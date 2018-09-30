@@ -1,5 +1,6 @@
 import lexing
 import parsing
+import evaluating
 
 example_code = 'add(5, mul(8, 9))'
 print('Code:')
@@ -13,3 +14,7 @@ print('Parsing:')
 expression = parsing.parse_expression(tokens=tokens)
 print('Done')
 print(expression)
+print('Evaluating:')
+value = evaluating.evaluate(expression)
+print(value)
+print('Done')

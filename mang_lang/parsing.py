@@ -6,12 +6,15 @@
 # function_call = symbol, array
 
 from typing import Sequence
-
 from lexing import Token, TokenType
+from value_array import ValueArray
 
 
 class Expression:
     def num_tokens(self) -> int:
+        raise NotImplemented()
+
+    def evaluate(self, environment) -> ValueArray:
         raise NotImplemented()
 
 
@@ -22,6 +25,12 @@ class Array(Expression):
     def num_tokens(self) -> int:
         return 1 + sum(e.num_tokens() + 1 for e in self.expressions)
 
+    def evaluate(self, environment) -> ValueArray:
+        value = []
+        for expression in self.expressions:
+            value.extend(expression.evaluate(environment))
+        return value
+
 
 class Number(Expression):
     def __init__(self, value: str) -> None:
@@ -29,6 +38,9 @@ class Number(Expression):
 
     def num_tokens(self) -> int:
         return 1
+
+    def evaluate(self, environment) -> ValueArray:
+        return [float(self.value)]
 
 
 class Constant(Expression):
@@ -38,6 +50,9 @@ class Constant(Expression):
     def num_tokens(self) -> int:
         return 1
 
+    def evaluate(self, environment) -> ValueArray:
+        return environment[self.name]
+
 
 class FunctionCall(Expression):
     def __init__(self, name: str, array: Array) -> None:
@@ -46,6 +61,11 @@ class FunctionCall(Expression):
 
     def num_tokens(self) -> int:
         return 1 + self.array.num_tokens()
+
+    def evaluate(self, environment) -> ValueArray:
+        input = self.array.evaluate(environment)
+        function = getattr(environment, self.name)
+        return function(input)
 
 
 def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expression:
