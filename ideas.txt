@@ -1,0 +1,86 @@
+SINGLE EXPRESSION
+
+Builtin functions R^N->R
+add, mul, sub, div, neg, pow, ln, sin, cos, tan
+
+add(5, mul(8, 9)) // 5 + 8 * 9
+
+
+number = ...
+number_array = "(", number {"," number} ")"
+expression = number or array or symbol ( expression )
+
+
+expression = number | constant | array | function_call
+number = 123...
+constant = symbol
+symbol = abc...
+array = "(" [expression {"," expression}] ")"
+function_call = symbol, array
+
+
+WITH DEFINITION (=) OF CONSTANT VARIABLES
+
+One definition per line:
+
+x = mul(8, 9) // (72)
+y = 5         // 5
+z = add(x, y) // 77
+
+
+ARRAYS
+
+a = (8, 9)    // (8, 9)
+x = mul(a)    // 72
+y = 5         // 5
+z = add(x, y) // 77
+
+c = (4, 5, 6, 7) // (4, 5, 6, 7)
+n = size(c)      // 4
+d = a(1)         // 5
+e = c(1:2)       // (5, 6)  implement slicing later
+f = (d, e)       // (5, 5, 6)
+
+
+WITH DEFINITION (=) OF FUNCTIONS R->R
+
+cube = x -> mul(x, mul(x, x))
+
+cube = x ->
+    x2 = mul(x, x)
+    mul(x, x2)
+
+
+WITH DEFINITION (=) OF FUNCTIONS R^N->R^N
+
+conjugate = x -> (x(0), neg(x(1)))
+
+conjugate = x ->
+    real_in = x(0)
+    imaginary_in = x(1)
+
+    real_out = real_in
+    imaginary_out = neg(imaginary)
+    (real_out, imaginary_out)
+
+x = (1, 2)   // (1, 2)
+conjugate(x) // (1, -2) result of program/environment
+
+
+SUBROUTINES
+
+pi =
+    a = 3.0
+    b = 0.14
+    add(a, b)
+
+
+CONTROL STRUCTURES
+
+if/choose, and, or, not, equal, greater, smaller as built in functions operating on R^N
+
+abs = x ->
+    condition = greater(x, 0)
+    alternative0 = x
+    alternative1 = neg(x)
+    choose(condition, alternative0, alternative1)
