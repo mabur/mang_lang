@@ -1,6 +1,3 @@
-from _functools import reduce
-from operator import mul
-
 from value_array import ValueArray
 
 
@@ -17,6 +14,7 @@ def mul(x: ValueArray) -> ValueArray:
 def sub(x: ValueArray) -> ValueArray:
     assert len(x) == 2
     return [x[0] - x[1]]
+
 
 def div(x: ValueArray) -> ValueArray:
     assert len(x) == 2
