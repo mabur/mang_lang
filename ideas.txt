@@ -26,7 +26,7 @@ One definition per line:
 x = mul(8, 9) // (72)
 y = 5         // 5
 z = add(x, y) // 77
-
+result = z    // special symbol for result / return of main program
 
 ARRAYS
 
@@ -40,31 +40,56 @@ n = size(c)      // 4
 d = a(1)         // 5
 e = c(1:2)       // (5, 6)  implement slicing later
 f = (d, e)       // (5, 5, 6)
+result = f
 
 
 WITH DEFINITION (=) OF FUNCTIONS R->R
 
-cube = x -> mul(x, mul(x, x))
+cube(x) = mul(x, mul(x, x))
 
-cube = x ->
-    x2 = mul(x, x)
-    mul(x, x2)
+cube(x) = {x2 = mul(x, x)} = mul(x, x2)
 
 
 WITH DEFINITION (=) OF FUNCTIONS R^N->R^N
 
-conjugate = x -> (x(0), neg(x(1)))
+conjugate(x) = (x(0), neg(x(1)))
 
-conjugate = x ->
+conjugate(x) = {
     real_in = x(0)
     imaginary_in = x(1)
-
     real_out = real_in
     imaginary_out = neg(imaginary)
-    (real_out, imaginary_out)
+} = (real_out, imaginary_out)
 
 x = (1, 2)   // (1, 2)
-conjugate(x) // (1, -2) result of program/environment
+result = conjugate(x) // (1, -2) result of program/environment
+
+
+HASKELL
+distance (x1,y1) (x2,y2) = 
+  let xdistance = x2 - x1
+      ydistance = y2 - y1
+      sqr z = z*z in
+  in sqrt((sqr xdistance) + (sqr ydistance))
+
+distance (x1,y1) (x2,y2) = sqrt((sqr xdistance) + (sqr ydistance))
+where
+  xdistance = x2 - x1
+  ydistance = y2 - y1
+  sqr z = z*z
+
+ME
+sqr = z -> z*z
+distance = (x1,y1,x2,y2) ->
+    xdistance = sub(x2, x1)
+    ydistance = sub(y2, y1)
+    sqrt(add(sqr(xdistance), sqr(ydistance)))
+
+sqr(z) = z * z
+distance(x1,y1,x2,y2) = {
+    xdistance = sub(x2, x1)
+    ydistance = sub(y2, y1)
+    } = sqrt(add(sqr(xdistance), sqr(ydistance)))
 
 
 SUBROUTINES
@@ -74,16 +99,23 @@ pi =
     b = 0.14
     add(a, b)
 
+pi = {a = 3.0, b = 0.14} = add(a, b)
+
+pi = {
+    a = 3.0,
+    b = 0.14
+} = add(a, b)
+
 
 CONTROL STRUCTURES
 
 if/choose, and, or, not, equal, greater, smaller as built in functions operating on R^N
 
-abs = x ->
+abs(x) = {
     condition = greater(x, 0)
     alternative0 = x
     alternative1 = neg(x)
-    choose(condition, alternative0, alternative1)
+    } = ifthenelse(condition, alternative0, alternative1)
 
 
 DEFINITION OF CONTEXT
