@@ -84,3 +84,56 @@ abs = x ->
     alternative0 = x
     alternative1 = neg(x)
     choose(condition, alternative0, alternative1)
+
+
+DEFINITION OF CONTEXT
+A context is a dictionary of definitions. It is indexed by the names of the defined variables and functions.
+
+Result is a special symbol. If it exists in the context, then it is the value of the context. Otherwise the context has no value.
+
+LOCAL ANONYMOUS CONTEXT & ENVIRONMENT
+
+a = 3.0
+b = 0.14
+result = a + b
+
+(a = 3.0; b = 0.14; result = a + b)
+
+result = {a = 3.0; b = 0.14} = a + b
+
+abs(x) = {
+    condition = greater(x, 0)
+    alternative0 = x
+    alternative1 = neg(x)
+} = ifthenelse(condition, alternative0, alternative1)
+
+abs(x) = {condition = greater(x, 0); alternative0 = x; alternative1 = neg(x)} = ifthenelse(condition, alternative0, alternative1)
+
+
+NAMED CONTEXT & ENVIRONMENT
+
+// variable without unpacking
+point = (x=3; y=5)
+result = point.x + point.y
+
+// function input without unpacking
+max(x, y) = ifthenelse(greater(x, y), x, y)
+
+// function output without unpacking
+minmax(x) = {...} = (min=...; max=...)
+elements = (1,7,4,9,7)
+mm = minmax(elements)
+result = add(mm.min, mm.max)
+
+
+PATTERN MATHING / UNPACKING (later)
+
+// variable with unpacking (later)
+point = (x=3; y=5)
+(x; y) = point
+
+// function output with unpacking (later)
+minmax(x) = {...} = (min; max)
+elements = (1,7,4,9,7)
+(min; max) = minmax(elements)
+result = add(min, max)
