@@ -42,5 +42,15 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(interpret('  add( sub(5 , 3), mul   (2,5))'), [12])
 
 
+class TestDefinitions(unittest.TestCase):
+    def test_definition_result_constant(self):
+        self.assertEqual(interpret('result = 5'), [5])
+
+    def test_definition_result_constant_function_call(self):
+        self.assertEqual(interpret('result = add(1, 2)'), [3])
+
+    def test_definition_constant_function_call(self):
+        self.assertEqual(interpret('x = add(1, 2)'), [])
+
 if __name__ == '__main__':
     unittest.main()

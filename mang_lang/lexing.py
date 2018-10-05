@@ -9,6 +9,8 @@ class TokenType(Enum):
     PARENTHESIS_BEGIN = "\("
     COMMA = ","
     PARENTHESIS_END = "\)"
+    EQUAL = "="
+    NEW_LINE = "\n"
 
 
 class Token:
