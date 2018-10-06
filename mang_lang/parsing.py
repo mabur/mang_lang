@@ -25,9 +25,9 @@ class Tuple(Expression):
         return 1 + sum(e.num_tokens() + 1 for e in self.expressions)
 
     def evaluate(self, environment):
-        value = []
+        value = ()
         for expression in self.expressions:
-            value.extend(expression.evaluate(environment))
+            value += (expression.evaluate(environment),)
         return value
 
 
@@ -39,7 +39,7 @@ class Number(Expression):
         return 1
 
     def evaluate(self, environment):
-        return [float(self.value)]
+        return float(self.value)
 
 
 class Constant(Expression):
@@ -88,7 +88,7 @@ class Environment(Expression):
 
     def evaluate(self, environment):
         values = {d.name: d.evaluate(environment) for d in self.definitions}
-        return values.get('result', [])
+        return values.get('result', ())
 
 
 def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expression:
@@ -130,11 +130,11 @@ def _parse_constant(tokens: Sequence[Token], begin_index: int) -> Constant:
 
 
 def _parse_tuple(tokens: Sequence[Token], begin_index: int) -> Tuple:
-    expressions = []
+    expressions = ()
     begin_index += 1 # eat (
     while tokens[begin_index].type != TokenType.PARENTHESIS_END:
         expression = parse_expression(tokens=tokens, begin_index=begin_index)
-        expressions.append(expression)
+        expressions += (expression,)
         begin_index += expression.num_tokens()
         if tokens[begin_index].type == TokenType.COMMA:
             begin_index += 1 # eat ,
