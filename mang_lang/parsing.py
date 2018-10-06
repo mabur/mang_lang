@@ -5,15 +5,18 @@
 # array = "(" [expression {"," expression}] ")"
 # function_call = symbol, array
 
-from typing import Sequence
+from typing import Any, Mapping, Sequence
 from lexing import Token, TokenType
+
+
+Environment = Mapping[str, Any]
 
 
 class Expression:
     def num_tokens(self) -> int:
         raise NotImplemented()
 
-    def evaluate(self, environment):
+    def evaluate(self, environment: Environment):
         raise NotImplemented()
 
 
@@ -24,7 +27,7 @@ class Tuple(Expression):
     def num_tokens(self) -> int:
         return 1 + sum(e.num_tokens() + 1 for e in self.expressions)
 
-    def evaluate(self, environment):
+    def evaluate(self, environment: Environment):
         value = ()
         for expression in self.expressions:
             value += (expression.evaluate(environment),)
@@ -38,7 +41,7 @@ class Number(Expression):
     def num_tokens(self) -> int:
         return 1
 
-    def evaluate(self, environment):
+    def evaluate(self, environment: Environment):
         return float(self.value)
 
 
@@ -49,7 +52,7 @@ class Constant(Expression):
     def num_tokens(self) -> int:
         return 1
 
-    def evaluate(self, environment):
+    def evaluate(self, environment: Environment):
         return environment[self.name]
 
 
@@ -61,7 +64,7 @@ class FunctionCall(Expression):
     def num_tokens(self) -> int:
         return 1 + self.tuple.num_tokens()
 
-    def evaluate(self, environment):
+    def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
         function = environment[self.name]
         return function(input)
@@ -75,7 +78,7 @@ class Definition(Expression):
     def num_tokens(self) -> int:
         return 2 + self.expression.num_tokens()
 
-    def evaluate(self, environment):
+    def evaluate(self, environment: Environment):
         return (self.name, self.expression.evaluate(environment))
 
 
