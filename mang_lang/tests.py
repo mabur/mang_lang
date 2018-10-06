@@ -65,8 +65,14 @@ class TestDefinitions(unittest.TestCase):
 
 
 class TestIndirection(unittest.TestCase):
-    def test_indirection(self):
+    def test_indirection1(self):
         self.assertEqual((('x', 5), ('y', 5)), interpret('(x = 5, y = x)'))
+
+    def test_indirection2(self):
+        self.assertEqual((('a', 1), ('b', 1), ('c', 1)), interpret('(a = 1, b = a, c = b)'))
+
+    def test_indirection3(self):
+        self.assertEqual((('x', 5), ('y', 3), 8), interpret('(x = 5, y = 3, add(x, y))'))
 
 
 if __name__ == '__main__':
