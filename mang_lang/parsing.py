@@ -76,19 +76,7 @@ class Definition(Expression):
         return 2 + self.expression.num_tokens()
 
     def evaluate(self, environment):
-        return self.expression.evaluate(environment)
-
-
-class Environment(Expression):
-    def __init__(self, definitions: Sequence[Definition]) -> None:
-        self.definitions = definitions
-
-    def num_tokens(self) -> int:
-        return [d.num_tokens() + 1 for d in self.definitions] - 1
-
-    def evaluate(self, environment):
-        values = {d.name: d.evaluate(environment) for d in self.definitions}
-        return values.get('result', ())
+        return (self.name, self.expression.evaluate(environment))
 
 
 def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expression:
@@ -102,7 +90,7 @@ def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expressio
         return _parse_function_call(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.EQUAL]):
-        return _parse_environment(tokens=tokens, begin_index=begin_index)
+       return _parse_definition(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL]):
         return _parse_constant(tokens=tokens, begin_index=begin_index)
@@ -156,14 +144,3 @@ def _parse_definition(tokens: Sequence[Token], begin_index: int) -> Definition:
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return Definition(name=name, expression=expression)
-
-
-def _parse_environment(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
-    first_definition = _parse_definition(tokens, begin_index)
-    definitions = [first_definition]
-    begin_index += first_definition.expression.num_tokens()
-    while tokens[begin_index].type == TokenType.NEW_LINE:
-        begin_index += 1
-        definition = _parse_definition(tokens, begin_index)
-        definitions.append(definition)
-    return Environment(definitions)

@@ -49,13 +49,16 @@ class TestTuple(unittest.TestCase):
 
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
-        self.assertEqual(5, interpret('result = 5'))
+        self.assertEqual(('result', 5), interpret('result = 5'))
 
     def test_definition_result_constant_function_call(self):
-        self.assertEqual(3, interpret('result = add(1, 2)'))
+        self.assertEqual(('result', 3), interpret('result = add(1, 2)'))
 
     def test_definition_constant_function_call(self):
-        self.assertEqual((), interpret('x = add(1, 2)'))
+        self.assertEqual(('x', 3), interpret('x = add(1, 2)'))
+
+    def test_definitions(self):
+        self.assertEqual((('x', 1), ('y', 2)), interpret('(x = 1, y = 2)'))
 
 if __name__ == '__main__':
     unittest.main()
