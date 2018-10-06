@@ -42,6 +42,11 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(interpret('  add( sub(5 , 3), mul   (2,5))'), [12])
 
 
+class TestTuple(unittest.TestCase):
+    def test_tuple(self):
+        self.assertEqual(interpret('(add(1, 2), add(3,4))'), [3, 7])
+
+
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
         self.assertEqual(interpret('result = 5'), [5])
