@@ -83,5 +83,13 @@ class TestIndexing(unittest.TestCase):
         self.assertEqual((('x', (2, 3)), ('y', 1), 3), interpret('(x = (2, 3), y = 1, x[y])'))
 
 
+class TestDefinitionLookup(unittest.TestCase):
+    def test_indexing_number0(self):
+        self.assertEqual((('x', (('y', 1),)), 1), interpret('(x = (y = 1), x.y)'))
+
+    def test_indexing_number1(self):
+        self.assertEqual((('x', (('a', 1),('b', 2))), 2), interpret('(x=(a=1,b=2), x.b)'))
+
+
 if __name__ == '__main__':
     unittest.main()

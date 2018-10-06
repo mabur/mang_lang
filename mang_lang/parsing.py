@@ -101,6 +101,19 @@ class TupleIndexing(Expression):
         return constant[index]
 
 
+class DefinitionLookup(Expression):
+    def __init__(self, tuple: Constant, symbol: Constant) -> None:
+        self.tuple = tuple
+        self.symbol = symbol
+
+    def num_tokens(self) -> int:
+        return self.tuple.num_tokens() + 1 + self.symbol.num_tokens()
+
+    def evaluate(self, environment: Environment):
+        tuple = environment[self.tuple.name]
+        return next(e[1] for e in tuple if e[0] == self.symbol.name)
+
+
 def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expression:
     end_index = len(tokens)
     assert begin_index < end_index
@@ -113,6 +126,9 @@ def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expressio
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
         return _parse_tuple_indexing(tokens=tokens, begin_index=begin_index)
+
+    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
+        return _parse_definition_lookup(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.EQUAL]):
        return _parse_definition(tokens=tokens, begin_index=begin_index)
@@ -182,3 +198,13 @@ def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> Function
     bracket_end = tokens[begin_index].value
     assert bracket_end == TokenType.BRACKET_END.value[1]
     return TupleIndexing(constant=Constant(name=name), index=expression)
+
+
+def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
+    tuple_name = tokens[begin_index].value
+    begin_index += 1
+    dot = tokens[begin_index].value
+    assert dot == TokenType.DOT.value[1]
+    begin_index += 1
+    member_name = tokens[begin_index].value
+    return DefinitionLookup(tuple=Constant(tuple_name),symbol=Constant(member_name))

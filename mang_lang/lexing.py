@@ -8,6 +8,7 @@ class TokenType(Enum):
     SYMBOL = "[a-z_]\\w*"
     PARENTHESIS_BEGIN = "\("
     COMMA = ","
+    DOT = "\."
     PARENTHESIS_END = "\)"
     EQUAL = "="
     NEW_LINE = "\n"
