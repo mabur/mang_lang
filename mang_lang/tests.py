@@ -7,55 +7,55 @@ class TestArray(unittest.TestCase):
         self.assertEqual((), interpret('()'))
 
     def test_array1a(self):
-        self.assertEqual(interpret('(1)'), (1,))
+        self.assertEqual((1,), interpret('(1)'))
 
     def test_array1b(self):
-        self.assertEqual(interpret('1'), 1)
+        self.assertEqual(1, interpret('1'))
 
     def test_array2(self):
-        self.assertEqual(interpret('(1,2)'), (1, 2))
+        self.assertEqual((1, 2), interpret('(1,2)'))
 
     def test_array3(self):
-        self.assertEqual(interpret('(1,2,3)'), (1, 2, 3))
+        self.assertEqual((1, 2, 3), interpret('(1,2,3)'))
 
 
 class TestBuiltinFunctions(unittest.TestCase):
 
     def test_add(self):
-        self.assertEqual(interpret('add(5, 3)'), 8)
+        self.assertEqual(8, interpret('add(5, 3)'))
 
     def test_sub(self):
-        self.assertEqual(interpret('sub(5, 3)'), 2)
+        self.assertEqual(2, interpret('sub(5, 3)'))
 
     def test_mul(self):
-        self.assertEqual(interpret('mul(5, 3)'), 15)
+        self.assertEqual(15, interpret('mul(5, 3)'))
 
     def test_div(self):
-        self.assertEqual(interpret('div(6, 3)'), 2)
+        self.assertEqual(2, interpret('div(6, 3)'))
 
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(interpret('add(sub(5, 3), mul(2, 5))'), 12)
+        self.assertEqual(12, interpret('add(sub(5, 3), mul(2, 5))'))
 
     def test_whites_pace(self):
-        self.assertEqual(interpret('  add( sub(5 , 3), mul   (2,5))'), 12)
+        self.assertEqual(12, interpret('  add( sub(5 , 3), mul   (2,5))'))
 
 
 class TestTuple(unittest.TestCase):
     def test_tuple(self):
-        self.assertEqual(interpret('(add(1, 2), add(3,4))'), (3, 7))
+        self.assertEqual((3, 7), interpret('(add(1, 2), add(3,4))'))
 
 
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
-        self.assertEqual(interpret('result = 5'), 5)
+        self.assertEqual(5, interpret('result = 5'))
 
     def test_definition_result_constant_function_call(self):
-        self.assertEqual(interpret('result = add(1, 2)'), 3)
+        self.assertEqual(3, interpret('result = add(1, 2)'))
 
     def test_definition_constant_function_call(self):
-        self.assertEqual(interpret('x = add(1, 2)'), ())
+        self.assertEqual((), interpret('x = add(1, 2)'))
 
 if __name__ == '__main__':
     unittest.main()
