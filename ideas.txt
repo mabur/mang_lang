@@ -26,7 +26,6 @@ One definition per line:
 x = mul(8, 9) // (72)
 y = 5         // 5
 z = add(x, y) // 77
-result = z    // special symbol for result / return of main program
 
 ARRAYS
 
@@ -40,7 +39,6 @@ n = size(c)      // 4
 d = a(1)         // 5
 e = c(1:2)       // (5, 6)  implement slicing later
 f = (d, e)       // (5, 5, 6)
-result = f
 
 
 WITH DEFINITION (=) OF FUNCTIONS R->R
@@ -62,7 +60,7 @@ conjugate(x) = {
 } = (real_out, imaginary_out)
 
 x = (1, 2)   // (1, 2)
-result = conjugate(x) // (1, -2) result of program/environment
+result = conjugate(x) // (1, -2)
 
 
 HASKELL
@@ -129,24 +127,27 @@ a = 3.0
 b = 0.14
 result = a + b
 
-(a = 3.0; b = 0.14; result = a + b)
+(a = 3.0, b = 0.14, result = a + b)
 
-result = {a = 3.0; b = 0.14} = a + b
+result = {a = 3.0, b = 0.14} = a + b
 
 abs(x) = {
-    condition = greater(x, 0)
-    alternative0 = x
+    condition = greater(x, 0),
+    alternative0 = x,
     alternative1 = neg(x)
 } = ifthenelse(condition, alternative0, alternative1)
 
-abs(x) = {condition = greater(x, 0); alternative0 = x; alternative1 = neg(x)} = ifthenelse(condition, alternative0, alternative1)
+abs(x) = {condition = greater(x, 0), alternative0 = x, alternative1 = neg(x)} = ifthenelse(condition, alternative0, alternative1)
 
 
 NAMED CONTEXT & ENVIRONMENT
 
 // variable without unpacking
-point = (x=3; y=5)
+point = (x=3, y=5)
 result = point.x + point.y
+
+single = (data=5)
+result = single.data
 
 // function input without unpacking
 max(x, y) = ifthenelse(greater(x, y), x, y)
@@ -158,14 +159,73 @@ mm = minmax(elements)
 result = add(mm.min, mm.max)
 
 
-PATTERN MATHING / UNPACKING (later)
+PATTERN MATCHING / UNPACKING (skip)
 
-// variable with unpacking (later)
-point = (x=3; y=5)
-(x; y) = point
+// variable with unpacking
+point = (x=3, y=5)
+(x, y) = point
 
-// function output with unpacking (later)
-minmax(x) = {...} = (min; max)
-elements = (1,7,4,9,7)
-(min; max) = minmax(elements)
+// function output with unpacking
+minmax(x) = {...} = (min, max)
+elements = (1, 7, 4, 9, 7)
+(min, max) = minmax(elements)
 result = add(min, max)
+
+
+GRAMMAR
+
+symbol = ...
+number = ...
+expression = number or symbol or function_call or variable_definition or function_definition or tuple or tuple_indexing or definition_lookup
+tuple = expressions
+function_call = symbol and tuple
+variable_definition = symbol and expression
+function_definition = symbol and tuple and expression
+tuple_indexing = symbol and expression
+definition_lookup = symbol and symbol
+
+
+Do not allow chaining of function calls or tuple indexing or definition lookup.
+Force the use of helper symbols.
+
+
+GRAMMAR 1
+
+symbol = ...
+number = ...
+expression = number or symbol or function_call or tuple
+tuple = expressions
+function_call = symbol and tuple
+
+
+GRAMMAR 2
+
+symbol = ...
+number = ...
+expression = number or symbol or function_call or tuple or variable_definition
+tuple = expressions
+function_call = symbol and tuple
+variable_definition = symbol and expression
+
+
+GRAMMAR 3
+
+symbol = ...
+number = ...
+expression = number or symbol or function_call or tuple_indexing or tuple or variable_definition
+tuple = expressions
+function_call = symbol and tuple
+variable_definition = symbol and expression
+tuple_indexing = symbol and expression
+
+
+GRAMMAR 4
+
+symbol = ...
+number = ...
+expression = number or symbol or function_call or tuple_indexing or definition_lookup or tuple or variable_definition
+tuple = expressions
+function_call = symbol and tuple
+variable_definition = symbol and expression
+tuple_indexing = symbol and expression
+definition_lookup = symbol and symbol
