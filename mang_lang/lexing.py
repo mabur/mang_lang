@@ -11,6 +11,8 @@ class TokenType(Enum):
     PARENTHESIS_END = "\)"
     EQUAL = "="
     NEW_LINE = "\n"
+    BRACKET_BEGIN = "\["
+    BRACKET_END = "\]"
 
 
 class Token:

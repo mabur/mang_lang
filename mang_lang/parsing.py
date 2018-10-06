@@ -87,6 +87,20 @@ class Definition(Expression):
         return (self.name, self.expression.evaluate(environment))
 
 
+class TupleIndexing(Expression):
+    def __init__(self, constant: Constant, index: Expression) -> None:
+        self.constant = constant
+        self.index = index
+
+    def num_tokens(self) -> int:
+        return self.constant.num_tokens() + 1 + self.index.num_tokens() + 1
+
+    def evaluate(self, environment: Environment):
+        constant = self.constant.evaluate(environment)
+        index = int(self.index.evaluate(environment))
+        return constant[index]
+
+
 def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expression:
     end_index = len(tokens)
     assert begin_index < end_index
@@ -96,6 +110,9 @@ def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expressio
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
         return _parse_function_call(tokens=tokens, begin_index=begin_index)
+
+    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
+        return _parse_tuple_indexing(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.EQUAL]):
        return _parse_definition(tokens=tokens, begin_index=begin_index)
@@ -152,3 +169,16 @@ def _parse_definition(tokens: Sequence[Token], begin_index: int) -> Definition:
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return Definition(name=name, expression=expression)
+
+
+def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
+    name = tokens[begin_index].value
+    begin_index += 1
+    bracket_begin = tokens[begin_index].value
+    assert bracket_begin == TokenType.BRACKET_BEGIN.value[1]
+    begin_index += 1
+    expression =  parse_expression(tokens=tokens, begin_index=begin_index)
+    begin_index += expression.num_tokens()
+    bracket_end = tokens[begin_index].value
+    assert bracket_end == TokenType.BRACKET_END.value[1]
+    return TupleIndexing(constant=Constant(name=name), index=expression)

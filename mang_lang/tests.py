@@ -75,5 +75,13 @@ class TestIndirection(unittest.TestCase):
         self.assertEqual((('x', 5), ('y', 3), 8), interpret('(x = 5, y = 3, add(x, y))'))
 
 
+class TestIndexing(unittest.TestCase):
+    def test_indexing_number(self):
+        self.assertEqual((('x', (2, 3)), 2), interpret('(x = (2, 3), x[0])'))
+
+    def test_indexing_constant(self):
+        self.assertEqual((('x', (2, 3)), ('y', 1), 3), interpret('(x = (2, 3), y = 1, x[y])'))
+
+
 if __name__ == '__main__':
     unittest.main()
