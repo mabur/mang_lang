@@ -1,21 +1,21 @@
-from value_array import ValueArray
+from typing import Tuple
 
 
-def add(x: ValueArray) -> ValueArray:
+def add(x: Tuple):
     assert len(x) == 2
     return [x[0] + x[1]]
 
 
-def mul(x: ValueArray) -> ValueArray:
+def mul(x: Tuple):
     assert len(x) == 2
     return [x[0] * x[1]]
 
 
-def sub(x: ValueArray) -> ValueArray:
+def sub(x: Tuple):
     assert len(x) == 2
     return [x[0] - x[1]]
 
 
-def div(x: ValueArray) -> ValueArray:
+def div(x: Tuple):
     assert len(x) == 2
     return [x[0] / x[1]]

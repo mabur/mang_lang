@@ -5,16 +5,15 @@
 # array = "(" [expression {"," expression}] ")"
 # function_call = symbol, array
 
-from typing import Mapping, Sequence
+from typing import Sequence
 from lexing import Token, TokenType
-from value_array import ValueArray
 
 
 class Expression:
     def num_tokens(self) -> int:
         raise NotImplemented()
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         raise NotImplemented()
 
 
@@ -25,7 +24,7 @@ class Tuple(Expression):
     def num_tokens(self) -> int:
         return 1 + sum(e.num_tokens() + 1 for e in self.expressions)
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         value = []
         for expression in self.expressions:
             value.extend(expression.evaluate(environment))
@@ -39,7 +38,7 @@ class Number(Expression):
     def num_tokens(self) -> int:
         return 1
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         return [float(self.value)]
 
 
@@ -50,7 +49,7 @@ class Constant(Expression):
     def num_tokens(self) -> int:
         return 1
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         return environment[self.name]
 
 
@@ -62,7 +61,7 @@ class FunctionCall(Expression):
     def num_tokens(self) -> int:
         return 1 + self.tuple.num_tokens()
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         input = self.tuple.evaluate(environment)
         function = getattr(environment, self.name)
         return function(input)
@@ -76,7 +75,7 @@ class Definition(Expression):
     def num_tokens(self) -> int:
         return 2 + self.expression.num_tokens()
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         return self.expression.evaluate(environment)
 
 
@@ -87,7 +86,7 @@ class Environment(Expression):
     def num_tokens(self) -> int:
         return [d.num_tokens() + 1 for d in self.definitions] - 1
 
-    def evaluate(self, environment) -> ValueArray:
+    def evaluate(self, environment):
         values = {d.name: d.evaluate(environment) for d in self.definitions}
         return values.get('result', [])
 
