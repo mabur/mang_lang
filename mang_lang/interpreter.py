@@ -6,5 +6,5 @@ import global_environment
 def interpret(code: str):
     tokens = lexer(code)
     expression = parse_expression(tokens=tokens)
-    value = expression.evaluate(global_environment)
+    value = expression.evaluate(global_environment.ENVIRONMENT)
     return value

@@ -19,3 +19,6 @@ def sub(x: Tuple):
 def div(x: Tuple):
     assert len(x) == 2
     return x[0] / x[1]
+
+
+ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div}

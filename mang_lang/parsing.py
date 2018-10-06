@@ -63,7 +63,7 @@ class FunctionCall(Expression):
 
     def evaluate(self, environment):
         input = self.tuple.evaluate(environment)
-        function = getattr(environment, self.name)
+        function = environment[self.name]
         return function(input)
 
 
