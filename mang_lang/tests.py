@@ -46,6 +46,9 @@ class TestTuple(unittest.TestCase):
     def test_tuple(self):
         self.assertEqual((3, 7), interpret('(add(1, 2), add(3,4))'))
 
+    def test_mixed_tuple(self):
+        self.assertEqual((3, 3, ('x', 3)), interpret('(3, add(1, 2), x = 3)'))
+
 
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
