@@ -5,6 +5,7 @@
 # array = "(" [expression {"," expression}] ")"
 # function_call = symbol, array
 
+from copy import deepcopy
 from typing import Any, Mapping, Sequence
 from lexing import Token, TokenType
 
@@ -29,8 +30,12 @@ class Tuple(Expression):
 
     def evaluate(self, environment: Environment):
         value = ()
+        new_environment = deepcopy(environment)
         for expression in self.expressions:
-            value += (expression.evaluate(environment),)
+            expression_value = expression.evaluate(new_environment)
+            value += (expression_value,)
+            if isinstance(expression, Definition):
+                new_environment[expression.name] = expression_value[1]
         return value
 
 

@@ -63,5 +63,11 @@ class TestDefinitions(unittest.TestCase):
     def test_definitions(self):
         self.assertEqual((('x', 1), ('y', 2)), interpret('(x = 1, y = 2)'))
 
+
+class TestIndirection(unittest.TestCase):
+    def test_indirection(self):
+        self.assertEqual((('x', 5), ('y', 5)), interpret('(x = 5, y = x)'))
+
+
 if __name__ == '__main__':
     unittest.main()
