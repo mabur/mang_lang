@@ -36,6 +36,8 @@ class Tuple(Expression):
             value += (expression_value,)
             if isinstance(expression, VariableDefinition):
                 new_environment[expression.name] = expression_value[1]
+            if isinstance(expression, FunctionDefinition):
+                new_environment[expression.function_name] = expression
         return value
 
 
@@ -72,6 +74,11 @@ class FunctionCall(Expression):
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
         function = environment[self.name]
+        if isinstance(function, Expression):
+            # Todo: add argument definition to environment
+            new_environment = deepcopy(environment)
+            new_environment[function.argument_name] = input
+            return function.expression.evaluate(new_environment)
         return function(input)
 
 
@@ -85,6 +92,19 @@ class VariableDefinition(Expression):
 
     def evaluate(self, environment: Environment):
         return (self.name, self.expression.evaluate(environment))
+
+
+class FunctionDefinition(Expression):
+    def __init__(self, function_name: str, argument_name: str, expression: Expression) -> None:
+        self.function_name = function_name
+        self.argument_name = argument_name
+        self.expression = expression
+
+    def num_tokens(self) -> int:
+        return 5 + self.expression.num_tokens()
+
+    def evaluate(self, environment: Environment):
+        return (self.function_name, self.argument_name, self.expression)
 
 
 class TupleIndexing(Expression):
@@ -120,6 +140,9 @@ def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expressio
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.NUMBER]):
         return _parse_number(tokens=tokens, begin_index=begin_index)
+
+    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
+        return _parse_function_definition(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
         return _parse_function_call(tokens=tokens, begin_index=begin_index)
@@ -185,6 +208,24 @@ def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> Var
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return VariableDefinition(name=name, expression=expression)
+
+
+def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> FunctionDefinition:
+    function_name = tokens[begin_index].value
+    begin_index += 1
+    parenthesis_begin = tokens[begin_index].value
+    assert parenthesis_begin == TokenType.PARENTHESIS_BEGIN.value[-1]
+    begin_index += 1
+    argument_name = tokens[begin_index].value
+    begin_index += 1
+    parenthesis_end = tokens[begin_index].value
+    assert parenthesis_end == TokenType.PARENTHESIS_END.value[-1]
+    begin_index += 1
+    equal = tokens[begin_index].value
+    assert equal == TokenType.EQUAL.value
+    begin_index += 1
+    expression = parse_expression(tokens, begin_index)
+    return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
 
 
 def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleIndexing:

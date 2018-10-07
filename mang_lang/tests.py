@@ -94,5 +94,22 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual((('x', (('a', 1),('b', 2))), 2), interpret('(x=(a=1,b=2), x.b)'))
 
 
+class TestFunctionDefinition(unittest.TestCase):
+    def test_function_definition(self):
+        actual = interpret('f(x)=add(x)')
+        expected = ('f', 'x', None)
+        self.assertEqual(expected[0], actual[0])
+        self.assertEqual(expected[1], actual[1])
+
+    def test_constant_function_definition_and_call(self):
+        actual = interpret('(f(x) = 3, f(1))')
+        expected = ((None), 3)
+        self.assertEqual(expected[1], actual[1])
+
+    def test_function_definition_and_call(self):
+        actual = interpret('(f(x) = add(x), f(2,3))')
+        expected = ((None), 5)
+        self.assertEqual(expected[1], actual[1])
+
 if __name__ == '__main__':
     unittest.main()
