@@ -34,7 +34,7 @@ class Tuple(Expression):
         for expression in self.expressions:
             expression_value = expression.evaluate(new_environment)
             value += (expression_value,)
-            if isinstance(expression, Definition):
+            if isinstance(expression, VariableDefinition):
                 new_environment[expression.name] = expression_value[1]
         return value
 
@@ -75,7 +75,7 @@ class FunctionCall(Expression):
         return function(input)
 
 
-class Definition(Expression):
+class VariableDefinition(Expression):
     def __init__(self, name: str, expression: Expression) -> None:
         self.name = name
         self.expression = expression
@@ -131,7 +131,7 @@ def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expressio
         return _parse_definition_lookup(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.EQUAL]):
-       return _parse_definition(tokens=tokens, begin_index=begin_index)
+       return _parse_variable_definition(tokens=tokens, begin_index=begin_index)
 
     if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL]):
         return _parse_constant(tokens=tokens, begin_index=begin_index)
@@ -177,14 +177,14 @@ def _parse_function_call(tokens: Sequence[Token], begin_index: int) -> FunctionC
     return FunctionCall(name=name, tuple=tuple)
 
 
-def _parse_definition(tokens: Sequence[Token], begin_index: int) -> Definition:
+def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> VariableDefinition:
     name = tokens[begin_index].value
     begin_index += 1
     equal = tokens[begin_index].value
     assert equal == TokenType.EQUAL.value
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
-    return Definition(name=name, expression=expression)
+    return VariableDefinition(name=name, expression=expression)
 
 
 def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
