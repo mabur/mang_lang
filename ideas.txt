@@ -229,3 +229,16 @@ function_call = symbol and tuple
 variable_definition = symbol and expression
 tuple_indexing = symbol and expression
 definition_lookup = symbol and symbol
+
+
+GRAMMAR 5
+
+symbol = ...
+number = ...
+expression = number or symbol or function_call or tuple_indexing or definition_lookup or tuple or variable_definition or function_definition
+tuple = expressions
+function_call = symbol and tuple
+variable_definition = symbol and expression
+tuple_indexing = symbol and expression
+definition_lookup = symbol and symbol
+function_definition = symbol and tuple and expression
