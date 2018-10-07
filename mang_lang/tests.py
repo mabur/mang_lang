@@ -63,6 +63,9 @@ class TestDefinitions(unittest.TestCase):
     def test_definitions(self):
         self.assertEqual((('x', 1), ('y', 2)), interpret('(x = 1, y = 2)'))
 
+    def test_tuple_definition_and_function_call(self):
+        self.assertEqual((('x',(1,2)), 3), interpret('(x=(1,2), add(x))'))
+
 
 class TestIndirection(unittest.TestCase):
     def test_indirection1(self):
