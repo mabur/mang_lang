@@ -187,7 +187,7 @@ def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> Var
     return VariableDefinition(name=name, expression=expression)
 
 
-def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
+def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleIndexing:
     name = tokens[begin_index].value
     begin_index += 1
     bracket_begin = tokens[begin_index].value
@@ -200,7 +200,7 @@ def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> Function
     return TupleIndexing(constant=Constant(name=name), index=expression)
 
 
-def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
+def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> DefinitionLookup:
     tuple_name = tokens[begin_index].value
     begin_index += 1
     dot = tokens[begin_index].value
