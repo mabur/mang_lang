@@ -73,6 +73,8 @@ class FunctionCall(Expression):
 
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
+        if len(input) == 1:
+            input = input[0]
         function = environment[self.name]
         if isinstance(function, Expression):
             # Todo: add argument definition to environment
