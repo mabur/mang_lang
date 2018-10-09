@@ -231,8 +231,8 @@ def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> Fun
 
 
 def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleIndexing:
-    name = tokens[begin_index].value
-    begin_index += 1
+    constant = _parse_constant(tokens, begin_index)
+    begin_index += constant.num_tokens()
     bracket_begin = tokens[begin_index].value
     assert bracket_begin == TokenType.BRACKET_BEGIN.value[-1]
     begin_index += 1
@@ -240,7 +240,7 @@ def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleInd
     begin_index += expression.num_tokens()
     bracket_end = tokens[begin_index].value
     assert bracket_end == TokenType.BRACKET_END.value[-1]
-    return TupleIndexing(constant=Constant(name=name), index=expression)
+    return TupleIndexing(constant=constant, index=expression)
 
 
 def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> DefinitionLookup:
