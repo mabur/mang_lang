@@ -136,121 +136,138 @@ class DefinitionLookup(Expression):
         return next(e[1] for e in tuple if e[0] == self.symbol.name)
 
 
-def parse_expression(tokens: Sequence[Token], begin_index: int = 0) -> Expression:
-    end_index = len(tokens)
-    assert begin_index < end_index
+class TokenSlice:
+    def __init__(self, tokens: Sequence[Token], begin_index: int = 0):
+        assert begin_index <= len(tokens)
+        self.tokens = tokens
+        self.begin_index = begin_index
 
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.NUMBER]):
-        return _parse_number(tokens=tokens, begin_index=begin_index)
+    def front(self) -> str:
+        return self.tokens[self.begin_index].value
 
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
-        return _parse_function_definition(tokens=tokens, begin_index=begin_index)
-
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
-        return _parse_function_call(tokens=tokens, begin_index=begin_index)
-
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
-        return _parse_tuple_indexing(tokens=tokens, begin_index=begin_index)
-
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
-        return _parse_definition_lookup(tokens=tokens, begin_index=begin_index)
-
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL, TokenType.EQUAL]):
-       return _parse_variable_definition(tokens=tokens, begin_index=begin_index)
-
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.SYMBOL]):
-        return _parse_constant(tokens=tokens, begin_index=begin_index)
-
-    if _do_tokens_match(tokens=tokens, begin_index=begin_index, token_pattern=[TokenType.PARENTHESIS_BEGIN]):
-        return _parse_tuple(tokens=tokens, begin_index=begin_index)
-
-    raise ValueError('Bad token pattern: {}'.format(tokens[begin_index].value))
+    def does_match(self, token_pattern: Sequence[TokenType]) -> bool:
+        if len(self.tokens) < self.begin_index + len(token_pattern):
+            return False
+        return all(
+            self.tokens[self.begin_index + i].type == token for i, token in
+            enumerate(token_pattern))
 
 
-def _do_tokens_match(tokens: Sequence[Token],
-                     begin_index: int,
-                     token_pattern: Sequence[Token]) -> bool:
-    if len(tokens) < begin_index + len(token_pattern):
+def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
+    return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
+
+
+def parse_expression(token_slice: TokenSlice) -> Expression:
+    if token_slice.does_match([TokenType.NUMBER]):
+        return _parse_number(token_slice)
+
+    if token_slice.does_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
+        return _parse_function_definition(token_slice)
+
+    if token_slice.does_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
+        return _parse_function_call(token_slice)
+
+    if token_slice.does_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
+        return _parse_tuple_indexing(token_slice)
+
+    if token_slice.does_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
+        return _parse_definition_lookup(token_slice)
+
+    if token_slice.does_match([TokenType.SYMBOL, TokenType.EQUAL]):
+       return _parse_variable_definition(token_slice)
+
+    if token_slice.does_match([TokenType.SYMBOL]):
+        return _parse_constant(token_slice)
+
+    if token_slice.does_match([TokenType.PARENTHESIS_BEGIN]):
+        return _parse_tuple(token_slice)
+
+    raise ValueError('Bad token pattern: {}'.format(token_slice.front()))
+
+
+def _do_tokens_match(tokens: TokenSlice, token_pattern: Sequence[Token])\
+        -> bool:
+    if len(tokens.tokens) < tokens.begin_index + len(token_pattern):
         return False
-    return all(tokens[begin_index + i].type == token for i, token in enumerate(token_pattern))
+    return all(tokens.tokens[tokens.begin_index + i].type == token for i, token in enumerate(token_pattern))
 
 
-def _parse_number(tokens: Sequence[Token], begin_index: int) -> Number:
-    return Number(value=tokens[begin_index].value)
+def _parse_number(tokens: TokenSlice) -> Number:
+    return Number(value=tokens.front())
 
 
-def _parse_constant(tokens: Sequence[Token], begin_index: int) -> Constant:
-    return Constant(name=tokens[begin_index].value)
+def _parse_constant(tokens: TokenSlice) -> Constant:
+    return Constant(name=tokens.front())
 
 
-def _parse_tuple(tokens: Sequence[Token], begin_index: int) -> Tuple:
+def _parse_tuple(tokens: TokenSlice) -> Tuple:
     expressions = ()
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_BEGIN)
-    begin_index += 1
-    while tokens[begin_index].type != TokenType.PARENTHESIS_END:
-        expression = parse_expression(tokens=tokens, begin_index=begin_index)
+    _assert_token(tokens, expected=TokenType.PARENTHESIS_BEGIN)
+    tokens = step(tokens, 1)
+    while tokens.tokens[tokens.begin_index].type != TokenType.PARENTHESIS_END:
+        expression = parse_expression(tokens)
         expressions += (expression,)
-        begin_index += expression.num_tokens()
-        if tokens[begin_index].type == TokenType.COMMA:
-            _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.COMMA)
-            begin_index += 1
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_END)
-    begin_index += 1
+        tokens = step(tokens, expression.num_tokens())
+        if tokens.tokens[tokens.begin_index].type == TokenType.COMMA:
+            _assert_token(tokens, expected=TokenType.COMMA)
+            tokens = step(tokens, 1)
+    _assert_token(tokens, expected=TokenType.PARENTHESIS_END)
+    tokens = step(tokens, 1)
     return Tuple(expressions=expressions)
 
 
-def _parse_function_call(tokens: Sequence[Token], begin_index: int) -> FunctionCall:
-    name = tokens[begin_index].value
-    tuple =  _parse_tuple(tokens=tokens, begin_index=begin_index + 1)
+def _parse_function_call(tokens: TokenSlice) -> FunctionCall:
+    name = tokens.front()
+    tokens = step(tokens, 1)
+    tuple =  _parse_tuple(tokens)
     return FunctionCall(name=name, tuple=tuple)
 
 
-def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> VariableDefinition:
-    name = tokens[begin_index].value
-    begin_index += 1
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.EQUAL)
-    begin_index += 1
-    expression = parse_expression(tokens=tokens, begin_index=begin_index)
+def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
+    name = tokens.front()
+    tokens = step(tokens, 1)
+    _assert_token(tokens, expected=TokenType.EQUAL)
+    tokens = step(tokens, 1)
+    expression = parse_expression(tokens)
     return VariableDefinition(name=name, expression=expression)
 
 
-def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> FunctionDefinition:
-    function_name = tokens[begin_index].value
-    begin_index += 1
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_BEGIN)
-    begin_index += 1
-    argument_name = tokens[begin_index].value
-    begin_index += 1
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_END)
-    begin_index += 1
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.EQUAL)
-    begin_index += 1
-    expression = parse_expression(tokens=tokens, begin_index=begin_index)
+def _parse_function_definition(tokens: TokenSlice) -> FunctionDefinition:
+    function_name = tokens.front()
+    tokens = step(tokens, 1)
+    _assert_token(tokens, expected=TokenType.PARENTHESIS_BEGIN)
+    tokens = step(tokens, 1)
+    argument_name = tokens.front()
+    tokens = step(tokens, 1)
+    _assert_token(tokens, expected=TokenType.PARENTHESIS_END)
+    tokens = step(tokens, 1)
+    _assert_token(tokens, expected=TokenType.EQUAL)
+    tokens = step(tokens, 1)
+    expression = parse_expression(tokens)
     return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
 
 
-def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleIndexing:
-    constant = _parse_constant(tokens=tokens, begin_index=begin_index)
-    begin_index += constant.num_tokens()
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.BRACKET_BEGIN)
-    begin_index += 1
-    expression = parse_expression(tokens=tokens, begin_index=begin_index)
-    begin_index += expression.num_tokens()
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.BRACKET_END)
-    begin_index += 1
+def _parse_tuple_indexing(tokens: TokenSlice) -> TupleIndexing:
+    constant = _parse_constant(tokens)
+    tokens = step(tokens, constant.num_tokens())
+    _assert_token(tokens, expected=TokenType.BRACKET_BEGIN)
+    tokens = step(tokens, 1)
+    expression = parse_expression(tokens)
+    tokens = step(tokens, expression.num_tokens())
+    _assert_token(tokens, expected=TokenType.BRACKET_END)
+    tokens = step(tokens, 1)
     return TupleIndexing(constant=constant, index=expression)
 
 
-def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> DefinitionLookup:
-    tuple = _parse_constant(tokens=tokens, begin_index=begin_index)
-    begin_index += tuple.num_tokens()
-    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.DOT)
-    begin_index += 1
-    symbol = _parse_constant(tokens=tokens, begin_index=begin_index)
-    begin_index += symbol.num_tokens()
+def _parse_definition_lookup(tokens: TokenSlice) -> DefinitionLookup:
+    tuple = _parse_constant(tokens)
+    tokens = step(tokens, tuple.num_tokens())
+    _assert_token(tokens, expected=TokenType.DOT)
+    tokens = step(tokens, 1)
+    symbol = _parse_constant(tokens)
+    tokens = step(tokens, symbol.num_tokens())
     return DefinitionLookup(tuple=tuple, symbol=symbol)
 
 
-def _assert_token(tokens: Sequence[Token], begin_index: int, expected: TokenType) -> None:
-    actual = tokens[begin_index]
-    assert actual.value == expected.value[-1]
+def _assert_token(tokens: TokenSlice, expected: TokenType) -> None:
+    assert tokens.front() == expected.value[-1]
