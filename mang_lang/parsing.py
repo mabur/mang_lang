@@ -185,14 +185,17 @@ def _parse_constant(tokens: Sequence[Token], begin_index: int) -> Constant:
 
 def _parse_tuple(tokens: Sequence[Token], begin_index: int) -> Tuple:
     expressions = ()
-    begin_index += 1 # eat (
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_BEGIN)
+    begin_index += 1
     while tokens[begin_index].type != TokenType.PARENTHESIS_END:
         expression = parse_expression(tokens=tokens, begin_index=begin_index)
         expressions += (expression,)
         begin_index += expression.num_tokens()
         if tokens[begin_index].type == TokenType.COMMA:
-            begin_index += 1 # eat ,
-    begin_index += 1 # eat )
+            _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.COMMA)
+            begin_index += 1
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_END)
+    begin_index += 1
     return Tuple(expressions=expressions)
 
 
