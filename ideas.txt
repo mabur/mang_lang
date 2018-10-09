@@ -242,3 +242,10 @@ variable_definition = symbol and expression
 tuple_indexing = symbol and expression
 definition_lookup = symbol and symbol
 function_definition = symbol and tuple and expression
+
+
+TEXT REPRESENTATION
+Define three text representations for the language:
+1. Raw source code as raw text file.
+2. Abstract syntax tree as jason.
+3. Evaluated tree as jason.
