@@ -206,7 +206,7 @@ def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> Var
     name = tokens[begin_index].value
     begin_index += 1
     equal = tokens[begin_index].value
-    assert equal == TokenType.EQUAL.value
+    assert equal == TokenType.EQUAL.value[-1]
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return VariableDefinition(name=name, expression=expression)
@@ -224,7 +224,7 @@ def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> Fun
     assert parenthesis_end == TokenType.PARENTHESIS_END.value[-1]
     begin_index += 1
     equal = tokens[begin_index].value
-    assert equal == TokenType.EQUAL.value
+    assert equal == TokenType.EQUAL.value[-1]
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
