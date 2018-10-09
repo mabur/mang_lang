@@ -207,7 +207,7 @@ def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> Var
     begin_index += 1
     _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.EQUAL)
     begin_index += 1
-    expression = parse_expression(tokens, begin_index)
+    expression = parse_expression(tokens=tokens, begin_index=begin_index)
     return VariableDefinition(name=name, expression=expression)
 
 
@@ -222,12 +222,12 @@ def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> Fun
     begin_index += 1
     _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.EQUAL)
     begin_index += 1
-    expression = parse_expression(tokens, begin_index)
+    expression = parse_expression(tokens=tokens, begin_index=begin_index)
     return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
 
 
 def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleIndexing:
-    constant = _parse_constant(tokens, begin_index)
+    constant = _parse_constant(tokens=tokens, begin_index=begin_index)
     begin_index += constant.num_tokens()
     _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.BRACKET_BEGIN)
     begin_index += 1
@@ -239,11 +239,11 @@ def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleInd
 
 
 def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> DefinitionLookup:
-    tuple = _parse_constant(tokens, begin_index)
+    tuple = _parse_constant(tokens=tokens, begin_index=begin_index)
     begin_index += tuple.num_tokens()
     _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.DOT)
     begin_index += 1
-    symbol = _parse_constant(tokens, begin_index)
+    symbol = _parse_constant(tokens=tokens, begin_index=begin_index)
     begin_index += symbol.num_tokens()
     return DefinitionLookup(tuple=tuple, symbol=symbol)
 
