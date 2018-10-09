@@ -244,10 +244,11 @@ def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleInd
 
 
 def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> DefinitionLookup:
-    tuple_name = tokens[begin_index].value
-    begin_index += 1
+    tuple = _parse_constant(tokens, begin_index)
+    begin_index += tuple.num_tokens()
     dot = tokens[begin_index].value
     assert dot == TokenType.DOT.value[-1]
     begin_index += 1
-    member_name = tokens[begin_index].value
-    return DefinitionLookup(tuple=Constant(tuple_name),symbol=Constant(member_name))
+    symbol = _parse_constant(tokens, begin_index)
+    begin_index += symbol.num_tokens()
+    return DefinitionLookup(tuple=tuple, symbol=symbol)
