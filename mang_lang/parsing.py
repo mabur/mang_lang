@@ -205,8 +205,7 @@ def _parse_function_call(tokens: Sequence[Token], begin_index: int) -> FunctionC
 def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> VariableDefinition:
     name = tokens[begin_index].value
     begin_index += 1
-    equal = tokens[begin_index].value
-    assert equal == TokenType.EQUAL.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.EQUAL)
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return VariableDefinition(name=name, expression=expression)
@@ -215,16 +214,13 @@ def _parse_variable_definition(tokens: Sequence[Token], begin_index: int) -> Var
 def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> FunctionDefinition:
     function_name = tokens[begin_index].value
     begin_index += 1
-    parenthesis_begin = tokens[begin_index].value
-    assert parenthesis_begin == TokenType.PARENTHESIS_BEGIN.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_BEGIN)
     begin_index += 1
     argument_name = tokens[begin_index].value
     begin_index += 1
-    parenthesis_end = tokens[begin_index].value
-    assert parenthesis_end == TokenType.PARENTHESIS_END.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.PARENTHESIS_END)
     begin_index += 1
-    equal = tokens[begin_index].value
-    assert equal == TokenType.EQUAL.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.EQUAL)
     begin_index += 1
     expression = parse_expression(tokens, begin_index)
     return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
@@ -233,22 +229,25 @@ def _parse_function_definition(tokens: Sequence[Token], begin_index: int) -> Fun
 def _parse_tuple_indexing(tokens: Sequence[Token], begin_index: int) -> TupleIndexing:
     constant = _parse_constant(tokens, begin_index)
     begin_index += constant.num_tokens()
-    bracket_begin = tokens[begin_index].value
-    assert bracket_begin == TokenType.BRACKET_BEGIN.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.BRACKET_BEGIN)
     begin_index += 1
-    expression =  parse_expression(tokens=tokens, begin_index=begin_index)
+    expression = parse_expression(tokens=tokens, begin_index=begin_index)
     begin_index += expression.num_tokens()
-    bracket_end = tokens[begin_index].value
-    assert bracket_end == TokenType.BRACKET_END.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.BRACKET_END)
+    begin_index += 1
     return TupleIndexing(constant=constant, index=expression)
 
 
 def _parse_definition_lookup(tokens: Sequence[Token], begin_index: int) -> DefinitionLookup:
     tuple = _parse_constant(tokens, begin_index)
     begin_index += tuple.num_tokens()
-    dot = tokens[begin_index].value
-    assert dot == TokenType.DOT.value[-1]
+    _assert_token(tokens=tokens, begin_index=begin_index, expected=TokenType.DOT)
     begin_index += 1
     symbol = _parse_constant(tokens, begin_index)
     begin_index += symbol.num_tokens()
     return DefinitionLookup(tuple=tuple, symbol=symbol)
+
+
+def _assert_token(tokens: Sequence[Token], begin_index: int, expected: TokenType) -> None:
+    actual = tokens[begin_index]
+    assert actual.value == expected.value[-1]
