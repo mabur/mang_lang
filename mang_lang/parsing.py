@@ -156,13 +156,17 @@ class TokenSlice:
             enumerate(token_pattern))
 
 
+def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
+    return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
+
+
 def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
     assert tokens.front() == expected.value[-1]
     return step(tokens, 1)
 
 
-def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
-    return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
+def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
+    return (tokens.front(), step(tokens, 1))
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
@@ -209,26 +213,22 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
 
 
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
-    name = tokens.front()
-    tokens = step(tokens, 1)
+    name, tokens = _parse_token(tokens)
     tuple, tokens = _parse_tuple(tokens)
     return (FunctionCall(name=name, tuple=tuple), tokens)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
-    name = tokens.front()
-    tokens = step(tokens, 1)
+    name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
-    function_name = tokens.front()
-    tokens = step(tokens, 1)
+    function_name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
-    argument_name = tokens.front()
-    tokens = step(tokens, 1)
+    argument_name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
     tokens = _parse_known_token(tokens, TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
