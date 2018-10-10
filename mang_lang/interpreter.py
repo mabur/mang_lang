@@ -5,6 +5,6 @@ import global_environment
 
 def interpret(code: str):
     tokens = lexer(code)
-    expression = parse_expression(TokenSlice(tokens=tokens))
+    expression = parse_expression(TokenSlice(tokens))
     value = expression.evaluate(global_environment.ENVIRONMENT)
     return value

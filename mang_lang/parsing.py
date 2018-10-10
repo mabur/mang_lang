@@ -145,7 +145,7 @@ class TokenSlice:
     def front(self) -> str:
         return self.tokens[self.begin_index].value
 
-    def does_match(self, token_pattern: Sequence[TokenType]) -> bool:
+    def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
         if len(self.tokens) < self.begin_index + len(token_pattern):
             return False
         return all(
@@ -157,32 +157,32 @@ def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
     return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
 
 
-def parse_expression(token_slice: TokenSlice) -> Expression:
-    if token_slice.does_match([TokenType.NUMBER]):
-        return _parse_number(token_slice)
+def parse_expression(tokens: TokenSlice) -> Expression:
+    if tokens.do_match([TokenType.NUMBER]):
+        return _parse_number(tokens)
 
-    if token_slice.does_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
-        return _parse_function_definition(token_slice)
+    if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
+        return _parse_function_definition(tokens)
 
-    if token_slice.does_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
-        return _parse_function_call(token_slice)
+    if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
+        return _parse_function_call(tokens)
 
-    if token_slice.does_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
-        return _parse_tuple_indexing(token_slice)
+    if tokens.do_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
+        return _parse_tuple_indexing(tokens)
 
-    if token_slice.does_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
-        return _parse_definition_lookup(token_slice)
+    if tokens.do_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
+        return _parse_definition_lookup(tokens)
 
-    if token_slice.does_match([TokenType.SYMBOL, TokenType.EQUAL]):
-       return _parse_variable_definition(token_slice)
+    if tokens.do_match([TokenType.SYMBOL, TokenType.EQUAL]):
+       return _parse_variable_definition(tokens)
 
-    if token_slice.does_match([TokenType.SYMBOL]):
-        return _parse_constant(token_slice)
+    if tokens.do_match([TokenType.SYMBOL]):
+        return _parse_constant(tokens)
 
-    if token_slice.does_match([TokenType.PARENTHESIS_BEGIN]):
-        return _parse_tuple(token_slice)
+    if tokens.do_match([TokenType.PARENTHESIS_BEGIN]):
+        return _parse_tuple(tokens)
 
-    raise ValueError('Bad token pattern: {}'.format(token_slice.front()))
+    raise ValueError('Bad token pattern: {}'.format(tokens.front()))
 
 
 def _do_tokens_match(tokens: TokenSlice, token_pattern: Sequence[Token])\
