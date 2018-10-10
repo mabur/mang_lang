@@ -6,7 +6,7 @@
 # function_call = symbol, array
 
 from copy import deepcopy
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Sequence, Tuple
 from lexing import Token, TokenType
 
 
@@ -165,7 +165,7 @@ def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
 
 def parse_expression(tokens: TokenSlice) -> Expression:
     if tokens.do_match([TokenType.NUMBER]):
-        return _parse_number(tokens)
+        return _parse_number(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
         return _parse_function_definition(tokens)
@@ -191,8 +191,8 @@ def parse_expression(tokens: TokenSlice) -> Expression:
     raise ValueError('Bad token pattern: {}'.format(tokens.front()))
 
 
-def _parse_number(tokens: TokenSlice) -> Number:
-    return Number(value=tokens.front())
+def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
+    return (Number(value=tokens.front()), step(tokens, 1))
 
 
 def _parse_constant(tokens: TokenSlice) -> Constant:
