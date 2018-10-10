@@ -205,8 +205,8 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple:
     tokens = step(tokens, 1)
     while tokens.front_type() != TokenType.PARENTHESIS_END:
         expression = parse_expression(tokens)
-        expressions += (expression,)
         tokens = step(tokens, expression.num_tokens())
+        expressions += (expression,)
         if tokens.front_type() == TokenType.COMMA:
             tokens.assert_front_type(TokenType.COMMA)
             tokens = step(tokens, 1)
@@ -219,6 +219,7 @@ def _parse_function_call(tokens: TokenSlice) -> FunctionCall:
     name = tokens.front()
     tokens = step(tokens, 1)
     tuple = _parse_tuple(tokens)
+    tokens = step(tokens, tuple.num_tokens())
     return FunctionCall(name=name, tuple=tuple)
 
 
@@ -228,6 +229,7 @@ def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
+    tokens = step(tokens, expression.num_tokens())
     return VariableDefinition(name=name, expression=expression)
 
 
@@ -243,6 +245,7 @@ def _parse_function_definition(tokens: TokenSlice) -> FunctionDefinition:
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
+    tokens = step(tokens, expression.num_tokens())
     return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
 
 
