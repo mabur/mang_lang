@@ -145,6 +145,9 @@ class TokenSlice:
     def front(self) -> str:
         return self.tokens[self.begin_index].value
 
+    def front_type(self) -> TokenType:
+        return self.tokens[self.begin_index].type
+
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
         if len(self.tokens) < self.begin_index + len(token_pattern):
             return False
@@ -197,11 +200,11 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple:
     expressions = ()
     _assert_token(tokens, expected=TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
-    while tokens.tokens[tokens.begin_index].type != TokenType.PARENTHESIS_END:
+    while tokens.front_type() != TokenType.PARENTHESIS_END:
         expression = parse_expression(tokens)
         expressions += (expression,)
         tokens = step(tokens, expression.num_tokens())
-        if tokens.tokens[tokens.begin_index].type == TokenType.COMMA:
+        if tokens.front_type() == TokenType.COMMA:
             _assert_token(tokens, expected=TokenType.COMMA)
             tokens = step(tokens, 1)
     _assert_token(tokens, expected=TokenType.PARENTHESIS_END)
