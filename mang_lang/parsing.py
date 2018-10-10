@@ -171,7 +171,7 @@ def parse_expression(tokens: TokenSlice) -> Expression:
         return _parse_function_definition(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
-        return _parse_function_call(tokens)
+        return _parse_function_call(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
         return _parse_tuple_indexing(tokens)
@@ -215,12 +215,12 @@ def _parse_tuple(tokens: TokenSlice) -> ExpressionTuple:
     return ExpressionTuple(expressions=expressions)
 
 
-def _parse_function_call(tokens: TokenSlice) -> FunctionCall:
+def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     name = tokens.front()
     tokens = step(tokens, 1)
     tuple = _parse_tuple(tokens)
     tokens = step(tokens, tuple.num_tokens())
-    return FunctionCall(name=name, tuple=tuple)
+    return (FunctionCall(name=name, tuple=tuple), tokens)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
