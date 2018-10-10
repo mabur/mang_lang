@@ -183,7 +183,7 @@ def parse_expression(tokens: TokenSlice) -> Expression:
        return _parse_variable_definition(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL]):
-        return _parse_constant(tokens)
+        return _parse_constant(tokens)[0]
 
     if tokens.do_match([TokenType.PARENTHESIS_BEGIN]):
         return _parse_tuple(tokens)[0]
@@ -195,8 +195,8 @@ def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
     return (Number(value=tokens.front()), step(tokens, 1))
 
 
-def _parse_constant(tokens: TokenSlice) -> Constant:
-    return Constant(name=tokens.front())
+def _parse_constant(tokens: TokenSlice) -> Tuple[Constant, TokenSlice]:
+    return (Constant(name=tokens.front()), step(tokens, 1))
 
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
@@ -251,7 +251,7 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
 
 
 def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice]:
-    constant = _parse_constant(tokens)
+    constant = _parse_constant(tokens)[0]
     tokens = step(tokens, constant.num_tokens())
     tokens.assert_front_type(TokenType.BRACKET_BEGIN)
     tokens = step(tokens, 1)
@@ -263,10 +263,10 @@ def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
-    tuple = _parse_constant(tokens)
+    tuple = _parse_constant(tokens)[0]
     tokens = step(tokens, tuple.num_tokens())
     tokens.assert_front_type(TokenType.DOT)
     tokens = step(tokens, 1)
-    symbol = _parse_constant(tokens)
+    symbol = _parse_constant(tokens)[0]
     tokens = step(tokens, symbol.num_tokens())
     return (DefinitionLookup(tuple=tuple, symbol=symbol), tokens)
