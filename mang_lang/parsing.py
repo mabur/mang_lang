@@ -156,9 +156,10 @@ class TokenSlice:
             enumerate(token_pattern))
 
 
-def _parse_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
+def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
     assert tokens.front() == expected.value[-1]
     return step(tokens, 1)
+
 
 def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
     return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
@@ -197,13 +198,13 @@ def _parse_constant(tokens: TokenSlice) -> Tuple[Constant, TokenSlice]:
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     expressions = ()
-    tokens = _parse_token(tokens, TokenType.PARENTHESIS_BEGIN)
+    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
     while tokens.front_type() != TokenType.PARENTHESIS_END:
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
         if tokens.front_type() == TokenType.COMMA:
-            tokens = _parse_token(tokens, TokenType.COMMA)
-    tokens = _parse_token(tokens, TokenType.PARENTHESIS_END)
+            tokens = _parse_known_token(tokens, TokenType.COMMA)
+    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
     return (ExpressionTuple(expressions=expressions), tokens)
 
 
@@ -217,7 +218,7 @@ def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
     name = tokens.front()
     tokens = step(tokens, 1)
-    tokens = _parse_token(tokens, TokenType.EQUAL)
+    tokens = _parse_known_token(tokens, TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
     return (VariableDefinition(name=name, expression=expression), tokens)
 
@@ -225,11 +226,11 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
     function_name = tokens.front()
     tokens = step(tokens, 1)
-    tokens = _parse_token(tokens, TokenType.PARENTHESIS_BEGIN)
+    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
     argument_name = tokens.front()
     tokens = step(tokens, 1)
-    tokens = _parse_token(tokens, TokenType.PARENTHESIS_END)
-    tokens = _parse_token(tokens, TokenType.EQUAL)
+    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
+    tokens = _parse_known_token(tokens, TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
     return (FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression),
             tokens)
@@ -237,14 +238,14 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
 
 def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice]:
     constant, tokens = _parse_constant(tokens)
-    tokens = _parse_token(tokens, TokenType.BRACKET_BEGIN)
+    tokens = _parse_known_token(tokens, TokenType.BRACKET_BEGIN)
     expression, tokens = parse_expression(tokens)
-    tokens = _parse_token(tokens, TokenType.BRACKET_END)
+    tokens = _parse_known_token(tokens, TokenType.BRACKET_END)
     return (TupleIndexing(constant=constant, index=expression), tokens)
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
     tuple, tokens = _parse_constant(tokens)
-    tokens = _parse_token(tokens, TokenType.DOT)
+    tokens = _parse_known_token(tokens, TokenType.DOT)
     symbol, tokens = _parse_constant(tokens)
     return (DefinitionLookup(tuple=tuple, symbol=symbol), tokens)
