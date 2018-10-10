@@ -21,7 +21,7 @@ class Expression:
         raise NotImplemented()
 
 
-class Tuple(Expression):
+class ExpressionTuple(Expression):
     def __init__(self, expressions: Sequence[Expression]) -> None:
         self.expressions = expressions
 
@@ -64,7 +64,7 @@ class Constant(Expression):
 
 
 class FunctionCall(Expression):
-    def __init__(self, name: str, tuple: Tuple) -> None:
+    def __init__(self, name: str, tuple: ExpressionTuple) -> None:
         self.name = name
         self.tuple = tuple
 
@@ -199,7 +199,7 @@ def _parse_constant(tokens: TokenSlice) -> Constant:
     return Constant(name=tokens.front())
 
 
-def _parse_tuple(tokens: TokenSlice) -> Tuple:
+def _parse_tuple(tokens: TokenSlice) -> ExpressionTuple:
     expressions = ()
     tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
@@ -212,7 +212,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple:
             tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.PARENTHESIS_END)
     tokens = step(tokens, 1)
-    return Tuple(expressions=expressions)
+    return ExpressionTuple(expressions=expressions)
 
 
 def _parse_function_call(tokens: TokenSlice) -> FunctionCall:
