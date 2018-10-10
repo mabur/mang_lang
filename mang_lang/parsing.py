@@ -185,13 +185,6 @@ def parse_expression(tokens: TokenSlice) -> Expression:
     raise ValueError('Bad token pattern: {}'.format(tokens.front()))
 
 
-def _do_tokens_match(tokens: TokenSlice, token_pattern: Sequence[Token])\
-        -> bool:
-    if len(tokens.tokens) < tokens.begin_index + len(token_pattern):
-        return False
-    return all(tokens.tokens[tokens.begin_index + i].type == token for i, token in enumerate(token_pattern))
-
-
 def _parse_number(tokens: TokenSlice) -> Number:
     return Number(value=tokens.front())
 
