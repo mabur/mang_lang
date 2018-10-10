@@ -180,7 +180,7 @@ def parse_expression(tokens: TokenSlice) -> Expression:
         return _parse_definition_lookup(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.EQUAL]):
-       return _parse_variable_definition(tokens)
+       return _parse_variable_definition(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL]):
         return _parse_constant(tokens)
@@ -223,14 +223,14 @@ def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     return (FunctionCall(name=name, tuple=tuple), tokens)
 
 
-def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
+def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
     name = tokens.front()
     tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
     tokens = step(tokens, expression.num_tokens())
-    return VariableDefinition(name=name, expression=expression)
+    return (VariableDefinition(name=name, expression=expression), tokens)
 
 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
