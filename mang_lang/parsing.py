@@ -168,7 +168,7 @@ def parse_expression(tokens: TokenSlice) -> Expression:
         return _parse_number(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
-        return _parse_function_definition(tokens)
+        return _parse_function_definition(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
         return _parse_function_call(tokens)
@@ -233,7 +233,7 @@ def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
     return VariableDefinition(name=name, expression=expression)
 
 
-def _parse_function_definition(tokens: TokenSlice) -> FunctionDefinition:
+def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
     function_name = tokens.front()
     tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
@@ -246,7 +246,8 @@ def _parse_function_definition(tokens: TokenSlice) -> FunctionDefinition:
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
     tokens = step(tokens, expression.num_tokens())
-    return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
+    return (FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression),
+            tokens)
 
 
 def _parse_tuple_indexing(tokens: TokenSlice) -> TupleIndexing:
