@@ -186,7 +186,7 @@ def parse_expression(tokens: TokenSlice) -> Expression:
         return _parse_constant(tokens)
 
     if tokens.do_match([TokenType.PARENTHESIS_BEGIN]):
-        return _parse_tuple(tokens)
+        return _parse_tuple(tokens)[0]
 
     raise ValueError('Bad token pattern: {}'.format(tokens.front()))
 
@@ -199,7 +199,7 @@ def _parse_constant(tokens: TokenSlice) -> Constant:
     return Constant(name=tokens.front())
 
 
-def _parse_tuple(tokens: TokenSlice) -> ExpressionTuple:
+def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     expressions = ()
     tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
@@ -212,13 +212,13 @@ def _parse_tuple(tokens: TokenSlice) -> ExpressionTuple:
             tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.PARENTHESIS_END)
     tokens = step(tokens, 1)
-    return ExpressionTuple(expressions=expressions)
+    return (ExpressionTuple(expressions=expressions), tokens)
 
 
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     name = tokens.front()
     tokens = step(tokens, 1)
-    tuple = _parse_tuple(tokens)
+    tuple = _parse_tuple(tokens)[0]
     tokens = step(tokens, tuple.num_tokens())
     return (FunctionCall(name=name, tuple=tuple), tokens)
 
