@@ -177,7 +177,7 @@ def parse_expression(tokens: TokenSlice) -> Expression:
         return _parse_tuple_indexing(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
-        return _parse_definition_lookup(tokens)
+        return _parse_definition_lookup(tokens)[0]
 
     if tokens.do_match([TokenType.SYMBOL, TokenType.EQUAL]):
        return _parse_variable_definition(tokens)
@@ -262,11 +262,11 @@ def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice
     return (TupleIndexing(constant=constant, index=expression), tokens)
 
 
-def _parse_definition_lookup(tokens: TokenSlice) -> DefinitionLookup:
+def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
     tuple = _parse_constant(tokens)
     tokens = step(tokens, tuple.num_tokens())
     tokens.assert_front_type(TokenType.DOT)
     tokens = step(tokens, 1)
     symbol = _parse_constant(tokens)
     tokens = step(tokens, symbol.num_tokens())
-    return DefinitionLookup(tuple=tuple, symbol=symbol)
+    return (DefinitionLookup(tuple=tuple, symbol=symbol), tokens)
