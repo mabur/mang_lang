@@ -199,8 +199,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
     while tokens.front_type() != TokenType.PARENTHESIS_END:
-        expression = parse_expression(tokens)[0]
-        tokens = step(tokens, expression.num_tokens())
+        expression, tokens = parse_expression(tokens)
         expressions += (expression,)
         if tokens.front_type() == TokenType.COMMA:
             tokens.assert_front_type(TokenType.COMMA)
@@ -213,8 +212,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     name = tokens.front()
     tokens = step(tokens, 1)
-    tuple = _parse_tuple(tokens)[0]
-    tokens = step(tokens, tuple.num_tokens())
+    tuple, tokens = _parse_tuple(tokens)
     return (FunctionCall(name=name, tuple=tuple), tokens)
 
 
@@ -223,8 +221,7 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
     tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
-    expression = parse_expression(tokens)[0]
-    tokens = step(tokens, expression.num_tokens())
+    expression, tokens = parse_expression(tokens)
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
@@ -239,29 +236,24 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
     tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
-    expression = parse_expression(tokens)[0]
-    tokens = step(tokens, expression.num_tokens())
+    expression, tokens = parse_expression(tokens)
     return (FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression),
             tokens)
 
 
 def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice]:
-    constant = _parse_constant(tokens)[0]
-    tokens = step(tokens, constant.num_tokens())
+    constant, tokens = _parse_constant(tokens)
     tokens.assert_front_type(TokenType.BRACKET_BEGIN)
     tokens = step(tokens, 1)
-    expression = parse_expression(tokens)[0]
-    tokens = step(tokens, expression.num_tokens())
+    expression, tokens = parse_expression(tokens)
     tokens.assert_front_type(TokenType.BRACKET_END)
     tokens = step(tokens, 1)
     return (TupleIndexing(constant=constant, index=expression), tokens)
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
-    tuple = _parse_constant(tokens)[0]
-    tokens = step(tokens, tuple.num_tokens())
+    tuple, tokens = _parse_constant(tokens)
     tokens.assert_front_type(TokenType.DOT)
     tokens = step(tokens, 1)
-    symbol = _parse_constant(tokens)[0]
-    tokens = step(tokens, symbol.num_tokens())
+    symbol, tokens = _parse_constant(tokens)
     return (DefinitionLookup(tuple=tuple, symbol=symbol), tokens)
