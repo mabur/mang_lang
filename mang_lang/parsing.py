@@ -193,11 +193,13 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
-    return (Number(value=tokens.front()), step(tokens, 1))
+    value, tokens = _parse_token(tokens)
+    return (Number(value), tokens)
 
 
 def _parse_constant(tokens: TokenSlice) -> Tuple[Constant, TokenSlice]:
-    return (Constant(name=tokens.front()), step(tokens, 1))
+    name, tokens = _parse_token(tokens)
+    return (Constant(name), tokens)
 
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
