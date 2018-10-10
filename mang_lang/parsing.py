@@ -163,32 +163,27 @@ def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
     return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
 
 
-def parse_expression(tokens: TokenSlice) -> Expression:
+def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
     if tokens.do_match([TokenType.NUMBER]):
-        return _parse_number(tokens)[0]
-
-    if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
-        return _parse_function_definition(tokens)[0]
-
-    if tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
-        return _parse_function_call(tokens)[0]
-
-    if tokens.do_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
-        return _parse_tuple_indexing(tokens)[0]
-
-    if tokens.do_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
-        return _parse_definition_lookup(tokens)[0]
-
-    if tokens.do_match([TokenType.SYMBOL, TokenType.EQUAL]):
-       return _parse_variable_definition(tokens)[0]
-
-    if tokens.do_match([TokenType.SYMBOL]):
-        return _parse_constant(tokens)[0]
-
-    if tokens.do_match([TokenType.PARENTHESIS_BEGIN]):
-        return _parse_tuple(tokens)[0]
-
-    raise ValueError('Bad token pattern: {}'.format(tokens.front()))
+        expression = _parse_number(tokens)[0]
+    elif tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
+        expression = _parse_function_definition(tokens)[0]
+    elif tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
+        expression = _parse_function_call(tokens)[0]
+    elif tokens.do_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
+        expression = _parse_tuple_indexing(tokens)[0]
+    elif tokens.do_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
+        expression = _parse_definition_lookup(tokens)[0]
+    elif tokens.do_match([TokenType.SYMBOL, TokenType.EQUAL]):
+        expression = _parse_variable_definition(tokens)[0]
+    elif tokens.do_match([TokenType.SYMBOL]):
+        expression = _parse_constant(tokens)[0]
+    elif tokens.do_match([TokenType.PARENTHESIS_BEGIN]):
+        expression = _parse_tuple(tokens)[0]
+    else:
+        raise ValueError('Bad token pattern: {}'.format(tokens.front()))
+    tokens = step(tokens, expression.num_tokens())
+    return (expression, tokens)
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
@@ -204,7 +199,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
     while tokens.front_type() != TokenType.PARENTHESIS_END:
-        expression = parse_expression(tokens)
+        expression = parse_expression(tokens)[0]
         tokens = step(tokens, expression.num_tokens())
         expressions += (expression,)
         if tokens.front_type() == TokenType.COMMA:
@@ -228,7 +223,7 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
     tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
-    expression = parse_expression(tokens)
+    expression = parse_expression(tokens)[0]
     tokens = step(tokens, expression.num_tokens())
     return (VariableDefinition(name=name, expression=expression), tokens)
 
@@ -244,7 +239,7 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
     tokens = step(tokens, 1)
     tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
-    expression = parse_expression(tokens)
+    expression = parse_expression(tokens)[0]
     tokens = step(tokens, expression.num_tokens())
     return (FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression),
             tokens)
@@ -255,7 +250,7 @@ def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice
     tokens = step(tokens, constant.num_tokens())
     tokens.assert_front_type(TokenType.BRACKET_BEGIN)
     tokens = step(tokens, 1)
-    expression = parse_expression(tokens)
+    expression = parse_expression(tokens)[0]
     tokens = step(tokens, expression.num_tokens())
     tokens.assert_front_type(TokenType.BRACKET_END)
     tokens = step(tokens, 1)
