@@ -155,6 +155,9 @@ class TokenSlice:
             self.tokens[self.begin_index + i].type == token for i, token in
             enumerate(token_pattern))
 
+    def assert_front_type(self, expected: TokenType) -> None:
+        assert self.front() == expected.value[-1]
+
 
 def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
     return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
@@ -198,16 +201,16 @@ def _parse_constant(tokens: TokenSlice) -> Constant:
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple:
     expressions = ()
-    _assert_token(tokens, expected=TokenType.PARENTHESIS_BEGIN)
+    tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
     while tokens.front_type() != TokenType.PARENTHESIS_END:
         expression = parse_expression(tokens)
         expressions += (expression,)
         tokens = step(tokens, expression.num_tokens())
         if tokens.front_type() == TokenType.COMMA:
-            _assert_token(tokens, expected=TokenType.COMMA)
+            tokens.assert_front_type(TokenType.COMMA)
             tokens = step(tokens, 1)
-    _assert_token(tokens, expected=TokenType.PARENTHESIS_END)
+    tokens.assert_front_type(TokenType.PARENTHESIS_END)
     tokens = step(tokens, 1)
     return Tuple(expressions=expressions)
 
@@ -215,14 +218,14 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple:
 def _parse_function_call(tokens: TokenSlice) -> FunctionCall:
     name = tokens.front()
     tokens = step(tokens, 1)
-    tuple =  _parse_tuple(tokens)
+    tuple = _parse_tuple(tokens)
     return FunctionCall(name=name, tuple=tuple)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
     name = tokens.front()
     tokens = step(tokens, 1)
-    _assert_token(tokens, expected=TokenType.EQUAL)
+    tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
     return VariableDefinition(name=name, expression=expression)
@@ -231,13 +234,13 @@ def _parse_variable_definition(tokens: TokenSlice) -> VariableDefinition:
 def _parse_function_definition(tokens: TokenSlice) -> FunctionDefinition:
     function_name = tokens.front()
     tokens = step(tokens, 1)
-    _assert_token(tokens, expected=TokenType.PARENTHESIS_BEGIN)
+    tokens.assert_front_type(TokenType.PARENTHESIS_BEGIN)
     tokens = step(tokens, 1)
     argument_name = tokens.front()
     tokens = step(tokens, 1)
-    _assert_token(tokens, expected=TokenType.PARENTHESIS_END)
+    tokens.assert_front_type(TokenType.PARENTHESIS_END)
     tokens = step(tokens, 1)
-    _assert_token(tokens, expected=TokenType.EQUAL)
+    tokens.assert_front_type(TokenType.EQUAL)
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
     return FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression)
@@ -246,11 +249,11 @@ def _parse_function_definition(tokens: TokenSlice) -> FunctionDefinition:
 def _parse_tuple_indexing(tokens: TokenSlice) -> TupleIndexing:
     constant = _parse_constant(tokens)
     tokens = step(tokens, constant.num_tokens())
-    _assert_token(tokens, expected=TokenType.BRACKET_BEGIN)
+    tokens.assert_front_type(TokenType.BRACKET_BEGIN)
     tokens = step(tokens, 1)
     expression = parse_expression(tokens)
     tokens = step(tokens, expression.num_tokens())
-    _assert_token(tokens, expected=TokenType.BRACKET_END)
+    tokens.assert_front_type(TokenType.BRACKET_END)
     tokens = step(tokens, 1)
     return TupleIndexing(constant=constant, index=expression)
 
@@ -258,12 +261,8 @@ def _parse_tuple_indexing(tokens: TokenSlice) -> TupleIndexing:
 def _parse_definition_lookup(tokens: TokenSlice) -> DefinitionLookup:
     tuple = _parse_constant(tokens)
     tokens = step(tokens, tuple.num_tokens())
-    _assert_token(tokens, expected=TokenType.DOT)
+    tokens.assert_front_type(TokenType.DOT)
     tokens = step(tokens, 1)
     symbol = _parse_constant(tokens)
     tokens = step(tokens, symbol.num_tokens())
     return DefinitionLookup(tuple=tuple, symbol=symbol)
-
-
-def _assert_token(tokens: TokenSlice, expected: TokenType) -> None:
-    assert tokens.front() == expected.value[-1]
