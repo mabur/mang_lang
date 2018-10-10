@@ -6,7 +6,7 @@
 # function_call = symbol, array
 
 from copy import deepcopy
-from typing import Any, Mapping, Sequence, Tuple
+from typing import Any, Callable, Mapping, Sequence, Tuple
 from lexing import Token, TokenType
 
 
@@ -156,6 +156,14 @@ class TokenSlice:
             enumerate(token_pattern))
 
 
+class ParsePattern:
+    def __init__(self,
+                 parse_function: Callable[[TokenSlice], Tuple[Expression, TokenSlice]],
+                 pattern: Sequence[TokenType]) -> None:
+        self.parse_function = parse_function
+        self.pattern = pattern
+
+
 def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
     return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + num_steps)
 
@@ -170,25 +178,21 @@ def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
-    if tokens.do_match([TokenType.NUMBER]):
-        expression, tokens = _parse_number(tokens)
-    elif tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]):
-        expression, tokens = _parse_function_definition(tokens)
-    elif tokens.do_match([TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]):
-        expression, tokens = _parse_function_call(tokens)
-    elif tokens.do_match([TokenType.SYMBOL, TokenType.BRACKET_BEGIN]):
-        expression, tokens = _parse_tuple_indexing(tokens)
-    elif tokens.do_match([TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]):
-        expression, tokens = _parse_definition_lookup(tokens)
-    elif tokens.do_match([TokenType.SYMBOL, TokenType.EQUAL]):
-        expression, tokens = _parse_variable_definition(tokens)
-    elif tokens.do_match([TokenType.SYMBOL]):
-        expression, tokens = _parse_constant(tokens)
-    elif tokens.do_match([TokenType.PARENTHESIS_BEGIN]):
-        expression, tokens = _parse_tuple(tokens)
-    else:
-        raise ValueError('Bad token pattern: {}'.format(tokens.front()))
-    return (expression, tokens)
+    PARSE_PATTERNS = [
+        ParsePattern(_parse_number, [TokenType.NUMBER]),
+        ParsePattern(_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]),
+        ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
+        ParsePattern(_parse_tuple_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
+        ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]),
+        ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
+        ParsePattern(_parse_constant, [TokenType.SYMBOL]),
+        ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN])]
+
+    for parse_pattern in PARSE_PATTERNS:
+        if tokens.do_match(parse_pattern.pattern):
+            return parse_pattern.parse_function(tokens)
+
+    raise ValueError('Bad token pattern: {}'.format(tokens.front()))
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
