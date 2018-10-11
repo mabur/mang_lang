@@ -142,11 +142,8 @@ class TokenSlice:
         self.tokens = tokens
         self.begin_index = begin_index
 
-    def front(self) -> str:
-        return self.tokens[self.begin_index].value
-
-    def front_type(self) -> TokenType:
-        return self.tokens[self.begin_index].type
+    def front(self) -> Token:
+        return self.tokens[self.begin_index]
 
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
         if len(self.tokens) < self.begin_index + len(token_pattern):
@@ -169,12 +166,12 @@ def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
 
 
 def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
-    assert tokens.front() == expected.value[-1]
+    assert tokens.front().value == expected.value[-1]
     return step(tokens, 1)
 
 
 def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
-    return (tokens.front(), step(tokens, 1))
+    return (tokens.front().value, step(tokens, 1))
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
@@ -192,7 +189,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         if tokens.do_match(parse_pattern.pattern):
             return parse_pattern.parse_function(tokens)
 
-    raise ValueError('Bad token pattern: {}'.format(tokens.front()))
+    raise ValueError('Bad token pattern: {}'.format(tokens.front().value))
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
@@ -208,10 +205,10 @@ def _parse_constant(tokens: TokenSlice) -> Tuple[Constant, TokenSlice]:
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     expressions = ()
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
-    while tokens.front_type() != TokenType.PARENTHESIS_END:
+    while tokens.front().type != TokenType.PARENTHESIS_END:
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
-        if tokens.front_type() == TokenType.COMMA:
+        if tokens.front().type == TokenType.COMMA:
             tokens = _parse_known_token(tokens, TokenType.COMMA)
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
     return (ExpressionTuple(expressions=expressions), tokens)
