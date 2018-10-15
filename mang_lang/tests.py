@@ -43,19 +43,34 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(1, interpret('if_then_else(-1, 1, 2)'))
 
 
-class TestBuiltinFunctionsLogical(unittest.TestCase):
+class TestAnd(unittest.TestCase):
 
-    def test_and0(self):
+    def test0(self):
         self.assertEqual(1, interpret('and(1, 1)'))
 
-    def test_and1(self):
+    def test1(self):
         self.assertEqual(0, interpret('and(0, 1)'))
 
-    def test_and2(self):
+    def test2(self):
         self.assertEqual(0, interpret('and(1, 0)'))
 
-    def test_and3(self):
+    def test3(self):
         self.assertEqual(0, interpret('and(0, 0)'))
+
+
+class TestOr(unittest.TestCase):
+
+    def test0(self):
+        self.assertEqual(1, interpret('or(1, 1)'))
+
+    def test1(self):
+        self.assertEqual(1, interpret('or(0, 1)'))
+
+    def test2(self):
+        self.assertEqual(1, interpret('or(1, 0)'))
+
+    def test3(self):
+        self.assertEqual(0, interpret('or(0, 0)'))
 
 
 class TestExpression(unittest.TestCase):
