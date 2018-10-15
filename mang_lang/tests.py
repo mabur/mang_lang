@@ -73,6 +73,15 @@ class TestOr(unittest.TestCase):
         self.assertEqual(0, interpret('or(0, 0)'))
 
 
+class TestNot(unittest.TestCase):
+
+    def test0(self):
+        self.assertEqual(0, interpret('not(1)'))
+
+    def test1(self):
+        self.assertEqual(1, interpret('not(0)'))
+
+
 class TestExpression(unittest.TestCase):
     def test_composition(self):
         self.assertEqual(12, interpret('add(sub(5, 3), mul(2, 5))'))

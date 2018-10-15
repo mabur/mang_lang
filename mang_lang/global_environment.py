@@ -37,6 +37,10 @@ def logical_or(x: Tuple) -> float:
     return float(x[0] != 0 or x[1] != 0)
 
 
+def logical_not(x: float) -> float:
+    return float(not(x != 0))
+
+
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div,
                'if_then_else': if_then_else, 'and': logical_and,
-               'or': logical_or}
+               'or': logical_or, 'not': logical_not}
