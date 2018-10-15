@@ -43,6 +43,21 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(1, interpret('if_then_else(-1, 1, 2)'))
 
 
+class TestBuiltinFunctionsLogical(unittest.TestCase):
+
+    def test_and0(self):
+        self.assertEqual(1, interpret('and(1, 1)'))
+
+    def test_and1(self):
+        self.assertEqual(0, interpret('and(0, 1)'))
+
+    def test_and2(self):
+        self.assertEqual(0, interpret('and(1, 0)'))
+
+    def test_and3(self):
+        self.assertEqual(0, interpret('and(0, 0)'))
+
+
 class TestExpression(unittest.TestCase):
     def test_composition(self):
         self.assertEqual(12, interpret('add(sub(5, 3), mul(2, 5))'))

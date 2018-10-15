@@ -29,5 +29,9 @@ def if_then_else(x: Tuple):
     return true_expression if condition != 0 else false_expression
 
 
+def logical_and(x: Tuple) -> float:
+    return float(x[0] != 0 and x[1] != 0)
+
+
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div,
-               'if_then_else': if_then_else}
+               'if_then_else': if_then_else, 'and': logical_and}
