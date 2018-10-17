@@ -14,8 +14,6 @@ Environment = Mapping[str, Any]
 
 
 class Expression:
-    def num_tokens(self) -> int:
-        raise NotImplemented()
 
     def evaluate(self, environment: Environment):
         raise NotImplemented()
@@ -25,8 +23,6 @@ class ExpressionTuple(Expression):
     def __init__(self, expressions: Sequence[Expression]) -> None:
         self.expressions = expressions
 
-    def num_tokens(self) -> int:
-        return 1 + sum(e.num_tokens() + 1 for e in self.expressions)
 
     def evaluate(self, environment: Environment):
         value = ()
@@ -45,8 +41,6 @@ class Number(Expression):
     def __init__(self, value: str) -> None:
         self.value = value
 
-    def num_tokens(self) -> int:
-        return 1
 
     def evaluate(self, environment: Environment):
         return float(self.value)
@@ -56,8 +50,6 @@ class Constant(Expression):
     def __init__(self, name: str) -> None:
         self.name = name
 
-    def num_tokens(self) -> int:
-        return 1
 
     def evaluate(self, environment: Environment):
         return environment[self.name]
@@ -68,8 +60,6 @@ class FunctionCall(Expression):
         self.name = name
         self.tuple = tuple
 
-    def num_tokens(self) -> int:
-        return 1 + self.tuple.num_tokens()
 
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
@@ -89,8 +79,6 @@ class VariableDefinition(Expression):
         self.name = name
         self.expression = expression
 
-    def num_tokens(self) -> int:
-        return 2 + self.expression.num_tokens()
 
     def evaluate(self, environment: Environment):
         return (self.name, self.expression.evaluate(environment))
@@ -102,8 +90,6 @@ class FunctionDefinition(Expression):
         self.argument_name = argument_name
         self.expression = expression
 
-    def num_tokens(self) -> int:
-        return 5 + self.expression.num_tokens()
 
     def evaluate(self, environment: Environment):
         return (self.function_name, self.argument_name, self.expression)
@@ -114,8 +100,6 @@ class TupleIndexing(Expression):
         self.constant = constant
         self.index = index
 
-    def num_tokens(self) -> int:
-        return self.constant.num_tokens() + 1 + self.index.num_tokens() + 1
 
     def evaluate(self, environment: Environment):
         constant = self.constant.evaluate(environment)
@@ -128,8 +112,6 @@ class DefinitionLookup(Expression):
         self.tuple = tuple
         self.symbol = symbol
 
-    def num_tokens(self) -> int:
-        return self.tuple.num_tokens() + 1 + self.symbol.num_tokens()
 
     def evaluate(self, environment: Environment):
         tuple = environment[self.tuple.name]
