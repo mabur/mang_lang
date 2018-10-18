@@ -11,9 +11,11 @@ from lexing import Token, TokenType
 
 
 Environment = Mapping[str, Any]
-
+Json = Any
 
 class Expression:
+    def to_json(self) -> Json:
+        raise NotImplemented
 
     def evaluate(self, environment: Environment):
         raise NotImplemented()
@@ -23,6 +25,9 @@ class ExpressionTuple(Expression):
     def __init__(self, expressions: Sequence[Expression]) -> None:
         self.expressions = expressions
 
+    def to_json(self) -> Json:
+        return {"type": "expression_tuple",
+                "expressions": [e.to_json() for e in self.expressions]}
 
     def evaluate(self, environment: Environment):
         value = ()
@@ -41,6 +46,9 @@ class Number(Expression):
     def __init__(self, value: str) -> None:
         self.value = value
 
+    def to_json(self) -> Json:
+        return {"type": "number",
+                "value": self.value}
 
     def evaluate(self, environment: Environment):
         return float(self.value)
@@ -50,6 +58,8 @@ class Reference(Expression):
     def __init__(self, name: str) -> None:
         self.name = name
 
+    def to_json(self) -> Json:
+        return {"type": "reference", "name": self.name}
 
     def evaluate(self, environment: Environment):
         return environment[self.name]
@@ -60,6 +70,10 @@ class FunctionCall(Expression):
         self.function = function
         self.tuple = tuple
 
+    def to_json(self) -> Json:
+        return {"type": "function_call",
+                "function": self.function.to_json(),
+                "tuple": self.tuple.to_json()}
 
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
@@ -79,6 +93,10 @@ class VariableDefinition(Expression):
         self.name = name
         self.expression = expression
 
+    def to_json(self) -> Json:
+        return {"type": "variable_definition",
+                "name": self.name,
+                "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
         return (self.name, self.expression.evaluate(environment))
@@ -90,6 +108,11 @@ class FunctionDefinition(Expression):
         self.argument_name = argument_name
         self.expression = expression
 
+    def to_json(self) -> Json:
+        return {"type": "function_definition",
+                "function_name": self.function_name,
+                "argument_name": self.argument_name,
+                "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
         return (self.function_name, self.argument_name, self.expression)
@@ -100,6 +123,10 @@ class TupleIndexing(Expression):
         self.reference = reference
         self.index = index
 
+    def to_json(self) -> Json:
+        return {"type": "tuple_indexing",
+                "reference": self.reference.to_json(),
+                "index": self.index.to_json()}
 
     def evaluate(self, environment: Environment):
         tuple = self.reference.evaluate(environment)
@@ -112,6 +139,10 @@ class DefinitionLookup(Expression):
         self.parent = parent
         self.child = child
 
+    def to_json(self) -> Json:
+        return {"type": "definition_lookup",
+                "parent": self.parent.to_json(),
+                "child": self.child.to_json()}
 
     def evaluate(self, environment: Environment):
         tuple = self.parent.evaluate(environment)
