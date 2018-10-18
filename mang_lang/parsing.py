@@ -164,7 +164,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_tuple_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
         ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]),
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
-        ParsePattern(_parse_constant, [TokenType.SYMBOL]),
+        ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN])]
 
     for parse_pattern in PARSE_PATTERNS:
@@ -179,7 +179,7 @@ def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
     return (Number(value), tokens)
 
 
-def _parse_constant(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
+def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
     name, tokens = _parse_token(tokens)
     return (Reference(name), tokens)
 
@@ -197,9 +197,9 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
 
 
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
-    name, tokens = _parse_constant(tokens)
+    function, tokens = _parse_reference(tokens)
     tuple, tokens = _parse_tuple(tokens)
-    return (FunctionCall(name=name, tuple=tuple), tokens)
+    return (FunctionCall(name=function, tuple=tuple), tokens)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
@@ -221,15 +221,15 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
 
 
 def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice]:
-    constant, tokens = _parse_constant(tokens)
+    tuple, tokens = _parse_reference(tokens)
     tokens = _parse_known_token(tokens, TokenType.BRACKET_BEGIN)
     expression, tokens = parse_expression(tokens)
     tokens = _parse_known_token(tokens, TokenType.BRACKET_END)
-    return (TupleIndexing(reference=constant, index=expression), tokens)
+    return (TupleIndexing(reference=tuple, index=expression), tokens)
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
-    tuple, tokens = _parse_constant(tokens)
+    parent, tokens = _parse_reference(tokens)
     tokens = _parse_known_token(tokens, TokenType.DOT)
-    symbol, tokens = _parse_constant(tokens)
-    return (DefinitionLookup(parent=tuple, child=symbol), tokens)
+    child, tokens = _parse_reference(tokens)
+    return (DefinitionLookup(parent=parent, child=child), tokens)
