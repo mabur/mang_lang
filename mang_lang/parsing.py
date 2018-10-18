@@ -56,7 +56,7 @@ class Constant(Expression):
 
 
 class FunctionCall(Expression):
-    def __init__(self, name: str, tuple: ExpressionTuple) -> None:
+    def __init__(self, name: Constant, tuple: ExpressionTuple) -> None:
         self.name = name
         self.tuple = tuple
 
@@ -65,7 +65,7 @@ class FunctionCall(Expression):
         input = self.tuple.evaluate(environment)
         if len(input) == 1:
             input = input[0]
-        function = environment[self.name]
+        function = self.name.evaluate(environment)
         if isinstance(function, Expression):
             # Todo: add argument definition to environment
             new_environment = deepcopy(environment)
@@ -197,7 +197,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
 
 
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
-    name, tokens = _parse_token(tokens)
+    name, tokens = _parse_constant(tokens)
     tuple, tokens = _parse_tuple(tokens)
     return (FunctionCall(name=name, tuple=tuple), tokens)
 
