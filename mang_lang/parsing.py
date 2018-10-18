@@ -46,7 +46,7 @@ class Number(Expression):
         return float(self.value)
 
 
-class Constant(Expression):
+class Reference(Expression):
     def __init__(self, name: str) -> None:
         self.name = name
 
@@ -56,7 +56,7 @@ class Constant(Expression):
 
 
 class FunctionCall(Expression):
-    def __init__(self, name: Constant, tuple: ExpressionTuple) -> None:
+    def __init__(self, name: Reference, tuple: ExpressionTuple) -> None:
         self.name = name
         self.tuple = tuple
 
@@ -96,26 +96,26 @@ class FunctionDefinition(Expression):
 
 
 class TupleIndexing(Expression):
-    def __init__(self, constant: Constant, index: Expression) -> None:
-        self.constant = constant
+    def __init__(self, reference: Reference, index: Expression) -> None:
+        self.reference = reference
         self.index = index
 
 
     def evaluate(self, environment: Environment):
-        constant = self.constant.evaluate(environment)
+        tuple = self.reference.evaluate(environment)
         index = int(self.index.evaluate(environment))
-        return constant[index]
+        return tuple[index]
 
 
 class DefinitionLookup(Expression):
-    def __init__(self, tuple: Constant, symbol: Constant) -> None:
-        self.tuple = tuple
-        self.symbol = symbol
+    def __init__(self, parent: Reference, child: Reference) -> None:
+        self.parent = parent
+        self.child = child
 
 
     def evaluate(self, environment: Environment):
-        tuple = environment[self.tuple.name]
-        return next(e[1] for e in tuple if e[0] == self.symbol.name)
+        tuple = self.parent.evaluate(environment)
+        return next(e[1] for e in tuple if e[0] == self.child.name)
 
 
 class TokenSlice:
@@ -179,9 +179,9 @@ def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
     return (Number(value), tokens)
 
 
-def _parse_constant(tokens: TokenSlice) -> Tuple[Constant, TokenSlice]:
+def _parse_constant(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
     name, tokens = _parse_token(tokens)
-    return (Constant(name), tokens)
+    return (Reference(name), tokens)
 
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
@@ -225,11 +225,11 @@ def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice
     tokens = _parse_known_token(tokens, TokenType.BRACKET_BEGIN)
     expression, tokens = parse_expression(tokens)
     tokens = _parse_known_token(tokens, TokenType.BRACKET_END)
-    return (TupleIndexing(constant=constant, index=expression), tokens)
+    return (TupleIndexing(reference=constant, index=expression), tokens)
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
     tuple, tokens = _parse_constant(tokens)
     tokens = _parse_known_token(tokens, TokenType.DOT)
     symbol, tokens = _parse_constant(tokens)
-    return (DefinitionLookup(tuple=tuple, symbol=symbol), tokens)
+    return (DefinitionLookup(parent=tuple, child=symbol), tokens)
