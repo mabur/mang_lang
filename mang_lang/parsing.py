@@ -44,14 +44,14 @@ class ExpressionTuple(Expression):
 
 class Number(Expression):
     def __init__(self, value: str) -> None:
-        self.value = value
+        self.value = float(value)
 
     def to_json(self) -> Json:
         return {"type": "number",
                 "value": self.value}
 
     def evaluate(self, environment: Environment):
-        return float(self.value)
+        return self.value
 
 
 class Reference(Expression):
