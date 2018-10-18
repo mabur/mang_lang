@@ -56,8 +56,8 @@ class Reference(Expression):
 
 
 class FunctionCall(Expression):
-    def __init__(self, name: Reference, tuple: ExpressionTuple) -> None:
-        self.name = name
+    def __init__(self, function: Reference, tuple: ExpressionTuple) -> None:
+        self.function = function
         self.tuple = tuple
 
 
@@ -65,7 +65,7 @@ class FunctionCall(Expression):
         input = self.tuple.evaluate(environment)
         if len(input) == 1:
             input = input[0]
-        function = self.name.evaluate(environment)
+        function = self.function.evaluate(environment)
         if isinstance(function, Expression):
             # Todo: add argument definition to environment
             new_environment = deepcopy(environment)
@@ -199,7 +199,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     function, tokens = _parse_reference(tokens)
     tuple, tokens = _parse_tuple(tokens)
-    return (FunctionCall(name=function, tuple=tuple), tokens)
+    return (FunctionCall(function=function, tuple=tuple), tokens)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
