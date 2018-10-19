@@ -6,11 +6,11 @@
 # function_call = symbol, array
 
 from copy import deepcopy
-from typing import Any, Callable, Mapping, Sequence, Tuple
+from typing import Any, Callable, MutableMapping, Sequence, Tuple
 from lexing import Token, TokenType
 
 
-Environment = Mapping[str, Any]
+Environment = MutableMapping[str, Any]
 Json = Any
 
 class Expression:
