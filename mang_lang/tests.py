@@ -25,7 +25,6 @@ class TestArray(unittest.TestCase):
 
 
 class TestBuiltinFunctions(unittest.TestCase):
-
     def test_add(self):
         self.assertEqual(V(8), interpret('add(5, 3)'))
 
@@ -47,6 +46,7 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_if_then_else_true2(self):
         self.assertEqual(V(1), interpret('if -1 then 1 else 2'))
 
+
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
         code = '(f(x) = if equal(x, 0) then 1 else mul(x, f(sub(x, 1))), f(10))'
@@ -54,7 +54,6 @@ class TestRecursion(unittest.TestCase):
 
 
 class TestAnd(unittest.TestCase):
-
     def test0(self):
         self.assertEqual(V(1), interpret('and(1, 1)'))
 
@@ -69,7 +68,6 @@ class TestAnd(unittest.TestCase):
 
 
 class TestOr(unittest.TestCase):
-
     def test0(self):
         self.assertEqual(V(1), interpret('or(1, 1)'))
 
@@ -84,7 +82,6 @@ class TestOr(unittest.TestCase):
 
 
 class TestNot(unittest.TestCase):
-
     def test0(self):
         self.assertEqual(V(0), interpret('not(1)'))
 
@@ -93,7 +90,6 @@ class TestNot(unittest.TestCase):
 
 
 class TestEqual(unittest.TestCase):
-
     def test0(self):
         self.assertEqual(V(1), interpret('equal(1, 1)'))
 
@@ -226,6 +222,7 @@ class TestFunctionDefinition(unittest.TestCase):
         actual = interpret('(f(x) = add(x), f(2,3))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
+
 
 if __name__ == '__main__':
     unittest.main()
