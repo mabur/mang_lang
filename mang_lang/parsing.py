@@ -51,7 +51,6 @@ class Number(Expression):
 
     def evaluate(self, environment: Environment):
         return self.to_json()
-        #return self.value
 
 
 class Reference(Expression):
@@ -72,8 +71,8 @@ class FunctionCall(Expression):
 
     def to_json(self) -> Json:
         return {"type": "function_call",
-                "function": self.function.to_json(),
-                "tuple": self.tuple.to_json()}
+                "function_name": self.function.to_json()['name'],
+                "input": self.tuple.to_json()}
 
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
@@ -125,7 +124,7 @@ class TupleIndexing(Expression):
 
     def to_json(self) -> Json:
         return {"type": "tuple_indexing",
-                "reference": self.reference.to_json(),
+                "reference_name": self.reference.to_json()['name'],
                 "index": self.index.to_json()}
 
     def evaluate(self, environment: Environment):
