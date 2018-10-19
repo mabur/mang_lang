@@ -72,7 +72,6 @@ class FunctionCall(Expression):
             input = input[0]
         function = self.function.evaluate(environment)
         if isinstance(function, Expression):
-            # Todo: add argument definition to environment
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             return function.expression.evaluate(new_environment)
@@ -90,7 +89,6 @@ class VariableDefinition(Expression):
                 "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
-        #return (self.name, self.expression.evaluate(environment))
         value = self.expression.evaluate(environment)
         environment[self.name] = value
         return {"type": "variable_definition",
