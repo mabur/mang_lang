@@ -144,6 +144,26 @@ class DefinitionLookup(Expression):
         return next(e['value'] for e in tuple if e['name'] == self.child.name)
 
 
+class Conditional(Expression):
+    def __init__(self, condition: Expression, then_expression: Expression,
+                 else_expression: Expression) -> None:
+        self.condition = condition
+        self.then_expression = then_expression
+        self.else_expression = else_expression
+
+    def to_json(self) -> Json:
+        return {"type": "conditional",
+                "condition": self.condition.to_json(),
+                "then_expression": self.then_expression.to_json(),
+                "else_expression": self.else_expression.to_json()}
+
+    def evaluate(self, environment: Environment):
+        if self.condition.evaluate(environment)['value']:
+            return self.then_expression.evaluate(environment)
+        else:
+            return self.else_expression.evaluate(environment)
+
+
 class TokenSlice:
     def __init__(self, tokens: Sequence[Token], begin_index: int = 0):
         assert begin_index <= len(tokens)
@@ -174,7 +194,7 @@ def step(tokens: TokenSlice, num_steps: int) -> TokenSlice:
 
 
 def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
-    assert tokens.front().value == expected.value[-1]
+    assert tokens.front().value == expected.value.replace('\\', '')
     return step(tokens, 1)
 
 
@@ -191,7 +211,8 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]),
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
-        ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN])]
+        ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
+        ParsePattern(_parse_conditional, [TokenType.IF])]
 
     for parse_pattern in PARSE_PATTERNS:
         if tokens.do_match(parse_pattern.pattern):
@@ -259,3 +280,14 @@ def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, Toke
     tokens = _parse_known_token(tokens, TokenType.DOT)
     child, tokens = _parse_reference(tokens)
     return (DefinitionLookup(parent=parent, child=child), tokens)
+
+
+def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
+    tokens = _parse_known_token(tokens, TokenType.IF)
+    condition, tokens = parse_expression(tokens)
+    tokens = _parse_known_token(tokens, TokenType.THEN)
+    then_expression, tokens = parse_expression(tokens)
+    tokens = _parse_known_token(tokens, TokenType.ELSE)
+    else_expression, tokens = parse_expression(tokens)
+    return (Conditional(condition=condition, then_expression=then_expression,
+                        else_expression=else_expression), tokens)

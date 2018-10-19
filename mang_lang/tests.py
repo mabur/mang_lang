@@ -38,14 +38,14 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_div(self):
         self.assertEqual(V(2), interpret('div(6, 3)'))
 
+    def test_if_then_else_true(self):
+        self.assertEqual(V(1), interpret('if 1 then 1 else 2'))
+
     def test_if_then_else_false(self):
-        self.assertEqual(V(2), interpret('if_then_else(0, 1, 2)'))
+        self.assertEqual(V(2), interpret('if 0 then 1 else 2'))
 
-    def test_if_then_else_true0(self):
-        self.assertEqual(V(1), interpret('if_then_else(1, 1, 2)'))
-
-    def test_if_then_else_true1(self):
-        self.assertEqual(V(1), interpret('if_then_else(-1, 1, 2)'))
+    def test_if_then_else_true2(self):
+        self.assertEqual(V(1), interpret('if -1 then 1 else 2'))
 
 
 class TestAnd(unittest.TestCase):

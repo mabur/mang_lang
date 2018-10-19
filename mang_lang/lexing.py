@@ -5,15 +5,18 @@ from typing import Sequence
 
 class TokenType(Enum):
     NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
-    SYMBOL = "[a-z_]\\w*"
     PARENTHESIS_BEGIN = "\("
     COMMA = ","
     DOT = "\."
     PARENTHESIS_END = "\)"
     EQUAL = "="
-    NEW_LINE = "\n"
+    NEW_LINE = "\n" # TODO: remove
     BRACKET_BEGIN = "\["
     BRACKET_END = "\]"
+    IF = "if"
+    THEN = "then"
+    ELSE = "else"
+    SYMBOL = "[a-z_]\\w*"
 
 
 class Token:
