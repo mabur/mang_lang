@@ -34,9 +34,6 @@ class ExpressionTuple(Expression):
         for expression in self.expressions:
             expression_value = expression.evaluate(new_environment)
             value += (expression_value,)
-            if isinstance(expression_value, Mapping):
-                if expression_value.get('type') == 'function_definition':
-                    new_environment[expression.function_name] = expression
         return value
 
 
@@ -118,6 +115,7 @@ class FunctionDefinition(Expression):
                 "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
+        environment[self.function_name] = self
         return self.to_json()
 
 
