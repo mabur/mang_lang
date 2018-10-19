@@ -116,7 +116,7 @@ class FunctionDefinition(Expression):
                 "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
-        return (self.function_name, self.argument_name, self.expression)
+        return self.to_json()
 
 
 class TupleIndexing(Expression):

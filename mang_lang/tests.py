@@ -150,9 +150,12 @@ class TestDefinitionLookup(unittest.TestCase):
 class TestFunctionDefinition(unittest.TestCase):
     def test_function_definition(self):
         actual = interpret('f(x)=add(x)')
-        expected = ('f', 'x', None)
-        self.assertEqual(expected[0], actual[0])
-        self.assertEqual(expected[1], actual[1])
+        expected = {'type': 'function_definition',
+                    'function_name': 'f',
+                    'argument_name': 'x'}
+        self.assertEqual(expected['type'], actual['type'])
+        self.assertEqual(expected['function_name'], actual['function_name'])
+        self.assertEqual(expected['argument_name'], actual['argument_name'])
 
     def test_constant_function_definition_and_call(self):
         actual = interpret('(f(x) = 3, f(1))')
