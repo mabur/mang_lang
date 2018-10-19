@@ -105,21 +105,27 @@ pi = {
 } = add(a, b)
 
 
-CONTROL STRUCTURES
+CONDITIONAL
 
-if/choose, and, or, not, equal, greater, smaller as built in functions operating on R^N
+f(x) = if equal(x, 0) then 0 else add(x, f(sub(x, 1)))
 
 abs(x) = {
     condition = greater(x, 0)
     alternative0 = x
     alternative1 = neg(x)
-    } = ifthenelse(condition, alternative0, alternative1)
+    } = if condition then alternative0 else alternative1
+
+
+BOOLEAN PREDICATES
+
+and, or, not, equal, greater, smaller as built in functions operating on R^N
 
 
 DEFINITION OF CONTEXT
 A context is a dictionary of definitions. It is indexed by the names of the defined variables and functions.
 
 Result is a special symbol. If it exists in the context, then it is the value of the context. Otherwise the context has no value.
+
 
 LOCAL ANONYMOUS CONTEXT & ENVIRONMENT
 
@@ -135,9 +141,10 @@ abs(x) = {
     condition = greater(x, 0),
     alternative0 = x,
     alternative1 = neg(x)
-} = ifthenelse(condition, alternative0, alternative1)
+} = if condition then alternative0 else alternative1
 
-abs(x) = {condition = greater(x, 0), alternative0 = x, alternative1 = neg(x)} = ifthenelse(condition, alternative0, alternative1)
+abs(x) = {condition = greater(x, 0), alternative0 = x, alternative1 = neg(x)}
+= if condition then alternative0 else alternative1
 
 
 NAMED CONTEXT & ENVIRONMENT
@@ -150,7 +157,7 @@ single = (data=5)
 result = single.data
 
 // function input without unpacking
-max(x, y) = ifthenelse(greater(x, y), x, y)
+max(x, y) = if greater(x, y) then x else y
 
 // function output without unpacking
 minmax(x) = {...} = (min=...; max=...)
