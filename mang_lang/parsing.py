@@ -34,9 +34,6 @@ class ExpressionTuple(Expression):
         for expression in self.expressions:
             expression_value = expression.evaluate(new_environment)
             value += (expression_value,)
-            if isinstance(expression, Mapping):
-                if expression.get('type') == 'variable_definition':
-                    new_environment[expression.name] = expression_value['name']
             if isinstance(expression_value, Mapping):
                 if expression_value.get('type') == 'function_definition':
                     new_environment[expression.function_name] = expression
