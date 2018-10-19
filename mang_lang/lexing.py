@@ -10,7 +10,6 @@ class TokenType(Enum):
     DOT = "\."
     PARENTHESIS_END = "\)"
     EQUAL = "="
-    NEW_LINE = "\n" # TODO: remove
     BRACKET_BEGIN = "\["
     BRACKET_END = "\]"
     IF = "if"
