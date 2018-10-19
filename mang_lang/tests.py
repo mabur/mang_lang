@@ -100,51 +100,91 @@ class TestTuple(unittest.TestCase):
         self.assertEqual((V(3), V(7)), interpret('(add(1, 2), add(3,4))'))
 
     def test_mixed_tuple(self):
-        self.assertEqual((V(3), V(3), ('x', V(3))), interpret('(3, add(1, 2), x = 3)'))
+        self.assertEqual(
+            (V(3), V(3), {'type': 'variable_definition', 'name': 'x', 'value': V(3)}),
+            interpret('(3, add(1, 2), x = 3)'))
 
 
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
-        self.assertEqual(('result', V(5)), interpret('result = 5'))
+        self.assertEqual({'type': 'variable_definition', 'name': 'result', 'value': V(5)},
+                         interpret('result = 5'))
 
     def test_definition_result_constant_function_call(self):
-        self.assertEqual(('result', V(3)), interpret('result = add(1, 2)'))
+        self.assertEqual({'type': 'variable_definition', 'name': 'result', 'value': V(3)},
+                         interpret('result = add(1, 2)'))
 
     def test_definition_constant_function_call(self):
-        self.assertEqual(('x', V(3)), interpret('x = add(1, 2)'))
+        self.assertEqual({'type': 'variable_definition', 'name': 'x', 'value': V(3)},
+                         interpret('x = add(1, 2)'))
 
     def test_definitions(self):
-        self.assertEqual((('x', V(1)), ('y', V(2))), interpret('(x = 1, y = 2)'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(1)},
+                          {'type': 'variable_definition', 'name': 'y', 'value': V(2)}),
+                         interpret('(x = 1, y = 2)'))
 
     def test_tuple_definition_and_function_call(self):
-        self.assertEqual((('x',(V(1),V(2))), V(3)), interpret('(x=(1,2), add(x))'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(1),V(2))}, V(3)),
+                         interpret('(x=(1,2), add(x))'))
 
 
 class TestIndirection(unittest.TestCase):
     def test_indirection1(self):
-        self.assertEqual((('x', V(5)), ('y', V(5))), interpret('(x = 5, y = x)'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(5)},
+                          {'type': 'variable_definition', 'name': 'y', 'value': V(5)}),
+                         interpret('(x = 5, y = x)'))
 
     def test_indirection2(self):
-        self.assertEqual((('a', V(1)), ('b', V(1)), ('c', V(1))), interpret('(a = 1, b = a, c = b)'))
+        self.assertEqual((
+            {'type': 'variable_definition', 'name': 'a', 'value': V(1)},
+            {'type': 'variable_definition', 'name': 'b', 'value': V(1)},
+            {'type': 'variable_definition', 'name': 'c', 'value': V(1)}),
+            interpret('(a = 1, b = a, c = b)'))
 
     def test_indirection3(self):
-        self.assertEqual((('x', V(5)), ('y', V(3)), V(8)), interpret('(x = 5, y = 3, add(x, y))'))
+        self.assertEqual((
+            {'type': 'variable_definition', 'name': 'x', 'value': V(5)},
+            {'type': 'variable_definition', 'name': 'y', 'value': V(3)},
+            V(8)),
+            interpret('(x = 5, y = 3, add(x, y))'))
 
 
 class TestIndexing(unittest.TestCase):
     def test_indexing_number(self):
-        self.assertEqual((('x', (V(2), V(3))), V(2)), interpret('(x = (2, 3), x[0])'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(2), V(3))}, V(2)),
+                         interpret('(x = (2, 3), x[0])'))
 
     def test_indexing_constant(self):
-        self.assertEqual((('x', (V(2), V(3))), ('y', V(1)), V(3)), interpret('(x = (2, 3), y = 1, x[y])'))
+        self.assertEqual(
+            (
+                {'type': 'variable_definition', 'name': 'x', 'value': (V(2), V(3))},
+                {'type': 'variable_definition', 'name': 'y', 'value': V(1)},
+                V(3)
+            ),
+            interpret('(x = (2, 3), y = 1, x[y])'))
 
 
 class TestDefinitionLookup(unittest.TestCase):
     def test_indexing_number0(self):
-        self.assertEqual((('x', (('y', V(1)),)), V(1)), interpret('(x = (y = 1), x.y)'))
+        self.assertEqual(
+            (
+                {'type': 'variable_definition', 'name': 'x', 'value': ({'type': 'variable_definition', 'name': 'y', 'value': V(1)},)},
+                V(1)
+            ),
+            interpret('(x = (y = 1), x.y)'))
 
     def test_indexing_number1(self):
-        self.assertEqual((('x', (('a', V(1)),('b', V(2)))), V(2)), interpret('(x=(a=1,b=2), x.b)'))
+        self.assertEqual(
+            (
+                {'type': 'variable_definition', 'name': 'x', 'value':
+                    (
+                        {'type': 'variable_definition', 'name': 'a', 'value': V(1)},
+                        {'type': 'variable_definition', 'name': 'b', 'value': V(2)}
+                    )
+                 },
+                V(2)
+            ),
+            interpret('(x=(a=1,b=2), x.b)'))
 
 
 class TestFunctionDefinition(unittest.TestCase):

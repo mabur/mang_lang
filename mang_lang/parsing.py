@@ -34,10 +34,12 @@ class ExpressionTuple(Expression):
         for expression in self.expressions:
             expression_value = expression.evaluate(new_environment)
             value += (expression_value,)
-            if isinstance(expression, VariableDefinition):
-                new_environment[expression.name] = expression_value[1]
-            if isinstance(expression, FunctionDefinition):
-                new_environment[expression.function_name] = expression
+            if isinstance(expression, Mapping):
+                if expression.get('type') == 'variable_definition':
+                    new_environment[expression.name] = expression_value['name']
+            if isinstance(expression_value, Mapping):
+                if expression_value.get('type') == 'function_definition':
+                    new_environment[expression.function_name] = expression
         return value
 
 
@@ -98,7 +100,12 @@ class VariableDefinition(Expression):
                 "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
-        return (self.name, self.expression.evaluate(environment))
+        #return (self.name, self.expression.evaluate(environment))
+        value = self.expression.evaluate(environment)
+        environment[self.name] = value
+        return {"type": "variable_definition",
+                "name": self.name,
+                "value": value}
 
 
 class FunctionDefinition(Expression):
@@ -145,7 +152,7 @@ class DefinitionLookup(Expression):
 
     def evaluate(self, environment: Environment):
         tuple = self.parent.evaluate(environment)
-        return next(e[1] for e in tuple if e[0] == self.child.name)
+        return next(e['value'] for e in tuple if e['name'] == self.child.name)
 
 
 class TokenSlice:
