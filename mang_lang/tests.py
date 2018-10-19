@@ -87,6 +87,21 @@ class TestNot(unittest.TestCase):
         self.assertEqual(V(1), interpret('not(0)'))
 
 
+class TestEqual(unittest.TestCase):
+
+    def test0(self):
+        self.assertEqual(V(1), interpret('equal(1, 1)'))
+
+    def test1(self):
+        self.assertEqual(V(0), interpret('equal(0, 1)'))
+
+    def test2(self):
+        self.assertEqual(V(0), interpret('equal(1, 0)'))
+
+    def test3(self):
+        self.assertEqual(V(1), interpret('equal(0, 0)'))
+
+
 class TestExpression(unittest.TestCase):
     def test_composition(self):
         self.assertEqual(V(12), interpret('add(sub(5, 3), mul(2, 5))'))

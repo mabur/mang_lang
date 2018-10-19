@@ -41,6 +41,10 @@ def logical_not(x: float) -> float:
     return Number(float(not(x["value"] != 0))).to_json()
 
 
+def equal(x: Tuple) -> float:
+    return Number(float(x[0]["value"] == x[1]["value"])).to_json()
+
+
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div,
                'if_then_else': if_then_else, 'and': logical_and,
-               'or': logical_or, 'not': logical_not}
+               'or': logical_or, 'not': logical_not, 'equal': equal}
