@@ -29,12 +29,8 @@ class ExpressionTuple(Expression):
         return tuple(e.to_json() for e in self.expressions)
 
     def evaluate(self, environment: Environment):
-        value = ()
         new_environment = deepcopy(environment)
-        for expression in self.expressions:
-            expression_value = expression.evaluate(new_environment)
-            value += (expression_value,)
-        return value
+        return tuple(expression.evaluate(new_environment) for expression in self.expressions)
 
 
 class Number(Expression):
