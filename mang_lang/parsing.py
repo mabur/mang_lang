@@ -26,8 +26,7 @@ class ExpressionTuple(Expression):
         self.expressions = expressions
 
     def to_json(self) -> Json:
-        return {"type": "expression_tuple",
-                "expressions": [e.to_json() for e in self.expressions]}
+        return tuple(e.to_json() for e in self.expressions)
 
     def evaluate(self, environment: Environment):
         value = ()
