@@ -3,8 +3,8 @@ import json
 
 code = '''
 (
-f(x) = mul(x[0], x[1]),
-result = f(8, f(2, 3))
+faculty(x) = if equal(x, 0) then 1 else mul(x, faculty(sub(x, 1))),
+faculty(3)
 )
 '''
 print('Interpreting: {}'.format(code))
