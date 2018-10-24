@@ -1,46 +1,3 @@
-SINGLE EXPRESSION
-
-Builtin functions R^N->R
-add, mul, sub, div, neg, pow, ln, sin, cos, tan
-
-add(5, mul(8, 9)) // 5 + 8 * 9
-
-
-number = ...
-number_array = "(", number {"," number} ")"
-expression = number or array or symbol ( expression )
-
-
-expression = number | constant | array | function_call
-number = 123...
-constant = symbol
-symbol = abc...
-array = "(" [expression {"," expression}] ")"
-function_call = symbol, array
-
-
-WITH DEFINITION (=) OF CONSTANT VARIABLES
-
-One definition per line:
-
-x = mul(8, 9) // (72)
-y = 5         // 5
-z = add(x, y) // 77
-
-ARRAYS
-
-a = (8, 9)    // (8, 9)
-x = mul(a)    // 72
-y = 5         // 5
-z = add(x, y) // 77
-
-c = (4, 5, 6, 7) // (4, 5, 6, 7)
-n = size(c)      // 4
-d = a(1)         // 5
-e = c(1:2)       // (5, 6)  implement slicing later
-f = (d, e)       // (5, 5, 6)
-
-
 WITH DEFINITION (=) OF FUNCTIONS R->R
 
 cube(x) = mul(x, mul(x, x))
@@ -76,28 +33,29 @@ where
   ydistance = y2 - y1
   sqr z = z*z
 
-ME
-sqr = z -> z*z
-distance = (x1,y1,x2,y2) ->
-    xdistance = sub(x2, x1)
-    ydistance = sub(y2, y1)
-    sqrt(add(sqr(xdistance), sqr(ydistance)))
+
+MANG LANG
 
 sqr(z) = z * z
 distance(x1,y1,x2,y2) = {
     xdistance = sub(x2, x1)
     ydistance = sub(y2, y1)
-    } = sqrt(add(sqr(xdistance), sqr(ydistance)))
+} = sqrt(add(sqr(xdistance), sqr(ydistance)))
 
+sqr = z -> z*z
+distance = (x1,y1,x2,y2) ->
+    sqrt(add(sqr(xdistance), sqr(ydistance)))
+where
+{
+    xdistance = sub(x2, x1)
+    ydistance = sub(y2, y1)
+}
 
-SUBROUTINES
-
-pi =
-    a = 3.0
-    b = 0.14
-    add(a, b)
-
-pi = {a = 3.0, b = 0.14} = add(a, b)
+sqr = z -> z*z
+distance = (x1,y1,x2,y2) -> {
+    xdistance = sub(x2, x1)
+    ydistance = sub(y2, y1)
+} -> sqrt(add(sqr(xdistance), sqr(ydistance)))
 
 pi = {
     a = 3.0,
@@ -160,7 +118,7 @@ result = single.data
 max(x, y) = if greater(x, y) then x else y
 
 // function output without unpacking
-minmax(x) = {...} = (min=...; max=...)
+minmax(x) = {...} = (min=..., max=...)
 elements = (1,7,4,9,7)
 mm = minmax(elements)
 result = add(mm.min, mm.max)
@@ -179,76 +137,8 @@ elements = (1, 7, 4, 9, 7)
 result = add(min, max)
 
 
-GRAMMAR
-
-symbol = ...
-number = ...
-expression = number or symbol or function_call or variable_definition or function_definition or tuple or tuple_indexing or definition_lookup
-tuple = expressions
-function_call = symbol and tuple
-variable_definition = symbol and expression
-function_definition = symbol and tuple and expression
-tuple_indexing = symbol and expression
-definition_lookup = symbol and symbol
-
-
-Do not allow chaining of function calls or tuple indexing or definition lookup.
-Force the use of helper symbols.
-
-
-GRAMMAR 1
-
-symbol = ...
-number = ...
-expression = number or symbol or function_call or tuple
-tuple = expressions
-function_call = symbol and tuple
-
-
-GRAMMAR 2
-
-symbol = ...
-number = ...
-expression = number or symbol or function_call or tuple or variable_definition
-tuple = expressions
-function_call = symbol and tuple
-variable_definition = symbol and expression
-
-
-GRAMMAR 3
-
-symbol = ...
-number = ...
-expression = number or symbol or function_call or tuple_indexing or tuple or variable_definition
-tuple = expressions
-function_call = symbol and tuple
-variable_definition = symbol and expression
-tuple_indexing = symbol and expression
-
-
-GRAMMAR 4
-
-symbol = ...
-number = ...
-expression = number or symbol or function_call or tuple_indexing or definition_lookup or tuple or variable_definition
-tuple = expressions
-function_call = symbol and tuple
-variable_definition = symbol and expression
-tuple_indexing = symbol and expression
-definition_lookup = symbol and symbol
-
-
-GRAMMAR 5
-
-symbol = ...
-number = ...
-expression = number or symbol or function_call or tuple_indexing or definition_lookup or tuple or variable_definition or function_definition
-tuple = expressions
-function_call = symbol and tuple
-variable_definition = symbol and expression
-tuple_indexing = symbol and expression
-definition_lookup = symbol and symbol
-function_definition = symbol and tuple and expression
+HELPER SYMBOLS
+Have a grammer that does not allow chaining of function calls or tuple indexing or definition lookup. Force the use of helper symbols.
 
 
 TEXT REPRESENTATION
@@ -256,3 +146,17 @@ Define three text representations for the language:
 1. Raw source code as raw text file.
 2. Abstract syntax tree as jason.
 3. Evaluated tree as jason.
+
+
+TUPLES
+
+a = (8, 9)    // (8, 9)
+x = mul(a)    // 72
+y = 5         // 5
+z = add(x, y) // 77
+
+c = (4, 5, 6, 7) // (4, 5, 6, 7)
+n = size(c)      // 4
+d = c(1)         // 5
+e = c(1:2)       // (5, 6)  implement slicing later
+f = concat((d), e) // (5, 5, 6)
