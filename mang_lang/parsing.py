@@ -33,6 +33,17 @@ class ExpressionTuple(Expression):
         return tuple(expression.evaluate(new_environment) for expression in self.expressions)
 
 
+class ScopeTuple(Expression):
+    def __init__(self, expressions: Sequence[Expression]) -> None:
+        self.expressions = expressions
+
+    def to_json(self) -> Json:
+        return tuple(e.to_json() for e in self.expressions)
+
+    def evaluate(self, environment: Environment):
+        return tuple(expression.evaluate(environment) for expression in self.expressions)
+
+
 class Number(Expression):
     def __init__(self, value: str) -> None:
         self.value = float(value)
@@ -79,9 +90,11 @@ class FunctionCall(Expression):
 
 
 class VariableDefinition(Expression):
-    def __init__(self, name: str, expression: Expression) -> None:
+    def __init__(self, name: str, expression: Expression,
+                 scope: ScopeTuple) -> None:
         self.name = name
         self.expression = expression
+        self.scope = scope
 
     def to_json(self) -> Json:
         return {"type": "variable_definition",
@@ -89,7 +102,10 @@ class VariableDefinition(Expression):
                 "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment):
-        value = self.expression.evaluate(environment)
+        new_environment = deepcopy(environment)
+        if self.scope:
+            _ = self.scope.evaluate(new_environment)
+        value = self.expression.evaluate(new_environment)
         environment[self.name] = value
         return {"type": "variable_definition",
                 "name": self.name,
@@ -212,6 +228,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
+        ParsePattern(_parse_scope, [TokenType.SCOPE_BEGIN]),
         ParsePattern(_parse_conditional, [TokenType.IF])]
 
     for parse_pattern in PARSE_PATTERNS:
@@ -243,6 +260,18 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     return (ExpressionTuple(expressions=expressions), tokens)
 
 
+def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
+    expressions = ()
+    tokens = _parse_known_token(tokens, TokenType.SCOPE_BEGIN)
+    while tokens.front().type != TokenType.SCOPE_END:
+        expression, tokens = parse_expression(tokens)
+        expressions += (expression,)
+        if tokens.front().type == TokenType.COMMA:
+            tokens = _parse_known_token(tokens, TokenType.COMMA)
+    tokens = _parse_known_token(tokens, TokenType.SCOPE_END)
+    return (ScopeTuple(expressions=expressions), tokens)
+
+
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     function, tokens = _parse_reference(tokens)
     tuple, tokens = _parse_tuple(tokens)
@@ -252,8 +281,12 @@ def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
     name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    scope = None
+    if tokens.do_match([TokenType.SCOPE_BEGIN]):
+        scope, tokens = _parse_scope(tokens)
+        tokens = _parse_known_token(tokens, TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
-    return (VariableDefinition(name=name, expression=expression), tokens)
+    return (VariableDefinition(name=name, expression=expression, scope=scope), tokens)
 
 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:

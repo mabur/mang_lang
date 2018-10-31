@@ -12,6 +12,8 @@ class TokenType(Enum):
     EQUAL = "="
     BRACKET_BEGIN = "\["
     BRACKET_END = "\]"
+    SCOPE_BEGIN = "\{"
+    SCOPE_END = "\}"
     IF = "if"
     THEN = "then"
     ELSE = "else"

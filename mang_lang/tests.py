@@ -223,6 +223,32 @@ class TestFunctionDefinition(unittest.TestCase):
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
+class TestScopeTuple(unittest.TestCase):
+    def test_scope1(self):
+        actual = interpret('(x = {y = 3} = y, x)')
+        expected = ((None), V(3))
+        self.assertEqual(expected[1], actual[1])
+
+    def test_scope2(self):
+        actual = interpret('(x = {y = 3, z = 4} = add(y, z), x)')
+        expected = ((None), V(7))
+        self.assertEqual(expected[1], actual[1])
+
+    def test_scope3(self):
+        actual = interpret('(z = 4, x = {y = 3} = add(y, z), x)')
+        expected = ((None), (None), V(7))
+        self.assertEqual(expected[2], actual[2])
+
+    def test_scope4(self):
+        actual = interpret('(z = 4, x = {} = z, x)')
+        expected = ((None), (None), V(4))
+        self.assertEqual(expected[2], actual[2])
+
+    def test_scope5(self):
+        actual = interpret('(z = 4, x = {z = 3} = z, x)')
+        expected = ((None), (None), V(3))
+        self.assertEqual(expected[2], actual[2])
+
 
 if __name__ == '__main__':
     unittest.main()

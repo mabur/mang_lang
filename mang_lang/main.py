@@ -2,10 +2,7 @@ from interpreter import interpret, create_abstract_syntax_tree_json
 import json
 
 code = '''
-(
-faculty(x) = if equal(x, 0) then 1 else mul(x, faculty(sub(x, 1))),
-faculty(3)
-)
+x = {y=5, z=2} = 3
 '''
 print('Interpreting: {}'.format(code))
 print('Abstract syntax tree:')
