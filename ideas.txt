@@ -38,7 +38,7 @@ MANG LANG
 
 sqr(z) = z * z
 distance(x1,y1,x2,y2) = {
-    xdistance = sub(x2, x1)
+    xdistance = sub(x2, x1),
     ydistance = sub(y2, y1)
 } = sqrt(add(sqr(xdistance), sqr(ydistance)))
 
@@ -53,7 +53,7 @@ where
 
 sqr = z -> z*z
 distance = (x1,y1,x2,y2) -> {
-    xdistance = sub(x2, x1)
+    xdistance = sub(x2, x1),
     ydistance = sub(y2, y1)
 } -> sqrt(add(sqr(xdistance), sqr(ydistance)))
 
@@ -68,8 +68,8 @@ CONDITIONAL
 f(x) = if equal(x, 0) then 0 else add(x, f(sub(x, 1)))
 
 abs(x) = {
-    condition = greater(x, 0)
-    alternative0 = x
+    condition = greater(x, 0),
+    alternative0 = x,
     alternative1 = neg(x)
     } = if condition then alternative0 else alternative1
 
