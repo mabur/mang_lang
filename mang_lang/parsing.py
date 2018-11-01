@@ -85,6 +85,8 @@ class FunctionCall(Expression):
         if isinstance(function, Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
+            if function.scope:
+                _ = function.scope.evaluate(new_environment)
             return function.expression.evaluate(new_environment)
         return function(input)
 
@@ -113,10 +115,12 @@ class VariableDefinition(Expression):
 
 
 class FunctionDefinition(Expression):
-    def __init__(self, function_name: str, argument_name: str, expression: Expression) -> None:
+    def __init__(self, function_name: str, argument_name: str,
+                 expression: Expression, scope: ScopeTuple) -> None:
         self.function_name = function_name
         self.argument_name = argument_name
         self.expression = expression
+        self.scope = scope
 
     def to_json(self) -> Json:
         return {"type": "function_definition",
@@ -295,9 +299,15 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
     argument_name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
     tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    scope = None
+    if tokens.do_match([TokenType.SCOPE_BEGIN]):
+        scope, tokens = _parse_scope(tokens)
+        tokens = _parse_known_token(tokens, TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
-    return (FunctionDefinition(function_name=function_name, argument_name=argument_name, expression=expression),
-            tokens)
+    return (FunctionDefinition(function_name=function_name,
+                               argument_name=argument_name,
+                               scope=scope,
+                               expression=expression), tokens)
 
 
 def _parse_tuple_indexing(tokens: TokenSlice) -> Tuple[TupleIndexing, TokenSlice]:

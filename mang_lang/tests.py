@@ -223,7 +223,8 @@ class TestFunctionDefinition(unittest.TestCase):
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
-class TestScopeTuple(unittest.TestCase):
+
+class TestVariableScope(unittest.TestCase):
     def test_scope1(self):
         actual = interpret('(x = {y = 3} = y, x)')
         expected = ((None), V(3))
@@ -247,6 +248,23 @@ class TestScopeTuple(unittest.TestCase):
     def test_scope5(self):
         actual = interpret('(z = 4, x = {z = 3} = z, x)')
         expected = ((None), (None), V(3))
+        self.assertEqual(expected[2], actual[2])
+
+
+class TestFunctionScope(unittest.TestCase):
+    def test_scope1(self):
+        actual = interpret('(f(x) = {y = 3} = y, f(2))')
+        expected = ((None), V(3))
+        self.assertEqual(expected[1], actual[1])
+
+    def test_scope2(self):
+        actual = interpret('(f(x) = {y = 3} = add(x, y), f(2))')
+        expected = ((None), V(5))
+        self.assertEqual(expected[1], actual[1])
+
+    def test_scope3(self):
+        actual = interpret('(y = 2, f(x) = {y = 3} = add(x, y), f(2))')
+        expected = ((None), (None), V(5))
         self.assertEqual(expected[2], actual[2])
 
 
