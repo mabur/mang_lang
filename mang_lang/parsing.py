@@ -282,13 +282,18 @@ def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     return (FunctionCall(function=function, tuple=tuple), tokens)
 
 
+def _parse_optional_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
+    if not tokens.do_match([TokenType.SCOPE_BEGIN]):
+        return None, tokens
+    scope, tokens = _parse_scope(tokens)
+    tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    return scope, tokens
+
+
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
     name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.EQUAL)
-    scope = None
-    if tokens.do_match([TokenType.SCOPE_BEGIN]):
-        scope, tokens = _parse_scope(tokens)
-        tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    scope, tokens = _parse_optional_scope(tokens)
     expression, tokens = parse_expression(tokens)
     return (VariableDefinition(name=name, expression=expression, scope=scope), tokens)
 
@@ -299,10 +304,7 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
     argument_name, tokens = _parse_token(tokens)
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
     tokens = _parse_known_token(tokens, TokenType.EQUAL)
-    scope = None
-    if tokens.do_match([TokenType.SCOPE_BEGIN]):
-        scope, tokens = _parse_scope(tokens)
-        tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    scope, tokens = _parse_optional_scope(tokens)
     expression, tokens = parse_expression(tokens)
     return (FunctionDefinition(function_name=function_name,
                                argument_name=argument_name,
