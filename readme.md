@@ -34,6 +34,12 @@ This example first defines a function named `faculty`. It then defines a variabl
 
 # Examples
 
+1. [Numbers and Built-in Functions](#numbers-and-built-in-functions)
+2. [Variables and Multiple Statements](#variables-and-multiple-statements)
+3. [Tuples](#tuples)
+4. [Functions](#functions)
+5. [Scope](#scope)
+
 ## Numbers and Built-in Functions
 
 Mang Lang can be used as a calculator. This is a trivial program that just contains a single number:
@@ -120,7 +126,7 @@ result = add(object.x, object.y)
 )
 ```
 
-## FUNCTIONS
+## Functions
 
 Functions are defined and used like this:
 
@@ -150,7 +156,7 @@ result = faculty(10)
 )
 ```
 
-## SCOPE
+## Scope
 
 Function definitions can be broken up into smaller parts that are put in a local scope `{}`:
 
