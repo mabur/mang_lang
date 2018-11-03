@@ -160,3 +160,31 @@ n = size(c)      // 4
 d = c(1)         // 5
 e = c(1:2)       // (5, 6)  implement slicing later
 f = concat((d), e) // (5, 5, 6)
+
+
+LIST COMPREHENSION FOR MAP AND FILTER
+
+a = (f(x) for x in collection if g(x))
+a = (f(x) : x in collection and g(x))
+
+// Fold
+faculty = left_fold collection with 1 by mul
+sum     = left_fold collection with 0 by add
+minimum = left_fold collection with MAX_FLOAT by min
+maximum = left_fold collection with MIN_FLOAT by max
+
+// Unfold
+a = unfold 0 by next until greater_than(10)
+a = from 0; greater_than(10); next
+a = for x=0; x <= 10; next(x)
+a = (x for geq(0, x) and leq(x, 10))
+
+// linspace
+a = (0,1,...,10)
+N = 10
+delta = div(1,N)
+a = (0,delta,...,1)
+a = range(0, 10)
+
+delta = div(sub(end, start), 10)
+a = (start, ..., end)
