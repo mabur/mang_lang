@@ -21,24 +21,24 @@ def div(x: Tuple):
     return Number(x[0]["value"] / x[1]["value"]).to_json()
 
 
-def logical_and(x: Tuple) -> float:
-    return Number(float(x[0]["value"] != 0 and x[1]["value"] != 0)).to_json()
+def logical_and(x: Tuple):
+    return Number(str(float(x[0]["value"] != 0 and x[1]["value"] != 0))).to_json()
 
 
-def logical_or(x: Tuple) -> float:
-    return Number(float(x[0]["value"] != 0 or x[1]["value"] != 0)).to_json()
+def logical_or(x: Tuple):
+    return Number(str(float(x[0]["value"] != 0 or x[1]["value"] != 0))).to_json()
 
 
-def logical_not(x: float) -> float:
-    return Number(float(not(x["value"] != 0))).to_json()
+def logical_not(x: float):
+    return Number(str(float(not(x["value"] != 0)))).to_json()
 
 
-def equal(x: Tuple) -> float:
-    return Number(float(x[0]["value"] == x[1]["value"])).to_json()
+def equal(x: Tuple):
+    return Number(str(float(x[0]["value"] == x[1]["value"]))).to_json()
 
 
 def size(x: Tuple):
-    return Number(float(len(x))).to_json()
+    return Number(str(len(x))).to_json()
 
 
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
