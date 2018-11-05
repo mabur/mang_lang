@@ -1,17 +1,10 @@
-WITH DEFINITION (=) OF FUNCTIONS R->R
-
-cube(x) = mul(x, mul(x, x))
-
-cube(x) = {x2 = mul(x, x)} = mul(x, x2)
-
-
 WITH DEFINITION (=) OF FUNCTIONS R^N->R^N
 
 conjugate(x) = (x(0), neg(x(1)))
 
 conjugate(x) = {
-    real_in = x(0)
-    imaginary_in = x(1)
+    real_in = x[0]
+    imaginary_in = x[1]
     real_out = real_in
     imaginary_out = neg(imaginary)
 } = (real_out, imaginary_out)
@@ -19,109 +12,17 @@ conjugate(x) = {
 x = (1, 2)   // (1, 2)
 result = conjugate(x) // (1, -2)
 
-
-HASKELL
-distance (x1,y1) (x2,y2) = 
-  let xdistance = x2 - x1
-      ydistance = y2 - y1
-      sqr z = z*z in
-  in sqrt((sqr xdistance) + (sqr ydistance))
-
-distance (x1,y1) (x2,y2) = sqrt((sqr xdistance) + (sqr ydistance))
-where
-  xdistance = x2 - x1
-  ydistance = y2 - y1
-  sqr z = z*z
-
-
-MANG LANG
-
 sqr(z) = z * z
 distance(x1,y1,x2,y2) = {
     xdistance = sub(x2, x1),
     ydistance = sub(y2, y1)
 } = sqrt(add(sqr(xdistance), sqr(ydistance)))
 
-sqr = z -> z*z
-distance = (x1,y1,x2,y2) ->
-    sqrt(add(sqr(xdistance), sqr(ydistance)))
-where
-{
-    xdistance = sub(x2, x1)
-    ydistance = sub(y2, y1)
-}
-
-sqr = z -> z*z
-distance = (x1,y1,x2,y2) -> {
-    xdistance = sub(x2, x1),
-    ydistance = sub(y2, y1)
-} -> sqrt(add(sqr(xdistance), sqr(ydistance)))
-
-pi = {
-    a = 3.0,
-    b = 0.14
-} = add(a, b)
-
-
-CONDITIONAL
-
-f(x) = if equal(x, 0) then 0 else add(x, f(sub(x, 1)))
-
 abs(x) = {
     condition = greater(x, 0),
     alternative0 = x,
     alternative1 = neg(x)
     } = if condition then alternative0 else alternative1
-
-
-BOOLEAN PREDICATES
-
-and, or, not, equal, greater, smaller as built in functions operating on R^N
-
-
-DEFINITION OF CONTEXT
-A context is a dictionary of definitions. It is indexed by the names of the defined variables and functions.
-
-Result is a special symbol. If it exists in the context, then it is the value of the context. Otherwise the context has no value.
-
-
-LOCAL ANONYMOUS CONTEXT & ENVIRONMENT
-
-a = 3.0
-b = 0.14
-result = a + b
-
-(a = 3.0, b = 0.14, result = a + b)
-
-result = {a = 3.0, b = 0.14} = a + b
-
-abs(x) = {
-    condition = greater(x, 0),
-    alternative0 = x,
-    alternative1 = neg(x)
-} = if condition then alternative0 else alternative1
-
-abs(x) = {condition = greater(x, 0), alternative0 = x, alternative1 = neg(x)}
-= if condition then alternative0 else alternative1
-
-
-NAMED CONTEXT & ENVIRONMENT
-
-// variable without unpacking
-point = (x=3, y=5)
-result = point.x + point.y
-
-single = (data=5)
-result = single.data
-
-// function input without unpacking
-max(x, y) = if greater(x, y) then x else y
-
-// function output without unpacking
-minmax(x) = {...} = (min=..., max=...)
-elements = (1,7,4,9,7)
-mm = minmax(elements)
-result = add(mm.min, mm.max)
 
 
 PATTERN MATCHING / UNPACKING (skip)
@@ -160,6 +61,12 @@ n = size(c)      // 4
 d = c(1)         // 5
 e = c(1:2)       // (5, 6)  implement slicing later
 f = concat((d), e) // (5, 5, 6)
+b = is_empty(c)
+
+a = first(tuple)
+b = last(tuple)
+c = without_first(tuple)
+d = without_last(tuple)
 
 
 LIST COMPREHENSION FOR MAP AND FILTER
@@ -188,3 +95,8 @@ a = range(0, 10)
 
 delta = div(sub(end, start), 10)
 a = (start, ..., end)
+
+
+STANDARD LIBRARY
+
+Start writing standard library functions in Mang Lang instead of Python.
