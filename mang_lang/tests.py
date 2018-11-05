@@ -46,6 +46,18 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_if_then_else_true2(self):
         self.assertEqual(V(1), interpret('if -1 then 1 else 2'))
 
+    def test_size1(self):
+        self.assertEqual(V(3), interpret('size(8,4,6)'))
+
+    def test_size2(self):
+        self.assertEqual(V(1), interpret('size((9))'))
+
+    def test_size3(self):
+        self.assertEqual(V(0), interpret('size(())'))
+
+    def test_size4(self):
+        self.assertEqual(V(0), interpret('size()'))
+
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):

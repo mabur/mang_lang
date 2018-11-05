@@ -37,5 +37,10 @@ def equal(x: Tuple) -> float:
     return Number(float(x[0]["value"] == x[1]["value"])).to_json()
 
 
+def size(x: Tuple):
+    return Number(float(len(x))).to_json()
+
+
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
-               'and': logical_and, 'or': logical_or, 'not': logical_not}
+               'and': logical_and, 'or': logical_or, 'not': logical_not,
+               'size': size}
