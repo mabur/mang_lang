@@ -30,8 +30,7 @@ class Token:
 
 
 def lexer(code: str) -> Sequence[Token]:
-    code = code.replace(' ', '')
-    code = code.replace('\n', '')
+    code = _strip_white_space(code)
     num_characters = len(code)
     index = 0
     tokens = []
@@ -40,6 +39,13 @@ def lexer(code: str) -> Sequence[Token]:
         tokens.append(token)
         index += len(token)
     return tokens
+
+
+def _strip_white_space(code: str) -> str:
+    code = code.replace(' ', '')
+    code = code.replace('\n', '')
+    return code
+
 
 def _match_token(code: str, index: int) -> Token:
     for token_type in TokenType:
