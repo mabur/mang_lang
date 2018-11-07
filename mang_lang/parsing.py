@@ -56,6 +56,18 @@ class Number(Expression):
         return self.to_json()
 
 
+class String(Expression):
+    def __init__(self, value: str) -> None:
+        self.value = value[1:-1]
+
+    def to_json(self) -> Json:
+        return {"type": "string",
+                "value": self.value}
+
+    def evaluate(self, environment: Environment):
+        return self.to_json()
+
+
 class Reference(Expression):
     def __init__(self, name: str) -> None:
         self.name = name
@@ -225,6 +237,7 @@ def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
     PARSE_PATTERNS = [
         ParsePattern(_parse_number, [TokenType.NUMBER]),
+        ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
         ParsePattern(_parse_tuple_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
@@ -245,6 +258,11 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
     value, tokens = _parse_token(tokens)
     return (Number(value), tokens)
+
+
+def _parse_string(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
+    value, tokens = _parse_token(tokens)
+    return (String(value), tokens)
 
 
 def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:

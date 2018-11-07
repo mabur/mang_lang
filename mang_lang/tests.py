@@ -7,6 +7,10 @@ def V(value) -> Mapping[str, Any]:
     return {"type": "number", "value": value}
 
 
+def S(value) -> Mapping[str, Any]:
+    return {"type": "string", "value": value}
+
+
 class TestArray(unittest.TestCase):
     def test_array0(self):
         self.assertEqual((), interpret('()'))
@@ -290,6 +294,11 @@ class TestFunctionScope(unittest.TestCase):
         actual = interpret('(y = 2, f(x) = {y = 3} = add(x, y), f(2))')
         expected = ((None), (None), V(5))
         self.assertEqual(expected[2], actual[2])
+
+
+class TestString(unittest.TestCase):
+    def test_string(self):
+        self.assertEqual(S("hej"), interpret('"hej"'))
 
 
 if __name__ == '__main__':

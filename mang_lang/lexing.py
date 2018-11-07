@@ -18,6 +18,7 @@ class TokenType(Enum):
     THEN = "then"
     ELSE = "else"
     SYMBOL = "[a-z_]\\w*"
+    STRING = "\"\w*\""
 
 
 class Token:
