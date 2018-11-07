@@ -58,6 +58,18 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_size4(self):
         self.assertEqual(V(0), interpret('size()'))
 
+    def test_concat1(self):
+        self.assertEqual((V(1), V(2), V(3), V(4)),
+                         interpret('concat((1,2),(3,4))'))
+
+    def test_concat2(self):
+        self.assertEqual((V(1), V(2), V(3), V(4), V(5), V(6)),
+                         interpret('concat((1,2),(3,4),(5,6))'))
+
+    def test_concat3(self):
+        self.assertEqual((V(1), V(2), V(3)),
+                         interpret('concat((1),(2),(3))'))
+
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):

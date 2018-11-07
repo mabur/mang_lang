@@ -41,6 +41,13 @@ def size(x: Tuple):
     return Number(str(len(x))).to_json()
 
 
+def concat(x: Tuple):
+    expressions = ()
+    for tuple in x:
+        expressions += tuple
+    return expressions
+
+
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
                'and': logical_and, 'or': logical_or, 'not': logical_not,
-               'size': size}
+               'size': size, 'concat': concat}
