@@ -38,10 +38,11 @@ def equal(x: Tuple):
 
 
 def size(x):
-    if isinstance(x, Tuple):
+    if _is_tuple(x):
         return Number(str(len(x))).to_json()
-    assert x['type'] == "string"
-    return Number(str(len(x["value"]))).to_json()
+    if _is_string(x):
+        return Number(str(len(x["value"]))).to_json()
+    raise TypeError
 
 
 def _concat_tuple(x: Tuple) -> Tuple:
@@ -49,6 +50,7 @@ def _concat_tuple(x: Tuple) -> Tuple:
     for t in x:
         expressions += t
     return expressions
+
 
 def _concat_string(x) -> str:
     expressions = '"'
@@ -59,11 +61,19 @@ def _concat_string(x) -> str:
 
 
 def concat(x):
-    if isinstance(x[0], Tuple):
+    if _is_tuple(x[0]):
         return _concat_tuple(x)
-    if isinstance(x[0], dict) and x[0]["type"] == "string":
+    if _is_string(x[0]):
         return _concat_string(x)
     raise TypeError
+
+
+def _is_tuple(x) -> bool:
+    return isinstance(x, Tuple)
+
+
+def _is_string(x) -> bool:
+    return isinstance(x, dict) and x["type"] == "string"
 
 
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
