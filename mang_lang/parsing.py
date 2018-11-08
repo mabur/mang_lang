@@ -7,7 +7,7 @@
 
 from copy import deepcopy
 from typing import Any, Callable, MutableMapping, Sequence, Tuple
-from lexing import Token, TokenType
+from lexing import lexer, Token, TokenType
 
 
 Environment = MutableMapping[str, Any]
@@ -77,6 +77,24 @@ class Reference(Expression):
 
     def evaluate(self, environment: Environment):
         return environment[self.name]
+
+
+def read_text_file(file_path: str) -> str:
+    with open(file_path, 'r') as file:
+        return file.read()
+
+class Import(Expression):
+    def __init__(self, file_path: str) -> None:
+        self.file_path = file_path
+
+    def to_json(self) -> Json:
+        return {"type": "import", "file_path": self.file_path}
+
+    def evaluate(self, environment: Environment):
+        code = read_text_file(self.file_path)
+        tokens = lexer(code)
+        expression, _ = parse_expression(TokenSlice(tokens))
+        return expression.evaluate(environment)
 
 
 class FunctionCall(Expression):
@@ -243,6 +261,8 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
     PARSE_PATTERNS = [
         ParsePattern(_parse_number, [TokenType.NUMBER]),
         ParsePattern(_parse_string, [TokenType.STRING]),
+        ParsePattern(_parse_conditional, [TokenType.IF]),
+        ParsePattern(_parse_import, [TokenType.IMPORT]),
         ParsePattern(_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
         ParsePattern(_parse_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
@@ -250,8 +270,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
-        ParsePattern(_parse_scope, [TokenType.SCOPE_BEGIN]),
-        ParsePattern(_parse_conditional, [TokenType.IF])]
+        ParsePattern(_parse_scope, [TokenType.SCOPE_BEGIN])]
 
     for parse_pattern in PARSE_PATTERNS:
         if tokens.do_match(parse_pattern.pattern):
@@ -303,6 +322,14 @@ def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     function, tokens = _parse_reference(tokens)
     tuple, tokens = _parse_tuple(tokens)
     return (FunctionCall(function=function, tuple=tuple), tokens)
+
+
+def _parse_import(tokens: TokenSlice) -> Tuple[Import, TokenSlice]:
+    tokens = _parse_known_token(tokens, TokenType.IMPORT)
+    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
+    file_path, tokens = _parse_string(tokens)
+    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
+    return (Import(file_path=file_path.value), tokens)
 
 
 def _parse_optional_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:

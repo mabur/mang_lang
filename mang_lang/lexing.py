@@ -17,6 +17,7 @@ class TokenType(Enum):
     IF = "if"
     THEN = "then"
     ELSE = "else"
+    IMPORT = "import"
     SYMBOL = "[a-z_]\\w*"
     STRING = "\"\w*\""
 

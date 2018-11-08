@@ -1,5 +1,6 @@
 from typing import Any, Mapping
 import unittest
+from unittest import mock
 from interpreter import interpret
 
 
@@ -329,6 +330,16 @@ class TestString(unittest.TestCase):
 
     def test_string_index1(self):
         self.assertEqual(S("b"), interpret('(x="abc",x[1])')[1])
+
+
+class TestImport(unittest.TestCase):
+    def test1(self):
+        with mock.patch('parsing.read_text_file', return_value='3'):
+            self.assertEqual(V(3), interpret('import("file_name")'))
+
+    def test2(self):
+        with mock.patch('parsing.read_text_file', return_value='(\nx=3,\ny=4\n)'):
+            self.assertEqual(V(4), interpret('(z = import("file_name"), z.y)')[1])
 
 
 if __name__ == '__main__':
