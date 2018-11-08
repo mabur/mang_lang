@@ -309,6 +309,21 @@ class TestString(unittest.TestCase):
     def test_string_size2(self):
         self.assertEqual(V(2), interpret('size("du")'))
 
+    def test_string_concat1(self):
+        self.assertEqual(S(""), interpret('concat("","")'))
+
+    def test_string_concat2(self):
+        self.assertEqual(S("abcd"), interpret('concat("ab","cd")'))
+
+    def test_string_concat3(self):
+        self.assertEqual(S("ab"), interpret('concat("ab","")'))
+
+    def test_string_concat4(self):
+        self.assertEqual(S("cd"), interpret('concat("","cd")'))
+
+    def test_string_concat5(self):
+        self.assertEqual(S("abc"), interpret('concat("a","b","c")'))
+
 
 if __name__ == '__main__':
     unittest.main()

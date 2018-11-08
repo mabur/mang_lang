@@ -1,5 +1,5 @@
 from typing import Tuple
-from parsing import Number
+from parsing import Number, String
 
 def add(x: Tuple):
     assert len(x) == 2
@@ -44,11 +44,26 @@ def size(x):
     return Number(str(len(x["value"]))).to_json()
 
 
-def concat(x: Tuple):
+def _concat_tuple(x: Tuple) -> Tuple:
     expressions = ()
-    for tuple in x:
-        expressions += tuple
+    for t in x:
+        expressions += t
     return expressions
+
+def _concat_string(x) -> str:
+    expressions = '"'
+    for s in x:
+        expressions += s["value"]
+    expressions += '"'
+    return String(expressions).to_json()
+
+
+def concat(x):
+    if isinstance(x[0], Tuple):
+        return _concat_tuple(x)
+    if isinstance(x[0], dict) and x[0]["type"] == "string":
+        return _concat_string(x)
+    raise TypeError
 
 
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
