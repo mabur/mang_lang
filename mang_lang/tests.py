@@ -300,6 +300,15 @@ class TestString(unittest.TestCase):
     def test_string(self):
         self.assertEqual(S("hej"), interpret('"hej"'))
 
+    def test_string_size0(self):
+        self.assertEqual(V(0), interpret('size("")'))
+
+    def test_string_size1(self):
+        self.assertEqual(V(1), interpret('size("f")'))
+
+    def test_string_size2(self):
+        self.assertEqual(V(2), interpret('size("du")'))
+
 
 if __name__ == '__main__':
     unittest.main()

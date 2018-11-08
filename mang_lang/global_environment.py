@@ -37,8 +37,11 @@ def equal(x: Tuple):
     return Number(str(float(x[0]["value"] == x[1]["value"]))).to_json()
 
 
-def size(x: Tuple):
-    return Number(str(len(x))).to_json()
+def size(x):
+    if isinstance(x, Tuple):
+        return Number(str(len(x))).to_json()
+    assert x['type'] == "string"
+    return Number(str(len(x["value"]))).to_json()
 
 
 def concat(x: Tuple):
