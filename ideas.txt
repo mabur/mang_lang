@@ -58,11 +58,11 @@ z = add(x, y) // 77
 
 c = (4, 5, 6, 7) // (4, 5, 6, 7)
 n = size(c)      // 4
-d = c(1)         // 5
+d = c[1]         // 5
 e = c(1:2)       // (5, 6)  implement slicing later
-f = concat((d), e) // (5, 5, 6)
-b = is_empty(c)
+f = concat((d), e, a) // (5, 5, 6, 8, 9)
 
+b = is_empty(c)
 a = first(tuple)
 b = last(tuple)
 c = without_first(tuple)
@@ -73,8 +73,9 @@ LIST COMPREHENSION FOR MAP AND FILTER
 
 a = (f(x) for x in collection if g(x))
 a = (f(x) : x in collection and g(x))
+a = all f(x) for x in collection if g(x)
 
-// Fold
+// Fold<
 faculty = left_fold collection with 1 by mul
 sum     = left_fold collection with 0 by add
 minimum = left_fold collection with MAX_FLOAT by min
@@ -100,3 +101,50 @@ a = (start, ..., end)
 STANDARD LIBRARY
 
 Start writing standard library functions in Mang Lang instead of Python.
+
+
+IMPORT
+
+Import source code as new namespace:
+
+(
+x = (1,2,3),
+std = import("std.ml"),
+f = std.first(x)
+)
+
+Import source code into current namespace:
+
+(
+x = (1,2,3),
+import("std.ml"),
+f = std.first(x)
+)
+
+STRINGS
+
+Tuple of characters.
+Convert to tuple of characters when parsing.
+Convert back to "string" notation when storing as json?
+
+x = "hej"
+y = "world"
+z = concat(x, y)
+a = x[0] // return string of length 1.
+m = size(x)
+b = "h" (how to represent individual characters?)
+z = x[end] // TODO?
+
+
+BOOLEAN
+
+Have same primitive types as in json? Number, string, bool?
+What about individual characters?
+
+
+READ OR WRITE TO TEXT FILES
+
+content = read_text("data.txt")
+content = text_file("data.txt")
+write_text("data.txt", content)
+text_file("data.txt") = content
