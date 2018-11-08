@@ -324,6 +324,12 @@ class TestString(unittest.TestCase):
     def test_string_concat5(self):
         self.assertEqual(S("abc"), interpret('concat("a","b","c")'))
 
+    def test_string_index0(self):
+        self.assertEqual(S("a"), interpret('(x="abc",x[0])')[1])
+
+    def test_string_index1(self):
+        self.assertEqual(S("b"), interpret('(x="abc",x[1])')[1])
+
 
 if __name__ == '__main__':
     unittest.main()

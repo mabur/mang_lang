@@ -158,7 +158,11 @@ class TupleIndexing(Expression):
     def evaluate(self, environment: Environment):
         tuple = self.reference.evaluate(environment)
         index = int(self.index.evaluate(environment)["value"])
-        return tuple[index]
+        if is_tuple(tuple):
+            return tuple[index]
+        if is_string(tuple):
+            return String('"{}"'.format(tuple["value"][index])).to_json()
+        raise TypeError
 
 
 class DefinitionLookup(Expression):
@@ -354,3 +358,11 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
     else_expression, tokens = parse_expression(tokens)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), tokens)
+
+
+def is_tuple(x) -> bool:
+    return isinstance(x, Tuple)
+
+
+def is_string(x) -> bool:
+    return isinstance(x, dict) and x["type"] == "string"

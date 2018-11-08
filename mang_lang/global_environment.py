@@ -1,5 +1,6 @@
 from typing import Tuple
-from parsing import Number, String
+from parsing import Number, String, is_tuple, is_string
+
 
 def add(x: Tuple):
     assert len(x) == 2
@@ -38,9 +39,9 @@ def equal(x: Tuple):
 
 
 def size(x):
-    if _is_tuple(x):
+    if is_tuple(x):
         return Number(str(len(x))).to_json()
-    if _is_string(x):
+    if is_string(x):
         return Number(str(len(x["value"]))).to_json()
     raise TypeError
 
@@ -61,19 +62,11 @@ def _concat_string(x) -> str:
 
 
 def concat(x):
-    if _is_tuple(x[0]):
+    if is_tuple(x[0]):
         return _concat_tuple(x)
-    if _is_string(x[0]):
+    if is_string(x[0]):
         return _concat_string(x)
     raise TypeError
-
-
-def _is_tuple(x) -> bool:
-    return isinstance(x, Tuple)
-
-
-def _is_string(x) -> bool:
-    return isinstance(x, dict) and x["type"] == "string"
 
 
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
