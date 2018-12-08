@@ -119,6 +119,8 @@ Import source code into current namespace:
 x = (1,2,3),
 import("std.ml"),
 f = std.first(x)
+// TODO: fix referencing for functions first
+
 )
 
 STRINGS
@@ -134,6 +136,7 @@ a = x[0] // return string of length 1.
 m = size(x)
 b = "h" (how to represent individual characters?)
 z = x[end] // TODO?
+w = x[end-2]
 
 
 BOOLEAN
@@ -148,3 +151,11 @@ content = read_text("data.txt")
 content = text_file("data.txt")
 write_text("data.txt", content)
 text_file("data.txt") = content
+
+
+STACKED OPERATIONS
+(
+a=(b=(c=1)),
+a[0][0],
+a.b.c
+)
