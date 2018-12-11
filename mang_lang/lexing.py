@@ -32,6 +32,10 @@ class Token:
     def __len__(self) -> int:
         return len(self.value)
 
+    def has_meaning(self) -> bool:
+        return self.type != TokenType.WHITE_SPACE and \
+               self.type != TokenType.NEW_LINES
+
 
 def lexer(code: str) -> Sequence[Token]:
     num_characters = len(code)
@@ -41,8 +45,7 @@ def lexer(code: str) -> Sequence[Token]:
         token = _match_token(code, index)
         tokens.append(token)
         index += len(token)
-    tokens = [t for t in tokens if t.type != TokenType.WHITE_SPACE and t.type != TokenType.NEW_LINES]
-    return tokens
+    return [token for token in tokens if token.has_meaning()]
 
 
 def _match_token(code: str, index: int) -> Token:
