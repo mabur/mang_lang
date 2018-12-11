@@ -20,6 +20,8 @@ class TokenType(Enum):
     IMPORT = "import"
     SYMBOL = "[a-z_]\\w*"
     STRING = "\"\w*\""
+    WHITE_SPACE = " "
+    NEW_LINES = "\n"
 
 
 class Token:
@@ -32,7 +34,6 @@ class Token:
 
 
 def lexer(code: str) -> Sequence[Token]:
-    code = _strip_white_space(code)
     num_characters = len(code)
     index = 0
     tokens = []
@@ -40,13 +41,8 @@ def lexer(code: str) -> Sequence[Token]:
         token = _match_token(code, index)
         tokens.append(token)
         index += len(token)
+    tokens = [t for t in tokens if t.type != TokenType.WHITE_SPACE and t.type != TokenType.NEW_LINES]
     return tokens
-
-
-def _strip_white_space(code: str) -> str:
-    code = code.replace(' ', '')
-    code = code.replace('\n', '')
-    return code
 
 
 def _match_token(code: str, index: int) -> Token:

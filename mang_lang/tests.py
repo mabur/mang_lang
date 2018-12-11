@@ -51,6 +51,9 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_if_then_else_true2(self):
         self.assertEqual(V(1), interpret('if -1 then 1 else 2'))
 
+    def test_if_then_else_references(self):
+        self.assertEqual(V(1), interpret('(x=1,if x then x else x)')[1])
+
     def test_size1(self):
         self.assertEqual(V(3), interpret('size(8,4,6)'))
 
