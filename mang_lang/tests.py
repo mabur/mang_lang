@@ -347,26 +347,41 @@ class TestImport(unittest.TestCase):
 
 class TestTupleComprehension(unittest.TestCase):
     def test1(self):
+        actual = interpret('all e for e in ()')
+        expected = tuple()
+        self.assertEqual(expected, actual)
+
+    def test2(self):
+        actual = interpret('all e for e in (2)')
+        expected = (V(2),)
+        self.assertEqual(expected, actual)
+
+    def test3(self):
+        actual = interpret('all e for e in (2, 3)')
+        expected = (V(2), V(3))
+        self.assertEqual(expected, actual)
+
+    def test4(self):
         actual = interpret('(t = (), all e for e in t)')
         expected = tuple()
         self.assertEqual(expected, actual[1])
 
-    def test2(self):
+    def test5(self):
         actual = interpret('(t = (2), all e for e in t)')
         expected = (V(2),)
         self.assertEqual(expected, actual[1])
 
-    def test3(self):
+    def test6(self):
         actual = interpret('(t = (2, 3), all e for e in t)')
         expected = (V(2), V(3))
         self.assertEqual(expected, actual[1])
 
-    def test4(self):
+    def test7(self):
         actual = interpret('(t = (2, 3), all mul(e, e) for e in t)')
         expected = (V(4), V(9))
         self.assertEqual(expected, actual[1])
 
-    def test5(self):
+    def test8(self):
         actual = interpret('(f(x) = 1, t = (2, 3), all f(e) for e in t)')
         expected = (V(1), V(1))
         self.assertEqual(expected, actual[2])

@@ -425,7 +425,7 @@ def _parse_tuple_comprehension(tokens: TokenSlice)\
     tokens = _parse_known_token(tokens, TokenType.FOR)
     for_expression, tokens = parse_expression(tokens)
     tokens = _parse_known_token(tokens, TokenType.IN)
-    in_expression, tokens = _parse_reference(tokens)
+    in_expression, tokens = parse_expression(tokens)
     return (TupleComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression), tokens)
