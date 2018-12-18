@@ -98,18 +98,6 @@ class Import(Expression):
         return expression.evaluate(environment)
 
 
-def _evaluate_function_call(environment, evaluated_function, evaluated_input: Tuple):
-    if len(evaluated_input) == 1:
-        evaluated_input = evaluated_input[0]
-    if isinstance(evaluated_function, Expression):
-        new_environment = deepcopy(environment)
-        new_environment[evaluated_function.argument_name] = evaluated_input
-        if evaluated_function.scope:
-            _ = evaluated_function.scope.evaluate(new_environment)
-        return evaluated_function.expression.evaluate(new_environment)
-    return evaluated_function(evaluated_input)
-
-
 class FunctionCall(Expression):
     def __init__(self, function: Reference, tuple: ExpressionTuple) -> None:
         self.function = function
@@ -123,9 +111,15 @@ class FunctionCall(Expression):
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
         function = self.function.evaluate(environment)
-        return _evaluate_function_call(environment=environment,
-                                       evaluated_function=function,
-                                       evaluated_input=input)
+        if len(input) == 1:
+            input = input[0]
+        if isinstance(function, Expression):
+            new_environment = deepcopy(environment)
+            new_environment[function.argument_name] = input
+            if function.scope:
+                _ = function.scope.evaluate(new_environment)
+            return function.expression.evaluate(new_environment)
+        return function(input)
 
 
 class VariableDefinition(Expression):
