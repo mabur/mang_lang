@@ -28,7 +28,7 @@ class ExpressionTuple(Expression):
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.expressions)
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Tuple:
         new_environment = deepcopy(environment)
         return tuple(expression.evaluate(new_environment) for expression in self.expressions)
 
@@ -83,6 +83,7 @@ def read_text_file(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return file.read()
 
+
 class Import(Expression):
     def __init__(self, file_path: str) -> None:
         self.file_path = file_path
@@ -97,6 +98,18 @@ class Import(Expression):
         return expression.evaluate(environment)
 
 
+def _evaluate_function_call(environment, evaluated_function, evaluated_input: Tuple):
+    if len(evaluated_input) == 1:
+        evaluated_input = evaluated_input[0]
+    if isinstance(evaluated_function, Expression):
+        new_environment = deepcopy(environment)
+        new_environment[evaluated_function.argument_name] = evaluated_input
+        if evaluated_function.scope:
+            _ = evaluated_function.scope.evaluate(new_environment)
+        return evaluated_function.expression.evaluate(new_environment)
+    return evaluated_function(evaluated_input)
+
+
 class FunctionCall(Expression):
     def __init__(self, function: Reference, tuple: ExpressionTuple) -> None:
         self.function = function
@@ -109,16 +122,10 @@ class FunctionCall(Expression):
 
     def evaluate(self, environment: Environment):
         input = self.tuple.evaluate(environment)
-        if len(input) == 1:
-            input = input[0]
         function = self.function.evaluate(environment)
-        if isinstance(function, Expression):
-            new_environment = deepcopy(environment)
-            new_environment[function.argument_name] = input
-            if function.scope:
-                _ = function.scope.evaluate(new_environment)
-            return function.expression.evaluate(new_environment)
-        return function(input)
+        return _evaluate_function_call(environment=environment,
+                                       evaluated_function=function,
+                                       evaluated_input=input)
 
 
 class VariableDefinition(Expression):
@@ -158,7 +165,7 @@ class FunctionDefinition(Expression):
                 "argument_name": self.argument_name,
                 "expression": self.expression.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         environment[self.function_name] = self
         return self.to_json()
 
@@ -219,6 +226,34 @@ class Conditional(Expression):
             return self.else_expression.evaluate(environment)
 
 
+class TupleComprehension(Expression):
+    def __init__(self, all_expression: Expression, for_expression: Expression,
+                 in_expression: Reference) -> None:
+        self.all_expression = all_expression
+        self.for_expression = for_expression
+        self.in_expression = in_expression
+
+    def to_json(self) -> Json:
+        return {"type": "tuple_comprehension",
+                "all_expression": self.all_expression.to_json(),
+                "for_expression": self.for_expression.to_json(),
+                "in_expression": self.in_expression.to_json()}
+
+    def evaluate(self, environment: Environment):
+        in_expression = self.in_expression.evaluate(environment)
+        assert isinstance(in_expression, tuple)
+        assert isinstance(self.for_expression, Reference)
+        variable_name = self.for_expression.name
+        result = []
+        for x in in_expression:
+            local_environment = deepcopy(environment)
+            local_environment[variable_name] = x
+            y = self.all_expression.evaluate(local_environment)
+            result.append(y)
+        return tuple(result)
+        return in_expression
+
+
 class TokenSlice:
     def __init__(self, tokens: Sequence[Token], begin_index: int = 0):
         assert begin_index <= len(tokens)
@@ -262,6 +297,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_number, [TokenType.NUMBER]),
         ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_conditional, [TokenType.IF]),
+        ParsePattern(_parse_tuple_comprehension, [TokenType.ALL]),
         ParsePattern(_parse_import, [TokenType.IMPORT]),
         ParsePattern(_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
@@ -386,6 +422,19 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
     else_expression, tokens = parse_expression(tokens)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), tokens)
+
+
+def _parse_tuple_comprehension(tokens: TokenSlice)\
+        -> Tuple[TupleComprehension, TokenSlice]:
+    tokens = _parse_known_token(tokens, TokenType.ALL)
+    all_expression, tokens = parse_expression(tokens)
+    tokens = _parse_known_token(tokens, TokenType.FOR)
+    for_expression, tokens = parse_expression(tokens)
+    tokens = _parse_known_token(tokens, TokenType.IN)
+    in_expression, tokens = _parse_reference(tokens)
+    return (TupleComprehension(all_expression=all_expression,
+                               for_expression=for_expression,
+                               in_expression=in_expression), tokens)
 
 
 def is_tuple(x) -> bool:

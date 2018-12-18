@@ -345,5 +345,12 @@ class TestImport(unittest.TestCase):
             self.assertEqual(V(4), interpret('(z = import("file_name"), z.y)')[1])
 
 
+class TestTupleComprehension(unittest.TestCase):
+    def test1(self):
+        actual = interpret('(t = (2, 3), all mul(e, e) for e in t)')
+        expected = (V(4), V(9))
+        self.assertEqual(expected, actual[1])
+
+
 if __name__ == '__main__':
     unittest.main()
