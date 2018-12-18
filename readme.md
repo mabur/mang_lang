@@ -10,16 +10,17 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 1. Numbers
 2. Variables
-3. Functions
-4. Conditional expressions (if then else)
-5. Tuples
+3. Tuples
+4. Functions
+5. Conditional expressions (if then else)
+5. Tuple comprehensions (all for in)
+
 
 **What it does NOT have**:
 
-1. Control structures like: for, while, switch. If-then-else is the only control structure and recursion is used for loops.
+1. Mutable variables. Everything is immutable / constant.
 2. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
 3. Object oriented stuff like constructors, destructors, inheritance. Tuples are used for simple objects.
-4. Mutable variables. Everything is immutable.
 
 **Example code**:
 
@@ -39,6 +40,7 @@ This example first defines a function named `faculty`. It then defines a variabl
 3. [Tuples](#tuples)
 4. [Functions](#functions)
 5. [Scope](#scope)
+6. [Tuple Comprehension](#tuple-comprehension)
 
 ## Numbers and Built-in Functions
 
@@ -177,3 +179,15 @@ Scopes can be used for both function definitions and variable definitions:
 margin = {top_margin = 5, bottom_margin = 10} = add(top_margin, bottom_margin)
 ```
 
+## Tuple Comprehension
+
+Tuple comprehension can be used to create a tuple by looping over another tuple:
+
+```
+(
+input = (1, 2, 3),
+output = all mul(x, x) for x in input
+)
+```
+This computes the square of all elements in `input`.
+So `output` becomes `(1, 4, 9)`.
