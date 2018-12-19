@@ -2,7 +2,7 @@ from interpreter import interpret, create_abstract_syntax_tree_json
 import json
 
 code = '''
-(f(x)=1, all f(y) for y in (1,2))
+(f(x)=1, all f(y) for y in (1,2) if not(y))
 '''
 print('Interpreting: {}'.format(code))
 print('Abstract syntax tree:')

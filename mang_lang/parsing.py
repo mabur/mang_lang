@@ -6,7 +6,7 @@
 # function_call = symbol, array
 
 from copy import deepcopy
-from typing import Any, Callable, MutableMapping, Sequence, Tuple
+from typing import Any, Callable, MutableMapping, Sequence, Optional, Tuple
 from lexing import lexer, Token, TokenType
 
 
@@ -222,10 +222,11 @@ class Conditional(Expression):
 
 class TupleComprehension(Expression):
     def __init__(self, all_expression: Expression, for_expression: Expression,
-                 in_expression: Reference) -> None:
+                 in_expression: Reference, if_expression: Optional[Expression]) -> None:
         self.all_expression = all_expression
         self.for_expression = for_expression
         self.in_expression = in_expression
+        self.if_expression = if_expression
 
     def to_json(self) -> Json:
         return {"type": "tuple_comprehension",
@@ -243,6 +244,10 @@ class TupleComprehension(Expression):
             local_environment = deepcopy(environment)
             local_environment[variable_name] = x
             y = self.all_expression.evaluate(local_environment)
+            if self.if_expression:
+                z = self.if_expression.evaluate(local_environment)
+                if not bool(z['value']):
+                    continue
             result.append(y)
         return tuple(result)
         return in_expression
@@ -426,9 +431,14 @@ def _parse_tuple_comprehension(tokens: TokenSlice)\
     for_expression, tokens = parse_expression(tokens)
     tokens = _parse_known_token(tokens, TokenType.IN)
     in_expression, tokens = parse_expression(tokens)
+    if_expression = None
+    if tokens.do_match([TokenType.IF]):
+        tokens = _parse_known_token(tokens, TokenType.IF)
+        if_expression, tokens = parse_expression(tokens)
     return (TupleComprehension(all_expression=all_expression,
                                for_expression=for_expression,
-                               in_expression=in_expression), tokens)
+                               in_expression=in_expression,
+                               if_expression=if_expression), tokens)
 
 
 def is_tuple(x) -> bool:

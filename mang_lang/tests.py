@@ -386,6 +386,16 @@ class TestTupleComprehension(unittest.TestCase):
         expected = (V(1), V(1))
         self.assertEqual(expected, actual[2])
 
+    def test9(self):
+        actual = interpret('all e for e in (1, 2, 3, 4) if equal(e, 2)')
+        expected = (V(2),)
+        self.assertEqual(expected, actual)
+
+    def test10(self):
+        actual = interpret('all e for e in (1, 2, 3, 4) if not(equal(e, 2))')
+        expected = (V(1), V(3), V(4))
+        self.assertEqual(expected, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
