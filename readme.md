@@ -2,9 +2,8 @@
 
 Mang Lang is a toy programming language with the following **design trade-offs**:
 
-1. Simple instead of advanced.
-2. Minimalistic instead of feature-rich.
-3. Functional instead of imperative or object oriented.
+1. Minimalistic instead of feature-rich.
+2. Functional instead of imperative or object oriented.
 
 **What it has**:
 
@@ -13,7 +12,7 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 3. Tuples
 4. Functions
 5. Conditional expressions (if then else)
-5. Tuple comprehensions (all for in)
+5. Tuple comprehensions (all for in if)
 
 
 **What it does NOT have**:
@@ -31,7 +30,7 @@ result = faculty(4)
 )
 ```
 
-This example first defines a function named `faculty`. It then defines a variable named `result` to be the value of `faculty(4)` i.e. `1*2*3*4=24`. Mang Lang uses functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Recursion is used for loops. Whitespace and new lines are optional.
+This example first defines a function named `faculty`. It has a recursive definition. It then defines a variable named `result` to be the value of `faculty(4)` i.e. `1*2*3*4=24`. Mang Lang uses functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Whitespace and new lines are optional.
 
 # Examples
 
@@ -181,7 +180,10 @@ margin = {top_margin = 5, bottom_margin = 10} = add(top_margin, bottom_margin)
 
 ## Tuple Comprehension
 
-Tuple comprehension can be used to create a tuple by looping over another tuple:
+In Mang Lang you can create loops by using recursion.
+Tuple comprehension is an alternative way to express some loops in a simpler way.
+It is similar to "set builder notation" and "map" and "filter" operations.
+It is designed for the use case when you create a tuple by looping over another tuple:
 
 ```
 (
@@ -191,3 +193,11 @@ output = all mul(x, x) for x in input
 ```
 This computes the square of all elements in `input`.
 So `output` becomes `(1, 4, 9)`.
+Tuple comprehensions also support an optional `if` expression at the end. This can be used to filter values:
+```
+(
+input = (1, 2, 3),
+output = all mul(x, x) for x in input if not(equal(x, 2))
+)
+```
+In this example `output` becomes `(1, 9)`.
