@@ -40,7 +40,7 @@ class ScopeTuple(Expression):
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.expressions)
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Tuple:
         return tuple(expression.evaluate(environment) for expression in self.expressions)
 
 
@@ -52,7 +52,7 @@ class Number(Expression):
         return {"type": "number",
                 "value": self.value}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         return self.to_json()
 
 
@@ -64,7 +64,7 @@ class String(Expression):
         return {"type": "string",
                 "value": self.value}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         return self.to_json()
 
 
@@ -234,7 +234,7 @@ class TupleComprehension(Expression):
                 "for_expression": self.for_expression.to_json(),
                 "in_expression": self.in_expression.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Tuple:
         in_expression = self.in_expression.evaluate(environment)
         assert isinstance(in_expression, tuple)
         assert isinstance(self.for_expression, Reference)
@@ -250,7 +250,6 @@ class TupleComprehension(Expression):
                     continue
             result.append(y)
         return tuple(result)
-        return in_expression
 
 
 class TokenSlice:
