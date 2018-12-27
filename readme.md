@@ -7,12 +7,13 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 **What it has**:
 
-1. Numbers
-2. Variables
-3. Tuples
-4. Functions
-5. Conditional expressions (if then else)
-5. Tuple comprehensions (all for in if)
+1. Numbers and strings are primitive data types.
+3. Tuples are used for composite data types.
+4. Variables.
+5. Functions.
+6. Conditional expressions (if then else).
+7. Looping with tuple comprehensions (all for in if).
+8. Looping with recursive functions.
 
 
 **What it does NOT have**:
