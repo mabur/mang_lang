@@ -6,18 +6,19 @@
 # function_call = symbol, array
 
 from copy import deepcopy
-from typing import Any, Callable, MutableMapping, Sequence, Optional, Tuple
+from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
+    Tuple, Union
 from lexing import lexer, Token, TokenType
 
 
 Environment = MutableMapping[str, Any]
-Json = Any
+Json = Union[float, str, Mapping[str, Any], Sequence]
 
 class Expression:
     def to_json(self) -> Json:
         raise NotImplemented
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         raise NotImplemented()
 
 
@@ -28,7 +29,7 @@ class ExpressionTuple(Expression):
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.expressions)
 
-    def evaluate(self, environment: Environment) -> Tuple:
+    def evaluate(self, environment: Environment) -> Json:
         new_environment = deepcopy(environment)
         return tuple(expression.evaluate(new_environment) for expression in self.expressions)
 
@@ -40,7 +41,7 @@ class ScopeTuple(Expression):
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.expressions)
 
-    def evaluate(self, environment: Environment) -> Tuple:
+    def evaluate(self, environment: Environment) -> Json:
         return tuple(expression.evaluate(environment) for expression in self.expressions)
 
 
@@ -75,7 +76,7 @@ class Reference(Expression):
     def to_json(self) -> Json:
         return {"type": "reference", "name": self.name}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         return environment[self.name]
 
 
@@ -91,7 +92,7 @@ class Import(Expression):
     def to_json(self) -> Json:
         return {"type": "import", "file_path": self.file_path}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         code = read_text_file(self.file_path)
         tokens = lexer(code)
         expression, _ = parse_expression(TokenSlice(tokens))
@@ -108,7 +109,7 @@ class FunctionCall(Expression):
                 "function_name": self.function.to_json()['name'],
                 "input": self.tuple.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         input = self.tuple.evaluate(environment)
         function = self.function.evaluate(environment)
         if len(input) == 1:
@@ -134,7 +135,7 @@ class VariableDefinition(Expression):
                 "name": self.name,
                 "expression": self.expression.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         new_environment = deepcopy(environment)
         if self.scope:
             _ = self.scope.evaluate(new_environment)
@@ -174,7 +175,7 @@ class Indexing(Expression):
                 "reference_name": self.reference.to_json()['name'],
                 "index": self.index.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         reference = self.reference.evaluate(environment)
         index = int(self.index.evaluate(environment)["value"])
         if is_tuple(reference):
@@ -195,7 +196,7 @@ class DefinitionLookup(Expression):
                 "parent": self.parent.to_json(),
                 "child": self.child.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         tuple = self.parent.evaluate(environment)
         return next(e['value'] for e in tuple if e['name'] == self.child.name)
 
@@ -213,7 +214,7 @@ class Conditional(Expression):
                 "then_expression": self.then_expression.to_json(),
                 "else_expression": self.else_expression.to_json()}
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, environment: Environment) -> Json:
         if self.condition.evaluate(environment)['value']:
             return self.then_expression.evaluate(environment)
         else:
@@ -234,7 +235,7 @@ class TupleComprehension(Expression):
                 "for_expression": self.for_expression.to_json(),
                 "in_expression": self.in_expression.to_json()}
 
-    def evaluate(self, environment: Environment) -> Tuple:
+    def evaluate(self, environment: Environment) -> Json:
         in_expression = self.in_expression.evaluate(environment)
         assert isinstance(in_expression, tuple)
         assert isinstance(self.for_expression, Reference)
