@@ -155,7 +155,35 @@ text_file("data.txt") = content
 
 STACKED OPERATIONS
 (
-a=(b=(c=1)),
+a=(b=(c=1,d(x)=mul(x,x))),
 a[0][0],
-a.b.c
+a.b.c,
+a.b.d(2)
 )
+
+indexing = (symbol and "[" and index and "]") or (expression and "[" and index and "]")
+lookup = (symbol and "." and symbol) or (expression and "." and symbol)
+call = (symbol and expression) or (expression and expression)
+
+Det blir väl svårare att parsa när ordningen är tvärtom?
+Alternativ: Eller ska man implementera den parsningen baklänges?
+
+Alternativ: Uttryck som funktioner. Skulle något bli enklare av det?
+index(tuple, i)
+lookup(object, member_name)
+eller låt () ha speciel betydelse för tuple:
+tuple(i)
+object(member_name)
+(
+a=(b=(c=1,d(x)=mul(x,x))),
+a(0)(0),
+a(b)(c),
+a(b)(d)(2)
+)
+std(min)(3, 2)
+
+Alternativ: tillåt inte kedjning, utan bara en "operation" per expression.
+En annan fördel med det är att man tvingas införa hjälpvariabler för sammansatta uttryck.
+Då behöver jag dock hantera funktionspekare.
+
+FUNCTION POINTERS / REFERENCES / ALIASES
