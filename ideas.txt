@@ -187,3 +187,49 @@ En annan fördel med det är att man tvingas införa hjälpvariabler för samman
 Då behöver jag dock hantera funktionspekare.
 
 FUNCTION POINTERS / REFERENCES / ALIASES
+
+MODULES & SCOPE
+
+main.ml
+(
+std = import("std.ml"),
+a = 3,
+f(x) = 4,
+b = (
+    c = 5,
+    g(x) = 7
+    )
+h(x) = {
+       k(y) = 8,
+       u = mul(x, x)
+       } = k(u),
+d = (1, 2, 3),
+sum = std.sum,
+e = sum(d)
+)
+
+std.ml
+(
+arithmetic = (
+             sum = ...
+             ),
+order = (
+        min = ...
+        max = ...
+        ),
+pi = 3.14,
+sin(x) = ...,
+cos(x) = {half_pi = div(pi, 2), y = add(x, half_pi)}, sin(y),
+increment(x) = {f(y) = add(y, x)} = f
+)
+
+Code representations:
+* source
+* lexed sequence of tokens (maybe multiple steps)
+* ast (not json, but can be converted to json)
+* evaluated tree (not json, but can be converted to json)
+  Uses same node types as ast, but all constants substituted etc.
+  It is possible to have recursive data structures in Python, but not with Mypy annotation.
+
+TODO:
+* Make result of "evaluate" methods be Expression nodes. Convert to json outside of the methods, in the calling function "interpret".
