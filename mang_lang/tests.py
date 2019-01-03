@@ -139,7 +139,7 @@ class TestExpression(unittest.TestCase):
     def test_composition(self):
         self.assertEqual(V(12), interpret('add(sub(5, 3), mul(2, 5))'))
 
-    def test_whites_pace(self):
+    def test_white_space(self):
         self.assertEqual(V(12), interpret('  add( sub(5 , 3), mul   (2,5))'))
 
 
