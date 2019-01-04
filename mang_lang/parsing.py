@@ -24,14 +24,14 @@ class Expression:
 
 class ExpressionTuple(Expression):
     def __init__(self, expressions: Sequence[Expression]) -> None:
-        self.expressions = expressions  # TODO: rename to value to make it similar to String?
+        self.value = expressions
 
     def to_json(self) -> Json:
-        return tuple(e.to_json() for e in self.expressions)
+        return tuple(e.to_json() for e in self.value)
 
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.expressions]
+        expressions = [e.evaluate(new_environment) for e in self.value]
         return ExpressionTuple(expressions)
 
 
@@ -115,8 +115,8 @@ class FunctionCall(Expression):
         input = self.tuple.evaluate(environment)
         assert isinstance(input, ExpressionTuple)
         function = self.function.evaluate(environment)
-        if len(input.expressions) == 1:
-            input = input.expressions[0]
+        if len(input.value) == 1:
+            input = input.value[0]
         if isinstance(function, Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
@@ -181,11 +181,11 @@ class Indexing(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         reference = self.reference.evaluate(environment)
         index = int(self.index.evaluate(environment).value)
+        element = reference.value[index]
         if isinstance(reference, ExpressionTuple):
-            return reference.expressions[index]
+            return element
         if isinstance(reference, String):
-            character = reference.value[index]
-            return String('"{}"'.format(character))
+            return String('"{}"'.format(element))
         raise TypeError
 
 
@@ -202,7 +202,7 @@ class DefinitionLookup(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         tuple = self.parent.evaluate(environment)
         assert isinstance(tuple, ExpressionTuple)
-        return next(e.expression for e in tuple.expressions
+        return next(e.expression for e in tuple.value
                     if e.name == self.child.name)
 
 
@@ -246,7 +246,7 @@ class TupleComprehension(Expression):
         assert isinstance(self.for_expression, Reference)
         variable_name = self.for_expression.name
         result = []
-        for x in in_expression.expressions:
+        for x in in_expression.value:
             local_environment = deepcopy(environment)
             local_environment[variable_name] = x
             y = self.all_expression.evaluate(local_environment)

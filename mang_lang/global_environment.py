@@ -36,43 +36,40 @@ def equal(x: ExpressionTuple):
 
 
 def _value_left(x: ExpressionTuple):
-    assert len(x.expressions) == 2
-    return x.expressions[0].value
+    assert len(x.value) == 2
+    return x.value[0].value
 
 
 def _value_right(x: ExpressionTuple):
-    assert len(x.expressions) == 2
-    return x.expressions[1].value
+    assert len(x.value) == 2
+    return x.value[1].value
 
 
 def size(x: Union[String, ExpressionTuple]):
-    if isinstance(x, String):
         return Number(str(len(x.value)))
-    if isinstance(x, ExpressionTuple):
-        return Number(str(len(x.expressions)))
-    raise TypeError
 
 
 def _concat_tuple(x: ExpressionTuple) -> ExpressionTuple:
     expressions = []
-    for t in x.expressions:
-        assert isinstance(t, ExpressionTuple)
-        expressions += t.expressions
+    for e in x.value:
+        assert isinstance(e, ExpressionTuple)
+        expressions += e.value
     return ExpressionTuple(expressions)
 
 
 def _concat_string(x: ExpressionTuple) -> String:
     expressions = '"'
-    for s in x.expressions:
-        expressions += s.value
+    for e in x.value:
+        assert isinstance(e, String)
+        expressions += e.value
     expressions += '"'
     return String(expressions)
 
 
 def concat(x: ExpressionTuple):
-    if isinstance(x.expressions[0], ExpressionTuple):
+    if isinstance(x.value[0], ExpressionTuple):
         return _concat_tuple(x)
-    if isinstance(x.expressions[0], String):
+    if isinstance(x.value[0], String):
         return _concat_string(x)
     raise TypeError
 
