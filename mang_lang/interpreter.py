@@ -12,5 +12,5 @@ def create_abstract_syntax_tree_json(code: str):
 def interpret(code: str):
     tokens = lexer(code)
     expression, _ = parse_expression(TokenSlice(tokens))
-    value = expression.evaluate(global_environment.ENVIRONMENT)
+    value = expression.evaluate(global_environment.ENVIRONMENT).to_json()
     return value

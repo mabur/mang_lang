@@ -18,20 +18,21 @@ class Expression:
     def to_json(self) -> Json:
         raise NotImplemented
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment):
         raise NotImplemented()
 
 
 class ExpressionTuple(Expression):
     def __init__(self, expressions: Sequence[Expression]) -> None:
-        self.expressions = expressions
+        self.expressions = expressions  # TODO: rename to value to make it similar to String?
 
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.expressions)
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        return tuple(expression.evaluate(new_environment) for expression in self.expressions)
+        expressions = [e.evaluate(new_environment) for e in self.expressions]
+        return ExpressionTuple(expressions)
 
 
 class ScopeTuple(Expression):
@@ -41,8 +42,9 @@ class ScopeTuple(Expression):
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.expressions)
 
-    def evaluate(self, environment: Environment) -> Json:
-        return tuple(expression.evaluate(environment) for expression in self.expressions)
+    def evaluate(self, environment: Environment) -> Expression:
+        expressions = [e.evaluate(environment) for e in self.expressions]
+        return ScopeTuple(expressions)
 
 
 class Number(Expression):
@@ -53,8 +55,8 @@ class Number(Expression):
         return {"type": "number",
                 "value": self.value}
 
-    def evaluate(self, environment: Environment) -> Json:
-        return self.to_json()
+    def evaluate(self, environment: Environment) -> Expression:
+        return self
 
 
 class String(Expression):
@@ -65,8 +67,8 @@ class String(Expression):
         return {"type": "string",
                 "value": self.value}
 
-    def evaluate(self, environment: Environment) -> Json:
-        return self.to_json()
+    def evaluate(self, environment: Environment) -> Expression:
+        return self
 
 
 class Reference(Expression):
@@ -76,7 +78,7 @@ class Reference(Expression):
     def to_json(self) -> Json:
         return {"type": "reference", "name": self.name}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         return environment[self.name]
 
 
@@ -92,7 +94,7 @@ class Import(Expression):
     def to_json(self) -> Json:
         return {"type": "import", "file_path": self.file_path}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         code = read_text_file(self.file_path)
         tokens = lexer(code)
         expression, _ = parse_expression(TokenSlice(tokens))
@@ -109,11 +111,12 @@ class FunctionCall(Expression):
                 "function_name": self.function.to_json()['name'],
                 "input": self.tuple.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         input = self.tuple.evaluate(environment)
+        assert isinstance(input, ExpressionTuple)
         function = self.function.evaluate(environment)
-        if len(input) == 1:
-            input = input[0]
+        if len(input.expressions) == 1:
+            input = input.expressions[0]
         if isinstance(function, Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
@@ -133,17 +136,17 @@ class VariableDefinition(Expression):
     def to_json(self) -> Json:
         return {"type": "variable_definition",
                 "name": self.name,
-                "expression": self.expression.to_json()}
+                "value": self.expression.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         if self.scope:
             _ = self.scope.evaluate(new_environment)
         value = self.expression.evaluate(new_environment)
         environment[self.name] = value
-        return {"type": "variable_definition",
-                "name": self.name,
-                "value": value}
+        return VariableDefinition(name=self.name,
+                                  expression=value,
+                                  scope=self.scope)
 
 
 class FunctionDefinition(Expression):
@@ -160,9 +163,9 @@ class FunctionDefinition(Expression):
                 "argument_name": self.argument_name,
                 "expression": self.expression.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         environment[self.function_name] = self
-        return self.to_json()
+        return self
 
 
 class Indexing(Expression):
@@ -175,14 +178,14 @@ class Indexing(Expression):
                 "reference_name": self.reference.to_json()['name'],
                 "index": self.index.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         reference = self.reference.evaluate(environment)
-        index = int(self.index.evaluate(environment)["value"])
-        if is_tuple(reference):
-            return reference[index]
-        if is_string(reference):
-            character = reference["value"][index]
-            return String('"{}"'.format(character)).to_json()
+        index = int(self.index.evaluate(environment).value)
+        if isinstance(reference, ExpressionTuple):
+            return reference.expressions[index]
+        if isinstance(reference, String):
+            character = reference.value[index]
+            return String('"{}"'.format(character))
         raise TypeError
 
 
@@ -196,9 +199,11 @@ class DefinitionLookup(Expression):
                 "parent": self.parent.to_json(),
                 "child": self.child.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         tuple = self.parent.evaluate(environment)
-        return next(e['value'] for e in tuple if e['name'] == self.child.name)
+        assert isinstance(tuple, ExpressionTuple)
+        return next(e.expression for e in tuple.expressions
+                    if e.name == self.child.name)
 
 
 class Conditional(Expression):
@@ -214,8 +219,8 @@ class Conditional(Expression):
                 "then_expression": self.then_expression.to_json(),
                 "else_expression": self.else_expression.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
-        if self.condition.evaluate(environment)['value']:
+    def evaluate(self, environment: Environment) -> Expression:
+        if self.condition.evaluate(environment).value:
             return self.then_expression.evaluate(environment)
         else:
             return self.else_expression.evaluate(environment)
@@ -235,22 +240,22 @@ class TupleComprehension(Expression):
                 "for_expression": self.for_expression.to_json(),
                 "in_expression": self.in_expression.to_json()}
 
-    def evaluate(self, environment: Environment) -> Json:
+    def evaluate(self, environment: Environment) -> Expression:
         in_expression = self.in_expression.evaluate(environment)
-        assert isinstance(in_expression, tuple)
+        assert isinstance(in_expression, ExpressionTuple)
         assert isinstance(self.for_expression, Reference)
         variable_name = self.for_expression.name
         result = []
-        for x in in_expression:
+        for x in in_expression.expressions:
             local_environment = deepcopy(environment)
             local_environment[variable_name] = x
             y = self.all_expression.evaluate(local_environment)
             if self.if_expression:
                 z = self.if_expression.evaluate(local_environment)
-                if not bool(z['value']):
+                if not bool(z.value):
                     continue
             result.append(y)
-        return tuple(result)
+        return ExpressionTuple(result)
 
 
 class TokenSlice:
@@ -439,11 +444,3 @@ def _parse_tuple_comprehension(tokens: TokenSlice)\
                                for_expression=for_expression,
                                in_expression=in_expression,
                                if_expression=if_expression), tokens)
-
-
-def is_tuple(x) -> bool:
-    return isinstance(x, Tuple)
-
-
-def is_string(x) -> bool:
-    return isinstance(x, dict) and x["type"] == "string"
