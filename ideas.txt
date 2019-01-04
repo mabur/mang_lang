@@ -223,6 +223,104 @@ cos(x) = {half_pi = div(pi, 2), y = add(x, half_pi)}, sin(y),
 increment(x) = {f(y) = add(y, x)} = f
 )
 
+TODO:
+Add support for calling of functions via several references:
+a.f(b)
+Do that before supporting "copying" of functions:
+c = a.f
+c(b)
+
+First step can be to implement regexp-like functionality on my own, and use that for both lexing and parsing.
+
+
+REGEXP FUNCTIONALITY
+
+NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
+PARENTHESIS_BEGIN = "\("
+PARENTHESIS_END = "\)"
+BRACKET_BEGIN = "\["
+BRACKET_END = "\]"
+SCOPE_BEGIN = "\{"
+SCOPE_END = "\}"
+EQUAL = "="
+COMMA = ","
+DOT = "\."
+IF = "if"
+THEN = "then"
+ELSE = "else"
+IMPORT = "import"
+ALL = "all"  # TODO: rename to "each"?
+FOR = "for"
+IN = "in"
+SYMBOL = "[a-z_]\\w*"
+STRING = "\"\w*\""
+WHITE_SPACE = " "
+NEW_LINES = "\n"
+
+_parse_number, [TokenType.NUMBER]
+_parse_string, [TokenType.STRING]
+_parse_conditional, [TokenType.IF]
+_parse_tuple_comprehension, [TokenType.ALL]
+_parse_import, [TokenType.IMPORT]
+_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]
+_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]
+_parse_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]
+_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]
+_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]
+_parse_reference, [TokenType.SYMBOL]
+_parse_tuple, [TokenType.PARENTHESIS_BEGIN]
+_parse_scope, [TokenType.SCOPE_BEGIN]
+
+a.b.c
+a.b.c()
+
+* Fix sekvens
+* optional (0 eller 1) av element från någon mängd. högst 1.
+* 1 eller godtyckligt många av element från någon mängd. minst 1.
+* godtyckligt antal. minst 0
+* ihopslagningar av mönstren ovan.
+* Stöd karaktärer / tokens av godtycklig typ.
+
+digit = anyof([0,1,2,3,4,5,6,7,8,9])
+letter = anyof([a,b,c,...])
+sign = anyof([+,-])
+if_key_word = sequence([i,f])
+
+a=if_key_word
+b=atmost(1, sign)
+c=atleast(1, letter)
+d=atleast(0, digit)
+e=sequence([a,b,c,d])
+g=atmost(1, e)
+
+// Exempel:
+a.b.c()
+symbol = atleast(1, letters)
+dot = sequence([.])
+indirection = sequence((symbol, dot))
+optional_indirection = atleast(0, indirection)
+open_parenthesis = sequence([(])
+function_call = sequence((optional_indirection, symbol, open_parenthesis))
+
+def sequence(x: Sequence[Token]) -> Pattern
+def atmost(n: int, x: Sequence[Token]) -> Pattern
+def atleast(n: int, x: Sequence[Token]) -> Pattern
+def match_pattern(x: Sequence[Token], pattern: Pattern) -> Pair[int, int]
+def match_patterns(x: Sequence[Token], patterns: Sequence[Pattern]) -> Sequence[Pair[int, int]]:
+    return [match_pattern(x, pattern) for pattern in patterns]
+Den sista funktionen kanske är onödigt enkel för att ha som del av bibliotek.
+Kanske lättare att skriva den själv och anpassa till just de behov man har.
+
+class Pattern:
+    def match(self, x: Sequence):
+
+NY IDÈ
+
+Kanske blir lättare om man har rekursiv definition av indirection:
+indirection = symbol . expression
+istället för
+symbol.symbol
+
 Code representations:
 * source
 * lexed sequence of tokens (maybe multiple steps)
