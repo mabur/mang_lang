@@ -234,6 +234,12 @@ class TestDefinitionLookup(unittest.TestCase):
             ),
             interpret('(x=(a=1,b=2), x.b)'))
 
+    def test_indexing_number2(self):
+        self.assertEqual(V(1), interpret('(x = (y = (z = 1)), x.y.z)')[1])
+
+    def test_indexing_number3(self):
+        self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), x.y.z.w)')[1])
+
 
 class TestFunctionDefinition(unittest.TestCase):
     def test_function_definition(self):

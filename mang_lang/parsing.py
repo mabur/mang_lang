@@ -190,9 +190,10 @@ class Indexing(Expression):
 
 
 class DefinitionLookup(Expression):
-    def __init__(self, parent: Reference, child: Reference) -> None:
+    def __init__(self, parent: Reference, child: Expression) -> None:
         self.parent = parent
         self.child = child
+        self.name = parent.name
 
     def to_json(self) -> Json:
         return {"type": "definition_lookup",
@@ -202,8 +203,11 @@ class DefinitionLookup(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         tuple = self.parent.evaluate(environment)
         assert isinstance(tuple, ExpressionTuple)
-        return next(e.expression for e in tuple.value
-                    if e.name == self.child.name)
+        child_environment = deepcopy(environment)
+        next_expression = next(e.expression for e in tuple.value
+                               if e.name == self.child.name)
+        child_environment[self.child.name] = next_expression
+        return self.child.evaluate(child_environment)
 
 
 class Conditional(Expression):
@@ -306,7 +310,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
         ParsePattern(_parse_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
-        ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]),
+        ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT]),
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
@@ -413,7 +417,7 @@ def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
     parent, tokens = _parse_reference(tokens)
     tokens = _parse_known_token(tokens, TokenType.DOT)
-    child, tokens = _parse_reference(tokens)
+    child, tokens = parse_expression(tokens)
     return (DefinitionLookup(parent=parent, child=child), tokens)
 
 
