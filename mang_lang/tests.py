@@ -240,6 +240,12 @@ class TestDefinitionLookup(unittest.TestCase):
     def test_indexing_number3(self):
         self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), x.y.z.w)')[1])
 
+    def test_indexing_number4(self):
+        self.assertEqual(V(1), interpret('(a=(f(x)=1), a.f(3))')[1])
+
+    def test_indexing_number5(self):
+        self.assertEqual(V(4), interpret('(a=(f(x)=add(x,1)), a.f(3))')[1])
+
 
 class TestFunctionDefinition(unittest.TestCase):
     def test_function_definition(self):

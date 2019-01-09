@@ -104,6 +104,7 @@ class Import(Expression):
 class FunctionCall(Expression):
     def __init__(self, function: Reference, tuple: ExpressionTuple) -> None:
         self.function = function
+        self.name = function.name
         self.tuple = tuple
 
     def to_json(self) -> Json:
@@ -153,6 +154,7 @@ class FunctionDefinition(Expression):
     def __init__(self, function_name: str, argument_name: str,
                  expression: Expression, scope: ScopeTuple) -> None:
         self.function_name = function_name
+        self.name = function_name
         self.argument_name = argument_name
         self.expression = expression
         self.scope = scope
@@ -204,7 +206,15 @@ class DefinitionLookup(Expression):
         tuple = self.parent.evaluate(environment)
         assert isinstance(tuple, ExpressionTuple)
         child_environment = deepcopy(environment)
-        next_expression = next(e.expression for e in tuple.value
+
+        def extract_definition(element: Expression) -> Expression:
+            if isinstance(element, VariableDefinition):
+                return element.expression
+            if isinstance(element, FunctionDefinition):
+                return element
+            raise TypeError
+
+        next_expression = next(extract_definition(e) for e in tuple.value
                                if e.name == self.child.name)
         child_environment[self.child.name] = next_expression
         return self.child.evaluate(child_environment)
