@@ -213,7 +213,7 @@ class TestIndexing(unittest.TestCase):
 
 
 class TestDefinitionLookup(unittest.TestCase):
-    def test_indexing_number0(self):
+    def test0(self):
         self.assertEqual(
             (
                 {'type': 'variable_definition', 'name': 'x', 'value': ({'type': 'variable_definition', 'name': 'y', 'value': V(1)},)},
@@ -221,7 +221,7 @@ class TestDefinitionLookup(unittest.TestCase):
             ),
             interpret('(x = (y = 1), x.y)'))
 
-    def test_indexing_number1(self):
+    def test1(self):
         self.assertEqual(
             (
                 {'type': 'variable_definition', 'name': 'x', 'value':
@@ -234,19 +234,19 @@ class TestDefinitionLookup(unittest.TestCase):
             ),
             interpret('(x=(a=1,b=2), x.b)'))
 
-    def test_indexing_number2(self):
+    def test2(self):
         self.assertEqual(V(1), interpret('(x = (y = (z = 1)), x.y.z)')[1])
 
-    def test_indexing_number3(self):
+    def test3(self):
         self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), x.y.z.w)')[1])
 
-    def test_indexing_number4(self):
+    def test4(self):
         self.assertEqual(V(1), interpret('(a=(f(x)=1), a.f(3))')[1])
 
-    def test_indexing_number5(self):
+    def test5(self):
         self.assertEqual(V(4), interpret('(a=(f(x)=add(x,1)), a.f(3))')[1])
 
-    def test_indexing_number6(self):
+    def test6(self):
         self.assertEqual(V(4), interpret('(a=(b=(f(x)=add(x,1))),a.b.f(3))')[1])
 
 
