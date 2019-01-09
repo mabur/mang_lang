@@ -359,6 +359,10 @@ class TestImport(unittest.TestCase):
         with mock.patch('parsing.read_text_file', return_value='(\nx=3,\ny=4\n)'):
             self.assertEqual(V(4), interpret('(z = import("file_name"), z.y)')[1])
 
+    def test3(self):
+        with mock.patch('parsing.read_text_file', return_value='(square(x)=mul(x,x))'):
+            self.assertEqual(V(9), interpret('(a = import("file_name"), a.square(3))')[1])
+
 
 class TestTupleComprehension(unittest.TestCase):
     def test1(self):
