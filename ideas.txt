@@ -184,5 +184,7 @@ Have same primitive types as in json? Number, string, bool?
 What about individual characters?
 
 TODO:
-* allow keywords in the beginning of symbols
-* update readme with strings and import
+* update readme with strings, import, built-in functions
+* Parse tokens and Expressions similarly.
+  Can peek for starting sequences.
+  Handle optional starting sequences, by implementing it as multiple ParsePatterns.
