@@ -2,7 +2,7 @@ from interpreter import interpret, create_abstract_syntax_tree_json
 import json
 
 code = '''
-(a=(f(x)=1), a.f(1))
+(sum(1,2,3), min(1,2,3), max(1,2,3))
 '''
 print('Interpreting: {}'.format(code))
 print('Abstract syntax tree:')

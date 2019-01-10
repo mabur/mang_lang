@@ -74,6 +74,19 @@ def concat(x: ExpressionTuple):
     raise TypeError
 
 
+def sum_numbers(x: ExpressionTuple):
+    return Number(str(sum(element.value for element in x.value)))
+
+
+def min_numbers(x: ExpressionTuple):
+    return Number(str(min(element.value for element in x.value)))
+
+
+def max_numbers(x: ExpressionTuple):
+    return Number(str(max(element.value for element in x.value)))
+
+
 ENVIRONMENT = {'add': add, 'mul': mul, 'sub': sub, 'div': div, 'equal': equal,
                'and': logical_and, 'or': logical_or, 'not': logical_not,
-               'size': size, 'concat': concat}
+               'size': size, 'concat': concat,
+               'sum': sum_numbers, 'min': min_numbers, 'max': max_numbers}

@@ -135,6 +135,17 @@ class TestEqual(unittest.TestCase):
         self.assertEqual(V(1), interpret('equal(0, 0)'))
 
 
+class TestSumMinMax(unittest.TestCase):
+    def test_sum(self):
+        self.assertEqual(V(6), interpret('sum(1,2,3)'))
+
+    def test_min(self):
+        self.assertEqual(V(1), interpret('min(1,2,3)'))
+
+    def test_max(self):
+        self.assertEqual(V(3), interpret('max(1,2,3)'))
+
+
 class TestExpression(unittest.TestCase):
     def test_composition(self):
         self.assertEqual(V(12), interpret('add(sub(5, 3), mul(2, 5))'))
