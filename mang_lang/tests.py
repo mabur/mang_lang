@@ -197,6 +197,10 @@ class TestKeywordVariableClashes(unittest.TestCase):
         self.assertEqual({'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)},
                          interpret('elsewhere = 5'))
 
+    def test_import(self):
+        self.assertEqual({'type': 'variable_definition', 'name': 'important', 'value': V(5)},
+                         interpret('important = 5'))
+
 
 class TestIndirection(unittest.TestCase):
     def test_indirection1(self):

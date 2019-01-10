@@ -380,7 +380,6 @@ def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
 
 def _parse_import(tokens: TokenSlice) -> Tuple[Import, TokenSlice]:
     tokens = _parse_known_token(tokens, TokenType.IMPORT)
-    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
     file_path, tokens = _parse_string(tokens)
     tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
     return (Import(file_path=file_path.value), tokens)

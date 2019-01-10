@@ -17,7 +17,7 @@ class TokenType(Enum):
     IF = "if "
     THEN = "then "
     ELSE = "else "
-    IMPORT = "import"
+    IMPORT = "import\("
     ALL = "all "  # TODO: rename to "each"?
     FOR = "for "
     IN = "in "
