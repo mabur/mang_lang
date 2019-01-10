@@ -66,6 +66,15 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_size4(self):
         self.assertEqual(V(0), interpret('size()'))
 
+    def test_is_empty1(self):
+        self.assertEqual(V(1), interpret('(x=(), is_empty(x))')[1])
+
+    def test_is_empty2(self):
+        self.assertEqual(V(0), interpret('(x=(1), is_empty(x))')[1])
+
+    def test_is_empty3(self):
+        self.assertEqual(V(0), interpret('(x=(1,2), is_empty(x))')[1])
+
     def test_concat1(self):
         self.assertEqual((V(1), V(2), V(3), V(4)),
                          interpret('concat((1,2),(3,4))'))

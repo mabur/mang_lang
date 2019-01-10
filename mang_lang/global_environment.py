@@ -49,6 +49,10 @@ def _size(x: Union[String, ExpressionTuple]):
     return Number(str(len(x.value)))
 
 
+def _is_empty(x: Union[String, ExpressionTuple]):
+    return Number(str(0 if x.value else 1))
+
+
 def _concat_tuple(x: ExpressionTuple) -> ExpressionTuple:
     expressions = []
     for e in x.value:
@@ -95,6 +99,7 @@ ENVIRONMENT = {'add': _add,
                'or': _or,
                'not': _not,
                'size': _size,
+               'is_empty': _is_empty,
                'concat': _concat,
                'sum': _sum,
                'min': _min,
