@@ -176,6 +176,28 @@ class TestDefinitions(unittest.TestCase):
                          interpret('(x=(1,2), add(x))'))
 
 
+class TestKeywordVariableClashes(unittest.TestCase):
+    def test_in(self):
+        self.assertEqual({'type': 'variable_definition', 'name': 'input', 'value': V(5)},
+                         interpret('input = 5'))
+
+    def test_if(self):
+        self.assertEqual({'type': 'variable_definition', 'name': 'iffy', 'value': V(5)},
+                         interpret('iffy = 5'))
+
+    def test_all(self):
+        self.assertEqual({'type': 'variable_definition', 'name': 'allround', 'value': V(5)},
+                         interpret('allround = 5'))
+
+    def test_then(self):
+        self.assertEqual({'type': 'variable_definition', 'name': 'thenner', 'value': V(5)},
+                         interpret('thenner = 5'))
+
+    def test_else(self):
+        self.assertEqual({'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)},
+                         interpret('elsewhere = 5'))
+
+
 class TestIndirection(unittest.TestCase):
     def test_indirection1(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(5)},
