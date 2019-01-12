@@ -202,3 +202,21 @@ output = all mul(x, x) for x in input if not(equal(x, 2))
 )
 ```
 In this example `output` becomes `(1, 9)`.
+
+## Importing code in different source files
+
+Source code can be put in different source files. If you have a file called `math` that contains the following:
+```
+(
+square(x) = mul(x, x),
+pi = 3.14151965
+)
+```
+then you can import those definitions into another source file by using the `import` function:
+```
+(
+math = import("math"),
+tau = mul(2, math.pi),
+four = math.square(2)
+)
+```
