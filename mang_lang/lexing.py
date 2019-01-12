@@ -22,7 +22,7 @@ class TokenType(Enum):
     FOR = "for "
     IN = "in "
     SYMBOL = "[a-z_]\\w*"
-    STRING = "\"\w*\""
+    STRING = "\"[\w\s]*\""
     WHITE_SPACE = " "
     NEW_LINES = "\n"
 
