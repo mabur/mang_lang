@@ -41,6 +41,9 @@ This example first defines a function named `faculty`. It has a recursive defini
 4. [Functions](#functions)
 5. [Scope](#scope)
 6. [Tuple Comprehension](#tuple-comprehension)
+7. [Strings](#Strings)
+8. [Importing code in different source files](#importing-code-in-different-source-files)
+9. [List of built-in functions](#list-of-built-in-functions)
 
 ## Numbers and Built-in Functions
 
@@ -203,6 +206,18 @@ output = all mul(x, x) for x in input if not(equal(x, 2))
 ```
 In this example `output` becomes `(1, 9)`.
 
+## Strings
+Strings are similar to tuples: 
+```
+(
+first_name = "Magnus",
+last_name = "Burenius",
+full_name = concat(first_name, last_name),
+initials = concat(first_name[0], last_name[0])
+)
+```
+In this example `full_name` gets the value "Magnus Burenius" and `initials` gets the value "MB".
+
 ## Importing code in different source files
 
 Source code can be put in different source files. If you have a file called `math` that contains the following:
@@ -220,3 +235,27 @@ tau = mul(2, math.pi),
 four = math.square(2)
 )
 ```
+
+## List of built-in functions
+
+### Arithmetic functions:
+* **add**: adds two numbers.
+* **mul**: multiplies two numbers.
+* **sub**: subtracts two numbers.
+* **div**: divides two numbers.
+
+### Logical functions:
+* **equal**: true if two numbers are equal, and otherwise false.
+* **and**: true if two variables are both true, and otherwise false.
+* **or**: true if at least one of two variables are true, and otherwise false.
+* **not**: true if a variable is false, and otherwise false.
+
+### Tuple and string functions
+* **size**: the number of elements of a tuple or string.
+* **is_empty**: true if a tuple or string has zero elements.
+* **concat**: concatenates two tuples or strings.
+
+### Tuple of numbers
+* **sum**: sum all numbers in a tuple. Gives zero if the tuple is empty.
+* **min**: smallest number in a non-empty tuple.
+* **max**: largest number in a non-empty tuple.
