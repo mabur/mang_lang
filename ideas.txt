@@ -184,9 +184,8 @@ Have same primitive types as in json? Number, string, bool?
 What about individual characters?
 
 TODO:
-* update readme with strings
 * Parse tokens and Expressions similarly.
   Can peek for starting sequences.
   Handle optional starting sequences, by implementing it as multiple ParsePatterns.
 * Allow capital letters in symbols.
-* Allow more characters in strings.
+* Allow more characters in strings, especially . / \ needed for filenames

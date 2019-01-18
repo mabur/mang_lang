@@ -398,15 +398,15 @@ class TestString(unittest.TestCase):
 
 class TestImport(unittest.TestCase):
     def test1(self):
-        with mock.patch('parsing.read_text_file', return_value='3'):
+        with mock.patch('global_environment._read_text_file', return_value='3'):
             self.assertEqual(V(3), interpret('import("file_name")'))
 
     def test2(self):
-        with mock.patch('parsing.read_text_file', return_value='(\nx=3,\ny=4\n)'):
+        with mock.patch('global_environment._read_text_file', return_value='(\nx=3,\ny=4\n)'):
             self.assertEqual(V(4), interpret('(z = import("file_name"), z.y)')[1])
 
     def test3(self):
-        with mock.patch('parsing.read_text_file', return_value='(square(x)=mul(x,x))'):
+        with mock.patch('global_environment._read_text_file', return_value='(square(x)=mul(x,x))'):
             self.assertEqual(V(9), interpret('(a = import("file_name"), a.square(3))')[1])
 
 
