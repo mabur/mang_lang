@@ -1,0 +1,16 @@
+
+
+copy
+fill
+set
+transform
+
+set(x, 1)
+set(y, 2)
+set(z, 4)
+copy(x, y)
+mul(x, y, z)
+
+
+define square(in, out)
+    mul(in, in, out)
