@@ -183,6 +183,32 @@ BOOLEAN
 Have same primitive types as in json? Number, string, bool?
 What about individual characters?
 
+TYPES
+square(x:real):real = mul(x, x)
+vec2(x:real, y:real):type
+type(x:real, y:real):vec2
+vec2(x:real, y:real):vec2
+vec2(x:real, y:real)
+vec2 = (x:real, y:real)
+(x:real, y:real):vec2
+point = vec2(1,-1)
+point = typeof((x=0, y=0))
+prototype = (x=0, y=0)
+point = typeof(prototype)
+
+square = (real x) -> (real mul(x,x))
+hypo = (real x, real y) -> (real add(square(x),square(y)))
+conj = (real re, real im) -> (real re, real neg(im))
+conj = (complex c) -> (complex {re=c.re, im=neg(c.im)})
+c1 = complex {re=1,im=1}
+c2 = conj(c1)
+im re = conj 1 2
+im,re = conj(1,2)
+im re = conj(1 2)
+(im, re) = conj(1, 2)
+
+Handle definitions as dicts. Have dicts and arrays as basic containers instead of tuple.
+
 TODO:
 * update readme with strings
 * Parse tokens and Expressions similarly.
