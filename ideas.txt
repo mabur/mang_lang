@@ -209,10 +209,201 @@ im re = conj(1 2)
 
 Handle definitions as dicts. Have dicts and arrays as basic containers instead of tuple.
 
+TYPES
+origin2d = (x=0, y=0)
+//Vec2 = type(origin2d))
+//Vec2 = type(x=0, y=0)
+Vec2 = (x: Real, y: Real)
+//point1 = Vec2()
+point2 = Vec2(1, 1)
+//Ray2 = type(start=(0,0), direction=(1,1))
+Ray = (start: Vec2, direction: Vec2)
+// Behövs default-värden? Nej.
+// Behövs konstruktorer? Ja.
+square(x: Real): Real = mul(x, x)
+square(x: Real) = mul(x, x)
+square(x) = mul(x, x)
+square = (x: Real) -> mul(x, x): Real
+square = (x: Real) -> mul(x, x)
+square = (x) -> mul(x, x)
+square = x -> mul(x, x)
+square_distance =
+  (a: Vec2, b: Vec2) ->
+  (dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)) ->
+  add(dx2, dy2): Real
+square_distance =
+  (a: Vec2, b: Vec2) ->
+  (dx=sub(a.x,b.x), dy=sub(a.y,b.y)) ->
+  (dx2=mul(dx,dx), dy2=mul(dy, dy)) ->
+  add(dx2, dy2): Real
+// Variables with local scope:
+square_distance =
+  (a: Vec2, b: Vec2) ->
+  (dx=sub(a.x,b.x), dy=sub(a.y,b.y)) ->
+  (dx2=mul(dx,dx), dy2=mul(dy, dy)) ->
+  add(dx2, dy2): Real
+square_distance =
+  (a: Vec2, b: Vec2) ->
+  {dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)} ->
+  add(dx2, dy2): Real
+
+square_distance: (Vec2, Vec2) -> Real =
+  (a: Vec2, b: Vec2) ->
+  {dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)} ->
+  add(dx2, dy2): Real
+square_distance =
+  (Vec2 a, Vec2 b) -> Real
+  {dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)} ->
+  add(dx2, dy2)
+
+Vec2 = (x=Real, y=Real)
+point = (x=Real 0, y=Real 0)
+point = Vec2 (x=0, y=0)
+point = (x=0, y=0)
+hyp(x, y) = sqrt(add(mul(x, x), mul(y, y)))
+hyp = (x, y) -> sqrt(add(mul(x, x), mul(y, y)))
+hyp = (x=Real, y=Real) -> Real sqrt(add(mul(x, x), mul(y, y)))
+hyp = Vec2 -> Real sqrt(add(mul(x, x), mul(y, y)))
+Hyp = (x=Real, y=Real) -> Real
+
+
+// Alternativ 1 (klass till primitiv):
+square = (x=Number) -> Number mul(left=x, right=x)
+nine = square((x=3))
+five = hyp((x=3,y=4))
+vec  = Vec2((x=3, y=4))
+five = hyp(vec)
+// Alternativ 2 (klass till primitiv):
+square = (x=Number) -> Number mul(left=x, right=x)
+nine = square(x=3)
+five = hyp(x=3,y=4)
+vec  = Vec2(x=3,y=4)
+five = hyp vec
+five = hyp(vec) optional alternativ 3
+
+Ordnings-regel: symbol = typ värde
+Rule: types start with upper case. variables start with lower case.
+
+
+FUNKTIONS-DEFINITIONER
+
+// Klass till primitiv:
+hyp = (x=Real, y=Real) -> Real sqrt(add(mul(x, x), mul(y, y)))
+Real hyp(Real x, Real y) = sqrt(add(mul(x, x), mul(y, y)))
+square = (x=Number) -> Number mul(left=x, right=x)
+Number square(Number x) = mul(x, x)
+
+// Primitiv till primitiv:
+square(x)=mul(x,x)
+square x = mul x x
+square : Number -> Number
+square(x=Number) = Number mul(x,x)
+square x = {x is a number} = mul x x
+square x = mul x x where x is a Number
+square(x)=mul(x,x) where x is a Number
+assuming x is a Number let
+square(x)=mul(x,x)
+square = x -> mul(x, x) where x is a Number
+
+// Tuppel till tuppel
+conjugate(a, b) = (a, neg(b))
+conjugate a b = a neg(b)
+conjugate : Number x Number -> Number x Number
+conjugate(a, b) = (a, neg(b)) where a is a Number and b is a Number
+conjugate = (a, b) -> (a, neg(b)) where a is a Number and b is a Number
+assuming a is a Number and b is a Number let
+conjugate(a, b) = (a, neg(b))
+
+// Klass/tuppel till klass:
+conjugate(Real r, Imag i) = (Real r=r, Imag i=neg(i))
+conjugate : (Real r, Imag i) -> (Real r, Imag i)
+conjugate = (r=Real, i=Imag) -> (r=Real r, i=Imag neg(i))
+conjugate = (r:Real, i:Imag) -> (r:Real=r, i:Imag=neg(i))
+conjugate = (Real r, Imag i) -> (Real r=r, Imag i=neg(i))
+conjugate = {a, b} -> {a=a, b=neg(b)} where a is Number and b is Number
+
+// Klass variabel
+Complex = (re=Number, im=Number)
+complex = (re=1, im=1)
+re = complex.re
+im = complex.im
+conjugate = c -> (re = c.re, im = neg(c.im)) where c is Complex
+complex2 = conjugate(complex1)
+
+
+TYPER
+*Number
+*Real/Rational?
+*Integer?
+*Character?
+*String?
+*Bool?
+*Dict / Class:
+Vec2 = (x=Real, y=Real)
+*Array?
+*Enum?
+
+DICT / TUPLE / ARRAY / TABLE / LUA
+a = (1, 2)
+b = (x=1, y=2)
+add2 = (l, r) -> (add(l[0], r[0]), add(l[1], r[1]))
+c = add2(a, b)
+hyp1 = (v) -> sqrt(add(mul(v[0], v[0]), mul(v[1], v[1])))
+hyp2 = (x, y) -> sqrt(add(mul(x, x), mul(y, y)))
+h1 = hyp1(a)
+h2 = hyp2(1, 2)
+conj1 = (c) -> (re=c.re, im=c.im)
+conj2 = (im, re) -> (re=re, im=im)
+c1 = (1,2)
+c2 = (re=1, im=2)
+c3 = conj1(c1) # error tuple c1 has no members re and im
+c4 = conj1(c2)
+c5 = conj1((re=1, im=2)) # implicit packing
+c6 = conj2(1, 2)
+c7 = conj2(*c1) # implicit unpacking
+c8 = conj2(*c2) # implicit unpacking
+(a,b) = conj1(c1)
+
+SINGLE ARGUMENT FUNCTIONS (ENKELT & BRA)
+a = [1, 2]
+b = [3, 4]
+add2 = x -> [add([x[0][0], x[1][0]]), add([x[0][1], x[1][1]])]
+add2 = terms -> {
+  left = terms[0],
+  right = terms[1],
+  x = [left[0], right[0]],
+  y = [left[1], right[1]]
+  } -> [add(x), add(y)]
+constant = {three = 3, decimals = 0.14}
+         = add(three, decimals)
+c = add2([a, b])
+hyp1 = v -> {
+  x = v[0],
+  y = v[1],
+  x2 = mul([x, x]),
+  y2 = mul([y, y]),
+  } -> sqrt(add([x2, y2]))
+h1 = hyp1(a)
+h2 = hyp1([1, 2])
+conj1 = c -> [re=c[0], im=c[1]]
+c1 = [re=1, im=2]
+c2 = conj1(c1)
+c3 = conj1([re=1, im=2])
+
+TUPLE / ARRAYS / DICT / SCOPES
+* Array []
+* Dict []
+* Scope {}
+* Function call ()
+
 TODO:
-* update readme with strings
+* Types, and input format for functions.
+  How to handle tuples and tuples of definitions?
+  Keyword arguments?
+  Use dict instead of tuple as main building block.
+  Treat functions as values first?
 * Parse tokens and Expressions similarly.
   Can peek for starting sequences.
   Handle optional starting sequences, by implementing it as multiple ParsePatterns.
 * Allow capital letters in symbols.
-* Allow more characters in strings.
+* Allow more characters in strings, especially . / \ needed for filenames

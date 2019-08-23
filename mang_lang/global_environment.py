@@ -1,6 +1,8 @@
 from typing import Union
 
-from parsing import ExpressionTuple, Number, String
+from lexing import lexer
+from parsing import ExpressionTuple, Number, parse_expression, String,\
+    TokenSlice
 
 
 def _add(x: ExpressionTuple):
@@ -90,6 +92,19 @@ def _max(x: ExpressionTuple):
     return Number(str(max(element.value for element in x.value)))
 
 
+def _read_text_file(file_path: str) -> str:
+    with open(file_path, 'r') as file:
+        return file.read()
+
+
+def _import(x: String):
+    code = _read_text_file(x.value)
+    tokens = lexer(code)
+    expression, _ = parse_expression(TokenSlice(tokens))
+    environment = {}
+    return expression.evaluate(environment)
+
+
 ENVIRONMENT = {'add': _add,
                'mul': _mul,
                'sub': _sub,
@@ -103,4 +118,5 @@ ENVIRONMENT = {'add': _add,
                'concat': _concat,
                'sum': _sum,
                'min': _min,
-               'max': _max}
+               'max': _max,
+               'import': _import}

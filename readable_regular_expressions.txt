@@ -1,0 +1,21 @@
+Sök efter sträng:
+"hello"           // fix sträng
+"he{l}[1...9]o"   // 1-9 l
+"he{l}[0...1]o"   // valfritt med l, högst 1 l
+"he{l}[...1]o"    // valfritt med l, högst 1 l
+"he{l}[1...]o"    // minst 1 l
+"he{l}[...]o"     // godtyckligt många l
+"he{l}[2]o"       // hello
+"he{l}[2...2]o"   // hello
+"he{ll}[1]o"      // hello
+"he{ll}[1...1]o"  // hello
+"he{ll}o"         // hello
+"{hello}"         // hello
+"{hello,hi}"      // hello eller hi
+"{hello,hi}[3]"   // t.ex. hellohellohi
+
+Nestade uttryck?
+digit = "{0,1,2,3,4,5,6,7,8,9}"
+number = "{+,-}[0...1]\digit[1...]{.\digit[1...]}[0...1]"
+string = "\"\character[...]\""
+symbol = "\letter[1...]{\letter,\digit,_}[...]"
