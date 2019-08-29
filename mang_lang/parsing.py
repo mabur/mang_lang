@@ -254,10 +254,9 @@ class TupleComprehension(Expression):
 
 
 class TokenSlice:
-    def __init__(self, tokens: Sequence[Token], begin_index: int = 0):
-        assert begin_index <= len(tokens)
+    def __init__(self, tokens: Sequence[Token]):
         self._tokens = tokens
-        self._begin_index = begin_index
+        self._begin_index = 0
 
     def front(self) -> Token:
         return self._tokens[self._begin_index]
