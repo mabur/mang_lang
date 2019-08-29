@@ -1,8 +1,8 @@
 from typing import Union
 
 from lexing import lexer
-from parsing import ExpressionTuple, Number, parse_expression, String,\
-    TokenSlice
+from parsing import ExpressionTuple, Number, parse_expression, String
+from token_slice import TokenSlice
 
 
 def _add(x: ExpressionTuple):

@@ -1,5 +1,6 @@
 from lexing import lexer
-from parsing import parse_expression, TokenSlice
+from parsing import parse_expression
+from token_slice import TokenSlice
 import global_environment
 
 
