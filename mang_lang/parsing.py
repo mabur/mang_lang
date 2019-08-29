@@ -273,6 +273,15 @@ class TokenSlice:
         self.begin_index += 1
         return self
 
+    def parse_known_token(self, expected: TokenType):
+        assert self.front().value == expected.value.replace('\\', '')
+        self.increment()
+
+    def parse_token(self) -> str:
+        value = self.front().value
+        self.increment()
+        return value
+
 
 class ParsePattern:
     def __init__(self,
@@ -280,16 +289,6 @@ class ParsePattern:
                  pattern: Sequence[TokenType]) -> None:
         self.parse_function = parse_function
         self.pattern = pattern
-
-
-def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
-    assert tokens.front().value == expected.value.replace('\\', '')
-    return tokens.increment()
-
-
-def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
-    value = tokens.front().value
-    return (value, tokens.increment())
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
@@ -315,41 +314,41 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
-    value, tokens = _parse_token(tokens)
+    value = tokens.parse_token()
     return (Number(value), tokens)
 
 
 def _parse_string(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
-    value, tokens = _parse_token(tokens)
+    value = tokens.parse_token()
     return (String(value), tokens)
 
 
 def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
-    name, tokens = _parse_token(tokens)
+    name = tokens.parse_token()
     return (Reference(name), tokens)
 
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     expressions = ()
-    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
+    tokens.parse_known_token(TokenType.PARENTHESIS_BEGIN)
     while tokens.front().type != TokenType.PARENTHESIS_END:
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
         if tokens.front().type == TokenType.COMMA:
-            tokens = _parse_known_token(tokens, TokenType.COMMA)
-    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
+            tokens.parse_known_token(TokenType.COMMA)
+    tokens.parse_known_token(TokenType.PARENTHESIS_END)
     return (ExpressionTuple(expressions=expressions), tokens)
 
 
 def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
     expressions = ()
-    tokens = _parse_known_token(tokens, TokenType.SCOPE_BEGIN)
+    tokens.parse_known_token(TokenType.SCOPE_BEGIN)
     while tokens.front().type != TokenType.SCOPE_END:
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
         if tokens.front().type == TokenType.COMMA:
-            tokens = _parse_known_token(tokens, TokenType.COMMA)
-    tokens = _parse_known_token(tokens, TokenType.SCOPE_END)
+            tokens.parse_known_token(TokenType.COMMA)
+    tokens.parse_known_token(TokenType.SCOPE_END)
     return (ScopeTuple(expressions=expressions), tokens)
 
 
@@ -363,24 +362,24 @@ def _parse_optional_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
     if not tokens.do_match([TokenType.SCOPE_BEGIN]):
         return None, tokens
     scope, tokens = _parse_scope(tokens)
-    tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    tokens.parse_known_token(TokenType.EQUAL)
     return scope, tokens
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
-    name, tokens = _parse_token(tokens)
-    tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    name = tokens.parse_token()
+    tokens.parse_known_token(TokenType.EQUAL)
     scope, tokens = _parse_optional_scope(tokens)
     expression, tokens = parse_expression(tokens)
     return (VariableDefinition(name=name, expression=expression, scope=scope), tokens)
 
 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
-    function_name, tokens = _parse_token(tokens)
-    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_BEGIN)
-    argument_name, tokens = _parse_token(tokens)
-    tokens = _parse_known_token(tokens, TokenType.PARENTHESIS_END)
-    tokens = _parse_known_token(tokens, TokenType.EQUAL)
+    function_name = tokens.parse_token()
+    tokens.parse_known_token(TokenType.PARENTHESIS_BEGIN)
+    argument_name = tokens.parse_token()
+    tokens.parse_known_token(TokenType.PARENTHESIS_END)
+    tokens.parse_known_token(TokenType.EQUAL)
     scope, tokens = _parse_optional_scope(tokens)
     expression, tokens = parse_expression(tokens)
     return (FunctionDefinition(function_name=function_name,
@@ -391,25 +390,25 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
 
 def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
     reference, tokens = _parse_reference(tokens)
-    tokens = _parse_known_token(tokens, TokenType.BRACKET_BEGIN)
+    tokens.parse_known_token(TokenType.BRACKET_BEGIN)
     expression, tokens = parse_expression(tokens)
-    tokens = _parse_known_token(tokens, TokenType.BRACKET_END)
+    tokens.parse_known_token(TokenType.BRACKET_END)
     return (Indexing(reference=reference, index=expression), tokens)
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
     parent, tokens = _parse_reference(tokens)
-    tokens = _parse_known_token(tokens, TokenType.DOT)
+    tokens.parse_known_token(TokenType.DOT)
     child, tokens = parse_expression(tokens)
     return (DefinitionLookup(parent=parent, child=child), tokens)
 
 
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
-    tokens = _parse_known_token(tokens, TokenType.IF)
+    tokens.parse_known_token(TokenType.IF)
     condition, tokens = parse_expression(tokens)
-    tokens = _parse_known_token(tokens, TokenType.THEN)
+    tokens.parse_known_token(TokenType.THEN)
     then_expression, tokens = parse_expression(tokens)
-    tokens = _parse_known_token(tokens, TokenType.ELSE)
+    tokens.parse_known_token(TokenType.ELSE)
     else_expression, tokens = parse_expression(tokens)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), tokens)
@@ -417,15 +416,15 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
 
 def _parse_tuple_comprehension(tokens: TokenSlice)\
         -> Tuple[TupleComprehension, TokenSlice]:
-    tokens = _parse_known_token(tokens, TokenType.ALL)
+    tokens.parse_known_token(TokenType.ALL)
     all_expression, tokens = parse_expression(tokens)
-    tokens = _parse_known_token(tokens, TokenType.FOR)
+    tokens.parse_known_token(TokenType.FOR)
     for_expression, tokens = parse_expression(tokens)
-    tokens = _parse_known_token(tokens, TokenType.IN)
+    tokens.parse_known_token(TokenType.IN)
     in_expression, tokens = parse_expression(tokens)
     if_expression = None
     if tokens.do_match([TokenType.IF]):
-        tokens = _parse_known_token(tokens, TokenType.IF)
+        tokens.parse_known_token(TokenType.IF)
         if_expression, tokens = parse_expression(tokens)
     return (TupleComprehension(all_expression=all_expression,
                                for_expression=for_expression,
