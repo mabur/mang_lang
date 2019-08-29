@@ -126,22 +126,18 @@ class VariableDefinition(Expression):
 
 
 class FunctionDefinition(Expression):
-    def __init__(self, function_name: str, argument_name: str,
+    def __init__(self, argument_name: str,
                  expression: Expression, scope: ScopeTuple) -> None:
-        self.function_name = function_name
-        self.name = function_name
         self.argument_name = argument_name
         self.expression = expression
         self.scope = scope
 
     def to_json(self) -> Json:
         return {"type": "function_definition",
-                "function_name": self.function_name,
                 "argument_name": self.argument_name,
                 "expression": self.expression.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
-        environment[self.function_name] = self
         return self
 
 
@@ -307,15 +303,12 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
 
 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
-    function_name = tokens.parse_token()
-    tokens.parse_known_token(TokenType.EQUAL)
     tokens.parse_known_token(TokenType.FROM)
     argument_name = tokens.parse_token()
     scope, tokens = _parse_optional_function_scope(tokens)
     tokens.parse_known_token(TokenType.TO)
     expression, tokens = parse_expression(tokens)
-    return (FunctionDefinition(function_name=function_name,
-                               argument_name=argument_name,
+    return (FunctionDefinition(argument_name=argument_name,
                                scope=scope,
                                expression=expression), tokens)
 
@@ -377,7 +370,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_conditional, [TokenType.IF]),
         ParsePattern(_parse_tuple_comprehension, [TokenType.ALL]),
-        ParsePattern(_parse_function_definition, [TokenType.SYMBOL, TokenType.EQUAL, TokenType.FROM]),
+        ParsePattern(_parse_function_definition, [TokenType.FROM]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
         ParsePattern(_parse_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
         ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT]),
