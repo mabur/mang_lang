@@ -269,6 +269,10 @@ class TokenSlice:
             self.tokens[self.begin_index + i].type == token for i, token in
             enumerate(token_pattern))
 
+    def increment(self):
+        self.begin_index += 1
+        return self
+
 
 class ParsePattern:
     def __init__(self,
@@ -278,17 +282,14 @@ class ParsePattern:
         self.pattern = pattern
 
 
-def _step(tokens: TokenSlice) -> TokenSlice:
-    return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + 1)
-
-
 def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
     assert tokens.front().value == expected.value.replace('\\', '')
-    return _step(tokens)
+    return tokens.increment()
 
 
 def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
-    return (tokens.front().value, _step(tokens))
+    value = tokens.front().value
+    return (value, tokens.increment())
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
