@@ -278,17 +278,17 @@ class ParsePattern:
         self.pattern = pattern
 
 
-def step(tokens: TokenSlice) -> TokenSlice:
+def _step(tokens: TokenSlice) -> TokenSlice:
     return TokenSlice(tokens=tokens.tokens, begin_index=tokens.begin_index + 1)
 
 
 def _parse_known_token(tokens: TokenSlice, expected: TokenType) -> TokenSlice:
     assert tokens.front().value == expected.value.replace('\\', '')
-    return step(tokens)
+    return _step(tokens)
 
 
 def _parse_token(tokens: TokenSlice) -> Tuple[str, TokenSlice]:
-    return (tokens.front().value, step(tokens))
+    return (tokens.front().value, _step(tokens))
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
