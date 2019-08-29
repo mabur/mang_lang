@@ -256,26 +256,26 @@ class TupleComprehension(Expression):
 class TokenSlice:
     def __init__(self, tokens: Sequence[Token], begin_index: int = 0):
         assert begin_index <= len(tokens)
-        self.tokens = tokens
-        self.begin_index = begin_index
+        self._tokens = tokens
+        self._begin_index = begin_index
 
     def front(self) -> Token:
-        return self.tokens[self.begin_index]
+        return self._tokens[self._begin_index]
 
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
-        if len(self.tokens) < self.begin_index + len(token_pattern):
+        if len(self._tokens) < self._begin_index + len(token_pattern):
             return False
         return all(
-            self.tokens[self.begin_index + i].type == token for i, token in
+            self._tokens[self._begin_index + i].type == token for i, token in
             enumerate(token_pattern))
 
     def parse_known_token(self, expected: TokenType) -> None:
         assert self.front().value == expected.value.replace('\\', '')
-        self.begin_index += 1
+        self._begin_index += 1
 
     def parse_token(self) -> str:
         value = self.front().value
-        self.begin_index += 1
+        self._begin_index += 1
         return value
 
 
