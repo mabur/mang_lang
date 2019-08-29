@@ -269,17 +269,13 @@ class TokenSlice:
             self.tokens[self.begin_index + i].type == token for i, token in
             enumerate(token_pattern))
 
-    def increment(self):
-        self.begin_index += 1
-        return self
-
-    def parse_known_token(self, expected: TokenType):
+    def parse_known_token(self, expected: TokenType) -> None:
         assert self.front().value == expected.value.replace('\\', '')
-        self.increment()
+        self.begin_index += 1
 
     def parse_token(self) -> str:
         value = self.front().value
-        self.increment()
+        self.begin_index += 1
         return value
 
 
