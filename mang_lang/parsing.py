@@ -258,8 +258,8 @@ class TokenSlice:
         self._tokens = tokens
         self._begin_index = 0
 
-    def front(self) -> Token:
-        return self._tokens[self._begin_index]
+    def front(self) -> str:
+        return self._tokens[self._begin_index].value
 
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
         if len(self._tokens) < self._begin_index + len(token_pattern):
@@ -269,11 +269,11 @@ class TokenSlice:
             enumerate(token_pattern))
 
     def parse_known_token(self, expected: TokenType) -> None:
-        assert self.front().value == expected.value.replace('\\', '')
+        assert self.front() == expected.value.replace('\\', '')
         self._begin_index += 1
 
     def parse_token(self) -> str:
-        value = self.front().value
+        value = self.front()
         self._begin_index += 1
         return value
 
@@ -305,7 +305,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         if tokens.do_match(parse_pattern.pattern):
             return parse_pattern.parse_function(tokens)
 
-    raise ValueError('Bad token pattern: {}'.format(tokens.front().value))
+    raise ValueError('Bad token pattern: {}'.format(tokens.front()))
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
