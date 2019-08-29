@@ -53,7 +53,7 @@ Mang Lang can be used as a calculator. This is a trivial program that just conta
 8
 ```
 
-This program is unsurprisingly evaluated to the value  `8`. Mang Lang does not have any operators for arithmetics etc, but instead use functions:
+This program is unsurprisingly evaluated to the value  `8`. Mang Lang does not have any operators for arithmetics etc, but instead uses functions:
 
 ```
 add(8,3)
@@ -204,7 +204,7 @@ Strings are similar to tuples:
 (
 first_name = "Magnus",
 last_name = "Burenius",
-full_name = concat(first_name, last_name),
+full_name = concat(first_name, " ", last_name),
 initials = concat(first_name[0], last_name[0])
 )
 ```
