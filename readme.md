@@ -26,12 +26,12 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 ```(
 (
-faculty(x) = if equal(x,0) then 1 else mul(x,faculty(sub(x,1))),
+faculty = from x to if equal(x,0) then 1 else mul(x,faculty(sub(x,1))),
 result = faculty(4)
 )
 ```
 
-This example first defines a function named `faculty`. It has a recursive definition. It then defines a variable named `result` to be the value of `faculty(4)` i.e. `1*2*3*4=24`. Mang Lang uses functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Whitespace and new lines are optional.
+This example first defines a function named `faculty` that takes an argument named `x`. The function is defined recursively. It then defines a variable named `result` to be the value of `faculty(4)` i.e. `1*2*3*4=24`. Mang Lang uses functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Whitespace and new lines are optional.
 
 # Examples
 
@@ -133,11 +133,11 @@ result = add(object.x, object.y)
 
 ## Functions
 
-Functions are defined and used like this:
+Functions are defined using they keywords `from` and `to` like this:
 
 ```
 (
-square_norm(x) = add(mul(x[0], x[0]), mul(x[1], x[1])),
+square_norm = from x to add(mul(x[0], x[0]), mul(x[1], x[1])),
 vector = (3, 4),
 result = square_norm(vector)
 )
@@ -147,7 +147,7 @@ The if-then-else operator is used to choose what value to return based on a cond
 
 ```
 (
-abs(x) = if greater(x, 0) then x else sub(0, x)
+abs = from x to if greater(x, 0) then x else sub(0, x)
 result = abs(-10)
 )
 ```
@@ -156,30 +156,22 @@ Recursive function calls and the if-then-else operator are used for loops:
 
 ```
 (
-faculty(x) = if equal(x, 0) then 1 else mul(x, faculty(sub(x, 1))),
+faculty = x from to if equal(x, 0) then 1 else mul(x, faculty(sub(x, 1))),
 result = faculty(10)
 )
 ```
 
-## Scope
-
-Function definitions can be broken up into smaller parts that are put in a local scope `{}`:
+Function definitions can be broken up into smaller parts that are put in a local scope using the `where` keyword:
 
 ```
 (
-square_norm(v) = {
+square_norm = from v where (
     x2 = mul(v[0], v[0]),
     y2 = mul(v[1], v[1])
-    } = add(x2, y2),
+    ) to add(x2, y2),
 vector = (3, 4),
 result = square_norm(vector)
 )
-```
-
-Scopes can be used for both function definitions and variable definitions:
-
-```
-margin = {top_margin = 5, bottom_margin = 10} = add(top_margin, bottom_margin)
 ```
 
 ## Tuple Comprehension
@@ -223,7 +215,7 @@ In this example `full_name` gets the value "Magnus Burenius" and `initials` gets
 Source code can be put in different source files. If you have a file called `math` that contains the following:
 ```
 (
-square(x) = mul(x, x),
+square = from x to mul(x, x),
 pi = 3.14151965
 )
 ```
