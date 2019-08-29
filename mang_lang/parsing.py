@@ -8,7 +8,7 @@
 from copy import deepcopy
 from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
     Tuple, Union
-from lexing import lexer, Token, TokenType
+from lexing import Token, TokenType
 
 
 Environment = MutableMapping[str, Any]
