@@ -90,7 +90,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = '(f(x) = if equal(x, 0) then 1 else mul(x, f(sub(x, 1))), f(10))'
+        code = '(f = from x to if equal(x, 0) then 1 else mul(x, f(sub(x, 1))), f(10))'
         self.assertEqual(V(3628800), interpret(code)[1])
 
 
@@ -287,18 +287,18 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), x.y.z.w)')[1])
 
     def test4(self):
-        self.assertEqual(V(1), interpret('(a=(f(x)=1), a.f(3))')[1])
+        self.assertEqual(V(1), interpret('(a=(f=from x to 1), a.f(3))')[1])
 
     def test5(self):
-        self.assertEqual(V(4), interpret('(a=(f(x)=add(x,1)), a.f(3))')[1])
+        self.assertEqual(V(4), interpret('(a=(f = from x to add(x,1)), a.f(3))')[1])
 
     def test6(self):
-        self.assertEqual(V(4), interpret('(a=(b=(f(x)=add(x,1))),a.b.f(3))')[1])
+        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add(x,1))),a.b.f(3))')[1])
 
 
 class TestFunctionDefinition(unittest.TestCase):
     def test_function_definition(self):
-        actual = interpret('f(x)=add(x)')
+        actual = interpret('f = from x to add(x)')
         expected = {'type': 'function_definition',
                     'function_name': 'f',
                     'argument_name': 'x'}
@@ -307,56 +307,29 @@ class TestFunctionDefinition(unittest.TestCase):
         self.assertEqual(expected['argument_name'], actual['argument_name'])
 
     def test_constant_function_definition_and_call(self):
-        actual = interpret('(f(x) = 3, f(1))')
+        actual = interpret('(f = from x to 3, f(1))')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_function_definition_and_call(self):
-        actual = interpret('(f(x) = add(x), f(2,3))')
+        actual = interpret('(f = from x to add(x), f(2,3))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
-
-
-class TestVariableScope(unittest.TestCase):
-    def test_scope1(self):
-        actual = interpret('(x = {y = 3} = y, x)')
-        expected = ((None), V(3))
-        self.assertEqual(expected[1], actual[1])
-
-    def test_scope2(self):
-        actual = interpret('(x = {y = 3, z = 4} = add(y, z), x)')
-        expected = ((None), V(7))
-        self.assertEqual(expected[1], actual[1])
-
-    def test_scope3(self):
-        actual = interpret('(z = 4, x = {y = 3} = add(y, z), x)')
-        expected = ((None), (None), V(7))
-        self.assertEqual(expected[2], actual[2])
-
-    def test_scope4(self):
-        actual = interpret('(z = 4, x = {} = z, x)')
-        expected = ((None), (None), V(4))
-        self.assertEqual(expected[2], actual[2])
-
-    def test_scope5(self):
-        actual = interpret('(z = 4, x = {z = 3} = z, x)')
-        expected = ((None), (None), V(3))
-        self.assertEqual(expected[2], actual[2])
 
 
 class TestFunctionScope(unittest.TestCase):
     def test_scope1(self):
-        actual = interpret('(f(x) = {y = 3} = y, f(2))')
+        actual = interpret('(f = from x where {y = 3} to y, f(2))')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope2(self):
-        actual = interpret('(f(x) = {y = 3} = add(x, y), f(2))')
+        actual = interpret('(f = from x where {y = 3} to add(x, y), f(2))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope3(self):
-        actual = interpret('(y = 2, f(x) = {y = 3} = add(x, y), f(2))')
+        actual = interpret('(y = 2, f = from x where {y = 3} to add(x, y), f(2))')
         expected = ((None), (None), V(5))
         self.assertEqual(expected[2], actual[2])
 
@@ -406,7 +379,7 @@ class TestImport(unittest.TestCase):
             self.assertEqual(V(4), interpret('(z = import("file_name"), z.y)')[1])
 
     def test3(self):
-        with mock.patch('global_environment._read_text_file', return_value='(square(x)=mul(x,x))'):
+        with mock.patch('global_environment._read_text_file', return_value='(square = from x to mul(x,x))'):
             self.assertEqual(V(9), interpret('(a = import("file_name"), a.square(3))')[1])
 
 
@@ -447,7 +420,7 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual[1])
 
     def test8(self):
-        actual = interpret('(f(x) = 1, t = (2, 3), all f(e) for e in t)')
+        actual = interpret('(f = from x to 1, t = (2, 3), all f(e) for e in t)')
         expected = (V(1), V(1))
         self.assertEqual(expected, actual[2])
 
