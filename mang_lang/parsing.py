@@ -326,10 +326,10 @@ def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     expressions = ()
     tokens.parse_known_token(TokenType.PARENTHESIS_BEGIN)
-    while tokens.front().type != TokenType.PARENTHESIS_END:
+    while not tokens.do_match([TokenType.PARENTHESIS_END]):
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
-        if tokens.front().type == TokenType.COMMA:
+        if tokens.do_match([TokenType.COMMA]):
             tokens.parse_known_token(TokenType.COMMA)
     tokens.parse_known_token(TokenType.PARENTHESIS_END)
     return (ExpressionTuple(expressions=expressions), tokens)
@@ -338,10 +338,10 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
 def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
     expressions = ()
     tokens.parse_known_token(TokenType.SCOPE_BEGIN)
-    while tokens.front().type != TokenType.SCOPE_END:
+    while not tokens.do_match([TokenType.SCOPE_END]):
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
-        if tokens.front().type == TokenType.COMMA:
+        if tokens.do_match([TokenType.COMMA]):
             tokens.parse_known_token(TokenType.COMMA)
     tokens.parse_known_token(TokenType.SCOPE_END)
     return (ScopeTuple(expressions=expressions), tokens)
