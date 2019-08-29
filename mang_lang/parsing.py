@@ -268,14 +268,13 @@ class TokenSlice:
             self._tokens[self._begin_index + i].type == token for i, token in
             enumerate(token_pattern))
 
-    def parse_known_token(self, expected: TokenType) -> None:
-        assert self.front() == expected.value.replace('\\', '')
-        self._begin_index += 1
-
     def parse_token(self) -> str:
         value = self.front()
         self._begin_index += 1
         return value
+
+    def parse_known_token(self, expected: TokenType) -> None:
+        assert self.parse_token() == expected.value.replace('\\', '')
 
 
 class ParsePattern:
