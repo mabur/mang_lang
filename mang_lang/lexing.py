@@ -9,8 +9,6 @@ class TokenType(Enum):
     PARENTHESIS_END = "\)"
     BRACKET_BEGIN = "\["
     BRACKET_END = "\]"
-    SCOPE_BEGIN = "\{"
-    SCOPE_END = "\}"
     EQUAL = "="
     COMMA = ","
     DOT = "\."

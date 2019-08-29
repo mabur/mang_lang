@@ -319,17 +319,17 @@ class TestFunctionDefinition(unittest.TestCase):
 
 class TestFunctionScope(unittest.TestCase):
     def test_scope1(self):
-        actual = interpret('(f = from x where {y = 3} to y, f(2))')
+        actual = interpret('(f = from x where (y = 3) to y, f(2))')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope2(self):
-        actual = interpret('(f = from x where {y = 3} to add(x, y), f(2))')
+        actual = interpret('(f = from x where (y = 3) to add(x, y), f(2))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope3(self):
-        actual = interpret('(y = 2, f = from x where {y = 3} to add(x, y), f(2))')
+        actual = interpret('(y = 2, f = from x where (y = 3) to add(x, y), f(2))')
         expected = ((None), (None), V(5))
         self.assertEqual(expected[2], actual[2])
 
