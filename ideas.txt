@@ -390,11 +390,116 @@ c1 = [re=1, im=2]
 c2 = conj1(c1)
 c3 = conj1([re=1, im=2])
 
+dot2 = vectors -> (
+    a = vectors[0],
+    b = vectors[1],
+    ax = a[0],
+    ay = a[1],
+    bx = b[0],
+    by = b[1],
+) -> add[mul[ax, bx], mul[ay, by]]
+) -> [[ax, bx].mul, [ay, by].mul].add
+
+dot2 = FROM vectors WHERE (
+    a = vectors[0],
+    b = vectors[1],
+    ax = a[0],
+    ay = a[1],
+    bx = b[0],
+    by = b[1],
+) TO add[mul[ax, bx], mul[ay, by]]
+) TO [[ax, bx].mul, [ay, by].mul].add
+) TO [[ax, bx]->mul, [ay, by]->mul]->add
+
+square_norm2 = vector -> dot2[vector, vector]
+square_norm2 = vector -> [vector, vector].dot2
+
+sub2 = vectors -> (
+    a = vectors[0],
+    b = vectors[1],
+    ax = a[0],
+    ay = a[1],
+    bx = b[0],
+    by = b[1],
+    x = [ax, bx].sub,
+    y = [ay, by].sub,
+) -> [x, y]
+
+sub2 = from vectors where
+{
+    a = vectors[0],
+    b = vectors[1],
+    ax = a[0],
+    ay = a[1],
+    bx = b[0],
+    by = b[1],
+    x = sub[ax, bx],
+    y = sub[ay, by],
+} to [x, y]
+
+square_distance2 = from vectors to square_norm2(sub2(vectors))
+square_distance2 = from vectors to square_norm2 sub2 vectors
+square_distance2 = from vectors to vectors sub2 square_norm
+square_distance2 = from vectors to vectors|sub2|square_norm
+square_distance2 = from vectors to vectors.sub2.square_norm
+square_distance2 = from vectors to vectors->sub2->square_norm
+
+Liknande Ruby och Python-properties. Ha punkt . för både:
+1. slå upp medlems-variabel.
+2. applicera funktion/metod.
+Men hur blir det då med metoder/funktioner definierade i det egna objektet?
+Hur ska man applicera en metod på objektet?
+Men vad är vitsen med medlemsfunktioner istället för medlemsvariablar om objektet är immutable?
+Kan fortfarande vara en vits med medlemsfunktioner, om de inte bara jobbar på self.
+[1,2,3]|std.min
+Slutsats: gör inte så.
+
+my_vec =
+{
+  x = 1,
+  y = 2,
+  squared_norm2 = from v to dot[v,v]
+  proj = from a to dot[a, [x, y]]
+}
+
+
+square_distance2 = from vectors where
+{
+    delta = sub2 vectors,
+} to square_norm2 delta
+
 TUPLE / ARRAYS / DICT / SCOPES
 * Array []
-* Dict []
-* Scope {}
-* Function call ()
+* Dict {}
+* Scope
+* Tuple
+* Function call
+
+()
+[]
+{}
+<>
+||
+
+ARRAY lookup
+
+sub2 = from vectors where
+{
+    a = vectors 0,
+    b = vectors 1,
+    ax = a 0,
+    ay = a 1,
+    bx = b 0,
+    by = b 1,
+    x = sub[ax, bx],
+    y = sub[ay, by],
+} to [x, y]
+
+sub_vec = from vector_pair to
+    all sub dimension for dimension in zip vector_pair
+
+def sub_vec(vector0, vector1):
+    return [c0 - c1 for c0, c1 in zip(vector0, vector1)]
 
 TODO:
 * Types, and input format for functions.
@@ -407,3 +512,85 @@ TODO:
   Handle optional starting sequences, by implementing it as multiple ParsePatterns.
 * Allow capital letters in symbols.
 * Allow more characters in strings, especially . / \ needed for filenames
+* Remove indexing?
+* zip
+
+
+split = from input where
+(
+  queue  = input.queue,
+  query  = input.query,
+  result = recursive_split(queue=queue, query=query, result=())
+) to result.result
+
+recursive_split = from input where
+(
+  queue  = input.queue,
+  query  = input.query,
+  result = input.result,
+) to if is_empty queue then input
+else
+(
+  find_result = find(list=queue, query=','),
+  tail        = find_result.tail,
+  head        = find_result.head,
+  result      = concat[result, [head]]
+  output      = recursive_split(queue=tail, result=result)
+).output
+
+
+// Take a list and return a pair of lists: head and tail, or head, query, tail
+find = ...
+find_inclusive = ...
+find_exclusive = ...
+
+[1,2,3,4]
+
+find(list=[1,2,3,4], query=3)
+-> (head=[1,2], query=[3], tail=[4])
+
+Parse "123,+56,345,-76,23"
+
+parse_element = from input to find(list=input.string, query=',')
+
+def split(input, query):
+  output = []
+  last_split_index = 0
+  for index, element in enumerate(input):
+      if element == query:
+        word = input[last_split_index:index]
+        output.append(word)
+  return output
+
+def split(input_query):
+  def f(a, b):
+    return
+  return fold(input_query, [], f)
+
+def eat(source, target, query)
+  if source and source[0] != query:
+    front = source.pop_front()
+    target = target.push_back(front)
+  return (source, target, query)
+
+
+eat = from input where
+(
+  source = input.source,
+  target = input.target,
+  query = input.query,
+)
+if is_empty source then target
+else if equal(first source, query) then 
+(
+  source = pop_front input.source,
+  target = input.target,
+  query = input.query,
+)
+else
+eat
+(
+  target = concat( input.target, (first source)),
+  source = pop_front input.source,
+  query = input.query,
+)
