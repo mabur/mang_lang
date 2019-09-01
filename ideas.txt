@@ -594,3 +594,13 @@ eat
   source = pop_front input.source,
   query = input.query,
 )
+
+move_front_to_back = from input where
+(
+  source = input.source,
+  target = input.target,
+  element = get_front(source),
+  source = pop_front(source),
+  target = push_back(target, element)
+)
+to if is_empty(source) then input else (source=source, target=target)
