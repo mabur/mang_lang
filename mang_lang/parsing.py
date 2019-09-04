@@ -83,19 +83,18 @@ class Reference(Expression):
 
 
 class FunctionCall(Expression):
-    def __init__(self, function: Reference, expression: Expression) -> None:
-        self.function = function
-        self.name = function.name
-        self.expression = expression
+    def __init__(self, left: Reference, right: Expression) -> None:
+        self.left = left
+        self.right = right
 
     def to_json(self) -> Json:
         return {"type": "function_call",
-                "function_name": self.function.to_json()['name'],
-                "input": self.expression.to_json()}
+                "function_name": self.left.to_json()['name'],
+                "input": self.right.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
-        input = self.expression.evaluate(environment)
-        function = self.function.evaluate(environment)
+        function = self.left.evaluate(environment)
+        input = self.right.evaluate(environment)
         if isinstance(function, Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
@@ -160,18 +159,18 @@ class Indexing(Expression):
 
 
 class DefinitionLookup(Expression):
-    def __init__(self, parent: Reference, child: Expression) -> None:
-        self.parent = parent
-        self.child = child
-        self.name = parent.name
+    def __init__(self, left: Reference, right: Expression) -> None:
+        self.left = left
+        self.right = right
+        self.name = right.name
 
     def to_json(self) -> Json:
         return {"type": "definition_lookup",
-                "parent": self.parent.to_json(),
-                "child": self.child.to_json()}
+                "parent": self.right.to_json(),
+                "child": self.left.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
-        tuple = self.parent.evaluate(environment)
+        tuple = self.right.evaluate(environment)
         assert isinstance(tuple, ExpressionTuple)
         child_environment = deepcopy(environment)
 
@@ -180,9 +179,9 @@ class DefinitionLookup(Expression):
             return element.expression
 
         next_expression = next(extract_definition(e) for e in tuple.value
-                               if e.name == self.child.name)
-        child_environment[self.child.name] = next_expression
-        return self.child.evaluate(child_environment)
+                               if e.name == self.left.name)
+        child_environment[self.left.name] = next_expression
+        return self.left.evaluate(child_environment)
 
 
 class Conditional(Expression):
@@ -277,10 +276,10 @@ def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
 
 
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
-    function, tokens = _parse_reference(tokens)
+    left, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.OF)
-    expression, tokens = parse_expression(tokens)
-    return (FunctionCall(function=function, expression=expression), tokens)
+    right, tokens = parse_expression(tokens)
+    return (FunctionCall(left=left, right=right), tokens)
 
 
 def _parse_optional_function_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
@@ -316,10 +315,10 @@ def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
-    child, tokens = _parse_reference(tokens)
+    left, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.DOT)
-    parent, tokens = parse_expression(tokens)
-    return (DefinitionLookup(parent=parent, child=child), tokens)
+    right, tokens = parse_expression(tokens)
+    return (DefinitionLookup(left=left, right=right), tokens)
 
 
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
