@@ -278,13 +278,13 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), x.y.z.w)')[1])
 
     def test4(self):
-        self.assertEqual(V(1), interpret('(a=(f=from x to 1), a.f of (3))')[1])
+        self.assertEqual(V(1), interpret('(a=(f=from x to 1), a.f of 3)')[1])
 
     def test5(self):
         self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), a.f of 3)')[1])
 
     def test6(self):
-        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))),a.b.f of 3)')[1])
+        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))), a.b.f of 3)')[1])
 
 
 class TestFunctionDefinition(unittest.TestCase):
