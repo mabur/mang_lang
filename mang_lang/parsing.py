@@ -316,9 +316,9 @@ def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
-    parent, tokens = _parse_reference(tokens)
+    child, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.DOT)
-    child, tokens = parse_expression(tokens)
+    parent, tokens = parse_expression(tokens)
     return (DefinitionLookup(parent=parent, child=child), tokens)
 
 
