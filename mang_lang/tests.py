@@ -58,22 +58,22 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(3), interpret('size of (8,4,6)'))
 
     def test_size2(self):
-        self.assertEqual(V(1), interpret('size of ((9))'))
+        self.assertEqual(V(1), interpret('size of (9)'))
 
     def test_size3(self):
-        self.assertEqual(V(0), interpret('size of (())'))
+        self.assertEqual(V(0), interpret('size of ()'))
 
     def test_size4(self):
         self.assertEqual(V(0), interpret('size of ()'))
 
     def test_is_empty1(self):
-        self.assertEqual(V(1), interpret('(x=(), is_empty of (x))')[1])
+        self.assertEqual(V(1), interpret('(x=(), is_empty of x)')[1])
 
     def test_is_empty2(self):
-        self.assertEqual(V(0), interpret('(x=(1), is_empty of (x))')[1])
+        self.assertEqual(V(0), interpret('(x=(1), is_empty of x)')[1])
 
     def test_is_empty3(self):
-        self.assertEqual(V(0), interpret('(x=(1,2), is_empty of (x))')[1])
+        self.assertEqual(V(0), interpret('(x=(1,2), is_empty of x)')[1])
 
     def test_concat1(self):
         self.assertEqual((V(1), V(2), V(3), V(4)),
@@ -90,7 +90,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = '(f = from x to if equal of (x, 0) then 1 else mul of (x, f of (sub of (x, 1))), f of (10))'
+        code = '(f = from x to if equal of (x, 0) then 1 else mul of (x, f of sub of (x, 1)), f of 10)'
         self.assertEqual(V(3628800), interpret(code)[1])
 
 
@@ -124,10 +124,10 @@ class TestOr(unittest.TestCase):
 
 class TestNot(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(0), interpret('not of (1)'))
+        self.assertEqual(V(0), interpret('not of 1'))
 
     def test1(self):
-        self.assertEqual(V(1), interpret('not of (0)'))
+        self.assertEqual(V(1), interpret('not of 0'))
 
 
 class TestEqual(unittest.TestCase):
@@ -193,7 +193,7 @@ class TestDefinitions(unittest.TestCase):
 
     def test_tuple_definition_and_function_call(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(1),V(2))}, V(3)),
-                         interpret('(x=(1,2), add of (x))'))
+                         interpret('(x=(1,2), add of x)'))
 
 
 class TestKeywordVariableClashes(unittest.TestCase):
@@ -281,10 +281,10 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual(V(1), interpret('(a=(f=from x to 1), a.f of (3))')[1])
 
     def test5(self):
-        self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), a.f of (3))')[1])
+        self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), a.f of 3)')[1])
 
     def test6(self):
-        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))),a.b.f of (3))')[1])
+        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))),a.b.f of 3)')[1])
 
 
 class TestFunctionDefinition(unittest.TestCase):
@@ -296,29 +296,29 @@ class TestFunctionDefinition(unittest.TestCase):
         self.assertEqual(expected['argument_name'], actual['argument_name'])
 
     def test_constant_function_definition_and_call(self):
-        actual = interpret('(f = from x to 3, f of (1))')
+        actual = interpret('(f = from x to 3, f of 1)')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_function_definition_and_call(self):
-        actual = interpret('(f = from x to add of (x), f of (2,3))')
+        actual = interpret('(f = from x to add of x, f of (2,3))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
 
 class TestFunctionScope(unittest.TestCase):
     def test_scope1(self):
-        actual = interpret('(f = from x where (y = 3) to y, f of (2))')
+        actual = interpret('(f = from x where (y = 3) to y, f of 2)')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope2(self):
-        actual = interpret('(f = from x where (y = 3) to add of (x, y), f of (2))')
+        actual = interpret('(f = from x where (y = 3) to add of (x, y), f of 2)')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope3(self):
-        actual = interpret('(y = 2, f = from x where (y = 3) to add of (x, y), f of (2))')
+        actual = interpret('(y = 2, f = from x where (y = 3) to add of (x, y), f of 2)')
         expected = ((None), (None), V(5))
         self.assertEqual(expected[2], actual[2])
 
@@ -328,13 +328,13 @@ class TestString(unittest.TestCase):
         self.assertEqual(S("hej"), interpret('"hej"'))
 
     def test_string_size0(self):
-        self.assertEqual(V(0), interpret('size of ("")'))
+        self.assertEqual(V(0), interpret('size of ""'))
 
     def test_string_size1(self):
-        self.assertEqual(V(1), interpret('size of ("f")'))
+        self.assertEqual(V(1), interpret('size of "f"'))
 
     def test_string_size2(self):
-        self.assertEqual(V(2), interpret('size of ("du")'))
+        self.assertEqual(V(2), interpret('size of "du"'))
 
     def test_string_concat1(self):
         self.assertEqual(S(""), interpret('concat of ("","")'))
@@ -361,15 +361,15 @@ class TestString(unittest.TestCase):
 class TestImport(unittest.TestCase):
     def test1(self):
         with mock.patch('global_environment._read_text_file', return_value='3'):
-            self.assertEqual(V(3), interpret('import of ("file_name")'))
+            self.assertEqual(V(3), interpret('import of "file_name"'))
 
     def test2(self):
         with mock.patch('global_environment._read_text_file', return_value='(\nx=3,\ny=4\n)'):
-            self.assertEqual(V(4), interpret('(z = import of ("file_name"), z.y)')[1])
+            self.assertEqual(V(4), interpret('(z = import of "file_name", z.y)')[1])
 
     def test3(self):
         with mock.patch('global_environment._read_text_file', return_value='(square = from x to mul of (x,x))'):
-            self.assertEqual(V(9), interpret('(a = import of ("file_name"), a.square of (3))')[1])
+            self.assertEqual(V(9), interpret('(a = import of "file_name", a.square of 3)')[1])
 
 
 class TestTupleComprehension(unittest.TestCase):
@@ -409,7 +409,7 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual[1])
 
     def test8(self):
-        actual = interpret('(f = from x to 1, t = (2, 3), all f of (e) for e in t)')
+        actual = interpret('(f = from x to 1, t = (2, 3), all f of e for e in t)')
         expected = (V(1), V(1))
         self.assertEqual(expected, actual[2])
 
@@ -419,7 +419,7 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test10(self):
-        actual = interpret('all e for e in (1, 2, 3, 4) if not of (equal of (e, 2))')
+        actual = interpret('all e for e in (1, 2, 3, 4) if not of equal of (e, 2)')
         expected = (V(1), V(3), V(4))
         self.assertEqual(expected, actual)
 

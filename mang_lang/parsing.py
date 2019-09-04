@@ -83,22 +83,19 @@ class Reference(Expression):
 
 
 class FunctionCall(Expression):
-    def __init__(self, function: Reference, tuple: ExpressionTuple) -> None:
+    def __init__(self, function: Reference, expression: Expression) -> None:
         self.function = function
         self.name = function.name
-        self.tuple = tuple
+        self.expression = expression
 
     def to_json(self) -> Json:
         return {"type": "function_call",
                 "function_name": self.function.to_json()['name'],
-                "input": self.tuple.to_json()}
+                "input": self.expression.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
-        input = self.tuple.evaluate(environment)
-        assert isinstance(input, ExpressionTuple)
+        input = self.expression.evaluate(environment)
         function = self.function.evaluate(environment)
-        if len(input.value) == 1:
-            input = input.value[0]
         if isinstance(function, Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
@@ -282,8 +279,8 @@ def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     function, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.OF)
-    tuple, tokens = _parse_tuple(tokens)
-    return (FunctionCall(function=function, tuple=tuple), tokens)
+    expression, tokens = parse_expression(tokens)
+    return (FunctionCall(function=function, expression=expression), tokens)
 
 
 def _parse_optional_function_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
