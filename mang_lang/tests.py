@@ -246,16 +246,7 @@ class TestIndirection(unittest.TestCase):
 class TestIndexing(unittest.TestCase):
     def test_indexing_number(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(2), V(3))}, V(2)),
-                         interpret('(x = (2, 3), x[0])'))
-
-    def test_indexing_constant(self):
-        self.assertEqual(
-            (
-                {'type': 'variable_definition', 'name': 'x', 'value': (V(2), V(3))},
-                {'type': 'variable_definition', 'name': 'y', 'value': V(1)},
-                V(3)
-            ),
-            interpret('(x = (2, 3), y = 1, x[y])'))
+                         interpret('(x = (2, 3), 0 of x)'))
 
 
 class TestDefinitionLookup(unittest.TestCase):
@@ -361,10 +352,10 @@ class TestString(unittest.TestCase):
         self.assertEqual(S("abc"), interpret('concat("a","b","c")'))
 
     def test_string_index0(self):
-        self.assertEqual(S("a"), interpret('(x="abc",x[0])')[1])
+        self.assertEqual(S("a"), interpret('(x="abc", 0 of x)')[1])
 
     def test_string_index1(self):
-        self.assertEqual(S("b"), interpret('(x="abc",x[1])')[1])
+        self.assertEqual(S("b"), interpret('(x="abc", 1 of x)')[1])
 
 
 class TestImport(unittest.TestCase):

@@ -21,6 +21,7 @@ class TokenType(Enum):
     FROM = "from "
     WHERE = "where "
     TO = "to "
+    OF = "of "
     SYMBOL = "[a-z_]\\w*"
     STRING = "\"[\w\s]*\""
     WHITE_SPACE = " "

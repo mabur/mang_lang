@@ -142,7 +142,7 @@ class FunctionDefinition(Expression):
 
 
 class Indexing(Expression):
-    def __init__(self, reference: Reference, index: Expression) -> None:
+    def __init__(self, reference: Reference, index: Number) -> None:
         self.reference = reference
         self.index = index
 
@@ -311,11 +311,10 @@ def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, 
 
 
 def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
+    number, tokens = _parse_number(tokens)
+    tokens.parse_known_token(TokenType.OF)
     reference, tokens = _parse_reference(tokens)
-    tokens.parse_known_token(TokenType.BRACKET_BEGIN)
-    expression, tokens = parse_expression(tokens)
-    tokens.parse_known_token(TokenType.BRACKET_END)
-    return (Indexing(reference=reference, index=expression), tokens)
+    return (Indexing(reference=reference, index=number), tokens)
 
 
 def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
@@ -363,13 +362,13 @@ class ParsePattern:
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
     PARSE_PATTERNS = [
+        ParsePattern(_parse_indexing, [TokenType.NUMBER, TokenType.OF]),
         ParsePattern(_parse_number, [TokenType.NUMBER]),
         ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_conditional, [TokenType.IF]),
         ParsePattern(_parse_tuple_comprehension, [TokenType.ALL]),
         ParsePattern(_parse_function_definition, [TokenType.FROM]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
-        ParsePattern(_parse_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]),
         ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT]),
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
