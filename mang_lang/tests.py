@@ -31,16 +31,16 @@ class TestArray(unittest.TestCase):
 
 class TestBuiltinFunctions(unittest.TestCase):
     def test_add(self):
-        self.assertEqual(V(8), interpret('add(5, 3)'))
+        self.assertEqual(V(8), interpret('add of (5, 3)'))
 
     def test_sub(self):
-        self.assertEqual(V(2), interpret('sub(5, 3)'))
+        self.assertEqual(V(2), interpret('sub of (5, 3)'))
 
     def test_mul(self):
-        self.assertEqual(V(15), interpret('mul(5, 3)'))
+        self.assertEqual(V(15), interpret('mul of (5, 3)'))
 
     def test_div(self):
-        self.assertEqual(V(2), interpret('div(6, 3)'))
+        self.assertEqual(V(2), interpret('div of (6, 3)'))
 
     def test_if_then_else_true(self):
         self.assertEqual(V(1), interpret('if 1 then 1 else 2'))
@@ -55,122 +55,122 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(1), interpret('(x=1,if x then x else x)')[1])
 
     def test_size1(self):
-        self.assertEqual(V(3), interpret('size(8,4,6)'))
+        self.assertEqual(V(3), interpret('size of (8,4,6)'))
 
     def test_size2(self):
-        self.assertEqual(V(1), interpret('size((9))'))
+        self.assertEqual(V(1), interpret('size of ((9))'))
 
     def test_size3(self):
-        self.assertEqual(V(0), interpret('size(())'))
+        self.assertEqual(V(0), interpret('size of (())'))
 
     def test_size4(self):
-        self.assertEqual(V(0), interpret('size()'))
+        self.assertEqual(V(0), interpret('size of ()'))
 
     def test_is_empty1(self):
-        self.assertEqual(V(1), interpret('(x=(), is_empty(x))')[1])
+        self.assertEqual(V(1), interpret('(x=(), is_empty of (x))')[1])
 
     def test_is_empty2(self):
-        self.assertEqual(V(0), interpret('(x=(1), is_empty(x))')[1])
+        self.assertEqual(V(0), interpret('(x=(1), is_empty of (x))')[1])
 
     def test_is_empty3(self):
-        self.assertEqual(V(0), interpret('(x=(1,2), is_empty(x))')[1])
+        self.assertEqual(V(0), interpret('(x=(1,2), is_empty of (x))')[1])
 
     def test_concat1(self):
         self.assertEqual((V(1), V(2), V(3), V(4)),
-                         interpret('concat((1,2),(3,4))'))
+                         interpret('concat of ((1,2),(3,4))'))
 
     def test_concat2(self):
         self.assertEqual((V(1), V(2), V(3), V(4), V(5), V(6)),
-                         interpret('concat((1,2),(3,4),(5,6))'))
+                         interpret('concat of ((1,2),(3,4),(5,6))'))
 
     def test_concat3(self):
         self.assertEqual((V(1), V(2), V(3)),
-                         interpret('concat((1),(2),(3))'))
+                         interpret('concat of ((1),(2),(3))'))
 
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = '(f = from x to if equal(x, 0) then 1 else mul(x, f(sub(x, 1))), f(10))'
+        code = '(f = from x to if equal of (x, 0) then 1 else mul of (x, f of (sub of (x, 1))), f of (10))'
         self.assertEqual(V(3628800), interpret(code)[1])
 
 
 class TestAnd(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('and(1, 1)'))
+        self.assertEqual(V(1), interpret('and of (1, 1)'))
 
     def test1(self):
-        self.assertEqual(V(0), interpret('and(0, 1)'))
+        self.assertEqual(V(0), interpret('and of (0, 1)'))
 
     def test2(self):
-        self.assertEqual(V(0), interpret('and(1, 0)'))
+        self.assertEqual(V(0), interpret('and of (1, 0)'))
 
     def test3(self):
-        self.assertEqual(V(0), interpret('and(0, 0)'))
+        self.assertEqual(V(0), interpret('and of (0, 0)'))
 
 
 class TestOr(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('or(1, 1)'))
+        self.assertEqual(V(1), interpret('or of (1, 1)'))
 
     def test1(self):
-        self.assertEqual(V(1), interpret('or(0, 1)'))
+        self.assertEqual(V(1), interpret('or of (0, 1)'))
 
     def test2(self):
-        self.assertEqual(V(1), interpret('or(1, 0)'))
+        self.assertEqual(V(1), interpret('or of (1, 0)'))
 
     def test3(self):
-        self.assertEqual(V(0), interpret('or(0, 0)'))
+        self.assertEqual(V(0), interpret('or of (0, 0)'))
 
 
 class TestNot(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(0), interpret('not(1)'))
+        self.assertEqual(V(0), interpret('not of (1)'))
 
     def test1(self):
-        self.assertEqual(V(1), interpret('not(0)'))
+        self.assertEqual(V(1), interpret('not of (0)'))
 
 
 class TestEqual(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('equal(1, 1)'))
+        self.assertEqual(V(1), interpret('equal of (1, 1)'))
 
     def test1(self):
-        self.assertEqual(V(0), interpret('equal(0, 1)'))
+        self.assertEqual(V(0), interpret('equal of (0, 1)'))
 
     def test2(self):
-        self.assertEqual(V(0), interpret('equal(1, 0)'))
+        self.assertEqual(V(0), interpret('equal of (1, 0)'))
 
     def test3(self):
-        self.assertEqual(V(1), interpret('equal(0, 0)'))
+        self.assertEqual(V(1), interpret('equal of (0, 0)'))
 
 
 class TestSumMinMax(unittest.TestCase):
     def test_sum(self):
-        self.assertEqual(V(6), interpret('sum(1,2,3)'))
+        self.assertEqual(V(6), interpret('sum of (1,2,3)'))
 
     def test_min(self):
-        self.assertEqual(V(1), interpret('min(1,2,3)'))
+        self.assertEqual(V(1), interpret('min of (1,2,3)'))
 
     def test_max(self):
-        self.assertEqual(V(3), interpret('max(1,2,3)'))
+        self.assertEqual(V(3), interpret('max of (1,2,3)'))
 
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(V(12), interpret('add(sub(5, 3), mul(2, 5))'))
+        self.assertEqual(V(12), interpret('add of (sub of (5, 3), mul of (2, 5))'))
 
     def test_white_space(self):
-        self.assertEqual(V(12), interpret('  add( sub(5 , 3), mul   (2,5))'))
+        self.assertEqual(V(12), interpret('  add of ( sub of (5 , 3), mul   of (2,5))'))
 
 
 class TestTuple(unittest.TestCase):
     def test_tuple(self):
-        self.assertEqual((V(3), V(7)), interpret('(add(1, 2), add(3,4))'))
+        self.assertEqual((V(3), V(7)), interpret('(add of (1, 2), add of (3,4))'))
 
     def test_mixed_tuple(self):
         self.assertEqual(
             (V(3), V(3), {'type': 'variable_definition', 'name': 'x', 'value': V(3)}),
-            interpret('(3, add(1, 2), x = 3)'))
+            interpret('(3, add of (1, 2), x = 3)'))
 
 
 class TestDefinitions(unittest.TestCase):
@@ -180,11 +180,11 @@ class TestDefinitions(unittest.TestCase):
 
     def test_definition_result_constant_function_call(self):
         self.assertEqual({'type': 'variable_definition', 'name': 'result', 'value': V(3)},
-                         interpret('result = add(1, 2)'))
+                         interpret('result = add of (1, 2)'))
 
     def test_definition_constant_function_call(self):
         self.assertEqual({'type': 'variable_definition', 'name': 'x', 'value': V(3)},
-                         interpret('x = add(1, 2)'))
+                         interpret('x = add of (1, 2)'))
 
     def test_definitions(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(1)},
@@ -193,7 +193,7 @@ class TestDefinitions(unittest.TestCase):
 
     def test_tuple_definition_and_function_call(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(1),V(2))}, V(3)),
-                         interpret('(x=(1,2), add(x))'))
+                         interpret('(x=(1,2), add of (x))'))
 
 
 class TestKeywordVariableClashes(unittest.TestCase):
@@ -240,7 +240,7 @@ class TestIndirection(unittest.TestCase):
             {'type': 'variable_definition', 'name': 'x', 'value': V(5)},
             {'type': 'variable_definition', 'name': 'y', 'value': V(3)},
             V(8)),
-            interpret('(x = 5, y = 3, add(x, y))'))
+            interpret('(x = 5, y = 3, add of (x, y))'))
 
 
 class TestIndexing(unittest.TestCase):
@@ -278,13 +278,13 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), x.y.z.w)')[1])
 
     def test4(self):
-        self.assertEqual(V(1), interpret('(a=(f=from x to 1), a.f(3))')[1])
+        self.assertEqual(V(1), interpret('(a=(f=from x to 1), a.f of (3))')[1])
 
     def test5(self):
-        self.assertEqual(V(4), interpret('(a=(f = from x to add(x,1)), a.f(3))')[1])
+        self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), a.f of (3))')[1])
 
     def test6(self):
-        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add(x,1))),a.b.f(3))')[1])
+        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))),a.b.f of (3))')[1])
 
 
 class TestFunctionDefinition(unittest.TestCase):
@@ -296,29 +296,29 @@ class TestFunctionDefinition(unittest.TestCase):
         self.assertEqual(expected['argument_name'], actual['argument_name'])
 
     def test_constant_function_definition_and_call(self):
-        actual = interpret('(f = from x to 3, f(1))')
+        actual = interpret('(f = from x to 3, f of (1))')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_function_definition_and_call(self):
-        actual = interpret('(f = from x to add(x), f(2,3))')
+        actual = interpret('(f = from x to add of (x), f of (2,3))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
 
 class TestFunctionScope(unittest.TestCase):
     def test_scope1(self):
-        actual = interpret('(f = from x where (y = 3) to y, f(2))')
+        actual = interpret('(f = from x where (y = 3) to y, f of (2))')
         expected = ((None), V(3))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope2(self):
-        actual = interpret('(f = from x where (y = 3) to add(x, y), f(2))')
+        actual = interpret('(f = from x where (y = 3) to add of (x, y), f of (2))')
         expected = ((None), V(5))
         self.assertEqual(expected[1], actual[1])
 
     def test_scope3(self):
-        actual = interpret('(y = 2, f = from x where (y = 3) to add(x, y), f(2))')
+        actual = interpret('(y = 2, f = from x where (y = 3) to add of (x, y), f of (2))')
         expected = ((None), (None), V(5))
         self.assertEqual(expected[2], actual[2])
 
@@ -328,28 +328,28 @@ class TestString(unittest.TestCase):
         self.assertEqual(S("hej"), interpret('"hej"'))
 
     def test_string_size0(self):
-        self.assertEqual(V(0), interpret('size("")'))
+        self.assertEqual(V(0), interpret('size of ("")'))
 
     def test_string_size1(self):
-        self.assertEqual(V(1), interpret('size("f")'))
+        self.assertEqual(V(1), interpret('size of ("f")'))
 
     def test_string_size2(self):
-        self.assertEqual(V(2), interpret('size("du")'))
+        self.assertEqual(V(2), interpret('size of ("du")'))
 
     def test_string_concat1(self):
-        self.assertEqual(S(""), interpret('concat("","")'))
+        self.assertEqual(S(""), interpret('concat of ("","")'))
 
     def test_string_concat2(self):
-        self.assertEqual(S("abcd"), interpret('concat("ab","cd")'))
+        self.assertEqual(S("abcd"), interpret('concat of ("ab","cd")'))
 
     def test_string_concat3(self):
-        self.assertEqual(S("ab"), interpret('concat("ab","")'))
+        self.assertEqual(S("ab"), interpret('concat of ("ab","")'))
 
     def test_string_concat4(self):
-        self.assertEqual(S("cd"), interpret('concat("","cd")'))
+        self.assertEqual(S("cd"), interpret('concat of ("","cd")'))
 
     def test_string_concat5(self):
-        self.assertEqual(S("abc"), interpret('concat("a","b","c")'))
+        self.assertEqual(S("abc"), interpret('concat of ("a","b","c")'))
 
     def test_string_index0(self):
         self.assertEqual(S("a"), interpret('(x="abc", 0 of x)')[1])
@@ -361,15 +361,15 @@ class TestString(unittest.TestCase):
 class TestImport(unittest.TestCase):
     def test1(self):
         with mock.patch('global_environment._read_text_file', return_value='3'):
-            self.assertEqual(V(3), interpret('import("file_name")'))
+            self.assertEqual(V(3), interpret('import of ("file_name")'))
 
     def test2(self):
         with mock.patch('global_environment._read_text_file', return_value='(\nx=3,\ny=4\n)'):
-            self.assertEqual(V(4), interpret('(z = import("file_name"), z.y)')[1])
+            self.assertEqual(V(4), interpret('(z = import of ("file_name"), z.y)')[1])
 
     def test3(self):
-        with mock.patch('global_environment._read_text_file', return_value='(square = from x to mul(x,x))'):
-            self.assertEqual(V(9), interpret('(a = import("file_name"), a.square(3))')[1])
+        with mock.patch('global_environment._read_text_file', return_value='(square = from x to mul of (x,x))'):
+            self.assertEqual(V(9), interpret('(a = import of ("file_name"), a.square of (3))')[1])
 
 
 class TestTupleComprehension(unittest.TestCase):
@@ -404,22 +404,22 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual[1])
 
     def test7(self):
-        actual = interpret('(t = (2, 3), all mul(e, e) for e in t)')
+        actual = interpret('(t = (2, 3), all mul of (e, e) for e in t)')
         expected = (V(4), V(9))
         self.assertEqual(expected, actual[1])
 
     def test8(self):
-        actual = interpret('(f = from x to 1, t = (2, 3), all f(e) for e in t)')
+        actual = interpret('(f = from x to 1, t = (2, 3), all f of (e) for e in t)')
         expected = (V(1), V(1))
         self.assertEqual(expected, actual[2])
 
     def test9(self):
-        actual = interpret('all e for e in (1, 2, 3, 4) if equal(e, 2)')
+        actual = interpret('all e for e in (1, 2, 3, 4) if equal of (e, 2)')
         expected = (V(2),)
         self.assertEqual(expected, actual)
 
     def test10(self):
-        actual = interpret('all e for e in (1, 2, 3, 4) if not(equal(e, 2))')
+        actual = interpret('all e for e in (1, 2, 3, 4) if not of (equal of (e, 2))')
         expected = (V(1), V(3), V(4))
         self.assertEqual(expected, actual)
 

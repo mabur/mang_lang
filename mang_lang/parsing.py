@@ -281,6 +281,7 @@ def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
 
 def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
     function, tokens = _parse_reference(tokens)
+    tokens.parse_known_token(TokenType.OF)
     tuple, tokens = _parse_tuple(tokens)
     return (FunctionCall(function=function, tuple=tuple), tokens)
 
@@ -368,7 +369,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_conditional, [TokenType.IF]),
         ParsePattern(_parse_tuple_comprehension, [TokenType.ALL]),
         ParsePattern(_parse_function_definition, [TokenType.FROM]),
-        ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]),
+        ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.OF]),
         ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT]),
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
