@@ -296,31 +296,21 @@ class TestFunctionDefinition(unittest.TestCase):
         self.assertEqual(expected['argument_name'], actual['argument_name'])
 
     def test_constant_function_definition_and_call(self):
-        actual = interpret('(f = from x to 3, f of 1)')
-        expected = ((None), V(3))
-        self.assertEqual(expected[-1], actual[-1])
+        self.assertEqual(V(3), interpret('(f = from x to 3, f of 1)')[-1])
 
     def test_function_definition_and_call(self):
-        actual = interpret('(f = from x to add of x, f of (2,3))')
-        expected = ((None), V(5))
-        self.assertEqual(expected[-1], actual[-1])
+        self.assertEqual(V(5), interpret('(f = from x to add of x, f of (2,3))')[-1])
 
 
 class TestFunctionScope(unittest.TestCase):
     def test_scope1(self):
-        actual = interpret('(f = from x where (y = 3) to y, f of 2)')
-        expected = ((None), V(3))
-        self.assertEqual(expected[-1], actual[-1])
+        self.assertEqual(V(3), interpret('(f = from x where (y = 3) to y, f of 2)')[-1])
 
     def test_scope2(self):
-        actual = interpret('(f = from x where (y = 3) to add of (x, y), f of 2)')
-        expected = ((None), V(5))
-        self.assertEqual(expected[-1], actual[-1])
+        self.assertEqual(V(5), interpret('(f = from x where (y = 3) to add of (x, y), f of 2)')[-1])
 
     def test_scope3(self):
-        actual = interpret('(y = 2, f = from x where (y = 3) to add of (x, y), f of 2)')
-        expected = ((None), (None), V(5))
-        self.assertEqual(expected[-1], actual[-1])
+        self.assertEqual(V(5), interpret('(y = 2, f = from x where (y = 3) to add of (x, y), f of 2)')[-1])
 
 
 class TestString(unittest.TestCase):
