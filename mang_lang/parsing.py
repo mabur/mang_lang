@@ -169,6 +169,7 @@ class DefinitionLookup(Expression):
                 "child": self.left.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
+        assert self.left.name not in environment
         tuple = self.right.evaluate(environment)
         assert isinstance(tuple, ExpressionTuple)
         child_environment = deepcopy(environment)
