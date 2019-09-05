@@ -5,7 +5,7 @@ from parsing import ExpressionTuple, Number, parse_expression, String
 from token_slice import TokenSlice
 
 
-def _sub(x: ExpressionTuple):
+def _difference(x: ExpressionTuple):
     return Number(_value_left(x) - _value_right(x))
 
 
@@ -104,7 +104,7 @@ def _import(x: String):
     return expression.evaluate(environment)
 
 
-ENVIRONMENT = {'sub': _sub,
+ENVIRONMENT = {'difference': _difference,
                'div': _div,
                'equal': _equal,
                'not': _not,

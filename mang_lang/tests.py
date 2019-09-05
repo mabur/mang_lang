@@ -34,7 +34,7 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(8), interpret('sum of (5, 3)'))
 
     def test_sub(self):
-        self.assertEqual(V(2), interpret('sub of (5, 3)'))
+        self.assertEqual(V(2), interpret('difference of (5, 3)'))
 
     def test_product(self):
         self.assertEqual(V(15), interpret('product of (5, 3)'))
@@ -90,7 +90,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = '(f = from x to if equal of (x, 0) then 1 else product of (x, f of sub of (x, 1)), f of 10)'
+        code = '(f = from x to if equal of (x, 0) then 1 else product of (x, f of difference of (x, 1)), f of 10)'
         self.assertEqual(V(3628800), interpret(code)[-1])
 
 
@@ -157,10 +157,10 @@ class TestSumMinMax(unittest.TestCase):
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(V(12), interpret('sum of (sub of (5, 3), product of (2, 5))'))
+        self.assertEqual(V(12), interpret('sum of (difference of (5, 3), product of (2, 5))'))
 
     def test_white_space(self):
-        self.assertEqual(V(12), interpret('  sum of ( sub of (5 , 3), product   of (2,5))'))
+        self.assertEqual(V(12), interpret('  sum of ( difference of (5 , 3), product   of (2,5))'))
 
 
 class TestTuple(unittest.TestCase):
