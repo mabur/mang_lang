@@ -30,14 +30,14 @@ class TestArray(unittest.TestCase):
 
 
 class TestBuiltinFunctions(unittest.TestCase):
-    def test_add(self):
-        self.assertEqual(V(8), interpret('add of (5, 3)'))
+    def test_sum(self):
+        self.assertEqual(V(8), interpret('sum of (5, 3)'))
 
     def test_sub(self):
         self.assertEqual(V(2), interpret('sub of (5, 3)'))
 
-    def test_mul(self):
-        self.assertEqual(V(15), interpret('mul of (5, 3)'))
+    def test_product(self):
+        self.assertEqual(V(15), interpret('product of (5, 3)'))
 
     def test_div(self):
         self.assertEqual(V(2), interpret('div of (6, 3)'))
@@ -90,11 +90,11 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = '(f = from x to if equal of (x, 0) then 1 else mul of (x, f of sub of (x, 1)), f of 10)'
+        code = '(f = from x to if equal of (x, 0) then 1 else product of (x, f of sub of (x, 1)), f of 10)'
         self.assertEqual(V(3628800), interpret(code)[-1])
 
 
-class TestAnd(unittest.TestCase):
+class TestAll(unittest.TestCase):
     def test0(self):
         self.assertEqual(V(1), interpret('and of (1, 1)'))
 
@@ -108,18 +108,18 @@ class TestAnd(unittest.TestCase):
         self.assertEqual(V(0), interpret('and of (0, 0)'))
 
 
-class TestOr(unittest.TestCase):
+class TestAny(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('or of (1, 1)'))
+        self.assertEqual(V(1), interpret('any of (1, 1)'))
 
     def test1(self):
-        self.assertEqual(V(1), interpret('or of (0, 1)'))
+        self.assertEqual(V(1), interpret('any of (0, 1)'))
 
     def test2(self):
-        self.assertEqual(V(1), interpret('or of (1, 0)'))
+        self.assertEqual(V(1), interpret('any of (1, 0)'))
 
     def test3(self):
-        self.assertEqual(V(0), interpret('or of (0, 0)'))
+        self.assertEqual(V(0), interpret('any of (0, 0)'))
 
 
 class TestNot(unittest.TestCase):
@@ -157,20 +157,20 @@ class TestSumMinMax(unittest.TestCase):
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(V(12), interpret('add of (sub of (5, 3), mul of (2, 5))'))
+        self.assertEqual(V(12), interpret('sum of (sub of (5, 3), product of (2, 5))'))
 
     def test_white_space(self):
-        self.assertEqual(V(12), interpret('  add of ( sub of (5 , 3), mul   of (2,5))'))
+        self.assertEqual(V(12), interpret('  sum of ( sub of (5 , 3), product   of (2,5))'))
 
 
 class TestTuple(unittest.TestCase):
     def test_tuple(self):
-        self.assertEqual((V(3), V(7)), interpret('(add of (1, 2), add of (3,4))'))
+        self.assertEqual((V(3), V(7)), interpret('(sum of (1, 2), sum of (3,4))'))
 
     def test_mixed_tuple(self):
         self.assertEqual(
             (V(3), V(3), {'type': 'variable_definition', 'name': 'x', 'value': V(3)}),
-            interpret('(3, add of (1, 2), x = 3)'))
+            interpret('(3, sum of (1, 2), x = 3)'))
 
 
 class TestDefinitions(unittest.TestCase):
@@ -180,11 +180,11 @@ class TestDefinitions(unittest.TestCase):
 
     def test_definition_result_constant_function_call(self):
         self.assertEqual({'type': 'variable_definition', 'name': 'result', 'value': V(3)},
-                         interpret('result = add of (1, 2)'))
+                         interpret('result = sum of (1, 2)'))
 
     def test_definition_constant_function_call(self):
         self.assertEqual({'type': 'variable_definition', 'name': 'x', 'value': V(3)},
-                         interpret('x = add of (1, 2)'))
+                         interpret('x = sum of (1, 2)'))
 
     def test_definitions(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(1)},
@@ -193,7 +193,7 @@ class TestDefinitions(unittest.TestCase):
 
     def test_tuple_definition_and_function_call(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(1),V(2))}, V(3)),
-                         interpret('(x=(1,2), add of x)'))
+                         interpret('(x=(1,2), sum of x)'))
 
 
 class TestKeywordVariableClashes(unittest.TestCase):
@@ -240,7 +240,7 @@ class TestIndirection(unittest.TestCase):
             {'type': 'variable_definition', 'name': 'x', 'value': V(5)},
             {'type': 'variable_definition', 'name': 'y', 'value': V(3)},
             V(8)),
-            interpret('(x = 5, y = 3, add of (x, y))'))
+            interpret('(x = 5, y = 3, sum of (x, y))'))
 
 
 class TestIndexing(unittest.TestCase):
@@ -281,10 +281,10 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual(V(1), interpret('(a=(f=from x to 1), g=f of a, g of 3)')[-1])
 
     def test5(self):
-        self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), g=f of a, g of 3)')[-1])
+        self.assertEqual(V(4), interpret('(a=(f = from x to sum of (x,1)), g=f of a, g of 3)')[-1])
 
     def test6(self):
-        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))), g=f of b of a, g of 3)')[-1])
+        self.assertEqual(V(4), interpret('(a=(b=(f=from x to sum of (x,1))), g=f of b of a, g of 3)')[-1])
 
 
 class TestFunctionDefinition(unittest.TestCase):
@@ -299,7 +299,7 @@ class TestFunctionDefinition(unittest.TestCase):
         self.assertEqual(V(3), interpret('(f = from x to 3, f of 1)')[-1])
 
     def test_function_definition_and_call(self):
-        self.assertEqual(V(5), interpret('(f = from x to add of x, f of (2,3))')[-1])
+        self.assertEqual(V(5), interpret('(f = from x to sum of x, f of (2,3))')[-1])
 
 
 class TestFunctionScope(unittest.TestCase):
@@ -307,10 +307,10 @@ class TestFunctionScope(unittest.TestCase):
         self.assertEqual(V(3), interpret('(f = from x where (y = 3) to y, f of 2)')[-1])
 
     def test_scope2(self):
-        self.assertEqual(V(5), interpret('(f = from x where (y = 3) to add of (x, y), f of 2)')[-1])
+        self.assertEqual(V(5), interpret('(f = from x where (y = 3) to sum of (x, y), f of 2)')[-1])
 
     def test_scope3(self):
-        self.assertEqual(V(5), interpret('(y = 2, f = from x where (y = 3) to add of (x, y), f of 2)')[-1])
+        self.assertEqual(V(5), interpret('(y = 2, f = from x where (y = 3) to sum of (x, y), f of 2)')[-1])
 
 
 class TestString(unittest.TestCase):
@@ -358,7 +358,7 @@ class TestImport(unittest.TestCase):
             self.assertEqual(V(4), interpret('(z = import of "file_name", y of z)')[-1])
 
     def test3(self):
-        with mock.patch('global_environment._read_text_file', return_value='(square = from x to mul of (x,x))'):
+        with mock.patch('global_environment._read_text_file', return_value='(square = from x to product of (x,x))'):
             self.assertEqual(V(9), interpret('(a = import of "file_name", square = square of a, square of 3)')[-1])
 
 
@@ -394,7 +394,7 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual[-1])
 
     def test7(self):
-        actual = interpret('(t = (2, 3), all mul of (e, e) for e in t)')
+        actual = interpret('(t = (2, 3), all product of (e, e) for e in t)')
         expected = (V(4), V(9))
         self.assertEqual(expected, actual[-1])
 

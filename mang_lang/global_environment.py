@@ -5,14 +5,6 @@ from parsing import ExpressionTuple, Number, parse_expression, String
 from token_slice import TokenSlice
 
 
-def _add(x: ExpressionTuple):
-    return Number(_value_left(x) + _value_right(x))
-
-
-def _mul(x: ExpressionTuple):
-    return Number(_value_left(x) * _value_right(x))
-
-
 def _sub(x: ExpressionTuple):
     return Number(_value_left(x) - _value_right(x))
 
@@ -84,12 +76,27 @@ def _sum(x: ExpressionTuple):
     return Number(str(sum(element.value for element in x.value)))
 
 
+def _product(x: ExpressionTuple):
+    result = 1
+    for element in x.value:
+        result *= element.value
+    return Number(str(result))
+
+
 def _min(x: ExpressionTuple):
     return Number(str(min(element.value for element in x.value)))
 
 
 def _max(x: ExpressionTuple):
     return Number(str(max(element.value for element in x.value)))
+
+
+def _all(x: ExpressionTuple):
+    return Number(str(float(all(element.value for element in x.value))))
+
+
+def _any(x: ExpressionTuple):
+    return Number(str(float(any(element.value for element in x.value))))
 
 
 def _read_text_file(file_path: str) -> str:
@@ -105,9 +112,7 @@ def _import(x: String):
     return expression.evaluate(environment)
 
 
-ENVIRONMENT = {'add': _add,
-               'mul': _mul,
-               'sub': _sub,
+ENVIRONMENT = {'sub': _sub,
                'div': _div,
                'equal': _equal,
                'and': _and,
@@ -117,6 +122,9 @@ ENVIRONMENT = {'add': _add,
                'is_empty': _is_empty,
                'concat': _concat,
                'sum': _sum,
+               'product': _product,
                'min': _min,
                'max': _max,
+               #'all': _all,
+               'any': _any,
                'import': _import}
