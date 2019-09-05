@@ -96,16 +96,16 @@ class TestRecursion(unittest.TestCase):
 
 class TestAll(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('and of (1, 1)'))
+        self.assertEqual(V(1), interpret('all of (1, 1)'))
 
     def test1(self):
-        self.assertEqual(V(0), interpret('and of (0, 1)'))
+        self.assertEqual(V(0), interpret('all of (0, 1)'))
 
     def test2(self):
-        self.assertEqual(V(0), interpret('and of (1, 0)'))
+        self.assertEqual(V(0), interpret('all of (1, 0)'))
 
     def test3(self):
-        self.assertEqual(V(0), interpret('and of (0, 0)'))
+        self.assertEqual(V(0), interpret('all of (0, 0)'))
 
 
 class TestAny(unittest.TestCase):
