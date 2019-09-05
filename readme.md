@@ -2,7 +2,7 @@
 
 Mang Lang is a toy programming language with the following **design trade-offs**:
 
-1. Minimalistic instead of feature-rich.
+1. Minimalistic instead of feature-rich. The implementation is ~600 lines of Python code.
 2. Functional instead of imperative or object oriented.
 
 **What it has**:
