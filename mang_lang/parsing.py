@@ -162,7 +162,6 @@ class DefinitionLookup(Expression):
     def __init__(self, left: Reference, right: Expression) -> None:
         self.left = left
         self.right = right
-        self.name = right.name
 
     def to_json(self) -> Json:
         return {"type": "definition_lookup",
