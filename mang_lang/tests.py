@@ -122,12 +122,21 @@ class TestAny(unittest.TestCase):
         self.assertEqual(V(0), interpret('any of (0, 0)'))
 
 
-class TestNot(unittest.TestCase):
+class TestNone(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(0), interpret('not of 1'))
+        self.assertEqual(V(0), interpret('none of (1)'))
 
     def test1(self):
-        self.assertEqual(V(1), interpret('not of 0'))
+        self.assertEqual(V(1), interpret('none of (0)'))
+
+    def test2(self):
+        self.assertEqual(V(1), interpret('none of (0, 0)'))
+
+    def test3(self):
+        self.assertEqual(V(0), interpret('none of (0, 1)'))
+
+    def test4(self):
+        self.assertEqual(V(0), interpret('none of (1, 1)'))
 
 
 class TestEqual(unittest.TestCase):
@@ -409,7 +418,7 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test10(self):
-        actual = interpret('each e for e in (1, 2, 3, 4) if not of equal of (e, 2)')
+        actual = interpret('each e for e in (1, 2, 3, 4) if none of (equal of (e, 2))')
         expected = (V(1), V(3), V(4))
         self.assertEqual(expected, actual)
 

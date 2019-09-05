@@ -13,10 +13,6 @@ def _division(x: ExpressionTuple):
     return Number(_value_left(x) / _value_right(x))
 
 
-def _not(x: Number):
-    return Number(str(float(not(x.value != 0))))
-
-
 def _equal(x: ExpressionTuple):
     return Number(str(float(_value_left(x) == _value_right(x))))
 
@@ -87,6 +83,10 @@ def _all(x: ExpressionTuple):
     return Number(str(float(all(element.value for element in x.value))))
 
 
+def _none(x: ExpressionTuple):
+    return Number(str(float(not any(element.value for element in x.value))))
+
+
 def _any(x: ExpressionTuple):
     return Number(str(float(any(element.value for element in x.value))))
 
@@ -107,7 +107,7 @@ def _import(x: String):
 ENVIRONMENT = {'difference': _difference,
                'division': _division,
                'equal': _equal,
-               'not': _not,
+               'none': _none,
                'size': _size,
                'is_empty': _is_empty,
                'concat': _concat,
