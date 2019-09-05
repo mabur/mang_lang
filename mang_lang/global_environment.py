@@ -13,10 +13,6 @@ def _div(x: ExpressionTuple):
     return Number(_value_left(x) / _value_right(x))
 
 
-def _or(x: ExpressionTuple):
-    return Number(str(float(_value_left(x) != 0 or _value_right(x) != 0)))
-
-
 def _not(x: Number):
     return Number(str(float(not(x.value != 0))))
 
@@ -111,7 +107,6 @@ def _import(x: String):
 ENVIRONMENT = {'sub': _sub,
                'div': _div,
                'equal': _equal,
-               'or': _or,
                'not': _not,
                'size': _size,
                'is_empty': _is_empty,
