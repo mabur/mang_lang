@@ -256,7 +256,7 @@ class TestDefinitionLookup(unittest.TestCase):
                 {'type': 'variable_definition', 'name': 'x', 'value': ({'type': 'variable_definition', 'name': 'y', 'value': V(1)},)},
                 V(1)
             ),
-            interpret('(x = (y = 1), y.x)'))
+            interpret('(x = (y = 1), y of x)'))
 
     def test1(self):
         self.assertEqual(
@@ -269,22 +269,22 @@ class TestDefinitionLookup(unittest.TestCase):
                  },
                 V(2)
             ),
-            interpret('(x=(a=1,b=2), b.x)'))
+            interpret('(x=(a=1,b=2), b of x)'))
 
     def test2(self):
-        self.assertEqual(V(1), interpret('(x = (y = (z = 1)), z.y.x)')[-1])
+        self.assertEqual(V(1), interpret('(x = (y = (z = 1)), z of y of x)')[-1])
 
     def test3(self):
-        self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), w.z.y.x)')[-1])
+        self.assertEqual(V(1), interpret('(x = (y = (z = (w=1))), w of z of y of x)')[-1])
 
     def test4(self):
-        self.assertEqual(V(1), interpret('(a=(f=from x to 1), g=f.a, g of 3)')[-1])
+        self.assertEqual(V(1), interpret('(a=(f=from x to 1), g=f of a, g of 3)')[-1])
 
     def test5(self):
-        self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), g=f.a, g of 3)')[-1])
+        self.assertEqual(V(4), interpret('(a=(f = from x to add of (x,1)), g=f of a, g of 3)')[-1])
 
     def test6(self):
-        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))), g=f.b.a, g of 3)')[-1])
+        self.assertEqual(V(4), interpret('(a=(b=(f=from x to add of (x,1))), g=f of b of a, g of 3)')[-1])
 
 
 class TestFunctionDefinition(unittest.TestCase):
@@ -355,11 +355,11 @@ class TestImport(unittest.TestCase):
 
     def test2(self):
         with mock.patch('global_environment._read_text_file', return_value='(\nx=3,\ny=4\n)'):
-            self.assertEqual(V(4), interpret('(z = import of "file_name", y.z)')[-1])
+            self.assertEqual(V(4), interpret('(z = import of "file_name", y of z)')[-1])
 
     def test3(self):
         with mock.patch('global_environment._read_text_file', return_value='(square = from x to mul of (x,x))'):
-            self.assertEqual(V(9), interpret('(a = import of "file_name", square = square.a, square of 3)')[-1])
+            self.assertEqual(V(9), interpret('(a = import of "file_name", square = square of a, square of 3)')[-1])
 
 
 class TestTupleComprehension(unittest.TestCase):
