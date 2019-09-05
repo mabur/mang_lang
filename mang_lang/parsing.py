@@ -178,6 +178,38 @@ class FunctionCall(Expression):
         return function(input)
 
 
+class FunctionCallOrDefinitionLookup(Expression):
+    def __init__(self, left: Reference, right: Expression) -> None:
+        self.left = left
+        self.right = right
+
+    def to_json(self) -> Json:
+        return {"type": "function_call_or_definition_lookup",
+                "left": self.left.to_json(),
+                "right": self.right.to_json()}
+
+    def evaluate(self, environment: Environment) -> Expression:
+        # Definition lookup
+        if self.left.name not in environment:
+            tuple = self.right.evaluate(environment)
+            assert isinstance(tuple, ExpressionTuple)
+            child_environment = deepcopy(environment)
+            child_environment[self.left.name] = next(
+                e.expression for e in tuple.value if e.name == self.left.name)
+            return self.left.evaluate(child_environment)
+
+        # Function call
+        function = self.left.evaluate(environment)
+        input = self.right.evaluate(environment)
+        if isinstance(function, FunctionDefinition):
+            new_environment = deepcopy(environment)
+            new_environment[function.argument_name] = input
+            if function.scope:
+                _ = function.scope.evaluate(new_environment)
+            return function.expression.evaluate(new_environment)
+        return function(input)
+
+
 class Conditional(Expression):
     def __init__(self, condition: Expression, then_expression: Expression,
                  else_expression: Expression) -> None:
@@ -269,11 +301,11 @@ def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
     return (ScopeTuple(expressions=expressions), tokens)
 
 
-def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCall, TokenSlice]:
+def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
     left, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.OF)
     right, tokens = parse_expression(tokens)
-    return (FunctionCall(left=left, right=right), tokens)
+    return (FunctionCallOrDefinitionLookup(left=left, right=right), tokens)
 
 
 def _parse_optional_function_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
@@ -308,11 +340,11 @@ def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
     return (Indexing(reference=reference, index=number), tokens)
 
 
-def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[DefinitionLookup, TokenSlice]:
+def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
     left, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.DOT)
     right, tokens = parse_expression(tokens)
-    return (DefinitionLookup(left=left, right=right), tokens)
+    return (FunctionCallOrDefinitionLookup(left=left, right=right), tokens)
 
 
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
