@@ -171,6 +171,10 @@ class TestExpression(unittest.TestCase):
     def test_white_space(self):
         self.assertEqual(V(12), interpret('  sum of ( difference of (5 , 3), product   of (2,5))'))
 
+    def test_new_line(self):
+        self.assertEqual(V(5), interpret('''sum of
+        (2,3)'''))
+
 
 class TestTuple(unittest.TestCase):
     def test_tuple(self):
