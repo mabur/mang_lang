@@ -12,7 +12,7 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 4. Variables.
 5. Functions.
 6. Conditional expressions (if then else).
-7. Looping with tuple comprehensions (all for in if).
+7. Looping with tuple comprehensions (each for in if).
 8. Looping with recursive functions.
 
 
