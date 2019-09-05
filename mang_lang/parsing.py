@@ -95,7 +95,7 @@ class FunctionCall(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         function = self.left.evaluate(environment)
         input = self.right.evaluate(environment)
-        if isinstance(function, Expression):
+        if isinstance(function, FunctionDefinition):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             if function.scope:
