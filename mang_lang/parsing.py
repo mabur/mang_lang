@@ -172,14 +172,8 @@ class DefinitionLookup(Expression):
         tuple = self.right.evaluate(environment)
         assert isinstance(tuple, ExpressionTuple)
         child_environment = deepcopy(environment)
-
-        def extract_definition(element: Expression) -> Expression:
-            assert isinstance(element, VariableDefinition)
-            return element.expression
-
-        next_expression = next(extract_definition(e) for e in tuple.value
-                               if e.name == self.left.name)
-        child_environment[self.left.name] = next_expression
+        child_environment[self.left.name] = next(
+            e.expression for e in tuple.value if e.name == self.left.name)
         return self.left.evaluate(child_environment)
 
 
