@@ -89,8 +89,8 @@ class FunctionCall(Expression):
 
     def to_json(self) -> Json:
         return {"type": "function_call",
-                "function_name": self.left.to_json()['name'],
-                "input": self.right.to_json()}
+                "left": self.left.to_json(),
+                "right": self.right.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
         function = self.left.evaluate(environment)
@@ -165,8 +165,8 @@ class DefinitionLookup(Expression):
 
     def to_json(self) -> Json:
         return {"type": "definition_lookup",
-                "parent": self.right.to_json(),
-                "child": self.left.to_json()}
+                "left": self.left.to_json(),
+                "right": self.right.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
         assert self.left.name not in environment
