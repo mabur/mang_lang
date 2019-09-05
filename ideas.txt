@@ -574,33 +574,81 @@ def eat(source, target, query)
   return (source, target, query)
 
 
-eat = from input where
-(
-  source = input.source,
-  target = input.target,
-  query = input.query,
-)
-if is_empty source then target
-else if equal(first source, query) then 
-(
-  source = pop_front input.source,
-  target = input.target,
-  query = input.query,
-)
+eat_until = from input to
+if is_empty input.source then
+   input
+else if equal(get_first input.source, query) then 
+  (
+    target = input.target,
+    source = pop_first input.source
+  )
 else
-eat
+  eat_until
+  (
+    target = concat(input.target, (get_first(input.source))),
+    source = pop_first(input.source),
+    query = query
+  )
+
+
+INDIRECTION
+
+triangle =
 (
-  target = concat( input.target, (first source)),
-  source = pop_front input.source,
-  query = input.query,
+  points =
+  (
+    (x=1,y=2),
+    (x=1,y=2),
+    (x=1,y=2)
+  )
 )
 
-move_front_to_back = from input where
-(
-  source = input.source,
-  target = input.target,
-  element = get_front(source),
-  source = pop_front(source),
-  target = push_back(target, element)
-)
-to if is_empty(source) then input else (source=source, target=target)
+triangle.points.x
+x in points in triangle
+
+point = (x=1,y=2,z=3)
+
+square(world.point.x)
+conjugate(world.point).x
+vector_functions.conjugate(world.point).x // C style
+world.point.conjugate.x // Ruby style
+
+square world.point.x     // ambiguous without parenthesis
+conjugate world.point.x  // ambiguous without parenthesis
+
+square of x in point in world
+x in conjugate of point in world
+x in conjugate in vector_functions of point in world       // Ambiguous
+x of conjugate of vector_functions of point of world       // Ambiguous
+x in ((conjugate in vector_functions) of (point in world))
+x in (conjugate in vector_functions of (point in world))   // Evaluate from left to right
+x in (conjugate in vector_functions) of point in world     // Evaluate from right to left
+conjugate = conjugate in vector_functions // Only allow evaluation from right to left with expresions.
+x in conjugate of point in world          // like: symbol preposition expression. Makes parsing easier.
+x in conjugate of point in world where (conjugate = conjugate in vector_functions)
+
+world.points|(vector_functions.conjugate).x
+
+Might be less ambiguous and easier to parse if both function call and indirection are prefix operators.
+Alternatively they could both be postfix operators,
+but prefix seems easier in my parser and more similar to other constructs like if, comprehension, function.
+
+What prepositions? in of from.
+* in, of
+* from, of
+* of, of  // Use same. Similar as Ruby, but inverse order. Maybe also for arrays. Seems nice!
+
+square_distance2 = from vectors to square_norm2(sub2(line.points))
+square_distance2 = from vectors to square_norm2 sub2 line.points
+square_distance2 = from vectors to square_norm2 sub2 points line
+square_distance2 = from vectors to square_norm2 sub2 points in line
+square_distance2 = from vectors to square_norm2 of sub2 of points in line
+square_distance2 = from vectors to square_norm2 of sub2 of points of line
+square_distance2 = from vectors to vectors sub2 square_norm line.points
+square_distance2 = from vectors to line.points|sub2|square_norm
+square_distance2 = from vectors to line.points.sub2.square_norm
+square_distance2 = from vectors to line.points->sub2->square_norm
+square_distance2 = from vectors to line pick points apply sub2 apply square_norm
+
+min in std of queue
+std.min(queue)
