@@ -9,7 +9,7 @@ def _difference(x: ExpressionTuple):
     return Number(_value_left(x) - _value_right(x))
 
 
-def _div(x: ExpressionTuple):
+def _division(x: ExpressionTuple):
     return Number(_value_left(x) / _value_right(x))
 
 
@@ -105,7 +105,7 @@ def _import(x: String):
 
 
 ENVIRONMENT = {'difference': _difference,
-               'div': _div,
+               'division': _division,
                'equal': _equal,
                'not': _not,
                'size': _size,
@@ -118,3 +118,4 @@ ENVIRONMENT = {'difference': _difference,
                'all': _all,
                'any': _any,
                'import': _import}
+
