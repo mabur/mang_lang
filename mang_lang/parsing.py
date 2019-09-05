@@ -82,28 +82,6 @@ class Reference(Expression):
         return environment[self.name]
 
 
-class FunctionCall(Expression):
-    def __init__(self, left: Reference, right: Expression) -> None:
-        self.left = left
-        self.right = right
-
-    def to_json(self) -> Json:
-        return {"type": "function_call",
-                "left": self.left.to_json(),
-                "right": self.right.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        function = self.left.evaluate(environment)
-        input = self.right.evaluate(environment)
-        if isinstance(function, FunctionDefinition):
-            new_environment = deepcopy(environment)
-            new_environment[function.argument_name] = input
-            if function.scope:
-                _ = function.scope.evaluate(new_environment)
-            return function.expression.evaluate(new_environment)
-        return function(input)
-
-
 class VariableDefinition(Expression):
     def __init__(self, name: str, expression: Expression) -> None:
         self.name = name
@@ -176,6 +154,28 @@ class DefinitionLookup(Expression):
         child_environment[self.left.name] = next(
             e.expression for e in tuple.value if e.name == self.left.name)
         return self.left.evaluate(child_environment)
+
+
+class FunctionCall(Expression):
+    def __init__(self, left: Reference, right: Expression) -> None:
+        self.left = left
+        self.right = right
+
+    def to_json(self) -> Json:
+        return {"type": "function_call",
+                "left": self.left.to_json(),
+                "right": self.right.to_json()}
+
+    def evaluate(self, environment: Environment) -> Expression:
+        function = self.left.evaluate(environment)
+        input = self.right.evaluate(environment)
+        if isinstance(function, FunctionDefinition):
+            new_environment = deepcopy(environment)
+            new_environment[function.argument_name] = input
+            if function.scope:
+                _ = function.scope.evaluate(new_environment)
+            return function.expression.evaluate(new_environment)
+        return function(input)
 
 
 class Conditional(Expression):
