@@ -42,6 +42,7 @@ class Token:
 
 
 def lexer(code: str) -> Sequence[Token]:
+    code = code.replace('\n', ' ')
     num_characters = len(code)
     index = 0
     tokens = []
