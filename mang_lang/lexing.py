@@ -15,7 +15,7 @@ class TokenType(Enum):
     IF = "if "
     THEN = "then "
     ELSE = "else "
-    ALL = "all "
+    EACH = "each "
     FOR = "for "
     IN = "in "
     FROM = "from "

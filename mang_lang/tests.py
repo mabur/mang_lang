@@ -364,52 +364,52 @@ class TestImport(unittest.TestCase):
 
 class TestTupleComprehension(unittest.TestCase):
     def test1(self):
-        actual = interpret('all e for e in ()')
+        actual = interpret('each e for e in ()')
         expected = tuple()
         self.assertEqual(expected, actual)
 
     def test2(self):
-        actual = interpret('all e for e in (2)')
+        actual = interpret('each e for e in (2)')
         expected = (V(2),)
         self.assertEqual(expected, actual)
 
     def test3(self):
-        actual = interpret('all e for e in (2, 3)')
+        actual = interpret('each e for e in (2, 3)')
         expected = (V(2), V(3))
         self.assertEqual(expected, actual)
 
     def test4(self):
-        actual = interpret('(t = (), all e for e in t)')
+        actual = interpret('(t = (), each e for e in t)')
         expected = tuple()
         self.assertEqual(expected, actual[-1])
 
     def test5(self):
-        actual = interpret('(t = (2), all e for e in t)')
+        actual = interpret('(t = (2), each e for e in t)')
         expected = (V(2),)
         self.assertEqual(expected, actual[-1])
 
     def test6(self):
-        actual = interpret('(t = (2, 3), all e for e in t)')
+        actual = interpret('(t = (2, 3), each e for e in t)')
         expected = (V(2), V(3))
         self.assertEqual(expected, actual[-1])
 
     def test7(self):
-        actual = interpret('(t = (2, 3), all product of (e, e) for e in t)')
+        actual = interpret('(t = (2, 3), each product of (e, e) for e in t)')
         expected = (V(4), V(9))
         self.assertEqual(expected, actual[-1])
 
     def test8(self):
-        actual = interpret('(f = from x to 1, t = (2, 3), all f of e for e in t)')
+        actual = interpret('(f = from x to 1, t = (2, 3), each f of e for e in t)')
         expected = (V(1), V(1))
         self.assertEqual(expected, actual[-1])
 
     def test9(self):
-        actual = interpret('all e for e in (1, 2, 3, 4) if equal of (e, 2)')
+        actual = interpret('each e for e in (1, 2, 3, 4) if equal of (e, 2)')
         expected = (V(2),)
         self.assertEqual(expected, actual)
 
     def test10(self):
-        actual = interpret('all e for e in (1, 2, 3, 4) if not of equal of (e, 2)')
+        actual = interpret('each e for e in (1, 2, 3, 4) if not of equal of (e, 2)')
         expected = (V(1), V(3), V(4))
         self.assertEqual(expected, actual)
 

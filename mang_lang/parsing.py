@@ -360,7 +360,7 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
 
 def _parse_tuple_comprehension(tokens: TokenSlice)\
         -> Tuple[TupleComprehension, TokenSlice]:
-    tokens.parse_known_token(TokenType.ALL)
+    tokens.parse_known_token(TokenType.EACH)
     all_expression, tokens = parse_expression(tokens)
     tokens.parse_known_token(TokenType.FOR)
     for_expression, tokens = parse_expression(tokens)
@@ -389,7 +389,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_number, [TokenType.NUMBER]),
         ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_conditional, [TokenType.IF]),
-        ParsePattern(_parse_tuple_comprehension, [TokenType.ALL]),
+        ParsePattern(_parse_tuple_comprehension, [TokenType.EACH]),
         ParsePattern(_parse_function_definition, [TokenType.FROM]),
         ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.OF]),
         #ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT]),
