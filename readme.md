@@ -26,12 +26,14 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 ```(
 (
-faculty = from x to if equal(x,0) then 1 else mul(x,faculty(sub(x,1))),
-result = faculty(4)
+faculty = from x to 
+    if equal of (x, 0) then 1
+    else product of (x, faculty of difference of (x, 1)),
+result = faculty of 4
 )
 ```
 
-This example first defines a function named `faculty` that takes an argument named `x`. The function is defined recursively. It then defines a variable named `result` to be the value of `faculty(4)` i.e. `1*2*3*4=24`. Mang Lang uses functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Whitespace and new lines are optional.
+This example first defines a function named `faculty` that takes an argument named `x`. The function is defined recursively. It then defines a variable named `result` to be the value of `faculty of 4` i.e. `1*2*3*4=24`. Mang Lang uses functions like `equal`, `product`, `difference` instead of having operators like `==`, `*` , `-`. Whitespace and new lines are optional.
 
 # Examples
 
@@ -56,16 +58,16 @@ Mang Lang can be used as a calculator. This is a trivial program that just conta
 This program is unsurprisingly evaluated to the value  `8`. Mang Lang does not have any operators for arithmetics etc, but instead uses functions:
 
 ```
-add(8,3)
+sum of (8,3)
 ```
 
 This program is evaluated to `11`. Function calls can be nested like this:
 
 ````
-mul(add(1,2),sub(3,1))
+product of (sum of (1,2), difference of (3,1))
 ````
 
-This program is evaluated to `6`.
+This program is evaluated to `(1+2)*(3-1)=6`.
 
 ## Variables and Multiple Statements
 
@@ -75,7 +77,7 @@ Variables can be defined and used like this:
 (
 x=3,
 y=2,
-z=mul(x,y)
+z=product of (x,y)
 )
 ```
 
@@ -98,7 +100,7 @@ White space and new lines are optional in Mang Lang so the same program can also
 and in our concrete example:
 
 ```(
-(x = 3, y = 2, z = mul(x, y))
+(x = 3, y = 2, z = product of (x, y))
 ```
 
 ## Tuples
@@ -109,7 +111,7 @@ Mang Lang uses tuples as flexible building blocks for many different things. Whi
 (
 x = 1,
 y = 3,
-result = add(x, y)
+result = sum of (x, y)
 )
 ```
 
@@ -118,7 +120,10 @@ Example using tuples as lists or arrays:
 ```
 (
 array = (1, 3),
-result = add(array[0], array[1])
+one = 0 of array,
+three = 1 of array,
+result1 = sum of (0 of array, 1 of array),
+result2 = sum of array,
 )
 ```
 
@@ -127,7 +132,7 @@ Example using tuples to create data records/objects:
 ```
 (
 object = (x = 1, y = 3),
-result = add(object.x, object.y)
+result = sum of (x of object, y of object)
 )
 ```
 
@@ -137,9 +142,10 @@ Functions are defined using they keywords `from` and `to` like this:
 
 ```
 (
-square_norm = from x to add(mul(x[0], x[0]), mul(x[1], x[1])),
+square = from x to product of (x, x)
+square_norm = from vec2 to sum of (square of 0 of vec2, square of 1 of vec2),
 vector = (3, 4),
-result = square_norm(vector)
+result = square_norm of vector
 )
 ```
 
@@ -147,8 +153,9 @@ The if-then-else operator is used to choose what value to return based on a cond
 
 ```
 (
-abs = from x to if greater(x, 0) then x else sub(0, x)
-result = abs(-10)
+negation = from x to difference of (0, x),
+abs = from x to if greater of (x, 0) then x else negation of x,
+result = abs of -10
 )
 ```
 
@@ -156,8 +163,10 @@ Recursive function calls and the if-then-else operator are used for loops:
 
 ```
 (
-faculty = x from to if equal(x, 0) then 1 else mul(x, faculty(sub(x, 1))),
-result = faculty(10)
+faculty = x from to 
+    if equal of (x, 0) then 1
+    else product of (x, faculty of difference of (x, 1)),
+result = faculty of 10
 )
 ```
 
@@ -165,12 +174,12 @@ Function definitions can be broken up into smaller parts that are put in a local
 
 ```
 (
-square_norm = from v where (
-    x2 = mul(v[0], v[0]),
-    y2 = mul(v[1], v[1])
-    ) to add(x2, y2),
+square_norm = from vec2 where (
+    x2 = product of (0 of vec2, 0 of vec2),
+    y2 = product of (1 of vec2, 1 of vec2)
+    ) to sum of (x2, y2),
 vector = (3, 4),
-result = square_norm(vector)
+result = square_norm of vector
 )
 ```
 
@@ -184,7 +193,7 @@ It is designed for the use case when you create a tuple by looping over another 
 ```
 (
 input = (1, 2, 3),
-output = all mul(x, x) for x in input
+output = each product of (x, x) for x in input
 )
 ```
 This computes the square of all elements in `input`.
@@ -193,7 +202,7 @@ Tuple comprehensions also support an optional `if` expression at the end. This c
 ```
 (
 input = (1, 2, 3),
-output = all mul(x, x) for x in input if not(equal(x, 2))
+output = each product of (x, x) for x in input if none of (equal of (x, 2))
 )
 ```
 In this example `output` becomes `(1, 9)`.
@@ -204,8 +213,8 @@ Strings are similar to tuples:
 (
 first_name = "Magnus",
 last_name = "Burenius",
-full_name = concat(first_name, " ", last_name),
-initials = concat(first_name[0], last_name[0])
+full_name = concat of (first_name, " ", last_name),
+initials = concat of (0 of first_name, 0 of last_name)
 )
 ```
 In this example `full_name` gets the value "Magnus Burenius" and `initials` gets the value "MB".
@@ -215,39 +224,38 @@ In this example `full_name` gets the value "Magnus Burenius" and `initials` gets
 Source code can be put in different source files. If you have a file called `math` that contains the following:
 ```
 (
-square = from x to mul(x, x),
+square = from x to product of (x, x),
 pi = 3.14151965
 )
 ```
 then you can import those definitions into another source file by using the `import` function:
 ```
 (
-math = import("math"),
-tau = mul(2, math.pi),
-four = math.square(2)
+math = import of "math",
+tau  = product of (2, pi of math),
+square = square of math,
+four = square of 2
 )
 ```
 
 ## List of built-in functions
 
 ### Arithmetic functions:
-* **add**: adds two numbers.
-* **mul**: multiplies two numbers.
-* **sub**: subtracts two numbers.
-* **div**: divides two numbers.
+* **sum**: adds a tuple of numbers.
+* **product**: multiplies a tuple of numbers.
+* **difference**: subtracts two numbers.
+* **division**: divides two numbers.
+* **min**: smallest number in a non-empty tuple.
+* **max**: largest number in a non-empty tuple.
 
 ### Logical functions:
 * **equal**: true if two numbers are equal, and otherwise false.
-* **and**: true if two variables are both true, and otherwise false.
-* **or**: true if at least one of two variables are true, and otherwise false.
-* **not**: true if a variable is false, and otherwise false.
+* **all**: true if all elements of a tuple are true.
+* **any**: true if at least one element of a tuple is true.
+* **none**: true if all elements of a tuple are false.
 
 ### Tuple and string functions
 * **size**: the number of elements of a tuple or string.
 * **is_empty**: true if a tuple or string has zero elements.
 * **concat**: concatenates two tuples or strings.
 
-### Tuple of numbers
-* **sum**: sum all numbers in a tuple. Gives zero if the tuple is empty.
-* **min**: smallest number in a non-empty tuple.
-* **max**: largest number in a non-empty tuple.
