@@ -1,10 +1,3 @@
-# expression = number | constant | array | function_call
-# number = 123...
-# constant = symbol
-# symbol = abc...
-# array = "(" [expression {"," expression}] ")"
-# function_call = symbol, array
-
 from copy import deepcopy
 from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
     Tuple, Union
