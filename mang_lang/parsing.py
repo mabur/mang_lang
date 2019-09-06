@@ -45,8 +45,7 @@ class Number(Expression):
         self.value = float(value)
 
     def to_json(self) -> Json:
-        return {"type": "number",
-                "value": self.value}
+        return {"type": "number", "value": self.value}
 
     def evaluate(self, environment: Environment) -> Expression:
         return self
@@ -57,8 +56,7 @@ class String(Expression):
         self.value = value[1:-1]
 
     def to_json(self) -> Json:
-        return {"type": "string",
-                "value": self.value}
+        return {"type": "string", "value": self.value}
 
     def evaluate(self, environment: Environment) -> Expression:
         return self
@@ -127,48 +125,6 @@ class Indexing(Expression):
         if isinstance(reference, String):
             return String('"{}"'.format(element))
         raise TypeError
-
-
-class DefinitionLookup(Expression):
-    def __init__(self, left: Reference, right: Expression) -> None:
-        self.left = left
-        self.right = right
-
-    def to_json(self) -> Json:
-        return {"type": "definition_lookup",
-                "left": self.left.to_json(),
-                "right": self.right.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        assert self.left.name not in environment
-        tuple = self.right.evaluate(environment)
-        assert isinstance(tuple, ExpressionTuple)
-        child_environment = deepcopy(environment)
-        child_environment[self.left.name] = next(
-            e.expression for e in tuple.value if e.name == self.left.name)
-        return self.left.evaluate(child_environment)
-
-
-class FunctionCall(Expression):
-    def __init__(self, left: Reference, right: Expression) -> None:
-        self.left = left
-        self.right = right
-
-    def to_json(self) -> Json:
-        return {"type": "function_call",
-                "left": self.left.to_json(),
-                "right": self.right.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        function = self.left.evaluate(environment)
-        input = self.right.evaluate(environment)
-        if isinstance(function, FunctionDefinition):
-            new_environment = deepcopy(environment)
-            new_environment[function.argument_name] = input
-            if function.scope:
-                _ = function.scope.evaluate(new_environment)
-            return function.expression.evaluate(new_environment)
-        return function(input)
 
 
 class FunctionCallOrDefinitionLookup(Expression):
@@ -294,7 +250,7 @@ def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
     return (ScopeTuple(expressions=expressions), tokens)
 
 
-def _parse_function_call(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
+def _parse_function_call_or_definition_lookup(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
     left, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.OF)
     right, tokens = parse_expression(tokens)
@@ -331,13 +287,6 @@ def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
     tokens.parse_known_token(TokenType.OF)
     reference, tokens = _parse_reference(tokens)
     return (Indexing(reference=reference, index=number), tokens)
-
-
-def _parse_definition_lookup(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
-    left, tokens = _parse_reference(tokens)
-    tokens.parse_known_token(TokenType.DOT)
-    right, tokens = parse_expression(tokens)
-    return (FunctionCallOrDefinitionLookup(left=left, right=right), tokens)
 
 
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
@@ -384,8 +333,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_conditional, [TokenType.IF]),
         ParsePattern(_parse_tuple_comprehension, [TokenType.EACH]),
         ParsePattern(_parse_function_definition, [TokenType.FROM]),
-        ParsePattern(_parse_function_call, [TokenType.SYMBOL, TokenType.OF]),
-        #ParsePattern(_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT]),
+        ParsePattern(_parse_function_call_or_definition_lookup, [TokenType.SYMBOL, TokenType.OF]),
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
