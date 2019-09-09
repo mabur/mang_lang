@@ -1,23 +1,3 @@
-TUPLES
-
-a = (8, 9)    // (8, 9)
-x = mul(a)    // 72
-y = 5         // 5
-z = add(x, y) // 77
-
-c = (4, 5, 6, 7) // (4, 5, 6, 7)
-n = size(c)      // 4
-d = c[1]         // 5
-e = c(1:2)       // (5, 6)  implement slicing later
-f = concat((d), e, a) // (5, 5, 6, 8, 9)
-
-b = is_empty(c)
-a = first(tuple)
-b = last(tuple)
-c = without_first(tuple)
-d = without_last(tuple)
-
-
 FOLD
 
 // Fold<
@@ -25,6 +5,7 @@ faculty = left_fold collection with 1 by mul
 sum     = left_fold collection with 0 by add
 minimum = left_fold collection with MAX_FLOAT by min
 maximum = left_fold collection with MIN_FLOAT by max
+concat  = left_fold right with with left by push_back
 
 // Unfold
 a = unfold 0 by next until greater_than(10)
@@ -49,42 +30,6 @@ content = read_text("data.txt")
 content = text_file("data.txt")
 write_text("data.txt", content)
 text_file("data.txt") = content
-
-
-MODULES & SCOPE
-
-main.ml
-(
-std = import("std.ml"),
-a = 3,
-f(x) = 4,
-b = (
-    c = 5,
-    g(x) = 7
-    )
-h(x) = {
-       k(y) = 8,
-       u = mul(x, x)
-       } = k(u),
-d = (1, 2, 3),
-sum = std.sum,
-e = sum(d)
-)
-
-std.ml
-(
-arithmetic = (
-             sum = ...
-             ),
-order = (
-        min = ...
-        max = ...
-        ),
-pi = 3.14,
-sin(x) = ...,
-cos(x) = {half_pi = div(pi, 2), y = add(x, half_pi)}, sin(y),
-increment(x) = {f(y) = add(y, x)} = f
-)
 
 
 REGEXP FUNCTIONALITY
@@ -177,11 +122,6 @@ STANDARD LIBRARY
 
 Start writing standard library functions in Mang Lang instead of Python.
 
-
-BOOLEAN
-
-Have same primitive types as in json? Number, string, bool?
-What about individual characters?
 
 TYPES
 square(x:real):real = mul(x, x)
@@ -343,170 +283,9 @@ Vec2 = (x=Real, y=Real)
 *Array?
 *Enum?
 
-DICT / TUPLE / ARRAY / TABLE / LUA
-a = (1, 2)
-b = (x=1, y=2)
-add2 = (l, r) -> (add(l[0], r[0]), add(l[1], r[1]))
-c = add2(a, b)
-hyp1 = (v) -> sqrt(add(mul(v[0], v[0]), mul(v[1], v[1])))
-hyp2 = (x, y) -> sqrt(add(mul(x, x), mul(y, y)))
-h1 = hyp1(a)
-h2 = hyp2(1, 2)
-conj1 = (c) -> (re=c.re, im=c.im)
-conj2 = (im, re) -> (re=re, im=im)
-c1 = (1,2)
-c2 = (re=1, im=2)
-c3 = conj1(c1) # error tuple c1 has no members re and im
-c4 = conj1(c2)
-c5 = conj1((re=1, im=2)) # implicit packing
-c6 = conj2(1, 2)
-c7 = conj2(*c1) # implicit unpacking
-c8 = conj2(*c2) # implicit unpacking
-(a,b) = conj1(c1)
-
-SINGLE ARGUMENT FUNCTIONS (ENKELT & BRA)
-a = [1, 2]
-b = [3, 4]
-add2 = x -> [add([x[0][0], x[1][0]]), add([x[0][1], x[1][1]])]
-add2 = terms -> {
-  left = terms[0],
-  right = terms[1],
-  x = [left[0], right[0]],
-  y = [left[1], right[1]]
-  } -> [add(x), add(y)]
-constant = {three = 3, decimals = 0.14}
-         = add(three, decimals)
-c = add2([a, b])
-hyp1 = v -> {
-  x = v[0],
-  y = v[1],
-  x2 = mul([x, x]),
-  y2 = mul([y, y]),
-  } -> sqrt(add([x2, y2]))
-h1 = hyp1(a)
-h2 = hyp1([1, 2])
-conj1 = c -> [re=c[0], im=c[1]]
-c1 = [re=1, im=2]
-c2 = conj1(c1)
-c3 = conj1([re=1, im=2])
-
-dot2 = vectors -> (
-    a = vectors[0],
-    b = vectors[1],
-    ax = a[0],
-    ay = a[1],
-    bx = b[0],
-    by = b[1],
-) -> add[mul[ax, bx], mul[ay, by]]
-) -> [[ax, bx].mul, [ay, by].mul].add
-
-dot2 = FROM vectors WHERE (
-    a = vectors[0],
-    b = vectors[1],
-    ax = a[0],
-    ay = a[1],
-    bx = b[0],
-    by = b[1],
-) TO add[mul[ax, bx], mul[ay, by]]
-) TO [[ax, bx].mul, [ay, by].mul].add
-) TO [[ax, bx]->mul, [ay, by]->mul]->add
-
-square_norm2 = vector -> dot2[vector, vector]
-square_norm2 = vector -> [vector, vector].dot2
-
-sub2 = vectors -> (
-    a = vectors[0],
-    b = vectors[1],
-    ax = a[0],
-    ay = a[1],
-    bx = b[0],
-    by = b[1],
-    x = [ax, bx].sub,
-    y = [ay, by].sub,
-) -> [x, y]
-
-sub2 = from vectors where
-{
-    a = vectors[0],
-    b = vectors[1],
-    ax = a[0],
-    ay = a[1],
-    bx = b[0],
-    by = b[1],
-    x = sub[ax, bx],
-    y = sub[ay, by],
-} to [x, y]
-
-square_distance2 = from vectors to square_norm2(sub2(vectors))
-square_distance2 = from vectors to square_norm2 sub2 vectors
-square_distance2 = from vectors to vectors sub2 square_norm
-square_distance2 = from vectors to vectors|sub2|square_norm
-square_distance2 = from vectors to vectors.sub2.square_norm
-square_distance2 = from vectors to vectors->sub2->square_norm
-
-Liknande Ruby och Python-properties. Ha punkt . för både:
-1. slå upp medlems-variabel.
-2. applicera funktion/metod.
-Men hur blir det då med metoder/funktioner definierade i det egna objektet?
-Hur ska man applicera en metod på objektet?
-Men vad är vitsen med medlemsfunktioner istället för medlemsvariablar om objektet är immutable?
-Kan fortfarande vara en vits med medlemsfunktioner, om de inte bara jobbar på self.
-[1,2,3]|std.min
-Slutsats: gör inte så.
-
-my_vec =
-{
-  x = 1,
-  y = 2,
-  squared_norm2 = from v to dot[v,v]
-  proj = from a to dot[a, [x, y]]
-}
-
-
-square_distance2 = from vectors where
-{
-    delta = sub2 vectors,
-} to square_norm2 delta
-
-TUPLE / ARRAYS / DICT / SCOPES
-* Array []
-* Dict {}
-* Scope
-* Tuple
-* Function call
-
-()
-[]
-{}
-<>
-||
-
-ARRAY lookup
-
-sub2 = from vectors where
-{
-    a = vectors 0,
-    b = vectors 1,
-    ax = a 0,
-    ay = a 1,
-    bx = b 0,
-    by = b 1,
-    x = sub[ax, bx],
-    y = sub[ay, by],
-} to [x, y]
-
-sub_vec = from vector_pair to
-    all sub dimension for dimension in zip vector_pair
-
-def sub_vec(vector0, vector1):
-    return [c0 - c1 for c0, c1 in zip(vector0, vector1)]
 
 TODO:
-* Types, and input format for functions.
-  How to handle tuples and tuples of definitions?
-  Keyword arguments?
-  Use dict instead of tuple as main building block.
-  Treat functions as values first?
+* Use dict as main building block for defining symbols. Add array. Remove tuple.
 * Parse tokens and Expressions similarly.
   Can peek for starting sequences.
   Handle optional starting sequences, by implementing it as multiple ParsePatterns.
@@ -514,8 +293,9 @@ TODO:
 * Allow more characters in strings, especially . / \ needed for filenames
 * Remove indexing?
 * zip
+* Try to implement Advent od Code problems to see what is missing
 
-
+-------------------------------------------------------------------------------------------------
 split = from input where
 (
   queue  = input.queue,
@@ -574,81 +354,27 @@ def eat(source, target, query)
   return (source, target, query)
 
 
-eat_until = from input to
-if is_empty input.source then
-   input
-else if equal(get_first input.source, query) then 
-  (
-    target = input.target,
-    source = pop_first input.source
-  )
-else
-  eat_until
-  (
-    target = concat(input.target, (get_first(input.source))),
-    source = pop_first(input.source),
-    query = query
-  )
-
-
-INDIRECTION
-
-triangle =
+eat_until = from input where
 (
-  points =
-  (
-    (x=1,y=2),
-    (x=1,y=2),
-    (x=1,y=2)
-  )
+  source = source of input,
+  target = target of input,
+  query  = query  of input
 )
-
-triangle.points.x
-x in points in triangle
-
-point = (x=1,y=2,z=3)
-
-square(world.point.x)
-conjugate(world.point).x
-vector_functions.conjugate(world.point).x // C style
-world.point.conjugate.x // Ruby style
-
-square world.point.x     // ambiguous without parenthesis
-conjugate world.point.x  // ambiguous without parenthesis
-
-square of x in point in world
-x in conjugate of point in world
-x in conjugate in vector_functions of point in world       // Ambiguous
-x of conjugate of vector_functions of point of world       // Ambiguous
-x in ((conjugate in vector_functions) of (point in world))
-x in (conjugate in vector_functions of (point in world))   // Evaluate from left to right
-x in (conjugate in vector_functions) of point in world     // Evaluate from right to left
-conjugate = conjugate in vector_functions // Only allow evaluation from right to left with expresions.
-x in conjugate of point in world          // like: symbol preposition expression. Makes parsing easier.
-x in conjugate of point in world where (conjugate = conjugate in vector_functions)
-
-world.points|(vector_functions.conjugate).x
-
-Might be less ambiguous and easier to parse if both function call and indirection are prefix operators.
-Alternatively they could both be postfix operators,
-but prefix seems easier in my parser and more similar to other constructs like if, comprehension, function.
-
-What prepositions? in of from.
-* in, of
-* from, of
-* of, of  // Use same. Similar as Ruby, but inverse order. Maybe also for arrays. Seems nice!
-
-square_distance2 = from vectors to square_norm2(sub2(line.points))
-square_distance2 = from vectors to square_norm2 sub2 line.points
-square_distance2 = from vectors to square_norm2 sub2 points line
-square_distance2 = from vectors to square_norm2 sub2 points in line
-square_distance2 = from vectors to square_norm2 of sub2 of points in line
-square_distance2 = from vectors to square_norm2 of sub2 of points of line
-square_distance2 = from vectors to vectors sub2 square_norm line.points
-square_distance2 = from vectors to line.points|sub2|square_norm
-square_distance2 = from vectors to line.points.sub2.square_norm
-square_distance2 = from vectors to line.points->sub2->square_norm
-square_distance2 = from vectors to line pick points apply sub2 apply square_norm
-
-min in std of queue
-std.min(queue)
+to if is_empty of source then
+(
+  source = source,
+  target = target,
+  query  = query
+)
+else if equal of (first of source, query) then 
+(
+  source = pop_first of source
+  target = target,
+  query  = query
+)
+else eat_until of 
+(
+  target = concat of (target, (first of source)),
+  source = pop_first of source,
+  query  = query
+)
