@@ -225,13 +225,13 @@ def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
 
 def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     expressions = ()
-    tokens.parse_known_token(TokenType.PARENTHESIS_BEGIN)
-    while not tokens.do_match([TokenType.PARENTHESIS_END]):
+    tokens.parse_known_token(TokenType.ARRAY_BEGIN)
+    while not tokens.do_match([TokenType.ARRAY_END]):
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
         if tokens.do_match([TokenType.COMMA]):
             tokens.parse_known_token(TokenType.COMMA)
-    tokens.parse_known_token(TokenType.PARENTHESIS_END)
+    tokens.parse_known_token(TokenType.ARRAY_END)
     return (ExpressionTuple(expressions=expressions), tokens)
 
 
@@ -323,7 +323,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_function_definition, [TokenType.FROM]),
         ParsePattern(_parse_function_call_or_definition_lookup, [TokenType.SYMBOL, TokenType.OF]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
-        ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
+        ParsePattern(_parse_tuple, [TokenType.ARRAY_BEGIN]),
         ParsePattern(_parse_dictionary, [TokenType.DICTIONARY_BEGIN]),
     ]
 
