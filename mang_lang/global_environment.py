@@ -1,49 +1,49 @@
 from typing import Union
 
 from lexing import lexer
-from parsing import ExpressionTuple, Number, parse_expression, String
+from parsing import Array, Number, parse_expression, String
 from token_slice import TokenSlice
 
 
-def _difference(x: ExpressionTuple):
+def _difference(x: Array):
     return Number(_value_left(x) - _value_right(x))
 
 
-def _division(x: ExpressionTuple):
+def _division(x: Array):
     return Number(_value_left(x) / _value_right(x))
 
 
-def _equal(x: ExpressionTuple):
+def _equal(x: Array):
     return Number(str(float(_value_left(x) == _value_right(x))))
 
 
-def _value_left(x: ExpressionTuple):
+def _value_left(x: Array):
     assert len(x.value) == 2
     return x.value[0].value
 
 
-def _value_right(x: ExpressionTuple):
+def _value_right(x: Array):
     assert len(x.value) == 2
     return x.value[1].value
 
 
-def _size(x: Union[String, ExpressionTuple]):
+def _size(x: Union[String, Array]):
     return Number(str(len(x.value)))
 
 
-def _is_empty(x: Union[String, ExpressionTuple]):
+def _is_empty(x: Union[String, Array]):
     return Number(str(0 if x.value else 1))
 
 
-def _concat_tuple(x: ExpressionTuple) -> ExpressionTuple:
+def _concat_tuple(x: Array) -> Array:
     expressions = []
     for e in x.value:
-        assert isinstance(e, ExpressionTuple)
+        assert isinstance(e, Array)
         expressions += e.value
-    return ExpressionTuple(expressions)
+    return Array(expressions)
 
 
-def _concat_string(x: ExpressionTuple) -> String:
+def _concat_string(x: Array) -> String:
     expressions = '"'
     for e in x.value:
         assert isinstance(e, String)
@@ -52,42 +52,42 @@ def _concat_string(x: ExpressionTuple) -> String:
     return String(expressions)
 
 
-def _concat(x: ExpressionTuple):
-    if isinstance(x.value[0], ExpressionTuple):
+def _concat(x: Array):
+    if isinstance(x.value[0], Array):
         return _concat_tuple(x)
     if isinstance(x.value[0], String):
         return _concat_string(x)
     raise TypeError
 
 
-def _sum(x: ExpressionTuple):
+def _sum(x: Array):
     return Number(str(sum(element.value for element in x.value)))
 
 
-def _product(x: ExpressionTuple):
+def _product(x: Array):
     result = 1
     for element in x.value:
         result *= element.value
     return Number(str(result))
 
 
-def _min(x: ExpressionTuple):
+def _min(x: Array):
     return Number(str(min(element.value for element in x.value)))
 
 
-def _max(x: ExpressionTuple):
+def _max(x: Array):
     return Number(str(max(element.value for element in x.value)))
 
 
-def _all(x: ExpressionTuple):
+def _all(x: Array):
     return Number(str(float(all(element.value for element in x.value))))
 
 
-def _none(x: ExpressionTuple):
+def _none(x: Array):
     return Number(str(float(not any(element.value for element in x.value))))
 
 
-def _any(x: ExpressionTuple):
+def _any(x: Array):
     return Number(str(float(any(element.value for element in x.value))))
 
 

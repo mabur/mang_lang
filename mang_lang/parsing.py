@@ -15,7 +15,7 @@ class Expression:
         raise NotImplemented()
 
 
-class ExpressionTuple(Expression):
+class Array(Expression):
     def __init__(self, expressions: Sequence[Expression]) -> None:
         self.value = expressions
 
@@ -25,7 +25,7 @@ class ExpressionTuple(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [e.evaluate(new_environment) for e in self.value]
-        return ExpressionTuple(expressions)
+        return Array(expressions)
 
 
 class Number(Expression):
@@ -88,10 +88,10 @@ class Dictionary(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [e.evaluate(new_environment) for e in self.value]
-        return ExpressionTuple(expressions)
+        return Array(expressions)
 
 
-class FunctionDefinition(Expression):
+class Function(Expression):
     def __init__(self, argument_name: str, expression: Expression) -> None:
         self.argument_name = argument_name
         self.expression = expression
@@ -119,7 +119,7 @@ class Indexing(Expression):
         reference = self.reference.evaluate(environment)
         index = int(self.index.evaluate(environment).value)
         element = reference.value[index]
-        if isinstance(reference, ExpressionTuple):
+        if isinstance(reference, Array):
             return element
         if isinstance(reference, String):
             return String('"{}"'.format(element))
@@ -140,7 +140,7 @@ class FunctionCallOrDefinitionLookup(Expression):
         # Definition lookup
         if self.left.name not in environment:
             tuple = self.right.evaluate(environment)
-            assert isinstance(tuple, ExpressionTuple)
+            assert isinstance(tuple, Array)
             child_environment = deepcopy(environment)
             child_environment[self.left.name] = next(
                 e.expression for e in tuple.value if e.name == self.left.name)
@@ -149,7 +149,7 @@ class FunctionCallOrDefinitionLookup(Expression):
         # Function call
         function = self.left.evaluate(environment)
         input = self.right.evaluate(environment)
-        if isinstance(function, FunctionDefinition):
+        if isinstance(function, Function):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             return function.expression.evaluate(new_environment)
@@ -176,7 +176,7 @@ class Conditional(Expression):
             return self.else_expression.evaluate(environment)
 
 
-class TupleComprehension(Expression):
+class ArrayComprehension(Expression):
     def __init__(self, all_expression: Expression, for_expression: Expression,
                  in_expression: Reference, if_expression: Optional[Expression]) -> None:
         self.all_expression = all_expression
@@ -192,7 +192,7 @@ class TupleComprehension(Expression):
 
     def evaluate(self, environment: Environment) -> Expression:
         in_expression = self.in_expression.evaluate(environment)
-        assert isinstance(in_expression, ExpressionTuple)
+        assert isinstance(in_expression, Array)
         assert isinstance(self.for_expression, Reference)
         variable_name = self.for_expression.name
         result = []
@@ -205,7 +205,7 @@ class TupleComprehension(Expression):
                 if not bool(z.value):
                     continue
             result.append(y)
-        return ExpressionTuple(result)
+        return Array(result)
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
@@ -223,7 +223,7 @@ def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
     return (Reference(name), tokens)
 
 
-def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
+def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
     expressions = ()
     tokens.parse_known_token(TokenType.ARRAY_BEGIN)
     while not tokens.do_match([TokenType.ARRAY_END]):
@@ -232,7 +232,7 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
         if tokens.do_match([TokenType.COMMA]):
             tokens.parse_known_token(TokenType.COMMA)
     tokens.parse_known_token(TokenType.ARRAY_END)
-    return (ExpressionTuple(expressions=expressions), tokens)
+    return (Array(expressions=expressions), tokens)
 
 
 def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
@@ -261,13 +261,13 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
-def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
+def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
     tokens.parse_known_token(TokenType.FROM)
     argument_name = tokens.parse_token()
     tokens.parse_known_token(TokenType.TO)
     expression, tokens = parse_expression(tokens)
-    return (FunctionDefinition(argument_name=argument_name,
-                               expression=expression), tokens)
+    return (Function(argument_name=argument_name,
+                     expression=expression), tokens)
 
 
 def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
@@ -288,8 +288,8 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
                         else_expression=else_expression), tokens)
 
 
-def _parse_tuple_comprehension(tokens: TokenSlice)\
-        -> Tuple[TupleComprehension, TokenSlice]:
+def _parse_array_comprehension(tokens: TokenSlice)\
+        -> Tuple[ArrayComprehension, TokenSlice]:
     tokens.parse_known_token(TokenType.EACH)
     all_expression, tokens = parse_expression(tokens)
     tokens.parse_known_token(TokenType.FOR)
@@ -300,7 +300,7 @@ def _parse_tuple_comprehension(tokens: TokenSlice)\
     if tokens.do_match([TokenType.IF]):
         tokens.parse_known_token(TokenType.IF)
         if_expression, tokens = parse_expression(tokens)
-    return (TupleComprehension(all_expression=all_expression,
+    return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
                                if_expression=if_expression), tokens)
@@ -319,11 +319,11 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_number, [TokenType.NUMBER]),
         ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_conditional, [TokenType.IF]),
-        ParsePattern(_parse_tuple_comprehension, [TokenType.EACH]),
-        ParsePattern(_parse_function_definition, [TokenType.FROM]),
+        ParsePattern(_parse_array_comprehension, [TokenType.EACH]),
+        ParsePattern(_parse_function, [TokenType.FROM]),
         ParsePattern(_parse_function_call_or_definition_lookup, [TokenType.SYMBOL, TokenType.OF]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
-        ParsePattern(_parse_tuple, [TokenType.ARRAY_BEGIN]),
+        ParsePattern(_parse_array, [TokenType.ARRAY_BEGIN]),
         ParsePattern(_parse_dictionary, [TokenType.DICTIONARY_BEGIN]),
     ]
 
