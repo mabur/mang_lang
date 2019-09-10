@@ -322,7 +322,6 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_tuple_comprehension, [TokenType.EACH]),
         ParsePattern(_parse_function_definition, [TokenType.FROM]),
         ParsePattern(_parse_function_call_or_definition_lookup, [TokenType.SYMBOL, TokenType.OF]),
-        ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
         ParsePattern(_parse_dictionary, [TokenType.DICTIONARY_BEGIN]),

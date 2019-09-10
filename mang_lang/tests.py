@@ -52,7 +52,7 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(1), interpret('if -1 then 1 else 2'))
 
     def test_if_then_else_references(self):
-        self.assertEqual(V(1), interpret('(x=1,if x then x else x)')[-1])
+        self.assertEqual(V(1), interpret('y of {x=1,y=if x then x else x}'))
 
     def test_size1(self):
         self.assertEqual(V(3), interpret('size of (8,4,6)'))
@@ -67,13 +67,13 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(0), interpret('size of ()'))
 
     def test_is_empty1(self):
-        self.assertEqual(V(1), interpret('(x=(), is_empty of x)')[-1])
+        self.assertEqual(V(1), interpret('is_empty of ()'))
 
     def test_is_empty2(self):
-        self.assertEqual(V(0), interpret('(x=(1), is_empty of x)')[-1])
+        self.assertEqual(V(0), interpret('is_empty of (1)'))
 
     def test_is_empty3(self):
-        self.assertEqual(V(0), interpret('(x=(1,2), is_empty of x)')[-1])
+        self.assertEqual(V(0), interpret('is_empty of (1,2)'))
 
     def test_concat1(self):
         self.assertEqual((V(1), V(2), V(3), V(4)),
@@ -90,8 +90,8 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = '(f = from x to if equal of (x, 0) then 1 else product of (x, f of difference of (x, 1)), f of 10)'
-        self.assertEqual(V(3628800), interpret(code)[-1])
+        code = 'y of {f = from x to if equal of (x, 0) then 1 else product of (x, f of difference of (x, 1)), y=f of 10}'
+        self.assertEqual(V(3628800), interpret(code))
 
 
 class TestAll(unittest.TestCase):
@@ -205,28 +205,28 @@ class TestDefinitions(unittest.TestCase):
 
 class TestKeywordVariableClashes(unittest.TestCase):
     def test_in(self):
-        self.assertEqual({'type': 'variable_definition', 'name': 'input', 'value': V(5)},
-                         interpret('input = 5'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'input', 'value': V(5)},),
+                         interpret('{input = 5}'))
 
     def test_if(self):
-        self.assertEqual({'type': 'variable_definition', 'name': 'iffy', 'value': V(5)},
-                         interpret('iffy = 5'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'iffy', 'value': V(5)},),
+                         interpret('{iffy = 5}'))
 
     def test_all(self):
-        self.assertEqual({'type': 'variable_definition', 'name': 'allround', 'value': V(5)},
-                         interpret('allround = 5'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'allround', 'value': V(5)},),
+                         interpret('{allround = 5}'))
 
     def test_then(self):
-        self.assertEqual({'type': 'variable_definition', 'name': 'thenner', 'value': V(5)},
-                         interpret('thenner = 5'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'thenner', 'value': V(5)},),
+                         interpret('{thenner = 5}'))
 
     def test_else(self):
-        self.assertEqual({'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)},
-                         interpret('elsewhere = 5'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)},),
+                         interpret('{elsewhere = 5}'))
 
     def test_import(self):
-        self.assertEqual({'type': 'variable_definition', 'name': 'important', 'value': V(5)},
-                         interpret('important = 5'))
+        self.assertEqual(({'type': 'variable_definition', 'name': 'important', 'value': V(5)},),
+                         interpret('{important = 5}'))
 
 
 class TestIndirection(unittest.TestCase):
@@ -254,7 +254,7 @@ class TestIndexing(unittest.TestCase):
     def test_indexing_number(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(2), V(3))},
                           {'type': 'variable_definition', 'name': 'y', 'value': V(2)}),
-                         interpret('(x = (2, 3), y = 0 of x)'))
+                         interpret('{x = (2, 3), y = 0 of x}'))
 
 
 class TestDefinitionLookup(unittest.TestCase):
@@ -335,10 +335,10 @@ class TestString(unittest.TestCase):
         self.assertEqual(S("abc"), interpret('concat of ("a","b","c")'))
 
     def test_string_index0(self):
-        self.assertEqual(S("a"), interpret('(x="abc", 0 of x)')[1])
+        self.assertEqual(S("a"), interpret('y of {x="abc", y=0 of x}'))
 
     def test_string_index1(self):
-        self.assertEqual(S("b"), interpret('(x="abc", 1 of x)')[1])
+        self.assertEqual(S("b"), interpret('y of {x="abc", y=1 of x}'))
 
 
 class TestImport(unittest.TestCase):
@@ -347,11 +347,11 @@ class TestImport(unittest.TestCase):
             self.assertEqual(V(3), interpret('import of "file_name"'))
 
     def test2(self):
-        with mock.patch('global_environment._read_text_file', return_value='(\nx=3,\ny=4\n)'):
+        with mock.patch('global_environment._read_text_file', return_value='{\nx=3,\ny=4\n}'):
             self.assertEqual(V(4), interpret('y of import of "file_name"'))
 
     def test3(self):
-        with mock.patch('global_environment._read_text_file', return_value='(square = from x to product of (x,x))'):
+        with mock.patch('global_environment._read_text_file', return_value='{square = from x to product of (x,x)}'):
             self.assertEqual(V(9), interpret('b of {a = import of "file_name", square = square of a, b=square of 3}'))
 
 
@@ -372,9 +372,9 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test4(self):
-        actual = interpret('(t = (), each e for e in t)')
+        actual = interpret('x of {t = (), x = each e for e in t}')
         expected = tuple()
-        self.assertEqual(expected, actual[-1])
+        self.assertEqual(expected, actual)
 
     def test5(self):
         self.assertEqual((V(2),), interpret('x of {t = (2), x = each e for e in t}'))
