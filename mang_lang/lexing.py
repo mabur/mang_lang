@@ -18,7 +18,6 @@ class TokenType(Enum):
     FOR = "for "
     IN = "in "
     FROM = "from "
-    WHERE = "where "
     TO = "to "
     OF = "of "
     SYMBOL = "[a-z_]\\w*"
