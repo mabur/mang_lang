@@ -28,18 +28,6 @@ class ExpressionTuple(Expression):
         return ExpressionTuple(expressions)
 
 
-class ScopeTuple(Expression):
-    def __init__(self, expressions: Sequence[Expression]) -> None:
-        self.expressions = expressions
-
-    def to_json(self) -> Json:
-        return tuple(e.to_json() for e in self.expressions)
-
-    def evaluate(self, environment: Environment) -> Expression:
-        expressions = [e.evaluate(environment) for e in self.expressions]
-        return ScopeTuple(expressions)
-
-
 class Number(Expression):
     def __init__(self, value: str) -> None:
         self.value = float(value)
@@ -104,11 +92,9 @@ class Dictionary(Expression):
 
 
 class FunctionDefinition(Expression):
-    def __init__(self, argument_name: str,
-                 expression: Expression, scope: ScopeTuple) -> None:
+    def __init__(self, argument_name: str, expression: Expression) -> None:
         self.argument_name = argument_name
         self.expression = expression
-        self.scope = scope
 
     def to_json(self) -> Json:
         return {"type": "function_definition",
@@ -166,8 +152,6 @@ class FunctionCallOrDefinitionLookup(Expression):
         if isinstance(function, FunctionDefinition):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
-            if function.scope:
-                _ = function.scope.evaluate(new_environment)
             return function.expression.evaluate(new_environment)
         return function(input)
 
@@ -251,18 +235,6 @@ def _parse_tuple(tokens: TokenSlice) -> Tuple[ExpressionTuple, TokenSlice]:
     return (ExpressionTuple(expressions=expressions), tokens)
 
 
-def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
-    expressions = ()
-    tokens.parse_known_token(TokenType.PARENTHESIS_BEGIN)
-    while not tokens.do_match([TokenType.PARENTHESIS_END]):
-        expression, tokens = parse_expression(tokens)
-        expressions += (expression,)
-        if tokens.do_match([TokenType.COMMA]):
-            tokens.parse_known_token(TokenType.COMMA)
-    tokens.parse_known_token(TokenType.PARENTHESIS_END)
-    return (ScopeTuple(expressions=expressions), tokens)
-
-
 def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
     variable_definitions = []
     tokens.parse_known_token(TokenType.DICTIONARY_BEGIN)
@@ -282,13 +254,6 @@ def _parse_function_call_or_definition_lookup(tokens: TokenSlice) -> Tuple[Funct
     return (FunctionCallOrDefinitionLookup(left=left, right=right), tokens)
 
 
-def _parse_optional_function_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
-    if not tokens.do_match([TokenType.WHERE]):
-        return None, tokens
-    tokens.parse_known_token(TokenType.WHERE)
-    return _parse_scope(tokens)
-
-
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
     name = tokens.parse_token()
     tokens.parse_known_token(TokenType.EQUAL)
@@ -299,11 +264,9 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
 def _parse_function_definition(tokens: TokenSlice) -> Tuple[FunctionDefinition, TokenSlice]:
     tokens.parse_known_token(TokenType.FROM)
     argument_name = tokens.parse_token()
-    scope, tokens = _parse_optional_function_scope(tokens)
     tokens.parse_known_token(TokenType.TO)
     expression, tokens = parse_expression(tokens)
     return (FunctionDefinition(argument_name=argument_name,
-                               scope=scope,
                                expression=expression), tokens)
 
 

@@ -297,13 +297,13 @@ class TestFunctionDefinition(unittest.TestCase):
 
 class TestFunctionScope(unittest.TestCase):
     def test_scope1(self):
-        self.assertEqual(V(3), interpret('z of {f = from x where (y = 3) to y, z=f of 2}'))
+        self.assertEqual(V(3), interpret('z of {f = from x to y of {y = 3}, z=f of 2}'))
 
     def test_scope2(self):
-        self.assertEqual(V(5), interpret('z of {f = from x where (y = 3) to sum of (x, y), z = f of 2}'))
+        self.assertEqual(V(5), interpret('z of {f = from x to result of {y=3,result=sum of (x, y)}, z = f of 2}'))
 
     def test_scope3(self):
-        self.assertEqual(V(5), interpret('z of {y = 2, f = from x where (y = 3) to sum of (x, y), z = f of 2}'))
+        self.assertEqual(V(5), interpret('z of {y = 2, f = from x to result of {y=3, result=sum of (x, y)}, z = f of 2}'))
 
 
 class TestString(unittest.TestCase):
