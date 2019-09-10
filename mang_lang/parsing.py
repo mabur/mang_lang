@@ -90,6 +90,19 @@ class VariableDefinition(Expression):
         return VariableDefinition(name=self.name, expression=value)
 
 
+class Dictionary(Expression):
+    def __init__(self, expressions: Sequence[VariableDefinition]) -> None:
+        self.value = expressions
+
+    def to_json(self) -> Json:
+        return tuple(e.to_json() for e in self.value)
+
+    def evaluate(self, environment: Environment) -> Expression:
+        new_environment = deepcopy(environment)
+        expressions = [e.evaluate(new_environment) for e in self.value]
+        return ExpressionTuple(expressions)
+
+
 class FunctionDefinition(Expression):
     def __init__(self, argument_name: str,
                  expression: Expression, scope: ScopeTuple) -> None:
@@ -250,6 +263,18 @@ def _parse_scope(tokens: TokenSlice) -> Tuple[ScopeTuple, TokenSlice]:
     return (ScopeTuple(expressions=expressions), tokens)
 
 
+def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
+    variable_definitions = []
+    tokens.parse_known_token(TokenType.DICTIONARY_BEGIN)
+    while not tokens.do_match([TokenType.DICTIONARY_END]):
+        variable_definition, tokens = _parse_variable_definition(tokens)
+        variable_definitions.append(variable_definition)
+        if tokens.do_match([TokenType.COMMA]):
+            tokens.parse_known_token(TokenType.COMMA)
+    tokens.parse_known_token(TokenType.DICTIONARY_END)
+    return (Dictionary(expressions=variable_definitions), tokens)
+
+
 def _parse_function_call_or_definition_lookup(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
     left, tokens = _parse_reference(tokens)
     tokens.parse_known_token(TokenType.OF)
@@ -337,6 +362,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]),
         ParsePattern(_parse_reference, [TokenType.SYMBOL]),
         ParsePattern(_parse_tuple, [TokenType.PARENTHESIS_BEGIN]),
+        ParsePattern(_parse_dictionary, [TokenType.DICTIONARY_BEGIN]),
     ]
 
     for parse_pattern in PARSE_PATTERNS:
