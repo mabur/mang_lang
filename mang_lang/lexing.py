@@ -5,8 +5,8 @@ from typing import Sequence
 
 class TokenType(Enum):
     NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
-    PARENTHESIS_BEGIN = "\("
-    PARENTHESIS_END = "\)"
+    PARENTHESIS_BEGIN = "\["
+    PARENTHESIS_END = "\]"
     DICTIONARY_BEGIN = "\{"
     DICTIONARY_END = "\}"
     EQUAL = "="
