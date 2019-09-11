@@ -153,6 +153,20 @@ class TestEqual(unittest.TestCase):
         self.assertEqual(V(1), interpret('check_equality of [0, 0]'))
 
 
+class TestInequality(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(0), interpret('check_inequality of [1, 1]'))
+
+    def test1(self):
+        self.assertEqual(V(1), interpret('check_inequality of [0, 1]'))
+
+    def test2(self):
+        self.assertEqual(V(1), interpret('check_inequality of [1, 0]'))
+
+    def test3(self):
+        self.assertEqual(V(0), interpret('check_inequality of [0, 0]'))
+
+
 class TestSumMinMax(unittest.TestCase):
     def test_sum(self):
         self.assertEqual(V(6), interpret('sum of [1,2,3]'))

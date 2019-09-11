@@ -17,6 +17,10 @@ def _check_equality(x: Array):
     return Number(str(float(_value_left(x) == _value_right(x))))
 
 
+def _check_inequality(x: Array):
+    return Number(str(float(_value_left(x) != _value_right(x))))
+
+
 def _value_left(x: Array):
     assert len(x.value) == 2
     return x.value[0].value
@@ -107,6 +111,7 @@ def _import(x: String):
 ENVIRONMENT = {'difference': _difference,
                'division': _division,
                'check_equality': _check_equality,
+               'check_inequality': _check_inequality,
                'none': _none,
                'size': _size,
                'is_empty': _is_empty,
