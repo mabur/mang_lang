@@ -52,11 +52,10 @@ Note that the same syntax is used to apply a function and access a variable in a
 # Examples
 
 1. [Numbers and Built-in Functions](#numbers-and-built-in-functions)
-2. [Variables and Multiple Statements](#variables-and-multiple-statements)
-3. [Tuples](#tuples)
-4. [Functions](#functions)
-5. [Scope](#scope)
-6. [Tuple Comprehension](#tuple-comprehension)
+2. [Dictionaries and Variables](#dictionaries-and-variables)
+3. [Arrays](#arrays)
+4. [Functions and Control Flow](#functions-and-control-flow)
+6. [Array Comprehension](#array-comprehension)
 7. [Strings](#Strings)
 8. [Importing code in different source files](#importing-code-in-different-source-files)
 9. [List of built-in functions](#list-of-built-in-functions)
