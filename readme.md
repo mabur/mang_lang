@@ -31,15 +31,23 @@ factorial = from x to
 result = factorial of 4
 }
 ```
-This example program defines two symbols: `factorial` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{factorial = ..., result = ...}`.
-White space and new lines are optional.
+This example program defines two symbols: `factorial` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{factorial = ..., result = ...}`. White space and new lines are optional.
 
 Functions are defined using the syntax `from ... to ...`, and called using the syntax `function of input`.
-Mang Lang has built in functions like `check_equality`, `product`, `difference` instead of having operators like `==`, `*` , `-`.
-Functions take a single input and a single output.
-Multiple things are passed to and from functions by first putting them in either an array `[]` or a dictionary `{}`.
+Mang Lang has built in functions like `check_equality`, `product`, `difference` instead of having operators like `==`, `*` , `-`. Functions take a single input and a single output. Multiple things are passed to and from functions by first putting them in either an array `[]` or a dictionary `{}`.
 
-In this example result gets the value `1*2*3*4=24`.
+In the example above the result gets the value `1*2*3*4=24`.
+
+Another example of how Mang Lang uses dictionaries both for structuring a program into multiple lines and creating objects/records:
+
+```
+{
+rectangle = {width = 4, height = 5},
+area = product of [width of rectangle, height of rectangle]
+}
+```
+
+Note that the same syntax is used to apply a function and access a variable in a dictionary: `... of ...`
 
 # Examples
 
@@ -69,9 +77,7 @@ Computations are done by calling functions:
 ```
 sum of [7,3,4]
 ```
-This program is evaluated to `14`.
-Mang Lang does not have any operators for arithmetics etc, but instead uses functions for all computations.
-Function calls can be nested like this:
+This program is evaluated to `14`. Mang Lang does not have any operators for arithmetics etc, but instead uses functions for all computations. Function calls can be nested like this:
 
 ````
 product of [sum of [1,2,3], difference of [7,2]]
@@ -81,8 +87,8 @@ This program is evaluated to `(1+2+3)*(7-2) = 3*5 = 15`.
 
 ## Dictionaries and Variables
 
-Mang Lang uses dictionaries as flexible building blocks for many different things.
-Variables can be defined and used like this:
+Mang Lang uses dictionaries as flexible building blocks for many different things. Variables can be defined and used like this:
+
 ```
 {
 x=3,
@@ -90,8 +96,7 @@ y=2,
 z=product of [x,y]
 }
 ```
-This program defines three variables, inside a dictionary `{}`.
-When evaluating this program `z` gets the value `6`. White space and new lines are optional in Mang Lang so the same program can also be written:
+This program defines three variables, inside a dictionary `{}`. When evaluating this program `z` gets the value `6`. White space and new lines are optional in Mang Lang so the same program can also be written:
 ```
 {x = 3, y = 2, z = product of [x, y]}
 ```
@@ -174,20 +179,14 @@ result = square_norm of vector
 
 ## Array Comprehension
 
-In Mang Lang you can create loops by using recursion.
-Array comprehension is an alternative way to express some loops in a simpler way.
-It is similar to "set builder notation" and "map" and "filter" operations.
-It is designed for the use case when you create an array from another array.
-It uses the syntax `each ... for ... in ...`:
+In Mang Lang you can create loops by using recursion. Array comprehension is an alternative way to express some loops in a simpler way. It is similar to "set builder notation" and "map" and "filter" operations. It is designed for the use case when you create an array from another array. It uses the syntax `each ... for ... in ...`:
 ```
 {
 input = [1, 2, 3],
 output = each product of [x, x] for x in input
 }
 ```
-This computes the square of all elements in `input`.
-So `output` becomes `[1, 4, 9]`.
-Tuple comprehensions also support an optional `if` expression at the end. This can be used to filter values:
+This computes the square of all elements in `input`. So `output` becomes `[1, 4, 9]`. Tuple comprehensions also support an optional `if` expression at the end. This can be used to filter values:
 ```
 {
 input = [1, 2, 3],
