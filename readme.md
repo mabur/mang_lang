@@ -25,13 +25,13 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 ```(
 {
-faculty = from x to 
+factorial = from x to 
     if check_equality of [x, 0] then 1
-    else product of [x, faculty of difference of [x, 1]],
-result = faculty of 4
+    else product of [x, factorial of difference of [x, 1]],
+result = factorial of 4
 }
 ```
-This example program defines two symbols: `faculty` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{faculty = ..., result = ...}`.
+This example program defines two symbols: `factorial` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{factorial = ..., result = ...}`.
 White space and new lines are optional.
 
 Functions are defined using the syntax `from ... to ...`, and called using the syntax `function of input`.
@@ -150,13 +150,13 @@ Recursive function calls and the if-then-else operator are used for loops:
 
 ```
 {
-faculty = x from to 
+factorial = from x to 
     if check_equality of [x, 0] then 1
-    else product of [x, faculty of difference of [x, 1]],
-result = faculty of 4
+    else product of [x, factorial of difference of [x, 1]],
+result = factorial of 4
 }
 ```
-Function definitions and compuations can be broken up into smaller parts by using dictionaries:
+Function definitions and computations can be broken up into smaller parts by using dictionaries:
 
 ```
 {
