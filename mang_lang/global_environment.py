@@ -13,7 +13,7 @@ def _division(x: Array):
     return Number(_value_left(x) / _value_right(x))
 
 
-def _equal(x: Array):
+def _check_equality(x: Array):
     return Number(str(float(_value_left(x) == _value_right(x))))
 
 
@@ -106,7 +106,7 @@ def _import(x: String):
 
 ENVIRONMENT = {'difference': _difference,
                'division': _division,
-               'equal': _equal,
+               'check_equality': _check_equality,
                'none': _none,
                'size': _size,
                'is_empty': _is_empty,

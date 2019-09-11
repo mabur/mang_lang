@@ -90,7 +90,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = 'y of {f = from x to if equal of [x, 0] then 1 else product of [x, f of difference of [x, 1]], y=f of 10}'
+        code = 'y of {f = from x to if check_equality of [x, 0] then 1 else product of [x, f of difference of [x, 1]], y=f of 10}'
         self.assertEqual(V(3628800), interpret(code))
 
 
@@ -141,16 +141,16 @@ class TestNone(unittest.TestCase):
 
 class TestEqual(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('equal of [1, 1]'))
+        self.assertEqual(V(1), interpret('check_equality of [1, 1]'))
 
     def test1(self):
-        self.assertEqual(V(0), interpret('equal of [0, 1]'))
+        self.assertEqual(V(0), interpret('check_equality of [0, 1]'))
 
     def test2(self):
-        self.assertEqual(V(0), interpret('equal of [1, 0]'))
+        self.assertEqual(V(0), interpret('check_equality of [1, 0]'))
 
     def test3(self):
-        self.assertEqual(V(1), interpret('equal of [0, 0]'))
+        self.assertEqual(V(1), interpret('check_equality of [0, 0]'))
 
 
 class TestSumMinMax(unittest.TestCase):
@@ -389,12 +389,12 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual((V(1), V(1)), interpret('x of {f = from x to 1, t = [2, 3], x = each f of e for e in t}'))
 
     def test9(self):
-        actual = interpret('each e for e in [1, 2, 3, 4] if equal of [e, 2]')
+        actual = interpret('each e for e in [1, 2, 3, 4] if check_equality of [e, 2]')
         expected = (V(2),)
         self.assertEqual(expected, actual)
 
     def test10(self):
-        actual = interpret('each e for e in [1, 2, 3, 4] if none of [equal of [e, 2]]')
+        actual = interpret('each e for e in [1, 2, 3, 4] if none of [check_equality of [e, 2]]')
         expected = (V(1), V(3), V(4))
         self.assertEqual(expected, actual)
 
