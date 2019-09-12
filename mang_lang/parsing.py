@@ -331,4 +331,4 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         if tokens.do_match(parse_pattern.pattern):
             return parse_pattern.parse_function(tokens)
 
-    raise ValueError('Bad token pattern: {}'.format(tokens.front()))
+    raise ValueError('Bad token pattern: {}'.format(tokens[0].value))

@@ -5,9 +5,6 @@ from slice import Slice
 
 
 class TokenSlice(Slice):
-    def front(self) -> str:
-        return self[0].value
-
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
         if len(self) < len(token_pattern):
             return False
