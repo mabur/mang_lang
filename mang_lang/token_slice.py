@@ -6,11 +6,8 @@ from slice import Slice
 
 class TokenSlice(Slice):
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
-        if len(self) < len(token_pattern):
-            return False
-        return all(
-            self[i].type == token for i, token in
-            enumerate(token_pattern))
+        return len(token_pattern) <= len(self) and \
+               all(a.type == b for a, b in zip(self, token_pattern))
 
     def parse_token(self) -> str:
         return self.pop().value
