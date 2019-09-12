@@ -11,11 +11,14 @@ class TokenSlice:
     def __getitem__(self, item):
         return self._tokens[self._begin_index + item]
 
+    def __len__(self):
+        return len(self._tokens) - self._begin_index
+
     def front(self) -> str:
         return self[0].value
 
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
-        if len(self._tokens) < self._begin_index + len(token_pattern):
+        if len(self) < len(token_pattern):
             return False
         return all(
             self[i].type == token for i, token in
