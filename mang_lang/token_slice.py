@@ -8,14 +8,17 @@ class TokenSlice:
         self._tokens = tokens
         self._begin_index = 0
 
+    def __getitem__(self, item):
+        return self._tokens[self._begin_index + item]
+
     def front(self) -> str:
-        return self._tokens[self._begin_index].value
+        return self[0].value
 
     def do_match(self, token_pattern: Sequence[TokenType]) -> bool:
         if len(self._tokens) < self._begin_index + len(token_pattern):
             return False
         return all(
-            self._tokens[self._begin_index + i].type == token for i, token in
+            self[i].type == token for i, token in
             enumerate(token_pattern))
 
     def parse_token(self) -> str:
