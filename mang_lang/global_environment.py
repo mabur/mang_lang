@@ -64,6 +64,10 @@ def _concat(x: Array):
     raise TypeError
 
 
+def _first(x: Array):
+    return x.value[0]
+
+
 def _sum(x: Array):
     return Number(str(sum(element.value for element in x.value)))
 
@@ -116,6 +120,7 @@ ENVIRONMENT = {'difference': _difference,
                'size': _size,
                'is_empty': _is_empty,
                'concat': _concat,
+               'first': _first,
                'sum': _sum,
                'product': _product,
                'min': _min,
