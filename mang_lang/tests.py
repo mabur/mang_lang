@@ -87,8 +87,11 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual((V(1), V(2), V(3)),
                          interpret('concat of [[1],[2],[3]]'))
 
-    def test_front(self):
+    def test_first(self):
         self.assertEqual(V(6), interpret('first of [6, 4, 8]'))
+
+    def test_last(self):
+        self.assertEqual(V(8), interpret('last of [6, 4, 8]'))
 
 
 class TestRecursion(unittest.TestCase):
