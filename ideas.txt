@@ -6,6 +6,7 @@ sum     = left_fold collection with 0 by add
 minimum = left_fold collection with MAX_FLOAT by min
 maximum = left_fold collection with MIN_FLOAT by max
 concat  = left_fold right with with left by push_back
+sum     = left_fold 0 collection add
 
 // Unfold
 a = unfold 0 by next until greater_than(10)
@@ -22,7 +23,11 @@ increasing_range = end -> ((x -> x + 1 if x != end) unfold 0)
 
 decreasing_range = from x to difference of [x, 1] if check_inequality of [x, -1]
 decreasing_range = each x from x to difference of [x, 1] if check_inequality of [x, -1]
-my_range = decreasing_range unfold 10
+decreasing_range = unfold 9 from x to difference of [x, 1] if check_inequality of [x, -1]
+my_range = decreasing_range unfold 9
+increasing_range = unfold 0 from x to sum of [x, 1] if check_inequality of [x, 10]
+increasing_range = unfold 0 from x to if check_inequality of [x, 10] then sum of [x, 1] else undefined
+increasing_range = unfold 0 increase_until_10
 
 split = from s to move_word of s if is_not_empty of source of s
 chunks = split unfold 'hello,new,world'
@@ -34,6 +39,8 @@ move_word = from input to {source=..., target=...}
 // list comprehension
 squares = each mul of [x, x] for x in collection
 squares = from x to mul of [x, x] if check_equality [x, 4] for collection 
+squares = for collection from x to mul of [x, x] if check_equality [x, 4]
+squares = for collection from x to if check_equality [x, 4] then mul of [x, x] else undefined
 squares = square for collection
 
 // linspace
