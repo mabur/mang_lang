@@ -93,6 +93,24 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_last(self):
         self.assertEqual(V(8), interpret('last of [6, 4, 8]'))
 
+    def test_first_part0(self):
+        self.assertEqual(V(2), interpret('size of first_part of [6, 4, 8]'))
+
+    def test_first_part1(self):
+        self.assertEqual(V(6), interpret('0 of first_part of [6, 4, 8]'))
+
+    def test_first_part2(self):
+        self.assertEqual(V(4), interpret('1 of first_part of [6, 4, 8]'))
+
+    def test_last_part0(self):
+        self.assertEqual(V(2), interpret('size of last_part of [6, 4, 8]'))
+
+    def test_last_part1(self):
+        self.assertEqual(V(4), interpret('0 of last_part of [6, 4, 8]'))
+
+    def test_last_part2(self):
+        self.assertEqual(V(8), interpret('1 of last_part of [6, 4, 8]'))
+
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):

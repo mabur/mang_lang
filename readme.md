@@ -195,7 +195,7 @@ output = each product of [x, x] for x in input if check_inequality of [x, 2]
 In this example `output` becomes `[1, 9]`.
 
 ## Strings
-Strings are similar to tuples: 
+Strings are similar to arrays: 
 ```
 {
 first_name = "Magnus",
@@ -228,21 +228,25 @@ four   = square of 2
 ## List of built-in functions
 
 ### Arithmetic functions:
-* **sum**: adds a tuple of numbers.
-* **product**: multiplies a tuple of numbers.
+* **sum**: adds an array of numbers.
+* **product**: multiplies an  array of numbers.
 * **difference**: subtracts two numbers.
 * **division**: divides two numbers.
-* **min**: smallest number in a non-empty tuple.
-* **max**: largest number in a non-empty tuple.
+* **min**: smallest number in a non-empty array.
+* **max**: largest number in a non-empty array.
 
 ### Logical functions:
 * **check_equality**: true if two numbers are equal, and otherwise false.
 * **check_inequality**: false if two numbers are equal, and otherwise true.
-* **all**: true if all elements of a tuple are true.
-* **any**: true if at least one element of a tuple is true.
-* **none**: true if all elements of a tuple are false.
+* **all**: true if all elements of an array are true.
+* **any**: true if at least one element of an array is true.
+* **none**: true if all elements of an array are false.
 
 ### Array and string functions
-* **size**: the number of elements of a tuple or string.
-* **is_empty**: true if a tuple or string has zero elements.
-* **concat**: concatenates two tuples or strings.
+* **size**: the number of elements of an array or string.
+* **is_empty**: true if a array or string has zero elements.
+* **concat**: concatenates two arrays or strings.
+* **first**: pick the first element.
+* **last**: pick the last element.
+* **first_part**: pick all elements except the last.
+* **last_part**: pick all elements except the first.

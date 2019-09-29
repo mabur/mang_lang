@@ -72,6 +72,14 @@ def _last(x: Array):
     return x.value[-1]
 
 
+def _first_part(x: Array) -> Array:
+    return Array(x.value[:-1])
+
+
+def _last_part(x: Array) -> Array:
+    return Array(x.value[1:])
+
+
 def _sum(x: Array):
     return Number(str(sum(element.value for element in x.value)))
 
@@ -116,21 +124,25 @@ def _import(x: String):
     return expression.evaluate(environment)
 
 
-ENVIRONMENT = {'difference': _difference,
-               'division': _division,
-               'check_equality': _check_equality,
-               'check_inequality': _check_inequality,
-               'none': _none,
-               'size': _size,
-               'is_empty': _is_empty,
-               'concat': _concat,
-               'first': _first,
-               'last': _last,
-               'sum': _sum,
-               'product': _product,
-               'min': _min,
-               'max': _max,
-               'all': _all,
-               'any': _any,
-               'import': _import}
+ENVIRONMENT = {
+    'difference': _difference,
+    'division': _division,
+    'check_equality': _check_equality,
+    'check_inequality': _check_inequality,
+    'none': _none,
+    'size': _size,
+    'is_empty': _is_empty,
+    'concat': _concat,
+    'first': _first,
+    'last': _last,
+    'first_part': _first_part,
+    'last_part': _last_part,
+    'sum': _sum,
+    'product': _product,
+    'min': _min,
+    'max': _max,
+    'all': _all,
+    'any': _any,
+    'import': _import,
+}
 
