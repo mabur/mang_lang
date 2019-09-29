@@ -28,6 +28,7 @@ my_range = decreasing_range unfold 9
 increasing_range = unfold 0 from x to sum of [x, 1] if check_inequality of [x, 10]
 increasing_range = unfold 0 from x to if check_inequality of [x, 10] then sum of [x, 1] else undefined
 increasing_range = unfold 0 increase_until_10
+increasing_range = increase_until_10 unfold 0 
 
 split = from s to move_word of s if is_not_empty of source of s
 chunks = split unfold 'hello,new,world'
@@ -41,7 +42,24 @@ squares = each mul of [x, x] for x in collection
 squares = from x to mul of [x, x] if check_equality [x, 4] for collection 
 squares = for collection from x to mul of [x, x] if check_equality [x, 4]
 squares = for collection from x to if check_equality [x, 4] then mul of [x, x] else undefined
+squares = from x to mul of [x, x] if check_equality [x, 4] for collection 
+squares = from x to if check_equality [x, 4] then mul of [x, x] else undefined for collection 
 squares = square for collection
+squares = for collection square
+
+// Consistent approach?
+result = function of argument
+result = function for collection
+result = function unfold seed
+
+result = successor  of 0
+result = successor  for [8, 4, 5]
+result = successor* unfold [0]
+result = successor* unfolding [0]
+
+result = add fold 0 with collection
+result = add leftfold 0 with collection
+result = add rightfold collection with 0
 
 // linspace
 a = (0,1,...,10)
@@ -324,29 +342,41 @@ TODO:
 * Remove indexing?
 * zip
 * Try to implement Advent od Code problems to see what is missing
+* Konsekvent indentering
+* Multiple input to functions:
+    {left, right} [x, y]
+    x, y  // Can send either dictionary or array, and it get unwrapped.
+    That opens up for user deciding if they want to use keyword arguments or not.
 
 -------------------------------------------------------------------------------------------------
-split = from input where
-(
-  queue  = input.queue,
-  query  = input.query,
-  result = recursive_split(queue=queue, query=query, result=())
-) to result.result
+split = from input to result of
+{
+  queue  = queue of input,
+  query  = query of input,
+  result = recursive_split of {queue=queue, query=query, result=[]}
+}
 
-recursive_split = from input where
-(
-  queue  = input.queue,
-  query  = input.query,
-  result = input.result,
-) to if is_empty queue then input
-else
-(
-  find_result = find(list=queue, query=','),
-  tail        = find_result.tail,
-  head        = find_result.head,
-  result      = concat[result, [head]]
-  output      = recursive_split(queue=tail, result=result)
-).output
+recursive_split = from input to
+    if check_empty of queue of input
+    then input
+    else output of
+    {
+      find_result = find of {list=queue, query=","}, // Relies on find/split_first
+      tail        = tail of find_result,
+      head        = head of find_result,
+      result      = concat of [result, [head]]
+      output      = recursive_split of {queue=tail, result=result}
+    }
+
+move_element = from input to
+    if check_equality of [front of source, query of input] then undefined else
+    {
+        target = concat of [target of input, front of source of input],
+        source = without_front of source of input,
+        query = query of input
+    }
+move_word = move_element unfold {source=,target=[], query=","}
+    
 
 
 // Take a list and return a pair of lists: head and tail, or head, query, tail
@@ -373,21 +403,93 @@ def split_for(input, query):
         last_split_index = index
   return output
 
-def split_while(input, query):
-  output = []
-  while input:
-    word, input = next_word(input, query)
-    output.append(word)
-  return output
+// Recursive split in Python:
+def split_recursive(source, query):
+  if not source:
+    return []
+  word, rest = next_word(source, query)
+  return [word] + split_recursive(rest, query)
 
-def split_recursive(query, input, output):
-  if not input:
-    return output
-  if input[0] != query:
-    x = input.pop_left()
-    output[-1].append(x)
-    return recursive_split(query, input, output)
-  if input[0] == query:
-    input.pop_left()
-    output.append([])
-    return recursive_split(query, input, output)
+def next_word(source, query):
+  if not source:
+      return [], []
+  if source[0] == query:
+    return [], source[1:]
+  word, rest = next_word(source[1:], query)
+  return [source[0]] + word, rest
+
+// Recursive split in C++:
+std::vector<std::string> split_recursive(std::string source, char query)
+{
+    if (source.empty())
+        return {};
+    auto split = next_word(source, query);
+    auto word = split[0];
+    auto rest = split[1];
+    auto recursive_result = split_recursive(rest, query);
+    recursive_result.push_front(word);
+    return recursive_result;
+}
+
+std::tuple<std::string, std::string> next_word(std::string source, char query) {
+    using namespace std;
+    if (source.empty)
+        return make_tuple("", "");
+    if (source[0] == query)
+        return {{}, source.substr(1)};
+    auto split = next_word(source.substr(1), query);
+    auto word = get<0>(split);
+    auto rest = get<1>(split);
+    return make_tuple(source[0] + word, rest);
+}
+
+// Recursive split in Mang lang:
+split_recursive = from input to if check_empty of source of input then [] else result of
+{
+    query = query of input,
+    source = source of input,
+    split = next_word of {source = source, query = query},
+    word = word of split,
+    rest = rest of split,
+    recursive_result = split_recursive of {source = rest, query = query},
+    result = concat of [word, recursive_result]
+}
+
+next_word = from input to
+    if check_empty of source of input then
+        {word = [], rest = []}
+    else if check_equality of [first of source of input, query of input] then
+        {word = [], rest = last_part of source of input}
+    else
+        result of {
+            source = source of input,
+            query = query of input,
+            tail = last_part of source,
+            split = next_word of {source = tail, query = query},
+            word = word of split,
+            rest = rest of split,
+            result = word = concat of [[first of source], word], rest = rest}
+        }
+
+// Multiple named inputfor functions:
+split_recursive = from {source, query} to if check_empty of source then [] else result of
+{
+    split = next_word of {source = source, query = query},
+    word = word of split,
+    rest = rest of split,
+    recursive_result = split_recursive of {source = rest, query = query},
+    result = concat of [word, recursive_result]
+}
+
+next_word = from source, query to
+    if check_empty of source then
+        {word = [], rest = []}
+    else if check_equality of [first of source, query] then
+        {word = [], rest = last_part of source}
+    else
+        result of {
+            split = next_word of {source = last_part of source, query = query},
+            word = word of split,
+            rest = rest of split,
+            result = {word = concat of [[first of source], word], rest = rest}
+        }
