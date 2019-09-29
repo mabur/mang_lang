@@ -106,17 +106,17 @@ class Function(Expression):
 
 
 class Indexing(Expression):
-    def __init__(self, reference: Reference, index: Number) -> None:
-        self.reference = reference
+    def __init__(self, expression: Expression, index: Number) -> None:
+        self.expression = expression
         self.index = index
 
     def to_json(self) -> Json:
         return {"type": "indexing",
-                "reference_name": self.reference.to_json()['name'],
-                "index": self.index.to_json()}
+                "index": self.index.to_json(),
+                "parent": self.expression.to_json()}
 
     def evaluate(self, environment: Environment) -> Expression:
-        reference = self.reference.evaluate(environment)
+        reference = self.expression.evaluate(environment)
         index = int(self.index.evaluate(environment).value)
         element = reference.value[index]
         if isinstance(reference, Array):
@@ -273,8 +273,8 @@ def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
 def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
     number, tokens = _parse_number(tokens)
     tokens.parse_known_token(TokenType.OF)
-    reference, tokens = _parse_reference(tokens)
-    return (Indexing(reference=reference, index=number), tokens)
+    expression, tokens = parse_expression(tokens)
+    return (Indexing(expression=expression, index=number), tokens)
 
 
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:

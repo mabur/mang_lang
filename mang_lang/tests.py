@@ -276,6 +276,15 @@ class TestIndexing(unittest.TestCase):
                           {'type': 'variable_definition', 'name': 'y', 'value': V(2)}),
                          interpret('{x = [2, 3], y = 0 of x}'))
 
+    def test_indexing_0(self):
+        self.assertEqual(V(7), interpret('0 of [7, 4, 0]'))
+
+    def test_indexing_1(self):
+        self.assertEqual(V(4), interpret('1 of [7, 4, 0]'))
+
+    def test_indexing_2(self):
+        self.assertEqual(V(0), interpret('2 of [7, 4, 0]'))
+
 
 class TestDefinitionLookup(unittest.TestCase):
     def test0(self):
