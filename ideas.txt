@@ -344,9 +344,7 @@ TODO:
 * Try to implement Advent od Code problems to see what is missing
 * Konsekvent indentering
 * Multiple input to functions:
-    {left, right} [x, y]
-    x, y  // Can send either dictionary or array, and it get unwrapped.
-    That opens up for user deciding if they want to use keyword arguments or not.
+    {left, right}
 
 -------------------------------------------------------------------------------------------------
 split = from input to result of
@@ -444,16 +442,19 @@ std::tuple<std::string, std::string> next_word(std::string source, char query) {
 }
 
 // Recursive split in Mang lang:
-split_recursive = from input to if check_empty of source of input then [] else result of
-{
-    query = query of input,
-    source = source of input,
-    split = next_word of {source = source, query = query},
-    word = word of split,
-    rest = rest of split,
-    recursive_result = split_recursive of {source = rest, query = query},
-    result = concat of [word, recursive_result]
-}
+split_recursive = from input to
+    if check_empty of source of input then
+        []
+    else
+        result of {
+            query = query of input,
+            source = source of input,
+            split = next_word of {source = source, query = query},
+            word = word of split,
+            rest = rest of split,
+            recursive_result = split_recursive of {source = rest, query = query},
+            result = concat of [word, recursive_result]
+        }
 
 next_word = from input to
     if check_empty of source of input then
@@ -471,25 +472,24 @@ next_word = from input to
             result = word = concat of [[first of source], word], rest = rest}
         }
 
-// Multiple named inputfor functions:
-split_recursive = from {source, query} to if check_empty of source then [] else result of
-{
-    split = next_word of {source = source, query = query},
-    word = word of split,
-    rest = rest of split,
-    recursive_result = split_recursive of {source = rest, query = query},
-    result = concat of [word, recursive_result]
-}
+// Multiple named input/output for functions:
+split_recursive = from {source, query} to
+    if check_empty of source then
+        []
+    else
+        result of {
+            {word, rest} = next_word of {source = source, query = query},
+            recursive_result = split_recursive of {source = rest, query = query},
+            result = concat of [word, recursive_result]
+        }
 
-next_word = from source, query to
+next_word = from {source, query} to
     if check_empty of source then
         {word = [], rest = []}
     else if check_equality of [first of source, query] then
         {word = [], rest = last_part of source}
     else
         result of {
-            split = next_word of {source = last_part of source, query = query},
-            word = word of split,
-            rest = rest of split,
+            {word, rest} = next_word of {source = last_part of source, query = query},
             result = {word = concat of [[first of source], word], rest = rest}
         }
