@@ -13,4 +13,5 @@ class TokenSlice(Slice):
         return self.pop().value
 
     def parse_known_token(self, expected: TokenType) -> None:
-        assert self.pop().type == expected
+        actual = self.pop().type
+        assert expected == actual, 'Expected {} but got {}'.format(expected, actual)
