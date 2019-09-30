@@ -443,7 +443,7 @@ std::tuple<std::string, std::string> next_word(std::string source, char query) {
 
 // Recursive split in Mang lang:
 split_recursive = from input to
-    if check_empty of source of input then
+    if is_empty of source of input then
         []
     else
         result of {
@@ -457,7 +457,7 @@ split_recursive = from input to
         }
 
 next_word = from input to
-    if check_empty of source of input then
+    if is_empty of source of input then
         {word = [], rest = []}
     else if check_equality of [first of source of input, query of input] then
         {word = [], rest = last_part of source of input}
@@ -469,12 +469,12 @@ next_word = from input to
             split = next_word of {source = tail, query = query},
             word = word of split,
             rest = rest of split,
-            result = word = concat of [[first of source], word], rest = rest}
+            result = {word = concat of [[first of source], word], rest = rest}
         }
 
 // Multiple named input/output for functions:
 split_recursive = from {source, query} to
-    if check_empty of source then
+    if is_empty of source then
         []
     else
         result of {
@@ -484,7 +484,7 @@ split_recursive = from {source, query} to
         }
 
 next_word = from {source, query} to
-    if check_empty of source then
+    if is_empty of source then
         {word = [], rest = []}
     else if check_equality of [first of source, query] then
         {word = [], rest = last_part of source}
