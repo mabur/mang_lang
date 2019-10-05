@@ -303,6 +303,9 @@ class TestIndexing(unittest.TestCase):
     def test_indexing_2(self):
         self.assertEqual(V(0), interpret('2 of [7, 4, 0]'))
 
+    def test_indexing_last(self):
+        self.assertEqual(V(0), interpret('-1 of [7, 4, 0]'))
+
 
 class TestDefinitionLookup(unittest.TestCase):
     def test0(self):
