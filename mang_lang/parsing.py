@@ -142,8 +142,12 @@ class FunctionCallOrDefinitionLookup(Expression):
             tuple = self.right.evaluate(environment)
             assert isinstance(tuple, Array)
             child_environment = deepcopy(environment)
-            child_environment[self.left.name] = next(
-                e.expression for e in tuple.value if e.name == self.left.name)
+            try:
+                child_environment[self.left.name] = next(
+                    e.expression for e in tuple.value if e.name == self.left.name)
+            except StopIteration:
+                print('Could not find symbol: {}'.format(self.left.name))
+                raise
             return self.left.evaluate(child_environment)
 
         # Function call
