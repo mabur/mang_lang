@@ -197,10 +197,10 @@ def _parse_string(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
 def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
     expressions = ()
     tokens.parse_known_token(TokenType.ARRAY_BEGIN)
-    while not tokens.do_match([TokenType.ARRAY_END]):
+    while not tokens.do_match(TokenType.ARRAY_END):
         expression, tokens = parse_expression(tokens)
         expressions += (expression,)
-        if tokens.do_match([TokenType.COMMA]):
+        if tokens.do_match(TokenType.COMMA):
             tokens.parse_known_token(TokenType.COMMA)
     tokens.parse_known_token(TokenType.ARRAY_END)
     return (Array(expressions=expressions), tokens)
@@ -209,10 +209,10 @@ def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
 def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
     variable_definitions = []
     tokens.parse_known_token(TokenType.DICTIONARY_BEGIN)
-    while not tokens.do_match([TokenType.DICTIONARY_END]):
+    while not tokens.do_match(TokenType.DICTIONARY_END):
         variable_definition, tokens = _parse_variable_definition(tokens)
         variable_definitions.append(variable_definition)
-        if tokens.do_match([TokenType.COMMA]):
+        if tokens.do_match(TokenType.COMMA):
             tokens.parse_known_token(TokenType.COMMA)
     tokens.parse_known_token(TokenType.DICTIONARY_END)
     return (Dictionary(expressions=variable_definitions), tokens)
@@ -220,7 +220,7 @@ def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
 
 def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
     left = tokens.parse_token()
-    if not tokens.do_match([TokenType.OF]):
+    if not tokens.do_match(TokenType.OF):
         return (Lookup(left=left, right=None), tokens)
     tokens.parse_known_token(TokenType.OF)
     right, tokens = parse_expression(tokens)
@@ -263,7 +263,7 @@ def _parse_array_comprehension(tokens: TokenSlice)\
     tokens.parse_known_token(TokenType.IN)
     in_expression, tokens = parse_expression(tokens)
     if_expression = None
-    if tokens.do_match([TokenType.IF]):
+    if tokens.do_match(TokenType.IF):
         tokens.parse_known_token(TokenType.IF)
         if_expression, tokens = parse_expression(tokens)
     return (ArrayComprehension(all_expression=all_expression,
@@ -274,21 +274,21 @@ def _parse_array_comprehension(tokens: TokenSlice)\
 class ParsePattern:
     def __init__(self,
                  parse_function: Callable[[TokenSlice], Tuple[Expression, TokenSlice]],
-                 pattern: Sequence[TokenType]) -> None:
+                 pattern: TokenType) -> None:
         self.parse_function = parse_function
         self.pattern = pattern
 
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
     PARSE_PATTERNS = [
-        ParsePattern(_parse_number, [TokenType.NUMBER]),
-        ParsePattern(_parse_string, [TokenType.STRING]),
-        ParsePattern(_parse_conditional, [TokenType.IF]),
-        ParsePattern(_parse_array_comprehension, [TokenType.EACH]),
-        ParsePattern(_parse_function, [TokenType.FROM]),
-        ParsePattern(_parse_lookup, [TokenType.SYMBOL]),
-        ParsePattern(_parse_array, [TokenType.ARRAY_BEGIN]),
-        ParsePattern(_parse_dictionary, [TokenType.DICTIONARY_BEGIN]),
+        ParsePattern(_parse_number, TokenType.NUMBER),
+        ParsePattern(_parse_string, TokenType.STRING),
+        ParsePattern(_parse_conditional, TokenType.IF),
+        ParsePattern(_parse_array_comprehension, TokenType.EACH),
+        ParsePattern(_parse_function, TokenType.FROM),
+        ParsePattern(_parse_lookup, TokenType.SYMBOL),
+        ParsePattern(_parse_array, TokenType.ARRAY_BEGIN),
+        ParsePattern(_parse_dictionary, TokenType.DICTIONARY_BEGIN),
     ]
 
     for parse_pattern in PARSE_PATTERNS:
