@@ -97,19 +97,19 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(2), interpret('size of first_part of [6, 4, 8]'))
 
     def test_first_part1(self):
-        self.assertEqual(V(6), interpret('0 of first_part of [6, 4, 8]'))
+        self.assertEqual(V(6), interpret('first of first_part of [6, 4, 8]'))
 
     def test_first_part2(self):
-        self.assertEqual(V(4), interpret('1 of first_part of [6, 4, 8]'))
+        self.assertEqual(V(4), interpret('last of first_part of [6, 4, 8]'))
 
     def test_last_part0(self):
         self.assertEqual(V(2), interpret('size of last_part of [6, 4, 8]'))
 
     def test_last_part1(self):
-        self.assertEqual(V(4), interpret('0 of last_part of [6, 4, 8]'))
+        self.assertEqual(V(4), interpret('first of last_part of [6, 4, 8]'))
 
     def test_last_part2(self):
-        self.assertEqual(V(8), interpret('1 of last_part of [6, 4, 8]'))
+        self.assertEqual(V(8), interpret('last of last_part of [6, 4, 8]'))
 
 
 class TestRecursion(unittest.TestCase):
@@ -288,25 +288,6 @@ class TestIndirection(unittest.TestCase):
             interpret('{x = 5, y = 3, z = sum of [x, y]}'))
 
 
-class TestIndexing(unittest.TestCase):
-    def test_indexing_number(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': (V(2), V(3))},
-                          {'type': 'variable_definition', 'name': 'y', 'value': V(2)}),
-                         interpret('{x = [2, 3], y = 0 of x}'))
-
-    def test_indexing_0(self):
-        self.assertEqual(V(7), interpret('0 of [7, 4, 0]'))
-
-    def test_indexing_1(self):
-        self.assertEqual(V(4), interpret('1 of [7, 4, 0]'))
-
-    def test_indexing_2(self):
-        self.assertEqual(V(0), interpret('2 of [7, 4, 0]'))
-
-    def test_indexing_last(self):
-        self.assertEqual(V(0), interpret('-1 of [7, 4, 0]'))
-
-
 class TestDefinitionLookup(unittest.TestCase):
     def test0(self):
         self.assertEqual(V(1), interpret('y of x of {x = {y = 1}}'))
@@ -385,10 +366,10 @@ class TestString(unittest.TestCase):
         self.assertEqual(S("abc"), interpret('concat of ["a","b","c"]'))
 
     def test_string_index0(self):
-        self.assertEqual(S("a"), interpret('y of {x="abc", y=0 of x}'))
+        self.assertEqual(S("a"), interpret('y of {x="abc", y=first of x}'))
 
     def test_string_index1(self):
-        self.assertEqual(S("b"), interpret('y of {x="abc", y=1 of x}'))
+        self.assertEqual(S("c"), interpret('y of {x="abc", y=last of x}'))
 
 
 class TestImport(unittest.TestCase):

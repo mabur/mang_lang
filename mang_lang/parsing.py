@@ -105,27 +105,6 @@ class Function(Expression):
         return self
 
 
-class Indexing(Expression):
-    def __init__(self, expression: Expression, index: Number) -> None:
-        self.expression = expression
-        self.index = index
-
-    def to_json(self) -> Json:
-        return {"type": "indexing",
-                "index": self.index.to_json(),
-                "parent": self.expression.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        reference = self.expression.evaluate(environment)
-        index = int(self.index.evaluate(environment).value)
-        element = reference.value[index]
-        if isinstance(reference, Array):
-            return element
-        if isinstance(reference, String):
-            return String('"{}"'.format(element))
-        raise TypeError
-
-
 class FunctionCallOrDefinitionLookup(Expression):
     def __init__(self, left: Reference, right: Expression) -> None:
         self.left = left
@@ -274,13 +253,6 @@ def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
                      expression=expression), tokens)
 
 
-def _parse_indexing(tokens: TokenSlice) -> Tuple[Indexing, TokenSlice]:
-    number, tokens = _parse_number(tokens)
-    tokens.parse_known_token(TokenType.OF)
-    expression, tokens = parse_expression(tokens)
-    return (Indexing(expression=expression, index=number), tokens)
-
-
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
     tokens.parse_known_token(TokenType.IF)
     condition, tokens = parse_expression(tokens)
@@ -319,7 +291,6 @@ class ParsePattern:
 
 def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
     PARSE_PATTERNS = [
-        ParsePattern(_parse_indexing, [TokenType.NUMBER, TokenType.OF]),
         ParsePattern(_parse_number, [TokenType.NUMBER]),
         ParsePattern(_parse_string, [TokenType.STRING]),
         ParsePattern(_parse_conditional, [TokenType.IF]),

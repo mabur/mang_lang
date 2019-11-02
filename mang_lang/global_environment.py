@@ -64,12 +64,20 @@ def _concat(x: Array):
     raise TypeError
 
 
-def _first(x: Array):
-    return x.value[0]
+def _first(x: Union[Array, String]):
+    element = x.value[0]
+    if isinstance(x, Array):
+        return element
+    if isinstance(x, String):
+        return String('"{}"'.format(element))
 
 
-def _last(x: Array):
-    return x.value[-1]
+def _last(x: Union[Array, String]):
+    element = x.value[-1]
+    if isinstance(x, Array):
+        return element
+    if isinstance(x, String):
+        return String('"{}"'.format(element))
 
 
 def _first_part(x: Array) -> Array:
