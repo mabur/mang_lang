@@ -50,17 +50,6 @@ class String(Expression):
         return self
 
 
-class Reference(Expression):
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-    def to_json(self) -> Json:
-        return {"type": "reference", "name": self.name}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        return environment[self.name]
-
-
 class VariableDefinition(Expression):
     def __init__(self, name: str, expression: Expression) -> None:
         self.name = name
@@ -105,32 +94,36 @@ class Function(Expression):
         return self
 
 
-class FunctionCallOrDefinitionLookup(Expression):
-    def __init__(self, left: Reference, right: Expression) -> None:
+class Lookup(Expression):
+    def __init__(self, left: str, right: Optional[Expression]) -> None:
         self.left = left
         self.right = right
 
     def to_json(self) -> Json:
-        return {"type": "function_call_or_definition_lookup",
-                "left": self.left.to_json(),
-                "right": self.right.to_json()}
+        return {"type": "lookup",
+                "left": self.left,
+                "right": self.right.to_json() if self.right is not None else ''}
 
     def evaluate(self, environment: Environment) -> Expression:
-        # Definition lookup
-        if self.left.name not in environment:
+        # Lookup in current scope
+        if self.right is None:
+            return environment[self.left]
+
+        # Lookup in child scope
+        if self.left not in environment:
             tuple = self.right.evaluate(environment)
             assert isinstance(tuple, Array)
             child_environment = deepcopy(environment)
             try:
-                child_environment[self.left.name] = next(
-                    e.expression for e in tuple.value if e.name == self.left.name)
+                child_environment[self.left] = next(
+                    e.expression for e in tuple.value if e.name == self.left)
             except StopIteration:
-                print('Could not find symbol: {}'.format(self.left.name))
+                print('Could not find symbol: {}'.format(self.left))
                 raise
-            return self.left.evaluate(child_environment)
+            return child_environment[self.left]
 
         # Function call
-        function = self.left.evaluate(environment)
+        function = environment[self.left]
         input = self.right.evaluate(environment)
         if isinstance(function, Function):
             new_environment = deepcopy(environment)
@@ -161,7 +154,7 @@ class Conditional(Expression):
 
 class ArrayComprehension(Expression):
     def __init__(self, all_expression: Expression, for_expression: Expression,
-                 in_expression: Reference, if_expression: Optional[Expression]) -> None:
+                 in_expression: Lookup, if_expression: Optional[Expression]) -> None:
         self.all_expression = all_expression
         self.for_expression = for_expression
         self.in_expression = in_expression
@@ -176,8 +169,8 @@ class ArrayComprehension(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         in_expression = self.in_expression.evaluate(environment)
         assert isinstance(in_expression, Array)
-        assert isinstance(self.for_expression, Reference)
-        variable_name = self.for_expression.name
+        assert isinstance(self.for_expression, Lookup)
+        variable_name = self.for_expression.left
         result = []
         for x in in_expression.value:
             local_environment = deepcopy(environment)
@@ -199,11 +192,6 @@ def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
 def _parse_string(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
     value = tokens.parse_token()
     return (String(value), tokens)
-
-
-def _parse_reference(tokens: TokenSlice) -> Tuple[Reference, TokenSlice]:
-    name = tokens.parse_token()
-    return (Reference(name), tokens)
 
 
 def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
@@ -230,11 +218,13 @@ def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
     return (Dictionary(expressions=variable_definitions), tokens)
 
 
-def _parse_function_call_or_definition_lookup(tokens: TokenSlice) -> Tuple[FunctionCallOrDefinitionLookup, TokenSlice]:
-    left, tokens = _parse_reference(tokens)
+def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
+    left = tokens.parse_token()
+    if not tokens.do_match([TokenType.OF]):
+        return (Lookup(left=left, right=None), tokens)
     tokens.parse_known_token(TokenType.OF)
     right, tokens = parse_expression(tokens)
-    return (FunctionCallOrDefinitionLookup(left=left, right=right), tokens)
+    return (Lookup(left=left, right=right), tokens)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
@@ -296,8 +286,7 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         ParsePattern(_parse_conditional, [TokenType.IF]),
         ParsePattern(_parse_array_comprehension, [TokenType.EACH]),
         ParsePattern(_parse_function, [TokenType.FROM]),
-        ParsePattern(_parse_function_call_or_definition_lookup, [TokenType.SYMBOL, TokenType.OF]),
-        ParsePattern(_parse_reference, [TokenType.SYMBOL]),
+        ParsePattern(_parse_lookup, [TokenType.SYMBOL]),
         ParsePattern(_parse_array, [TokenType.ARRAY_BEGIN]),
         ParsePattern(_parse_dictionary, [TokenType.DICTIONARY_BEGIN]),
     ]
