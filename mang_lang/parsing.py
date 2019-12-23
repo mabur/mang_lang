@@ -154,7 +154,7 @@ class Conditional(Expression):
 
 class ArrayComprehension(Expression):
     def __init__(self, all_expression: Expression, for_expression: Expression,
-                 in_expression: Lookup, if_expression: Optional[Expression]) -> None:
+                 in_expression: Expression, if_expression: Optional[Expression]) -> None:
         self.all_expression = all_expression
         self.for_expression = for_expression
         self.in_expression = in_expression
@@ -189,7 +189,7 @@ def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
     return (Number(value), tokens)
 
 
-def _parse_string(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
+def _parse_string(tokens: TokenSlice) -> Tuple[String, TokenSlice]:
     value = tokens.parse(TokenType.STRING)
     return (String(value), tokens)
 
