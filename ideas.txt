@@ -399,7 +399,24 @@ def split_for(input, query):
         word = input[last_split_index + 1:index]
         output.append(word)
         last_split_index = index
+  word = input[last_split_index + 1:]
+  if word:
+    output.append(word)
   return output
+
+def split_generator(first, last, query):
+  if first != last:
+    next = find_if(first, last, query)
+    yield [first, next]
+    yield from split_generator(++next, last, query)
+
+// Denna verkar enkel. Skulle liknande funka i Manglang?
+def split_recursive(first, last, query):
+  if first == last:
+    return []
+  next = find_if(first, last, query)
+  return [[first, next]] + split_generator(++next, last, query)
+
 
 // Recursive split in Python:
 def split_recursive(source, query):
@@ -415,6 +432,21 @@ def next_word(source, query):
     return [], source[1:]
   word, rest = next_word(source[1:], query)
   return [source[0]] + word, rest
+
+// Iterator split in C++:
+std::vector<std::string> split(first, last, char query) {
+  using namespace std;
+  auto result = vector<string>{};
+  auto next = find(first, last, query);
+  do {
+    if (first != next) {
+      result.append(string{first, next});
+    }
+    first = ++next;
+    next = find(first, last, query);
+  } while (next != last)
+  return result;
+}
 
 // Recursive split in C++:
 std::vector<std::string> split_recursive(std::string source, char query)
@@ -493,3 +525,9 @@ next_word = from {source, query} to
             {word, rest} = next_word of {source = last_part of source, query = query},
             result = {word = concat of [[first of source], word], rest = rest}
         }
+
+// Blir bra. Implementera algoritmer från STL som find, find_if,
+// men som returnerar listor istället för arrayer.
+// find ger ger listorna [first, it] [it, end],
+// där it kan vara end ifall den inte hittar något.
+// next word ovan är typ find_if.
