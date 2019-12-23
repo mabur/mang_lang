@@ -185,12 +185,12 @@ class ArrayComprehension(Expression):
 
 
 def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
-    value = tokens.parse_token()
+    value = tokens.parse_known_token(TokenType.NUMBER)
     return (Number(value), tokens)
 
 
 def _parse_string(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
-    value = tokens.parse_token()
+    value = tokens.parse_known_token(TokenType.STRING)
     return (String(value), tokens)
 
 
@@ -219,7 +219,7 @@ def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
 
 
 def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
-    left = tokens.parse_token()
+    left = tokens.parse_known_token(TokenType.SYMBOL)
     if not tokens.do_match(TokenType.OF):
         return (Lookup(left=left, right=None), tokens)
     tokens.parse_known_token(TokenType.OF)
@@ -228,7 +228,7 @@ def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
-    name = tokens.parse_token()
+    name = tokens.parse_known_token(TokenType.SYMBOL)
     tokens.parse_known_token(TokenType.EQUAL)
     expression, tokens = parse_expression(tokens)
     return (VariableDefinition(name=name, expression=expression), tokens)
@@ -236,7 +236,7 @@ def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, 
 
 def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
     tokens.parse_known_token(TokenType.FROM)
-    argument_name = tokens.parse_token()
+    argument_name = tokens.parse_known_token(TokenType.SYMBOL)
     tokens.parse_known_token(TokenType.TO)
     expression, tokens = parse_expression(tokens)
     return (Function(argument_name=argument_name,
