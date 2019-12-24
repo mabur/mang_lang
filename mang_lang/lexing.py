@@ -39,59 +39,55 @@ class FixedPraser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
 
-    def __call__(self, code: str, index: int) -> Optional[Token]:
-        if code.startswith(self.token_type.value, index):
-            return Token(type=self.token_type, value=code[:len(self.token_type.value)])
-        return None
+    def __call__(self, code: str, index: int) -> Token:
+        return Token(type=self.token_type, value=code[:len(self.token_type.value)])
 
-def parse_string(code: str, index: int) -> Optional[TokenType]:
-    if code[index] != '\"':
-        return None
-    try:
-        second = code.index('\"', index + 1)
-        value = code[index:second + 1]
-        return Token(type=TokenType.STRING, value=value)
-    except ValueError:
-        return None
+def parse_string(code: str, index: int) -> Token:
+    assert code[index] == '\"'
+    second = code.index('\"', index + 1)
+    value = code[index:second + 1]
+    return Token(type=TokenType.STRING, value=value)
 
-def parse_number(code: str, index: int) -> Optional[TokenType]:
+def parse_number(code: str, index: int) -> Token:
     end = index
     while end < len(code) and code[end] in '-+.1234567890':
         end += 1
-    if end == index:
-        return None
+    assert end != index
     return Token(type=TokenType.NUMBER, value=code[index:end])
 
-def parse_symbol(code: str, index: int) -> Optional[TokenType]:
+def parse_symbol(code: str, index: int) -> Token:
     end = index
     while end < len(code) and (code[end].isalnum() or code[end] == '_'):
         end += 1
-    if end == index:
-        return None
+    assert end != index
     return Token(type=TokenType.SYMBOL, value=code[index:end])
 
-PARSERS = [
-    parse_number,
-    FixedPraser(TokenType.ARRAY_BEGIN),
-    FixedPraser(TokenType.ARRAY_END),
-    FixedPraser(TokenType.DICTIONARY_BEGIN),
-    FixedPraser(TokenType.DICTIONARY_END),
-    FixedPraser(TokenType.EQUAL),
-    FixedPraser(TokenType.COMMA),
-    FixedPraser(TokenType.IF),
-    FixedPraser(TokenType.THEN),
-    FixedPraser(TokenType.ELSE),
-    FixedPraser(TokenType.EACH),
-    FixedPraser(TokenType.FOR),
-    FixedPraser(TokenType.IN),
-    FixedPraser(TokenType.FROM),
-    FixedPraser(TokenType.TO),
-    FixedPraser(TokenType.OF),
-    parse_symbol,
-    parse_string,
-    FixedPraser(TokenType.WHITE_SPACE),
-    FixedPraser(TokenType.NEW_LINES),
-]
+parser_from_token = {
+    "[": FixedPraser(TokenType.ARRAY_BEGIN),
+    "]": FixedPraser(TokenType.ARRAY_END),
+    "{": FixedPraser(TokenType.DICTIONARY_BEGIN),
+    "}": FixedPraser(TokenType.DICTIONARY_END),
+    "=": FixedPraser(TokenType.EQUAL),
+    ",": FixedPraser(TokenType.COMMA),
+    "if ": FixedPraser(TokenType.IF),
+    "then ": FixedPraser(TokenType.THEN),
+    "else ": FixedPraser(TokenType.ELSE),
+    "each ": FixedPraser(TokenType.EACH),
+    "for ": FixedPraser(TokenType.FOR),
+    "in ": FixedPraser(TokenType.IN),
+    "from ": FixedPraser(TokenType.FROM),
+    "to ": FixedPraser(TokenType.TO),
+    "of ": FixedPraser(TokenType.OF),
+    "\"": parse_string,
+    " ": FixedPraser(TokenType.WHITE_SPACE),
+    "\n": FixedPraser(TokenType.NEW_LINES),
+}
+
+for char in '+-.1234567890':
+    parser_from_token[char] = parse_number
+
+for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
+    parser_from_token[char] = parse_symbol
 
 def lexer(code: str) -> Sequence[Token]:
     code = code.replace('\n', ' ')
@@ -104,10 +100,8 @@ def lexer(code: str) -> Sequence[Token]:
         index += len(token)
     return [token for token in tokens if token.has_meaning()]
 
-
 def _match_token(code: str, index: int) -> Token:
-    for parser in PARSERS:
-        token = parser(code, index)
-        if token is not None:
-            return token
+    for sequence, parser in parser_from_token.items():
+        if code.startswith(sequence, index):
+            return parser(code, index)
     raise "No matching token"
