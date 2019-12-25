@@ -102,8 +102,9 @@ def lexer(code: str) -> Sequence[Token]:
     tokens = []
     while slice:
         token, slice = _match_token(slice)
-        tokens.append(token)
-    return [token for token in tokens if token.has_meaning()]
+        if token.has_meaning():
+            tokens.append(token)
+    return tokens
 
 def _match_token(slice: Slice) -> Tuple[Token, Slice]:
     for sequence, parser in parser_from_token.items():
