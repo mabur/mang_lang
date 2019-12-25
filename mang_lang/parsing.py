@@ -184,17 +184,20 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
-def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
+def _parse_number(code: str) -> Tuple[Number, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     value = tokens.parse(TokenType.NUMBER)
     return (Number(value), tokens)
 
 
-def _parse_string(tokens: TokenSlice) -> Tuple[String, TokenSlice]:
+def _parse_string(code: str) -> Tuple[String, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     value = tokens.parse(TokenType.STRING)
     return (String(value), tokens)
 
 
-def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
+def _parse_array(code: str) -> Tuple[Array, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     expressions = ()
     tokens.parse(TokenType.ARRAY_BEGIN)
     while not tokens.do_match(TokenType.ARRAY_END):
@@ -206,11 +209,12 @@ def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
     return (Array(expressions=expressions), tokens)
 
 
-def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
+def _parse_dictionary(code: str) -> Tuple[Dictionary, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     variable_definitions = []
     tokens.parse(TokenType.DICTIONARY_BEGIN)
     while not tokens.do_match(TokenType.DICTIONARY_END):
-        variable_definition, tokens = _parse_variable_definition(tokens)
+        variable_definition, tokens = _parse_variable_definition(tokens.as_string())
         variable_definitions.append(variable_definition)
         if tokens.do_match(TokenType.COMMA):
             tokens.parse(TokenType.COMMA)
@@ -218,7 +222,8 @@ def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
     return (Dictionary(expressions=variable_definitions), tokens)
 
 
-def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
+def _parse_lookup(code: str) -> Tuple[Lookup, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     left = tokens.parse(TokenType.SYMBOL)
     if not tokens.do_match(TokenType.OF):
         return (Lookup(left=left, right=None), tokens)
@@ -227,14 +232,16 @@ def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
     return (Lookup(left=left, right=right), tokens)
 
 
-def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
+def _parse_variable_definition(code: str) -> Tuple[VariableDefinition, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     name = tokens.parse(TokenType.SYMBOL)
     tokens.parse(TokenType.EQUAL)
     expression, tokens = parse_expression(tokens.as_string())
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
-def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
+def _parse_function(code: str) -> Tuple[Function, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     tokens.parse(TokenType.FROM)
     argument_name = tokens.parse(TokenType.SYMBOL)
     tokens.parse(TokenType.TO)
@@ -243,7 +250,8 @@ def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
                      expression=expression), tokens)
 
 
-def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
+def _parse_conditional(code: str) -> Tuple[Conditional, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     tokens.parse(TokenType.IF)
     condition, tokens = parse_expression(tokens.as_string())
     tokens.parse(TokenType.THEN)
@@ -254,8 +262,9 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
                         else_expression=else_expression), tokens)
 
 
-def _parse_array_comprehension(tokens: TokenSlice)\
+def _parse_array_comprehension(code: str)\
         -> Tuple[ArrayComprehension, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     tokens.parse(TokenType.EACH)
     all_expression, tokens = parse_expression(tokens.as_string())
     tokens.parse(TokenType.FOR)
@@ -287,7 +296,7 @@ def parse_expression(code: str) -> Tuple[Expression, TokenSlice]:
     next_token = tokens[0]
     try:
         parser = parser_from_token[next_token.type]
-        return parser(tokens)
+        return parser(code)
     except KeyError:
         raise ValueError('Bad token pattern: {}'.format(next_token.value))
 
