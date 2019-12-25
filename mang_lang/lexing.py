@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import Optional, Sequence
+from typing import Sequence
+from slice import Slice
 
 class TokenType(Enum):
     NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
@@ -39,28 +40,34 @@ class FixedPraser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
 
-    def __call__(self, code: str, index: int) -> Token:
-        return Token(type=self.token_type, value=code[:len(self.token_type.value)])
+    def __call__(self, slice: Slice) -> Token:
+        value = ''
+        for _ in self.token_type.value:
+            value += slice.pop()
+        return Token(type=self.token_type, value=value)
 
-def parse_string(code: str, index: int) -> Token:
-    assert code[index] == '\"'
-    second = code.index('\"', index + 1)
-    value = code[index:second + 1]
+def parse_string(slice: Slice) -> Token:
+    assert slice.front() == '\"'
+    value = ''
+    value += slice.pop()
+    while slice and slice.front() != '\"':
+        value += slice.pop()
+    value += slice.pop()
     return Token(type=TokenType.STRING, value=value)
 
-def parse_number(code: str, index: int) -> Token:
-    end = index
-    while end < len(code) and code[end] in '-+.1234567890':
-        end += 1
-    assert end != index
-    return Token(type=TokenType.NUMBER, value=code[index:end])
+def parse_number(slice: Slice) -> Token:
+    value = ''
+    while slice and slice.front() in '-+.1234567890':
+        value += slice.pop()
+    assert value
+    return Token(type=TokenType.NUMBER, value=value)
 
-def parse_symbol(code: str, index: int) -> Token:
-    end = index
-    while end < len(code) and (code[end].isalnum() or code[end] == '_'):
-        end += 1
-    assert end != index
-    return Token(type=TokenType.SYMBOL, value=code[index:end])
+def parse_symbol(slice: Slice) -> Token:
+    value = ''
+    while slice and (slice.front().isalnum() or slice.front() == '_'):
+        value += slice.pop()
+    assert value
+    return Token(type=TokenType.SYMBOL, value=value)
 
 parser_from_token = {
     "[": FixedPraser(TokenType.ARRAY_BEGIN),
@@ -95,13 +102,14 @@ def lexer(code: str) -> Sequence[Token]:
     index = 0
     tokens = []
     while index < num_characters:
-        token = _match_token(code, index)
+        slice = Slice(code, index)
+        token = _match_token(slice)
         tokens.append(token)
         index += len(token)
     return [token for token in tokens if token.has_meaning()]
 
-def _match_token(code: str, index: int) -> Token:
+def _match_token(slice: Slice) -> Token:
     for sequence, parser in parser_from_token.items():
-        if code.startswith(sequence, index):
-            return parser(code, index)
+        if slice.startswith(sequence):
+            return parser(slice)
     raise "No matching token"
