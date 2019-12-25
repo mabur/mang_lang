@@ -1,8 +1,6 @@
 from typing import Union
 
-from lexing import lexer
-from parsing import Array, Number, parse_expression, String
-from token_slice import TokenSlice
+from parsing import Array, Number, String, lex_and_parse
 
 
 def _difference(x: Array):
@@ -126,8 +124,7 @@ def _read_text_file(file_path: str) -> str:
 
 def _import(x: String):
     code = _read_text_file(x.value)
-    tokens = lexer(code)
-    expression, _ = parse_expression(TokenSlice(tokens))
+    expression = lex_and_parse(code)
     environment = {}
     return expression.evaluate(environment)
 

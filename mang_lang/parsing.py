@@ -1,7 +1,7 @@
 from copy import deepcopy
 from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
     Tuple, Union
-from lexing import TokenType
+from lexing import TokenType, lexer
 from token_slice import TokenSlice
 
 Environment = MutableMapping[str, Any]
@@ -289,3 +289,9 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
         return parser(tokens)
     except KeyError:
         raise ValueError('Bad token pattern: {}'.format(next_token.value))
+
+
+def lex_and_parse(code: str) -> Expression:
+    tokens = lexer(code)
+    expression, _ = parse_expression(TokenSlice(tokens))
+    return expression
