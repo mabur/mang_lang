@@ -198,7 +198,7 @@ def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
     expressions = ()
     tokens.parse(TokenType.ARRAY_BEGIN)
     while not tokens.do_match(TokenType.ARRAY_END):
-        expression, tokens = parse_expression(tokens)
+        expression, tokens = parse_expression(tokens.as_string())
         expressions += (expression,)
         if tokens.do_match(TokenType.COMMA):
             tokens.parse(TokenType.COMMA)
@@ -223,14 +223,14 @@ def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
     if not tokens.do_match(TokenType.OF):
         return (Lookup(left=left, right=None), tokens)
     tokens.parse(TokenType.OF)
-    right, tokens = parse_expression(tokens)
+    right, tokens = parse_expression(tokens.as_string())
     return (Lookup(left=left, right=right), tokens)
 
 
 def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
     name = tokens.parse(TokenType.SYMBOL)
     tokens.parse(TokenType.EQUAL)
-    expression, tokens = parse_expression(tokens)
+    expression, tokens = parse_expression(tokens.as_string())
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
@@ -238,18 +238,18 @@ def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
     tokens.parse(TokenType.FROM)
     argument_name = tokens.parse(TokenType.SYMBOL)
     tokens.parse(TokenType.TO)
-    expression, tokens = parse_expression(tokens)
+    expression, tokens = parse_expression(tokens.as_string())
     return (Function(argument_name=argument_name,
                      expression=expression), tokens)
 
 
 def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
     tokens.parse(TokenType.IF)
-    condition, tokens = parse_expression(tokens)
+    condition, tokens = parse_expression(tokens.as_string())
     tokens.parse(TokenType.THEN)
-    then_expression, tokens = parse_expression(tokens)
+    then_expression, tokens = parse_expression(tokens.as_string())
     tokens.parse(TokenType.ELSE)
-    else_expression, tokens = parse_expression(tokens)
+    else_expression, tokens = parse_expression(tokens.as_string())
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), tokens)
 
@@ -257,22 +257,23 @@ def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
 def _parse_array_comprehension(tokens: TokenSlice)\
         -> Tuple[ArrayComprehension, TokenSlice]:
     tokens.parse(TokenType.EACH)
-    all_expression, tokens = parse_expression(tokens)
+    all_expression, tokens = parse_expression(tokens.as_string())
     tokens.parse(TokenType.FOR)
-    for_expression, tokens = parse_expression(tokens)
+    for_expression, tokens = parse_expression(tokens.as_string())
     tokens.parse(TokenType.IN)
-    in_expression, tokens = parse_expression(tokens)
+    in_expression, tokens = parse_expression(tokens.as_string())
     if_expression = None
     if tokens.do_match(TokenType.IF):
         tokens.parse(TokenType.IF)
-        if_expression, tokens = parse_expression(tokens)
+        if_expression, tokens = parse_expression(tokens.as_string())
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
                                if_expression=if_expression), tokens)
 
 
-def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
+def parse_expression(code: str) -> Tuple[Expression, TokenSlice]:
+    tokens = TokenSlice(lexer(code))
     parser_from_token = {
         TokenType.NUMBER: _parse_number,
         TokenType.STRING: _parse_string,
@@ -292,6 +293,5 @@ def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
 
 
 def lex_and_parse(code: str) -> Expression:
-    tokens = lexer(code)
-    expression, _ = parse_expression(TokenSlice(tokens))
+    expression, _ = parse_expression(code)
     return expression

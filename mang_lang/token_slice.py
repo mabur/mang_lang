@@ -12,3 +12,6 @@ class TokenSlice(Slice):
         actual = self.pop()
         assert expected == actual.type, 'Expected {} but got {}'.format(expected, actual.type)
         return actual.value
+
+    def as_string(self):
+        return ' '.join([t.value for t in self])
