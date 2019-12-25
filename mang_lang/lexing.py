@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Sequence
+from typing import Sequence, Tuple
 from slice import Slice
 
 class TokenType(Enum):
@@ -40,34 +40,34 @@ class FixedPraser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
 
-    def __call__(self, slice: Slice) -> Token:
+    def __call__(self, slice: Slice) -> Tuple[Token, Slice]:
         value = ''
         for _ in self.token_type.value:
             value += slice.pop()
-        return Token(type=self.token_type, value=value)
+        return (Token(type=self.token_type, value=value), slice)
 
-def parse_string(slice: Slice) -> Token:
+def parse_string(slice: Slice) -> Tuple[Token, Slice]:
     assert slice.front() == '\"'
     value = ''
     value += slice.pop()
     while slice and slice.front() != '\"':
         value += slice.pop()
     value += slice.pop()
-    return Token(type=TokenType.STRING, value=value)
+    return (Token(type=TokenType.STRING, value=value), slice)
 
-def parse_number(slice: Slice) -> Token:
+def parse_number(slice: Slice) -> Tuple[Token, Slice]:
     value = ''
     while slice and slice.front() in '-+.1234567890':
         value += slice.pop()
     assert value
-    return Token(type=TokenType.NUMBER, value=value)
+    return (Token(type=TokenType.NUMBER, value=value), slice)
 
-def parse_symbol(slice: Slice) -> Token:
+def parse_symbol(slice: Slice) -> Tuple[Token, Slice]:
     value = ''
     while slice and (slice.front().isalnum() or slice.front() == '_'):
         value += slice.pop()
     assert value
-    return Token(type=TokenType.SYMBOL, value=value)
+    return (Token(type=TokenType.SYMBOL, value=value), slice)
 
 parser_from_token = {
     "[": FixedPraser(TokenType.ARRAY_BEGIN),
@@ -98,17 +98,14 @@ for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
 
 def lexer(code: str) -> Sequence[Token]:
     code = code.replace('\n', ' ')
-    num_characters = len(code)
-    index = 0
+    slice = Slice(code)
     tokens = []
-    while index < num_characters:
-        slice = Slice(code, index)
-        token = _match_token(slice)
+    while slice:
+        token, slice = _match_token(slice)
         tokens.append(token)
-        index += len(token)
     return [token for token in tokens if token.has_meaning()]
 
-def _match_token(slice: Slice) -> Token:
+def _match_token(slice: Slice) -> Tuple[Token, Slice]:
     for sequence, parser in parser_from_token.items():
         if slice.startswith(sequence):
             return parser(slice)
