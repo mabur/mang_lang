@@ -97,7 +97,6 @@ for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
     parser_from_token[char] = parse_symbol
 
 def lexer(code: str) -> Sequence[Token]:
-    code = code.replace('\n', ' ')
     slice = Slice(code)
     tokens = []
     while slice:
