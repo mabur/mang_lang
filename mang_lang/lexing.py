@@ -37,7 +37,7 @@ class Token:
         return self.type != TokenType.WHITE_SPACE and \
                self.type != TokenType.NEW_LINES
 
-class FixedPraser:
+class FixedParser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
 
@@ -71,24 +71,24 @@ def parse_symbol(slice: Slice) -> Tuple[Token, Slice]:
     return (Token(type=TokenType.SYMBOL, value=value), slice)
 
 parser_from_token = {
-    "[": FixedPraser(TokenType.ARRAY_BEGIN),
-    "]": FixedPraser(TokenType.ARRAY_END),
-    "{": FixedPraser(TokenType.DICTIONARY_BEGIN),
-    "}": FixedPraser(TokenType.DICTIONARY_END),
-    "=": FixedPraser(TokenType.EQUAL),
-    ",": FixedPraser(TokenType.COMMA),
-    "if ": FixedPraser(TokenType.IF),
-    "then ": FixedPraser(TokenType.THEN),
-    "else ": FixedPraser(TokenType.ELSE),
-    "each ": FixedPraser(TokenType.EACH),
-    "for ": FixedPraser(TokenType.FOR),
-    "in ": FixedPraser(TokenType.IN),
-    "from ": FixedPraser(TokenType.FROM),
-    "to ": FixedPraser(TokenType.TO),
-    "of ": FixedPraser(TokenType.OF),
+    "[": FixedParser(TokenType.ARRAY_BEGIN),
+    "]": FixedParser(TokenType.ARRAY_END),
+    "{": FixedParser(TokenType.DICTIONARY_BEGIN),
+    "}": FixedParser(TokenType.DICTIONARY_END),
+    "=": FixedParser(TokenType.EQUAL),
+    ",": FixedParser(TokenType.COMMA),
+    "if ": FixedParser(TokenType.IF),
+    "then ": FixedParser(TokenType.THEN),
+    "else ": FixedParser(TokenType.ELSE),
+    "each ": FixedParser(TokenType.EACH),
+    "for ": FixedParser(TokenType.FOR),
+    "in ": FixedParser(TokenType.IN),
+    "from ": FixedParser(TokenType.FROM),
+    "to ": FixedParser(TokenType.TO),
+    "of ": FixedParser(TokenType.OF),
     "\"": parse_string,
-    " ": FixedPraser(TokenType.WHITE_SPACE),
-    "\n": FixedPraser(TokenType.NEW_LINES),
+    " ": FixedParser(TokenType.WHITE_SPACE),
+    "\n": FixedParser(TokenType.NEW_LINES),
 }
 
 for char in '+-.1234567890':
