@@ -4,6 +4,7 @@ from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
 from lexing import TokenType, lexer
 from slice import Slice
 from token_slice import TokenSlice
+import lexing
 
 Environment = MutableMapping[str, Any]
 Json = Union[float, str, Mapping[str, Any], Sequence]
@@ -185,16 +186,14 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
-def _parse_number(code: Slice) -> Tuple[Number, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    value = tokens.parse(TokenType.NUMBER)
-    return (Number(value), tokens)
+def _parse_number(slice: Slice) -> Tuple[Number, TokenSlice]:
+    token, slice = lexing.parse_number(slice)
+    return (Number(token.value), TokenSlice(lexer(slice)))
 
 
-def _parse_string(code: Slice) -> Tuple[String, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    value = tokens.parse(TokenType.STRING)
-    return (String(value), tokens)
+def _parse_string(slice: Slice) -> Tuple[String, TokenSlice]:
+    token, slice = lexing.parse_string(slice)
+    return (String(token.value), TokenSlice(lexer(slice)))
 
 
 def _parse_array(code: Slice) -> Tuple[Array, TokenSlice]:
