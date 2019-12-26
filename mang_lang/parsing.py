@@ -185,15 +185,22 @@ class ArrayComprehension(Expression):
             result.append(y)
         return Array(result)
 
+def _make_token_slice(slice) -> TokenSlice:
+    return TokenSlice(lexer(slice))
+
+def _parse_optional_white_space(slice: Slice) -> Slice:
+    while slice.front() == ' ' or slice.front() == '\n':
+        slice.pop()
+    return slice
 
 def _parse_number(slice: Slice) -> Tuple[Number, TokenSlice]:
     token, slice = lexing.parse_number(slice)
-    return (Number(token.value), TokenSlice(lexer(slice)))
+    return (Number(token.value), _make_token_slice(slice))
 
 
 def _parse_string(slice: Slice) -> Tuple[String, TokenSlice]:
     token, slice = lexing.parse_string(slice)
-    return (String(token.value), TokenSlice(lexer(slice)))
+    return (String(token.value), _make_token_slice(slice))
 
 
 def _parse_array(code: Slice) -> Tuple[Array, TokenSlice]:
@@ -232,11 +239,13 @@ def _parse_lookup(code: Slice) -> Tuple[Lookup, TokenSlice]:
     return (Lookup(left=left, right=right), tokens)
 
 
-def _parse_variable_definition(code: Slice) -> Tuple[VariableDefinition, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    name = tokens.parse(TokenType.SYMBOL)
-    tokens.parse(TokenType.EQUAL)
-    expression, tokens = parse_expression(tokens.as_string())
+def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, TokenSlice]:
+    token, slice = lexing.parse_symbol(slice)
+    name = token.value
+    slice = _parse_optional_white_space(slice)
+    _, slice = lexing.FixedParser(TokenType.EQUAL)(slice)
+    slice = _parse_optional_white_space(slice)
+    expression, tokens = parse_expression(slice)
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
