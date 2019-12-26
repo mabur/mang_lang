@@ -2,6 +2,7 @@ from copy import deepcopy
 from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
     Tuple, Union
 from lexing import TokenType, lexer
+from slice import Slice
 from token_slice import TokenSlice
 
 Environment = MutableMapping[str, Any]
@@ -184,19 +185,19 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
-def _parse_number(code: str) -> Tuple[Number, TokenSlice]:
+def _parse_number(code: Slice) -> Tuple[Number, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     value = tokens.parse(TokenType.NUMBER)
     return (Number(value), tokens)
 
 
-def _parse_string(code: str) -> Tuple[String, TokenSlice]:
+def _parse_string(code: Slice) -> Tuple[String, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     value = tokens.parse(TokenType.STRING)
     return (String(value), tokens)
 
 
-def _parse_array(code: str) -> Tuple[Array, TokenSlice]:
+def _parse_array(code: Slice) -> Tuple[Array, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     expressions = ()
     tokens.parse(TokenType.ARRAY_BEGIN)
@@ -209,7 +210,7 @@ def _parse_array(code: str) -> Tuple[Array, TokenSlice]:
     return (Array(expressions=expressions), tokens)
 
 
-def _parse_dictionary(code: str) -> Tuple[Dictionary, TokenSlice]:
+def _parse_dictionary(code: Slice) -> Tuple[Dictionary, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     variable_definitions = []
     tokens.parse(TokenType.DICTIONARY_BEGIN)
@@ -222,7 +223,7 @@ def _parse_dictionary(code: str) -> Tuple[Dictionary, TokenSlice]:
     return (Dictionary(expressions=variable_definitions), tokens)
 
 
-def _parse_lookup(code: str) -> Tuple[Lookup, TokenSlice]:
+def _parse_lookup(code: Slice) -> Tuple[Lookup, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     left = tokens.parse(TokenType.SYMBOL)
     if not tokens.do_match(TokenType.OF):
@@ -232,7 +233,7 @@ def _parse_lookup(code: str) -> Tuple[Lookup, TokenSlice]:
     return (Lookup(left=left, right=right), tokens)
 
 
-def _parse_variable_definition(code: str) -> Tuple[VariableDefinition, TokenSlice]:
+def _parse_variable_definition(code: Slice) -> Tuple[VariableDefinition, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     name = tokens.parse(TokenType.SYMBOL)
     tokens.parse(TokenType.EQUAL)
@@ -240,7 +241,7 @@ def _parse_variable_definition(code: str) -> Tuple[VariableDefinition, TokenSlic
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
-def _parse_function(code: str) -> Tuple[Function, TokenSlice]:
+def _parse_function(code: Slice) -> Tuple[Function, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     tokens.parse(TokenType.FROM)
     argument_name = tokens.parse(TokenType.SYMBOL)
@@ -250,7 +251,7 @@ def _parse_function(code: str) -> Tuple[Function, TokenSlice]:
                      expression=expression), tokens)
 
 
-def _parse_conditional(code: str) -> Tuple[Conditional, TokenSlice]:
+def _parse_conditional(code: Slice) -> Tuple[Conditional, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     tokens.parse(TokenType.IF)
     condition, tokens = parse_expression(tokens.as_string())
@@ -262,7 +263,7 @@ def _parse_conditional(code: str) -> Tuple[Conditional, TokenSlice]:
                         else_expression=else_expression), tokens)
 
 
-def _parse_array_comprehension(code: str)\
+def _parse_array_comprehension(code: Slice)\
         -> Tuple[ArrayComprehension, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     tokens.parse(TokenType.EACH)
@@ -281,7 +282,7 @@ def _parse_array_comprehension(code: str)\
                                if_expression=if_expression), tokens)
 
 
-def parse_expression(code: str) -> Tuple[Expression, TokenSlice]:
+def parse_expression(code: Slice) -> Tuple[Expression, TokenSlice]:
     tokens = TokenSlice(lexer(code))
     parser_from_token = {
         TokenType.NUMBER: _parse_number,
@@ -302,5 +303,5 @@ def parse_expression(code: str) -> Tuple[Expression, TokenSlice]:
 
 
 def lex_and_parse(code: str) -> Expression:
-    expression, _ = parse_expression(code)
+    expression, _ = parse_expression(Slice(code))
     return expression

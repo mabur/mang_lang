@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Sequence, Tuple
 from slice import Slice
+import copy
 
 class TokenType(Enum):
     NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
@@ -96,8 +97,8 @@ for char in '+-.1234567890':
 for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
     parser_from_token[char] = parse_symbol
 
-def lexer(code: str) -> Sequence[Token]:
-    slice = Slice(code)
+def lexer(slice: Slice) -> Sequence[Token]:
+    slice = copy.deepcopy(slice)
     tokens = []
     while slice:
         token, slice = _match_token(slice)

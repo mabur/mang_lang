@@ -14,4 +14,4 @@ class TokenSlice(Slice):
         return actual.value
 
     def as_string(self):
-        return ' '.join([t.value for t in self])
+        return Slice(' '.join([t.value for t in self]))
