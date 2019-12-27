@@ -184,6 +184,14 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
+def _parse_sequence(text: Slice, sequence) -> Tuple[str, Slice]:
+    value = ''
+    for _ in sequence:
+        value += text.pop()
+    text = _parse_optional_white_space(text)
+    return value, text
+
+
 def _parse_while(text: Slice, predicate) -> Tuple[str, Slice]:
     value = ''
     while text and predicate(text.front()):
@@ -223,25 +231,25 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
 
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
-    _, text = FixedParser(TokenType.ARRAY_BEGIN)(text)
+    _, text = _parse_sequence(text, TokenType.ARRAY_BEGIN.value)
     while not text.startswith(TokenType.ARRAY_END.value):
         expression, text = parse_expression(text)
         expressions += (expression,)
         if text.startswith(TokenType.COMMA.value):
-            _, text = FixedParser(TokenType.COMMA)(text)
-    _, text = FixedParser(TokenType.ARRAY_END)(text)
+            _, text = _parse_sequence(text, TokenType.COMMA.value)
+    _, text = _parse_sequence(text, TokenType.ARRAY_END.value)
     return Array(expressions=expressions), text
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
-    _, text = FixedParser(TokenType.DICTIONARY_BEGIN)(text)
+    _, text = _parse_sequence(text, TokenType.DICTIONARY_BEGIN.value)
     while not text.startswith(TokenType.DICTIONARY_END.value):
         variable_definition, text = _parse_variable_definition(text)
         variable_definitions.append(variable_definition)
         if text.startswith(TokenType.COMMA.value):
-            _, text = FixedParser(TokenType.COMMA)(text)
-    _, text = FixedParser(TokenType.DICTIONARY_END)(text)
+            _, text = _parse_sequence(text, TokenType.COMMA.value)
+    _, text = _parse_sequence(text, TokenType.DICTIONARY_END.value)
     return Dictionary(expressions=variable_definitions), text
 
 
@@ -250,7 +258,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     left = value
     if not text.startswith(TokenType.OF.value):
         return Lookup(left=left, right=None), text
-    _, text = FixedParser(TokenType.OF)(text)
+    _, text = _parse_sequence(text, TokenType.OF.value)
     right, text = parse_expression(text)
     return Lookup(left=left, right=right), text
 
@@ -258,26 +266,26 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     value, text = _parse_symbol(text)
     name = value
-    _, text = FixedParser(TokenType.EQUAL)(text)
+    _, text = _parse_sequence(text, TokenType.EQUAL.value)
     expression, text = parse_expression(text)
     return VariableDefinition(name=name, expression=expression), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
-    _, text = FixedParser(TokenType.FROM)(text)
+    _, text = _parse_sequence(text, TokenType.FROM.value)
     value, text = _parse_symbol(text)
     argument_name = value
-    _, text = FixedParser(TokenType.TO)(text)
+    _, text = _parse_sequence(text, TokenType.TO.value)
     expression, text = parse_expression(text)
     return Function(argument_name=argument_name, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
-    _, text = FixedParser(TokenType.IF)(text)
+    _, text = _parse_sequence(text, TokenType.IF.value)
     condition, text = parse_expression(text)
-    _, text = FixedParser(TokenType.THEN)(text)
+    _, text = _parse_sequence(text, TokenType.THEN.value)
     then_expression, text = parse_expression(text)
-    _, text = FixedParser(TokenType.ELSE)(text)
+    _, text = _parse_sequence(text, TokenType.ELSE.value)
     else_expression, text = parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), text)
@@ -285,15 +293,15 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
 
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
-    _, text = FixedParser(TokenType.EACH)(text)
+    _, text = _parse_sequence(text, TokenType.EACH.value)
     all_expression, text = parse_expression(text)
-    _, text = FixedParser(TokenType.FOR)(text)
+    _, text = _parse_sequence(text, TokenType.FOR.value)
     for_expression, text = parse_expression(text)
-    _, text = FixedParser(TokenType.IN)(text)
+    _, text = _parse_sequence(text, TokenType.IN.value)
     in_expression, text = parse_expression(text)
     if_expression = None
     if text.startswith(TokenType.IF.value):
-        _, text = FixedParser(TokenType.IF)(text)
+        _, text = _parse_sequence(text, TokenType.IF.value)
         if_expression, text = parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
@@ -346,15 +354,3 @@ class TokenType(Enum):
     FROM = "from "
     TO = "to "
     OF = "of "
-
-
-class FixedParser:
-    def __init__(self, token_type: TokenType):
-        self.token_type = token_type
-
-    def __call__(self, text: Slice) -> Tuple[str, Slice]:
-        value = ''
-        for _ in self.token_type.value:
-            value += text.pop()
-        text = _parse_optional_white_space(text)
-        return (value, text)
