@@ -1,6 +1,7 @@
 from typing import Union
 
-from parsing import Array, Number, String, lex_and_parse
+from parsing import lex_and_parse
+from ast import Array, Number, String
 
 
 def _difference(x: Array):
