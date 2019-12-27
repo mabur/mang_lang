@@ -1,291 +1,209 @@
-from copy import deepcopy
-from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
-    Tuple, Union
-from lexing import TokenType
-from token_slice import TokenSlice
+from typing import Any, Callable, Sequence, Tuple
 
-Environment = MutableMapping[str, Any]
-Json = Union[float, str, Mapping[str, Any], Sequence]
-
-class Expression:
-    def to_json(self) -> Json:
-        raise NotImplemented
-
-    def evaluate(self, environment: Environment):
-        raise NotImplemented()
+from ast import Expression, Array, Number, String, VariableDefinition, \
+    Dictionary, Function, Lookup, Conditional, ArrayComprehension
 
 
-class Array(Expression):
-    def __init__(self, expressions: Sequence[Expression]) -> None:
-        self.value = expressions
+class Slice:
+    def __init__(self, elements: str, begin_index=0):
+        self._elements = elements
+        self._begin_index = begin_index
 
-    def to_json(self) -> Json:
-        return tuple(e.to_json() for e in self.value)
+    def __getitem__(self, item):
+        return self._elements[self._begin_index + item]
 
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.value]
-        return Array(expressions)
+    def __len__(self):
+        return len(self._elements) - self._begin_index
 
+    def pop(self):
+        value = self[0]
+        self._begin_index += 1
+        return value
 
-class Number(Expression):
-    def __init__(self, value: str) -> None:
-        self.value = float(value)
+    def front(self):
+        return self[0]
 
-    def to_json(self) -> Json:
-        return {"type": "number", "value": self.value}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        return self
-
-
-class String(Expression):
-    def __init__(self, value: str) -> None:
-        self.value = value[1:-1]
-
-    def to_json(self) -> Json:
-        return {"type": "string", "value": self.value}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        return self
+    def startswith(self, word: str) -> bool:
+        return self._elements.startswith(word, self._begin_index)
 
 
-class VariableDefinition(Expression):
-    def __init__(self, name: str, expression: Expression) -> None:
-        self.name = name
-        self.expression = expression
-
-    def to_json(self) -> Json:
-        return {"type": "variable_definition",
-                "name": self.name,
-                "value": self.expression.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        value = self.expression.evaluate(new_environment)
-        environment[self.name] = value
-        return VariableDefinition(name=self.name, expression=value)
+def parse(code: str) -> Expression:
+    text = Slice(code)
+    return _parse_expression(text)[0]
 
 
-class Dictionary(Expression):
-    def __init__(self, expressions: Sequence[VariableDefinition]) -> None:
-        self.value = expressions
+ARRAY_BEGIN = "["
+ARRAY_END = "]"
+DICTIONARY_BEGIN = "{"
+DICTIONARY_END = "}"
+EQUAL = "="
+COMMA = ","
+IF = "if "
+THEN = "then "
+ELSE = "else "
+EACH = "each "
+FOR = "for "
+IN = "in "
+FROM = "from "
+TO = "to "
+OF = "of "
+STRING_BEGIN = "\""
+STRING_END = "\""
 
-    def to_json(self) -> Json:
-        return tuple(e.to_json() for e in self.value)
-
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.value]
-        return Array(expressions)
-
-
-class Function(Expression):
-    def __init__(self, argument_name: str, expression: Expression) -> None:
-        self.argument_name = argument_name
-        self.expression = expression
-
-    def to_json(self) -> Json:
-        return {"type": "function_definition",
-                "argument_name": self.argument_name,
-                "expression": self.expression.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        return self
+DIGITS = '+-.1234567890'
+LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
+WHITESPACE = ' \n'
 
 
-class Lookup(Expression):
-    def __init__(self, left: str, right: Optional[Expression]) -> None:
-        self.left = left
-        self.right = right
-
-    def to_json(self) -> Json:
-        return {"type": "lookup",
-                "left": self.left,
-                "right": self.right.to_json() if self.right is not None else ''}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        # Lookup in current scope
-        if self.right is None:
-            return environment[self.left]
-
-        # Lookup in child scope
-        if self.left not in environment:
-            tuple = self.right.evaluate(environment)
-            assert isinstance(tuple, Array)
-            child_environment = deepcopy(environment)
-            try:
-                child_environment[self.left] = next(
-                    e.expression for e in tuple.value if e.name == self.left)
-            except StopIteration:
-                print('Could not find symbol: {}'.format(self.left))
-                raise
-            return child_environment[self.left]
-
-        # Function call
-        function = environment[self.left]
-        input = self.right.evaluate(environment)
-        if isinstance(function, Function):
-            new_environment = deepcopy(environment)
-            new_environment[function.argument_name] = input
-            return function.expression.evaluate(new_environment)
-        return function(input)
+def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
+    value = ''
+    for _ in keyword:
+        value += text.pop()
+    text = _parse_optional_white_space(text)
+    return value, text
 
 
-class Conditional(Expression):
-    def __init__(self, condition: Expression, then_expression: Expression,
-                 else_expression: Expression) -> None:
-        self.condition = condition
-        self.then_expression = then_expression
-        self.else_expression = else_expression
-
-    def to_json(self) -> Json:
-        return {"type": "conditional",
-                "condition": self.condition.to_json(),
-                "then_expression": self.then_expression.to_json(),
-                "else_expression": self.else_expression.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        if self.condition.evaluate(environment).value:
-            return self.then_expression.evaluate(environment)
-        else:
-            return self.else_expression.evaluate(environment)
+def _parse_while(text: Slice, predicate) -> Tuple[str, Slice]:
+    value = ''
+    while text and predicate(text.front()):
+        value += text.pop()
+    return value, text
 
 
-class ArrayComprehension(Expression):
-    def __init__(self, all_expression: Expression, for_expression: Expression,
-                 in_expression: Expression, if_expression: Optional[Expression]) -> None:
-        self.all_expression = all_expression
-        self.for_expression = for_expression
-        self.in_expression = in_expression
-        self.if_expression = if_expression
-
-    def to_json(self) -> Json:
-        return {"type": "tuple_comprehension",
-                "all_expression": self.all_expression.to_json(),
-                "for_expression": self.for_expression.to_json(),
-                "in_expression": self.in_expression.to_json()}
-
-    def evaluate(self, environment: Environment) -> Expression:
-        in_expression = self.in_expression.evaluate(environment)
-        assert isinstance(in_expression, Array)
-        assert isinstance(self.for_expression, Lookup)
-        variable_name = self.for_expression.left
-        result = []
-        for x in in_expression.value:
-            local_environment = deepcopy(environment)
-            local_environment[variable_name] = x
-            y = self.all_expression.evaluate(local_environment)
-            if self.if_expression:
-                z = self.if_expression.evaluate(local_environment)
-                if not bool(z.value):
-                    continue
-            result.append(y)
-        return Array(result)
+def _parse_optional_white_space(text: Slice) -> Slice:
+    value, text = _parse_while(text, lambda c: c in WHITESPACE)
+    return text
 
 
-def _parse_number(tokens: TokenSlice) -> Tuple[Number, TokenSlice]:
-    value = tokens.parse(TokenType.NUMBER)
-    return (Number(value), tokens)
+def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
+    value, text = _parse_while(text, lambda c: c in LETTERS)
+    assert value
+    text = _parse_optional_white_space(text)
+    return value, text
 
 
-def _parse_string(tokens: TokenSlice) -> Tuple[String, TokenSlice]:
-    value = tokens.parse(TokenType.STRING)
-    return (String(value), tokens)
+def _parse_number(text: Slice) -> Tuple[Number, Slice]:
+    value, text = _parse_while(text, lambda c: c in DIGITS)
+    assert value
+    text = _parse_optional_white_space(text)
+    return Number(value), text
 
 
-def _parse_array(tokens: TokenSlice) -> Tuple[Array, TokenSlice]:
+def _parse_string(text: Slice) -> Tuple[String, Slice]:
+    assert text.front() == STRING_BEGIN
+    value = text.pop()
+    body, text = _parse_while(text, lambda c: c != STRING_END)
+    value += body
+    value += text.pop()
+    text = _parse_optional_white_space(text)
+    return String(value), text
+
+
+def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
-    tokens.parse(TokenType.ARRAY_BEGIN)
-    while not tokens.do_match(TokenType.ARRAY_END):
-        expression, tokens = parse_expression(tokens)
+    _, text = _parse_keyword(text, ARRAY_BEGIN)
+    while not text.startswith(ARRAY_END):
+        expression, text = _parse_expression(text)
         expressions += (expression,)
-        if tokens.do_match(TokenType.COMMA):
-            tokens.parse(TokenType.COMMA)
-    tokens.parse(TokenType.ARRAY_END)
-    return (Array(expressions=expressions), tokens)
+        if text.startswith(COMMA):
+            _, text = _parse_keyword(text, COMMA)
+    _, text = _parse_keyword(text, ARRAY_END)
+    return Array(expressions=expressions), text
 
 
-def _parse_dictionary(tokens: TokenSlice) -> Tuple[Dictionary, TokenSlice]:
+def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
-    tokens.parse(TokenType.DICTIONARY_BEGIN)
-    while not tokens.do_match(TokenType.DICTIONARY_END):
-        variable_definition, tokens = _parse_variable_definition(tokens)
+    _, text = _parse_keyword(text, DICTIONARY_BEGIN)
+    while not text.startswith(DICTIONARY_END):
+        variable_definition, text = _parse_variable_definition(text)
         variable_definitions.append(variable_definition)
-        if tokens.do_match(TokenType.COMMA):
-            tokens.parse(TokenType.COMMA)
-    tokens.parse(TokenType.DICTIONARY_END)
-    return (Dictionary(expressions=variable_definitions), tokens)
+        if text.startswith(COMMA):
+            _, text = _parse_keyword(text, COMMA)
+    _, text = _parse_keyword(text, DICTIONARY_END)
+    return Dictionary(expressions=variable_definitions), text
 
 
-def _parse_lookup(tokens: TokenSlice) -> Tuple[Lookup, TokenSlice]:
-    left = tokens.parse(TokenType.SYMBOL)
-    if not tokens.do_match(TokenType.OF):
-        return (Lookup(left=left, right=None), tokens)
-    tokens.parse(TokenType.OF)
-    right, tokens = parse_expression(tokens)
-    return (Lookup(left=left, right=right), tokens)
+def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
+    value, text = _parse_symbol(text)
+    left = value
+    if not text.startswith(OF):
+        return Lookup(left=left, right=None), text
+    _, text = _parse_keyword(text, OF)
+    right, text = _parse_expression(text)
+    return Lookup(left=left, right=right), text
 
 
-def _parse_variable_definition(tokens: TokenSlice) -> Tuple[VariableDefinition, TokenSlice]:
-    name = tokens.parse(TokenType.SYMBOL)
-    tokens.parse(TokenType.EQUAL)
-    expression, tokens = parse_expression(tokens)
-    return (VariableDefinition(name=name, expression=expression), tokens)
+def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
+    value, text = _parse_symbol(text)
+    name = value
+    _, text = _parse_keyword(text, EQUAL)
+    expression, text = _parse_expression(text)
+    return VariableDefinition(name=name, expression=expression), text
 
 
-def _parse_function(tokens: TokenSlice) -> Tuple[Function, TokenSlice]:
-    tokens.parse(TokenType.FROM)
-    argument_name = tokens.parse(TokenType.SYMBOL)
-    tokens.parse(TokenType.TO)
-    expression, tokens = parse_expression(tokens)
-    return (Function(argument_name=argument_name,
-                     expression=expression), tokens)
+def _parse_function(text: Slice) -> Tuple[Function, Slice]:
+    _, text = _parse_keyword(text, FROM)
+    value, text = _parse_symbol(text)
+    argument_name = value
+    _, text = _parse_keyword(text, TO)
+    expression, text = _parse_expression(text)
+    return Function(argument_name=argument_name, expression=expression), text
 
 
-def _parse_conditional(tokens: TokenSlice) -> Tuple[Conditional, TokenSlice]:
-    tokens.parse(TokenType.IF)
-    condition, tokens = parse_expression(tokens)
-    tokens.parse(TokenType.THEN)
-    then_expression, tokens = parse_expression(tokens)
-    tokens.parse(TokenType.ELSE)
-    else_expression, tokens = parse_expression(tokens)
+def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
+    _, text = _parse_keyword(text, IF)
+    condition, text = _parse_expression(text)
+    _, text = _parse_keyword(text, THEN)
+    then_expression, text = _parse_expression(text)
+    _, text = _parse_keyword(text, ELSE)
+    else_expression, text = _parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
-                        else_expression=else_expression), tokens)
+                        else_expression=else_expression), text)
 
 
-def _parse_array_comprehension(tokens: TokenSlice)\
-        -> Tuple[ArrayComprehension, TokenSlice]:
-    tokens.parse(TokenType.EACH)
-    all_expression, tokens = parse_expression(tokens)
-    tokens.parse(TokenType.FOR)
-    for_expression, tokens = parse_expression(tokens)
-    tokens.parse(TokenType.IN)
-    in_expression, tokens = parse_expression(tokens)
+def _parse_array_comprehension(text: Slice)\
+        -> Tuple[ArrayComprehension, Slice]:
+    _, text = _parse_keyword(text, EACH)
+    all_expression, text = _parse_expression(text)
+    _, text = _parse_keyword(text, FOR)
+    for_expression, text = _parse_expression(text)
+    _, text = _parse_keyword(text, IN)
+    in_expression, text = _parse_expression(text)
     if_expression = None
-    if tokens.do_match(TokenType.IF):
-        tokens.parse(TokenType.IF)
-        if_expression, tokens = parse_expression(tokens)
+    if text.startswith(IF):
+        _, text = _parse_keyword(text, IF)
+        if_expression, text = _parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
-                               if_expression=if_expression), tokens)
+                               if_expression=if_expression), text)
 
 
-def parse_expression(tokens: TokenSlice) -> Tuple[Expression, TokenSlice]:
-    parser_from_token = {
-        TokenType.NUMBER: _parse_number,
-        TokenType.STRING: _parse_string,
-        TokenType.IF: _parse_conditional,
-        TokenType.EACH: _parse_array_comprehension,
-        TokenType.FROM: _parse_function,
-        TokenType.SYMBOL: _parse_lookup,
-        TokenType.ARRAY_BEGIN: _parse_array,
-        TokenType.DICTIONARY_BEGIN: _parse_dictionary,
-    }
-    next_token = tokens[0]
+def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
+    text = _parse_optional_white_space(text)
     try:
-        parser = parser_from_token[next_token.type]
-        return parser(tokens)
+        for sequence, parser in _PARSE_TABLE:
+            if text.startswith(sequence):
+                return parser(text)
     except KeyError:
-        raise ValueError('Bad token pattern: {}'.format(next_token.value))
+        raise ValueError('Bad token pattern: {}'.format(text[0]))
+
+
+def _make_parse_table()\
+        -> Sequence[Tuple[str, Callable[[Slice], Tuple[Any, Slice]]]]:
+    parser_from_token = [
+        (ARRAY_BEGIN, _parse_array),
+        (DICTIONARY_BEGIN, _parse_dictionary),
+        (IF, _parse_conditional),
+        (EACH, _parse_array_comprehension),
+        (FROM, _parse_function),
+        (STRING_BEGIN, _parse_string),
+    ]
+    for char in DIGITS:
+        parser_from_token.append((char, _parse_number))
+    for char in LETTERS:
+        parser_from_token.append((char, _parse_lookup))
+    return parser_from_token
+
+
+_PARSE_TABLE = _make_parse_table()
