@@ -229,30 +229,24 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
     _, text = FixedParser(TokenType.ARRAY_BEGIN)(text)
-    text = _parse_optional_white_space(text)
     while not text.startswith(TokenType.ARRAY_END.value):
         expression, text = parse_expression(text)
         expressions += (expression,)
         if text.startswith(TokenType.COMMA.value):
             _, text = FixedParser(TokenType.COMMA)(text)
-            text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.ARRAY_END)(text)
-    text = _parse_optional_white_space(text)
     return Array(expressions=expressions), text
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
     _, text = FixedParser(TokenType.DICTIONARY_BEGIN)(text)
-    text = _parse_optional_white_space(text)
     while not text.startswith(TokenType.DICTIONARY_END.value):
         variable_definition, text = _parse_variable_definition(text)
         variable_definitions.append(variable_definition)
         if text.startswith(TokenType.COMMA.value):
             _, text = FixedParser(TokenType.COMMA)(text)
-            text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.DICTIONARY_END)(text)
-    text = _parse_optional_white_space(text)
     return Dictionary(expressions=variable_definitions), text
 
 
@@ -264,7 +258,6 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     if not text.startswith(TokenType.OF.value):
         return Lookup(left=left, right=None), text
     _, text = FixedParser(TokenType.OF)(text)
-    text = _parse_optional_white_space(text)
     right, text = parse_expression(text)
     return Lookup(left=left, right=right), text
 
@@ -274,32 +267,26 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     name = value
     text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.EQUAL)(text)
-    text = _parse_optional_white_space(text)
     expression, text = parse_expression(text)
     return VariableDefinition(name=name, expression=expression), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     _, text = FixedParser(TokenType.FROM)(text)
-    text = _parse_optional_white_space(text)
     value, text = parse_symbol(text)
     argument_name = value
     text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.TO)(text)
-    text = _parse_optional_white_space(text)
     expression, text = parse_expression(text)
     return Function(argument_name=argument_name, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
     _, text = FixedParser(TokenType.IF)(text)
-    text = _parse_optional_white_space(text)
     condition, text = parse_expression(text)
     _, text = FixedParser(TokenType.THEN)(text)
-    text = _parse_optional_white_space(text)
     then_expression, text = parse_expression(text)
     _, text = FixedParser(TokenType.ELSE)(text)
-    text = _parse_optional_white_space(text)
     else_expression, text = parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), text)
@@ -308,18 +295,14 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
     _, text = FixedParser(TokenType.EACH)(text)
-    text = _parse_optional_white_space(text)
     all_expression, text = parse_expression(text)
     _, text = FixedParser(TokenType.FOR)(text)
-    text = _parse_optional_white_space(text)
     for_expression, text = parse_expression(text)
     _, text = FixedParser(TokenType.IN)(text)
-    text = _parse_optional_white_space(text)
     in_expression, text = parse_expression(text)
     if_expression = None
     if text.startswith(TokenType.IF.value):
         _, text = FixedParser(TokenType.IF)(text)
-        text = _parse_optional_white_space(text)
         if_expression, text = parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
@@ -382,4 +365,5 @@ class FixedParser:
         value = ''
         for _ in self.token_type.value:
             value += text.pop()
+        text = _parse_optional_white_space(text)
         return (value, text)
