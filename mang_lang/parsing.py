@@ -71,7 +71,7 @@ def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
     _, text = _parse_sequence(text, ARRAY_BEGIN)
     while not text.startswith(ARRAY_END):
-        expression, text = parse_expression(text)
+        expression, text = _parse_expression(text)
         expressions += (expression,)
         if text.startswith(COMMA):
             _, text = _parse_sequence(text, COMMA)
@@ -97,7 +97,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     if not text.startswith(OF):
         return Lookup(left=left, right=None), text
     _, text = _parse_sequence(text, OF)
-    right, text = parse_expression(text)
+    right, text = _parse_expression(text)
     return Lookup(left=left, right=right), text
 
 
@@ -105,7 +105,7 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     value, text = _parse_symbol(text)
     name = value
     _, text = _parse_sequence(text, EQUAL)
-    expression, text = parse_expression(text)
+    expression, text = _parse_expression(text)
     return VariableDefinition(name=name, expression=expression), text
 
 
@@ -114,17 +114,17 @@ def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     value, text = _parse_symbol(text)
     argument_name = value
     _, text = _parse_sequence(text, TO)
-    expression, text = parse_expression(text)
+    expression, text = _parse_expression(text)
     return Function(argument_name=argument_name, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
     _, text = _parse_sequence(text, IF)
-    condition, text = parse_expression(text)
+    condition, text = _parse_expression(text)
     _, text = _parse_sequence(text, THEN)
-    then_expression, text = parse_expression(text)
+    then_expression, text = _parse_expression(text)
     _, text = _parse_sequence(text, ELSE)
-    else_expression, text = parse_expression(text)
+    else_expression, text = _parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), text)
 
@@ -132,15 +132,15 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
     _, text = _parse_sequence(text, EACH)
-    all_expression, text = parse_expression(text)
+    all_expression, text = _parse_expression(text)
     _, text = _parse_sequence(text, FOR)
-    for_expression, text = parse_expression(text)
+    for_expression, text = _parse_expression(text)
     _, text = _parse_sequence(text, IN)
-    in_expression, text = parse_expression(text)
+    in_expression, text = _parse_expression(text)
     if_expression = None
     if text.startswith(IF):
         _, text = _parse_sequence(text, IF)
-        if_expression, text = parse_expression(text)
+        if_expression, text = _parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
@@ -162,7 +162,7 @@ for char in '+-.1234567890':
 for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
     parser_from_token[char] = _parse_lookup
 
-def parse_expression(text: Slice) -> Tuple[Expression, Slice]:
+def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
     text = _parse_optional_white_space(text)
     try:
         for sequence, parser in parser_from_token.items():
@@ -174,4 +174,4 @@ def parse_expression(text: Slice) -> Tuple[Expression, Slice]:
 
 def parse(code: str) -> Expression:
     text = Slice(code)
-    return parse_expression(text)[0]
+    return _parse_expression(text)[0]
