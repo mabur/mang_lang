@@ -184,6 +184,23 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
+ARRAY_BEGIN = "["
+ARRAY_END = "]"
+DICTIONARY_BEGIN = "{"
+DICTIONARY_END = "}"
+EQUAL = "="
+COMMA = ","
+IF = "if "
+THEN = "then "
+ELSE = "else "
+EACH = "each "
+FOR = "for "
+IN = "in "
+FROM = "from "
+TO = "to "
+OF = "of "
+
+
 def _parse_sequence(text: Slice, sequence) -> Tuple[str, Slice]:
     value = ''
     for _ in sequence:
@@ -231,34 +248,34 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
 
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
-    _, text = _parse_sequence(text, TokenType.ARRAY_BEGIN.value)
-    while not text.startswith(TokenType.ARRAY_END.value):
+    _, text = _parse_sequence(text, ARRAY_BEGIN)
+    while not text.startswith(ARRAY_END):
         expression, text = parse_expression(text)
         expressions += (expression,)
-        if text.startswith(TokenType.COMMA.value):
-            _, text = _parse_sequence(text, TokenType.COMMA.value)
-    _, text = _parse_sequence(text, TokenType.ARRAY_END.value)
+        if text.startswith(COMMA):
+            _, text = _parse_sequence(text, COMMA)
+    _, text = _parse_sequence(text, ARRAY_END)
     return Array(expressions=expressions), text
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
-    _, text = _parse_sequence(text, TokenType.DICTIONARY_BEGIN.value)
-    while not text.startswith(TokenType.DICTIONARY_END.value):
+    _, text = _parse_sequence(text, DICTIONARY_BEGIN)
+    while not text.startswith(DICTIONARY_END):
         variable_definition, text = _parse_variable_definition(text)
         variable_definitions.append(variable_definition)
-        if text.startswith(TokenType.COMMA.value):
-            _, text = _parse_sequence(text, TokenType.COMMA.value)
-    _, text = _parse_sequence(text, TokenType.DICTIONARY_END.value)
+        if text.startswith(COMMA):
+            _, text = _parse_sequence(text, COMMA)
+    _, text = _parse_sequence(text, DICTIONARY_END)
     return Dictionary(expressions=variable_definitions), text
 
 
 def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     value, text = _parse_symbol(text)
     left = value
-    if not text.startswith(TokenType.OF.value):
+    if not text.startswith(OF):
         return Lookup(left=left, right=None), text
-    _, text = _parse_sequence(text, TokenType.OF.value)
+    _, text = _parse_sequence(text, OF)
     right, text = parse_expression(text)
     return Lookup(left=left, right=right), text
 
@@ -266,26 +283,26 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     value, text = _parse_symbol(text)
     name = value
-    _, text = _parse_sequence(text, TokenType.EQUAL.value)
+    _, text = _parse_sequence(text, EQUAL)
     expression, text = parse_expression(text)
     return VariableDefinition(name=name, expression=expression), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
-    _, text = _parse_sequence(text, TokenType.FROM.value)
+    _, text = _parse_sequence(text, FROM)
     value, text = _parse_symbol(text)
     argument_name = value
-    _, text = _parse_sequence(text, TokenType.TO.value)
+    _, text = _parse_sequence(text, TO)
     expression, text = parse_expression(text)
     return Function(argument_name=argument_name, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
-    _, text = _parse_sequence(text, TokenType.IF.value)
+    _, text = _parse_sequence(text, IF)
     condition, text = parse_expression(text)
-    _, text = _parse_sequence(text, TokenType.THEN.value)
+    _, text = _parse_sequence(text, THEN)
     then_expression, text = parse_expression(text)
-    _, text = _parse_sequence(text, TokenType.ELSE.value)
+    _, text = _parse_sequence(text, ELSE)
     else_expression, text = parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), text)
@@ -293,15 +310,15 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
 
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
-    _, text = _parse_sequence(text, TokenType.EACH.value)
+    _, text = _parse_sequence(text, EACH)
     all_expression, text = parse_expression(text)
-    _, text = _parse_sequence(text, TokenType.FOR.value)
+    _, text = _parse_sequence(text, FOR)
     for_expression, text = parse_expression(text)
-    _, text = _parse_sequence(text, TokenType.IN.value)
+    _, text = _parse_sequence(text, IN)
     in_expression, text = parse_expression(text)
     if_expression = None
-    if text.startswith(TokenType.IF.value):
-        _, text = _parse_sequence(text, TokenType.IF.value)
+    if text.startswith(IF):
+        _, text = _parse_sequence(text, IF)
         if_expression, text = parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
@@ -336,21 +353,3 @@ def parse_expression(slice: Slice) -> Tuple[Expression, Slice]:
 def lex_and_parse(code: str) -> Expression:
     expression, _ = parse_expression(_parse_optional_white_space(Slice(code)))
     return expression
-
-
-class TokenType(Enum):
-    ARRAY_BEGIN = "["
-    ARRAY_END = "]"
-    DICTIONARY_BEGIN = "{"
-    DICTIONARY_END = "}"
-    EQUAL = "="
-    COMMA = ","
-    IF = "if "
-    THEN = "then "
-    ELSE = "else "
-    EACH = "each "
-    FOR = "for "
-    IN = "in "
-    FROM = "from "
-    TO = "to "
-    OF = "of "
