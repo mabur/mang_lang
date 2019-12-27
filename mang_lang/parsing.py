@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
@@ -151,26 +151,30 @@ def _parse_array_comprehension(text: Slice)\
                                if_expression=if_expression), text)
 
 
-_parser_from_token = {
-    ARRAY_BEGIN: _parse_array,
-    DICTIONARY_BEGIN: _parse_dictionary,
-    IF: _parse_conditional,
-    EACH: _parse_array_comprehension,
-    FROM: _parse_function,
-    STRING_BEGIN: _parse_string,
-}
+def _make_parse_table()\
+        -> Sequence[Tuple[str, Callable[[Slice], Tuple[Any, Slice]]]]:
+    parser_from_token = [
+        (ARRAY_BEGIN, _parse_array),
+        (DICTIONARY_BEGIN, _parse_dictionary),
+        (IF, _parse_conditional),
+        (EACH, _parse_array_comprehension),
+        (FROM, _parse_function),
+        (STRING_BEGIN, _parse_string),
+    ]
+    for char in DIGITS:
+        parser_from_token.append((char, _parse_number))
+    for char in LETTERS:
+        parser_from_token.append((char, _parse_lookup))
+    return parser_from_token
 
-for char in DIGITS:
-    _parser_from_token[char] = _parse_number
 
-for char in LETTERS:
-    _parser_from_token[char] = _parse_lookup
+_PARSE_TABLE = _make_parse_table()
 
 
 def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
     text = _parse_optional_white_space(text)
     try:
-        for sequence, parser in _parser_from_token.items():
+        for sequence, parser in _PARSE_TABLE:
             if text.startswith(sequence):
                 return parser(text)
     except KeyError:
