@@ -57,8 +57,10 @@ WHITESPACE = ' \n'
 
 def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
     value = ''
-    for _ in keyword:
-        value += text.pop()
+    for expected in keyword:
+        actual = text.pop()
+        assert expected == actual
+        value += actual
     text = _parse_optional_white_space(text)
     return value, text
 
