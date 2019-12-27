@@ -2,7 +2,7 @@ from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
-from slice import Slice
+
 
 ARRAY_BEGIN = "["
 ARRAY_END = "]"
@@ -25,6 +25,29 @@ STRING_END = "\""
 DIGITS = '+-.1234567890'
 LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 WHITESPACE = ' \n'
+
+
+class Slice:
+    def __init__(self, elements: str, begin_index=0):
+        self._elements = elements
+        self._begin_index = begin_index
+
+    def __getitem__(self, item):
+        return self._elements[self._begin_index + item]
+
+    def __len__(self):
+        return len(self._elements) - self._begin_index
+
+    def pop(self):
+        value = self[0]
+        self._begin_index += 1
+        return value
+
+    def front(self):
+        return self[0]
+
+    def startswith(self, word: str) -> bool:
+        return self._elements.startswith(word, self._begin_index)
 
 
 def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
