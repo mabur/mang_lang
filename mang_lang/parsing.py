@@ -1,9 +1,8 @@
 from copy import deepcopy
-from typing import Any, Callable, Mapping, MutableMapping, Sequence, Optional,\
+from typing import Any, Mapping, MutableMapping, Sequence, Optional,\
     Tuple, Union
-from lexing import TokenType, lexer
+from lexing import TokenType
 from slice import Slice
-from token_slice import TokenSlice
 import lexing
 
 Environment = MutableMapping[str, Any]
@@ -185,82 +184,75 @@ class ArrayComprehension(Expression):
             result.append(y)
         return Array(result)
 
-def _make_token_slice(slice) -> TokenSlice:
-    return TokenSlice(lexer(slice))
-
 def _parse_optional_white_space(slice: Slice) -> Slice:
     while slice and (slice.front() == ' ' or slice.front() == '\n'):
         slice.pop()
     return slice
 
-def _parse_number(slice: Slice) -> Tuple[Number, TokenSlice]:
+def _parse_number(slice: Slice) -> Tuple[Number, Slice]:
     token, slice = lexing.parse_number(slice)
-    return (Number(token.value), _make_token_slice(slice))
+    return (Number(token.value), slice)
 
 
-def _parse_string(slice: Slice) -> Tuple[String, TokenSlice]:
+def _parse_string(slice: Slice) -> Tuple[String, Slice]:
     token, slice = lexing.parse_string(slice)
-    return (String(token.value), _make_token_slice(slice))
+    return (String(token.value), slice)
 
 
-def _parse_array(slice: Slice) -> Tuple[Array, TokenSlice]:
+def _parse_array(slice: Slice) -> Tuple[Array, Slice]:
     expressions = ()
     _, slice = lexing.FixedParser(TokenType.ARRAY_BEGIN)(slice)
     slice = _parse_optional_white_space(slice)
     while not slice.startswith(TokenType.ARRAY_END.value):
-        expression, tokens = parse_expression(slice)
-        slice = tokens.as_string()
+        expression, slice = parse_expression(slice)
         expressions += (expression,)
         if slice.startswith(TokenType.COMMA.value):
             _, slice = lexing.FixedParser(TokenType.COMMA)(slice)
             slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.ARRAY_END)(slice)
     slice = _parse_optional_white_space(slice)
-    tokens = TokenSlice(lexer(slice))
-    return (Array(expressions=expressions), tokens)
+    return (Array(expressions=expressions), slice)
 
 
-def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, TokenSlice]:
+def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
     _, slice = lexing.FixedParser(TokenType.DICTIONARY_BEGIN)(slice)
     slice = _parse_optional_white_space(slice)
     while not slice.startswith(TokenType.DICTIONARY_END.value):
-        variable_definition, tokens = _parse_variable_definition(slice)
-        slice = tokens.as_string()
+        variable_definition, slice = _parse_variable_definition(slice)
         variable_definitions.append(variable_definition)
         if slice.startswith(TokenType.COMMA.value):
             _, slice = lexing.FixedParser(TokenType.COMMA)(slice)
             slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.DICTIONARY_END)(slice)
     slice = _parse_optional_white_space(slice)
-    tokens = TokenSlice(lexer(slice))
-    return (Dictionary(expressions=variable_definitions), tokens)
+    return (Dictionary(expressions=variable_definitions), slice)
 
 
-def _parse_lookup(slice: Slice) -> Tuple[Lookup, TokenSlice]:
+def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
     slice = _parse_optional_white_space(slice)
     token, slice = lexing.parse_symbol(slice)
     slice = _parse_optional_white_space(slice)
     left = token.value
     if not slice.startswith(TokenType.OF.value):
-        return (Lookup(left=left, right=None), _make_token_slice(slice))
+        return (Lookup(left=left, right=None), slice)
     token, slice = lexing.FixedParser(TokenType.OF)(slice)
     slice = _parse_optional_white_space(slice)
-    right, tokens = parse_expression(slice)
-    return (Lookup(left=left, right=right), tokens)
+    right, slice = parse_expression(slice)
+    return (Lookup(left=left, right=right), slice)
 
 
-def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, TokenSlice]:
+def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, Slice]:
     token, slice = lexing.parse_symbol(slice)
     name = token.value
     slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.EQUAL)(slice)
     slice = _parse_optional_white_space(slice)
-    expression, tokens = parse_expression(slice)
-    return (VariableDefinition(name=name, expression=expression), tokens)
+    expression, slice = parse_expression(slice)
+    return (VariableDefinition(name=name, expression=expression), slice)
 
 
-def _parse_function(slice: Slice) -> Tuple[Function, TokenSlice]:
+def _parse_function(slice: Slice) -> Tuple[Function, Slice]:
     _, slice = lexing.FixedParser(TokenType.FROM)(slice)
     slice = _parse_optional_white_space(slice)
     token, slice = lexing.parse_symbol(slice)
@@ -268,50 +260,45 @@ def _parse_function(slice: Slice) -> Tuple[Function, TokenSlice]:
     slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.TO)(slice)
     slice = _parse_optional_white_space(slice)
-    expression, tokens = parse_expression(slice)
+    expression, slice = parse_expression(slice)
     return (Function(argument_name=argument_name,
-                     expression=expression), tokens)
+                     expression=expression), slice)
 
 
-def _parse_conditional(slice: Slice) -> Tuple[Conditional, TokenSlice]:
+def _parse_conditional(slice: Slice) -> Tuple[Conditional, Slice]:
     _, slice = lexing.FixedParser(TokenType.IF)(slice)
     slice = _parse_optional_white_space(slice)
-    condition, tokens = parse_expression(slice)
-    slice = tokens.as_string()
+    condition, slice = parse_expression(slice)
     _, slice = lexing.FixedParser(TokenType.THEN)(slice)
     slice = _parse_optional_white_space(slice)
-    then_expression, tokens = parse_expression(slice)
-    slice = tokens.as_string()
+    then_expression, slice = parse_expression(slice)
     _, slice = lexing.FixedParser(TokenType.ELSE)(slice)
     slice = _parse_optional_white_space(slice)
-    else_expression, tokens = parse_expression(slice)
+    else_expression, slice = parse_expression(slice)
     return (Conditional(condition=condition, then_expression=then_expression,
-                        else_expression=else_expression), tokens)
+                        else_expression=else_expression), slice)
 
 
 def _parse_array_comprehension(slice: Slice)\
-        -> Tuple[ArrayComprehension, TokenSlice]:
+        -> Tuple[ArrayComprehension, Slice]:
     _, slice = lexing.FixedParser(TokenType.EACH)(slice)
     slice = _parse_optional_white_space(slice)
-    all_expression, tokens = parse_expression(slice)
-    slice = tokens.as_string()
+    all_expression, slice = parse_expression(slice)
     _, slice = lexing.FixedParser(TokenType.FOR)(slice)
     slice = _parse_optional_white_space(slice)
-    for_expression, tokens = parse_expression(slice)
-    slice = tokens.as_string()
+    for_expression, slice = parse_expression(slice)
     _, slice = lexing.FixedParser(TokenType.IN)(slice)
     slice = _parse_optional_white_space(slice)
-    in_expression, tokens = parse_expression(slice)
-    slice = tokens.as_string()
+    in_expression, slice = parse_expression(slice)
     if_expression = None
     if slice.startswith(TokenType.IF.value):
         _, slice = lexing.FixedParser(TokenType.IF)(slice)
         slice = _parse_optional_white_space(slice)
-        if_expression, tokens = parse_expression(slice)
+        if_expression, slice = parse_expression(slice)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
-                               if_expression=if_expression), tokens)
+                               if_expression=if_expression), slice)
 
 
 parser_from_token = {
@@ -329,7 +316,7 @@ for char in '+-.1234567890':
 for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
     parser_from_token[char] = _parse_lookup
 
-def parse_expression(slice: Slice) -> Tuple[Expression, TokenSlice]:
+def parse_expression(slice: Slice) -> Tuple[Expression, Slice]:
     try:
         for sequence, parser in parser_from_token.items():
             if slice.startswith(sequence):
