@@ -314,24 +314,28 @@ def _parse_array_comprehension(slice: Slice)\
                                if_expression=if_expression), tokens)
 
 
-def parse_expression(code: Slice) -> Tuple[Expression, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    parser_from_token = {
-        TokenType.NUMBER: _parse_number,
-        TokenType.STRING: _parse_string,
-        TokenType.IF: _parse_conditional,
-        TokenType.EACH: _parse_array_comprehension,
-        TokenType.FROM: _parse_function,
-        TokenType.SYMBOL: _parse_lookup,
-        TokenType.ARRAY_BEGIN: _parse_array,
-        TokenType.DICTIONARY_BEGIN: _parse_dictionary,
-    }
-    next_token = tokens[0]
+parser_from_token = {
+    "[": _parse_array,
+    "{": _parse_dictionary,
+    "if ": _parse_conditional,
+    "each ": _parse_array_comprehension,
+    "from ": _parse_function,
+    "\"": _parse_string,
+}
+
+for char in '+-.1234567890':
+    parser_from_token[char] = _parse_number
+
+for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
+    parser_from_token[char] = _parse_lookup
+
+def parse_expression(slice: Slice) -> Tuple[Expression, TokenSlice]:
     try:
-        parser = parser_from_token[next_token.type]
-        return parser(code)
+        for sequence, parser in parser_from_token.items():
+            if slice.startswith(sequence):
+                return parser(slice)
     except KeyError:
-        raise ValueError('Bad token pattern: {}'.format(next_token.value))
+        raise ValueError('Bad token pattern: {}'.format(slice[0]))
 
 
 def lex_and_parse(code: str) -> Expression:
