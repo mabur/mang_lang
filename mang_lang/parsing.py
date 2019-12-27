@@ -172,6 +172,6 @@ def parse_expression(text: Slice) -> Tuple[Expression, Slice]:
         raise ValueError('Bad token pattern: {}'.format(text[0]))
 
 
-def lex_and_parse(code: str) -> Expression:
+def parse(code: str) -> Expression:
     text = Slice(code)
     return parse_expression(text)[0]

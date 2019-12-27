@@ -1,6 +1,6 @@
 from typing import Union
 
-from parsing import lex_and_parse
+from parsing import parse
 from ast import Array, Number, String
 
 
@@ -125,7 +125,7 @@ def _read_text_file(file_path: str) -> str:
 
 def _import(x: String):
     code = _read_text_file(x.value)
-    expression = lex_and_parse(code)
+    expression = parse(code)
     environment = {}
     return expression.evaluate(environment)
 
