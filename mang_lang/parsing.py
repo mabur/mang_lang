@@ -189,7 +189,7 @@ def _make_token_slice(slice) -> TokenSlice:
     return TokenSlice(lexer(slice))
 
 def _parse_optional_white_space(slice: Slice) -> Slice:
-    while slice.front() == ' ' or slice.front() == '\n':
+    while slice and (slice.front() == ' ' or slice.front() == '\n'):
         slice.pop()
     return slice
 
@@ -203,16 +203,20 @@ def _parse_string(slice: Slice) -> Tuple[String, TokenSlice]:
     return (String(token.value), _make_token_slice(slice))
 
 
-def _parse_array(code: Slice) -> Tuple[Array, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
+def _parse_array(slice: Slice) -> Tuple[Array, TokenSlice]:
     expressions = ()
-    tokens.parse(TokenType.ARRAY_BEGIN)
-    while not tokens.do_match(TokenType.ARRAY_END):
-        expression, tokens = parse_expression(tokens.as_string())
+    _, slice = lexing.FixedParser(TokenType.ARRAY_BEGIN)(slice)
+    slice = _parse_optional_white_space(slice)
+    while not slice.startswith(TokenType.ARRAY_END.value):
+        expression, tokens = parse_expression(slice)
+        slice = tokens.as_string()
         expressions += (expression,)
-        if tokens.do_match(TokenType.COMMA):
-            tokens.parse(TokenType.COMMA)
-    tokens.parse(TokenType.ARRAY_END)
+        if slice.startswith(TokenType.COMMA.value):
+            _, slice = lexing.FixedParser(TokenType.COMMA)(slice)
+            slice = _parse_optional_white_space(slice)
+    _, slice = lexing.FixedParser(TokenType.ARRAY_END)(slice)
+    slice = _parse_optional_white_space(slice)
+    tokens = TokenSlice(lexer(slice))
     return (Array(expressions=expressions), tokens)
 
 
