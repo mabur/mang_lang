@@ -173,5 +173,5 @@ def parse_expression(text: Slice) -> Tuple[Expression, Slice]:
 
 
 def lex_and_parse(code: str) -> Expression:
-    expression, _ = parse_expression(Slice(code))
-    return expression
+    text = Slice(code)
+    return parse_expression(text)[0]
