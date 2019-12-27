@@ -199,6 +199,8 @@ IN = "in "
 FROM = "from "
 TO = "to "
 OF = "of "
+STRING_BEGIN = "\""
+STRING_END = "\""
 
 
 def _parse_sequence(text: Slice, sequence) -> Tuple[str, Slice]:
@@ -236,10 +238,9 @@ def _parse_number(text: Slice) -> Tuple[Number, Slice]:
 
 
 def _parse_string(text: Slice) -> Tuple[String, Slice]:
-    assert text.front() == '\"'
-    value = ''
-    value += text.pop()
-    body, text = _parse_while(text, lambda c: c != '\"')
+    assert text.front() == STRING_BEGIN
+    value = text.pop()
+    body, text = _parse_while(text, lambda c: c != STRING_END)
     value += body
     value += text.pop()
     text = _parse_optional_white_space(text)
@@ -327,12 +328,12 @@ def _parse_array_comprehension(text: Slice)\
 
 
 parser_from_token = {
-    "[": _parse_array,
-    "{": _parse_dictionary,
-    "if ": _parse_conditional,
-    "each ": _parse_array_comprehension,
-    "from ": _parse_function,
-    "\"": _parse_string,
+    ARRAY_BEGIN: _parse_array,
+    DICTIONARY_BEGIN: _parse_dictionary,
+    IF: _parse_conditional,
+    EACH: _parse_array_comprehension,
+    FROM: _parse_function,
+    STRING_BEGIN: _parse_string,
 }
 
 for char in '+-.1234567890':
