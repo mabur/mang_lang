@@ -4,29 +4,6 @@ from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
 
 
-ARRAY_BEGIN = "["
-ARRAY_END = "]"
-DICTIONARY_BEGIN = "{"
-DICTIONARY_END = "}"
-EQUAL = "="
-COMMA = ","
-IF = "if "
-THEN = "then "
-ELSE = "else "
-EACH = "each "
-FOR = "for "
-IN = "in "
-FROM = "from "
-TO = "to "
-OF = "of "
-STRING_BEGIN = "\""
-STRING_END = "\""
-
-DIGITS = '+-.1234567890'
-LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
-WHITESPACE = ' \n'
-
-
 class Slice:
     def __init__(self, elements: str, begin_index=0):
         self._elements = elements
@@ -48,6 +25,34 @@ class Slice:
 
     def startswith(self, word: str) -> bool:
         return self._elements.startswith(word, self._begin_index)
+
+
+def parse(code: str) -> Expression:
+    text = Slice(code)
+    return _parse_expression(text)[0]
+
+
+ARRAY_BEGIN = "["
+ARRAY_END = "]"
+DICTIONARY_BEGIN = "{"
+DICTIONARY_END = "}"
+EQUAL = "="
+COMMA = ","
+IF = "if "
+THEN = "then "
+ELSE = "else "
+EACH = "each "
+FOR = "for "
+IN = "in "
+FROM = "from "
+TO = "to "
+OF = "of "
+STRING_BEGIN = "\""
+STRING_END = "\""
+
+DIGITS = '+-.1234567890'
+LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
+WHITESPACE = ' \n'
 
 
 def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
@@ -174,6 +179,16 @@ def _parse_array_comprehension(text: Slice)\
                                if_expression=if_expression), text)
 
 
+def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
+    text = _parse_optional_white_space(text)
+    try:
+        for sequence, parser in _PARSE_TABLE:
+            if text.startswith(sequence):
+                return parser(text)
+    except KeyError:
+        raise ValueError('Bad token pattern: {}'.format(text[0]))
+
+
 def _make_parse_table()\
         -> Sequence[Tuple[str, Callable[[Slice], Tuple[Any, Slice]]]]:
     parser_from_token = [
@@ -192,18 +207,3 @@ def _make_parse_table()\
 
 
 _PARSE_TABLE = _make_parse_table()
-
-
-def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
-    text = _parse_optional_white_space(text)
-    try:
-        for sequence, parser in _PARSE_TABLE:
-            if text.startswith(sequence):
-                return parser(text)
-    except KeyError:
-        raise ValueError('Bad token pattern: {}'.format(text[0]))
-
-
-def parse(code: str) -> Expression:
-    text = Slice(code)
-    return _parse_expression(text)[0]
