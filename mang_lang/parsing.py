@@ -92,8 +92,7 @@ def _parse_number(text: Slice) -> Tuple[Number, Slice]:
 
 
 def _parse_string(text: Slice) -> Tuple[String, Slice]:
-    assert text.front() == STRING_BEGIN
-    value = text.pop()
+    value, text = _parse_keyword(text, STRING_BEGIN)
     body, text = _parse_while(text, lambda c: c != STRING_END)
     value += body
     value += text.pop()
