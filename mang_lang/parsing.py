@@ -162,15 +162,16 @@ for char in '+-.1234567890':
 for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
     parser_from_token[char] = _parse_lookup
 
-def parse_expression(slice: Slice) -> Tuple[Expression, Slice]:
+def parse_expression(text: Slice) -> Tuple[Expression, Slice]:
+    text = _parse_optional_white_space(text)
     try:
         for sequence, parser in parser_from_token.items():
-            if slice.startswith(sequence):
-                return parser(slice)
+            if text.startswith(sequence):
+                return parser(text)
     except KeyError:
-        raise ValueError('Bad token pattern: {}'.format(slice[0]))
+        raise ValueError('Bad token pattern: {}'.format(text[0]))
 
 
 def lex_and_parse(code: str) -> Expression:
-    expression, _ = parse_expression(_parse_optional_white_space(Slice(code)))
+    expression, _ = parse_expression(Slice(code))
     return expression
