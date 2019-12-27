@@ -183,146 +183,149 @@ class ArrayComprehension(Expression):
             result.append(y)
         return Array(result)
 
-def parse_string(slice: Slice) -> Tuple[str, Slice]:
-    assert slice.front() == '\"'
+
+def parse_string(text: Slice) -> Tuple[str, Slice]:
+    assert text.front() == '\"'
     value = ''
-    value += slice.pop()
-    while slice and slice.front() != '\"':
-        value += slice.pop()
-    value += slice.pop()
-    return (value, slice)
+    value += text.pop()
+    while text and text.front() != '\"':
+        value += text.pop()
+    value += text.pop()
+    return (value, text)
 
 
-def parse_number(slice: Slice) -> Tuple[str, Slice]:
+def parse_number(text: Slice) -> Tuple[str, Slice]:
     value = ''
-    while slice and slice.front() in '-+.1234567890':
-        value += slice.pop()
+    while text and text.front() in '-+.1234567890':
+        value += text.pop()
     assert value
-    return (value, slice)
+    return (value, text)
 
 
-def parse_symbol(slice: Slice) -> Tuple[str, Slice]:
+def parse_symbol(text: Slice) -> Tuple[str, Slice]:
     value = ''
-    while slice and (slice.front().isalnum() or slice.front() == '_'):
-        value += slice.pop()
+    while text and (text.front().isalnum() or text.front() == '_'):
+        value += text.pop()
     assert value
-    return (value, slice)
-
-def _parse_optional_white_space(slice: Slice) -> Slice:
-    while slice and (slice.front() == ' ' or slice.front() == '\n'):
-        slice.pop()
-    return slice
-
-def _parse_number(slice: Slice) -> Tuple[Number, Slice]:
-    value, slice = parse_number(slice)
-    return (Number(value), slice)
+    return (value, text)
 
 
-def _parse_string(slice: Slice) -> Tuple[String, Slice]:
-    value, slice = parse_string(slice)
-    return (String(value), slice)
+def _parse_optional_white_space(text: Slice) -> Slice:
+    while text and (text.front() == ' ' or text.front() == '\n'):
+        text.pop()
+    return text
 
 
-def _parse_array(slice: Slice) -> Tuple[Array, Slice]:
+def _parse_number(text: Slice) -> Tuple[Number, Slice]:
+    value, text = parse_number(text)
+    return (Number(value), text)
+
+
+def _parse_string(text: Slice) -> Tuple[String, Slice]:
+    value, text = parse_string(text)
+    return (String(value), text)
+
+
+def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
-    _, slice = FixedParser(TokenType.ARRAY_BEGIN)(slice)
-    slice = _parse_optional_white_space(slice)
-    while not slice.startswith(TokenType.ARRAY_END.value):
-        expression, slice = parse_expression(slice)
+    _, text = FixedParser(TokenType.ARRAY_BEGIN)(text)
+    text = _parse_optional_white_space(text)
+    while not text.startswith(TokenType.ARRAY_END.value):
+        expression, text = parse_expression(text)
         expressions += (expression,)
-        if slice.startswith(TokenType.COMMA.value):
-            _, slice = FixedParser(TokenType.COMMA)(slice)
-            slice = _parse_optional_white_space(slice)
-    _, slice = FixedParser(TokenType.ARRAY_END)(slice)
-    slice = _parse_optional_white_space(slice)
-    return (Array(expressions=expressions), slice)
+        if text.startswith(TokenType.COMMA.value):
+            _, text = FixedParser(TokenType.COMMA)(text)
+            text = _parse_optional_white_space(text)
+    _, text = FixedParser(TokenType.ARRAY_END)(text)
+    text = _parse_optional_white_space(text)
+    return (Array(expressions=expressions), text)
 
 
-def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, Slice]:
+def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
-    _, slice = FixedParser(TokenType.DICTIONARY_BEGIN)(slice)
-    slice = _parse_optional_white_space(slice)
-    while not slice.startswith(TokenType.DICTIONARY_END.value):
-        variable_definition, slice = _parse_variable_definition(slice)
+    _, text = FixedParser(TokenType.DICTIONARY_BEGIN)(text)
+    text = _parse_optional_white_space(text)
+    while not text.startswith(TokenType.DICTIONARY_END.value):
+        variable_definition, text = _parse_variable_definition(text)
         variable_definitions.append(variable_definition)
-        if slice.startswith(TokenType.COMMA.value):
-            _, slice = FixedParser(TokenType.COMMA)(slice)
-            slice = _parse_optional_white_space(slice)
-    _, slice = FixedParser(TokenType.DICTIONARY_END)(slice)
-    slice = _parse_optional_white_space(slice)
-    return (Dictionary(expressions=variable_definitions), slice)
+        if text.startswith(TokenType.COMMA.value):
+            _, text = FixedParser(TokenType.COMMA)(text)
+            text = _parse_optional_white_space(text)
+    _, text = FixedParser(TokenType.DICTIONARY_END)(text)
+    text = _parse_optional_white_space(text)
+    return (Dictionary(expressions=variable_definitions), text)
 
 
-def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
-    slice = _parse_optional_white_space(slice)
-    value, slice = parse_symbol(slice)
-    slice = _parse_optional_white_space(slice)
+def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
+    text = _parse_optional_white_space(text)
+    value, text = parse_symbol(text)
+    text = _parse_optional_white_space(text)
     left = value
-    if not slice.startswith(TokenType.OF.value):
-        return (Lookup(left=left, right=None), slice)
-    _, slice = FixedParser(TokenType.OF)(slice)
-    slice = _parse_optional_white_space(slice)
-    right, slice = parse_expression(slice)
-    return (Lookup(left=left, right=right), slice)
+    if not text.startswith(TokenType.OF.value):
+        return (Lookup(left=left, right=None), text)
+    _, text = FixedParser(TokenType.OF)(text)
+    text = _parse_optional_white_space(text)
+    right, text = parse_expression(text)
+    return (Lookup(left=left, right=right), text)
 
 
-def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, Slice]:
-    value, slice = parse_symbol(slice)
+def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
+    value, text = parse_symbol(text)
     name = value
-    slice = _parse_optional_white_space(slice)
-    _, slice = FixedParser(TokenType.EQUAL)(slice)
-    slice = _parse_optional_white_space(slice)
-    expression, slice = parse_expression(slice)
-    return (VariableDefinition(name=name, expression=expression), slice)
+    text = _parse_optional_white_space(text)
+    _, text = FixedParser(TokenType.EQUAL)(text)
+    text = _parse_optional_white_space(text)
+    expression, text = parse_expression(text)
+    return (VariableDefinition(name=name, expression=expression), text)
 
 
-def _parse_function(slice: Slice) -> Tuple[Function, Slice]:
-    _, slice = FixedParser(TokenType.FROM)(slice)
-    slice = _parse_optional_white_space(slice)
-    value, slice = parse_symbol(slice)
+def _parse_function(text: Slice) -> Tuple[Function, Slice]:
+    _, text = FixedParser(TokenType.FROM)(text)
+    text = _parse_optional_white_space(text)
+    value, text = parse_symbol(text)
     argument_name = value
-    slice = _parse_optional_white_space(slice)
-    _, slice = FixedParser(TokenType.TO)(slice)
-    slice = _parse_optional_white_space(slice)
-    expression, slice = parse_expression(slice)
+    text = _parse_optional_white_space(text)
+    _, text = FixedParser(TokenType.TO)(text)
+    text = _parse_optional_white_space(text)
+    expression, text = parse_expression(text)
     return (Function(argument_name=argument_name,
-                     expression=expression), slice)
+                     expression=expression), text)
 
 
-def _parse_conditional(slice: Slice) -> Tuple[Conditional, Slice]:
-    _, slice = FixedParser(TokenType.IF)(slice)
-    slice = _parse_optional_white_space(slice)
-    condition, slice = parse_expression(slice)
-    _, slice = FixedParser(TokenType.THEN)(slice)
-    slice = _parse_optional_white_space(slice)
-    then_expression, slice = parse_expression(slice)
-    _, slice = FixedParser(TokenType.ELSE)(slice)
-    slice = _parse_optional_white_space(slice)
-    else_expression, slice = parse_expression(slice)
+def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
+    _, text = FixedParser(TokenType.IF)(text)
+    text = _parse_optional_white_space(text)
+    condition, text = parse_expression(text)
+    _, text = FixedParser(TokenType.THEN)(text)
+    text = _parse_optional_white_space(text)
+    then_expression, text = parse_expression(text)
+    _, text = FixedParser(TokenType.ELSE)(text)
+    text = _parse_optional_white_space(text)
+    else_expression, text = parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
-                        else_expression=else_expression), slice)
+                        else_expression=else_expression), text)
 
 
-def _parse_array_comprehension(slice: Slice)\
+def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
-    _, slice = FixedParser(TokenType.EACH)(slice)
-    slice = _parse_optional_white_space(slice)
-    all_expression, slice = parse_expression(slice)
-    _, slice = FixedParser(TokenType.FOR)(slice)
-    slice = _parse_optional_white_space(slice)
-    for_expression, slice = parse_expression(slice)
-    _, slice = FixedParser(TokenType.IN)(slice)
-    slice = _parse_optional_white_space(slice)
-    in_expression, slice = parse_expression(slice)
+    _, text = FixedParser(TokenType.EACH)(text)
+    text = _parse_optional_white_space(text)
+    all_expression, text = parse_expression(text)
+    _, text = FixedParser(TokenType.FOR)(text)
+    text = _parse_optional_white_space(text)
+    for_expression, text = parse_expression(text)
+    _, text = FixedParser(TokenType.IN)(text)
+    text = _parse_optional_white_space(text)
+    in_expression, text = parse_expression(text)
     if_expression = None
-    if slice.startswith(TokenType.IF.value):
-        _, slice = FixedParser(TokenType.IF)(slice)
-        slice = _parse_optional_white_space(slice)
-        if_expression, slice = parse_expression(slice)
+    if text.startswith(TokenType.IF.value):
+        _, text = FixedParser(TokenType.IF)(text)
+        text = _parse_optional_white_space(text)
+        if_expression, text = parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
-                               if_expression=if_expression), slice)
+                               if_expression=if_expression), text)
 
 
 parser_from_token = {
