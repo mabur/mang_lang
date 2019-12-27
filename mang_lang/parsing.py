@@ -22,6 +22,10 @@ OF = "of "
 STRING_BEGIN = "\""
 STRING_END = "\""
 
+DIGITS = '+-.1234567890'
+LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
+WHITESPACE = ' \n'
+
 
 def _parse_sequence(text: Slice, sequence) -> Tuple[str, Slice]:
     value = ''
@@ -39,19 +43,19 @@ def _parse_while(text: Slice, predicate) -> Tuple[str, Slice]:
 
 
 def _parse_optional_white_space(text: Slice) -> Slice:
-    value, text = _parse_while(text, lambda c: c == ' ' or c == '\n')
+    value, text = _parse_while(text, lambda c: c in WHITESPACE)
     return text
 
 
 def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
-    value, text = _parse_while(text, lambda c: c.isalnum() or c == '_')
+    value, text = _parse_while(text, lambda c: c in LETTERS)
     assert value
     text = _parse_optional_white_space(text)
     return value, text
 
 
 def _parse_number(text: Slice) -> Tuple[Number, Slice]:
-    value, text = _parse_while(text, lambda c: c in '-+.1234567890')
+    value, text = _parse_while(text, lambda c: c in DIGITS)
     assert value
     text = _parse_optional_white_space(text)
     return Number(value), text
@@ -156,10 +160,11 @@ parser_from_token = {
     STRING_BEGIN: _parse_string,
 }
 
-for char in '+-.1234567890':
+
+for char in DIGITS:
     parser_from_token[char] = _parse_number
 
-for char in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_':
+for char in LETTERS:
     parser_from_token[char] = _parse_lookup
 
 def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
