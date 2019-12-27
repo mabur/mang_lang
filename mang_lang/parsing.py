@@ -190,13 +190,13 @@ def _parse_optional_white_space(slice: Slice) -> Slice:
     return slice
 
 def _parse_number(slice: Slice) -> Tuple[Number, Slice]:
-    token, slice = lexing.parse_number(slice)
-    return (Number(token.value), slice)
+    value, slice = lexing.parse_number(slice)
+    return (Number(value), slice)
 
 
 def _parse_string(slice: Slice) -> Tuple[String, Slice]:
-    token, slice = lexing.parse_string(slice)
-    return (String(token.value), slice)
+    value, slice = lexing.parse_string(slice)
+    return (String(value), slice)
 
 
 def _parse_array(slice: Slice) -> Tuple[Array, Slice]:
@@ -231,9 +231,9 @@ def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, Slice]:
 
 def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
     slice = _parse_optional_white_space(slice)
-    token, slice = lexing.parse_symbol(slice)
+    value, slice = lexing.parse_symbol(slice)
     slice = _parse_optional_white_space(slice)
-    left = token.value
+    left = value
     if not slice.startswith(TokenType.OF.value):
         return (Lookup(left=left, right=None), slice)
     token, slice = lexing.FixedParser(TokenType.OF)(slice)
@@ -243,8 +243,8 @@ def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
 
 
 def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, Slice]:
-    token, slice = lexing.parse_symbol(slice)
-    name = token.value
+    value, slice = lexing.parse_symbol(slice)
+    name = value
     slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.EQUAL)(slice)
     slice = _parse_optional_white_space(slice)
@@ -255,8 +255,8 @@ def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, Slice]
 def _parse_function(slice: Slice) -> Tuple[Function, Slice]:
     _, slice = lexing.FixedParser(TokenType.FROM)(slice)
     slice = _parse_optional_white_space(slice)
-    token, slice = lexing.parse_symbol(slice)
-    argument_name = token.value
+    value, slice = lexing.parse_symbol(slice)
+    argument_name = value
     slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.TO)(slice)
     slice = _parse_optional_white_space(slice)

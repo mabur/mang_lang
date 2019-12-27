@@ -42,25 +42,25 @@ class FixedParser:
             value += slice.pop()
         return (Token(type=self.token_type, value=value), slice)
 
-def parse_string(slice: Slice) -> Tuple[Token, Slice]:
+def parse_string(slice: Slice) -> Tuple[str, Slice]:
     assert slice.front() == '\"'
     value = ''
     value += slice.pop()
     while slice and slice.front() != '\"':
         value += slice.pop()
     value += slice.pop()
-    return (Token(type=TokenType.STRING, value=value), slice)
+    return (value, slice)
 
-def parse_number(slice: Slice) -> Tuple[Token, Slice]:
+def parse_number(slice: Slice) -> Tuple[str, Slice]:
     value = ''
     while slice and slice.front() in '-+.1234567890':
         value += slice.pop()
     assert value
-    return (Token(type=TokenType.NUMBER, value=value), slice)
+    return (value, slice)
 
-def parse_symbol(slice: Slice) -> Tuple[Token, Slice]:
+def parse_symbol(slice: Slice) -> Tuple[str, Slice]:
     value = ''
     while slice and (slice.front().isalnum() or slice.front() == '_'):
         value += slice.pop()
     assert value
-    return (Token(type=TokenType.SYMBOL, value=value), slice)
+    return (value, slice)
