@@ -184,16 +184,6 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
-def parse_string(text: Slice) -> Tuple[str, Slice]:
-    assert text.front() == '\"'
-    value = ''
-    value += text.pop()
-    while text and text.front() != '\"':
-        value += text.pop()
-    value += text.pop()
-    return value, text
-
-
 def parse_number(text: Slice) -> Tuple[str, Slice]:
     value = ''
     while text and text.front() in '-+.1234567890':
@@ -222,7 +212,12 @@ def _parse_number(text: Slice) -> Tuple[Number, Slice]:
 
 
 def _parse_string(text: Slice) -> Tuple[String, Slice]:
-    value, text = parse_string(text)
+    assert text.front() == '\"'
+    value = ''
+    value += text.pop()
+    while text and text.front() != '\"':
+        value += text.pop()
+    value += text.pop()
     return String(value), text
 
 
