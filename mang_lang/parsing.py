@@ -184,7 +184,7 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
-def parse_symbol(text: Slice) -> Tuple[str, Slice]:
+def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
     value = ''
     while text and (text.front().isalnum() or text.front() == '_'):
         value += text.pop()
@@ -242,7 +242,7 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
 
 def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     text = _parse_optional_white_space(text)
-    value, text = parse_symbol(text)
+    value, text = _parse_symbol(text)
     text = _parse_optional_white_space(text)
     left = value
     if not text.startswith(TokenType.OF.value):
@@ -253,7 +253,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
 
 
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
-    value, text = parse_symbol(text)
+    value, text = _parse_symbol(text)
     name = value
     text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.EQUAL)(text)
@@ -263,7 +263,7 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     _, text = FixedParser(TokenType.FROM)(text)
-    value, text = parse_symbol(text)
+    value, text = _parse_symbol(text)
     argument_name = value
     text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.TO)(text)
