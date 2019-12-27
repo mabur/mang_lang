@@ -191,20 +191,22 @@ def _parse_while(text: Slice, predicate) -> Tuple[str, Slice]:
     return value, text
 
 
-def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
-    value, text = _parse_while(text, lambda c: c.isalnum() or c == '_')
-    assert value
-    return value, text
-
-
 def _parse_optional_white_space(text: Slice) -> Slice:
     value, text = _parse_while(text, lambda c: c == ' ' or c == '\n')
     return text
 
 
+def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
+    value, text = _parse_while(text, lambda c: c.isalnum() or c == '_')
+    assert value
+    text = _parse_optional_white_space(text)
+    return value, text
+
+
 def _parse_number(text: Slice) -> Tuple[Number, Slice]:
     value, text = _parse_while(text, lambda c: c in '-+.1234567890')
     assert value
+    text = _parse_optional_white_space(text)
     return Number(value), text
 
 
@@ -215,6 +217,7 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
     body, text = _parse_while(text, lambda c: c != '\"')
     value += body
     value += text.pop()
+    text = _parse_optional_white_space(text)
     return String(value), text
 
 
@@ -227,6 +230,7 @@ def _parse_array(text: Slice) -> Tuple[Array, Slice]:
         if text.startswith(TokenType.COMMA.value):
             _, text = FixedParser(TokenType.COMMA)(text)
     _, text = FixedParser(TokenType.ARRAY_END)(text)
+    text = _parse_optional_white_space(text)
     return Array(expressions=expressions), text
 
 
@@ -239,6 +243,7 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
         if text.startswith(TokenType.COMMA.value):
             _, text = FixedParser(TokenType.COMMA)(text)
     _, text = FixedParser(TokenType.DICTIONARY_END)(text)
+    text = _parse_optional_white_space(text)
     return Dictionary(expressions=variable_definitions), text
 
 
@@ -251,6 +256,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
         return Lookup(left=left, right=None), text
     _, text = FixedParser(TokenType.OF)(text)
     right, text = parse_expression(text)
+    text = _parse_optional_white_space(text)
     return Lookup(left=left, right=right), text
 
 
@@ -260,6 +266,7 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.EQUAL)(text)
     expression, text = parse_expression(text)
+    text = _parse_optional_white_space(text)
     return VariableDefinition(name=name, expression=expression), text
 
 
@@ -270,6 +277,7 @@ def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.TO)(text)
     expression, text = parse_expression(text)
+    text = _parse_optional_white_space(text)
     return Function(argument_name=argument_name, expression=expression), text
 
 
@@ -280,6 +288,7 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
     then_expression, text = parse_expression(text)
     _, text = FixedParser(TokenType.ELSE)(text)
     else_expression, text = parse_expression(text)
+    text = _parse_optional_white_space(text)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), text)
 
@@ -296,6 +305,7 @@ def _parse_array_comprehension(text: Slice)\
     if text.startswith(TokenType.IF.value):
         _, text = FixedParser(TokenType.IF)(text)
         if_expression, text = parse_expression(text)
+    text = _parse_optional_white_space(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
@@ -327,7 +337,7 @@ def parse_expression(slice: Slice) -> Tuple[Expression, Slice]:
 
 
 def lex_and_parse(code: str) -> Expression:
-    expression, _ = parse_expression(Slice(code))
+    expression, _ = parse_expression(_parse_optional_white_space(Slice(code)))
     return expression
 
 
