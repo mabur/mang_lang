@@ -261,7 +261,7 @@ def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
     left = value
     if not slice.startswith(TokenType.OF.value):
         return (Lookup(left=left, right=None), slice)
-    token, slice = lexing.FixedParser(TokenType.OF)(slice)
+    _, slice = lexing.FixedParser(TokenType.OF)(slice)
     slice = _parse_optional_white_space(slice)
     right, slice = parse_expression(slice)
     return (Lookup(left=left, right=right), slice)

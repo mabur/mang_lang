@@ -24,20 +24,12 @@ class TokenType(Enum):
     WHITE_SPACE = " "
     NEW_LINES = "\n"
 
-class Token:
-    def __init__(self, type: TokenType, value: str):
-        self.type = type
-        self.value = value
-
-    def __len__(self) -> int:
-        return len(self.value)
-
 class FixedParser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
 
-    def __call__(self, slice: Slice) -> Tuple[Token, Slice]:
+    def __call__(self, slice: Slice) -> Tuple[str, Slice]:
         value = ''
         for _ in self.token_type.value:
             value += slice.pop()
-        return (Token(type=self.token_type, value=value), slice)
+        return (value, slice)
