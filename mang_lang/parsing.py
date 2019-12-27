@@ -237,13 +237,16 @@ def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, TokenSlice]:
     return (Dictionary(expressions=variable_definitions), tokens)
 
 
-def _parse_lookup(code: Slice) -> Tuple[Lookup, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    left = tokens.parse(TokenType.SYMBOL)
-    if not tokens.do_match(TokenType.OF):
-        return (Lookup(left=left, right=None), tokens)
-    tokens.parse(TokenType.OF)
-    right, tokens = parse_expression(tokens.as_string())
+def _parse_lookup(slice: Slice) -> Tuple[Lookup, TokenSlice]:
+    slice = _parse_optional_white_space(slice)
+    token, slice = lexing.parse_symbol(slice)
+    slice = _parse_optional_white_space(slice)
+    left = token.value
+    if not slice.startswith(TokenType.OF.value):
+        return (Lookup(left=left, right=None), _make_token_slice(slice))
+    token, slice = lexing.FixedParser(TokenType.OF)(slice)
+    slice = _parse_optional_white_space(slice)
+    right, tokens = parse_expression(slice)
     return (Lookup(left=left, right=right), tokens)
 
 
