@@ -27,9 +27,9 @@ LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 WHITESPACE = ' \n'
 
 
-def _parse_sequence(text: Slice, sequence) -> Tuple[str, Slice]:
+def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
     value = ''
-    for _ in sequence:
+    for _ in keyword:
         value += text.pop()
     text = _parse_optional_white_space(text)
     return value, text
@@ -73,25 +73,25 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
 
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     expressions = ()
-    _, text = _parse_sequence(text, ARRAY_BEGIN)
+    _, text = _parse_keyword(text, ARRAY_BEGIN)
     while not text.startswith(ARRAY_END):
         expression, text = _parse_expression(text)
         expressions += (expression,)
         if text.startswith(COMMA):
-            _, text = _parse_sequence(text, COMMA)
-    _, text = _parse_sequence(text, ARRAY_END)
+            _, text = _parse_keyword(text, COMMA)
+    _, text = _parse_keyword(text, ARRAY_END)
     return Array(expressions=expressions), text
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     variable_definitions = []
-    _, text = _parse_sequence(text, DICTIONARY_BEGIN)
+    _, text = _parse_keyword(text, DICTIONARY_BEGIN)
     while not text.startswith(DICTIONARY_END):
         variable_definition, text = _parse_variable_definition(text)
         variable_definitions.append(variable_definition)
         if text.startswith(COMMA):
-            _, text = _parse_sequence(text, COMMA)
-    _, text = _parse_sequence(text, DICTIONARY_END)
+            _, text = _parse_keyword(text, COMMA)
+    _, text = _parse_keyword(text, DICTIONARY_END)
     return Dictionary(expressions=variable_definitions), text
 
 
@@ -100,7 +100,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     left = value
     if not text.startswith(OF):
         return Lookup(left=left, right=None), text
-    _, text = _parse_sequence(text, OF)
+    _, text = _parse_keyword(text, OF)
     right, text = _parse_expression(text)
     return Lookup(left=left, right=right), text
 
@@ -108,26 +108,26 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     value, text = _parse_symbol(text)
     name = value
-    _, text = _parse_sequence(text, EQUAL)
+    _, text = _parse_keyword(text, EQUAL)
     expression, text = _parse_expression(text)
     return VariableDefinition(name=name, expression=expression), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
-    _, text = _parse_sequence(text, FROM)
+    _, text = _parse_keyword(text, FROM)
     value, text = _parse_symbol(text)
     argument_name = value
-    _, text = _parse_sequence(text, TO)
+    _, text = _parse_keyword(text, TO)
     expression, text = _parse_expression(text)
     return Function(argument_name=argument_name, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
-    _, text = _parse_sequence(text, IF)
+    _, text = _parse_keyword(text, IF)
     condition, text = _parse_expression(text)
-    _, text = _parse_sequence(text, THEN)
+    _, text = _parse_keyword(text, THEN)
     then_expression, text = _parse_expression(text)
-    _, text = _parse_sequence(text, ELSE)
+    _, text = _parse_keyword(text, ELSE)
     else_expression, text = _parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), text)
@@ -135,15 +135,15 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
 
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
-    _, text = _parse_sequence(text, EACH)
+    _, text = _parse_keyword(text, EACH)
     all_expression, text = _parse_expression(text)
-    _, text = _parse_sequence(text, FOR)
+    _, text = _parse_keyword(text, FOR)
     for_expression, text = _parse_expression(text)
-    _, text = _parse_sequence(text, IN)
+    _, text = _parse_keyword(text, IN)
     in_expression, text = _parse_expression(text)
     if_expression = None
     if text.startswith(IF):
-        _, text = _parse_sequence(text, IF)
+        _, text = _parse_keyword(text, IF)
         if_expression, text = _parse_expression(text)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
