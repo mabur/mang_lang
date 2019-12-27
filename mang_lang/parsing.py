@@ -184,14 +184,6 @@ class ArrayComprehension(Expression):
         return Array(result)
 
 
-def parse_number(text: Slice) -> Tuple[str, Slice]:
-    value = ''
-    while text and text.front() in '-+.1234567890':
-        value += text.pop()
-    assert value
-    return value, text
-
-
 def parse_symbol(text: Slice) -> Tuple[str, Slice]:
     value = ''
     while text and (text.front().isalnum() or text.front() == '_'):
@@ -207,7 +199,10 @@ def _parse_optional_white_space(text: Slice) -> Slice:
 
 
 def _parse_number(text: Slice) -> Tuple[Number, Slice]:
-    value, text = parse_number(text)
+    value = ''
+    while text and text.front() in '-+.1234567890':
+        value += text.pop()
+    assert value
     return Number(value), text
 
 
