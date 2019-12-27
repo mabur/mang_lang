@@ -378,8 +378,8 @@ class FixedParser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
 
-    def __call__(self, slice: Slice) -> Tuple[str, Slice]:
+    def __call__(self, text: Slice) -> Tuple[str, Slice]:
         value = ''
         for _ in self.token_type.value:
-            value += slice.pop()
-        return (value, slice)
+            value += text.pop()
+        return (value, text)
