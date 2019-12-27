@@ -32,10 +32,6 @@ class Token:
     def __len__(self) -> int:
         return len(self.value)
 
-    def has_meaning(self) -> bool:
-        return self.type != TokenType.WHITE_SPACE and \
-               self.type != TokenType.NEW_LINES
-
 class FixedParser:
     def __init__(self, token_type: TokenType):
         self.token_type = token_type
