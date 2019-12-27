@@ -220,16 +220,20 @@ def _parse_array(slice: Slice) -> Tuple[Array, TokenSlice]:
     return (Array(expressions=expressions), tokens)
 
 
-def _parse_dictionary(code: Slice) -> Tuple[Dictionary, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
+def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, TokenSlice]:
     variable_definitions = []
-    tokens.parse(TokenType.DICTIONARY_BEGIN)
-    while not tokens.do_match(TokenType.DICTIONARY_END):
-        variable_definition, tokens = _parse_variable_definition(tokens.as_string())
+    _, slice = lexing.FixedParser(TokenType.DICTIONARY_BEGIN)(slice)
+    slice = _parse_optional_white_space(slice)
+    while not slice.startswith(TokenType.DICTIONARY_END.value):
+        variable_definition, tokens = _parse_variable_definition(slice)
+        slice = tokens.as_string()
         variable_definitions.append(variable_definition)
-        if tokens.do_match(TokenType.COMMA):
-            tokens.parse(TokenType.COMMA)
-    tokens.parse(TokenType.DICTIONARY_END)
+        if slice.startswith(TokenType.COMMA.value):
+            _, slice = lexing.FixedParser(TokenType.COMMA)(slice)
+            slice = _parse_optional_white_space(slice)
+    _, slice = lexing.FixedParser(TokenType.DICTIONARY_END)(slice)
+    slice = _parse_optional_white_space(slice)
+    tokens = TokenSlice(lexer(slice))
     return (Dictionary(expressions=variable_definitions), tokens)
 
 
