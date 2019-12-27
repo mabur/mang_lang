@@ -262,14 +262,18 @@ def _parse_function(slice: Slice) -> Tuple[Function, TokenSlice]:
                      expression=expression), tokens)
 
 
-def _parse_conditional(code: Slice) -> Tuple[Conditional, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    tokens.parse(TokenType.IF)
-    condition, tokens = parse_expression(tokens.as_string())
-    tokens.parse(TokenType.THEN)
-    then_expression, tokens = parse_expression(tokens.as_string())
-    tokens.parse(TokenType.ELSE)
-    else_expression, tokens = parse_expression(tokens.as_string())
+def _parse_conditional(slice: Slice) -> Tuple[Conditional, TokenSlice]:
+    _, slice = lexing.FixedParser(TokenType.IF)(slice)
+    slice = _parse_optional_white_space(slice)
+    condition, tokens = parse_expression(slice)
+    slice = tokens.as_string()
+    _, slice = lexing.FixedParser(TokenType.THEN)(slice)
+    slice = _parse_optional_white_space(slice)
+    then_expression, tokens = parse_expression(slice)
+    slice = tokens.as_string()
+    _, slice = lexing.FixedParser(TokenType.ELSE)(slice)
+    slice = _parse_optional_white_space(slice)
+    else_expression, tokens = parse_expression(slice)
     return (Conditional(condition=condition, then_expression=then_expression,
                         else_expression=else_expression), tokens)
 
