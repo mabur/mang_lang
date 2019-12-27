@@ -355,7 +355,6 @@ def lex_and_parse(code: str) -> Expression:
 
 
 class TokenType(Enum):
-    NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
     ARRAY_BEGIN = "["
     ARRAY_END = "]"
     DICTIONARY_BEGIN = "{"
@@ -371,10 +370,6 @@ class TokenType(Enum):
     FROM = "from "
     TO = "to "
     OF = "of "
-    SYMBOL = "[a-z_]\\w*"
-    STRING = "\"[\w\s]*\""
-    WHITE_SPACE = " "
-    NEW_LINES = "\n"
 
 
 class FixedParser:
