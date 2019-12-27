@@ -151,7 +151,7 @@ def _parse_array_comprehension(text: Slice)\
                                if_expression=if_expression), text)
 
 
-parser_from_token = {
+_parser_from_token = {
     ARRAY_BEGIN: _parse_array,
     DICTIONARY_BEGIN: _parse_dictionary,
     IF: _parse_conditional,
@@ -160,17 +160,17 @@ parser_from_token = {
     STRING_BEGIN: _parse_string,
 }
 
-
 for char in DIGITS:
-    parser_from_token[char] = _parse_number
+    _parser_from_token[char] = _parse_number
 
 for char in LETTERS:
-    parser_from_token[char] = _parse_lookup
+    _parser_from_token[char] = _parse_lookup
+
 
 def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
     text = _parse_optional_white_space(text)
     try:
-        for sequence, parser in parser_from_token.items():
+        for sequence, parser in _parser_from_token.items():
             if text.startswith(sequence):
                 return parser(text)
     except KeyError:
