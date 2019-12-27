@@ -278,19 +278,25 @@ def _parse_conditional(slice: Slice) -> Tuple[Conditional, TokenSlice]:
                         else_expression=else_expression), tokens)
 
 
-def _parse_array_comprehension(code: Slice)\
+def _parse_array_comprehension(slice: Slice)\
         -> Tuple[ArrayComprehension, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    tokens.parse(TokenType.EACH)
-    all_expression, tokens = parse_expression(tokens.as_string())
-    tokens.parse(TokenType.FOR)
-    for_expression, tokens = parse_expression(tokens.as_string())
-    tokens.parse(TokenType.IN)
-    in_expression, tokens = parse_expression(tokens.as_string())
+    _, slice = lexing.FixedParser(TokenType.EACH)(slice)
+    slice = _parse_optional_white_space(slice)
+    all_expression, tokens = parse_expression(slice)
+    slice = tokens.as_string()
+    _, slice = lexing.FixedParser(TokenType.FOR)(slice)
+    slice = _parse_optional_white_space(slice)
+    for_expression, tokens = parse_expression(slice)
+    slice = tokens.as_string()
+    _, slice = lexing.FixedParser(TokenType.IN)(slice)
+    slice = _parse_optional_white_space(slice)
+    in_expression, tokens = parse_expression(slice)
+    slice = tokens.as_string()
     if_expression = None
-    if tokens.do_match(TokenType.IF):
-        tokens.parse(TokenType.IF)
-        if_expression, tokens = parse_expression(tokens.as_string())
+    if slice.startswith(TokenType.IF.value):
+        _, slice = lexing.FixedParser(TokenType.IF)(slice)
+        slice = _parse_optional_white_space(slice)
+        if_expression, tokens = parse_expression(slice)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
