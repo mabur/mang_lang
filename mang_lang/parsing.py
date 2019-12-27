@@ -249,12 +249,15 @@ def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, TokenS
     return (VariableDefinition(name=name, expression=expression), tokens)
 
 
-def _parse_function(code: Slice) -> Tuple[Function, TokenSlice]:
-    tokens = TokenSlice(lexer(code))
-    tokens.parse(TokenType.FROM)
-    argument_name = tokens.parse(TokenType.SYMBOL)
-    tokens.parse(TokenType.TO)
-    expression, tokens = parse_expression(tokens.as_string())
+def _parse_function(slice: Slice) -> Tuple[Function, TokenSlice]:
+    _, slice = lexing.FixedParser(TokenType.FROM)(slice)
+    slice = _parse_optional_white_space(slice)
+    token, slice = lexing.parse_symbol(slice)
+    argument_name = token.value
+    slice = _parse_optional_white_space(slice)
+    _, slice = lexing.FixedParser(TokenType.TO)(slice)
+    slice = _parse_optional_white_space(slice)
+    expression, tokens = parse_expression(slice)
     return (Function(argument_name=argument_name,
                      expression=expression), tokens)
 
