@@ -184,18 +184,43 @@ class ArrayComprehension(Expression):
             result.append(y)
         return Array(result)
 
+def parse_string(slice: Slice) -> Tuple[str, Slice]:
+    assert slice.front() == '\"'
+    value = ''
+    value += slice.pop()
+    while slice and slice.front() != '\"':
+        value += slice.pop()
+    value += slice.pop()
+    return (value, slice)
+
+
+def parse_number(slice: Slice) -> Tuple[str, Slice]:
+    value = ''
+    while slice and slice.front() in '-+.1234567890':
+        value += slice.pop()
+    assert value
+    return (value, slice)
+
+
+def parse_symbol(slice: Slice) -> Tuple[str, Slice]:
+    value = ''
+    while slice and (slice.front().isalnum() or slice.front() == '_'):
+        value += slice.pop()
+    assert value
+    return (value, slice)
+
 def _parse_optional_white_space(slice: Slice) -> Slice:
     while slice and (slice.front() == ' ' or slice.front() == '\n'):
         slice.pop()
     return slice
 
 def _parse_number(slice: Slice) -> Tuple[Number, Slice]:
-    value, slice = lexing.parse_number(slice)
+    value, slice = parse_number(slice)
     return (Number(value), slice)
 
 
 def _parse_string(slice: Slice) -> Tuple[String, Slice]:
-    value, slice = lexing.parse_string(slice)
+    value, slice = parse_string(slice)
     return (String(value), slice)
 
 
@@ -231,7 +256,7 @@ def _parse_dictionary(slice: Slice) -> Tuple[Dictionary, Slice]:
 
 def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
     slice = _parse_optional_white_space(slice)
-    value, slice = lexing.parse_symbol(slice)
+    value, slice = parse_symbol(slice)
     slice = _parse_optional_white_space(slice)
     left = value
     if not slice.startswith(TokenType.OF.value):
@@ -243,7 +268,7 @@ def _parse_lookup(slice: Slice) -> Tuple[Lookup, Slice]:
 
 
 def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, Slice]:
-    value, slice = lexing.parse_symbol(slice)
+    value, slice = parse_symbol(slice)
     name = value
     slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.EQUAL)(slice)
@@ -255,7 +280,7 @@ def _parse_variable_definition(slice: Slice) -> Tuple[VariableDefinition, Slice]
 def _parse_function(slice: Slice) -> Tuple[Function, Slice]:
     _, slice = lexing.FixedParser(TokenType.FROM)(slice)
     slice = _parse_optional_white_space(slice)
-    value, slice = lexing.parse_symbol(slice)
+    value, slice = parse_symbol(slice)
     argument_name = value
     slice = _parse_optional_white_space(slice)
     _, slice = lexing.FixedParser(TokenType.TO)(slice)
