@@ -126,29 +126,26 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
 
 def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     value, text = _parse_symbol(text)
-    left = value
     if not text.startswith(OF):
-        return Lookup(left=left, right=None), text
+        return Lookup(left=value, right=None), text
     _, text = _parse_keyword(text, OF)
     right, text = _parse_expression(text)
-    return Lookup(left=left, right=right), text
+    return Lookup(left=value, right=right), text
 
 
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     value, text = _parse_symbol(text)
-    name = value
     _, text = _parse_keyword(text, EQUAL)
     expression, text = _parse_expression(text)
-    return VariableDefinition(name=name, expression=expression), text
+    return VariableDefinition(name=value, expression=expression), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     _, text = _parse_keyword(text, FROM)
     value, text = _parse_symbol(text)
-    argument_name = value
     _, text = _parse_keyword(text, TO)
     expression, text = _parse_expression(text)
-    return Function(argument_name=argument_name, expression=expression), text
+    return Function(argument_name=value, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
