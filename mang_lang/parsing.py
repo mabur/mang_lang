@@ -191,7 +191,7 @@ def parse_string(text: Slice) -> Tuple[str, Slice]:
     while text and text.front() != '\"':
         value += text.pop()
     value += text.pop()
-    return (value, text)
+    return value, text
 
 
 def parse_number(text: Slice) -> Tuple[str, Slice]:
@@ -199,7 +199,7 @@ def parse_number(text: Slice) -> Tuple[str, Slice]:
     while text and text.front() in '-+.1234567890':
         value += text.pop()
     assert value
-    return (value, text)
+    return value, text
 
 
 def parse_symbol(text: Slice) -> Tuple[str, Slice]:
@@ -207,7 +207,7 @@ def parse_symbol(text: Slice) -> Tuple[str, Slice]:
     while text and (text.front().isalnum() or text.front() == '_'):
         value += text.pop()
     assert value
-    return (value, text)
+    return value, text
 
 
 def _parse_optional_white_space(text: Slice) -> Slice:
@@ -218,12 +218,12 @@ def _parse_optional_white_space(text: Slice) -> Slice:
 
 def _parse_number(text: Slice) -> Tuple[Number, Slice]:
     value, text = parse_number(text)
-    return (Number(value), text)
+    return Number(value), text
 
 
 def _parse_string(text: Slice) -> Tuple[String, Slice]:
     value, text = parse_string(text)
-    return (String(value), text)
+    return String(value), text
 
 
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
@@ -238,7 +238,7 @@ def _parse_array(text: Slice) -> Tuple[Array, Slice]:
             text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.ARRAY_END)(text)
     text = _parse_optional_white_space(text)
-    return (Array(expressions=expressions), text)
+    return Array(expressions=expressions), text
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
@@ -253,7 +253,7 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
             text = _parse_optional_white_space(text)
     _, text = FixedParser(TokenType.DICTIONARY_END)(text)
     text = _parse_optional_white_space(text)
-    return (Dictionary(expressions=variable_definitions), text)
+    return Dictionary(expressions=variable_definitions), text
 
 
 def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
@@ -262,11 +262,11 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     text = _parse_optional_white_space(text)
     left = value
     if not text.startswith(TokenType.OF.value):
-        return (Lookup(left=left, right=None), text)
+        return Lookup(left=left, right=None), text
     _, text = FixedParser(TokenType.OF)(text)
     text = _parse_optional_white_space(text)
     right, text = parse_expression(text)
-    return (Lookup(left=left, right=right), text)
+    return Lookup(left=left, right=right), text
 
 
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
@@ -276,7 +276,7 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     _, text = FixedParser(TokenType.EQUAL)(text)
     text = _parse_optional_white_space(text)
     expression, text = parse_expression(text)
-    return (VariableDefinition(name=name, expression=expression), text)
+    return VariableDefinition(name=name, expression=expression), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
@@ -288,8 +288,7 @@ def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     _, text = FixedParser(TokenType.TO)(text)
     text = _parse_optional_white_space(text)
     expression, text = parse_expression(text)
-    return (Function(argument_name=argument_name,
-                     expression=expression), text)
+    return Function(argument_name=argument_name, expression=expression), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
