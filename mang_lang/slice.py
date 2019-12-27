@@ -1,7 +1,5 @@
-from typing import Sequence
-
 class Slice:
-    def __init__(self, elements: Sequence, begin_index=0):
+    def __init__(self, elements: str, begin_index=0):
         self._elements = elements
         self._begin_index = begin_index
 
@@ -19,6 +17,5 @@ class Slice:
     def front(self):
         return self[0]
 
-    def startswith(self, sequence) -> bool:
-        # TODO: Assuming list here instead of more general Sequence.
-        return self._elements.startswith(sequence, self._begin_index)
+    def startswith(self, word: str) -> bool:
+        return self._elements.startswith(word, self._begin_index)
