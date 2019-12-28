@@ -193,10 +193,11 @@ def _make_parse_table()\
         (ARRAY_BEGIN, _parse_array),
         (DICTIONARY_BEGIN, _parse_dictionary),
         (STRING_BEGIN, _parse_string),
-        (IF, _parse_conditional),
-        (EACH, _parse_array_comprehension),
-        (FROM, _parse_function),
     ]
+    for char in WHITESPACE:
+        parser_from_token.append((IF + char, _parse_conditional))
+        parser_from_token.append((EACH + char, _parse_array_comprehension))
+        parser_from_token.append((FROM + char, _parse_function))
     for char in DIGITS:
         parser_from_token.append((char, _parse_number))
     for char in LETTERS:

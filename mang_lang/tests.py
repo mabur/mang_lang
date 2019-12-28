@@ -246,9 +246,21 @@ class TestKeywordVariableClashes(unittest.TestCase):
         self.assertEqual(({'type': 'variable_definition', 'name': 'input', 'value': V(5)},),
                          interpret('{input = 5}'))
 
+    def test_in2(self):
+        self.assertEqual(V(5), interpret('input of {input = 5}'))
+
     def test_if(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'iffy', 'value': V(5)},),
                          interpret('{iffy = 5}'))
+
+    def test_if2(self):
+        self.assertEqual(V(5), interpret('iffy of {iffy = 5}'))
+
+    def test_each(self):
+        self.assertEqual(V(5), interpret('eachy of {eachy = 5}'))
+
+    def test_from(self):
+        self.assertEqual(V(5), interpret('fromage of {fromage = 5}'))
 
     def test_all(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'allround', 'value': V(5)},),
@@ -258,13 +270,22 @@ class TestKeywordVariableClashes(unittest.TestCase):
         self.assertEqual(({'type': 'variable_definition', 'name': 'thenner', 'value': V(5)},),
                          interpret('{thenner = 5}'))
 
+    def test_then2(self):
+        self.assertEqual(V(5), interpret('thenner of {thenner = 5}'))
+
     def test_else(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)},),
                          interpret('{elsewhere = 5}'))
 
+    def test_else2(self):
+        self.assertEqual(V(5), interpret('elsewhere of {elsewhere = 5}'))
+
     def test_import(self):
         self.assertEqual(({'type': 'variable_definition', 'name': 'important', 'value': V(5)},),
                          interpret('{important = 5}'))
+
+    def test_import2(self):
+        self.assertEqual(V(5), interpret('important of {important = 5}'))
 
 
 class TestIndirection(unittest.TestCase):
