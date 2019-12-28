@@ -38,15 +38,15 @@ DICTIONARY_BEGIN = "{"
 DICTIONARY_END = "}"
 EQUAL = "="
 COMMA = ","
-IF = "if "
-THEN = "then "
-ELSE = "else "
-EACH = "each "
-FOR = "for "
-IN = "in "
-FROM = "from "
-TO = "to "
-OF = "of "
+IF = "if"
+THEN = "then"
+ELSE = "else"
+EACH = "each"
+FOR = "for"
+IN = "in"
+FROM = "from"
+TO = "to"
+OF = "of"
 STRING_BEGIN = "\""
 STRING_END = "\""
 
@@ -192,10 +192,10 @@ def _make_parse_table()\
     parser_from_token = [
         (ARRAY_BEGIN, _parse_array),
         (DICTIONARY_BEGIN, _parse_dictionary),
+        (STRING_BEGIN, _parse_string),
         (IF, _parse_conditional),
         (EACH, _parse_array_comprehension),
         (FROM, _parse_function),
-        (STRING_BEGIN, _parse_string),
     ]
     for char in DIGITS:
         parser_from_token.append((char, _parse_number))

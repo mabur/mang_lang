@@ -210,7 +210,7 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(V(12), interpret('  sum of [ difference of [5 , 3], product   of [2,5]]'))
 
     def test_new_line(self):
-        self.assertEqual(V(5), interpret('''sum of 
+        self.assertEqual(V(5), interpret('''sum of
         [2,3]'''))
 
 
