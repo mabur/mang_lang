@@ -1,5 +1,6 @@
 from parsing import parse
-import global_environment
+import ast
+import built_in
 
 
 def create_abstract_syntax_tree_json(code: str):
@@ -7,4 +8,10 @@ def create_abstract_syntax_tree_json(code: str):
 
 
 def interpret(code: str):
-    return parse(code).evaluate(global_environment.ENVIRONMENT).to_json()
+    standard_library = parse('import of "standard_library.ml"').evaluate(built_in.ENVIRONMENT)
+    assert isinstance(standard_library, ast.Array)
+    standard_library_environment = {
+        definition.name: definition.expression for definition in standard_library.value
+    }
+    environment = {**built_in.ENVIRONMENT, **standard_library_environment}
+    return parse(code).evaluate(environment).to_json()

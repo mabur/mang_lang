@@ -454,5 +454,18 @@ class TestTupleComprehension(unittest.TestCase):
         self.assertEqual(expected, actual)
 
 
+class TestStandardLibrary(unittest.TestCase):
+    def test(self):
+        self.assertEqual(V(36), interpret('magnus of []'))
+
+    def test_find_if0(self):
+        self.assertEqual(((), ()), interpret('find_if of {list=[], query=1}'))
+
+    def test_find_if1(self):
+        self.assertEqual(((), (V(1), V(2), V(3))), interpret('find_if of {list=[1,2,3], query=1}'))
+
+    #def test_find_if2(self):
+    #    self.assertEqual(((V(1),), (V(2), V(3))), interpret('find_if of {list=[1,2,3], query=2}'))
+
 if __name__ == '__main__':
     unittest.main()
