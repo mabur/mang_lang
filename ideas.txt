@@ -333,13 +333,6 @@ Vec2 = (x=Real, y=Real)
 
 
 TODO:
-* Use dict as main building block for defining symbols. Add array. Remove tuple.
-* Parse tokens and Expressions similarly.
-  Can peek for starting sequences.
-  Handle optional starting sequences, by implementing it as multiple ParsePatterns.
-* Allow capital letters in symbols.
-* Allow more characters in strings, especially . / \ needed for filenames
-* Remove indexing?
 * zip
 * Try to implement Advent od Code problems to see what is missing
 * Konsekvent indentering

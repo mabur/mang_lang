@@ -331,6 +331,9 @@ class TestDefinitionLookup(unittest.TestCase):
     def test6(self):
         self.assertEqual(V(4), interpret('c of {a={b={f=from x to sum of [x,1]}}, g=f of b of a, c = g of 3}'))
 
+    def test7(self):
+        self.assertEqual(V(1), interpret('ABBA of {ABBA = 1}'))
+
 
 class TestFunctionDefinition(unittest.TestCase):
     def test_function_definition(self):
@@ -359,8 +362,11 @@ class TestFunctionScope(unittest.TestCase):
 
 
 class TestString(unittest.TestCase):
-    def test_string(self):
+    def test_string1(self):
         self.assertEqual(S("hej"), interpret('"hej"'))
+
+    def test_string2(self):
+        self.assertEqual(S("home\dir/image.png"), interpret('"home\dir/image.png"'))
 
     def test_string_size0(self):
         self.assertEqual(V(0), interpret('size of ""'))
