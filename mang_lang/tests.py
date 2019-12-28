@@ -401,16 +401,13 @@ class TestString(unittest.TestCase):
 
 class TestImport(unittest.TestCase):
     def test1(self):
-        with mock.patch('global_environment._read_text_file', return_value='3'):
-            self.assertEqual(V(3), interpret('import of "file_name"'))
+        self.assertEqual(V(3), interpret('import of "test_data/test1.ml"'))
 
     def test2(self):
-        with mock.patch('global_environment._read_text_file', return_value='{\nx=3,\ny=4\n}'):
-            self.assertEqual(V(4), interpret('y of import of "file_name"'))
+        self.assertEqual(V(4), interpret('y of import of "test_data/test2.ml"'))
 
     def test3(self):
-        with mock.patch('global_environment._read_text_file', return_value='{square = from x to product of [x,x]}'):
-            self.assertEqual(V(9), interpret('b of {a = import of "file_name", square = square of a, b=square of 3}'))
+        self.assertEqual(V(9), interpret('b of {a = import of "test_data/test3.ml", square = square of a, b=square of 3}'))
 
 
 class TestTupleComprehension(unittest.TestCase):
