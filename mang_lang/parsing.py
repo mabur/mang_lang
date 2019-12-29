@@ -1,3 +1,4 @@
+from itertools import accumulate
 from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
@@ -29,7 +30,22 @@ class Slice:
 
 def parse(code: str) -> Expression:
     text = Slice(code)
-    return _parse_expression(text)[0]
+    try:
+        return _parse_expression(text)[0]
+    except:
+        _print_syntax_error(text)
+        raise
+
+
+def _print_syntax_error(text: Slice) -> None:
+    print('SYNTAX ERROR:')
+    lines = text._elements.split()
+    cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]
+    for row_number, line in enumerate(lines):
+        length0 = cumulative_lengths[row_number - 1]
+        length1 = cumulative_lengths[row_number]
+        marker = '  <- SYNTAX ERROR' if length0 < text._begin_index <= length1 else ''
+        print('{:04d} {}{}'.format(row_number, line, marker))
 
 
 ARRAY_BEGIN = "["
