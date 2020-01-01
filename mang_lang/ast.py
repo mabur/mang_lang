@@ -1,14 +1,14 @@
 from copy import deepcopy
 from typing import Sequence, Optional, MutableMapping, Any, Union, Mapping
 
-from error_handling import run_time_error_printer
+from error_handling import CodeFragment, run_time_error_printer
 
 Environment = MutableMapping[str, Any]
 Json = Union[float, str, Mapping[str, Any], Sequence]
 
 
 class Expression:
-    def __init__(self, code):
+    def __init__(self, code: CodeFragment):
         self.code = code
 
     def to_json(self) -> Json:
@@ -19,7 +19,7 @@ class Expression:
 
 
 class Array(Expression):
-    def __init__(self, expressions: Sequence[Expression], code) -> None:
+    def __init__(self, expressions: Sequence[Expression], code: CodeFragment) -> None:
         super().__init__(code)
         self.value = expressions
 
@@ -34,7 +34,7 @@ class Array(Expression):
 
 
 class Number(Expression):
-    def __init__(self, value: str, code) -> None:
+    def __init__(self, value: str, code: CodeFragment) -> None:
         super().__init__(code)
         self.value = float(value)
 
@@ -47,7 +47,7 @@ class Number(Expression):
 
 
 class String(Expression):
-    def __init__(self, value: str, code) -> None:
+    def __init__(self, value: str, code: CodeFragment) -> None:
         super().__init__(code)
         self.value = value[1:-1]
 
@@ -60,7 +60,7 @@ class String(Expression):
 
 
 class VariableDefinition(Expression):
-    def __init__(self, name: str, expression: Expression, code=None) -> None:
+    def __init__(self, name: str, expression: Expression, code: CodeFragment) -> None:
         super().__init__(code)
         self.name = name
         self.expression = expression
@@ -79,7 +79,11 @@ class VariableDefinition(Expression):
 
 
 class Dictionary(Expression):
-    def __init__(self, expressions: Sequence[VariableDefinition], code) -> None:
+    def __init__(
+            self,
+            expressions: Sequence[VariableDefinition],
+            code: CodeFragment,
+    ) -> None:
         super().__init__(code)
         self.value = expressions
 
@@ -94,7 +98,12 @@ class Dictionary(Expression):
 
 
 class Function(Expression):
-    def __init__(self, argument_name: str, expression: Expression, code) -> None:
+    def __init__(
+            self,
+            argument_name: str,
+            expression: Expression,
+            code: CodeFragment,
+    ) -> None:
         super().__init__(code)
         self.argument_name = argument_name
         self.expression = expression
@@ -110,7 +119,12 @@ class Function(Expression):
 
 
 class Lookup(Expression):
-    def __init__(self, left: str, right: Optional[Expression], code) -> None:
+    def __init__(
+            self,
+            left: str,
+            right: Optional[Expression],
+            code: CodeFragment,
+    ) -> None:
         super().__init__(code)
         self.left = left
         self.right = right
@@ -150,8 +164,13 @@ class Lookup(Expression):
 
 
 class Conditional(Expression):
-    def __init__(self, condition: Expression, then_expression: Expression,
-                 else_expression: Expression, code) -> None:
+    def __init__(
+            self,
+            condition: Expression,
+            then_expression: Expression,
+            else_expression: Expression,
+            code: CodeFragment,
+    ) -> None:
         super().__init__(code)
         self.condition = condition
         self.then_expression = then_expression
@@ -172,8 +191,14 @@ class Conditional(Expression):
 
 
 class ArrayComprehension(Expression):
-    def __init__(self, all_expression: Expression, for_expression: Expression,
-                 in_expression: Expression, if_expression: Optional[Expression], code) -> None:
+    def __init__(
+            self,
+            all_expression: Expression,
+            for_expression: Expression,
+            in_expression: Expression,
+            if_expression: Optional[Expression],
+            code: CodeFragment,
+    ) -> None:
         super().__init__(code)
         self.all_expression = all_expression
         self.for_expression = for_expression
