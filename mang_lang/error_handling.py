@@ -43,7 +43,7 @@ def run_time_error_printer(evaluate):
             return evaluate(self, environment)
         except AlreadyRegisteredException:
             pass
-        except Exception as e:
+        except:
             traceback.print_exc()
             print('Run time error when evaluating {}:'.format(self.__class__.__name__))
             _print_error_description(error_label='RUN TIME ERROR', code=self.code)
