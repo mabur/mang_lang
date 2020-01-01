@@ -333,11 +333,10 @@ Vec2 = (x=Real, y=Real)
 
 
 TODO:
-* zip
 * Try to implement Advent od Code problems to see what is missing
+* Unpacking dicts for multiple input and output of functions
+* zip
 * Konsekvent indentering
-* Multiple input to functions:
-    {left, right}
 
 -------------------------------------------------------------------------------------------------
 split = from input to result of
@@ -498,24 +497,24 @@ next_word = from input to
         }
 
 // Multiple named input/output for functions:
-split_recursive = from {source, query} to
+split_recursive = from source, query to
     if is_empty of source then
         []
     else
         result of {
-            {word, rest} = next_word of {source = source, query = query},
+            word, rest = next_word of {source = source, query = query},
             recursive_result = split_recursive of {source = rest, query = query},
             result = concat of [word, recursive_result]
         }
 
-next_word = from {source, query} to
+next_word = from source, query to
     if is_empty of source then
         {word = [], rest = []}
     else if check_equality of [first of source, query] then
         {word = [], rest = last_part of source}
     else
         result of {
-            {word, rest} = next_word of {source = last_part of source, query = query},
+            word, rest = next_word of {source = last_part of source, query = query},
             result = {word = concat of [[first of source], word], rest = rest}
         }
 
