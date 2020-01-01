@@ -51,7 +51,7 @@ def run_time_error_printer(evaluate):
 
 def _print_error_description(error_label: str, code: CodeFragment) -> None:
     """Print the source code that caused an error with a pointer to the error location"""
-    lines = code.text.split()
+    lines = code.text.split('\n')
     cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]
     for row_number, line in enumerate(lines):
         length0 = cumulative_lengths[row_number - 1]
