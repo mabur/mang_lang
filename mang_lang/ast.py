@@ -8,7 +8,7 @@ Json = Union[float, str, Mapping[str, Any], Sequence]
 
 
 class Expression:
-    def __init__(self, section=None):
+    def __init__(self, section):
         self.section = section
 
     def to_json(self) -> Json:
