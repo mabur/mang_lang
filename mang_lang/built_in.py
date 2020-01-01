@@ -2,21 +2,22 @@ from typing import Union
 
 from parsing import parse
 from ast import Array, Number, String
+from error_handling import CodeFragment
 
 
-def _difference(x: Array, code):
+def _difference(x: Array, code: CodeFragment):
     return Number(_value_left(x) - _value_right(x), code)
 
 
-def _division(x: Array, code):
+def _division(x: Array, code: CodeFragment):
     return Number(_value_left(x) / _value_right(x), code)
 
 
-def _check_equality(x: Array, code):
+def _check_equality(x: Array, code: CodeFragment):
     return Number(str(float(_value_left(x) == _value_right(x))), code)
 
 
-def _check_inequality(x: Array, code):
+def _check_inequality(x: Array, code: CodeFragment):
     return Number(str(float(_value_left(x) != _value_right(x))), code)
 
 
@@ -30,15 +31,15 @@ def _value_right(x: Array):
     return x.value[1].value
 
 
-def _size(x: Union[String, Array], code):
+def _size(x: Union[String, Array], code: CodeFragment):
     return Number(str(len(x.value)), code)
 
 
-def _is_empty(x: Union[String, Array], code):
+def _is_empty(x: Union[String, Array], code: CodeFragment):
     return Number(str(0 if x.value else 1), code)
 
 
-def _concat_tuple(x: Array, code) -> Array:
+def _concat_tuple(x: Array, code: CodeFragment) -> Array:
     expressions = []
     for e in x.value:
         assert isinstance(e, Array)
@@ -46,7 +47,7 @@ def _concat_tuple(x: Array, code) -> Array:
     return Array(expressions, code)
 
 
-def _concat_string(x: Array, code) -> String:
+def _concat_string(x: Array, code: CodeFragment) -> String:
     expressions = '"'
     for e in x.value:
         assert isinstance(e, String)
@@ -55,7 +56,7 @@ def _concat_string(x: Array, code) -> String:
     return String(expressions, code)
 
 
-def _concat(x: Array, code):
+def _concat(x: Array, code: CodeFragment):
     if isinstance(x.value[0], Array):
         return _concat_tuple(x, code)
     if isinstance(x.value[0], String):
@@ -63,7 +64,7 @@ def _concat(x: Array, code):
     raise TypeError
 
 
-def _first(x: Union[Array, String], code):
+def _first(x: Union[Array, String], code: CodeFragment):
     element = x.value[0]
     if isinstance(x, Array):
         return element
@@ -71,7 +72,7 @@ def _first(x: Union[Array, String], code):
         return String('"{}"'.format(element), code)
 
 
-def _last(x: Union[Array, String], code):
+def _last(x: Union[Array, String], code: CodeFragment):
     element = x.value[-1]
     if isinstance(x, Array):
         return element
@@ -79,42 +80,42 @@ def _last(x: Union[Array, String], code):
         return String('"{}"'.format(element), code)
 
 
-def _first_part(x: Array, code) -> Array:
+def _first_part(x: Array, code: CodeFragment) -> Array:
     return Array(x.value[:-1], code)
 
 
-def _last_part(x: Array, code) -> Array:
+def _last_part(x: Array, code: CodeFragment) -> Array:
     return Array(x.value[1:], code)
 
 
-def _sum(x: Array, code):
+def _sum(x: Array, code: CodeFragment):
     return Number(str(sum(element.value for element in x.value)), code)
 
 
-def _product(x: Array, code):
+def _product(x: Array, code: CodeFragment):
     result = 1
     for element in x.value:
         result *= element.value
     return Number(str(result), code)
 
 
-def _min(x: Array, code):
+def _min(x: Array, code: CodeFragment):
     return Number(str(min(element.value for element in x.value)), code)
 
 
-def _max(x: Array, code):
+def _max(x: Array, code: CodeFragment):
     return Number(str(max(element.value for element in x.value)), code)
 
 
-def _all(x: Array, code):
+def _all(x: Array, code: CodeFragment):
     return Number(str(float(all(element.value for element in x.value))), code)
 
 
-def _none(x: Array, code):
+def _none(x: Array, code: CodeFragment):
     return Number(str(float(not any(element.value for element in x.value))), code)
 
 
-def _any(x: Array, code):
+def _any(x: Array, code: CodeFragment):
     return Number(str(float(any(element.value for element in x.value))), code)
 
 
@@ -123,7 +124,7 @@ def _read_text_file(file_path: str) -> str:
         return file.read()
 
 
-def _import(x: String, code):
+def _import(x: String, code: CodeFragment):
     code = _read_text_file(x.value)
     expression = parse(code)
     environment = {}
