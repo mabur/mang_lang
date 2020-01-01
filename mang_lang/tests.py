@@ -101,6 +101,12 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_first_part2(self):
         self.assertEqual(V(4), interpret('last of first_part of [6, 4, 8]'))
 
+    def test_first_part3(self):
+        self.assertEqual(V(0), interpret('size of first_part of [6]'))
+
+    def test_first_part4(self):
+        self.assertEqual(V(0), interpret('size of first_part of []'))
+
     def test_last_part0(self):
         self.assertEqual(V(2), interpret('size of last_part of [6, 4, 8]'))
 
@@ -109,6 +115,12 @@ class TestBuiltinFunctions(unittest.TestCase):
 
     def test_last_part2(self):
         self.assertEqual(V(8), interpret('last of last_part of [6, 4, 8]'))
+
+    def test_last_part3(self):
+        self.assertEqual(V(0), interpret('size of last_part of [6]'))
+
+    def test_last_part4(self):
+        self.assertEqual(V(0), interpret('size of last_part of []'))
 
 
 class TestRecursion(unittest.TestCase):
@@ -460,8 +472,9 @@ class TestStandardLibrary(unittest.TestCase):
     def test_find1(self):
         self.assertEqual(((), (V(1), V(2), V(3))), interpret('find of {list=[1,2,3], query=1}'))
 
-    #def test_find2(self):
-    #    self.assertEqual(((V(1),), (V(2), V(3))), interpret('find of {list=[1,2,3], query=2}'))
+    @unittest.skip
+    def test_find2(self):
+        self.assertEqual(((V(1),), (V(2), V(3))), interpret('find of {list=[1], query=2}'))
 
 
 class TestErrorMessages(unittest.TestCase):
