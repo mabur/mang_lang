@@ -72,7 +72,7 @@ def _parse_number(code: CodeFragment) -> Tuple[Number, CodeFragment]:
     value, code = _parse_while(code, lambda c: c in DIGITS)
     assert value
     code = _parse_optional_white_space(code)
-    return Number(value, section=section), code
+    return Number(value, code=section), code
 
 
 def _parse_string(code: CodeFragment) -> Tuple[String, CodeFragment]:
@@ -82,7 +82,7 @@ def _parse_string(code: CodeFragment) -> Tuple[String, CodeFragment]:
     value += body
     value += code.pop()
     code = _parse_optional_white_space(code)
-    return String(value, section=section), code
+    return String(value, code=section), code
 
 
 def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:
@@ -95,7 +95,7 @@ def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)
     _, code = _parse_keyword(code, ARRAY_END)
-    return Array(expressions=expressions, section=section), code
+    return Array(expressions=expressions, code=section), code
 
 
 def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
@@ -108,17 +108,17 @@ def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)
     _, code = _parse_keyword(code, DICTIONARY_END)
-    return Dictionary(expressions=variable_definitions, section=section), code
+    return Dictionary(expressions=variable_definitions, code=section), code
 
 
 def _parse_lookup(code: CodeFragment) -> Tuple[Lookup, CodeFragment]:
     section = copy.copy(code)
     value, code = _parse_symbol(code)
     if not code.startswith(OF):
-        return Lookup(left=value, right=None, section=section), code
+        return Lookup(left=value, right=None, code=section), code
     _, code = _parse_keyword(code, OF)
     right, code = _parse_expression(code)
-    return Lookup(left=value, right=right, section=section), code
+    return Lookup(left=value, right=right, code=section), code
 
 
 def _parse_variable_definition(code: CodeFragment) -> Tuple[VariableDefinition, CodeFragment]:
@@ -126,7 +126,7 @@ def _parse_variable_definition(code: CodeFragment) -> Tuple[VariableDefinition, 
     value, code = _parse_symbol(code)
     _, code = _parse_keyword(code, EQUAL)
     expression, code = _parse_expression(code)
-    return VariableDefinition(name=value, expression=expression, section=section), code
+    return VariableDefinition(name=value, expression=expression, code=section), code
 
 
 def _parse_function(code: CodeFragment) -> Tuple[Function, CodeFragment]:
@@ -135,7 +135,7 @@ def _parse_function(code: CodeFragment) -> Tuple[Function, CodeFragment]:
     value, code = _parse_symbol(code)
     _, code = _parse_keyword(code, TO)
     expression, code = _parse_expression(code)
-    return Function(argument_name=value, expression=expression, section=section), code
+    return Function(argument_name=value, expression=expression, code=section), code
 
 
 def _parse_conditional(code: CodeFragment) -> Tuple[Conditional, CodeFragment]:
@@ -147,7 +147,7 @@ def _parse_conditional(code: CodeFragment) -> Tuple[Conditional, CodeFragment]:
     _, code = _parse_keyword(code, ELSE)
     else_expression, code = _parse_expression(code)
     return (Conditional(condition=condition, then_expression=then_expression,
-                        else_expression=else_expression, section=section), code)
+                        else_expression=else_expression, code=section), code)
 
 
 def _parse_array_comprehension(code: CodeFragment)\
@@ -167,7 +167,7 @@ def _parse_array_comprehension(code: CodeFragment)\
                                for_expression=for_expression,
                                in_expression=in_expression,
                                if_expression=if_expression,
-                               section=section), code)
+                               code=section), code)
 
 
 def _parse_expression(code: CodeFragment) -> Tuple[Expression, CodeFragment]:

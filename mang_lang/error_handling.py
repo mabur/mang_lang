@@ -44,7 +44,7 @@ def run_time_error_printer(evaluate):
             pass
         except:
             print('Run time error when evaluating {}:'.format(self.__class__.__name__))
-            _print_error_description(error_label='RUN TIME ERROR', code=self.section)
+            _print_error_description(error_label='RUN TIME ERROR', code=self.code)
             raise AlreadyRegisteredException
     return wrapped_evaluate
 
