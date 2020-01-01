@@ -3,11 +3,11 @@ from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
-from error_handling import Slice, print_syntax_error
+from error_handling import CodeFragment, print_syntax_error
 
 
 def parse(code: str) -> Expression:
-    text = Slice(code)
+    text = CodeFragment(code)
     try:
         return _parse_expression(text)[0]
     except:
@@ -38,7 +38,7 @@ LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 WHITESPACE = ' \n'
 
 
-def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
+def _parse_keyword(text: CodeFragment, keyword: str) -> Tuple[str, CodeFragment]:
     value = ''
     for expected in keyword:
         actual = text.pop()
@@ -48,26 +48,26 @@ def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
     return value, text
 
 
-def _parse_while(text: Slice, predicate) -> Tuple[str, Slice]:
+def _parse_while(text: CodeFragment, predicate) -> Tuple[str, CodeFragment]:
     value = ''
     while text and predicate(text.front()):
         value += text.pop()
     return value, text
 
 
-def _parse_optional_white_space(text: Slice) -> Slice:
+def _parse_optional_white_space(text: CodeFragment) -> CodeFragment:
     value, text = _parse_while(text, lambda c: c in WHITESPACE)
     return text
 
 
-def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
+def _parse_symbol(text: CodeFragment) -> Tuple[str, CodeFragment]:
     value, text = _parse_while(text, lambda c: c in LETTERS)
     assert value
     text = _parse_optional_white_space(text)
     return value, text
 
 
-def _parse_number(text: Slice) -> Tuple[Number, Slice]:
+def _parse_number(text: CodeFragment) -> Tuple[Number, CodeFragment]:
     section = copy.copy(text)
     value, text = _parse_while(text, lambda c: c in DIGITS)
     assert value
@@ -75,7 +75,7 @@ def _parse_number(text: Slice) -> Tuple[Number, Slice]:
     return Number(value, section=section), text
 
 
-def _parse_string(text: Slice) -> Tuple[String, Slice]:
+def _parse_string(text: CodeFragment) -> Tuple[String, CodeFragment]:
     section = copy.copy(text)
     value, text = _parse_keyword(text, STRING_BEGIN)
     body, text = _parse_while(text, lambda c: c != STRING_END)
@@ -85,7 +85,7 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
     return String(value, section=section), text
 
 
-def _parse_array(text: Slice) -> Tuple[Array, Slice]:
+def _parse_array(text: CodeFragment) -> Tuple[Array, CodeFragment]:
     section = copy.copy(text)
     expressions = ()
     _, text = _parse_keyword(text, ARRAY_BEGIN)
@@ -98,7 +98,7 @@ def _parse_array(text: Slice) -> Tuple[Array, Slice]:
     return Array(expressions=expressions, section=section), text
 
 
-def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
+def _parse_dictionary(text: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
     section = copy.copy(text)
     variable_definitions = []
     _, text = _parse_keyword(text, DICTIONARY_BEGIN)
@@ -111,7 +111,7 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
     return Dictionary(expressions=variable_definitions, section=section), text
 
 
-def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
+def _parse_lookup(text: CodeFragment) -> Tuple[Lookup, CodeFragment]:
     section = copy.copy(text)
     value, text = _parse_symbol(text)
     if not text.startswith(OF):
@@ -121,7 +121,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
     return Lookup(left=value, right=right, section=section), text
 
 
-def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
+def _parse_variable_definition(text: CodeFragment) -> Tuple[VariableDefinition, CodeFragment]:
     section = copy.copy(text)
     value, text = _parse_symbol(text)
     _, text = _parse_keyword(text, EQUAL)
@@ -129,7 +129,7 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
     return VariableDefinition(name=value, expression=expression, section=section), text
 
 
-def _parse_function(text: Slice) -> Tuple[Function, Slice]:
+def _parse_function(text: CodeFragment) -> Tuple[Function, CodeFragment]:
     section = copy.copy(text)
     _, text = _parse_keyword(text, FROM)
     value, text = _parse_symbol(text)
@@ -138,7 +138,7 @@ def _parse_function(text: Slice) -> Tuple[Function, Slice]:
     return Function(argument_name=value, expression=expression, section=section), text
 
 
-def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
+def _parse_conditional(text: CodeFragment) -> Tuple[Conditional, CodeFragment]:
     section = copy.copy(text)
     _, text = _parse_keyword(text, IF)
     condition, text = _parse_expression(text)
@@ -150,8 +150,8 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
                         else_expression=else_expression, section=section), text)
 
 
-def _parse_array_comprehension(text: Slice)\
-        -> Tuple[ArrayComprehension, Slice]:
+def _parse_array_comprehension(text: CodeFragment)\
+        -> Tuple[ArrayComprehension, CodeFragment]:
     section = copy.copy(text)
     _, text = _parse_keyword(text, EACH)
     all_expression, text = _parse_expression(text)
@@ -170,7 +170,7 @@ def _parse_array_comprehension(text: Slice)\
                                section=section), text)
 
 
-def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
+def _parse_expression(text: CodeFragment) -> Tuple[Expression, CodeFragment]:
     text = _parse_optional_white_space(text)
     try:
         for sequence, parser in _PARSE_TABLE:
@@ -181,7 +181,7 @@ def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
 
 
 def _make_parse_table()\
-        -> Sequence[Tuple[str, Callable[[Slice], Tuple[Any, Slice]]]]:
+        -> Sequence[Tuple[str, Callable[[CodeFragment], Tuple[Any, CodeFragment]]]]:
     parser_from_token = [
         (ARRAY_BEGIN, _parse_array),
         (DICTIONARY_BEGIN, _parse_dictionary),

@@ -1,7 +1,7 @@
 from itertools import accumulate
 
 
-class Slice:
+class CodeFragment:
     def __init__(self, elements: str, begin_index=0):
         self._elements = elements
         self._begin_index = begin_index
@@ -24,7 +24,7 @@ class Slice:
         return self._elements.startswith(word, self._begin_index)
 
 
-def print_syntax_error(text: Slice) -> None:
+def print_syntax_error(text: CodeFragment) -> None:
     print('SYNTAX ERROR')
     _print_error_description(error_label='SYNTAX ERROR', code=text)
 
@@ -48,7 +48,7 @@ def run_time_error_printer(evaluate):
     return wrapped_evaluate
 
 
-def _print_error_description(error_label: str, code: Slice) -> None:
+def _print_error_description(error_label: str, code: CodeFragment) -> None:
     """Print the source code that caused an error with a pointer to the error location"""
     lines = code._elements.split()
     cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]
