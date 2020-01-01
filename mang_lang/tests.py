@@ -1,6 +1,5 @@
 from typing import Any, Mapping
 import unittest
-from unittest import mock
 from interpreter import interpret
 
 
@@ -466,6 +465,12 @@ class TestStandardLibrary(unittest.TestCase):
 
     #def test_find_if2(self):
     #    self.assertEqual(((V(1),), (V(2), V(3))), interpret('find_if of {list=[1,2,3], query=2}'))
+
+    #def test_find_if3(self):
+    #    self.assertEqual((), interpret('{\nw=0,\nx=a of\n{b=1,\nc=1},\ny=1\n}'))
+
+    #def test_find_if4(self):
+    #    self.assertEqual((), interpret('{\na=0,\nb=,\nc=2\n}'))
 
 if __name__ == '__main__':
     unittest.main()

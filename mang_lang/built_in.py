@@ -2,22 +2,23 @@ from typing import Union
 
 from parsing import parse
 from ast import Array, Number, String
+from error_handling import CodeFragment
 
 
-def _difference(x: Array):
-    return Number(_value_left(x) - _value_right(x))
+def _difference(x: Array, code: CodeFragment):
+    return Number(_value_left(x) - _value_right(x), code)
 
 
-def _division(x: Array):
-    return Number(_value_left(x) / _value_right(x))
+def _division(x: Array, code: CodeFragment):
+    return Number(_value_left(x) / _value_right(x), code)
 
 
-def _check_equality(x: Array):
-    return Number(str(float(_value_left(x) == _value_right(x))))
+def _check_equality(x: Array, code: CodeFragment):
+    return Number(str(float(_value_left(x) == _value_right(x))), code)
 
 
-def _check_inequality(x: Array):
-    return Number(str(float(_value_left(x) != _value_right(x))))
+def _check_inequality(x: Array, code: CodeFragment):
+    return Number(str(float(_value_left(x) != _value_right(x))), code)
 
 
 def _value_left(x: Array):
@@ -30,92 +31,92 @@ def _value_right(x: Array):
     return x.value[1].value
 
 
-def _size(x: Union[String, Array]):
-    return Number(str(len(x.value)))
+def _size(x: Union[String, Array], code: CodeFragment):
+    return Number(str(len(x.value)), code)
 
 
-def _is_empty(x: Union[String, Array]):
-    return Number(str(0 if x.value else 1))
+def _is_empty(x: Union[String, Array], code: CodeFragment):
+    return Number(str(0 if x.value else 1), code)
 
 
-def _concat_tuple(x: Array) -> Array:
+def _concat_tuple(x: Array, code: CodeFragment) -> Array:
     expressions = []
     for e in x.value:
         assert isinstance(e, Array)
         expressions += e.value
-    return Array(expressions)
+    return Array(expressions, code)
 
 
-def _concat_string(x: Array) -> String:
+def _concat_string(x: Array, code: CodeFragment) -> String:
     expressions = '"'
     for e in x.value:
         assert isinstance(e, String)
         expressions += e.value
     expressions += '"'
-    return String(expressions)
+    return String(expressions, code)
 
 
-def _concat(x: Array):
+def _concat(x: Array, code: CodeFragment):
     if isinstance(x.value[0], Array):
-        return _concat_tuple(x)
+        return _concat_tuple(x, code)
     if isinstance(x.value[0], String):
-        return _concat_string(x)
+        return _concat_string(x, code)
     raise TypeError
 
 
-def _first(x: Union[Array, String]):
+def _first(x: Union[Array, String], code: CodeFragment):
     element = x.value[0]
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element))
+        return String('"{}"'.format(element), code)
 
 
-def _last(x: Union[Array, String]):
+def _last(x: Union[Array, String], code: CodeFragment):
     element = x.value[-1]
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element))
+        return String('"{}"'.format(element), code)
 
 
-def _first_part(x: Array) -> Array:
-    return Array(x.value[:-1])
+def _first_part(x: Array, code: CodeFragment) -> Array:
+    return Array(x.value[:-1], code)
 
 
-def _last_part(x: Array) -> Array:
-    return Array(x.value[1:])
+def _last_part(x: Array, code: CodeFragment) -> Array:
+    return Array(x.value[1:], code)
 
 
-def _sum(x: Array):
-    return Number(str(sum(element.value for element in x.value)))
+def _sum(x: Array, code: CodeFragment):
+    return Number(str(sum(element.value for element in x.value)), code)
 
 
-def _product(x: Array):
+def _product(x: Array, code: CodeFragment):
     result = 1
     for element in x.value:
         result *= element.value
-    return Number(str(result))
+    return Number(str(result), code)
 
 
-def _min(x: Array):
-    return Number(str(min(element.value for element in x.value)))
+def _min(x: Array, code: CodeFragment):
+    return Number(str(min(element.value for element in x.value)), code)
 
 
-def _max(x: Array):
-    return Number(str(max(element.value for element in x.value)))
+def _max(x: Array, code: CodeFragment):
+    return Number(str(max(element.value for element in x.value)), code)
 
 
-def _all(x: Array):
-    return Number(str(float(all(element.value for element in x.value))))
+def _all(x: Array, code: CodeFragment):
+    return Number(str(float(all(element.value for element in x.value))), code)
 
 
-def _none(x: Array):
-    return Number(str(float(not any(element.value for element in x.value))))
+def _none(x: Array, code: CodeFragment):
+    return Number(str(float(not any(element.value for element in x.value))), code)
 
 
-def _any(x: Array):
-    return Number(str(float(any(element.value for element in x.value))))
+def _any(x: Array, code: CodeFragment):
+    return Number(str(float(any(element.value for element in x.value))), code)
 
 
 def _read_text_file(file_path: str) -> str:
@@ -123,7 +124,7 @@ def _read_text_file(file_path: str) -> str:
         return file.read()
 
 
-def _import(x: String):
+def _import(x: String, code: CodeFragment):
     code = _read_text_file(x.value)
     expression = parse(code)
     environment = {}
@@ -151,4 +152,3 @@ ENVIRONMENT = {
     'any': _any,
     'import': _import,
 }
-

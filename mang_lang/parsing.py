@@ -1,51 +1,18 @@
-from itertools import accumulate
+import copy
 from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
-
-
-class Slice:
-    def __init__(self, elements: str, begin_index=0):
-        self._elements = elements
-        self._begin_index = begin_index
-
-    def __getitem__(self, item):
-        return self._elements[self._begin_index + item]
-
-    def __len__(self):
-        return len(self._elements) - self._begin_index
-
-    def pop(self):
-        value = self[0]
-        self._begin_index += 1
-        return value
-
-    def front(self):
-        return self[0]
-
-    def startswith(self, word: str) -> bool:
-        return self._elements.startswith(word, self._begin_index)
+from error_handling import CodeFragment, print_syntax_error
 
 
 def parse(code: str) -> Expression:
-    text = Slice(code)
+    code = CodeFragment(code)
     try:
-        return _parse_expression(text)[0]
+        return _parse_expression(code)[0]
     except:
-        _print_syntax_error(text)
+        print_syntax_error(code)
         raise
-
-
-def _print_syntax_error(text: Slice) -> None:
-    print('SYNTAX ERROR:')
-    lines = text._elements.split()
-    cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]
-    for row_number, line in enumerate(lines):
-        length0 = cumulative_lengths[row_number - 1]
-        length1 = cumulative_lengths[row_number]
-        marker = '  <- SYNTAX ERROR' if length0 < text._begin_index <= length1 else ''
-        print('{:04d} {}{}'.format(row_number, line, marker))
 
 
 ARRAY_BEGIN = "["
@@ -71,140 +38,150 @@ LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 WHITESPACE = ' \n'
 
 
-def _parse_keyword(text: Slice, keyword: str) -> Tuple[str, Slice]:
+def _parse_keyword(code: CodeFragment, keyword: str) -> Tuple[str, CodeFragment]:
     value = ''
     for expected in keyword:
-        actual = text.pop()
+        actual = code.pop()
         assert expected == actual
         value += actual
-    text = _parse_optional_white_space(text)
-    return value, text
+    code = _parse_optional_white_space(code)
+    return value, code
 
 
-def _parse_while(text: Slice, predicate) -> Tuple[str, Slice]:
+def _parse_while(code: CodeFragment, predicate) -> Tuple[str, CodeFragment]:
     value = ''
-    while text and predicate(text.front()):
-        value += text.pop()
-    return value, text
+    while code and predicate(code.front()):
+        value += code.pop()
+    return value, code
 
 
-def _parse_optional_white_space(text: Slice) -> Slice:
-    value, text = _parse_while(text, lambda c: c in WHITESPACE)
-    return text
+def _parse_optional_white_space(code: CodeFragment) -> CodeFragment:
+    value, code = _parse_while(code, lambda c: c in WHITESPACE)
+    return code
 
 
-def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
-    value, text = _parse_while(text, lambda c: c in LETTERS)
+def _parse_symbol(code: CodeFragment) -> Tuple[str, CodeFragment]:
+    value, code = _parse_while(code, lambda c: c in LETTERS)
     assert value
-    text = _parse_optional_white_space(text)
-    return value, text
+    code = _parse_optional_white_space(code)
+    return value, code
 
 
-def _parse_number(text: Slice) -> Tuple[Number, Slice]:
-    value, text = _parse_while(text, lambda c: c in DIGITS)
+def _parse_number(code: CodeFragment) -> Tuple[Number, CodeFragment]:
+    section = copy.copy(code)
+    value, code = _parse_while(code, lambda c: c in DIGITS)
     assert value
-    text = _parse_optional_white_space(text)
-    return Number(value), text
+    code = _parse_optional_white_space(code)
+    return Number(value, code=section), code
 
 
-def _parse_string(text: Slice) -> Tuple[String, Slice]:
-    value, text = _parse_keyword(text, STRING_BEGIN)
-    body, text = _parse_while(text, lambda c: c != STRING_END)
+def _parse_string(code: CodeFragment) -> Tuple[String, CodeFragment]:
+    section = copy.copy(code)
+    value, code = _parse_keyword(code, STRING_BEGIN)
+    body, code = _parse_while(code, lambda c: c != STRING_END)
     value += body
-    value += text.pop()
-    text = _parse_optional_white_space(text)
-    return String(value), text
+    value += code.pop()
+    code = _parse_optional_white_space(code)
+    return String(value, code=section), code
 
 
-def _parse_array(text: Slice) -> Tuple[Array, Slice]:
+def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:
+    section = copy.copy(code)
     expressions = ()
-    _, text = _parse_keyword(text, ARRAY_BEGIN)
-    while not text.startswith(ARRAY_END):
-        expression, text = _parse_expression(text)
+    _, code = _parse_keyword(code, ARRAY_BEGIN)
+    while not code.startswith(ARRAY_END):
+        expression, code = _parse_expression(code)
         expressions += (expression,)
-        if text.startswith(COMMA):
-            _, text = _parse_keyword(text, COMMA)
-    _, text = _parse_keyword(text, ARRAY_END)
-    return Array(expressions=expressions), text
+        if code.startswith(COMMA):
+            _, code = _parse_keyword(code, COMMA)
+    _, code = _parse_keyword(code, ARRAY_END)
+    return Array(expressions=expressions, code=section), code
 
 
-def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
+def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
+    section = copy.copy(code)
     variable_definitions = []
-    _, text = _parse_keyword(text, DICTIONARY_BEGIN)
-    while not text.startswith(DICTIONARY_END):
-        variable_definition, text = _parse_variable_definition(text)
+    _, code = _parse_keyword(code, DICTIONARY_BEGIN)
+    while not code.startswith(DICTIONARY_END):
+        variable_definition, code = _parse_variable_definition(code)
         variable_definitions.append(variable_definition)
-        if text.startswith(COMMA):
-            _, text = _parse_keyword(text, COMMA)
-    _, text = _parse_keyword(text, DICTIONARY_END)
-    return Dictionary(expressions=variable_definitions), text
+        if code.startswith(COMMA):
+            _, code = _parse_keyword(code, COMMA)
+    _, code = _parse_keyword(code, DICTIONARY_END)
+    return Dictionary(expressions=variable_definitions, code=section), code
 
 
-def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
-    value, text = _parse_symbol(text)
-    if not text.startswith(OF):
-        return Lookup(left=value, right=None), text
-    _, text = _parse_keyword(text, OF)
-    right, text = _parse_expression(text)
-    return Lookup(left=value, right=right), text
+def _parse_lookup(code: CodeFragment) -> Tuple[Lookup, CodeFragment]:
+    section = copy.copy(code)
+    value, code = _parse_symbol(code)
+    if not code.startswith(OF):
+        return Lookup(left=value, right=None, code=section), code
+    _, code = _parse_keyword(code, OF)
+    right, code = _parse_expression(code)
+    return Lookup(left=value, right=right, code=section), code
 
 
-def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
-    value, text = _parse_symbol(text)
-    _, text = _parse_keyword(text, EQUAL)
-    expression, text = _parse_expression(text)
-    return VariableDefinition(name=value, expression=expression), text
+def _parse_variable_definition(code: CodeFragment) -> Tuple[VariableDefinition, CodeFragment]:
+    section = copy.copy(code)
+    value, code = _parse_symbol(code)
+    _, code = _parse_keyword(code, EQUAL)
+    expression, code = _parse_expression(code)
+    return VariableDefinition(name=value, expression=expression, code=section), code
 
 
-def _parse_function(text: Slice) -> Tuple[Function, Slice]:
-    _, text = _parse_keyword(text, FROM)
-    value, text = _parse_symbol(text)
-    _, text = _parse_keyword(text, TO)
-    expression, text = _parse_expression(text)
-    return Function(argument_name=value, expression=expression), text
+def _parse_function(code: CodeFragment) -> Tuple[Function, CodeFragment]:
+    section = copy.copy(code)
+    _, code = _parse_keyword(code, FROM)
+    value, code = _parse_symbol(code)
+    _, code = _parse_keyword(code, TO)
+    expression, code = _parse_expression(code)
+    return Function(argument_name=value, expression=expression, code=section), code
 
 
-def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
-    _, text = _parse_keyword(text, IF)
-    condition, text = _parse_expression(text)
-    _, text = _parse_keyword(text, THEN)
-    then_expression, text = _parse_expression(text)
-    _, text = _parse_keyword(text, ELSE)
-    else_expression, text = _parse_expression(text)
+def _parse_conditional(code: CodeFragment) -> Tuple[Conditional, CodeFragment]:
+    section = copy.copy(code)
+    _, code = _parse_keyword(code, IF)
+    condition, code = _parse_expression(code)
+    _, code = _parse_keyword(code, THEN)
+    then_expression, code = _parse_expression(code)
+    _, code = _parse_keyword(code, ELSE)
+    else_expression, code = _parse_expression(code)
     return (Conditional(condition=condition, then_expression=then_expression,
-                        else_expression=else_expression), text)
+                        else_expression=else_expression, code=section), code)
 
 
-def _parse_array_comprehension(text: Slice)\
-        -> Tuple[ArrayComprehension, Slice]:
-    _, text = _parse_keyword(text, EACH)
-    all_expression, text = _parse_expression(text)
-    _, text = _parse_keyword(text, FOR)
-    for_expression, text = _parse_expression(text)
-    _, text = _parse_keyword(text, IN)
-    in_expression, text = _parse_expression(text)
+def _parse_array_comprehension(code: CodeFragment)\
+        -> Tuple[ArrayComprehension, CodeFragment]:
+    section = copy.copy(code)
+    _, code = _parse_keyword(code, EACH)
+    all_expression, code = _parse_expression(code)
+    _, code = _parse_keyword(code, FOR)
+    for_expression, code = _parse_expression(code)
+    _, code = _parse_keyword(code, IN)
+    in_expression, code = _parse_expression(code)
     if_expression = None
-    if text.startswith(IF):
-        _, text = _parse_keyword(text, IF)
-        if_expression, text = _parse_expression(text)
+    if code.startswith(IF):
+        _, code = _parse_keyword(code, IF)
+        if_expression, code = _parse_expression(code)
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
-                               if_expression=if_expression), text)
+                               if_expression=if_expression,
+                               code=section), code)
 
 
-def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:
-    text = _parse_optional_white_space(text)
+def _parse_expression(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
+    code = _parse_optional_white_space(code)
     try:
         for sequence, parser in _PARSE_TABLE:
-            if text.startswith(sequence):
-                return parser(text)
+            if code.startswith(sequence):
+                return parser(code)
     except KeyError:
-        raise ValueError('Bad token pattern: {}'.format(text[0]))
+        raise ValueError('Bad token pattern: {}'.format(code[0]))
 
 
 def _make_parse_table()\
-        -> Sequence[Tuple[str, Callable[[Slice], Tuple[Any, Slice]]]]:
+        -> Sequence[Tuple[str, Callable[[CodeFragment], Tuple[Any, CodeFragment]]]]:
     parser_from_token = [
         (ARRAY_BEGIN, _parse_array),
         (DICTIONARY_BEGIN, _parse_dictionary),
