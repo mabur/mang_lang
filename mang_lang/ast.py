@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Sequence, Optional, MutableMapping, Any, Union, Mapping
+from typing import Callable, Sequence, Optional, MutableMapping, Any, Union, Mapping
 
 from error_handling import CodeFragment, run_time_error_printer
 
@@ -160,6 +160,8 @@ class Lookup(Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             return function.expression.evaluate(new_environment)
+
+        assert isinstance(function, Callable)
         return function(input, self.code)
 
 
