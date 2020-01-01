@@ -4,20 +4,20 @@ from parsing import parse
 from ast import Array, Number, String
 
 
-def _difference(x: Array, section):
-    return Number(_value_left(x) - _value_right(x), section)
+def _difference(x: Array, code):
+    return Number(_value_left(x) - _value_right(x), code)
 
 
-def _division(x: Array, section):
-    return Number(_value_left(x) / _value_right(x), section)
+def _division(x: Array, code):
+    return Number(_value_left(x) / _value_right(x), code)
 
 
-def _check_equality(x: Array, section):
-    return Number(str(float(_value_left(x) == _value_right(x))), section)
+def _check_equality(x: Array, code):
+    return Number(str(float(_value_left(x) == _value_right(x))), code)
 
 
-def _check_inequality(x: Array, section):
-    return Number(str(float(_value_left(x) != _value_right(x))), section)
+def _check_inequality(x: Array, code):
+    return Number(str(float(_value_left(x) != _value_right(x))), code)
 
 
 def _value_left(x: Array):
@@ -30,92 +30,92 @@ def _value_right(x: Array):
     return x.value[1].value
 
 
-def _size(x: Union[String, Array], section):
-    return Number(str(len(x.value)), section)
+def _size(x: Union[String, Array], code):
+    return Number(str(len(x.value)), code)
 
 
-def _is_empty(x: Union[String, Array], section):
-    return Number(str(0 if x.value else 1), section)
+def _is_empty(x: Union[String, Array], code):
+    return Number(str(0 if x.value else 1), code)
 
 
-def _concat_tuple(x: Array, section) -> Array:
+def _concat_tuple(x: Array, code) -> Array:
     expressions = []
     for e in x.value:
         assert isinstance(e, Array)
         expressions += e.value
-    return Array(expressions, section)
+    return Array(expressions, code)
 
 
-def _concat_string(x: Array, section) -> String:
+def _concat_string(x: Array, code) -> String:
     expressions = '"'
     for e in x.value:
         assert isinstance(e, String)
         expressions += e.value
     expressions += '"'
-    return String(expressions, section)
+    return String(expressions, code)
 
 
-def _concat(x: Array, section):
+def _concat(x: Array, code):
     if isinstance(x.value[0], Array):
-        return _concat_tuple(x, section)
+        return _concat_tuple(x, code)
     if isinstance(x.value[0], String):
-        return _concat_string(x, section)
+        return _concat_string(x, code)
     raise TypeError
 
 
-def _first(x: Union[Array, String], section):
+def _first(x: Union[Array, String], code):
     element = x.value[0]
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element), section)
+        return String('"{}"'.format(element), code)
 
 
-def _last(x: Union[Array, String], section):
+def _last(x: Union[Array, String], code):
     element = x.value[-1]
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element), section)
+        return String('"{}"'.format(element), code)
 
 
-def _first_part(x: Array, section) -> Array:
-    return Array(x.value[:-1], section)
+def _first_part(x: Array, code) -> Array:
+    return Array(x.value[:-1], code)
 
 
-def _last_part(x: Array, section) -> Array:
-    return Array(x.value[1:], section)
+def _last_part(x: Array, code) -> Array:
+    return Array(x.value[1:], code)
 
 
-def _sum(x: Array, section):
-    return Number(str(sum(element.value for element in x.value)), section)
+def _sum(x: Array, code):
+    return Number(str(sum(element.value for element in x.value)), code)
 
 
-def _product(x: Array, section):
+def _product(x: Array, code):
     result = 1
     for element in x.value:
         result *= element.value
-    return Number(str(result), section)
+    return Number(str(result), code)
 
 
-def _min(x: Array, section):
-    return Number(str(min(element.value for element in x.value)), section)
+def _min(x: Array, code):
+    return Number(str(min(element.value for element in x.value)), code)
 
 
-def _max(x: Array, section):
-    return Number(str(max(element.value for element in x.value)), section)
+def _max(x: Array, code):
+    return Number(str(max(element.value for element in x.value)), code)
 
 
-def _all(x: Array, section):
-    return Number(str(float(all(element.value for element in x.value))), section)
+def _all(x: Array, code):
+    return Number(str(float(all(element.value for element in x.value))), code)
 
 
-def _none(x: Array, section):
-    return Number(str(float(not any(element.value for element in x.value))), section)
+def _none(x: Array, code):
+    return Number(str(float(not any(element.value for element in x.value))), code)
 
 
-def _any(x: Array, section):
-    return Number(str(float(any(element.value for element in x.value))), section)
+def _any(x: Array, code):
+    return Number(str(float(any(element.value for element in x.value))), code)
 
 
 def _read_text_file(file_path: str) -> str:
@@ -123,7 +123,7 @@ def _read_text_file(file_path: str) -> str:
         return file.read()
 
 
-def _import(x: String, section):
+def _import(x: String, code):
     code = _read_text_file(x.value)
     expression = parse(code)
     environment = {}
