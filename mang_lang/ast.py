@@ -160,9 +160,9 @@ class Lookup(Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             return function.expression.evaluate(new_environment)
-
-        assert isinstance(function, Callable)
-        return function(input, self.code)
+        elif isinstance(function, Callable):
+            return function(input, self.code)
+        raise TypeError
 
 
 class Conditional(Expression):
