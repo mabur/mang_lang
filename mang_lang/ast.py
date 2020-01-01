@@ -146,7 +146,7 @@ class Lookup(Expression):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             return function.expression.evaluate(new_environment)
-        return function(input)
+        return function(input, self.section)
 
 
 class Conditional(Expression):
