@@ -1,31 +1,8 @@
-from itertools import accumulate
 from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
-
-
-class Slice:
-    def __init__(self, elements: str, begin_index=0):
-        self._elements = elements
-        self._begin_index = begin_index
-
-    def __getitem__(self, item):
-        return self._elements[self._begin_index + item]
-
-    def __len__(self):
-        return len(self._elements) - self._begin_index
-
-    def pop(self):
-        value = self[0]
-        self._begin_index += 1
-        return value
-
-    def front(self):
-        return self[0]
-
-    def startswith(self, word: str) -> bool:
-        return self._elements.startswith(word, self._begin_index)
+from error_handling import Slice, Section, print_syntax_error
 
 
 def parse(code: str) -> Expression:
@@ -33,19 +10,8 @@ def parse(code: str) -> Expression:
     try:
         return _parse_expression(text)[0]
     except:
-        _print_syntax_error(text)
+        print_syntax_error(text)
         raise
-
-
-def _print_syntax_error(text: Slice) -> None:
-    print('SYNTAX ERROR:')
-    lines = text._elements.split()
-    cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]
-    for row_number, line in enumerate(lines):
-        length0 = cumulative_lengths[row_number - 1]
-        length1 = cumulative_lengths[row_number]
-        marker = '  <- SYNTAX ERROR' if length0 < text._begin_index <= length1 else ''
-        print('{:04d} {}{}'.format(row_number, line, marker))
 
 
 ARRAY_BEGIN = "["
@@ -101,22 +67,25 @@ def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
 
 
 def _parse_number(text: Slice) -> Tuple[Number, Slice]:
+    section = Section(text)
     value, text = _parse_while(text, lambda c: c in DIGITS)
     assert value
     text = _parse_optional_white_space(text)
-    return Number(value), text
+    return Number(value, section=section), text
 
 
 def _parse_string(text: Slice) -> Tuple[String, Slice]:
+    section = Section(text)
     value, text = _parse_keyword(text, STRING_BEGIN)
     body, text = _parse_while(text, lambda c: c != STRING_END)
     value += body
     value += text.pop()
     text = _parse_optional_white_space(text)
-    return String(value), text
+    return String(value, section=section), text
 
 
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
+    section = Section(text)
     expressions = ()
     _, text = _parse_keyword(text, ARRAY_BEGIN)
     while not text.startswith(ARRAY_END):
@@ -125,10 +94,11 @@ def _parse_array(text: Slice) -> Tuple[Array, Slice]:
         if text.startswith(COMMA):
             _, text = _parse_keyword(text, COMMA)
     _, text = _parse_keyword(text, ARRAY_END)
-    return Array(expressions=expressions), text
+    return Array(expressions=expressions, section=section), text
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
+    section = Section(text)
     variable_definitions = []
     _, text = _parse_keyword(text, DICTIONARY_BEGIN)
     while not text.startswith(DICTIONARY_END):
@@ -137,34 +107,38 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
         if text.startswith(COMMA):
             _, text = _parse_keyword(text, COMMA)
     _, text = _parse_keyword(text, DICTIONARY_END)
-    return Dictionary(expressions=variable_definitions), text
+    return Dictionary(expressions=variable_definitions, section=section), text
 
 
 def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
+    section = Section(text)
     value, text = _parse_symbol(text)
     if not text.startswith(OF):
-        return Lookup(left=value, right=None), text
+        return Lookup(left=value, right=None, section=section), text
     _, text = _parse_keyword(text, OF)
     right, text = _parse_expression(text)
-    return Lookup(left=value, right=right), text
+    return Lookup(left=value, right=right, section=section), text
 
 
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
+    section = Section(text)
     value, text = _parse_symbol(text)
     _, text = _parse_keyword(text, EQUAL)
     expression, text = _parse_expression(text)
-    return VariableDefinition(name=value, expression=expression), text
+    return VariableDefinition(name=value, expression=expression, section=section), text
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
+    section = Section(text)
     _, text = _parse_keyword(text, FROM)
     value, text = _parse_symbol(text)
     _, text = _parse_keyword(text, TO)
     expression, text = _parse_expression(text)
-    return Function(argument_name=value, expression=expression), text
+    return Function(argument_name=value, expression=expression, section=section), text
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
+    section = Section(text)
     _, text = _parse_keyword(text, IF)
     condition, text = _parse_expression(text)
     _, text = _parse_keyword(text, THEN)
@@ -172,11 +146,12 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
     _, text = _parse_keyword(text, ELSE)
     else_expression, text = _parse_expression(text)
     return (Conditional(condition=condition, then_expression=then_expression,
-                        else_expression=else_expression), text)
+                        else_expression=else_expression, section=section), text)
 
 
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
+    section = Section(text)
     _, text = _parse_keyword(text, EACH)
     all_expression, text = _parse_expression(text)
     _, text = _parse_keyword(text, FOR)
@@ -190,7 +165,8 @@ def _parse_array_comprehension(text: Slice)\
     return (ArrayComprehension(all_expression=all_expression,
                                for_expression=for_expression,
                                in_expression=in_expression,
-                               if_expression=if_expression), text)
+                               if_expression=if_expression,
+                               section=section), text)
 
 
 def _parse_expression(text: Slice) -> Tuple[Expression, Slice]:

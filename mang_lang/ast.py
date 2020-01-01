@@ -1,12 +1,16 @@
 from copy import deepcopy
 from typing import Sequence, Optional, MutableMapping, Any, Union, Mapping
 
+from error_handling import run_time_error_printer
 
 Environment = MutableMapping[str, Any]
 Json = Union[float, str, Mapping[str, Any], Sequence]
 
 
 class Expression:
+    def __init__(self, section=None):
+        self.section = section
+
     def to_json(self) -> Json:
         raise NotImplemented
 
@@ -15,42 +19,49 @@ class Expression:
 
 
 class Array(Expression):
-    def __init__(self, expressions: Sequence[Expression]) -> None:
+    def __init__(self, expressions: Sequence[Expression], section) -> None:
+        super().__init__(section)
         self.value = expressions
 
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.value)
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [e.evaluate(new_environment) for e in self.value]
-        return Array(expressions)
+        return Array(expressions, section=self.section)
 
 
 class Number(Expression):
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str, section) -> None:
+        super().__init__(section)
         self.value = float(value)
 
     def to_json(self) -> Json:
         return {"type": "number", "value": self.value}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         return self
 
 
 class String(Expression):
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str, section) -> None:
+        super().__init__(section)
         self.value = value[1:-1]
 
     def to_json(self) -> Json:
         return {"type": "string", "value": self.value}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         return self
 
 
 class VariableDefinition(Expression):
-    def __init__(self, name: str, expression: Expression) -> None:
+    def __init__(self, name: str, expression: Expression, section=None) -> None:
+        super().__init__(section)
         self.name = name
         self.expression = expression
 
@@ -59,28 +70,32 @@ class VariableDefinition(Expression):
                 "name": self.name,
                 "value": self.expression.to_json()}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         value = self.expression.evaluate(new_environment)
         environment[self.name] = value
-        return VariableDefinition(name=self.name, expression=value)
+        return VariableDefinition(name=self.name, expression=value, section=self.section)
 
 
 class Dictionary(Expression):
-    def __init__(self, expressions: Sequence[VariableDefinition]) -> None:
+    def __init__(self, expressions: Sequence[VariableDefinition], section) -> None:
+        super().__init__(section)
         self.value = expressions
 
     def to_json(self) -> Json:
         return tuple(e.to_json() for e in self.value)
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [e.evaluate(new_environment) for e in self.value]
-        return Array(expressions)
+        return Array(expressions, section=self.section)
 
 
 class Function(Expression):
-    def __init__(self, argument_name: str, expression: Expression) -> None:
+    def __init__(self, argument_name: str, expression: Expression, section) -> None:
+        super().__init__(section)
         self.argument_name = argument_name
         self.expression = expression
 
@@ -89,12 +104,14 @@ class Function(Expression):
                 "argument_name": self.argument_name,
                 "expression": self.expression.to_json()}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         return self
 
 
 class Lookup(Expression):
-    def __init__(self, left: str, right: Optional[Expression]) -> None:
+    def __init__(self, left: str, right: Optional[Expression], section) -> None:
+        super().__init__(section)
         self.left = left
         self.right = right
 
@@ -103,6 +120,7 @@ class Lookup(Expression):
                 "left": self.left,
                 "right": self.right.to_json() if self.right is not None else ''}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         # Lookup in current scope
         if self.right is None:
@@ -133,7 +151,8 @@ class Lookup(Expression):
 
 class Conditional(Expression):
     def __init__(self, condition: Expression, then_expression: Expression,
-                 else_expression: Expression) -> None:
+                 else_expression: Expression, section) -> None:
+        super().__init__(section)
         self.condition = condition
         self.then_expression = then_expression
         self.else_expression = else_expression
@@ -144,6 +163,7 @@ class Conditional(Expression):
                 "then_expression": self.then_expression.to_json(),
                 "else_expression": self.else_expression.to_json()}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         if self.condition.evaluate(environment).value:
             return self.then_expression.evaluate(environment)
@@ -153,7 +173,8 @@ class Conditional(Expression):
 
 class ArrayComprehension(Expression):
     def __init__(self, all_expression: Expression, for_expression: Expression,
-                 in_expression: Expression, if_expression: Optional[Expression]) -> None:
+                 in_expression: Expression, if_expression: Optional[Expression], section) -> None:
+        super().__init__(section)
         self.all_expression = all_expression
         self.for_expression = for_expression
         self.in_expression = in_expression
@@ -165,6 +186,7 @@ class ArrayComprehension(Expression):
                 "for_expression": self.for_expression.to_json(),
                 "in_expression": self.in_expression.to_json()}
 
+    @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         in_expression = self.in_expression.evaluate(environment)
         assert isinstance(in_expression, Array)
@@ -180,4 +202,4 @@ class ArrayComprehension(Expression):
                 if not bool(z.value):
                     continue
             result.append(y)
-        return Array(result)
+        return Array(result, section=self.section)

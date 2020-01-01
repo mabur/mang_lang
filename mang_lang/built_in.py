@@ -5,19 +5,19 @@ from ast import Array, Number, String
 
 
 def _difference(x: Array):
-    return Number(_value_left(x) - _value_right(x))
+    return Number(_value_left(x) - _value_right(x), section=None)
 
 
 def _division(x: Array):
-    return Number(_value_left(x) / _value_right(x))
+    return Number(_value_left(x) / _value_right(x), section=None)
 
 
 def _check_equality(x: Array):
-    return Number(str(float(_value_left(x) == _value_right(x))))
+    return Number(str(float(_value_left(x) == _value_right(x))), section=None)
 
 
 def _check_inequality(x: Array):
-    return Number(str(float(_value_left(x) != _value_right(x))))
+    return Number(str(float(_value_left(x) != _value_right(x))), section=None)
 
 
 def _value_left(x: Array):
@@ -31,11 +31,11 @@ def _value_right(x: Array):
 
 
 def _size(x: Union[String, Array]):
-    return Number(str(len(x.value)))
+    return Number(str(len(x.value)), section=None)
 
 
 def _is_empty(x: Union[String, Array]):
-    return Number(str(0 if x.value else 1))
+    return Number(str(0 if x.value else 1), section=None)
 
 
 def _concat_tuple(x: Array) -> Array:
@@ -43,7 +43,7 @@ def _concat_tuple(x: Array) -> Array:
     for e in x.value:
         assert isinstance(e, Array)
         expressions += e.value
-    return Array(expressions)
+    return Array(expressions, section=None)
 
 
 def _concat_string(x: Array) -> String:
@@ -52,7 +52,7 @@ def _concat_string(x: Array) -> String:
         assert isinstance(e, String)
         expressions += e.value
     expressions += '"'
-    return String(expressions)
+    return String(expressions, section=None)
 
 
 def _concat(x: Array):
@@ -68,7 +68,7 @@ def _first(x: Union[Array, String]):
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element))
+        return String('"{}"'.format(element), section=None)
 
 
 def _last(x: Union[Array, String]):
@@ -76,46 +76,46 @@ def _last(x: Union[Array, String]):
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element))
+        return String('"{}"'.format(element), section=None)
 
 
 def _first_part(x: Array) -> Array:
-    return Array(x.value[:-1])
+    return Array(x.value[:-1], section=None)
 
 
 def _last_part(x: Array) -> Array:
-    return Array(x.value[1:])
+    return Array(x.value[1:], section=None)
 
 
 def _sum(x: Array):
-    return Number(str(sum(element.value for element in x.value)))
+    return Number(str(sum(element.value for element in x.value)), section=None)
 
 
 def _product(x: Array):
     result = 1
     for element in x.value:
         result *= element.value
-    return Number(str(result))
+    return Number(str(result), section=None)
 
 
 def _min(x: Array):
-    return Number(str(min(element.value for element in x.value)))
+    return Number(str(min(element.value for element in x.value)), section=None)
 
 
 def _max(x: Array):
-    return Number(str(max(element.value for element in x.value)))
+    return Number(str(max(element.value for element in x.value)), section=None)
 
 
 def _all(x: Array):
-    return Number(str(float(all(element.value for element in x.value))))
+    return Number(str(float(all(element.value for element in x.value))), section=None)
 
 
 def _none(x: Array):
-    return Number(str(float(not any(element.value for element in x.value))))
+    return Number(str(float(not any(element.value for element in x.value))), section=None)
 
 
 def _any(x: Array):
-    return Number(str(float(any(element.value for element in x.value))))
+    return Number(str(float(any(element.value for element in x.value))), section=None)
 
 
 def _read_text_file(file_path: str) -> str:
