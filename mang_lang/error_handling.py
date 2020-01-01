@@ -2,6 +2,7 @@ from itertools import accumulate
 
 
 class CodeFragment:
+    """Describes a fragment of the source code starting at the given index"""
     def __init__(self, elements: str, begin_index=0):
         self._elements = elements
         self._begin_index = begin_index
