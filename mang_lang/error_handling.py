@@ -24,16 +24,6 @@ class Slice:
         return self._elements.startswith(word, self._begin_index)
 
 
-class Section:
-    def __init__(self, text: Slice):
-        self.text = text
-        self._begin_index = text._begin_index
-
-    @property
-    def _elements(self):
-        return self.text._elements
-
-
 def print_syntax_error(text: Slice) -> None:
     print('SYNTAX ERROR')
     _print_error_description(error_label='SYNTAX ERROR', code=text)
@@ -44,6 +34,8 @@ class AlreadyRegisteredException(Exception):
 
 
 def run_time_error_printer(evaluate):
+    """A decorator that prints messages for run time errors.
+    Is used for the evaluation functions for the nodes of the abstract syntax tree."""
     def wrapped_evaluate(self, environment):
         try:
             return evaluate(self, environment)
@@ -57,7 +49,7 @@ def run_time_error_printer(evaluate):
 
 
 def _print_error_description(error_label: str, code: Slice) -> None:
-    '''Print the source code that caused an error with a pointer to the error location'''
+    """Print the source code that caused an error with a pointer to the error location"""
     lines = code._elements.split()
     cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]
     for row_number, line in enumerate(lines):

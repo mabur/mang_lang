@@ -1,8 +1,9 @@
+import copy
 from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
     Dictionary, Function, Lookup, Conditional, ArrayComprehension
-from error_handling import Slice, Section, print_syntax_error
+from error_handling import Slice, print_syntax_error
 
 
 def parse(code: str) -> Expression:
@@ -67,7 +68,7 @@ def _parse_symbol(text: Slice) -> Tuple[str, Slice]:
 
 
 def _parse_number(text: Slice) -> Tuple[Number, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     value, text = _parse_while(text, lambda c: c in DIGITS)
     assert value
     text = _parse_optional_white_space(text)
@@ -75,7 +76,7 @@ def _parse_number(text: Slice) -> Tuple[Number, Slice]:
 
 
 def _parse_string(text: Slice) -> Tuple[String, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     value, text = _parse_keyword(text, STRING_BEGIN)
     body, text = _parse_while(text, lambda c: c != STRING_END)
     value += body
@@ -85,7 +86,7 @@ def _parse_string(text: Slice) -> Tuple[String, Slice]:
 
 
 def _parse_array(text: Slice) -> Tuple[Array, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     expressions = ()
     _, text = _parse_keyword(text, ARRAY_BEGIN)
     while not text.startswith(ARRAY_END):
@@ -98,7 +99,7 @@ def _parse_array(text: Slice) -> Tuple[Array, Slice]:
 
 
 def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     variable_definitions = []
     _, text = _parse_keyword(text, DICTIONARY_BEGIN)
     while not text.startswith(DICTIONARY_END):
@@ -111,7 +112,7 @@ def _parse_dictionary(text: Slice) -> Tuple[Dictionary, Slice]:
 
 
 def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     value, text = _parse_symbol(text)
     if not text.startswith(OF):
         return Lookup(left=value, right=None, section=section), text
@@ -121,7 +122,7 @@ def _parse_lookup(text: Slice) -> Tuple[Lookup, Slice]:
 
 
 def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     value, text = _parse_symbol(text)
     _, text = _parse_keyword(text, EQUAL)
     expression, text = _parse_expression(text)
@@ -129,7 +130,7 @@ def _parse_variable_definition(text: Slice) -> Tuple[VariableDefinition, Slice]:
 
 
 def _parse_function(text: Slice) -> Tuple[Function, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     _, text = _parse_keyword(text, FROM)
     value, text = _parse_symbol(text)
     _, text = _parse_keyword(text, TO)
@@ -138,7 +139,7 @@ def _parse_function(text: Slice) -> Tuple[Function, Slice]:
 
 
 def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     _, text = _parse_keyword(text, IF)
     condition, text = _parse_expression(text)
     _, text = _parse_keyword(text, THEN)
@@ -151,7 +152,7 @@ def _parse_conditional(text: Slice) -> Tuple[Conditional, Slice]:
 
 def _parse_array_comprehension(text: Slice)\
         -> Tuple[ArrayComprehension, Slice]:
-    section = Section(text)
+    section = copy.copy(text)
     _, text = _parse_keyword(text, EACH)
     all_expression, text = _parse_expression(text)
     _, text = _parse_keyword(text, FOR)
