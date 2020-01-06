@@ -464,6 +464,11 @@ class TestTupleComprehension(unittest.TestCase):
         expected = [V(1), V(3), V(4)]
         self.assertEqual(expected, actual)
 
+    def test11(self):
+        actual = interpret('each 9 for e in [1, 2, 3]')
+        expected = [V(9), V(9), V(9)]
+        self.assertEqual(expected, actual)
+
 
 class TestStandardLibrary(unittest.TestCase):
     def test_find0(self):
