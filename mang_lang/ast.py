@@ -18,21 +18,6 @@ class Expression:
         raise NotImplemented()
 
 
-class Array(Expression):
-    def __init__(self, expressions: Sequence[Expression], code: CodeFragment) -> None:
-        super().__init__(code)
-        self.value = expressions
-
-    def to_json(self) -> Json:
-        return [e.to_json() for e in self.value]
-
-    @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.value]
-        return Array(expressions, code=self.code)
-
-
 class Number(Expression):
     def __init__(self, value: str, code: CodeFragment) -> None:
         super().__init__(code)
@@ -57,6 +42,21 @@ class String(Expression):
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         return self
+
+
+class Array(Expression):
+    def __init__(self, expressions: Sequence[Expression], code: CodeFragment) -> None:
+        super().__init__(code)
+        self.value = expressions
+
+    def to_json(self) -> Json:
+        return [e.to_json() for e in self.value]
+
+    @run_time_error_printer
+    def evaluate(self, environment: Environment) -> Expression:
+        new_environment = deepcopy(environment)
+        expressions = [e.evaluate(new_environment) for e in self.value]
+        return Array(expressions, code=self.code)
 
 
 class VariableDefinition(Expression):
