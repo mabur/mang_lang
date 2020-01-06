@@ -97,6 +97,33 @@ class Dictionary(Expression):
         return Array(expressions, code=self.code)
 
 
+class Conditional(Expression):
+    def __init__(
+            self,
+            condition: Expression,
+            then_expression: Expression,
+            else_expression: Expression,
+            code: CodeFragment,
+    ) -> None:
+        super().__init__(code)
+        self.condition = condition
+        self.then_expression = then_expression
+        self.else_expression = else_expression
+
+    def to_json(self) -> Json:
+        return {"type": "conditional",
+                "condition": self.condition.to_json(),
+                "then_expression": self.then_expression.to_json(),
+                "else_expression": self.else_expression.to_json()}
+
+    @run_time_error_printer
+    def evaluate(self, environment: Environment) -> Expression:
+        if self.condition.evaluate(environment).value:
+            return self.then_expression.evaluate(environment)
+        else:
+            return self.else_expression.evaluate(environment)
+
+
 class Function(Expression):
     def __init__(
             self,
@@ -163,33 +190,6 @@ class Lookup(Expression):
         elif isinstance(function, Callable):
             return function(input, self.code)
         raise TypeError
-
-
-class Conditional(Expression):
-    def __init__(
-            self,
-            condition: Expression,
-            then_expression: Expression,
-            else_expression: Expression,
-            code: CodeFragment,
-    ) -> None:
-        super().__init__(code)
-        self.condition = condition
-        self.then_expression = then_expression
-        self.else_expression = else_expression
-
-    def to_json(self) -> Json:
-        return {"type": "conditional",
-                "condition": self.condition.to_json(),
-                "then_expression": self.then_expression.to_json(),
-                "else_expression": self.else_expression.to_json()}
-
-    @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        if self.condition.evaluate(environment).value:
-            return self.then_expression.evaluate(environment)
-        else:
-            return self.else_expression.evaluate(environment)
 
 
 class ArrayComprehension(Expression):
