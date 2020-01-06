@@ -421,7 +421,7 @@ class TestImport(unittest.TestCase):
         self.assertEqual(V(9), interpret('b of {a = import of "test_data/test3.ml", square = square of a, b=square of 3}'))
 
 
-class TestTupleComprehension(unittest.TestCase):
+class TestArrayComprehension(unittest.TestCase):
     def test1(self):
         actual = interpret('each e for e in []')
         expected = []
