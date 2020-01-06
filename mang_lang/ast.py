@@ -88,7 +88,7 @@ class Dictionary(Expression):
         self.value = expressions
 
     def to_json(self) -> Json:
-        return tuple(e.to_json() for e in self.value)
+        return [e.to_json() for e in self.value]
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
