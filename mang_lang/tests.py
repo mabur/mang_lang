@@ -13,19 +13,19 @@ def S(value) -> Mapping[str, Any]:
 
 class TestArray(unittest.TestCase):
     def test_array0(self):
-        self.assertEqual((), interpret('[]'))
+        self.assertEqual([], interpret('[]'))
 
     def test_array1a(self):
-        self.assertEqual((V(1),), interpret('[1]'))
+        self.assertEqual([V(1)], interpret('[1]'))
 
     def test_array1b(self):
         self.assertEqual(V(1), interpret('1'))
 
     def test_array2(self):
-        self.assertEqual((V(1), V(2)), interpret('[1,2]'))
+        self.assertEqual([V(1), V(2)], interpret('[1,2]'))
 
     def test_array3(self):
-        self.assertEqual((V(1), V(2), V(3)), interpret('[1,2,3]'))
+        self.assertEqual([V(1), V(2), V(3)], interpret('[1,2,3]'))
 
 
 class TestBuiltinFunctions(unittest.TestCase):
@@ -75,15 +75,15 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(0), interpret('is_empty of [1,2]'))
 
     def test_concat1(self):
-        self.assertEqual((V(1), V(2), V(3), V(4)),
+        self.assertEqual([V(1), V(2), V(3), V(4)],
                          interpret('concat of [[1,2],[3,4]]'))
 
     def test_concat2(self):
-        self.assertEqual((V(1), V(2), V(3), V(4), V(5), V(6)),
+        self.assertEqual([V(1), V(2), V(3), V(4), V(5), V(6)],
                          interpret('concat of [[1,2],[3,4],[5,6]]'))
 
     def test_concat3(self):
-        self.assertEqual((V(1), V(2), V(3)),
+        self.assertEqual([V(1), V(2), V(3)],
                          interpret('concat of [[1],[2],[3]]'))
 
     def test_first(self):
@@ -227,25 +227,25 @@ class TestExpression(unittest.TestCase):
 
 class TestTuple(unittest.TestCase):
     def test_tuple(self):
-        self.assertEqual((V(3), V(7)), interpret('[sum of [1, 2], sum of [3,4]]'))
+        self.assertEqual([V(3), V(7)], interpret('[sum of [1, 2], sum of [3,4]]'))
 
 
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'result', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'result', 'value': V(5)}],
                          interpret('{result = 5}'))
 
     def test_definition_result_constant_function_call(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'result', 'value': V(3)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'result', 'value': V(3)}],
                          interpret('{result = sum of [1, 2]}'))
 
     def test_definition_constant_function_call(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(3)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(3)}],
                          interpret('{x = sum of [1, 2]}'))
 
     def test_definitions(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(1)},
-                          {'type': 'variable_definition', 'name': 'y', 'value': V(2)}),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(1)},
+                          {'type': 'variable_definition', 'name': 'y', 'value': V(2)}],
                          interpret('{x = 1, y = 2}'))
 
     def test_tuple_definition_and_function_call(self):
@@ -254,14 +254,14 @@ class TestDefinitions(unittest.TestCase):
 
 class TestKeywordVariableClashes(unittest.TestCase):
     def test_in(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'input', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'input', 'value': V(5)}],
                          interpret('{input = 5}'))
 
     def test_in2(self):
         self.assertEqual(V(5), interpret('input of {input = 5}'))
 
     def test_if(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'iffy', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'iffy', 'value': V(5)}],
                          interpret('{iffy = 5}'))
 
     def test_if2(self):
@@ -274,25 +274,25 @@ class TestKeywordVariableClashes(unittest.TestCase):
         self.assertEqual(V(5), interpret('fromage of {fromage = 5}'))
 
     def test_all(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'allround', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'allround', 'value': V(5)}],
                          interpret('{allround = 5}'))
 
     def test_then(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'thenner', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'thenner', 'value': V(5)}],
                          interpret('{thenner = 5}'))
 
     def test_then2(self):
         self.assertEqual(V(5), interpret('thenner of {thenner = 5}'))
 
     def test_else(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)}],
                          interpret('{elsewhere = 5}'))
 
     def test_else2(self):
         self.assertEqual(V(5), interpret('elsewhere of {elsewhere = 5}'))
 
     def test_import(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'important', 'value': V(5)},),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'important', 'value': V(5)}],
                          interpret('{important = 5}'))
 
     def test_import2(self):
@@ -301,22 +301,22 @@ class TestKeywordVariableClashes(unittest.TestCase):
 
 class TestIndirection(unittest.TestCase):
     def test_indirection1(self):
-        self.assertEqual(({'type': 'variable_definition', 'name': 'x', 'value': V(5)},
-                          {'type': 'variable_definition', 'name': 'y', 'value': V(5)}),
+        self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(5)},
+                          {'type': 'variable_definition', 'name': 'y', 'value': V(5)}],
                          interpret('{x = 5, y = x}'))
 
     def test_indirection2(self):
-        self.assertEqual((
+        self.assertEqual([
             {'type': 'variable_definition', 'name': 'a', 'value': V(1)},
             {'type': 'variable_definition', 'name': 'b', 'value': V(1)},
-            {'type': 'variable_definition', 'name': 'c', 'value': V(1)}),
+            {'type': 'variable_definition', 'name': 'c', 'value': V(1)}],
             interpret('{a = 1, b = a, c = b}'))
 
     def test_indirection3(self):
-        self.assertEqual((
+        self.assertEqual([
             {'type': 'variable_definition', 'name': 'x', 'value': V(5)},
             {'type': 'variable_definition', 'name': 'y', 'value': V(3)},
-            {'type': 'variable_definition', 'name': 'z', 'value': V(8)}),
+            {'type': 'variable_definition', 'name': 'z', 'value': V(8)}],
             interpret('{x = 5, y = 3, z = sum of [x, y]}'))
 
 
@@ -424,57 +424,57 @@ class TestImport(unittest.TestCase):
 class TestTupleComprehension(unittest.TestCase):
     def test1(self):
         actual = interpret('each e for e in []')
-        expected = tuple()
+        expected = []
         self.assertEqual(expected, actual)
 
     def test2(self):
         actual = interpret('each e for e in [2]')
-        expected = (V(2),)
+        expected = [V(2)]
         self.assertEqual(expected, actual)
 
     def test3(self):
         actual = interpret('each e for e in [2, 3]')
-        expected = (V(2), V(3))
+        expected = [V(2), V(3)]
         self.assertEqual(expected, actual)
 
     def test4(self):
         actual = interpret('x of {t = [], x = each e for e in t}')
-        expected = tuple()
+        expected = []
         self.assertEqual(expected, actual)
 
     def test5(self):
-        self.assertEqual((V(2),), interpret('x of {t = [2], x = each e for e in t}'))
+        self.assertEqual([V(2)], interpret('x of {t = [2], x = each e for e in t}'))
 
     def test6(self):
-        self.assertEqual((V(2), V(3)), interpret('x of {t = [2, 3], x = each e for e in t}'))
+        self.assertEqual([V(2), V(3)], interpret('x of {t = [2, 3], x = each e for e in t}'))
 
     def test7(self):
-        self.assertEqual((V(4), V(9)), interpret('x of {t = [2, 3], x = each product of [e, e] for e in t}'))
+        self.assertEqual([V(4), V(9)], interpret('x of {t = [2, 3], x = each product of [e, e] for e in t}'))
 
     def test8(self):
-        self.assertEqual((V(1), V(1)), interpret('x of {f = from x to 1, t = [2, 3], x = each f of e for e in t}'))
+        self.assertEqual([V(1), V(1)], interpret('x of {f = from x to 1, t = [2, 3], x = each f of e for e in t}'))
 
     def test9(self):
         actual = interpret('each e for e in [1, 2, 3, 4] if check_equality of [e, 2]')
-        expected = (V(2),)
+        expected = [V(2)]
         self.assertEqual(expected, actual)
 
     def test10(self):
         actual = interpret('each e for e in [1, 2, 3, 4] if none of [check_equality of [e, 2]]')
-        expected = (V(1), V(3), V(4))
+        expected = [V(1), V(3), V(4)]
         self.assertEqual(expected, actual)
 
 
 class TestStandardLibrary(unittest.TestCase):
     def test_find0(self):
-        self.assertEqual(((), ()), interpret('find of {list=[], query=1}'))
+        self.assertEqual([[], []], interpret('find of {list=[], query=1}'))
 
     def test_find1(self):
-        self.assertEqual(((), (V(1), V(2), V(3))), interpret('find of {list=[1,2,3], query=1}'))
+        self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find of {list=[1,2,3], query=1}'))
 
     @unittest.skip
     def test_find2(self):
-        self.assertEqual(((V(1),), (V(2), V(3))), interpret('find of {list=[1], query=2}'))
+        self.assertEqual([[V(1)], [V(2), V(3)]], interpret('find of {list=[1], query=2}'))
 
 
 class TestErrorMessages(unittest.TestCase):
