@@ -183,12 +183,15 @@ class Lookup(Expression):
         # Function call
         function = environment[self.left]
         input = self.right.evaluate(environment)
+
         if isinstance(function, Function):
             new_environment = deepcopy(environment)
             new_environment[function.argument_name] = input
             return function.expression.evaluate(new_environment)
-        elif isinstance(function, Callable):
+
+        if isinstance(function, Callable):
             return function(input, self.code)
+
         raise TypeError
 
 
