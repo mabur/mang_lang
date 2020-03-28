@@ -19,6 +19,8 @@ ARRAY_BEGIN = "["
 ARRAY_END = "]"
 DICTIONARY_BEGIN = "{"
 DICTIONARY_END = "}"
+STRING_BEGIN = "\""
+STRING_END = "\""
 EQUAL = "="
 COMMA = ","
 IF = "if"
@@ -29,14 +31,12 @@ FOR = "for"
 IN = "in"
 FROM = "from"
 TO = "to"
-OF = "of"
-STRING_BEGIN = "\""
-STRING_END = "\""
 
 DIGITS = '+-.1234567890'
 LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 WHITESPACE = ' \n'
 
+KEYWORDS = [IF, THEN, ELSE, EACH, FOR, IN, FROM, TO]
 
 def _parse_keyword(code: CodeFragment, keyword: str) -> Tuple[str, CodeFragment]:
     value = ''
@@ -114,11 +114,13 @@ def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
 def _parse_lookup(code: CodeFragment) -> Tuple[Lookup, CodeFragment]:
     section = copy.copy(code)
     value, code = _parse_symbol(code)
-    if not code.startswith(OF):
-        return Lookup(left=value, right=None, code=section), code
-    _, code = _parse_keyword(code, OF)
-    right, code = _parse_expression(code)
-    return Lookup(left=value, right=right, code=section), code
+    assert value not in KEYWORDS, 'Cannot use keyword ({}) as symbol'.format(value)
+    code2 = copy.copy(code)
+    try:
+        right, code = _parse_expression(code)
+        return Lookup(left=value, right=right, code=section), code
+    except:
+        return Lookup(left=value, right=None, code=section), code2
 
 
 def _parse_variable_definition(code: CodeFragment) -> Tuple[VariableDefinition, CodeFragment]:
