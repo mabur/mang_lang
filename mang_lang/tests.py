@@ -33,7 +33,7 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(8), interpret('add [5, 3]'))
 
     def test_sub(self):
-        self.assertEqual(V(2), interpret('difference [5, 3]'))
+        self.assertEqual(V(2), interpret('sub [5, 3]'))
 
     def test_mul(self):
         self.assertEqual(V(15), interpret('mul [5, 3]'))
@@ -125,7 +125,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = 'y {f = from x to if check_equality [x, 0] then 1 else mul [x, f difference [x, 1]], y=f 10}'
+        code = 'y {f = from x to if check_equality [x, 0] then 1 else mul [x, f sub [x, 1]], y=f 10}'
         self.assertEqual(V(3628800), interpret(code))
 
 
@@ -215,10 +215,10 @@ class TestaddMinMax(unittest.TestCase):
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(V(12), interpret('add [difference [5, 3], mul [2, 5]]'))
+        self.assertEqual(V(12), interpret('add [sub [5, 3], mul [2, 5]]'))
 
     def test_white_space(self):
-        self.assertEqual(V(12), interpret('  add [ difference [5 , 3], mul   [2,5]]'))
+        self.assertEqual(V(12), interpret('  add [ sub [5 , 3], mul   [2,5]]'))
 
     def test_new_line(self):
         self.assertEqual(V(5), interpret('''add

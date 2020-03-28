@@ -5,7 +5,7 @@ from ast import Array, Number, String
 from error_handling import CodeFragment
 
 
-def _difference(x: Array, code: CodeFragment):
+def _sub(x: Array, code: CodeFragment):
     return Number(_value_left(x) - _value_right(x), code)
 
 
@@ -132,7 +132,7 @@ def _import(x: String, code: CodeFragment):
 
 
 ENVIRONMENT = {
-    'difference': _difference,
+    'sub': _sub,
     'division': _division,
     'check_equality': _check_equality,
     'check_inequality': _check_inequality,
