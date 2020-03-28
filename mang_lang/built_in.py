@@ -132,7 +132,9 @@ def _import(x: String, code: CodeFragment):
 
 
 ENVIRONMENT = {
+    'add': _add,
     'sub': _sub,
+    'mul': _mul,
     'div': _div,
     'check_equality': _check_equality,
     'check_inequality': _check_inequality,
@@ -144,8 +146,6 @@ ENVIRONMENT = {
     'last': _last,
     'first_part': _first_part,
     'last_part': _last_part,
-    'add': _add,
-    'mul': _mul,
     'min': _min,
     'max': _max,
     'all': _all,
