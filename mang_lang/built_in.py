@@ -88,7 +88,7 @@ def _last_part(x: Array, code: CodeFragment) -> Array:
     return Array(x.value[1:], code)
 
 
-def _sum(x: Array, code: CodeFragment):
+def _add(x: Array, code: CodeFragment):
     return Number(str(sum(element.value for element in x.value)), code)
 
 
@@ -144,7 +144,7 @@ ENVIRONMENT = {
     'last': _last,
     'first_part': _first_part,
     'last_part': _last_part,
-    'sum': _sum,
+    'add': _add,
     'product': _product,
     'min': _min,
     'max': _max,

@@ -29,8 +29,8 @@ class TestArray(unittest.TestCase):
 
 
 class TestBuiltinFunctions(unittest.TestCase):
-    def test_sum(self):
-        self.assertEqual(V(8), interpret('sum [5, 3]'))
+    def test_add(self):
+        self.assertEqual(V(8), interpret('add [5, 3]'))
 
     def test_sub(self):
         self.assertEqual(V(2), interpret('difference [5, 3]'))
@@ -202,9 +202,9 @@ class TestInequality(unittest.TestCase):
         self.assertEqual(V(0), interpret('check_inequality [0, 0]'))
 
 
-class TestSumMinMax(unittest.TestCase):
-    def test_sum(self):
-        self.assertEqual(V(6), interpret('sum [1,2,3]'))
+class TestaddMinMax(unittest.TestCase):
+    def test_add(self):
+        self.assertEqual(V(6), interpret('add [1,2,3]'))
 
     def test_min(self):
         self.assertEqual(V(1), interpret('min [1,2,3]'))
@@ -215,19 +215,19 @@ class TestSumMinMax(unittest.TestCase):
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(V(12), interpret('sum [difference [5, 3], product [2, 5]]'))
+        self.assertEqual(V(12), interpret('add [difference [5, 3], product [2, 5]]'))
 
     def test_white_space(self):
-        self.assertEqual(V(12), interpret('  sum [ difference [5 , 3], product   [2,5]]'))
+        self.assertEqual(V(12), interpret('  add [ difference [5 , 3], product   [2,5]]'))
 
     def test_new_line(self):
-        self.assertEqual(V(5), interpret('''sum
+        self.assertEqual(V(5), interpret('''add
         [2,3]'''))
 
 
 class TestTuple(unittest.TestCase):
     def test_tuple(self):
-        self.assertEqual([V(3), V(7)], interpret('[sum [1, 2], sum [3,4]]'))
+        self.assertEqual([V(3), V(7)], interpret('[add [1, 2], add [3,4]]'))
 
 
 class TestDefinitions(unittest.TestCase):
@@ -237,11 +237,11 @@ class TestDefinitions(unittest.TestCase):
 
     def test_definition_result_constant_function_call(self):
         self.assertEqual([{'type': 'variable_definition', 'name': 'result', 'value': V(3)}],
-                         interpret('{result = sum [1, 2]}'))
+                         interpret('{result = add [1, 2]}'))
 
     def test_definition_constant_function_call(self):
         self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(3)}],
-                         interpret('{x = sum [1, 2]}'))
+                         interpret('{x = add [1, 2]}'))
 
     def test_definitions(self):
         self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(1)},
@@ -249,7 +249,7 @@ class TestDefinitions(unittest.TestCase):
                          interpret('{x = 1, y = 2}'))
 
     def test_tuple_definition_and_function_call(self):
-        self.assertEqual(V(3), interpret('y {x=[1,2], y=sum x}'))
+        self.assertEqual(V(3), interpret('y {x=[1,2], y=add x}'))
 
 
 class TestKeywordVariableClashes(unittest.TestCase):
@@ -317,7 +317,7 @@ class TestIndirection(unittest.TestCase):
             {'type': 'variable_definition', 'name': 'x', 'value': V(5)},
             {'type': 'variable_definition', 'name': 'y', 'value': V(3)},
             {'type': 'variable_definition', 'name': 'z', 'value': V(8)}],
-            interpret('{x = 5, y = 3, z = sum [x, y]}'))
+            interpret('{x = 5, y = 3, z = add [x, y]}'))
 
 
 class TestDefinitionLookup(unittest.TestCase):
@@ -337,10 +337,10 @@ class TestDefinitionLookup(unittest.TestCase):
         self.assertEqual(V(1), interpret('b {a={f=from x to 1}, g=f a, b=g 3}'))
 
     def test5(self):
-        self.assertEqual(V(4), interpret('b {a={f = from x to sum [x,1]}, g=f a, b = g 3}'))
+        self.assertEqual(V(4), interpret('b {a={f = from x to add [x,1]}, g=f a, b = g 3}'))
 
     def test6(self):
-        self.assertEqual(V(4), interpret('c {a={b={f=from x to sum [x,1]}}, g=f b a, c = g 3}'))
+        self.assertEqual(V(4), interpret('c {a={b={f=from x to add [x,1]}}, g=f b a, c = g 3}'))
 
     def test7(self):
         self.assertEqual(V(1), interpret('ABBA {ABBA = 1}'))
@@ -361,7 +361,7 @@ class TestFunctionDefinition(unittest.TestCase):
         self.assertEqual(V(3), interpret('y {f = from x to 3, y=f 1}'))
 
     def test_function_definition_and_call(self):
-        self.assertEqual(V(5), interpret('y {f = from x to sum x, y = f [2,3]}'))
+        self.assertEqual(V(5), interpret('y {f = from x to add x, y = f [2,3]}'))
 
 
 class TestFunctionScope(unittest.TestCase):
@@ -369,10 +369,10 @@ class TestFunctionScope(unittest.TestCase):
         self.assertEqual(V(3), interpret('z {f = from x to y {y = 3}, z=f 2}'))
 
     def test_scope2(self):
-        self.assertEqual(V(5), interpret('z {f = from x to result {y=3,result=sum [x, y]}, z = f 2}'))
+        self.assertEqual(V(5), interpret('z {f = from x to result {y=3,result=add [x, y]}, z = f 2}'))
 
     def test_scope3(self):
-        self.assertEqual(V(5), interpret('z {y = 2, f = from x to result {y=3, result=sum [x, y]}, z = f 2}'))
+        self.assertEqual(V(5), interpret('z {y = 2, f = from x to result {y=3, result=add [x, y]}, z = f 2}'))
 
 
 class TestString(unittest.TestCase):
