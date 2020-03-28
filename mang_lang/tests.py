@@ -39,7 +39,7 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(15), interpret('mul [5, 3]'))
 
     def test_div(self):
-        self.assertEqual(V(2), interpret('division [6, 3]'))
+        self.assertEqual(V(2), interpret('div [6, 3]'))
 
     def test_if_then_else_true(self):
         self.assertEqual(V(1), interpret('if 1 then 1 else 2'))

@@ -9,7 +9,7 @@ def _sub(x: Array, code: CodeFragment):
     return Number(_value_left(x) - _value_right(x), code)
 
 
-def _division(x: Array, code: CodeFragment):
+def _div(x: Array, code: CodeFragment):
     return Number(_value_left(x) / _value_right(x), code)
 
 
@@ -133,7 +133,7 @@ def _import(x: String, code: CodeFragment):
 
 ENVIRONMENT = {
     'sub': _sub,
-    'division': _division,
+    'div': _div,
     'check_equality': _check_equality,
     'check_inequality': _check_inequality,
     'none': _none,
