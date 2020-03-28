@@ -35,8 +35,8 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_sub(self):
         self.assertEqual(V(2), interpret('difference [5, 3]'))
 
-    def test_product(self):
-        self.assertEqual(V(15), interpret('product [5, 3]'))
+    def test_mul(self):
+        self.assertEqual(V(15), interpret('mul [5, 3]'))
 
     def test_div(self):
         self.assertEqual(V(2), interpret('division [6, 3]'))
@@ -125,7 +125,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = 'y {f = from x to if check_equality [x, 0] then 1 else product [x, f difference [x, 1]], y=f 10}'
+        code = 'y {f = from x to if check_equality [x, 0] then 1 else mul [x, f difference [x, 1]], y=f 10}'
         self.assertEqual(V(3628800), interpret(code))
 
 
@@ -215,10 +215,10 @@ class TestaddMinMax(unittest.TestCase):
 
 class TestExpression(unittest.TestCase):
     def test_composition(self):
-        self.assertEqual(V(12), interpret('add [difference [5, 3], product [2, 5]]'))
+        self.assertEqual(V(12), interpret('add [difference [5, 3], mul [2, 5]]'))
 
     def test_white_space(self):
-        self.assertEqual(V(12), interpret('  add [ difference [5 , 3], product   [2,5]]'))
+        self.assertEqual(V(12), interpret('  add [ difference [5 , 3], mul   [2,5]]'))
 
     def test_new_line(self):
         self.assertEqual(V(5), interpret('''add
@@ -452,7 +452,7 @@ class TestArrayComprehension(unittest.TestCase):
         self.assertEqual([V(2), V(3)], interpret('x {t = [2, 3], x = each e for e in t}'))
 
     def test7(self):
-        self.assertEqual([V(4), V(9)], interpret('x {t = [2, 3], x = each product [e, e] for e in t}'))
+        self.assertEqual([V(4), V(9)], interpret('x {t = [2, 3], x = each mul [e, e] for e in t}'))
 
     def test8(self):
         self.assertEqual([V(1), V(1)], interpret('x {f = from x to 1, t = [2, 3], x = each f e for e in t}'))

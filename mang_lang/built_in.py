@@ -92,7 +92,7 @@ def _add(x: Array, code: CodeFragment):
     return Number(str(sum(element.value for element in x.value)), code)
 
 
-def _product(x: Array, code: CodeFragment):
+def _mul(x: Array, code: CodeFragment):
     result = 1
     for element in x.value:
         result *= element.value
@@ -145,7 +145,7 @@ ENVIRONMENT = {
     'first_part': _first_part,
     'last_part': _last_part,
     'add': _add,
-    'product': _product,
+    'mul': _mul,
     'min': _min,
     'max': _max,
     'all': _all,

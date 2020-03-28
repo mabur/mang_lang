@@ -1,3 +1,3 @@
 {
-    square = from x to product [x,x]
+    square = from x to mul [x,x]
 }
