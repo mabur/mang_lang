@@ -1,323 +1,63 @@
-FOLD
+TODO:
+* Fix scope handling
+* Try to implement Advent od Code problems to see what is missing
+* Unpacking dicts for multiple input and output of functions
+* zip
+* Konsekvent indentering
+* Start writing standard library functions in Mang Lang instead of Python.
+* Pattern matching.
 
-// Fold<
-faculty = left_fold collection with 1 by mul
-sum     = left_fold collection with 0 by add
-minimum = left_fold collection with MAX_FLOAT by min
-maximum = left_fold collection with MIN_FLOAT by max
-concat  = left_fold right with with left by push_back
-sum     = left_fold 0 collection add
-
-// Unfold
-a = unfold 0 by next until greater_than(10)
-a = from 0; greater_than(10); next
-a = for x=0; x <= 10; next(x)
-a = (x for geq(0, x) and leq(x, 10))
-
-increasing_range = from end to result of
+-------------------------------------------------------------------------------------------------
+PATTERN MATCHING FOR SYMBOLS IN RECORDS AND FUNCTION INPUT
 {
-  increase_until_end = from x to sum of [x, 1] if check_inequality [x, end],
-  result = increase_until_end unfold 0
+  // Lists
+  conjugate = from x to [first x, neg last x],
+  conjugate = from [a, b] to [a, neg b],
+  p0 = [1, 2],
+  p1 = conjugate p0,
+  [x1, y1] = conjugate p0,
+
+  // Records
+  conjugate = from c to {re = re c, im = neg im c},
+  conjugate = from {re, im} to {re = re, im = neg im},
+  p0 = {re = 1, im = 2},
+  p1 = conjugate p0,
+  {re1, im1} = conjugate p0,
 }
-increasing_range = end -> ((x -> x + 1 if x != end) unfold 0)
-
-decreasing_range = from x to difference of [x, 1] if check_inequality of [x, -1]
-decreasing_range = each x from x to difference of [x, 1] if check_inequality of [x, -1]
-decreasing_range = unfold 9 from x to difference of [x, 1] if check_inequality of [x, -1]
-my_range = decreasing_range unfold 9
-increasing_range = unfold 0 from x to sum of [x, 1] if check_inequality of [x, 10]
-increasing_range = unfold 0 from x to if check_inequality of [x, 10] then sum of [x, 1] else undefined
-increasing_range = unfold 0 increase_until_10
-increasing_range = increase_until_10 unfold 0 
-
-split = from s to move_word of s if is_not_empty of source of s
-chunks = split unfold 'hello,new,world'
-words = from s to target of s for chunks
-
-split2 = each target of s from s to move_word of s if is_not_empty of source of s
-move_word = from input to {source=..., target=...}
-
-// list comprehension
-squares = each mul of [x, x] for x in collection
-squares = from x to mul of [x, x] if check_equality [x, 4] for collection 
-squares = for collection from x to mul of [x, x] if check_equality [x, 4]
-squares = for collection from x to if check_equality [x, 4] then mul of [x, x] else undefined
-squares = from x to mul of [x, x] if check_equality [x, 4] for collection 
-squares = from x to if check_equality [x, 4] then mul of [x, x] else undefined for collection 
-squares = square for collection
-squares = for collection square
-
-// Consistent approach?
-result = function of argument
-result = function for collection
-result = function unfold seed
-
-result = successor  of 0
-result = successor  for [8, 4, 5]
-result = successor* unfold [0]
-result = successor* unfolding [0]
-
-result = add fold 0 with collection
-result = add leftfold 0 with collection
-result = add rightfold collection with 0
-
-// linspace
-a = (0,1,...,10)
-N = 10
-delta = div(1,N)
-a = (0,delta,...,1)
-a = range(0, 10)
-
-delta = div(sub(end, start), 10)
-a = (start, ..., end)
-
-
-READ OR WRITE TO TEXT FILES
-
-content = read_text("data.txt")
-content = text_file("data.txt")
-write_text("data.txt", content)
-text_file("data.txt") = content
-
-
-REGEXP FUNCTIONALITY
-
-NUMBER = "[+-]?([0-9]+[.])?[0-9]+"
-PARENTHESIS_BEGIN = "\("
-PARENTHESIS_END = "\)"
-BRACKET_BEGIN = "\["
-BRACKET_END = "\]"
-SCOPE_BEGIN = "\{"
-SCOPE_END = "\}"
-EQUAL = "="
-COMMA = ","
-DOT = "\."
-IF = "if"
-THEN = "then"
-ELSE = "else"
-IMPORT = "import"
-ALL = "all"  # TODO: rename to "each"?
-FOR = "for"
-IN = "in"
-SYMBOL = "[a-z_]\\w*"
-STRING = "\"\w*\""
-WHITE_SPACE = " "
-NEW_LINES = "\n"
-
-_parse_number, [TokenType.NUMBER]
-_parse_string, [TokenType.STRING]
-_parse_conditional, [TokenType.IF]
-_parse_tuple_comprehension, [TokenType.ALL]
-_parse_import, [TokenType.IMPORT]
-_parse_function_definition, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN, TokenType.SYMBOL, TokenType.PARENTHESIS_END, TokenType.EQUAL]
-_parse_function_call, [TokenType.SYMBOL, TokenType.PARENTHESIS_BEGIN]
-_parse_indexing, [TokenType.SYMBOL, TokenType.BRACKET_BEGIN]
-_parse_definition_lookup, [TokenType.SYMBOL, TokenType.DOT, TokenType.SYMBOL]
-_parse_variable_definition, [TokenType.SYMBOL, TokenType.EQUAL]
-_parse_reference, [TokenType.SYMBOL]
-_parse_tuple, [TokenType.PARENTHESIS_BEGIN]
-_parse_scope, [TokenType.SCOPE_BEGIN]
-
-a.b.c
-a.b.c()
-
-* Fix sekvens
-* optional (0 eller 1) av element från någon mängd. högst 1.
-* 1 eller godtyckligt många av element från någon mängd. minst 1.
-* godtyckligt antal. minst 0
-* ihopslagningar av mönstren ovan.
-* Stöd karaktärer / tokens av godtycklig typ.
-
-digit = anyof([0,1,2,3,4,5,6,7,8,9])
-letter = anyof([a,b,c,...])
-sign = anyof([+,-])
-if_key_word = sequence([i,f])
-
-a=if_key_word
-b=atmost(1, sign)
-c=atleast(1, letter)
-d=atleast(0, digit)
-e=sequence([a,b,c,d])
-g=atmost(1, e)
-
-// Exempel:
-a.b.c()
-symbol = atleast(1, letters)
-dot = sequence([.])
-indirection = sequence((symbol, dot))
-optional_indirection = atleast(0, indirection)
-open_parenthesis = sequence([(])
-function_call = sequence((optional_indirection, symbol, open_parenthesis))
-
-def sequence(x: Sequence[Token]) -> Pattern
-def atmost(n: int, x: Sequence[Token]) -> Pattern
-def atleast(n: int, x: Sequence[Token]) -> Pattern
-def match_pattern(x: Sequence[Token], pattern: Pattern) -> Pair[int, int]
-def match_patterns(x: Sequence[Token], patterns: Sequence[Pattern]) -> Sequence[Pair[int, int]]:
-    return [match_pattern(x, pattern) for pattern in patterns]
-Den sista funktionen kanske är onödigt enkel för att ha som del av bibliotek.
-Kanske lättare att skriva den själv och anpassa till just de behov man har.
-
-class Pattern:
-    def match(self, x: Sequence):
-
-
-HELPER SYMBOLS
-Have a grammer that does not allow chaining of function calls or tuple indexing or definition lookup. Force the use of helper symbols.
-
-
-STANDARD LIBRARY
-
-Start writing standard library functions in Mang Lang instead of Python.
-
+-------------------------------------------------------------------------------------------------
 
 TYPES
-square(x:real):real = mul(x, x)
-vec2(x:real, y:real):type
-type(x:real, y:real):vec2
-vec2(x:real, y:real):vec2
-vec2(x:real, y:real)
-vec2 = (x:real, y:real)
-(x:real, y:real):vec2
-point = vec2(1,-1)
-point = typeof((x=0, y=0))
-prototype = (x=0, y=0)
-point = typeof(prototype)
-
-square = (real x) -> (real mul(x,x))
-hypo = (real x, real y) -> (real add(square(x),square(y)))
-conj = (real re, real im) -> (real re, real neg(im))
-conj = (complex c) -> (complex {re=c.re, im=neg(c.im)})
-c1 = complex {re=1,im=1}
-c2 = conj(c1)
-im re = conj 1 2
-im,re = conj(1,2)
-im re = conj(1 2)
-(im, re) = conj(1, 2)
-
-Handle definitions as dicts. Have dicts and arrays as basic containers instead of tuple.
-
-TYPES
-origin2d = (x=0, y=0)
-//Vec2 = type(origin2d))
-//Vec2 = type(x=0, y=0)
-Vec2 = (x: Real, y: Real)
-//point1 = Vec2()
-point2 = Vec2(1, 1)
-//Ray2 = type(start=(0,0), direction=(1,1))
-Ray = (start: Vec2, direction: Vec2)
-// Behövs default-värden? Nej.
-// Behövs konstruktorer? Ja.
-square(x: Real): Real = mul(x, x)
-square(x: Real) = mul(x, x)
-square(x) = mul(x, x)
-square = (x: Real) -> mul(x, x): Real
-square = (x: Real) -> mul(x, x)
-square = (x) -> mul(x, x)
-square = x -> mul(x, x)
-square_distance =
-  (a: Vec2, b: Vec2) ->
-  (dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)) ->
-  add(dx2, dy2): Real
-square_distance =
-  (a: Vec2, b: Vec2) ->
-  (dx=sub(a.x,b.x), dy=sub(a.y,b.y)) ->
-  (dx2=mul(dx,dx), dy2=mul(dy, dy)) ->
-  add(dx2, dy2): Real
-// Variables with local scope:
-square_distance =
-  (a: Vec2, b: Vec2) ->
-  (dx=sub(a.x,b.x), dy=sub(a.y,b.y)) ->
-  (dx2=mul(dx,dx), dy2=mul(dy, dy)) ->
-  add(dx2, dy2): Real
-square_distance =
-  (a: Vec2, b: Vec2) ->
-  {dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)} ->
-  add(dx2, dy2): Real
-
-square_distance: (Vec2, Vec2) -> Real =
-  (a: Vec2, b: Vec2) ->
-  {dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)} ->
-  add(dx2, dy2): Real
-square_distance =
-  (Vec2 a, Vec2 b) -> Real
-  {dx=sub(a.x,b.x), dy=sub(a.y,b.y), dx2=mul(dx,dx), dy2=mul(dy, dy)} ->
-  add(dx2, dy2)
-
-Vec2 = (x=Real, y=Real)
-point = (x=Real 0, y=Real 0)
-point = Vec2 (x=0, y=0)
-point = (x=0, y=0)
-hyp(x, y) = sqrt(add(mul(x, x), mul(y, y)))
-hyp = (x, y) -> sqrt(add(mul(x, x), mul(y, y)))
-hyp = (x=Real, y=Real) -> Real sqrt(add(mul(x, x), mul(y, y)))
-hyp = Vec2 -> Real sqrt(add(mul(x, x), mul(y, y)))
-Hyp = (x=Real, y=Real) -> Real
-
-
-// Alternativ 1 (klass till primitiv):
-square = (x=Number) -> Number mul(left=x, right=x)
-nine = square((x=3))
-five = hyp((x=3,y=4))
-vec  = Vec2((x=3, y=4))
-five = hyp(vec)
-// Alternativ 2 (klass till primitiv):
-square = (x=Number) -> Number mul(left=x, right=x)
-nine = square(x=3)
-five = hyp(x=3,y=4)
-vec  = Vec2(x=3,y=4)
-five = hyp vec
-five = hyp(vec) optional alternativ 3
-
-Ordnings-regel: symbol = typ värde
-Rule: types start with upper case. variables start with lower case.
-
+Types start with upper case. Variables start with lower case.
 
 FUNKTIONS-DEFINITIONER
 
-// Klass till primitiv:
-hyp = (x=Real, y=Real) -> Real sqrt(add(mul(x, x), mul(y, y)))
-Real hyp(Real x, Real y) = sqrt(add(mul(x, x), mul(y, y)))
-square = (x=Number) -> Number mul(left=x, right=x)
-Number square(Number x) = mul(x, x)
+// primitive to primitive:
+square = from x to mul[x, x]
+square = from Number: x to Number: mul[x, x]
 
-// Primitiv till primitiv:
-square(x)=mul(x,x)
-square x = mul x x
-square : Number -> Number
-square(x=Number) = Number mul(x,x)
-square x = {x is a number} = mul x x
-square x = mul x x where x is a Number
-square(x)=mul(x,x) where x is a Number
-assuming x is a Number let
-square(x)=mul(x,x)
-square = x -> mul(x, x) where x is a Number
+// record to primitive:
+hyp = from {x, y} to sqrt add[mul[x, x], mul[y, y]
+hyp = from {Number: x, Number: y} to Number: sqrt add[mul[x, x], mul[y, y]
 
-// Tuppel till tuppel
-conjugate(a, b) = (a, neg(b))
-conjugate a b = a neg(b)
-conjugate : Number x Number -> Number x Number
-conjugate(a, b) = (a, neg(b)) where a is a Number and b is a Number
-conjugate = (a, b) -> (a, neg(b)) where a is a Number and b is a Number
-assuming a is a Number and b is a Number let
-conjugate(a, b) = (a, neg(b))
+// list to list
+conjugate = from x to [first x, neg last x]
+conjugate = from List<Number>: x to List<Number>: [first x, neg last x]
+conjugate = from [a, b] to [a, neg b]
+conjugate = from List<Number>: [a, b] to List<Number>: [a, neg last b]
 
-// Klass/tuppel till klass:
-conjugate(Real r, Imag i) = (Real r=r, Imag i=neg(i))
-conjugate : (Real r, Imag i) -> (Real r, Imag i)
-conjugate = (r=Real, i=Imag) -> (r=Real r, i=Imag neg(i))
-conjugate = (r:Real, i:Imag) -> (r:Real=r, i:Imag=neg(i))
-conjugate = (Real r, Imag i) -> (Real r=r, Imag i=neg(i))
-conjugate = {a, b} -> {a=a, b=neg(b)} where a is Number and b is Number
+// record to record:
+conjugate = from {r, i} to -> {r = r, i = neg i}
+conjugate = from {Number: r, Number: i} to -> {Number: r = r, Number i = neg i}
 
 // Klass variabel
-Complex = (re=Number, im=Number)
-complex = (re=1, im=1)
-re = complex.re
-im = complex.im
-conjugate = c -> (re = c.re, im = neg(c.im)) where c is Complex
-complex2 = conjugate(complex1)
+Complex = {Number: re, Number: im}
+complex = {re=1, im=1}
+re = re complex
+im = im complex
+conjugate = from Complex: {r, i} to -> Complex: {r = r, i = neg i} // Maybe only support this.
+complex2 = conjugate complex1
 
+Ordnings-regel: symbol = typ: värde
 
 TYPER
 *Number
@@ -330,15 +70,10 @@ TYPER
 Vec2 = (x=Real, y=Real)
 *Array?
 *Enum?
-
-
-TODO:
-* Try to implement Advent od Code problems to see what is missing
-* Unpacking dicts for multiple input and output of functions
-* zip
-* Konsekvent indentering
+*Type (The type of types. What is the type of Type itself?)
 
 -------------------------------------------------------------------------------------------------
+
 split = from input to result of
 {
   queue  = queue of input,
@@ -523,3 +258,53 @@ next_word = from source, query to
 // find ger ger listorna [first, it] [it, end],
 // där it kan vara end ifall den inte hittar något.
 // next word ovan är typ find_if.
+
+// F#
+let find list query =
+    match list width
+        [] -> [[]; []]
+        [query:] -> [[]; list]
+        _ ->
+            let [head: tail] = list
+            let [center; new_tail] = find tail query
+            let new_head = [head] + center
+            [new_head, new_tail]
+
+// Python
+def find(list, query):
+    if not list:
+        return [[], []]
+    if list[0] == query:
+        return [[], list]
+    center, tail = find(list=list[1:], query=query)
+    head = [list[0]] + center
+    return [head, tail]
+
+// Nuvarande
+find = from input to
+    if is_empty list input then
+        [[],[]]
+    else if are_equal [first list input, query input] then
+        [[], list input]
+    else
+        result {
+            list = list input,
+            query = query input,
+            recursive_result = find {list=last_part list, query=query}
+            head = concat [[first list], first recursive_result],
+            tail = last recursive_result,
+            result = [head, tail]
+        }
+
+// Multiple input & output of functions
+find = from {list, query} to
+    if is_empty list then
+        [[],[]]
+    else if are_equal [first list, query] then
+        [[], list]
+    else
+        result {
+            [center, tail] = find {list=last_part list, query=query}
+            head = concat [[first list], center],
+            result = [head, tail]
+        }
