@@ -31,33 +31,43 @@ Types start with upper case. Variables start with lower case.
 
 FUNKTIONS-DEFINITIONER
 
+Ordnings-regel 1:  symbol = typ : värde
+Ordnings- regel 2: symbol : typ = värde
+
 // primitive to primitive:
 square = from x to mul[x, x]
 square = from Number: x to Number: mul[x, x]
+square : Number -> Number = mul[x, x]
 
 // record to primitive:
 hyp = from {x, y} to sqrt add[mul[x, x], mul[y, y]
 hyp = from {Number: x, Number: y} to Number: sqrt add[mul[x, x], mul[y, y]
+hyp : {x:=Number, y:=Number} -> Number = sqrt add[mul[x, x], mul[y, y]
 
 // list to list
 conjugate = from x to [first x, neg last x]
 conjugate = from List<Number>: x to List<Number>: [first x, neg last x]
 conjugate = from [a, b] to [a, neg b]
 conjugate = from List<Number>: [a, b] to List<Number>: [a, neg last b]
+conjugate : List Number -> List Number = [first x, neg last x]
 
 // record to record:
 conjugate = from {r, i} to -> {r = r, i = neg i}
 conjugate = from {Number: r, Number: i} to -> {Number: r = r, Number i = neg i}
+conjugate : {r:=Number, i:=Number} -> {r:=Number, i:=Number} = {r := r, i := neg i}
 
 // Klass variabel
 Complex = {Number: re, Number: im}
+Complex := {re:=Number, im:=Number}
+Complex : Record = {re : Primitive = Number, im : Primitive = Number}
 complex = {re=1, im=1}
+complex := {re:=1, im:=1}
+complex : Complex = {re : Number = 1, im : Number = 1}
 re = re complex
 im = im complex
 conjugate = from Complex: {r, i} to -> Complex: {r = r, i = neg i} // Maybe only support this.
+conjugate : Complex -> Complex = {r := r, i := neg i}
 complex2 = conjugate complex1
-
-Ordnings-regel: symbol = typ: värde
 
 TYPER
 *Number
