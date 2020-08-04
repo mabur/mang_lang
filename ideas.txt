@@ -1,11 +1,10 @@
 TODO:
+* Types.
 * Fix scope handling
-* Try to implement Advent od Code problems to see what is missing
-* Unpacking dicts for multiple input and output of functions
-* zip
-* Konsekvent indentering
+* How to handle functions. Inlining vs jump.
+* Generics.
+* Try to implement Advent of Code problems to see what is missing
 * Start writing standard library functions in Mang Lang instead of Python.
-* Pattern matching.
 
 -------------------------------------------------------------------------------------------------
 PATTERN MATCHING FOR SYMBOLS IN RECORDS AND FUNCTION INPUT
