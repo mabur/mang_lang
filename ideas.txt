@@ -1,29 +1,10 @@
 TODO:
-* Types.
 * Fix scope handling
 * How to handle functions. Inlining vs jump.
+* Type annotation and linter.
 * Generics.
 * Try to implement Advent of Code problems to see what is missing
 * Start writing standard library functions in Mang Lang instead of Python.
-
--------------------------------------------------------------------------------------------------
-PATTERN MATCHING FOR SYMBOLS IN RECORDS AND FUNCTION INPUT
-{
-  // Lists
-  conjugate = from x to [first x, neg last x],
-  conjugate = from [a, b] to [a, neg b],
-  p0 = [1, 2],
-  p1 = conjugate p0,
-  [x1, y1] = conjugate p0,
-
-  // Records
-  conjugate = from c to {re = re c, im = neg im c},
-  conjugate = from {re, im} to {re = re, im = neg im},
-  p0 = {re = 1, im = 2},
-  p1 = conjugate p0,
-  {re1, im1} = conjugate p0,
-}
--------------------------------------------------------------------------------------------------
 
 TYPES
 Types start with upper case. Variables start with lower case.
@@ -48,7 +29,7 @@ square : Number to Number = mul[x, x]
 // record to primitive:
 hyp : {x:Number, y:Number} to Number = sqrt add[mul[x, x], mul[y, y]
 
-// list to list
+// list to list:
 conjugate : to = [first x, neg last x]
 conjugate : List Number to List Number = [first x, neg last x]
 
@@ -56,7 +37,7 @@ conjugate : List Number to List Number = [first x, neg last x]
 conjugate : {r, i} to = {r := r, i := neg i}
 conjugate : {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
 
-// Klass variabel
+// Klass variabel:
 Complex := {re: Number, im: Number}
 complex := {re:=1, im:=1}
 complex : Complex = {re : Number = 1, im : Number = 1}
@@ -65,6 +46,13 @@ im = im complex
 conjugate : {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
 conjugate : Complex to Complex = {r := r, i := neg i}
 complex2 = conjugate complex1
+
+// Generics:
+max_value : List Generic to Generic = ...
+max_index : List Generic to Number = ...
+max_split : List Generic to List List Generic = ...
+
+find_value_if : {collection: List Generic, predicate: Generic to Boolean} to Generic = ...
 
 TYPER
 *Number
