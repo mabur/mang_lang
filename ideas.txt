@@ -23,36 +23,36 @@ x : Distance = 3
 square : Number = mul[x, x]
 
 // primitive to primitive:
-square : to = mul[x, x]
-square : Number to Number = mul[x, x]
+square : from Number to Number = mul[x, x]
 
 // record to primitive:
-hyp : {x:Number, y:Number} to Number = sqrt add[mul[x, x], mul[y, y]
+hyp : from {x:Number, y:Number} to Number = sqrt add[mul[x, x], mul[y, y]
 
 // list to list:
-conjugate : to = [first x, neg last x]
-conjugate : List Number to List Number = [first x, neg last x]
+conjugate : from List Number to List Number = [first x, neg last x]
 
 // record to record:
-conjugate : {r, i} to = {r := r, i := neg i}
-conjugate : {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
+conjugate : from {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
 
-// Klass variabel:
-Complex := {re: Number, im: Number}
-complex := {re:=1, im:=1}
+// Type alias:
+Complex : Type = {re: Number, im: Number}
+complex := {re := 1, im := 1}
 complex : Complex = {re : Number = 1, im : Number = 1}
 re = re complex
 im = im complex
-conjugate : {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
-conjugate : Complex to Complex = {r := r, i := neg i}
+conjugate : from {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
+conjugate : from Complex to Complex = {r := r, i := neg i}
 complex2 = conjugate complex1
 
 // Generics:
-max_value : List Generic to Generic = ...
-max_index : List Generic to Number = ...
-max_split : List Generic to List List Generic = ...
+max_value : from List Generic to Generic = ...
+max_index : from List Generic to Number = ...
+max_split : from List Generic to List List Generic = ...
 
-find_value_if : {collection: List Generic, predicate: Generic to Boolean} to Generic = ...
+count_if : from {list: List Generic, predicate: from Generic to Boolean} to Number = ...
+map: from {list: List Generic0, operation: from Generic0 to Generic1} = ...
+map2 : from {list0: List Generic0, list1: List Generic0, operation: from List Generic0 to Generic1} = ...
+map2heterogeneous : from {list0: List Generic0, list1: List Generic1, operation: from {value0: Generic0, value1: Generic1} to Generic2} = ...
 
 TYPER
 *Number
@@ -285,21 +285,38 @@ find = from input to
         result {
             list = list input,
             query = query input,
-            recursive_result = find {list=last_part list, query=query}
-            head = concat [[first list], first recursive_result],
-            tail = last recursive_result,
+            sub_result = find {list=last_part list, query=query}
+            center = first sub_result,
+            tail = last sub_result,
+            head = concat [[first list], center],
             result = [head, tail]
         }
 
-// Multiple input & output of functions
-find = from {list, query} to
+
+// Typ-förslag
+find : from {list: List Generic, query: Generic} to List List Generic =
     if is_empty list then
-        [[],[]]
+        [[], []]
     else if are_equal [first list, query] then
         [[], list]
     else
         result {
-            [center, tail] = find {list=last_part list, query=query}
+            sub_result = find {list=last_part list, query=query},
+            center = first sub_result,
+            tail = last sub_result,
+            head = concat [[first list], center],
+            result = [head, tail]
+        }
+
+// Typ-förslag och pattern matching
+find : from {list: List Generic, query: Generic} to List List Generic =
+    if is_empty list then
+        [[], []]
+    else if are_equal [first list, query] then
+        [[], list]
+    else
+        result {
+            center, tail = find {list=last_part list, query=query},
             head = concat [[first list], center],
             result = [head, tail]
         }
