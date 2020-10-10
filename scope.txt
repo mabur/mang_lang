@@ -1,0 +1,34 @@
+MANGLANG SCOPE
+{
+	factor = 2,
+	double = from x to mul [x, factor],
+	triple = from x to mul [x, 3],
+	numbers = [1, 2, 3, 4, 5],
+	even0 = map {in=numbers, f=double},
+	even1 = each double x for x in numbers
+}
+
+PHASES
+* construction of AST
+  - 
+* type checking
+* compilation
+* evaluation of program
+
+IMPLEMENTATION
+* Outside of function body.
+  - Symbols are refering to constant values.
+  - The symbols could be assigned when constructing the AST.
+    - But let's skip it for simplicity.
+  - The symbols could share immutable data using pointers.
+    - But let's skip it for simplicity.
+* Inside function body.
+  - Symbols are potentially refering to variable values.
+  - The values can be assigned each time the function is called.
+  - It is harder to share data in this context.
+  - Let's create copies for each assignment.
+* What do we get when we evaluate a symbol refering to a functions, with possible captures?
+  - How about functions as input to functions?
+  - How about functions as output of functions?
+  - How about recursion?
+    - If we send function A to function B, then we only 
