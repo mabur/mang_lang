@@ -1,5 +1,11 @@
+SEMANTICS
+Mutable reference by default.
 
+DATA STRUCTURES
+Arrays, SOA, AOS, dataframes.
+Have dataframe as only datastructure?
 
+ACTIONS
 copy
 fill
 set
@@ -11,6 +17,8 @@ set(z, 4)
 copy(x, y)
 mul(x, y, z)
 
-
+EXAMPLES
 define square(in, out)
     mul(in, in, out)
+
+transform(df[length], df[square_length], square)
