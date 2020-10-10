@@ -1,5 +1,14 @@
 TODO:
 * Fix scope handling
+  - Make example of AST and with symbolic references.
+  - How does it work for values?
+  - How does it work for functions?
+  - How does it work for values/functions created inside functions?
+  - Should functions be able to have other functions as output? Maybe just input?
+  - Values are copied. Functions are pointers.
+  - Undefined behaviour if functions/pointers are returned from functions.
+    - This might circumvent need for closures.
+    - Pointers don't survive scope where they are defined, and cannot be used outside.
 * How to handle functions. Inlining vs jump.
 * Type annotation and linter.
 * Generics.
@@ -7,7 +16,7 @@ TODO:
 * Start writing standard library functions in Mang Lang instead of Python.
 
 TYPES
-Types start with upper case. Variables start with lower case.
+Types start with upper case. Variables start with lower case. (enforce that in syntax?)
 
 FUNKTIONS-DEFINITIONER
 
@@ -50,9 +59,9 @@ max_index : from List Generic to Number = ...
 max_split : from List Generic to List List Generic = ...
 
 count_if : from {list: List Generic, predicate: from Generic to Boolean} to Number = ...
-map: from {list: List Generic0, operation: from Generic0 to Generic1} = ...
-map2 : from {list0: List Generic0, list1: List Generic0, operation: from List Generic0 to Generic1} = ...
-map2heterogeneous : from {list0: List Generic0, list1: List Generic1, operation: from {value0: Generic0, value1: Generic1} to Generic2} = ...
+map: from {list: List Generic0, operation: from Generic0 to Generic1} to List Generic1 = ...
+map2 : from {list0: List Generic0, list1: List Generic0, operation: from List Generic0 to Generic1} to List Generic1 = ...
+map2heterogeneous : from {list0: List Generic0, list1: List Generic1, operation: from {value0: Generic0, value1: Generic1} to Generic2} to List Generic2 = ...
 
 TYPER
 *Number
