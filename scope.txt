@@ -1,18 +1,23 @@
 MANGLANG SCOPE
 {
-	factor = 2,
-	double = from x to mul [x, factor],
-	triple = from x to mul [x, 3],
-	numbers = [1, 2, 3, 4, 5],
-	even0 = map {in=numbers, f=double},
-	even1 = each double x for x in numbers
+	module = {
+    c = 1,
+    constant = from x to c,
+  },
+  c = 2,
+	constant = constant module,
+  x = constant []
 }
+TODO: x should be 1 and not 2
+SOLUTION:
+  - for each node in AST we keep a mutable field with the latest value it was evaluated to.
+  - We let lookups point to a node in the AST.
 
 PHASES
 * construction of AST
   - 
 * type checking
-* compilation
+* compilation / code generation
 * evaluation of program
 
 IMPLEMENTATION
@@ -32,3 +37,43 @@ IMPLEMENTATION
   - How about functions as output of functions?
   - How about recursion?
     - If we send function A to function B, then we only 
+
+AST
+Expression, Number, String, Array, \
+    Dictionary, Function, Lookup, Conditional, ArrayComprehension
+
+RAW VALUES:
+Number : number : 3.0
+String : string : "magnus"
+
+COMBINED EXPRESSIONS:
+Conditional : (expression, expression, expression) : if 1 then 2 else 3
+Array : [expression] : [1, 2]
+
+CONTEXT:
+Dictionary : {string: expression} : {x=1, y=2}
+Function : (string, expression) : from x to 1
+ArrayComprehension : (string, expression, array, condition?) : each f x for x in y if g x
+
+LOOKUP:
+VariableLookup : (expression*) : x
+DictionaryLookup : (expression*, Dictionary) : width rectangle
+FunctionLookup : (function*, expression) : area rectangle
+
+EVALUATION
+Evaluate the AST starting from the root.
+Generate new nodes on the fly.
+Keep an environment of symbols for each open node.
+Do we need more environments to handle closures?
+Number -> Number
+String -> String
+Array -> Array: [element.evaluate() for element in array]
+Dictionary -> Dictionary: {k: v.evaluate() for k, v in dictionaty.items()}
+Conditional -> Expression: if statement then first.evaluate() else second.evaluate()
+Function -> Function?
+LookupSymbol -> Expression?
+LookupFunction -> Expression (extend environment)
+ArrayComprehension -> Array (extend environment)
+
+Kan LookupSymbol bara titta på den environment som hör till den nod som evalueras i trädet?
+Då kan man väl inte hantera symboler i function capture?
