@@ -14,10 +14,9 @@ SOLUTION:
   - We let lookups point to a node in the AST.
 
 PHASES
-* construction of AST
-  - 
-* type checking
-* compilation / code generation
+* construction of AST (pass environment in this stage as well, to link lookups)
+* (type checking)
+* (compilation / code generation)
 * evaluation of program
 
 IMPLEMENTATION
@@ -39,8 +38,10 @@ IMPLEMENTATION
     - If we send function A to function B, then we only 
 
 AST
-Expression, Number, String, Array, \
-    Dictionary, Function, Lookup, Conditional, ArrayComprehension
+Expression, Number, String, Array, Dictionary, Function, Lookup, Conditional, ArrayComprehension
+
+
+!"#¤%&/()=?`^*{[]}\´´~¨'",.-;:_
 
 RAW VALUES:
 Number : number : 3.0
@@ -54,11 +55,33 @@ CONTEXT:
 Dictionary : {string: expression} : {x=1, y=2}
 Function : (string, expression) : from x to 1
 ArrayComprehension : (string, expression, array, condition?) : each f x for x in y if g x
+change order so that symbol is defined before it is used?
+for x in y if g x get f x
+or same as function
+map y from x to f x if g x
 
 LOOKUP:
-VariableLookup : (expression*) : x
-DictionaryLookup : (expression*, Dictionary) : width rectangle
+VariableLookup in current dictionary: (expression*) : x
+DictionaryLookup in sub dictionary: (string, Dictionary) : width-rectangle   
 FunctionLookup : (function*, expression) : area rectangle
+
+
+How can we differentiate between dictionary-lookup and function call when constructing AST?
+* Using another token than space like -
+* Using types
+* Fallback to function if a function with that name exists in the environment when constructing AST
+* Store pointer to function if it exists when constructing the AST,
+  but wait until evaluation-pass to decide if it is function-lookup or dictionary-lookup
+
+house = house city country
+house = house-city-country
+house = house of city of country
+house = country.city.house
+
+name = person.name.first
+name = first-name-person
+tail = tail-list
+
 
 EVALUATION
 Evaluate the AST starting from the root.
