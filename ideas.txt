@@ -20,8 +20,7 @@ Types start with upper case. Variables start with lower case. (enforce that in s
 
 FUNKTIONS-DEFINITIONER
 
-Ordnings-regel 1:  symbol = typ : värde
-Ordnings- regel 2: symbol : typ = värde
+Regel   symbol : typ = värde
 
 // Type definition
 Distance := Number
@@ -32,19 +31,23 @@ x : Distance = 3
 square : Number = mul[x, x]
 
 // primitive to primitive:
-square : from Number to Number = mul[x, x]
+square : from x:Number to Number = mul[x, x]
 
 // record to primitive:
 hyp : from {x:Number, y:Number} to Number = sqrt add[mul[x, x], mul[y, y]
 
 // list to list:
-conjugate : from List Number to List Number = [first x, neg last x]
+conjugate : from x : List Number to List Number = [first x, neg last x]
 
 // record to record:
 conjugate : from {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
+conjugate : from Complex to Complex = {r := r, i := neg i}
+
+// list comprehension
+squares : List Number = each mul[x, x] for x:Number in [1,2,3,4,5]
 
 // Type alias:
-Complex : Type = {re: Number, im: Number}
+Complex : Type = {re:Number, im:Number}
 complex := {re := 1, im := 1}
 complex : Complex = {re : Number = 1, im : Number = 1}
 re = re complex
