@@ -2,7 +2,7 @@ import copy
 from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
-    Dictionary, Function, Lookup, Conditional, ArrayComprehension
+    Dictionary, Function, Lookup, Conditional
 from error_handling import CodeFragment, print_syntax_error
 
 
@@ -26,9 +26,6 @@ COMMA = ","
 IF = "if"
 THEN = "then"
 ELSE = "else"
-EACH = "each"
-FOR = "for"
-IN = "in"
 FROM = "from"
 TO = "to"
 
@@ -36,7 +33,7 @@ DIGITS = '+-.1234567890'
 LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 WHITESPACE = ' \n'
 
-KEYWORDS = [IF, THEN, ELSE, EACH, FOR, IN, FROM, TO]
+KEYWORDS = [IF, THEN, ELSE, FROM, TO]
 
 def _parse_keyword(code: CodeFragment, keyword: str) -> Tuple[str, CodeFragment]:
     value = ''
@@ -152,26 +149,6 @@ def _parse_conditional(code: CodeFragment) -> Tuple[Conditional, CodeFragment]:
                         else_expression=else_expression, code=section), code)
 
 
-def _parse_array_comprehension(code: CodeFragment)\
-        -> Tuple[ArrayComprehension, CodeFragment]:
-    section = copy.copy(code)
-    _, code = _parse_keyword(code, EACH)
-    all_expression, code = _parse_expression(code)
-    _, code = _parse_keyword(code, FOR)
-    for_expression, code = _parse_expression(code)
-    _, code = _parse_keyword(code, IN)
-    in_expression, code = _parse_expression(code)
-    if_expression = None
-    if code.startswith(IF):
-        _, code = _parse_keyword(code, IF)
-        if_expression, code = _parse_expression(code)
-    return (ArrayComprehension(all_expression=all_expression,
-                               for_expression=for_expression,
-                               in_expression=in_expression,
-                               if_expression=if_expression,
-                               code=section), code)
-
-
 def _parse_expression(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
     code = _parse_optional_white_space(code)
     try:
@@ -191,7 +168,6 @@ def _make_parse_table()\
     ]
     for char in WHITESPACE:
         parser_from_token.append((IF + char, _parse_conditional))
-        parser_from_token.append((EACH + char, _parse_array_comprehension))
         parser_from_token.append((FROM + char, _parse_function))
     for char in DIGITS:
         parser_from_token.append((char, _parse_number))

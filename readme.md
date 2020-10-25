@@ -9,17 +9,17 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 1. Numbers and strings are primitive data types.
 2. Lists.
-3. Dictionaries of symbols/variables.
+3. Dictionaries of symbols / variables.
 4. Functions.
 5. Conditional expressions (if then else).
 6. Looping with recursive functions.
-7. Looping with list comprehensions (each for in if).
 
 **What it does NOT have**:
 
-1. Mutable variables. Everything is immutable / constant.
-2. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
-3. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
+1. For loops and while loops. Loops are handled with recursion and higher order functions.
+2. Mutable variables. Everything is immutable / constant.
+3. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
+4. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
 
 **Example code**:
 
@@ -58,10 +58,9 @@ Note that the same syntax is used to apply a function and access a field in a di
 2. [Dictionaries and Variables](#dictionaries-and-variables)
 3. [Lists](#lists)
 4. [Functions and Control Flow](#functions-and-control-flow)
-6. [List Comprehension](#list-comprehension)
-7. [Strings](#Strings)
-8. [Importing code in different source files](#importing-code-in-different-source-files)
-9. [List of built-in functions](#list-of-built-in-functions)
+5. [Strings](#Strings)
+6. [Importing code in different source files](#importing-code-in-different-source-files)
+7. [List of built-in functions](#list-of-built-in-functions)
 
 ## Numbers and Built-in Functions
 
@@ -178,24 +177,6 @@ vector = [3, 4],
 result = square_norm vector
 }
 ```
-
-## list Comprehension
-
-In Mang Lang you can create loops by using recursion. list comprehension is an alternative way to express some loops in a simpler way. It is similar to "set builder notation" and "map" and "filter" operations. It is designed for the use case when you create a list from another list. It uses the syntax `each ... for ... in ...`:
-```
-{
-input = [1, 2, 3],
-output = each mul [x, x] for x in input
-}
-```
-This computes the square of all elements in `input`. So `output` becomes `[1, 4, 9]`. Tuple comprehensions also support an optional `if` expression at the end. This can be used to filter values:
-```
-{
-input = [1, 2, 3],
-output = each mul [x, x] for x in input if check_inequality [x, 2]
-}
-```
-In this example `output` becomes `[1, 9]`.
 
 ## Strings
 Strings are similar to lists: 

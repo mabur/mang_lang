@@ -424,55 +424,6 @@ class TestImport(unittest.TestCase):
         self.assertEqual(V(9), interpret('b {a = import "test_data/test3.ml", square = square a, b=square 3}'))
 
 
-class TestArrayComprehension(unittest.TestCase):
-    def test1(self):
-        actual = interpret('each e for e in []')
-        expected = []
-        self.assertEqual(expected, actual)
-
-    def test2(self):
-        actual = interpret('each e for e in [2]')
-        expected = [V(2)]
-        self.assertEqual(expected, actual)
-
-    def test3(self):
-        actual = interpret('each e for e in [2, 3]')
-        expected = [V(2), V(3)]
-        self.assertEqual(expected, actual)
-
-    def test4(self):
-        actual = interpret('x {t = [], x = each e for e in t}')
-        expected = []
-        self.assertEqual(expected, actual)
-
-    def test5(self):
-        self.assertEqual([V(2)], interpret('x {t = [2], x = each e for e in t}'))
-
-    def test6(self):
-        self.assertEqual([V(2), V(3)], interpret('x {t = [2, 3], x = each e for e in t}'))
-
-    def test7(self):
-        self.assertEqual([V(4), V(9)], interpret('x {t = [2, 3], x = each mul [e, e] for e in t}'))
-
-    def test8(self):
-        self.assertEqual([V(1), V(1)], interpret('x {f = from x to 1, t = [2, 3], x = each f e for e in t}'))
-
-    def test9(self):
-        actual = interpret('each e for e in [1, 2, 3, 4] if check_equality [e, 2]')
-        expected = [V(2)]
-        self.assertEqual(expected, actual)
-
-    def test10(self):
-        actual = interpret('each e for e in [1, 2, 3, 4] if none [check_equality [e, 2]]')
-        expected = [V(1), V(3), V(4)]
-        self.assertEqual(expected, actual)
-
-    def test11(self):
-        actual = interpret('each 9 for e in [1, 2, 3]')
-        expected = [V(9), V(9), V(9)]
-        self.assertEqual(expected, actual)
-
-
 class TestStandardLibrary(unittest.TestCase):
     def test_find0(self):
         self.assertEqual([[], []], interpret('find {list=[], query=1}'))
