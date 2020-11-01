@@ -1,3 +1,7 @@
+documents/*.aux
+documents/*.log
+documents/*.pdf
+documents/*.synctex.gz
 mang_lang/.dmypy.json
 mang_lang/.idea/
 mang_lang/__pycache__/
