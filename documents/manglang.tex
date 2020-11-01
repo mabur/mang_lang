@@ -10,20 +10,21 @@
 
 \section{Minimal Language for Data}
 
-We start by defining a minimal language for storing data, similar to Json.
-
-\subsection{Abstract Syntax Tree}
-We have these primitive values:
+We start by defining a minimal language for storing data, similar to Json. It consists of these primitive values:
 \begin{itemize}
 \item Numbers like: \lstinline|1.0|
 \item Strings like: \lstinline|''Magnus''|
 \item Booleans true and false
 \end{itemize}
-We have these collections:
+Values can be packaged in these collections:
 \begin{itemize}
 \item Lists like: \lstinline|[1, 2, 3]|
 \item Dictionaries like: \lstinline|{x = 1, y = 2}|
 \end{itemize}
+Collections can be nested. We can easily transform this format to Json by replacing = with : and adding quotes arounds dictionary keys.
+
+\section{Extended Language for Data}
+
 We add the posibility to refer back to symbols:
 \begin{itemize}
 \item Reference to symbol in current scope like: \lstinline|{x = 1, y = x}|
@@ -35,20 +36,36 @@ We add the posibility for conditionals:
 \item Conditionals like: \lstinline|if x then y else z|
 \end{itemize}
 
-\subsection{Evaluate References in Abstract Syntax Tree}
+\subsection{Evaluation}
 
-We iterate through the AST and collapse the three kind of references to a single kind of pointer to the refered node in the AST.
-
-\begin{itemize}
-\item Pointer
-\end{itemize}
-
-\subsection{Evaluate Conditionals in Abstract Syntax Tree}
-
-We iterate through the AST and collapse conditionals.
+The evaluation of a program takes an AST from the extended language for data and collapses it to an AST for the minimal laguage by:
+\begin{enumerate}
+\item Collapsing the references to the expressions they refer to.
+\item Collapsing conditionals.
+\end{enumerate}
 
 \section{Minimal Language for Algorithms}
 
-How to handle functions, computations, and computed results.
+We will now extend our language to handle functions. We extend the abstract syntax tree with these nodes:
+\begin{itemize}
+\item Functions like: \lstinline|from x to [x, x]|
+\item Reference to function input like: \lstinline|from x to [x, x]|
+\item Function application like: \lstinline|{f = from x to [x, x], y = f 1}|
+\end{itemize}
+
+\subsection{Evaluation Phases}
+
+We evaluate the program by transforming the AST in different phases:
+\begin{enumerate}
+\item In the first phase we collapse static references to pointers.
+\item In the second phase we collapse:
+\begin{enumerate}
+\item Conditionals to dynamic expressions.
+\item Function calls to dynamic expressions. A dynamic expression can contain the same thing as the minimal language for data.
+\item References to dynamic expressions to dynamic pointers or dynamic expressions.
+\end{enumerate}
+\item In the third phase we collapse all pointers to expressions.
+\item As an optional final phase we strip all functions to get back the result in the minimal language for data.
+\end{enumerate}
 
 \end{document}
