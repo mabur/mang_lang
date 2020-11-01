@@ -1,5 +1,19 @@
 MANGLANG SCOPE
 {
+  x = 1,
+  barn = {
+    x = 2,
+    barnbarn = {
+      x = 3
+    },
+    y = x,
+    y = x barnbarn,
+    y = x PARENT,
+    y = x barn PARENT,
+    add = add GLOBAL
+  }
+}
+{
 	module = {
     c = 1,
     constant = from x to c,
@@ -36,10 +50,10 @@ IMPLEMENTATION
   - How about functions as output of functions?
   - How about recursion?
     - If we send function A to function B, then we only 
+* Differentiate between static dictionaries (that can have functions) and dynamic dictionaries (that cannot have functions)
 
 AST
-Expression, Number, String, Array, Dictionary, Function, Lookup, Conditional, ArrayComprehension
-
+Expression, Number, String, Array, Dictionary, Function, Lookup, Conditional
 
 !"#¤%&/()=?`^*{[]}\´´~¨'",.-;:_
 
@@ -48,40 +62,28 @@ Number : number : 3.0
 String : string : "magnus"
 
 COMBINED EXPRESSIONS:
-Conditional : (expression, expression, expression) : if 1 then 2 else 3
 Array : [expression] : [1, 2]
 
 CONTEXT:
-Dictionary : {string: expression} : {x=1, y=2}
+StaticDictionary : {string: expression} : {x=1, y=2, f = from a to add(a, x)}
+DynamicDictionary : {string: expression} : {x=1, y=2}
 Function : (string, expression) : from x to 1
-ArrayComprehension : (string, expression, array, condition?) : each f x for x in y if g x
-change order so that symbol is defined before it is used?
-for x in y if g x get f x
-or same as function
-map y from x to f x if g x
 
 LOOKUP:
-VariableLookup in current dictionary: (expression*) : x
-DictionaryLookup in sub dictionary: (string, Dictionary) : width-rectangle   
+ConditionalLookup : (expression, expression, expression) : if 1 then 2 else 3
+StaticVariableLookup in current (or parent) dictionary: (expression*) : x
+DynamicVariableLookup in current (or parent) dictionary: (expression*) : x
+StaticDictionaryLookup in sub dictionary: (string, Dictionary) : width-rectangle   
+DynamicDictionaryLookup in sub dictionary: (string, Dictionary) : width-rectangle   
 FunctionLookup : (function*, expression) : area rectangle
 
+PHASE TOKENS->AST
 
-How can we differentiate between dictionary-lookup and function call when constructing AST?
-* Using another token than space like -
-* Using types
-* Fallback to function if a function with that name exists in the environment when constructing AST
-* Store pointer to function if it exists when constructing the AST,
-  but wait until evaluation-pass to decide if it is function-lookup or dictionary-lookup
+PHASE AST->AST WITH STATIC LOOKUPS
+Pass along environment so that symbols in AST can point to nodes.
 
-house = house city country
-house = house-city-country
-house = house of city of country
-house = country.city.house
-
-name = person.name.first
-name = first-name-person
-tail = tail-list
-
+AST WITH STATIC LOOKUPS->VALUE
+Pass along environment so that symbols in call stack can be looked up.
 
 EVALUATION
 Evaluate the AST starting from the root.
@@ -96,7 +98,34 @@ Conditional -> Expression: if statement then first.evaluate() else second.evalua
 Function -> Function?
 LookupSymbol -> Expression?
 LookupFunction -> Expression (extend environment)
-ArrayComprehension -> Array (extend environment)
 
 Kan LookupSymbol bara titta på den environment som hör till den nod som evalueras i trädet?
 Då kan man väl inte hantera symboler i function capture?
+
+
+AST
+Number
+String
+Array
+Dictionary
+Function
+ConditionalLookup
+VariableLookup
+DictionaryLookup
+FunctionLookup
+
+STATICALLY EVALUATED AST
+Number
+String
+Array
+StaticDictionary
+DynamicDictionary
+Function
+ConditionalLookup
+StaticVariableLookup
+DynamicVariableLookup
+StaticDictionaryLookup
+DynamicDictionaryLookup
+FunctionLookup
+
+
