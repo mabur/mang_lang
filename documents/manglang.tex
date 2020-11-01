@@ -1,0 +1,54 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{listings}
+\title{Manglang}
+\author{Magnus Burenius}
+\begin{document}
+
+\maketitle
+
+\section{Minimal Language for Data}
+
+We start by defining a minimal language for storing data, similar to Json.
+
+\subsection{Abstract Syntax Tree}
+We have these primitive values:
+\begin{itemize}
+\item Numbers like: \lstinline|1.0|
+\item Strings like: \lstinline|''Magnus''|
+\item Booleans true and false
+\end{itemize}
+We have these collections:
+\begin{itemize}
+\item Lists like: \lstinline|[1, 2, 3]|
+\item Dictionaries like: \lstinline|{x = 1, y = 2}|
+\end{itemize}
+We add the posibility to refer back to symbols:
+\begin{itemize}
+\item Reference to symbol in current scope like: \lstinline|{x = 1, y = x}|
+\item Reference to symbol in parent scope like:  \lstinline|{x = 1, y = {z = x}}|
+\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1}, z = y x}|
+\end{itemize}
+We add the posibility for conditionals:
+\begin{itemize}
+\item Conditionals like: \lstinline|if x then y else z|
+\end{itemize}
+
+\subsection{Evaluate References in Abstract Syntax Tree}
+
+We iterate through the AST and collapse the three kind of references to a single kind of pointer to the refered node in the AST.
+
+\begin{itemize}
+\item Pointer
+\end{itemize}
+
+\subsection{Evaluate Conditionals in Abstract Syntax Tree}
+
+We iterate through the AST and collapse conditionals.
+
+\section{Minimal Language for Algorithms}
+
+How to handle functions, computations, and computed results.
+
+\end{document}
