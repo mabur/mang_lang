@@ -14,6 +14,12 @@ TODO:
 * Generics.
 * Try to implement Advent of Code problems to see what is missing
 * Start writing standard library functions in Mang Lang instead of Python.
+* Use-case: programmable json.
+* Maybe these are all "lookups":
+    - variable lookup in current dictionary
+    - variable lookup in child dictionary
+    - if statement
+    - function application
 
 TYPES
 Types start with upper case. Variables start with lower case. (enforce that in syntax?)
