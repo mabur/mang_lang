@@ -29,7 +29,7 @@ We add the posibility to refer back to symbols:
 \begin{itemize}
 \item Reference to symbol in current scope like: \lstinline|{x = 1, y = x}|
 \item Reference to symbol in parent scope like:  \lstinline|{x = 1, y = {z = x}}|
-\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1}, z = y x}|
+\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1}, z = y}|
 \end{itemize}
 We add the posibility for conditionals:
 \begin{itemize}
@@ -53,19 +53,18 @@ We will now extend our language to handle functions. We extend the abstract synt
 \item Function application like: \lstinline|{f = from x to [x, x], y = f 1}|
 \end{itemize}
 
-\subsection{Evaluation Phases}
+\subsection{Evaluation}
 
-We evaluate the program by transforming the AST in different phases:
+We evaluate the program by transforming the AST to another graph. We keep a copy of the original AST. Functions know about their environment in the graph.
 \begin{enumerate}
-\item In the first phase we collapse static references to pointers.
-\item In the second phase we collapse:
-\begin{enumerate}
-\item Conditionals to dynamic expressions.
-\item Function calls to dynamic expressions. A dynamic expression can contain the same thing as the minimal language for data.
-\item References to dynamic expressions to dynamic pointers or dynamic expressions.
+\item We do not collapse: numbers, strings, booleans
+\item We collapse conditionals.
+\item We collapse references.
+\item We collapse functions to bound functions. This is a function bound to an environment. Everything in the function body is untouched.
+\item We collapse function calls. When collapsing a function call we evaluate the body of the function, given the bound environment and the input to the function.
 \end{enumerate}
-\item In the third phase we collapse all pointers to expressions.
-\item As an optional final phase we strip all functions to get back the result in the minimal language for data.
-\end{enumerate}
+How to handle environments while evaluating? Do we want to link both up and down in the graph we get when evaluating the AST? Could be useful when collapsing references and function calls. We don't allow functions to survive their bound environment, i.e. to be the output.
+
+http://craftinginterpreters.com/contents.html
 
 \end{document}
