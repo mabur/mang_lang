@@ -29,7 +29,7 @@ We add the posibility to refer back to symbols:
 \begin{itemize}
 \item Reference to symbol in current scope like: \lstinline|{x = 1, y = x}|
 \item Reference to symbol in parent scope like:  \lstinline|{x = 1, y = {z = x}}|
-\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1}, z = y}|
+\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1}, z = y<x}|
 \end{itemize}
 We add the posibility for conditionals:
 \begin{itemize}
@@ -66,5 +66,35 @@ We evaluate the program by transforming the AST to another graph. We keep a copy
 How to handle environments while evaluating? Do we want to link both up and down in the graph we get when evaluating the AST? Could be useful when collapsing references and function calls. We don't allow functions to survive their bound environment, i.e. to be the output.
 
 http://craftinginterpreters.com/contents.html
+
+\section{Implementation}
+
+\subsection{Abstract Syntax Tree}
+The parsing takes a string and builds an Abstract Syntax Tree which consist of the following nodes:
+\begin{verbatim}
+type Number = {value: float}
+type String = {value: str}
+type Boolean = {value: str}
+type List = {values: list<Node>}
+type Dictionary = {values: list<tuple<str, Node>>}
+type Conditional = {condition: Node; a: Node; b: Node}
+type Reference = {name: str; tail: optional<Node>}
+type Function = {input_name: str; body: Node}
+\end{verbatim}
+
+\subsection{Evaluation Tree}
+
+The evaluation takes an Abstact Syntax Tree and builds an Evaluation Tree which consists of similar nodes but with a parent pointing to another Evaluation Node. The nodes in the Abstract Syntax Tree are cloned during the evaluation and given parents.
+
+\subsection{Methods}
+
+Each Node provides an evaluation method that generates new nodes:
+\begin{verbatim}
+evaluate(self: Node, parent: Node) -> Node
+\end{verbatim}
+Each Node provides a lookup method that search for a reference in the node and if nothing is find passes the query to its parent. The lookup does not generate new nodes:
+\begin{verbatim}
+lookup(self: Node, reference: str) -> Node
+\end{verbatim}
 
 \end{document}
