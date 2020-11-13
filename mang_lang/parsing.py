@@ -2,7 +2,7 @@ import copy
 from typing import Any, Callable, Sequence, Tuple
 
 from ast import Expression, Array, Number, String, VariableDefinition, \
-    Dictionary, Function, Lookup, Conditional
+    Dictionary, Function, Conditional, LookupChild, LookupFunction, LookupSymbol
 from error_handling import CodeFragment, print_syntax_error
 
 
@@ -23,6 +23,7 @@ STRING_BEGIN = "\""
 STRING_END = "\""
 EQUAL = "="
 COMMA = ","
+MEMBER = "<"
 IF = "if"
 THEN = "then"
 ELSE = "else"
@@ -108,16 +109,24 @@ def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
     return Dictionary(expressions=variable_definitions, code=section), code
 
 
-def _parse_lookup(code: CodeFragment) -> Tuple[Lookup, CodeFragment]:
+def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
     section = copy.copy(code)
     value, code = _parse_symbol(code)
     assert value not in KEYWORDS, 'Cannot use keyword ({}) as symbol'.format(value)
-    code2 = copy.copy(code)
     try:
-        right, code = _parse_expression(code)
-        return Lookup(left=value, right=right, code=section), code
+        code2 = copy.copy(code)
+        _, code2 = _parse_keyword(code2, MEMBER)
+        right, code2 = _parse_expression(code2)
+        return LookupChild(left=value, right=right, code=section), code2
+    except Exception as e:
+        pass
+    try:
+        code2 = copy.copy(code)
+        right, code2 = _parse_expression(code2)
+        return LookupFunction(left=value, right=right, code=section), code2
     except:
-        return Lookup(left=value, right=None, code=section), code2
+        pass
+    return LookupSymbol(left=value, code=section), code
 
 
 def _parse_variable_definition(code: CodeFragment) -> Tuple[VariableDefinition, CodeFragment]:

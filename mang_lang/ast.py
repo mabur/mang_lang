@@ -145,11 +145,11 @@ class Function(Expression):
         return self
 
 
-class Lookup(Expression):
+class LookupFunction(Expression):
     def __init__(
             self,
             left: str,
-            right: Optional[Expression],
+            right: Expression,
             code: CodeFragment,
     ) -> None:
         super().__init__(code)
@@ -163,23 +163,6 @@ class Lookup(Expression):
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
-        # Lookup in current scope
-        if self.right is None:
-            return environment[self.left]
-
-        # Lookup in child scope
-        if self.left not in environment:
-            tuple = self.right.evaluate(environment)
-            assert isinstance(tuple, Array)
-            child_environment = deepcopy(environment)
-            try:
-                child_environment[self.left] = next(
-                    e.expression for e in tuple.value if e.name == self.left)
-            except StopIteration:
-                print('Could not find symbol: {}'.format(self.left))
-                raise
-            return child_environment[self.left]
-
         # Function call
         function = environment[self.left]
         input = self.right.evaluate(environment)
@@ -193,3 +176,53 @@ class Lookup(Expression):
             return function(input, self.code)
 
         raise TypeError
+
+
+class LookupSymbol(Expression):
+    def __init__(
+            self,
+            left: str,
+            code: CodeFragment,
+    ) -> None:
+        super().__init__(code)
+        self.left = left
+
+    def to_json(self) -> Json:
+        return {"type": "lookup",
+                "left": self.left}
+
+    @run_time_error_printer
+    def evaluate(self, environment: Environment) -> Expression:
+        # Lookup in current scope
+        return environment[self.left]
+
+
+class LookupChild(Expression):
+    def __init__(
+            self,
+            left: str,
+            right: Expression,
+            code: CodeFragment,
+    ) -> None:
+        super().__init__(code)
+        self.left = left
+        self.right = right
+
+    def to_json(self) -> Json:
+        return {"type": "lookup",
+                "left": self.left,
+                "right": self.right.to_json() if self.right is not None else ''}
+
+    @run_time_error_printer
+    def evaluate(self, environment: Environment) -> Expression:
+        # Lookup in child scope
+        tuple = self.right.evaluate(environment)
+        assert isinstance(tuple, Array)
+        child_environment = deepcopy(environment)
+        try:
+            child_environment[self.left] = next(
+                e.expression for e in tuple.value if e.name == self.left)
+        except StopIteration:
+            print('Could not find symbol: {}'.format(self.left))
+            raise
+        return child_environment[self.left]
