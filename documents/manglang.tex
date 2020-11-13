@@ -78,7 +78,9 @@ type Boolean = {value: str}
 type List = {values: list<Node>}
 type Dictionary = {values: list<tuple<str, Node>>}
 type Conditional = {condition: Node; a: Node; b: Node}
-type Reference = {name: str; tail: optional<Node>}
+type LookupSymbol = {name: str}
+type LookupChild = {name: str; child: Node}
+type LookupFunction = {name: str; input: Node}
 type Function = {input_name: str; body: Node}
 \end{verbatim}
 
