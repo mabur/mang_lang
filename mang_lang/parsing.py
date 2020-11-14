@@ -113,22 +113,22 @@ def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
 
 def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
     section = copy.copy(code)
-    value, code = _parse_symbol(code)
-    assert value not in KEYWORDS, 'Cannot use keyword ({}) as symbol'.format(value)
+    name, code = _parse_symbol(code)
+    assert name not in KEYWORDS, 'Cannot use keyword ({}) as symbol'.format(name)
     try:
         code2 = copy.copy(code)
         _, code2 = _parse_keyword(code2, MEMBER)
-        right, code2 = _parse_expression(code2)
-        return LookupChild(name=value, child=right, code=section), code2
+        child, code2 = _parse_expression(code2)
+        return LookupChild(name=name, child=child, code=section), code2
     except Exception as e:
         pass
     try:
         code2 = copy.copy(code)
-        right, code2 = _parse_expression(code2)
-        return LookupFunction(left=value, right=right, code=section), code2
+        input, code2 = _parse_expression(code2)
+        return LookupFunction(name=name, input=input, code=section), code2
     except:
         pass
-    return LookupSymbol(name=value, code=section), code
+    return LookupSymbol(name=name, code=section), code
 
 
 def _parse_function(code: CodeFragment) -> Tuple[Function, CodeFragment]:

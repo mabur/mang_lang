@@ -151,23 +151,23 @@ class Function(Expression):
 class LookupFunction(Expression):
     def __init__(
             self,
-            left: str,
-            right: Expression,
+            name: str,
+            input: Expression,
             code: CodeFragment,
     ) -> None:
         super().__init__(code)
-        self.left = left
-        self.right = right
+        self.name = name
+        self.input = input
 
     def to_json(self) -> Json:
         return {"type": "lookup",
-                "left": self.left,
-                "right": self.right.to_json() if self.right is not None else ''}
+                "left": self.name,
+                "right": self.input.to_json() if self.input is not None else ''}
 
     @run_time_error_printer
     def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        function = parent.get(self.left)
-        input = self.right.evaluate(self)
+        function = parent.get(self.name)
+        input = self.input.evaluate(self)
         if isinstance(function, Function):
             return function.evaluate_call(input=input)
         if isinstance(function, Callable):
