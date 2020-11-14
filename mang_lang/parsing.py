@@ -98,19 +98,17 @@ def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:
 
 def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
     section = copy.copy(code)
-    names = []
-    expressions = []
+    dictionary = Dictionary(section)
     _, code = _parse_keyword(code, DICTIONARY_BEGIN)
     while not code.startswith(DICTIONARY_END):
-        value, code = _parse_symbol(code)
+        name, code = _parse_symbol(code)
         _, code = _parse_keyword(code, EQUAL)
         expression, code = _parse_expression(code)
-        names.append(value)
-        expressions.append(expression)
+        dictionary.append(name=name, expression=expression)
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)
     _, code = _parse_keyword(code, DICTIONARY_END)
-    return Dictionary(names=names, expressions=expressions, code=section), code
+    return dictionary, code
 
 
 def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:

@@ -57,15 +57,10 @@ class Array(Expression):
 
 
 class Dictionary(Expression):
-    def __init__(
-            self,
-            names: Sequence[str],
-            expressions: Sequence[Expression],
-            code: CodeFragment,
-    ) -> None:
+    def __init__(self, code: CodeFragment) -> None:
         super().__init__(code)
-        self.names = names
-        self.expressions = expressions
+        self.names = []
+        self.expressions = []
 
     def to_json(self) -> Json:
         return [
@@ -86,17 +81,20 @@ class Dictionary(Expression):
         print('Could not find symbol: {}'.format(name))
         raise KeyError
 
+    def append(self, name, expression):
+        self.names.append(name)
+        self.expressions.append(expression)
+
     def make_environment(self) -> dict:
         return dict(self.items())
 
     @run_time_error_printer
     def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        evaluated = Dictionary(names=[], expressions=[], code=self.code)
+        evaluated = Dictionary(self.code)
         evaluated.parent = parent
         for name, expression in self.items():
-            value = expression.evaluate(evaluated)
-            evaluated.expressions.append(value)
-            evaluated.names.append(name)
+            expression = expression.evaluate(evaluated)
+            evaluated.append(name=name, expression=expression)
         return evaluated
 
 
@@ -144,11 +142,9 @@ class Function(Expression):
                 "expression": self.expression.to_json()}
 
     def evaluate_call(self, input: Expression) -> Expression:
-        middle_man = Dictionary(
-            names=[self.argument_name],
-            expressions=[input],
-            code=None,
-        ).evaluate(self.parent)
+        middle_man = Dictionary(None)
+        middle_man.append(name=self.argument_name, expression=input)
+        middle_man.parent = self.parent
         return self.expression.evaluate(middle_man)
 
 
