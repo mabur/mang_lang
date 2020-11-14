@@ -77,15 +77,14 @@ class Dictionary(Expression):
         return zip(self.names, self.expressions)
 
     def get(self, name: str) -> Expression:
-        try:
-            return next(v for k, v in self.items() if k == name)
-        except StopIteration:
-            if self.parent:
-                result = self.parent.get(name)
-                if result:
-                    return result
-            print('Could not find symbol: {}'.format(name))
-            raise
+        result = next((v for k, v in self.items() if k == name), None)
+        if result:
+            return result
+        result = self.parent.get(name)
+        if result:
+            return result
+        print('Could not find symbol: {}'.format(name))
+        raise KeyError
 
     def make_environment(self) -> dict:
         return dict(self.items())
