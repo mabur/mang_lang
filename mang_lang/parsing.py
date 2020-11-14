@@ -119,7 +119,7 @@ def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
         code2 = copy.copy(code)
         _, code2 = _parse_keyword(code2, MEMBER)
         right, code2 = _parse_expression(code2)
-        return LookupChild(left=value, right=right, code=section), code2
+        return LookupChild(name=value, child=right, code=section), code2
     except Exception as e:
         pass
     try:

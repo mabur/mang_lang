@@ -189,24 +189,18 @@ class LookupSymbol(Expression):
 
 
 class LookupChild(Expression):
-    def __init__(
-            self,
-            left: str,
-            right: Expression,
-            code: CodeFragment,
-    ) -> None:
+    def __init__(self, name: str, child: Expression, code: CodeFragment) -> None:
         super().__init__(code)
-        self.left = left
-        self.right = right
+        self.name = name
+        self.child = child
 
     def to_json(self) -> Json:
         return {"type": "lookup",
-                "left": self.left,
-                "right": self.right.to_json() if self.right is not None else ''}
+                "name": self.name,
+                "child": self.child.to_json() if self.child is not None else ''}
 
     @run_time_error_printer
     def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        dictionary = self.right.evaluate(self)
-        assert isinstance(dictionary, Dictionary)
-        name = self.left
-        return dictionary.get(name)
+        child = self.child.evaluate(self)
+        assert isinstance(child, Dictionary)
+        return child.get(self.name)
