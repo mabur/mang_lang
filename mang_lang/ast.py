@@ -79,13 +79,6 @@ class Dictionary(Expression):
     def items(self) -> Iterator[Tuple[str, Expression]]:
         return zip(self.names, self.expressions)
 
-    @staticmethod
-    def child_evaluate(name, expression, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        value = expression.evaluate(new_environment)
-        environment[name] = value
-        return value
-
     def lookup(self, name):
         try:
             return next(v for k, v in self.items() if k == name)
@@ -99,9 +92,13 @@ class Dictionary(Expression):
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        expressions = [
-            self.child_evaluate(k, v, new_environment) for k, v in self.items()
-        ]
+        expressions = []
+        for name, expression in self.items():
+            newer_environment = deepcopy(new_environment)
+            value = expression.evaluate(newer_environment)
+            new_environment[name] = value
+            expressions.append(value)
+
         return Dictionary(names=self.names, expressions=expressions, code=self.code)
 
 
