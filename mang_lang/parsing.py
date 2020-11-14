@@ -101,7 +101,12 @@ def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
     variable_definitions = []
     _, code = _parse_keyword(code, DICTIONARY_BEGIN)
     while not code.startswith(DICTIONARY_END):
-        variable_definition, code = _parse_variable_definition(code)
+        value, code = _parse_symbol(code)
+        _, code = _parse_keyword(code, EQUAL)
+        expression, code = _parse_expression(code)
+        variable_definition = VariableDefinition(
+            name=value, expression=expression, code=section
+        )
         variable_definitions.append(variable_definition)
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)
@@ -127,14 +132,6 @@ def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
     except:
         pass
     return LookupSymbol(left=value, code=section), code
-
-
-def _parse_variable_definition(code: CodeFragment) -> Tuple[VariableDefinition, CodeFragment]:
-    section = copy.copy(code)
-    value, code = _parse_symbol(code)
-    _, code = _parse_keyword(code, EQUAL)
-    expression, code = _parse_expression(code)
-    return VariableDefinition(name=value, expression=expression, code=section), code
 
 
 def _parse_function(code: CodeFragment) -> Tuple[Function, CodeFragment]:
