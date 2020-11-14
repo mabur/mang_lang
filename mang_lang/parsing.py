@@ -104,9 +104,7 @@ def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
         value, code = _parse_symbol(code)
         _, code = _parse_keyword(code, EQUAL)
         expression, code = _parse_expression(code)
-        variable_definition = VariableDefinition(
-            name=value, expression=expression, code=section
-        )
+        variable_definition = VariableDefinition(name=value, expression=expression)
         variable_definitions.append(variable_definition)
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)

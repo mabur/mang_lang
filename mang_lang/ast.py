@@ -59,18 +59,10 @@ class Array(Expression):
         return Array(expressions, code=self.code)
 
 
-class VariableDefinition(Expression):
-    def __init__(self, name: str, expression: Expression, code: CodeFragment) -> None:
-        super().__init__(code)
+class VariableDefinition:
+    def __init__(self, name: str, expression: Expression) -> None:
         self.name = name
         self.expression = expression
-
-    def to_json(self) -> Json:
-        pass
-
-    @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        pass
 
 
 class Dictionary(Expression):
@@ -94,7 +86,7 @@ class Dictionary(Expression):
         new_environment = deepcopy(environment)
         value = expression.evaluate(new_environment)
         environment[name] = value
-        return VariableDefinition(name=name, expression=value, code=code)
+        return VariableDefinition(name=name, expression=value)
 
     def lookup(self, name):
         try:
