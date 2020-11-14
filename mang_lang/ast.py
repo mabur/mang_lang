@@ -66,16 +66,11 @@ class VariableDefinition(Expression):
         self.expression = expression
 
     def to_json(self) -> Json:
-        return {"type": "variable_definition",
-                "name": self.name,
-                "value": self.expression.to_json()}
+        pass
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        value = self.expression.evaluate(new_environment)
-        environment[self.name] = value
-        return VariableDefinition(name=self.name, expression=value, code=self.code)
+        pass
 
 
 class Dictionary(Expression):
@@ -88,12 +83,23 @@ class Dictionary(Expression):
         self.value = expressions
 
     def to_json(self) -> Json:
-        return [e.to_json() for e in self.value]
+        return [
+            {"type": "variable_definition",
+             "name": e.name,
+             "value": e.expression.to_json()
+             } for e in self.value]
+
+    @staticmethod
+    def child_evaluate(name, expression, code, environment: Environment) -> Expression:
+        new_environment = deepcopy(environment)
+        value = expression.evaluate(new_environment)
+        environment[name] = value
+        return VariableDefinition(name=name, expression=value, code=code)
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.value]
+        expressions = [self.child_evaluate(e.name, e.expression, e.expression.code, new_environment) for e in self.value]
         return Array(expressions, code=self.code)
 
 
