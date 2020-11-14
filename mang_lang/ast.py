@@ -100,7 +100,7 @@ class Dictionary(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [self.child_evaluate(e.name, e.expression, e.expression.code, new_environment) for e in self.value]
-        return Array(expressions, code=self.code)
+        return Dictionary(expressions, code=self.code)
 
 
 class Conditional(Expression):
@@ -223,7 +223,7 @@ class LookupChild(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         # Lookup in child scope
         tuple = self.right.evaluate(environment)
-        assert isinstance(tuple, Array)
+        assert isinstance(tuple, Dictionary)
         child_environment = deepcopy(environment)
         try:
             child_environment[self.left] = next(
