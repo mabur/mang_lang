@@ -149,6 +149,11 @@ class Function(Expression):
     def evaluate(self, environment: Environment) -> Expression:
         return self
 
+    def evaluate_call(self, input: Expression, environment: Environment) -> Expression:
+        new_environment = deepcopy(environment)
+        new_environment[self.argument_name] = input
+        return self.expression.evaluate(new_environment)
+
 
 class LookupFunction(Expression):
     def __init__(
@@ -168,18 +173,12 @@ class LookupFunction(Expression):
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
-        # Function call
         function = environment[self.left]
         input = self.right.evaluate(environment)
-
         if isinstance(function, Function):
-            new_environment = deepcopy(environment)
-            new_environment[function.argument_name] = input
-            return function.expression.evaluate(new_environment)
-
+            return function.evaluate_call(input=input, environment=environment)
         if isinstance(function, Callable):
             return function(input, self.code)
-
         raise TypeError
 
 
