@@ -232,21 +232,16 @@ class TestTuple(unittest.TestCase):
 
 class TestDefinitions(unittest.TestCase):
     def test_definition_result_constant(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'result', 'value': V(5)}],
-                         interpret('{result = 5}'))
+        self.assertEqual(V(5), interpret('result<{result = 5}'))
 
     def test_definition_result_constant_function_call(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'result', 'value': V(3)}],
-                         interpret('{result = add [1, 2]}'))
+        self.assertEqual(V(3), interpret('result<{result = add [1, 2]}'))
 
     def test_definition_constant_function_call(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(3)}],
-                         interpret('{x = add [1, 2]}'))
+        self.assertEqual(V(3), interpret('x<{x = add [1, 2]}'))
 
     def test_definitions(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(1)},
-                          {'type': 'variable_definition', 'name': 'y', 'value': V(2)}],
-                         interpret('{x = 1, y = 2}'))
+        self.assertEqual(V(2), interpret('y<{x = 1, y = 2}'))
 
     def test_tuple_definition_and_function_call(self):
         self.assertEqual(V(3), interpret('y<{x=[1,2], y=add x}'))
@@ -254,17 +249,9 @@ class TestDefinitions(unittest.TestCase):
 
 class TestKeywordVariableClashes(unittest.TestCase):
     def test_in(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'input', 'value': V(5)}],
-                         interpret('{input = 5}'))
-
-    def test_in2(self):
         self.assertEqual(V(5), interpret('input<{input = 5}'))
 
     def test_if(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'iffy', 'value': V(5)}],
-                         interpret('{iffy = 5}'))
-
-    def test_if2(self):
         self.assertEqual(V(5), interpret('iffy<{iffy = 5}'))
 
     def test_each(self):
@@ -274,50 +261,27 @@ class TestKeywordVariableClashes(unittest.TestCase):
         self.assertEqual(V(5), interpret('fromage<{fromage = 5}'))
 
     def test_all(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'allround', 'value': V(5)}],
-                         interpret('{allround = 5}'))
+        self.assertEqual(V(5), interpret('allround<{allround = 5}'))
 
     def test_then(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'thenner', 'value': V(5)}],
-                         interpret('{thenner = 5}'))
-
-    def test_then2(self):
         self.assertEqual(V(5), interpret('thenner<{thenner = 5}'))
 
     def test_else(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'elsewhere', 'value': V(5)}],
-                         interpret('{elsewhere = 5}'))
-
-    def test_else2(self):
         self.assertEqual(V(5), interpret('elsewhere<{elsewhere = 5}'))
 
     def test_import(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'important', 'value': V(5)}],
-                         interpret('{important = 5}'))
-
-    def test_import2(self):
         self.assertEqual(V(5), interpret('important<{important = 5}'))
 
 
 class TestIndirection(unittest.TestCase):
     def test_indirection1(self):
-        self.assertEqual([{'type': 'variable_definition', 'name': 'x', 'value': V(5)},
-                          {'type': 'variable_definition', 'name': 'y', 'value': V(5)}],
-                         interpret('{x = 5, y = x}'))
+        self.assertEqual(V(5), interpret('y<{x = 5, y = x}'))
 
     def test_indirection2(self):
-        self.assertEqual([
-            {'type': 'variable_definition', 'name': 'a', 'value': V(1)},
-            {'type': 'variable_definition', 'name': 'b', 'value': V(1)},
-            {'type': 'variable_definition', 'name': 'c', 'value': V(1)}],
-            interpret('{a = 1, b = a, c = b}'))
+        self.assertEqual(V(1), interpret('c<{a = 1, b = a, c = b}'))
 
     def test_indirection3(self):
-        self.assertEqual([
-            {'type': 'variable_definition', 'name': 'x', 'value': V(5)},
-            {'type': 'variable_definition', 'name': 'y', 'value': V(3)},
-            {'type': 'variable_definition', 'name': 'z', 'value': V(8)}],
-            interpret('{x = 5, y = 3, z = add [x, y]}'))
+        self.assertEqual(V(8), interpret('z<{x = 5, y = 3, z = add [x, y]}'))
 
 
 class TestDefinitionLookup(unittest.TestCase):
