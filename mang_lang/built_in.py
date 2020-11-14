@@ -124,14 +124,7 @@ def _read_text_file(file_path: str) -> str:
         return file.read()
 
 
-def _import(x: String, code: CodeFragment):
-    code = _read_text_file(x.value)
-    expression = parse(code)
-    environment = {}
-    return expression.evaluate(environment, None)
-
-
-ENVIRONMENT = {
+_SUB_ENVIRONMENT = {
     'add': _add,
     'sub': _sub,
     'mul': _mul,
@@ -150,5 +143,12 @@ ENVIRONMENT = {
     'max': _max,
     'all': _all,
     'any': _any,
-    'import': _import,
 }
+
+def _import(x: String, code: CodeFragment):
+    code = _read_text_file(x.value)
+    expression = parse(code)
+    return expression.evaluate(_SUB_ENVIRONMENT)
+
+
+ENVIRONMENT = {**_SUB_ENVIRONMENT, 'import': _import}
