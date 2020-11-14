@@ -19,11 +19,9 @@
         else
             result<{
                 list = list<input,
-                head = first list,
-                tail = last_part list,
                 f = f<input,
-                transformed_head = f head,
-                transformed_tail = map {list=tail, f=f},
-                result = concat[[transformed_head], transformed_tail]
+                head = f first list,
+                tail = map {list=last_part list, f=f},
+                result = concat[[head], tail]
             }
 }
