@@ -339,6 +339,11 @@ class TestFunctionScope(unittest.TestCase):
         self.assertEqual(V(5), interpret('z<{y = 2, f = from x to result<{y=3, result=add [x, y]}, z = f 2}'))
 
 
+class TestClosures(unittest.TestCase):
+    def test_closure(self):
+        self.assertEqual(V(1), interpret("x<{a={b=1,f=from x to b},b=2,f=f<a,x=f[]}"))
+
+
 class TestString(unittest.TestCase):
     def test_string1(self):
         self.assertEqual(S("hej"), interpret('"hej"'))
