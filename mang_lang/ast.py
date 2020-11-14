@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Callable, Sequence, Optional, MutableMapping, Any, Union, Mapping
+from typing import Callable, Iterator, Sequence, MutableMapping, Any, Union, Mapping, Tuple
 
 from error_handling import CodeFragment, run_time_error_printer
 
@@ -75,8 +75,11 @@ class Dictionary(Expression):
             {"type": "variable_definition",
              "name": name,
              "value": expression.to_json()
-             } for name, expression in zip(self.names, self.expressions)
+             } for name, expression in self.items()
         ]
+
+    def items(self) -> Iterator[Tuple[str, Expression]]:
+        return zip(self.names, self.expressions)
 
     @staticmethod
     def child_evaluate(name, expression, environment: Environment) -> Expression:
@@ -88,22 +91,22 @@ class Dictionary(Expression):
     def lookup(self, name):
         try:
             return next(
-                child_expression for child_name, child_expression
-                in zip(self.names, self.expressions) if child_name == name
+                child_expression for child_name, child_expression in self.items()
+                if child_name == name
             )
         except StopIteration:
             print('Could not find symbol: {}'.format(name))
             raise
 
     def make_environment(self) -> dict:
-        return {name: expression for name, expression in zip(self.names, self.expressions)}
+        return {name: expression for name, expression in self.items()}
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [
             self.child_evaluate(name, expression, new_environment)
-            for name, expression in zip(self.names, self.expressions)
+            for name, expression in self.items()
         ]
         return Dictionary(names=self.names, expressions=expressions, code=self.code)
 
