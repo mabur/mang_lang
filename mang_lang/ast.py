@@ -96,6 +96,13 @@ class Dictionary(Expression):
         environment[name] = value
         return VariableDefinition(name=name, expression=value, code=code)
 
+    def lookup(self, name):
+        try:
+            return next(e.expression for e in self.value if e.name == name)
+        except StopIteration:
+            print('Could not find symbol: {}'.format(name))
+            raise
+
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
@@ -221,14 +228,10 @@ class LookupChild(Expression):
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
-        # Lookup in child scope
-        tuple = self.right.evaluate(environment)
-        assert isinstance(tuple, Dictionary)
+        dictionary = self.right.evaluate(environment)
+        assert isinstance(dictionary, Dictionary)
         child_environment = deepcopy(environment)
-        try:
-            child_environment[self.left] = next(
-                e.expression for e in tuple.value if e.name == self.left)
-        except StopIteration:
-            print('Could not find symbol: {}'.format(self.left))
-            raise
-        return child_environment[self.left]
+        name = self.left
+        value = dictionary.lookup(name)
+        child_environment[name] = value
+        return value
