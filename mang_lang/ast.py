@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Callable, Sequence, Optional, MutableMapping, Any, Union, Mapping
+from typing import Callable, Iterator, Sequence, MutableMapping, Any, Union, Mapping, Tuple
 
 from error_handling import CodeFragment, run_time_error_printer
 
@@ -59,42 +59,56 @@ class Array(Expression):
         return Array(expressions, code=self.code)
 
 
-class VariableDefinition(Expression):
-    def __init__(self, name: str, expression: Expression, code: CodeFragment) -> None:
-        super().__init__(code)
-        self.name = name
-        self.expression = expression
-
-    def to_json(self) -> Json:
-        return {"type": "variable_definition",
-                "name": self.name,
-                "value": self.expression.to_json()}
-
-    @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        value = self.expression.evaluate(new_environment)
-        environment[self.name] = value
-        return VariableDefinition(name=self.name, expression=value, code=self.code)
-
-
 class Dictionary(Expression):
     def __init__(
             self,
-            expressions: Sequence[VariableDefinition],
+            names: Sequence[str],
+            expressions: Sequence[Expression],
             code: CodeFragment,
     ) -> None:
         super().__init__(code)
-        self.value = expressions
+        self.names = names
+        self.expressions = expressions
 
     def to_json(self) -> Json:
-        return [e.to_json() for e in self.value]
+        return [
+            {"type": "variable_definition",
+             "name": name,
+             "value": expression.to_json()
+             } for name, expression in self.items()
+        ]
+
+    def items(self) -> Iterator[Tuple[str, Expression]]:
+        return zip(self.names, self.expressions)
+
+    @staticmethod
+    def child_evaluate(name, expression, environment: Environment) -> Expression:
+        new_environment = deepcopy(environment)
+        value = expression.evaluate(new_environment)
+        environment[name] = value
+        return value
+
+    def lookup(self, name):
+        try:
+            return next(
+                child_expression for child_name, child_expression in self.items()
+                if child_name == name
+            )
+        except StopIteration:
+            print('Could not find symbol: {}'.format(name))
+            raise
+
+    def make_environment(self) -> dict:
+        return {name: expression for name, expression in self.items()}
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.value]
-        return Array(expressions, code=self.code)
+        expressions = [
+            self.child_evaluate(name, expression, new_environment)
+            for name, expression in self.items()
+        ]
+        return Dictionary(names=self.names, expressions=expressions, code=self.code)
 
 
 class Conditional(Expression):
@@ -215,14 +229,10 @@ class LookupChild(Expression):
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
-        # Lookup in child scope
-        tuple = self.right.evaluate(environment)
-        assert isinstance(tuple, Array)
+        dictionary = self.right.evaluate(environment)
+        assert isinstance(dictionary, Dictionary)
         child_environment = deepcopy(environment)
-        try:
-            child_environment[self.left] = next(
-                e.expression for e in tuple.value if e.name == self.left)
-        except StopIteration:
-            print('Could not find symbol: {}'.format(self.left))
-            raise
-        return child_environment[self.left]
+        name = self.left
+        value = dictionary.lookup(name)
+        child_environment[name] = value
+        return value
