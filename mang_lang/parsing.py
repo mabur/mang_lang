@@ -1,7 +1,7 @@
 import copy
 from typing import Any, Callable, Sequence, Tuple
 
-from ast import Expression, Array, Number, String, VariableDefinition, \
+from ast import Expression, Array, Number, String, \
     Dictionary, Function, Conditional, LookupChild, LookupFunction, LookupSymbol
 from error_handling import CodeFragment, print_syntax_error
 
@@ -98,18 +98,19 @@ def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:
 
 def _parse_dictionary(code: CodeFragment) -> Tuple[Dictionary, CodeFragment]:
     section = copy.copy(code)
-    variable_definitions = []
+    names = []
+    expressions = []
     _, code = _parse_keyword(code, DICTIONARY_BEGIN)
     while not code.startswith(DICTIONARY_END):
         value, code = _parse_symbol(code)
         _, code = _parse_keyword(code, EQUAL)
         expression, code = _parse_expression(code)
-        variable_definition = VariableDefinition(name=value, expression=expression)
-        variable_definitions.append(variable_definition)
+        names.append(value)
+        expressions.append(expression)
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)
     _, code = _parse_keyword(code, DICTIONARY_END)
-    return Dictionary(expressions=variable_definitions, code=section), code
+    return Dictionary(names=names, expressions=expressions, code=section), code
 
 
 def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:

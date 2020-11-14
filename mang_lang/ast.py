@@ -59,50 +59,53 @@ class Array(Expression):
         return Array(expressions, code=self.code)
 
 
-class VariableDefinition:
-    def __init__(self, name: str, expression: Expression) -> None:
-        self.name = name
-        self.expression = expression
-
-
 class Dictionary(Expression):
     def __init__(
             self,
-            expressions: Sequence[VariableDefinition],
+            names: Sequence[str],
+            expressions: Sequence[Expression],
             code: CodeFragment,
     ) -> None:
         super().__init__(code)
-        self.value = expressions
+        self.names = names
+        self.expressions = expressions
 
     def to_json(self) -> Json:
         return [
             {"type": "variable_definition",
-             "name": e.name,
-             "value": e.expression.to_json()
-             } for e in self.value]
+             "name": name,
+             "value": expression.to_json()
+             } for name, expression in zip(self.names, self.expressions)
+        ]
 
     @staticmethod
     def child_evaluate(name, expression, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         value = expression.evaluate(new_environment)
         environment[name] = value
-        return VariableDefinition(name=name, expression=value)
+        return value
 
     def lookup(self, name):
         try:
-            return next(e.expression for e in self.value if e.name == name)
+            return next(
+                child_expression for child_name, child_expression
+                in zip(self.names, self.expressions) if child_name == name
+            )
         except StopIteration:
             print('Could not find symbol: {}'.format(name))
             raise
 
     def make_environment(self) -> dict:
-        return {definition.name: definition.expression for definition in self.value}
+        return {name: expression for name, expression in zip(self.names, self.expressions)}
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        expressions = [self.child_evaluate(e.name, e.expression, new_environment) for e in self.value]
-        return Dictionary(expressions, code=self.code)
+        expressions = [
+            self.child_evaluate(name, expression, new_environment)
+            for name, expression in zip(self.names, self.expressions)
+        ]
+        return Dictionary(names=self.names, expressions=expressions, code=self.code)
 
 
 class Conditional(Expression):
