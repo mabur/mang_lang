@@ -176,22 +176,16 @@ class LookupFunction(Expression):
 
 
 class LookupSymbol(Expression):
-    def __init__(
-            self,
-            left: str,
-            code: CodeFragment,
-    ) -> None:
+    def __init__(self, name: str, code: CodeFragment) -> None:
         super().__init__(code)
-        self.left = left
+        self.name = name
 
     def to_json(self) -> Json:
-        return {"type": "lookup",
-                "left": self.left}
+        return {"type": "lookup", "left": self.name}
 
     @run_time_error_printer
     def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        # Lookup in current scope or above
-        return parent.get(self.left)
+        return parent.get(self.name)
 
 
 class LookupChild(Expression):

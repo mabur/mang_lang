@@ -128,7 +128,7 @@ def _parse_lookup(code: CodeFragment) -> Tuple[Expression, CodeFragment]:
         return LookupFunction(left=value, right=right, code=section), code2
     except:
         pass
-    return LookupSymbol(left=value, code=section), code
+    return LookupSymbol(name=value, code=section), code
 
 
 def _parse_function(code: CodeFragment) -> Tuple[Function, CodeFragment]:
