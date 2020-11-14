@@ -72,10 +72,8 @@ class Dictionary(Expression):
 
     def to_json(self) -> Json:
         return [
-            {"type": "variable_definition",
-             "name": name,
-             "value": expression.to_json()
-             } for name, expression in self.items()
+            {"type": "variable_definition", "name": k, "value": v.to_json()}
+            for k, v in self.items()
         ]
 
     def items(self) -> Iterator[Tuple[str, Expression]]:
@@ -90,23 +88,19 @@ class Dictionary(Expression):
 
     def lookup(self, name):
         try:
-            return next(
-                child_expression for child_name, child_expression in self.items()
-                if child_name == name
-            )
+            return next(v for k, v in self.items() if k == name)
         except StopIteration:
             print('Could not find symbol: {}'.format(name))
             raise
 
     def make_environment(self) -> dict:
-        return {name: expression for name, expression in self.items()}
+        return dict(self.items())
 
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         expressions = [
-            self.child_evaluate(name, expression, new_environment)
-            for name, expression in self.items()
+            self.child_evaluate(k, v, new_environment) for k, v in self.items()
         ]
         return Dictionary(names=self.names, expressions=expressions, code=self.code)
 
