@@ -95,6 +95,9 @@ class Dictionary(Expression):
             print('Could not find symbol: {}'.format(name))
             raise
 
+    def make_environment(self) -> dict:
+        return {definition.name: definition.expression for definition in self.value}
+
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
