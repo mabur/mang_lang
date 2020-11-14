@@ -398,6 +398,19 @@ class TestStandardLibrary(unittest.TestCase):
     def test_find2(self):
         self.assertEqual([[V(1)], []], interpret('find {list=[1], query=2}'))
 
+    def test_map0(self):
+        self.assertEqual([], interpret('map{list=[],f=from x to mul[x,x]}'))
+
+    def test_map1(self):
+        self.assertEqual([V(1)], interpret('map{list=[1],f=from x to mul[x,x]}'))
+
+    def test_map2(self):
+        self.assertEqual([V(1), V(4)], interpret('map{list=[1,2],f=from x to mul[x,x]}'))
+
+    def test_map3(self):
+        self.assertEqual([V(1), V(4), V(9)], interpret('map{list=[1,2,3],f=from x to mul[x,x]}'))
+
+
 
 class TestErrorMessages(unittest.TestCase):
     def test_syntax_error(self):
