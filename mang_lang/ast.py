@@ -82,7 +82,7 @@ class Dictionary(Expression):
              } for e in self.value]
 
     @staticmethod
-    def child_evaluate(name, expression, code, environment: Environment) -> Expression:
+    def child_evaluate(name, expression, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
         value = expression.evaluate(new_environment)
         environment[name] = value
@@ -101,7 +101,7 @@ class Dictionary(Expression):
     @run_time_error_printer
     def evaluate(self, environment: Environment) -> Expression:
         new_environment = deepcopy(environment)
-        expressions = [self.child_evaluate(e.name, e.expression, e.expression.code, new_environment) for e in self.value]
+        expressions = [self.child_evaluate(e.name, e.expression, new_environment) for e in self.value]
         return Dictionary(expressions, code=self.code)
 
 
