@@ -128,7 +128,7 @@ def _import(x: String, code: CodeFragment):
     code = _read_text_file(x.value)
     expression = parse(code)
     environment = {}
-    return expression.evaluate(environment)
+    return expression.evaluate(environment, None)
 
 
 ENVIRONMENT = {
