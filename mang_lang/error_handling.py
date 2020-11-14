@@ -38,9 +38,10 @@ class AlreadyRegisteredException(Exception):
 def run_time_error_printer(evaluate):
     """A decorator that prints messages for run time errors.
     Is used for the evaluation functions for the nodes of the abstract syntax tree."""
-    def wrapped_evaluate(self, environment):
+    def wrapped_evaluate(self, parent):
+        self.parent = parent
         try:
-            return evaluate(self, environment)
+            return evaluate(self, parent)
         except AlreadyRegisteredException:
             pass
         except:

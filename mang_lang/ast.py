@@ -1,5 +1,8 @@
 from copy import deepcopy
-from typing import Callable, Iterator, Sequence, MutableMapping, Any, Union, Mapping, Tuple
+from typing import (
+    Any, Callable, Iterator, Mapping, MutableMapping, Optional, Sequence, Tuple,
+    Union
+)
 
 from error_handling import CodeFragment, run_time_error_printer
 
@@ -10,12 +13,16 @@ Json = Union[float, str, Mapping[str, Any], Sequence]
 class Expression:
     def __init__(self, code: CodeFragment):
         self.code = code
+        self.parent = None
 
     def to_json(self) -> Json:
         raise NotImplemented
 
-    def evaluate(self, environment: Environment):
+    def evaluate(self, parent) -> "Expression":
         raise NotImplemented()
+
+    def get(self, name: str) -> Optional["Expression"]:
+        return self.parent.get(name)
 
 
 class Number(Expression):
@@ -27,7 +34,7 @@ class Number(Expression):
         return {"type": "number", "value": self.value}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
+    def evaluate(self, parent) -> Expression:
         return self
 
 
@@ -40,7 +47,7 @@ class String(Expression):
         return {"type": "string", "value": self.value}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
+    def evaluate(self, parent) -> Expression:
         return self
 
 
@@ -53,9 +60,8 @@ class Array(Expression):
         return [e.to_json() for e in self.value]
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        expressions = [e.evaluate(new_environment) for e in self.value]
+    def evaluate(self, parent) -> Expression:
+        expressions = [e.evaluate(self) for e in self.value]
         return Array(expressions, code=self.code)
 
 
@@ -79,10 +85,14 @@ class Dictionary(Expression):
     def items(self) -> Iterator[Tuple[str, Expression]]:
         return zip(self.names, self.expressions)
 
-    def lookup(self, name):
+    def get(self, name: str) -> Expression:
         try:
             return next(v for k, v in self.items() if k == name)
         except StopIteration:
+            if self.parent:
+                result = self.parent.get(name)
+                if result:
+                    return result
             print('Could not find symbol: {}'.format(name))
             raise
 
@@ -90,16 +100,14 @@ class Dictionary(Expression):
         return dict(self.items())
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        expressions = []
+    def evaluate(self, parent) -> Expression:
+        evaluated = Dictionary(names=[], expressions=[], code=self.code)
+        evaluated.parent = parent
         for name, expression in self.items():
-            newer_environment = deepcopy(new_environment)
-            value = expression.evaluate(newer_environment)
-            new_environment[name] = value
-            expressions.append(value)
-
-        return Dictionary(names=self.names, expressions=expressions, code=self.code)
+            value = expression.evaluate(evaluated)
+            evaluated.expressions.append(value)
+            evaluated.names.append(name)
+        return evaluated
 
 
 class Conditional(Expression):
@@ -122,11 +130,11 @@ class Conditional(Expression):
                 "else_expression": self.else_expression.to_json()}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        if self.condition.evaluate(environment).value:
-            return self.then_expression.evaluate(environment)
+    def evaluate(self, parent) -> Expression:
+        if self.condition.evaluate(self).value:
+            return self.then_expression.evaluate(self)
         else:
-            return self.else_expression.evaluate(environment)
+            return self.else_expression.evaluate(self)
 
 
 class Function(Expression):
@@ -146,13 +154,16 @@ class Function(Expression):
                 "expression": self.expression.to_json()}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
+    def evaluate(self, parent) -> Expression:
         return self
 
-    def evaluate_call(self, input: Expression, environment: Environment) -> Expression:
-        new_environment = deepcopy(environment)
-        new_environment[self.argument_name] = input
-        return self.expression.evaluate(new_environment)
+    def evaluate_call(self, input: Expression) -> Expression:
+        middle_man = Dictionary(
+            names=[self.argument_name],
+            expressions=[input],
+            code=None,
+        ).evaluate(self.parent)
+        return self.expression.evaluate(middle_man)
 
 
 class LookupFunction(Expression):
@@ -172,11 +183,11 @@ class LookupFunction(Expression):
                 "right": self.right.to_json() if self.right is not None else ''}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        function = environment[self.left]
-        input = self.right.evaluate(environment)
+    def evaluate(self, parent) -> Expression:
+        function = parent.get(self.left)
+        input = self.right.evaluate(self)
         if isinstance(function, Function):
-            return function.evaluate_call(input=input, environment=environment)
+            return function.evaluate_call(input=input)
         if isinstance(function, Callable):
             return function(input, self.code)
         raise TypeError
@@ -196,9 +207,9 @@ class LookupSymbol(Expression):
                 "left": self.left}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        # Lookup in current scope
-        return environment[self.left]
+    def evaluate(self, parent) -> Expression:
+        # Lookup in current scope or above
+        return parent.get(self.left)
 
 
 class LookupChild(Expression):
@@ -218,11 +229,8 @@ class LookupChild(Expression):
                 "right": self.right.to_json() if self.right is not None else ''}
 
     @run_time_error_printer
-    def evaluate(self, environment: Environment) -> Expression:
-        dictionary = self.right.evaluate(environment)
+    def evaluate(self, parent) -> Expression:
+        dictionary = self.right.evaluate(self)
         assert isinstance(dictionary, Dictionary)
-        child_environment = deepcopy(environment)
         name = self.left
-        value = dictionary.lookup(name)
-        child_environment[name] = value
-        return value
+        return dictionary.get(name)
