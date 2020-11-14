@@ -395,9 +395,8 @@ class TestStandardLibrary(unittest.TestCase):
     def test_find1(self):
         self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find {list=[1,2,3], query=1}'))
 
-    @unittest.skip
     def test_find2(self):
-        self.assertEqual([[V(1)], [V(2), V(3)]], interpret('find {list=[1], query=2}'))
+        self.assertEqual([[V(1)], []], interpret('find {list=[1], query=2}'))
 
 
 class TestErrorMessages(unittest.TestCase):
@@ -408,6 +407,7 @@ class TestErrorMessages(unittest.TestCase):
     def test_run_time_error(self):
         with self.assertRaises(AttributeError):
             interpret('{\nw=0,\nx=a\n{b=1,\nc=1},\ny=1\n}')
+
 
 if __name__ == '__main__':
     unittest.main()
