@@ -2,7 +2,7 @@
     find = from input to
         if is_empty list<input then
             [[], []]
-        else if check_equality [first list<input, query<input] then
+        else if equal [first list<input, query<input] then
             [[], list<input]
         else
             result<{

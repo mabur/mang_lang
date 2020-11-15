@@ -13,11 +13,11 @@ def _div(x: Array, code: CodeFragment):
     return Number(_value_left(x) / _value_right(x), code)
 
 
-def _check_equality(x: Array, code: CodeFragment):
+def _equal(x: Array, code: CodeFragment):
     return Number(str(float(_value_left(x) == _value_right(x))), code)
 
 
-def _check_inequality(x: Array, code: CodeFragment):
+def _unequal(x: Array, code: CodeFragment):
     return Number(str(float(_value_left(x) != _value_right(x))), code)
 
 
@@ -129,8 +129,8 @@ _SUB_ENVIRONMENT = {
     'sub': _sub,
     'mul': _mul,
     'div': _div,
-    'check_equality': _check_equality,
-    'check_inequality': _check_inequality,
+    'equal': _equal,
+    'unequal': _unequal,
     'none': _none,
     'size': _size,
     'is_empty': _is_empty,

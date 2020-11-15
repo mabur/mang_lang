@@ -125,7 +125,7 @@ class TestBuiltinFunctions(unittest.TestCase):
 
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
-        code = 'y<{f = from x to if check_equality [x, 0] then 1 else mul [x, f sub [x, 1]], y=f 10}'
+        code = 'y<{f = from x to if equal [x, 0] then 1 else mul [x, f sub [x, 1]], y=f 10}'
         self.assertEqual(V(3628800), interpret(code))
 
 
@@ -176,30 +176,30 @@ class TestNone(unittest.TestCase):
 
 class TestEqual(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(1), interpret('check_equality [1, 1]'))
+        self.assertEqual(V(1), interpret('equal [1, 1]'))
 
     def test1(self):
-        self.assertEqual(V(0), interpret('check_equality [0, 1]'))
+        self.assertEqual(V(0), interpret('equal [0, 1]'))
 
     def test2(self):
-        self.assertEqual(V(0), interpret('check_equality [1, 0]'))
+        self.assertEqual(V(0), interpret('equal [1, 0]'))
 
     def test3(self):
-        self.assertEqual(V(1), interpret('check_equality [0, 0]'))
+        self.assertEqual(V(1), interpret('equal [0, 0]'))
 
 
 class TestInequality(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(0), interpret('check_inequality [1, 1]'))
+        self.assertEqual(V(0), interpret('unequal [1, 1]'))
 
     def test1(self):
-        self.assertEqual(V(1), interpret('check_inequality [0, 1]'))
+        self.assertEqual(V(1), interpret('unequal [0, 1]'))
 
     def test2(self):
-        self.assertEqual(V(1), interpret('check_inequality [1, 0]'))
+        self.assertEqual(V(1), interpret('unequal [1, 0]'))
 
     def test3(self):
-        self.assertEqual(V(0), interpret('check_inequality [0, 0]'))
+        self.assertEqual(V(0), interpret('unequal [0, 0]'))
 
 
 class TestaddMinMax(unittest.TestCase):
