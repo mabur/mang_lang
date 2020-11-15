@@ -1,5 +1,6 @@
 TODO:
 * support numbers in variable names
+* Printing of row and column for syntax error
 * Fix scope handling
   - Make example of AST and with symbolic references.
   - How does it work for values?
