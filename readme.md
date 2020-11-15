@@ -45,12 +45,12 @@ Another example of how Mang Lang uses dictionaries both for structuring a progra
 ```
 {
 rectangle = {width = 4, height = 5},
-area = mul [width rectangle, height rectangle]
+area = mul [width<rectangle, height<rectangle]
 }
 ```
 
 In this example area gets the value `4*5=20`.
-Note that the same syntax is used to apply a function and access a field in a dictionary: `function input` and `field dictionary`.
+We use the syntax `width<rectangle` to get the field `width` from the dictionary `rectangle`.
 
 # Examples
 
@@ -105,11 +105,10 @@ Dictionaries can be nested:
 ```
 {
 rectangle = {width = 4, height = 5},
-area = mul [width rectangle, height rectangle]
+area = mul [width<rectangle, height<rectangle]
 }
 ```
-Fields inside a dictionary can be retrieved using the syntax `element dictionary`.
-Thus, the same syntax is used to retrieve an element from a dictionary as calling a function.
+We use the syntax `width<rectangle` to get the field `width` from the dictionary `rectangle`.
 
 ## lists
 
@@ -166,7 +165,7 @@ Function definitions and computations can be broken up into smaller parts by usi
 
 ```
 {
-square_norm = from vec2 to result {
+square_norm = from vec2 to result<{
     x = first vec2,
     y = last vec2,
     x2 = mul [x, x],
@@ -203,8 +202,8 @@ then you can import those definitions into another source file by using the `imp
 ```
 {
 math   = import "math",
-tau    = mul [2, pi math],
-square = square math,
+tau    = mul [2, pi<math],
+square = square<math,
 four   = square 2
 }
 ```
