@@ -65,6 +65,7 @@ def _concat(x: Array, code: CodeFragment):
 
 
 def _first(x: Union[Array, String], code: CodeFragment):
+    assert x.value, "Cannot get first element from empty list or string"
     element = x.value[0]
     if isinstance(x, Array):
         return element
@@ -73,6 +74,7 @@ def _first(x: Union[Array, String], code: CodeFragment):
 
 
 def _last(x: Union[Array, String], code: CodeFragment):
+    assert x.value, "Cannot get last element from empty list or string"
     element = x.value[-1]
     if isinstance(x, Array):
         return element
