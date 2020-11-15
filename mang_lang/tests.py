@@ -393,26 +393,28 @@ class TestImport(unittest.TestCase):
         self.assertEqual(V(9), interpret('b<{a = import "test_data/test3.ml", square = square<a, b=square 3}'))
 
 
-class TestStandardLibrary(unittest.TestCase):
-    def test_find0(self):
+class TestFind(unittest.TestCase):
+    def test0(self):
         self.assertEqual([[], []], interpret('find {list=[], query=1}'))
 
-    def test_find1(self):
+    def test1(self):
         self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find {list=[1,2,3], value=1}'))
 
-    def test_find2(self):
+    def test2(self):
         self.assertEqual([[V(1)], []], interpret('find {list=[1], value=2}'))
 
-    def test_map0(self):
+
+class TestMap(unittest.TestCase):
+    def test0(self):
         self.assertEqual([], interpret('map{list=[],f=from x to mul[x,x]}'))
 
-    def test_map1(self):
+    def test1(self):
         self.assertEqual([V(1)], interpret('map{list=[1],f=from x to mul[x,x]}'))
 
-    def test_map2(self):
+    def test2(self):
         self.assertEqual([V(1), V(4)], interpret('map{list=[1,2],f=from x to mul[x,x]}'))
 
-    def test_map3(self):
+    def test3(self):
         self.assertEqual([V(1), V(4), V(9)], interpret('map{list=[1,2,3],f=from x to mul[x,x]}'))
 
 
