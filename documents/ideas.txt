@@ -1,27 +1,16 @@
 TODO:
-* support numbers in variable names
-* Printing of row and column for syntax error
-* Fix scope handling
-  - Make example of AST and with symbolic references.
-  - How does it work for values?
-  - How does it work for functions?
-  - How does it work for values/functions created inside functions?
-  - Should functions be able to have other functions as output? Maybe just input?
-  - Values are copied. Functions are pointers.
-  - Undefined behaviour if functions/pointers are returned from functions.
-    - This might circumvent need for closures.
-    - Pointers don't survive scope where they are defined, and cannot be used outside.
-* How to handle functions. Inlining vs jump.
+* support numbers in variable names.
+* Printing of row and column for syntax error.
+* Printing of evaluation graph for run-time-errors.
+* Start writing standard library functions in Mang Lang instead of Python.
+* Try to implement Advent of Code problems to see what is missing
+* Use-case: programmable json.
+
+TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
 * Generics.
-* Try to implement Advent of Code problems to see what is missing
-* Start writing standard library functions in Mang Lang instead of Python.
-* Use-case: programmable json.
-* Maybe these are all "lookups":
-    - variable lookup in current dictionary
-    - variable lookup in child dictionary
-    - if statement
-    - function application
+* How to handle compiled functions. Inlining vs jump.
+
 
 TYPES
 Types start with upper case. Variables start with lower case. (enforce that in syntax?)
