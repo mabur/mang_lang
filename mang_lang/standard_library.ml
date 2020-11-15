@@ -16,6 +16,18 @@
                 x = if equal [head, value] then 1 else 0,
                 result = add [x, count_value {list=tail, value=value}],
             },
+    count_if = from input to
+        if is_empty list<input then
+            0
+        else
+            result<{
+                predicate = predicate<input,
+                list = list<input,
+                head = first list,
+                tail = last_part list,
+                x = if predicate head then 1 else 0,
+                result = add [x, count_if {list=tail, predicate=predicate}],
+            },
     find = from input to
         if is_empty list<input then
             [[], []]

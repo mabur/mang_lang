@@ -449,6 +449,23 @@ class TestCountValue(unittest.TestCase):
         self.assertEqual(V(2), interpret('count_value{list=[3,1,3], value=3}'))
 
 
+class TestCountIf(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(0), interpret('count_if{list=[], predicate=from x to equal[x, 3]}'))
+
+    def test1(self):
+        self.assertEqual(V(0), interpret('count_if{list=[1], predicate=from x to equal[x, 3]}'))
+
+    def test2(self):
+        self.assertEqual(V(1), interpret('count_if{list=[3], predicate=from x to equal[x, 3]}'))
+
+    def test3(self):
+        self.assertEqual(V(1), interpret('count_if{list=[1,3], predicate=from x to equal[x, 3]}'))
+
+    def test4(self):
+        self.assertEqual(V(2), interpret('count_if{list=[3,1,3], predicate=from x to equal[x, 3]}'))
+
+
 class TestErrorMessages(unittest.TestCase):
     def test_syntax_error(self):
         with self.assertRaises(TypeError):
