@@ -185,7 +185,10 @@ class LookupSymbol(Expression):
 
     @run_time_error_printer
     def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        return parent.get(self.name)
+        result = parent.get(self.name)
+        assert result,\
+            "Could not find symbol {} in current scope or above".format(self.name)
+        return result
 
 
 class LookupChild(Expression):
@@ -203,4 +206,8 @@ class LookupChild(Expression):
     def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         child = self.child.evaluate(self)
         assert isinstance(child, Dictionary)
-        return child.get(self.name)
+        result = child.get(self.name)
+        assert result, \
+            "Could not find symbol {} in child scope".format(
+                self.name)
+        return result
