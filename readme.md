@@ -10,7 +10,7 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 1. Numbers and strings are primitive data types.
 2. Lists.
 3. Dictionaries of symbols / variables.
-4. Functions.
+4. Functions, which are first-class citizens.
 5. Conditional expressions (if then else).
 6. Looping with recursive functions.
 
@@ -233,3 +233,10 @@ four   = square 2
 * **last**: pick the last element.
 * **first_part**: pick all elements except the last.
 * **last_part**: pick all elements except the first.
+
+
+## List of functions in standard library
+
+* **find**: Given input `{list, query}` find query in the list.
+  Returns two lists. The list up until and including query, and the remaining list. 
+* **map**: Given input `{list, f}` return a list where the function f has been applied to each element in the input list.
