@@ -238,8 +238,9 @@ four   = square 2
 
 ## List of functions in standard library
 
-* **find**: Given input `{list, value}` find value in the list.
-  Returns two lists. The list up until but excluding the value, and the remaining list from the value and to the end. 
-* **map**: Given input `{list, f}` return a list where the function f has been applied to each element in the input list.
 * **count_value**: Given input `{list, value}` count number of occurances of value in list.
-* **count_if**: Given input `{list, predicate}` count number of items in list for which the predicate holds.
+* **count_if**: Given input `{list, predicate}` count number of items in list for which the predicate is true.
+* **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
+* **find**: Given input `{list, value}` find value in the list.
+  Returns two lists. The list up until but excluding the value, and the remaining list from the value and to the end.
+* **map**: Given input `{list, f}` return a list where the function f has been applied to each element in the input list. 

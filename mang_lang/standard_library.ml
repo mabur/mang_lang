@@ -69,5 +69,20 @@
                 head = f first list,
                 tail = map {list = last_part list, f = f},
                 result = concat [[head], tail]
+            },
+    filter = from input to
+        if is_empty list<input then
+            []
+        else
+            result<{
+                list = list<input,
+                predicate = predicate<input,
+                head = first list,
+                tail = filter {list = last_part list, predicate = predicate}
+                result =
+                    if predicate head then
+                        concat [[head], tail]
+                    else
+                        tail
             }
 }
