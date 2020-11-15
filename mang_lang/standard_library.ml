@@ -1,4 +1,9 @@
 {
+    count = from input to
+        if is_empty input then
+            0
+        else
+            add [1, count last_part input],
     find = from input to
         if is_empty list<input then
             [[], []]

@@ -416,6 +416,19 @@ class TestStandardLibrary(unittest.TestCase):
         self.assertEqual([V(1), V(4), V(9)], interpret('map{list=[1,2,3],f=from x to mul[x,x]}'))
 
 
+class TestCount(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(0), interpret('count []'))
+
+    def test1(self):
+        self.assertEqual(V(1), interpret('count [0]'))
+
+    def test2(self):
+        self.assertEqual(V(2), interpret('count [0, 0]'))
+
+    def test3(self):
+        self.assertEqual(V(3), interpret('count [0, 0, 0]'))
+
 
 class TestErrorMessages(unittest.TestCase):
     def test_syntax_error(self):
