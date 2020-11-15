@@ -61,6 +61,7 @@ We use the syntax `width<rectangle` to get the field `width` from the dictionary
 5. [Strings](#Strings)
 6. [Importing code in different source files](#importing-code-in-different-source-files)
 7. [List of built-in functions](#list-of-built-in-functions)
+8. [List of functions in standard library](#list-of-functions-in-standard-library) 
 
 ## Numbers and Built-in Functions
 
