@@ -26,7 +26,7 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 ```(
 {
 factorial = from x to 
-    if check_equality [x, 0] then
+    if equal [x, 0] then
         1
     else
         mul [x, factorial sub [x, 1]],
@@ -36,7 +36,7 @@ result = factorial 4
 This example program defines two symbols: `factorial` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{factorial = ..., result = ...}`. White space and new lines are optional.
 
 Functions are defined using the syntax `from ... to ...`, and called using the syntax `function input`.
-Mang Lang has built in functions like `check_equality`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Functions take a single input and a single output. Multiple things are passed to and from functions by first putting them in either a list `[]` or a dictionary `{}`.
+Mang Lang has built in functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Functions take a single input and a single output. Multiple things are passed to and from functions by first putting them in either a list `[]` or a dictionary `{}`.
 
 In the example above the result gets the value `1*2*3*4=24`.
 
@@ -155,7 +155,7 @@ Recursive function calls and the if-then-else operator are used for loops:
 ```
 {
 factorial = from x to 
-    if check_equality [x, 0] then
+    if equal [x, 0] then
         1
     else
         mul [x, factorial sub [x, 1]],
@@ -220,8 +220,8 @@ four   = square 2
 * **max**: largest number in a non-empty list.
 
 ### Logical functions:
-* **check_equality**: true if two numbers are equal, and otherwise false.
-* **check_inequality**: false if two numbers are equal, and otherwise true.
+* **equal**: true if two numbers are equal, and otherwise false.
+* **unequal**: false if two numbers are equal, and otherwise true.
 * **all**: true if all elements of a list are true.
 * **any**: true if at least one element of a list is true.
 * **none**: true if all elements of a list are false.
