@@ -398,10 +398,10 @@ class TestStandardLibrary(unittest.TestCase):
         self.assertEqual([[], []], interpret('find {list=[], query=1}'))
 
     def test_find1(self):
-        self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find {list=[1,2,3], query=1}'))
+        self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find {list=[1,2,3], value=1}'))
 
     def test_find2(self):
-        self.assertEqual([[V(1)], []], interpret('find {list=[1], query=2}'))
+        self.assertEqual([[V(1)], []], interpret('find {list=[1], value=2}'))
 
     def test_map0(self):
         self.assertEqual([], interpret('map{list=[],f=from x to mul[x,x]}'))
