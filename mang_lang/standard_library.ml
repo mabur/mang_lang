@@ -4,6 +4,18 @@
             0
         else
             add [1, count last_part input],
+    count_value = from input to
+        if is_empty list<input then
+            0
+        else
+            result<{
+                value = value<input,
+                list = list<input,
+                head = first list,
+                tail = last_part list,
+                x = if equal [head, value] then 1 else 0,
+                result = add [x, count_value {list=tail, value=value}],
+            },
     find = from input to
         if is_empty list<input then
             [[], []]

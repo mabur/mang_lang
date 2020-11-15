@@ -241,3 +241,4 @@ four   = square 2
 * **find**: Given input `{list, query}` find query in the list.
   Returns two lists. The list up until and including query, and the remaining list. 
 * **map**: Given input `{list, f}` return a list where the function f has been applied to each element in the input list.
+* **count_value**: Given input `{list, value}` count number of occurances of value in list.
