@@ -37,7 +37,7 @@
             result<{
                 list = list<input,
                 value = value<input,
-                recursive_result = find {list = last_part list, value = value}
+                recursive_result = find {list = last_part list, value = value},
                 head = concat [[first list], first recursive_result],
                 tail = last recursive_result,
                 result = [head, tail]
