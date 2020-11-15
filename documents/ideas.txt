@@ -1,4 +1,5 @@
 TODO:
+* support numbers in variable names
 * Fix scope handling
   - Make example of AST and with symbolic references.
   - How does it work for values?
