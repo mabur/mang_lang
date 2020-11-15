@@ -425,6 +425,18 @@ class TestFind(unittest.TestCase):
         self.assertEqual([[V(2), V(3)], [V(1)]], interpret('find {list=[2,3,1], value=1}'))
 
 
+class TestFindIf(unittest.TestCase):
+    def test0(self):
+        self.assertEqual([[], []], interpret('find_if {list=[], predicate=from x to equal[x,1]}'))
+
+    def test1(self):
+        self.assertEqual([[], [V(1)]], interpret('find_if {list=[1], predicate=from x to equal[x,1]}'))
+
+    @unittest.skip
+    def test2(self):
+        self.assertEqual([[V(0)], []], interpret('find_if {list=[0], predicate=from x to equal[x,1]}'))
+
+
 class TestMap(unittest.TestCase):
     def test0(self):
         self.assertEqual([], interpret('map{list=[],f=from x to mul[x,x]}'))

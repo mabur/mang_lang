@@ -42,6 +42,23 @@
                 tail = last recursive_result,
                 result = [head, tail]
             },
+    find_if = from input to
+        result<{
+            list = list<input,
+            predicate = predicate<input,
+            result = 
+                if is_empty list then
+                    [[], []]
+                else if predicate first list then
+                    [[], list]
+                else
+                    subresult<{
+                        recursive_result = find_if {list = last_part list, predicate = predicate},
+                        head = concat [[first list], first recursive_result],
+                        tail = last recursive_result,
+                        subresult = [head, tail]
+                    }
+        },
     map = from input to
         if is_empty list<input then
             []
