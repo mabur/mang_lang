@@ -40,9 +40,6 @@ conjugate : from x : List Number to List Number = [first x, neg last x]
 conjugate : from {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
 conjugate : from Complex to Complex = {r := r, i := neg i}
 
-// list comprehension
-squares : List Number = each mul[x, x] for x:Number in [1,2,3,4,5]
-
 // Type alias:
 Complex : Type = {re:Number, im:Number}
 complex := {re := 1, im := 1}
@@ -80,29 +77,29 @@ Vec2 = (x=Real, y=Real)
 
 split = from input to result of
 {
-  queue  = queue of input,
-  query  = query of input,
-  result = recursive_split of {queue=queue, query=query, result=[]}
+  queue  = queue<input,
+  query  = query<input,
+  result = recursive_split {queue=queue, query=query, result=[]}
 }
 
 recursive_split = from input to
-    if check_empty of queue of input
+    if check_empty queue<input
     then input
     else output of
     {
-      find_result = find of {list=queue, query=","}, // Relies on find/split_first
-      tail        = tail of find_result,
-      head        = head of find_result,
-      result      = concat of [result, [head]]
-      output      = recursive_split of {queue=tail, result=result}
+      find_result = find {list=queue, query=","}, // Relies on find/split_first
+      tail        = tail find_result,
+      head        = head find_result,
+      result      = concat [result, [head]]
+      output      = recursive_split {queue=tail, result=result}
     }
 
 move_element = from input to
-    if check_equality of [front of source, query of input] then undefined else
+    if equal [front source, query<input] then undefined else
     {
-        target = concat of [target of input, front of source of input],
-        source = without_front of source of input,
-        query = query of input
+        target = concat [target<input, front source<input],
+        source = without_front source<input,
+        query = query<input
     }
 move_word = move_element unfold {source=,target=[], query=","}
     
@@ -206,55 +203,55 @@ std::tuple<std::string, std::string> next_word(std::string source, char query) {
 
 // Recursive split in Mang lang:
 split_recursive = from input to
-    if is_empty of source of input then
+    if is_empty source<input then
         []
     else
-        result of {
-            query = query of input,
-            source = source of input,
-            split = next_word of {source = source, query = query},
-            word = word of split,
-            rest = rest of split,
-            recursive_result = split_recursive of {source = rest, query = query},
-            result = concat of [word, recursive_result]
+        result<{
+            query = query<input,
+            source = source<input,
+            split = next_word {source = source, query = query},
+            word = word<split,
+            rest = rest<split,
+            recursive_result = split_recursive {source = rest, query = query},
+            result = concat [word, recursive_result]
         }
 
 next_word = from input to
-    if is_empty of source of input then
+    if is_empty source<input then
         {word = [], rest = []}
-    else if check_equality of [first of source of input, query of input] then
-        {word = [], rest = last_part of source of input}
+    else if equal [first source<input, query<input] then
+        {word = [], rest = last_part source<input}
     else
-        result of {
-            source = source of input,
-            query = query of input,
-            tail = last_part of source,
-            split = next_word of {source = tail, query = query},
-            word = word of split,
-            rest = rest of split,
-            result = {word = concat of [[first of source], word], rest = rest}
+        result<{
+            source = source<input,
+            query = query<input,
+            tail = last_part source,
+            split = next_word {source = tail, query = query},
+            word = word<split,
+            rest = rest<split,
+            result = {word = concat [[first<source], word], rest = rest}
         }
 
 // Multiple named input/output for functions:
 split_recursive = from source, query to
-    if is_empty of source then
+    if is_empty source then
         []
     else
-        result of {
-            word, rest = next_word of {source = source, query = query},
-            recursive_result = split_recursive of {source = rest, query = query},
-            result = concat of [word, recursive_result]
+        result<{
+            word, rest = next_word {source = source, query = query},
+            recursive_result = split_recursive {source = rest, query = query},
+            result = concat [word, recursive_result]
         }
 
 next_word = from source, query to
-    if is_empty of source then
+    if is_empty source then
         {word = [], rest = []}
-    else if check_equality of [first of source, query] then
-        {word = [], rest = last_part of source}
+    else if equal [first source, query] then
+        {word = [], rest = last_part source}
     else
-        result of {
-            word, rest = next_word of {source = last_part of source, query = query},
-            result = {word = concat of [[first of source], word], rest = rest}
+        result<{
+            word, rest = next_word {source = last_part source, query = query},
+            result = {word = concat [[first source], word], rest = rest}
         }
 
 // Blir bra. Implementera algoritmer från STL som find, find_if,
