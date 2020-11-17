@@ -3,23 +3,49 @@
 Mang Lang is a toy programming language with the following **design trade-offs**:
 
 1. Minimalistic instead of feature-rich. The implementation is ~500 lines of Python code.
-2. Functional instead of imperative or object oriented.
+2. Purely functional instead of imperative or object oriented.
 
 **What it has**:
 
 1. Numbers and strings are primitive data types.
 2. Lists.
 3. Dictionaries of symbols / variables.
-4. Functions, which are first-class citizens.
-5. Conditional expressions (if then else).
-6. Looping with recursive functions.
+4. Conditional expressions (if then else).
+5. Functions, which are first-class citizens, supporting higher order functions and generics.
+
 
 **What it does NOT have**:
 
-1. For loops and while loops. Loops are handled with recursion and higher order functions.
-2. Mutable variables. Everything is immutable / constant.
-3. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
+1. For loops and while loops. Loops are handled with recursion and higher order functions like map and filter.
+2. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
+3. Mutable variables. Everything is immutable / constant.
 4. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
+
+**Language Comparison**
+
+|                       | Json | Yaml | Manglang | C    |
+| :-------------------- | :--- | :--- | :------- | :--- |
+| Numbers               | Yes  | Yes  | Yes      | Yes  |
+| Strings               | Yes  | Yes  | Yes      | Yes  |
+| Lists/Arrays          | Yes  | Yes  | Yes      | Yes  |
+| Dictionaries/Structs  | Yes  | Yes  | Yes      | Yes  |
+| Null                  | Yes  | Yes  | -        | Yes  |
+| Enum                  | -    | -    | -        | Yes  |
+| Comments              | -    | Yes  | -        | Yes  |
+| Aliases               | -    | Yes  | Yes      | Yes  |
+| Pointers              | -    | -    | -        | Yes  |
+| Mutable Variables     | -    | -    | -        | Yes  |
+| Types                 | -    | -    | -        | Yes  |
+| Conditionals          | -    | -    | Yes      | Yes  |
+| Loops                 | -    | -    | -        | Yes  |
+| Functions             | -    | -    | Yes      | Yes  |
+| Generic Functions     | -    | -    | Yes      | -    |
+| First Class Functions | -    | -    | Yes      | -    |
+| Operators             | -    | -    | -        | Yes  |
+| Macros                | -    | -    | -        | Yes  |
+
+The minimalism of Manglang makes it resemble a simple data format like Json or Yaml.
+Manglang only adds conditionals and functions to allow computations. 
 
 **Example code**:
 
