@@ -23,6 +23,9 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 **Language Comparison**
 
+The minimalism of Manglang makes it resemble a simple data format like Json or Yaml.
+Manglang only adds conditionals and functions to allow computations.
+
 |                       | Json | Yaml | Manglang | C    |
 | :-------------------- | :--- | :--- | :------- | :--- |
 | Numbers               | Yes  | Yes  | Yes      | Yes  |
@@ -42,10 +45,7 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 | Generic Functions     | -    | -    | Yes      | -    |
 | First Class Functions | -    | -    | Yes      | -    |
 | Operators             | -    | -    | -        | Yes  |
-| Macros                | -    | -    | -        | Yes  |
-
-The minimalism of Manglang makes it resemble a simple data format like Json or Yaml.
-Manglang only adds conditionals and functions to allow computations. 
+| Macros                | -    | -    | -        | Yes  | 
 
 **Example code**:
 
