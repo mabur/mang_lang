@@ -42,8 +42,6 @@ Manglang only adds conditionals and functions to allow computations.
 | Conditionals          | -    | -    | Yes      | Yes  |
 | Loops                 | -    | -    | -        | Yes  |
 | Functions             | -    | -    | Yes      | Yes  |
-| Generic Functions     | -    | -    | Yes      | -    |
-| First Class Functions | -    | -    | Yes      | -    |
 | Operators             | -    | -    | -        | Yes  |
 | Macros                | -    | -    | -        | Yes  | 
 
