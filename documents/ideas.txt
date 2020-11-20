@@ -5,6 +5,7 @@ TODO:
 * Start writing standard library functions in Mang Lang instead of Python.
 * Try to implement Advent of Code problems to see what is missing
 * Use-case: programmable json.
+* railroad diagram / flow chart / ebnf definition
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
