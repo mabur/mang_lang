@@ -530,6 +530,20 @@ class TestFilter(unittest.TestCase):
         self.assertEqual([V(3), V(3)], interpret('filter{list=[3,2,3], predicate=from x to equal[x, 3]}'))
 
 
+class TestReverse(unittest.TestCase):
+    def test0(self):
+        self.assertEqual([], interpret('reverse[]'))
+
+    def test1(self):
+        self.assertEqual([V(0)], interpret('reverse[0]'))
+
+    def test2(self):
+        self.assertEqual([V(1), V(0)], interpret('reverse[0, 1]'))
+
+    def test3(self):
+        self.assertEqual([V(2), V(1), V(0)], interpret('reverse[0, 1, 2]'))
+
+
 class TestErrorMessages(unittest.TestCase):
     def test_syntax_error(self):
         with self.assertRaises(TypeError):

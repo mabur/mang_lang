@@ -85,5 +85,17 @@
                         concat [[head], tail]
                     else
                         tail
+            },
+    reverse = from list to
+        if is_empty list then
+            list
+        else
+            result<{
+                mylist = list,
+                head = first mylist,
+                tail = last_part mylist,
+                a = reverse tail,
+                b = [head]
+                result = concat[a, b]
             }
 }

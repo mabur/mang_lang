@@ -6,6 +6,7 @@ TODO:
 * Try to implement Advent of Code problems to see what is missing
 * Use-case: programmable json.
 * railroad diagram / flow chart / ebnf definition
+* Fix bug for input of recursive function calls.
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
