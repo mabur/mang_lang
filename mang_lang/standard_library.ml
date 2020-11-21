@@ -4,17 +4,17 @@
             0
         else
             add [1, count last_part input],
-    count_value = from input to
+    count_item = from input to
         if is_empty list<input then
             0
         else
             result<{
-                value = value<input,
+                item = item<input,
                 list = list<input,
                 head = first list,
                 tail = last_part list,
-                x = if equal [head, value] then 1 else 0,
-                result = add [x, count_value {list=tail, value=value}],
+                x = if equal [head, item] then 1 else 0,
+                result = add [x, count_item {list=tail, item=item}],
             },
     count_if = from input to
         if is_empty list<input then
@@ -31,13 +31,13 @@
     find = from input to
         if is_empty list<input then
             [[], []]
-        else if equal [first list<input, value<input] then
+        else if equal [first list<input, item<input] then
             [[], list<input]
         else
             result<{
                 list = list<input,
-                value = value<input,
-                recursive_result = find {list = last_part list, value = value},
+                item = item<input,
+                recursive_result = find {list = last_part list, item = item},
                 head = concat [[first list], first recursive_result],
                 tail = last recursive_result,
                 result = [head, tail]

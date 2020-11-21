@@ -251,20 +251,27 @@ four   = square 2
 * **none**: true if all elements of a list are false.
 
 ### List and string functions
-* **is_empty**: true if a list or string has zero elements.
+* **is_empty**: true if a list or string has zero items.
 * **concat**: concatenates two lists or strings.
-* **first**: pick the first element.
-* **last**: pick the last element.
-* **first_part**: pick all elements except the last.
-* **last_part**: pick all elements except the first.
+* **first**: pick the first item.
+* **last**: pick the last item.
+* **first_part**: list of all items except the last.
+* **last_part**: list of all items except the first.
 
 
 ## List of functions in standard library
 
-* **count**: The number of elements of a list or string.
-* **count_value**: Given input `{list, value}` count number of occurances of value in list.
-* **count_if**: Given input `{list, predicate}` count number of items in list for which the predicate is true.
+* **map**: Given input `{list, f}` return a list where the function f has been applied to each item.
 * **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
-* **find**: Given input `{list, value}` find value in the list.
-  Returns two lists. The list up until but excluding the value, and the remaining list from the value and to the end.
-* **map**: Given input `{list, f}` return a list where the function f has been applied to each element in the input list. 
+
+
+* **count**: The number of items of a list or string.
+* **count_item**: Given input `{list, item}` count number of occurrences of a specific item in list.
+* **count_if**: Given input `{list, predicate}` count number of items in list for which the predicate is true.
+
+
+* **find**: Given input `{list, item}` find the first occurrence of a specific item in the list.
+  Returns two lists. The list up until but excluding the item, and the remaining list from the item and to the end.  
+* **find_if**: Given input `{list, predicate}` find the first item in the list for which the predicate is true.
+  Returns two lists. The list up until but excluding the item, and the remaining list from the item and to the end.
+ 

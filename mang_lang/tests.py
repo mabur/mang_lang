@@ -395,34 +395,34 @@ class TestImport(unittest.TestCase):
 
 class TestFind(unittest.TestCase):
     def test0(self):
-        self.assertEqual([[], []], interpret('find {list=[], value=1}'))
+        self.assertEqual([[], []], interpret('find {list=[], item=1}'))
 
     def test1(self):
-        self.assertEqual([[V(0)], []], interpret('find {list=[0], value=1}'))
+        self.assertEqual([[V(0)], []], interpret('find {list=[0], item=1}'))
 
     def test2(self):
-        self.assertEqual([[], [V(1)]], interpret('find {list=[1], value=1}'))
+        self.assertEqual([[], [V(1)]], interpret('find {list=[1], item=1}'))
 
     def test3(self):
-        self.assertEqual([[V(0), V(0)],[]], interpret('find {list=[0, 0], value=1}'))
+        self.assertEqual([[V(0), V(0)],[]], interpret('find {list=[0, 0], item=1}'))
 
     def test4(self):
-        self.assertEqual([[], [V(1), V(0)]], interpret('find {list=[1, 0], value=1}'))
+        self.assertEqual([[], [V(1), V(0)]], interpret('find {list=[1, 0], item=1}'))
 
     def test5(self):
-        self.assertEqual([[V(0)], [V(1)]], interpret('find {list=[0, 1], value=1}'))
+        self.assertEqual([[V(0)], [V(1)]], interpret('find {list=[0, 1], item=1}'))
 
     def test6(self):
-        self.assertEqual([[], [V(1), V(1)]], interpret('find {list=[1, 1], value=1}'))
+        self.assertEqual([[], [V(1), V(1)]], interpret('find {list=[1, 1], item=1}'))
 
     def test7(self):
-        self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find {list=[1,2,3], value=1}'))
+        self.assertEqual([[], [V(1), V(2), V(3)]], interpret('find {list=[1,2,3], item=1}'))
 
     def test8(self):
-        self.assertEqual([[V(2)], [V(1), V(3)]], interpret('find {list=[2,1,3], value=1}'))
+        self.assertEqual([[V(2)], [V(1), V(3)]], interpret('find {list=[2,1,3], item=1}'))
 
     def test9(self):
-        self.assertEqual([[V(2), V(3)], [V(1)]], interpret('find {list=[2,3,1], value=1}'))
+        self.assertEqual([[V(2), V(3)], [V(1)]], interpret('find {list=[2,3,1], item=1}'))
 
 
 class TestFindIf(unittest.TestCase):
@@ -476,21 +476,21 @@ class TestCount(unittest.TestCase):
         self.assertEqual(V(3), interpret('count [0, 0, 0]'))
 
 
-class TestCountValue(unittest.TestCase):
+class TestCountItem(unittest.TestCase):
     def test0(self):
-        self.assertEqual(V(0), interpret('count_value{list=[], value=3}'))
+        self.assertEqual(V(0), interpret('count_item{list=[], item=3}'))
 
     def test1(self):
-        self.assertEqual(V(0), interpret('count_value{list=[1], value=3}'))
+        self.assertEqual(V(0), interpret('count_item{list=[1], item=3}'))
 
     def test2(self):
-        self.assertEqual(V(1), interpret('count_value{list=[3], value=3}'))
+        self.assertEqual(V(1), interpret('count_item{list=[3], item=3}'))
 
     def test3(self):
-        self.assertEqual(V(1), interpret('count_value{list=[1,3], value=3}'))
+        self.assertEqual(V(1), interpret('count_item{list=[1,3], item=3}'))
 
     def test4(self):
-        self.assertEqual(V(2), interpret('count_value{list=[3,1,3], value=3}'))
+        self.assertEqual(V(2), interpret('count_item{list=[3,1,3], item=3}'))
 
 
 class TestCountIf(unittest.TestCase):
