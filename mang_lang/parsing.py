@@ -85,11 +85,11 @@ def _parse_string(code: CodeFragment) -> Tuple[String, CodeFragment]:
 
 def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:
     section = copy.copy(code)
-    expressions = ()
+    expressions = []
     _, code = _parse_keyword(code, ARRAY_BEGIN)
     while not code.startswith(ARRAY_END):
         expression, code = _parse_expression(code)
-        expressions += (expression,)
+        expressions.append(expression)
         if code.startswith(COMMA):
             _, code = _parse_keyword(code, COMMA)
     _, code = _parse_keyword(code, ARRAY_END)
