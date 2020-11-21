@@ -53,17 +53,17 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_if_then_else_references(self):
         self.assertEqual(V(1), interpret('y<{x=1,y=if x then x else x}'))
 
-    def test_size1(self):
-        self.assertEqual(V(3), interpret('size [8,4,6]'))
+    def test_count1(self):
+        self.assertEqual(V(3), interpret('count [8,4,6]'))
 
-    def test_size2(self):
-        self.assertEqual(V(1), interpret('size [9]'))
+    def test_count2(self):
+        self.assertEqual(V(1), interpret('count [9]'))
 
-    def test_size3(self):
-        self.assertEqual(V(0), interpret('size []'))
+    def test_count3(self):
+        self.assertEqual(V(0), interpret('count []'))
 
-    def test_size4(self):
-        self.assertEqual(V(0), interpret('size []'))
+    def test_count4(self):
+        self.assertEqual(V(0), interpret('count []'))
 
     def test_is_empty1(self):
         self.assertEqual(V(1), interpret('is_empty []'))
@@ -93,7 +93,7 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(8), interpret('last [6, 4, 8]'))
 
     def test_first_part0(self):
-        self.assertEqual(V(2), interpret('size first_part [6, 4, 8]'))
+        self.assertEqual(V(2), interpret('count first_part [6, 4, 8]'))
 
     def test_first_part1(self):
         self.assertEqual(V(6), interpret('first first_part [6, 4, 8]'))
@@ -102,13 +102,13 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(4), interpret('last first_part [6, 4, 8]'))
 
     def test_first_part3(self):
-        self.assertEqual(V(0), interpret('size first_part [6]'))
+        self.assertEqual(V(0), interpret('count first_part [6]'))
 
     def test_first_part4(self):
-        self.assertEqual(V(0), interpret('size first_part []'))
+        self.assertEqual(V(0), interpret('count first_part []'))
 
     def test_last_part0(self):
-        self.assertEqual(V(2), interpret('size last_part [6, 4, 8]'))
+        self.assertEqual(V(2), interpret('count last_part [6, 4, 8]'))
 
     def test_last_part1(self):
         self.assertEqual(V(4), interpret('first last_part [6, 4, 8]'))
@@ -117,10 +117,10 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(8), interpret('last last_part [6, 4, 8]'))
 
     def test_last_part3(self):
-        self.assertEqual(V(0), interpret('size last_part [6]'))
+        self.assertEqual(V(0), interpret('count last_part [6]'))
 
     def test_last_part4(self):
-        self.assertEqual(V(0), interpret('size last_part []'))
+        self.assertEqual(V(0), interpret('count last_part []'))
 
 
 class TestRecursion(unittest.TestCase):
@@ -351,14 +351,14 @@ class TestString(unittest.TestCase):
     def test_string2(self):
         self.assertEqual(S("home\dir/image.png"), interpret('"home\dir/image.png"'))
 
-    def test_string_size0(self):
-        self.assertEqual(V(0), interpret('size ""'))
+    def test_string_count0(self):
+        self.assertEqual(V(0), interpret('count ""'))
 
-    def test_string_size1(self):
-        self.assertEqual(V(1), interpret('size "f"'))
+    def test_string_count1(self):
+        self.assertEqual(V(1), interpret('count "f"'))
 
-    def test_string_size2(self):
-        self.assertEqual(V(2), interpret('size "du"'))
+    def test_string_count2(self):
+        self.assertEqual(V(2), interpret('count "du"'))
 
     def test_string_concat1(self):
         self.assertEqual(S(""), interpret('concat ["",""]'))

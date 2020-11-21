@@ -31,10 +31,6 @@ def _value_right(x: Array):
     return x.value[1].value
 
 
-def _size(x: Union[String, Array], code: CodeFragment):
-    return Number(str(len(x.value)), code)
-
-
 def _is_empty(x: Union[String, Array], code: CodeFragment):
     return Number(str(0 if x.value else 1), code)
 
@@ -134,7 +130,6 @@ _SUB_ENVIRONMENT = {
     'equal': _equal,
     'unequal': _unequal,
     'none': _none,
-    'size': _size,
     'is_empty': _is_empty,
     'concat': _concat,
     'first': _first,

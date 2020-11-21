@@ -146,7 +146,7 @@ three = last list,
 result1 = add [first list, last list],
 result2 = add list,
 dubble_list = concat [list, list],
-s = size dubble_list
+s = count dubble_list
 }
 ```
 which is evaluated to:
@@ -251,7 +251,6 @@ four   = square 2
 * **none**: true if all elements of a list are false.
 
 ### List and string functions
-* **size**: the number of elements of a list or string.
 * **is_empty**: true if a list or string has zero elements.
 * **concat**: concatenates two lists or strings.
 * **first**: pick the first element.
@@ -262,6 +261,7 @@ four   = square 2
 
 ## List of functions in standard library
 
+* **count**: The number of elements of a list or string.
 * **count_value**: Given input `{list, value}` count number of occurances of value in list.
 * **count_if**: Given input `{list, predicate}` count number of items in list for which the predicate is true.
 * **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
