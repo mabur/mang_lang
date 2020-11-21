@@ -53,8 +53,9 @@
                     [[], list]
                 else
                     subresult<{
+                        a = first list,
                         recursive_result = find_if {list = last_part list, predicate = predicate},
-                        head = concat [[first list], first recursive_result],
+                        head = concat [[a], first recursive_result],
                         tail = last recursive_result,
                         subresult = [head, tail]
                     }
