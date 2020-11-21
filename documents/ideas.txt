@@ -1,12 +1,13 @@
 TODO:
-* support numbers in variable names.
+* Support numbers in variable names.
 * Printing of row and column for syntax error.
 * Printing of evaluation graph for run-time-errors.
 * Start writing standard library functions in Mang Lang instead of Python.
 * Try to implement Advent of Code problems to see what is missing
 * Use-case: programmable json.
-* railroad diagram / flow chart / ebnf definition
+* Railroad diagram / flow chart / ebnf definition
 * Fix bug for input of recursive function calls.
+* Refactor AST implementation
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
