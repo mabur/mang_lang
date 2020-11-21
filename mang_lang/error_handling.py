@@ -48,6 +48,12 @@ def run_time_error_printer(evaluate):
             traceback.print_exc()
             print('Run time error when evaluating {}:'.format(self.__class__.__name__))
             _print_error_description(error_label='RUN TIME ERROR', code=self.code)
+
+            node = self
+            while node:
+                print(node if isinstance(node, dict) else node.to_json())
+                node = None if isinstance(node, dict) else node.parent
+
             raise AlreadyRegisteredException
     return wrapped_evaluate
 
