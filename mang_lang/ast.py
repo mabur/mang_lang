@@ -21,7 +21,7 @@ def print_evaluation_tree(expression):
 
 
 class Expression:
-    def __init__(self, code: CodeFragment, parent):
+    def __init__(self, code: CodeFragment, parent: "Expression"):
         self.code = code
         self.parent = parent
 
