@@ -4,11 +4,13 @@ from typing import (
     Union
 )
 
-from error_handling import (
-    AlreadyRegisteredException, CodeFragment, print_error_description
-)
+from error_handling import CodeFragment, print_error_description
 
 Json = Union[float, str, Mapping[str, Any], Sequence]
+
+
+class AlreadyRegisteredException(Exception):
+    pass
 
 
 def print_call_stack(expression):
