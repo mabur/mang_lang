@@ -35,29 +35,6 @@ class AlreadyRegisteredException(Exception):
     pass
 
 
-def run_time_error_printer(evaluate):
-    """A decorator that prints messages for run time errors.
-    Is used for the evaluation functions for the nodes of the abstract syntax tree."""
-    def wrapped_evaluate(self, parent):
-        self.parent = parent
-        try:
-            return evaluate(self, parent)
-        except AlreadyRegisteredException:
-            pass
-        except:
-            traceback.print_exc()
-            print('Run time error when evaluating {}:'.format(self.__class__.__name__))
-            _print_error_description(error_label='RUN TIME ERROR', code=self.code)
-
-            node = self
-            while node:
-                print(node if isinstance(node, dict) else node.to_json())
-                node = None if isinstance(node, dict) else node.parent
-
-            raise AlreadyRegisteredException
-    return wrapped_evaluate
-
-
 def _print_error_description(error_label: str, code: CodeFragment) -> None:
     """Print the source code that caused an error with a pointer to the error location"""
     lines = code.text.split('\n')

@@ -1,9 +1,12 @@
+import traceback
 from typing import (
     Any, Callable, Iterator, Mapping, Optional, Sequence, Tuple,
     Union
 )
 
-from error_handling import CodeFragment, run_time_error_printer
+from error_handling import (
+    AlreadyRegisteredException, CodeFragment, _print_error_description
+)
 
 Json = Union[float, str, Mapping[str, Any], Sequence]
 
@@ -16,11 +19,29 @@ class Expression:
     def to_json(self) -> Json:
         raise NotImplemented
 
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
         raise NotImplemented
 
     def get(self, name: str) -> Optional["Expression"]:
         return self.parent.get(name)
+
+    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+        self.parent = parent
+        try:
+            return self.inner_evaluate(parent)
+        except AlreadyRegisteredException:
+            pass
+        except:
+            traceback.print_exc()
+            print('Run time error when evaluating {}:'.format(self.__class__.__name__))
+            _print_error_description(error_label='RUN TIME ERROR', code=self.code)
+
+            node = self
+            while node:
+                print(node if isinstance(node, dict) else node.to_json())
+                node = None if isinstance(node, dict) else node.parent
+
+            raise AlreadyRegisteredException
 
 
 class Number(Expression):
@@ -31,8 +52,7 @@ class Number(Expression):
     def to_json(self) -> Json:
         return {"type": "number", "value": self.value}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
         return self
 
 
@@ -44,8 +64,7 @@ class String(Expression):
     def to_json(self) -> Json:
         return {"type": "string", "value": self.value}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
         return self
 
 
@@ -57,8 +76,7 @@ class Array(Expression):
     def to_json(self) -> Json:
         return [e.to_json() for e in self.value]
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         expressions = [e.evaluate(self) for e in self.value]
         return Array(expressions, code=self.code)
 
@@ -95,8 +113,7 @@ class Dictionary(Expression):
     def make_environment(self) -> dict:
         return dict(self.items())
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         evaluated = Dictionary(self.code)
         evaluated.parent = parent
         for name, expression in self.items():
@@ -124,8 +141,7 @@ class Conditional(Expression):
                 "then_expression": self.then_expression.to_json(),
                 "else_expression": self.else_expression.to_json()}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         if self.condition.evaluate(self).value:
             return self.then_expression.evaluate(self)
         else:
@@ -148,8 +164,7 @@ class Function(Expression):
                 "argument_name": self.argument_name,
                 "expression": self.expression.to_json()}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
         return self
 
     def evaluate_call(self, input: Expression) -> Expression:
@@ -175,8 +190,7 @@ class LookupFunction(Expression):
                 "left": self.name,
                 "right": self.input.to_json() if self.input is not None else ''}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         function = parent.get(self.name)
         input = self.input.evaluate(self)
         if isinstance(function, Function):
@@ -194,8 +208,7 @@ class LookupSymbol(Expression):
     def to_json(self) -> Json:
         return {"type": "lookup", "left": self.name}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         result = parent.get(self.name)
         assert result,\
             "Could not find symbol {} in current scope or above".format(self.name)
@@ -213,8 +226,7 @@ class LookupChild(Expression):
                 "name": self.name,
                 "child": self.child.to_json() if self.child is not None else ''}
 
-    @run_time_error_printer
-    def evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
+    def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         child = self.child.evaluate(self)
         assert isinstance(child, Dictionary)
         result = child.get(self.name)
