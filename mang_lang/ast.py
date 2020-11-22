@@ -81,7 +81,7 @@ class Array(Expression):
         return [e.to_json() for e in self.value]
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        expressions = [e.evaluate(self) for e in self.value]
+        expressions = [e.evaluate(parent) for e in self.value]
         return Array(expressions, code=self.code, parent=parent)
 
 
@@ -173,7 +173,7 @@ class Function(Expression):
         return self
 
     def evaluate_call(self, input: Expression) -> Expression:
-        middle_man = Dictionary(code=None, parent=self.parent)
+        middle_man = Dictionary(code=self.code, parent=self.parent)
         middle_man.append(name=self.argument_name, expression=input)
         return self.expression.evaluate(middle_man)
 
@@ -197,7 +197,7 @@ class LookupFunction(Expression):
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         function = parent.get(self.name)
-        input = self.input.evaluate(self)
+        input = self.input.evaluate(parent)
         if isinstance(function, Function):
             return function.evaluate_call(input=input)
         if isinstance(function, Callable):
