@@ -21,9 +21,9 @@ def print_call_stack(expression):
 
 
 class Expression:
-    def __init__(self, code: CodeFragment):
+    def __init__(self, code: CodeFragment, parent):
         self.code = code
-        self.parent = None
+        self.parent = parent
 
     def to_json(self) -> Json:
         raise NotImplemented
@@ -49,8 +49,8 @@ class Expression:
 
 
 class Number(Expression):
-    def __init__(self, value: str, code: CodeFragment) -> None:
-        super().__init__(code)
+    def __init__(self, value: str, code: CodeFragment, parent: Expression=None) -> None:
+        super().__init__(code, parent)
         self.value = float(value)
 
     def to_json(self) -> Json:
@@ -61,8 +61,8 @@ class Number(Expression):
 
 
 class String(Expression):
-    def __init__(self, value: str, code: CodeFragment) -> None:
-        super().__init__(code)
+    def __init__(self, value: str, code: CodeFragment, parent: Expression=None) -> None:
+        super().__init__(code, parent)
         self.value = value[1:-1]
 
     def to_json(self) -> Json:
@@ -73,8 +73,8 @@ class String(Expression):
 
 
 class Array(Expression):
-    def __init__(self, expressions: Sequence[Expression], code: CodeFragment) -> None:
-        super().__init__(code)
+    def __init__(self, expressions: Sequence[Expression], code: CodeFragment, parent: Expression=None) -> None:
+        super().__init__(code, parent)
         self.value = expressions
 
     def to_json(self) -> Json:
@@ -82,12 +82,12 @@ class Array(Expression):
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
         expressions = [e.evaluate(self) for e in self.value]
-        return Array(expressions, code=self.code)
+        return Array(expressions, code=self.code, parent=parent)
 
 
 class Dictionary(Expression):
-    def __init__(self, code: CodeFragment) -> None:
-        super().__init__(code)
+    def __init__(self, code: CodeFragment, parent: Expression=None) -> None:
+        super().__init__(code, parent)
         self.names = []
         self.expressions = []
 
@@ -118,8 +118,7 @@ class Dictionary(Expression):
         return dict(self.items())
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        evaluated = Dictionary(self.code)
-        evaluated.parent = parent
+        evaluated = Dictionary(code=self.code, parent=parent)
         for name, expression in self.items():
             expression = expression.evaluate(evaluated)
             evaluated.append(name=name, expression=expression)
@@ -133,8 +132,9 @@ class Conditional(Expression):
             then_expression: Expression,
             else_expression: Expression,
             code: CodeFragment,
+            parent: Expression = None,
     ) -> None:
-        super().__init__(code)
+        super().__init__(code, parent)
         self.condition = condition
         self.then_expression = then_expression
         self.else_expression = else_expression
@@ -146,10 +146,10 @@ class Conditional(Expression):
                 "else_expression": self.else_expression.to_json()}
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        if self.condition.evaluate(self).value:
-            return self.then_expression.evaluate(self)
+        if self.condition.evaluate(parent).value:
+            return self.then_expression.evaluate(parent)
         else:
-            return self.else_expression.evaluate(self)
+            return self.else_expression.evaluate(parent)
 
 
 class Function(Expression):
@@ -158,8 +158,9 @@ class Function(Expression):
             argument_name: str,
             expression: Expression,
             code: CodeFragment,
+            parent: Expression = None,
     ) -> None:
-        super().__init__(code)
+        super().__init__(code, parent)
         self.argument_name = argument_name
         self.expression = expression
 
@@ -172,9 +173,8 @@ class Function(Expression):
         return self
 
     def evaluate_call(self, input: Expression) -> Expression:
-        middle_man = Dictionary(None)
+        middle_man = Dictionary(code=None, parent=self.parent)
         middle_man.append(name=self.argument_name, expression=input)
-        middle_man.parent = self.parent
         return self.expression.evaluate(middle_man)
 
 
@@ -184,8 +184,9 @@ class LookupFunction(Expression):
             name: str,
             input: Expression,
             code: CodeFragment,
+            parent: Expression = None,
     ) -> None:
-        super().__init__(code)
+        super().__init__(code, parent)
         self.name = name
         self.input = input
 
@@ -205,8 +206,8 @@ class LookupFunction(Expression):
 
 
 class LookupSymbol(Expression):
-    def __init__(self, name: str, code: CodeFragment) -> None:
-        super().__init__(code)
+    def __init__(self, name: str, code: CodeFragment, parent: Expression=None) -> None:
+        super().__init__(code, parent)
         self.name = name
 
     def to_json(self) -> Json:
@@ -220,8 +221,8 @@ class LookupSymbol(Expression):
 
 
 class LookupChild(Expression):
-    def __init__(self, name: str, child: Expression, code: CodeFragment) -> None:
-        super().__init__(code)
+    def __init__(self, name: str, child: Expression, code: CodeFragment, parent: Expression=None) -> None:
+        super().__init__(code, parent)
         self.name = name
         self.child = child
 
@@ -231,10 +232,8 @@ class LookupChild(Expression):
                 "child": self.child.to_json() if self.child is not None else ''}
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> Expression:
-        child = self.child.evaluate(self)
+        child = self.child.evaluate(parent)
         assert isinstance(child, Dictionary)
         result = child.get(self.name)
-        assert result, \
-            "Could not find symbol {} in child scope".format(
-                self.name)
+        assert result, "Could not find symbol {} in child scope".format(self.name)
         return result
