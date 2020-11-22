@@ -1,5 +1,4 @@
 from itertools import accumulate
-import traceback
 
 
 class CodeFragment:
@@ -28,14 +27,14 @@ class CodeFragment:
 
 def print_syntax_error(text: CodeFragment) -> None:
     print('SYNTAX ERROR')
-    _print_error_description(error_label='SYNTAX ERROR', code=text)
+    print_error_description(error_label='SYNTAX ERROR', code=text)
 
 
 class AlreadyRegisteredException(Exception):
     pass
 
 
-def _print_error_description(error_label: str, code: CodeFragment) -> None:
+def print_error_description(error_label: str, code: CodeFragment) -> None:
     """Print the source code that caused an error with a pointer to the error location"""
     lines = code.text.split('\n')
     cumulative_lengths = list(accumulate(len(line) + 1 for line in lines)) + [0]

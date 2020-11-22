@@ -5,10 +5,17 @@ from typing import (
 )
 
 from error_handling import (
-    AlreadyRegisteredException, CodeFragment, _print_error_description
+    AlreadyRegisteredException, CodeFragment, print_error_description
 )
 
 Json = Union[float, str, Mapping[str, Any], Sequence]
+
+
+def print_call_stack(expression):
+    node = expression
+    while node:
+        print(node if isinstance(node, dict) else node.to_json())
+        node = None if isinstance(node, dict) else node.parent
 
 
 class Expression:
@@ -34,13 +41,8 @@ class Expression:
         except:
             traceback.print_exc()
             print('Run time error when evaluating {}:'.format(self.__class__.__name__))
-            _print_error_description(error_label='RUN TIME ERROR', code=self.code)
-
-            node = self
-            while node:
-                print(node if isinstance(node, dict) else node.to_json())
-                node = None if isinstance(node, dict) else node.parent
-
+            print_error_description(error_label='RUN TIME ERROR', code=self.code)
+            print_call_stack(self)
             raise AlreadyRegisteredException
 
 
