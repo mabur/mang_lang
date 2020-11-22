@@ -11,6 +11,18 @@ TODOS: TYPE CHECKING AND COMPILING
 * How to handle compiled functions. Inlining vs jump.
 
 
+DESCRIPTION
+number               12.34
+string               "abc"
+list                 [expression, ...]
+dictionary           {name = expression, ...}
+reference            name
+child reference      name<expression
+conditional          if expression then expression else expression
+function             from name to expression
+function call        name expression
+
+
 TYPES
 Types start with upper case. Variables start with lower case. (enforce that in syntax?)
 
