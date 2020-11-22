@@ -13,7 +13,7 @@ class AlreadyRegisteredException(Exception):
     pass
 
 
-def print_call_stack(expression):
+def print_evaluation_tree(expression):
     node = expression
     while node:
         print(node if isinstance(node, dict) else node.to_json())
@@ -44,7 +44,7 @@ class Expression:
             traceback.print_exc()
             print('Run time error when evaluating {}:'.format(self.__class__.__name__))
             print_error_description(error_label='RUN TIME ERROR', code=self.code)
-            print_call_stack(self)
+            print_evaluation_tree(self)
             raise AlreadyRegisteredException
 
 
