@@ -16,9 +16,8 @@ class Expression:
     def to_json(self) -> Json:
         raise NotImplemented
 
-    @run_time_error_printer
     def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
-        return self
+        raise NotImplemented
 
     def get(self, name: str) -> Optional["Expression"]:
         return self.parent.get(name)
@@ -32,6 +31,10 @@ class Number(Expression):
     def to_json(self) -> Json:
         return {"type": "number", "value": self.value}
 
+    @run_time_error_printer
+    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+        return self
+
 
 class String(Expression):
     def __init__(self, value: str, code: CodeFragment) -> None:
@@ -40,6 +43,10 @@ class String(Expression):
 
     def to_json(self) -> Json:
         return {"type": "string", "value": self.value}
+
+    @run_time_error_printer
+    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+        return self
 
 
 class Array(Expression):
@@ -140,6 +147,10 @@ class Function(Expression):
         return {"type": "function_definition",
                 "argument_name": self.argument_name,
                 "expression": self.expression.to_json()}
+
+    @run_time_error_printer
+    def evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
+        return self
 
     def evaluate_call(self, input: Expression) -> Expression:
         middle_man = Dictionary(None)
