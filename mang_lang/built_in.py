@@ -122,6 +122,10 @@ def _sqrt(x: Number, code: CodeFragment):
     return Number(str(math.sqrt(x.value)), code)
 
 
+def _abs(x: Number, code: CodeFragment):
+    return Number(str(math.fabs(x.value)), code)
+
+
 def _read_text_file(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return file.read()
@@ -146,6 +150,7 @@ _SUB_ENVIRONMENT = {
     'all': _all,
     'any': _any,
     'sqrt': _sqrt,
+    'abs': _abs,
 }
 
 def _import(x: String, code: CodeFragment):

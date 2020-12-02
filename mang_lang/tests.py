@@ -552,6 +552,17 @@ class TestSqrt(unittest.TestCase):
         self.assertEqual(V(10), interpret('sqrt 100'))
 
 
+class TestAbs(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(1), interpret('abs -1'))
+
+    def test1(self):
+        self.assertEqual(V(0), interpret('abs 0'))
+
+    def test2(self):
+        self.assertEqual(V(1), interpret('abs 1'))
+
+
 class TestErrorMessages(unittest.TestCase):
     def test_syntax_error(self):
         with self.assertRaises(TypeError):
