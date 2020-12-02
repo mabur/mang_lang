@@ -4,6 +4,10 @@ TODO:
 * Try to implement Advent of Code problems to see what is missing
 * Use-case: programmable json.
 * Railroad diagram / flow chart / ebnf definition
+* Math functions: ceil/round_up, floor/round_down, round
+* How to handle mutable array like operations?
+  - append / push_back, as primitive instead of concat.
+  - allow mutable replace function for lists and strings?
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
