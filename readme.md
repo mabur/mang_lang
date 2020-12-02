@@ -242,6 +242,8 @@ four   = square 2
 * **div**: divides two numbers.
 * **min**: smallest number in a non-empty list.
 * **max**: largest number in a non-empty list.
+* **abs**: absolute value of a number.
+* **sqrt**: square root of a number. 
 
 ### Logical functions:
 * **equal**: true if two numbers are equal, and otherwise false.
@@ -253,8 +255,8 @@ four   = square 2
 ### List and string functions
 * **is_empty**: true if a list or string has zero items.
 * **concat**: concatenates two lists or strings.
-* **first**: pick the first item.
-* **last**: pick the last item.
+* **first**: pick the first item in a non-empty list.
+* **last**: pick the last item in a non-empty list.
 * **first_part**: list of all items except the last.
 * **last_part**: list of all items except the first.
 
