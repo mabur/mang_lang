@@ -51,7 +51,7 @@ Manglang only adds conditionals and functions to allow computations.
 
 Manglang has a minimal syntax. A program/expression is built up from these building blocks:
  
-| Buliding Block     | Example                                       |
+| Building Block     | Example                                       |
 | :----------------- | :-------------------------------------------- |
 |number              | 12.34                                         |
 |string              | "abc"                                         |
