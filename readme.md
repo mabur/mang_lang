@@ -47,11 +47,11 @@ Manglang only adds conditionals and functions to allow computations.
 | Macros                | -    | -    | -        | Yes  | 
 
 
-**Syntax**
+**Grammar**
 
 Manglang has a minimal syntax. A program/expression is built up from these building blocks:
  
-| Building Block     | Example                                       |
+| Building Block     | Syntax                                       |
 | :----------------- | :-------------------------------------------- |
 |number              | 12.34                                         |
 |string              | "abc"                                         |
