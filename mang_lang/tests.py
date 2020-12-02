@@ -544,6 +544,14 @@ class TestReverse(unittest.TestCase):
         self.assertEqual([V(2), V(1), V(0)], interpret('reverse[0, 1, 2]'))
 
 
+class TestSqrt(unittest.TestCase):
+    def test4(self):
+        self.assertEqual(V(2), interpret('sqrt 4'))
+
+    def test10(self):
+        self.assertEqual(V(10), interpret('sqrt 100'))
+
+
 class TestErrorMessages(unittest.TestCase):
     def test_syntax_error(self):
         with self.assertRaises(TypeError):

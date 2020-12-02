@@ -1,3 +1,4 @@
+import math
 from typing import Union
 
 from parsing import parse
@@ -117,6 +118,10 @@ def _any(x: Array, code: CodeFragment):
     return Number(str(float(any(element.value for element in x.value))), code)
 
 
+def _sqrt(x: Number, code: CodeFragment):
+    return Number(str(math.sqrt(x.value)), code)
+
+
 def _read_text_file(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return file.read()
@@ -140,6 +145,7 @@ _SUB_ENVIRONMENT = {
     'max': _max,
     'all': _all,
     'any': _any,
+    'sqrt': _sqrt,
 }
 
 def _import(x: String, code: CodeFragment):
