@@ -21,6 +21,7 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 3. Mutable variables. Everything is immutable / constant.
 4. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
 
+
 **Language Comparison**
 
 The minimalism of Manglang makes it resemble a simple data format like Json or Yaml.
@@ -44,6 +45,23 @@ Manglang only adds conditionals and functions to allow computations.
 | Functions             | -    | -    | Yes      | Yes  |
 | Operators             | -    | -    | -        | Yes  |
 | Macros                | -    | -    | -        | Yes  | 
+
+
+**Syntax**
+
+Manglang has a minimal syntax. A program/expression is built up from these building blocks:
+ 
+| Buliding Block     | Example                                       |
+| :----------------- | :-------------------------------------------- |
+|number              | 12.34                                         |
+|string              | "abc"                                         |
+|list                | [expression, ...]                             |
+|dictionary          | {name = expression, ...}                      |
+|reference           | name                                          |
+|child reference     | name<expression                               |
+|conditional         | if expression then expression else expression |
+|function            | from name to expression                       |
+|function call       | name expression                               |
 
 **Example code**:
 
