@@ -230,6 +230,62 @@ class TestUnequalString(unittest.TestCase):
         self.assertEqual(V(0), interpret('unequal ["a", "a"]'))
 
 
+class TestIncreasing(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(0), interpret('increasing [0, 0]'))
+
+    def test1(self):
+        self.assertEqual(V(1), interpret('increasing [0, 1]'))
+
+    def test2(self):
+        self.assertEqual(V(0), interpret('increasing [1, 1]'))
+
+    def test3(self):
+        self.assertEqual(V(0), interpret('increasing [1, 0]'))
+
+
+class TestWeaklyIncreasing(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(1), interpret('weakly_increasing [0, 0]'))
+
+    def test1(self):
+        self.assertEqual(V(1), interpret('weakly_increasing [0, 1]'))
+
+    def test2(self):
+        self.assertEqual(V(1), interpret('weakly_increasing [1, 1]'))
+
+    def test3(self):
+        self.assertEqual(V(0), interpret('weakly_increasing [1, 0]'))
+
+
+class TestDecreasing(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(0), interpret('decreasing [0, 0]'))
+
+    def test1(self):
+        self.assertEqual(V(0), interpret('decreasing [0, 1]'))
+
+    def test2(self):
+        self.assertEqual(V(0), interpret('decreasing [1, 1]'))
+
+    def test3(self):
+        self.assertEqual(V(1), interpret('decreasing [1, 0]'))
+
+
+class TestWeaklyDecreasing(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(1), interpret('weakly_decreasing [0, 0]'))
+
+    def test1(self):
+        self.assertEqual(V(0), interpret('weakly_decreasing [0, 1]'))
+
+    def test2(self):
+        self.assertEqual(V(1), interpret('weakly_decreasing [1, 1]'))
+
+    def test3(self):
+        self.assertEqual(V(1), interpret('weakly_decreasing [1, 0]'))
+
+
 class TestaddMinMax(unittest.TestCase):
     def test_add(self):
         self.assertEqual(V(6), interpret('add [1,2,3]'))

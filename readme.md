@@ -253,22 +253,32 @@ four   = square 2
 
 ## List of built-in functions
 
-### Arithmetic functions:
+### Functions for numbers:
 * **add**: adds a list of numbers.
 * **mul**: multiplies a list of numbers.
 * **sub**: subtracts two numbers.
 * **div**: divides two numbers.
+
+
+* **abs**: absolute value of a number.
+* **sqrt**: square root of a number.
+
+
 * **min**: smallest number in a non-empty list.
 * **max**: largest number in a non-empty list.
-* **abs**: absolute value of a number.
-* **sqrt**: square root of a number. 
+
+
+* **increasing**: true if a list of numbers is increasing (<), and otherwise false.
+* **decreasing**: true if a list of numbers is decreasing (>), and otherwise false.
+* **weakly_increasing**: true if a list of numbers is weakly_increasing (<=), and otherwise false.
+* **weakly_decreasing**: true if a list of numbers is weakly_decreasing (>=), and otherwise false.
 
 ### Logical functions:
-* **equal**: true if two numbers are equal, and otherwise false.
-* **unequal**: false if two numbers are equal, and otherwise true.
-* **all**: true if all elements of a list are true.
-* **any**: true if at least one element of a list is true.
-* **none**: true if all elements of a list are false.
+* **equal**: true if two primitives are equal, and otherwise false.
+* **unequal**: false if two primitives are equal, and otherwise true.
+* **all**: true if all items of a list are true.
+* **any**: true if at least one item of a list is true.
+* **none**: true if all items of a list are false.
 
 ### List and string functions
 * **is_empty**: true if a list or string has zero items.

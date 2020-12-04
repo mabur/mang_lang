@@ -106,6 +106,22 @@ def _max(x: Array, code: CodeFragment):
     return Number(str(max(element.value for element in x.value)), code)
 
 
+def _increasing(x: Array, code: CodeFragment):
+    return Number(str(float(all(a.value < b.value for a, b in zip(x.value, x.value[1:])))), code)
+
+
+def _weakly_increasing(x: Array, code: CodeFragment):
+    return Number(str(float(all(a.value <= b.value for a, b in zip(x.value, x.value[1:])))), code)
+
+
+def _decreasing(x: Array, code: CodeFragment):
+    return Number(str(float(all(a.value > b.value for a, b in zip(x.value, x.value[1:])))), code)
+
+
+def _weakly_decreasing(x: Array, code: CodeFragment):
+    return Number(str(float(all(a.value >= b.value for a, b in zip(x.value, x.value[1:])))), code)
+
+
 def _all(x: Array, code: CodeFragment):
     return Number(str(float(all(element.value for element in x.value))), code)
 
@@ -151,6 +167,10 @@ _SUB_ENVIRONMENT = {
     'any': _any,
     'sqrt': _sqrt,
     'abs': _abs,
+    'increasing': _increasing,
+    'weakly_increasing': _weakly_increasing,
+    'decreasing': _decreasing,
+    'weakly_decreasing': _weakly_decreasing,
 }
 
 def _import(x: String, code: CodeFragment):
