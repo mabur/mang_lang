@@ -66,9 +66,9 @@
             result<{
                 list = list<input,
                 f = f<input,
-                head = f first list,
-                tail = map {list = last_part list, f = f},
-                result = concat [[head], tail]
+                back = f last list,
+                beginning = map {list = first_part list, f = f},
+                result = concat [beginning, [back]]
             },
     filter = from input to
         if is_empty list<input then
