@@ -89,8 +89,14 @@ class TestBuiltinFunctions(unittest.TestCase):
     def test_first(self):
         self.assertEqual(V(6), interpret('first [6, 4, 8]'))
 
+    def test_first_string(self):
+        self.assertEqual(S("6"), interpret('first "648"'))
+
     def test_last(self):
         self.assertEqual(V(8), interpret('last [6, 4, 8]'))
+
+    def test_last_string(self):
+        self.assertEqual(S("8"), interpret('last "648"'))
 
     def test_first_part0(self):
         self.assertEqual(V(2), interpret('count first_part [6, 4, 8]'))
