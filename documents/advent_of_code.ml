@@ -49,3 +49,40 @@ cartesian_product = from input to
         },
         result = map{list=right, f=map_left}
     }
+
+Day3:
+result<{
+    map = [
+            [0,0,1,1,0,0,0,0,0,0,0],
+            [1,0,0,0,1,0,0,0,1,0,0],
+            [0,1,0,0,0,0,1,0,0,1,0],
+            [0,0,1,0,1,0,0,0,1,0,1],
+            [0,1,0,0,0,1,1,0,0,1,0],
+            [0,0,1,0,1,1,0,0,0,0,0],
+            [0,1,0,1,0,1,0,0,0,0,1],
+            [0,1,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,0,0,0,1,0,0,0],
+            [1,0,0,0,1,1,0,0,0,0,1],
+            [0,1,0,0,1,0,0,0,1,0,1]
+        ],
+    count_trees = from input to
+        if is_empty map<input then
+            0
+        else
+            result<{
+                map = map<input,
+                row = first map,
+                rows = last_part map,
+                width = count row,
+                index = index<input,
+                updated_index = add[index, 3],
+                next_index =
+                    if increasing[updated_index, width] then
+                        updated_index
+                    else
+                        sub[updated_index, width],
+                item = get_index {list=row, index=index},
+                result = add [item, count_trees {map=rows, index=next_index}]
+            },
+    result = count_trees{map = map, index = 0}
+}
