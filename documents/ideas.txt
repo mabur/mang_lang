@@ -8,6 +8,14 @@ TODO:
 * How to handle mutable array like operations?
   - append / push_back, as primitive instead of concat.
   - allow mutable replace function for lists and strings?
+* Can I implement lists as deque interface with array implementation underneath?
+  - allow efficient O(1) push_back and push_front.
+  - allow efficinet O(n) concat.
+  - allow sharing of memory as long as size is within reserved buffer.
+  - allocate new memory when it grows outside of reserved buffer.
+  - reference counting and copying if multiple actors append to middle existing list.
+* make generic sequence algorithms work for both lists and strings
+  - add character as primitive?
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
