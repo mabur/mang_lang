@@ -476,6 +476,20 @@ class TestCount(unittest.TestCase):
         self.assertEqual(V(3), interpret('count [0, 0, 0]'))
 
 
+class TestCountString(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(0), interpret('count ""'))
+
+    def test1(self):
+        self.assertEqual(V(1), interpret('count "0"'))
+
+    def test2(self):
+        self.assertEqual(V(2), interpret('count "00"'))
+
+    def test3(self):
+        self.assertEqual(V(3), interpret('count "000"'))
+
+
 class TestCountItem(unittest.TestCase):
     def test0(self):
         self.assertEqual(V(0), interpret('count_item{list=[], item=3}'))
