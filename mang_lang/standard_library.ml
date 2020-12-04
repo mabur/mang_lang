@@ -77,13 +77,13 @@
             result<{
                 list = list<input,
                 predicate = predicate<input,
-                head = first list,
-                tail = filter {list = last_part list, predicate = predicate}
+                back = last list,
+                beginning = filter {list = first_part list, predicate = predicate}
                 result =
-                    if predicate head then
-                        concat [[head], tail]
+                    if predicate back then
+                        concat [beginning, [back]]
                     else
-                        tail
+                        beginning
             },
     reverse = from list to
         if is_empty list then
