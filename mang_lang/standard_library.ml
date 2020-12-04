@@ -78,7 +78,7 @@
                 list = list<input,
                 predicate = predicate<input,
                 back = last list,
-                beginning = filter {list = first_part list, predicate = predicate}
+                beginning = filter {list = first_part list, predicate = predicate},
                 result =
                     if predicate back then
                         concat [beginning, [back]]
@@ -89,5 +89,14 @@
         if is_empty list then
             list
         else
-            concat[reverse last_part list, [first list]]
+            concat[reverse last_part list, [first list]],
+    split = from input to 
+        if is_empty list<input then
+            []
+        else
+            result<{
+                division = find {list = list<input, item = separator<input},
+                recursive_result = split {list = last_part last division, separator = separator<input},
+                result = concat [[first division], recursive_result]
+            }
 }

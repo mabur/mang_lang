@@ -284,6 +284,7 @@ four   = square 2
 * **map**: Given input `{list, f}` return a list where the function f has been applied to each item.
 * **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
 * **reverse**: flip the order of a list.
+* **split**: Given input `{list,separator}` split the list at the separators and return a list of sub lists.
 
 
 * **count**: The number of items of a list or string.

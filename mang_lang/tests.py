@@ -530,6 +530,38 @@ class TestFilter(unittest.TestCase):
         self.assertEqual([V(3), V(3)], interpret('filter{list=[3,2,3], predicate=from x to equal[x, 3]}'))
 
 
+class TestSplit(unittest.TestCase):
+    def test0(self):
+        self.assertEqual([], interpret('split{list=[],separator=0}'))
+
+    def test1(self):
+        self.assertEqual([[V(1)]], interpret('split{list=[1],separator=0}'))
+
+    def test2(self):
+        self.assertEqual([[V(1), V(2)]], interpret('split{list=[1,2],separator=0}'))
+
+    def test3(self):
+        self.assertEqual([[V(1)], [V(2)]], interpret('split{list=[1,0,2],separator=0}'))
+
+    def test4(self):
+        self.assertEqual([[]], interpret('split{list=[0],separator=0}'))
+
+    def test5(self):
+        self.assertEqual([[],[]], interpret('split{list=[0, 0],separator=0}'))
+
+    def test6(self):
+        self.assertEqual([[V(1)], [V(2)]], interpret('split{list=[1,0,2,0],separator=0}'))
+
+    def test7(self):
+        self.assertEqual([[V(1)], [V(2)], []], interpret('split{list=[1,0,2,0,0],separator=0}'))
+
+    def test8(self):
+        self.assertEqual([[], [V(1)], [V(2)]], interpret('split{list=[0,1,0,2],separator=0}'))
+
+    def test9(self):
+        self.assertEqual([[V(1), V(2)], [V(1)], [V(2), V(3), V(4)]], interpret('split{list=[1,2,0,1,0,2,3,4],separator=0}'))
+
+
 class TestReverse(unittest.TestCase):
     def test0(self):
         self.assertEqual([], interpret('reverse[]'))
