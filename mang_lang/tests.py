@@ -123,6 +123,18 @@ class TestBuiltinFunctions(unittest.TestCase):
         self.assertEqual(V(0), interpret('count last_part []'))
 
 
+class TestGetIndex(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(2), interpret('get_index{list=[2,5,9],index=0}'))
+
+    def test1(self):
+        self.assertEqual(V(5), interpret('get_index{list=[2,5,9],index=1}'))
+
+    def test2(self):
+        self.assertEqual(V(9), interpret('get_index{list=[2,5,9],index=2}'))
+
+
+
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
         code = 'y<{f = from x to if equal [x, 0] then 1 else mul [x, f sub [x, 1]], y=f 10}'

@@ -295,6 +295,7 @@ four   = square 2
 * **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
 * **reverse**: flip the order of a list.
 * **split**: Given input `{list,separator}` split the list at the separators and return a list of sub lists.
+* **get_index**: Given input `{list,index}` return the item at given index.
 
 
 * **count**: The number of items of a list or string.

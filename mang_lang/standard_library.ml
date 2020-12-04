@@ -98,5 +98,13 @@
                 division = find {list = list<input, item = separator<input},
                 recursive_result = split {list = last_part last division, separator = separator<input},
                 result = concat [[first division], recursive_result]
+            },
+    get_index = from input to
+        if equal [index<input, 0] then
+            first list<input
+        else
+            get_index {
+                list = last_part list<input,
+                index = sub[index<input, 1]
             }
 }
