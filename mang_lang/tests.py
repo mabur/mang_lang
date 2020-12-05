@@ -140,6 +140,42 @@ class TestGetIndex(unittest.TestCase):
         self.assertEqual(V(9), interpret('get_index{list=[2,5,9],index=2}'))
 
 
+
+class TestGetWrappedIndex(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=0}'))
+
+    def test1(self):
+        self.assertEqual(V(5), interpret('get_wrapped_index{list=[2,5,9],index=1}'))
+
+    def test2(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=2}'))
+
+    def test3(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=3}'))
+
+    def test4(self):
+        self.assertEqual(V(5), interpret('get_wrapped_index{list=[2,5,9],index=4}'))
+
+    def test5(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=5}'))
+
+    def test6(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=6}'))
+
+    def test7(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=-4}'))
+
+    def test8(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=-3}'))
+
+    def test9(self):
+        self.assertEqual(V(5), interpret('get_wrapped_index{list=[2,5,9],index=-2}'))
+
+    def test10(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=-1}'))
+
+
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
         code = 'y<{f = from x to if equal [x, 0] then 1 else mul [x, f sub [x, 1]], y=f 10}'

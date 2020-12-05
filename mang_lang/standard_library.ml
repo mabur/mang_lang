@@ -116,5 +116,18 @@
             get_index {
                 list = last_part list<input,
                 index = sub[index<input, 1]
-            }
+            },
+    get_wrapped_index = from input to
+        result<{
+            index = index<input,
+            list = list<input,
+            count = count list<input,
+            result = 
+                if increasing [index, 0] then
+                    get_wrapped_index {list = list, index = add [index, count]}
+                else if weakly_increasing [count, index] then
+                    get_wrapped_index {list = list, index = sub [index, count]}
+                else
+                    get_index {list = list, index = index}
+        }
 }

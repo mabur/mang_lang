@@ -297,6 +297,7 @@ four   = square 2
 * **reverse**: flip the order of a list.
 * **split**: Given input `{list,separator}` split the list at the separators and return a list of sub lists.
 * **get_index**: Given input `{list,index}` return the item at given index.
+* **get_wrapped_index**: Given input `{list,index}` return the item at given index. If the index is outside the range of the list then it wraps around. 
 
 
 * **count**: The number of items of a list or string.
