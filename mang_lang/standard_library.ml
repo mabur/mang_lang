@@ -85,6 +85,16 @@
                     else
                         beginning
             },
+    enumerate = from list to
+        if is_empty list then
+            []
+        else
+            result<{
+                index = sub [count list, 1],
+                back = {item = last list, index = index},
+                beginning = enumerate first_part list,
+                result = concat [beginning, [back]]
+            },
     reverse = from list to
         if is_empty list then
             list

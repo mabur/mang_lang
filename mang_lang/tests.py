@@ -140,7 +140,6 @@ class TestGetIndex(unittest.TestCase):
         self.assertEqual(V(9), interpret('get_index{list=[2,5,9],index=2}'))
 
 
-
 class TestRecursion(unittest.TestCase):
     def test_recursion(self):
         code = 'y<{f = from x to if equal [x, 0] then 1 else mul [x, f sub [x, 1]], y=f 10}'
@@ -644,6 +643,26 @@ class TestFilter(unittest.TestCase):
 
     def test5(self):
         self.assertEqual([V(3), V(3)], interpret('filter{list=[3,2,3], predicate=from x to equal[x, 3]}'))
+
+
+class TestEnumerate(unittest.TestCase):
+    def test0(self):
+        self.assertEqual([], interpret('enumerate []'))
+
+    def test1(self):
+        self.assertEqual(V(3), interpret('count enumerate [6,5,7]'))
+
+    def test2(self):
+        self.assertEqual(V(0), interpret('index < first enumerate [6,5,7]'))
+
+    def test3(self):
+        self.assertEqual(V(2), interpret('index < last enumerate [6,5,7]'))
+
+    def test4(self):
+        self.assertEqual(V(6), interpret('item < first enumerate [6,5,7]'))
+
+    def test5(self):
+        self.assertEqual(V(7), interpret('item < last enumerate [6,5,7]'))
 
 
 class TestSplit(unittest.TestCase):
