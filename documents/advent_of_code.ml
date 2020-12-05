@@ -52,7 +52,7 @@ cartesian_product = from input to
 
 Day3:
 result<{
-    map = [
+    array = [
             [0,0,1,1,0,0,0,0,0,0,0],
             [1,0,0,0,1,0,0,0,1,0,0],
             [0,1,0,0,0,0,1,0,0,1,0],
@@ -66,13 +66,13 @@ result<{
             [0,1,0,0,1,0,0,0,1,0,1]
         ],
     count_trees = from input to
-        if is_empty map<input then
+        if is_empty array<input then
             0
         else
             result<{
-                map = map<input,
-                row = first map,
-                rows = last_part map,
+                array = array<input,
+                row = first array,
+                rows = last_part array,
                 width = count row,
                 index = index<input,
                 updated_index = add[index, 3],
@@ -82,7 +82,28 @@ result<{
                     else
                         sub[updated_index, width],
                 item = get_index {list=row, index=index},
-                result = add [item, count_trees {map=rows, index=next_index}]
+                result = add [item, count_trees {array=rows, index=next_index}]
             },
-    result = count_trees{map = map, index = 0}
+    result = count_trees{array = array, index = 0}
+}
+Day3 alternative:
+result<{
+    array = [
+                [0,0,1,1,0,0,0,0,0,0,0],
+                [1,0,0,0,1,0,0,0,1,0,0],
+                [0,1,0,0,0,0,1,0,0,1,0],
+                [0,0,1,0,1,0,0,0,1,0,1],
+                [0,1,0,0,0,1,1,0,0,1,0],
+                [0,0,1,0,1,1,0,0,0,0,0],
+                [0,1,0,1,0,1,0,0,0,0,1],
+                [0,1,0,0,0,0,0,0,0,0,1],
+                [1,0,1,1,0,0,0,1,0,0,0],
+                [1,0,0,0,1,1,0,0,0,0,1],
+                [0,1,0,0,1,0,0,0,1,0,1]
+            ],
+    pick_item = from input to get_wrapped_index {
+        list = item<input,
+        index = mul [index<input, 3]
+    }
+    result = add map {list = enumerate array, f = pick_item}
 }
