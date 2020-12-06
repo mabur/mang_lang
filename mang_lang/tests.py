@@ -143,6 +143,20 @@ class TestFirstPartString(unittest.TestCase):
         self.assertEqual(S("ab"), interpret('first_part "abc"'))
 
 
+class TestLastPartString(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(S(""), interpret('last_part ""'))
+
+    def test1(self):
+        self.assertEqual(S(""), interpret('last_part "a"'))
+
+    def test2(self):
+        self.assertEqual(S("b"), interpret('last_part "ab"'))
+
+    def test3(self):
+        self.assertEqual(S("bc"), interpret('last_part "abc"'))
+
+
 class TestGetIndex(unittest.TestCase):
     def test0(self):
         self.assertEqual(V(2), interpret('get_index{list=[2,5,9],index=0}'))
