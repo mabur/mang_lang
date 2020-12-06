@@ -2,31 +2,6 @@ import unittest
 from interpreter import interpret
 
 
-class TestCountList(unittest.TestCase):
-    def test1(self):
-        self.assertEqual(3, interpret('count [8,4,6]'))
-
-    def test2(self):
-        self.assertEqual(1, interpret('count [9]'))
-
-    def test3(self):
-        self.assertEqual(0, interpret('count []'))
-
-    def test4(self):
-        self.assertEqual(0, interpret('count []'))
-
-
-class TestCountString(unittest.TestCase):
-    def test0(self):
-        self.assertEqual(0, interpret('count ""'))
-
-    def test1(self):
-        self.assertEqual(1, interpret('count "f"'))
-
-    def test2(self):
-        self.assertEqual(2, interpret('count "du"'))
-
-
 class TestIsEmptyList(unittest.TestCase):
     def test1(self):
         self.assertEqual(1, interpret('is_empty []'))
