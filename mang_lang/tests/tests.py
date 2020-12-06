@@ -549,13 +549,13 @@ class TestString(unittest.TestCase):
 
 class TestImport(unittest.TestCase):
     def test1(self):
-        self.assertEqual(V(3), interpret('import "test_data/test1.ml"'))
+        self.assertEqual(V(3), interpret('import "tests/test_data/test1.ml"'))
 
     def test2(self):
-        self.assertEqual(V(4), interpret('y<import "test_data/test2.ml"'))
+        self.assertEqual(V(4), interpret('y<import "tests/test_data/test2.ml"'))
 
     def test3(self):
-        self.assertEqual(V(9), interpret('b<{a = import "test_data/test3.ml", square = square<a, b=square 3}'))
+        self.assertEqual(V(9), interpret('b<{a = import "tests/test_data/test3.ml", square = square<a, b=square 3}'))
 
 
 class TestFind(unittest.TestCase):

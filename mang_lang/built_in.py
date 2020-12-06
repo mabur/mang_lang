@@ -1,4 +1,5 @@
 import math
+from pathlib import Path
 from typing import Union
 
 from parsing import parse
@@ -183,7 +184,8 @@ _SUB_ENVIRONMENT = {
 }
 
 def _import(x: String, code: CodeFragment):
-    code = _read_text_file(x.value)
+    source_dir_path = Path(__file__).parent
+    code = _read_text_file(source_dir_path / x.value)
     expression = parse(code)
     return expression.evaluate(_SUB_ENVIRONMENT)
 
