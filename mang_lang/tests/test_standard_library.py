@@ -228,5 +228,51 @@ class TestReverse(unittest.TestCase):
         self.assertEqual([V(2), V(1), V(0)], interpret('reverse[0, 1, 2]'))
 
 
+class TestGetIndex(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(2), interpret('get_index{list=[2,5,9],index=0}'))
+
+    def test1(self):
+        self.assertEqual(V(5), interpret('get_index{list=[2,5,9],index=1}'))
+
+    def test2(self):
+        self.assertEqual(V(9), interpret('get_index{list=[2,5,9],index=2}'))
+
+
+class TestGetWrappedIndex(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=0}'))
+
+    def test1(self):
+        self.assertEqual(V(5), interpret('get_wrapped_index{list=[2,5,9],index=1}'))
+
+    def test2(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=2}'))
+
+    def test3(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=3}'))
+
+    def test4(self):
+        self.assertEqual(V(5), interpret('get_wrapped_index{list=[2,5,9],index=4}'))
+
+    def test5(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=5}'))
+
+    def test6(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=6}'))
+
+    def test7(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=-4}'))
+
+    def test8(self):
+        self.assertEqual(V(2), interpret('get_wrapped_index{list=[2,5,9],index=-3}'))
+
+    def test9(self):
+        self.assertEqual(V(5), interpret('get_wrapped_index{list=[2,5,9],index=-2}'))
+
+    def test10(self):
+        self.assertEqual(V(9), interpret('get_wrapped_index{list=[2,5,9],index=-1}'))
+
+
 if __name__ == '__main__':
     unittest.main()
