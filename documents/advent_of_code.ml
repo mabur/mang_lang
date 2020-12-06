@@ -104,6 +104,6 @@ result<{
     pick_item = from input to get_wrapped_index {
         list = item<input,
         index = mul [index<input, 3]
-    }
+    },
     result = add map {list = enumerate array, f = pick_item}
 }
