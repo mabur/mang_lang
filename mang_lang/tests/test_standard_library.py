@@ -93,7 +93,7 @@ class TestCountString(unittest.TestCase):
         self.assertEqual(2, interpret('count "du"'))
 
 
-class TestCountItem(unittest.TestCase):
+class TestCountItemList(unittest.TestCase):
     def test0(self):
         self.assertEqual(0, interpret('count_item{list=[], item=3}'))
 
@@ -108,6 +108,23 @@ class TestCountItem(unittest.TestCase):
 
     def test4(self):
         self.assertEqual(2, interpret('count_item{list=[3,1,3], item=3}'))
+
+
+class TestCountItemString(unittest.TestCase):
+    def test0(self):
+        self.assertEqual(0, interpret('count_item{list="", item="3"}'))
+
+    def test1(self):
+        self.assertEqual(0, interpret('count_item{list="1", item="3"}'))
+
+    def test2(self):
+        self.assertEqual(1, interpret('count_item{list="3", item="3"}'))
+
+    def test3(self):
+        self.assertEqual(1, interpret('count_item{list="13", item="3"}'))
+
+    def test4(self):
+        self.assertEqual(2, interpret('count_item{list="313", item="3"}'))
 
 
 class TestCountIf(unittest.TestCase):
