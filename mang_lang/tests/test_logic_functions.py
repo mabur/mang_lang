@@ -4,11 +4,11 @@ from interpreter import interpret
 
 
 def V(value) -> Mapping[str, Any]:
-    return {"type": "number", "value": value}
+    return value
 
 
 def S(value) -> Mapping[str, Any]:
-    return {"type": "string", "value": value}
+    return value
 
 
 class TestAll(unittest.TestCase):

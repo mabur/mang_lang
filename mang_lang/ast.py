@@ -54,7 +54,7 @@ class Number(Expression):
         self.value = float(value)
 
     def to_json(self) -> Json:
-        return {"type": "number", "value": self.value}
+        return self.value
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
         return self
@@ -66,7 +66,7 @@ class String(Expression):
         self.value = value
 
     def to_json(self) -> Json:
-        return {"type": "string", "value": self.value}
+        return self.value
 
     def inner_evaluate(self, parent: Mapping[str, "Expression"]) -> "Expression":
         return self
