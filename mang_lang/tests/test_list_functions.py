@@ -24,6 +24,22 @@ class TestIsEmptyString(unittest.TestCase):
         self.assertEqual(0, interpret('is_empty "ab"'))
 
 
+class TestAppendList(unittest.TestCase):
+    def test1(self):
+        self.assertEqual([3], interpret('append{list=[],item=3}'))
+
+    def test2(self):
+        self.assertEqual([6,3], interpret('append{list=[6],item=3}'))
+
+
+class TestAppendString(unittest.TestCase):
+    def test1(self):
+        self.assertEqual("f", interpret('append{list="",item="f"}'))
+
+    def test2(self):
+        self.assertEqual("uf", interpret('append{list="u",item="f"}'))
+
+
 class TestConcatList(unittest.TestCase):
     def test1(self):
         self.assertEqual([1, 2, 3, 4],

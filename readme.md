@@ -281,12 +281,13 @@ four   = square 2
 * **none**: true if all items of a list are false.
 
 ### List and string functions
-* **is_empty**: true if a list or string has zero items.
-* **concat**: concatenates two lists or strings.
-* **first**: pick the first item in a non-empty list.
-* **last**: pick the last item in a non-empty list.
-* **first_part**: list of all items except the last.
-* **last_part**: list of all items except the first.
+* **is_empty**: true if a list/string has zero items.
+* **append**: Given input `{list,item}` return a copy of the list/string with the item appended at the end.
+* **concat**: concatenates two lists/strings.
+* **first**: pick the first item in a non-empty list/string.
+* **last**: pick the last item in a non-empty list/string.
+* **first_part**: list/string of all items except the last.
+* **last_part**: list/string of all items except the first.
 
 
 ## List of functions in standard library

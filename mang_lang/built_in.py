@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Union
 
 from parsing import parse
-from ast import Array, Number, String
+from ast import Array, Dictionary, Number, String
 from error_handling import CodeFragment
 
 
@@ -58,6 +58,17 @@ def _concat(x: Array, code: CodeFragment):
         return _concat_tuple(x, code)
     if isinstance(x.value[0], String):
         return _concat_string(x, code)
+    raise TypeError
+
+
+def _append(x: Dictionary, code: CodeFragment):
+    container = x.get("list")
+    item = x.get("item")
+    if isinstance(container, Array):
+        return Array(container.value + [item], code)
+    if isinstance(container, String):
+        assert isinstance(item, String)
+        return String(container.value + item.value, code)
     raise TypeError
 
 
@@ -166,6 +177,7 @@ _SUB_ENVIRONMENT = {
     'unequal': _unequal,
     'none': _none,
     'is_empty': _is_empty,
+    'append': _append,
     'concat': _concat,
     'first': _first,
     'last': _last,
