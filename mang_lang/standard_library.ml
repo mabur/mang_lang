@@ -68,7 +68,7 @@
                 f = f<input,
                 back = f last list,
                 beginning = map {list = first_part list, f = f},
-                result = concat [beginning, [back]]
+                result = append{list=beginning, item=back}
             },
     filter = from input to
         if is_empty list<input then
@@ -81,7 +81,7 @@
                 beginning = filter {list = first_part list, predicate = predicate},
                 result =
                     if predicate back then
-                        concat [beginning, [back]]
+                        append{list=beginning, item=back}
                     else
                         beginning
             },
@@ -93,7 +93,7 @@
                 index = sub [count list, 1],
                 back = {item = last list, index = index},
                 beginning = enumerate first_part list,
-                result = concat [beginning, [back]]
+                result = append{list=beginning, item=back}
             },
     reverse = from list to
         if is_empty list then
