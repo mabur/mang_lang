@@ -17,7 +17,6 @@ TODO:
 * make generic sequence algorithms work for both lists and strings
   - add character as primitive?
   - what is not working now?
-* refactor tests
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
