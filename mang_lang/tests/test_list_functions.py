@@ -38,6 +38,17 @@ class TestIsEmptyList(unittest.TestCase):
         self.assertEqual(0, interpret('is_empty [1,2]'))
 
 
+class TestIsEmptyString(unittest.TestCase):
+    def test1(self):
+        self.assertEqual(1, interpret('is_empty ""'))
+
+    def test2(self):
+        self.assertEqual(0, interpret('is_empty "a"'))
+
+    def test3(self):
+        self.assertEqual(0, interpret('is_empty "ab"'))
+
+
 class TestConcatList(unittest.TestCase):
     def test1(self):
         self.assertEqual([1, 2, 3, 4],
