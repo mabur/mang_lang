@@ -2,31 +2,6 @@ import unittest
 from interpreter import interpret
 
 
-class TestCountList(unittest.TestCase):
-    def test1(self):
-        self.assertEqual(3, interpret('count [8,4,6]'))
-
-    def test2(self):
-        self.assertEqual(1, interpret('count [9]'))
-
-    def test3(self):
-        self.assertEqual(0, interpret('count []'))
-
-    def test4(self):
-        self.assertEqual(0, interpret('count []'))
-
-
-class TestCountString(unittest.TestCase):
-    def test0(self):
-        self.assertEqual(0, interpret('count ""'))
-
-    def test1(self):
-        self.assertEqual(1, interpret('count "f"'))
-
-    def test2(self):
-        self.assertEqual(2, interpret('count "du"'))
-
-
 class TestFind(unittest.TestCase):
     def test0(self):
         self.assertEqual([[], []], interpret('find {list=[], item=1}'))
@@ -96,18 +71,15 @@ class TestMap(unittest.TestCase):
         self.assertEqual([1, 4, 9], interpret('map{list=[1,2,3],f=from x to mul[x,x]}'))
 
 
-class TestCount(unittest.TestCase):
-    def test0(self):
-        self.assertEqual(0, interpret('count []'))
-
+class TestCountList(unittest.TestCase):
     def test1(self):
-        self.assertEqual(1, interpret('count [0]'))
+        self.assertEqual(3, interpret('count [8,4,6]'))
 
     def test2(self):
-        self.assertEqual(2, interpret('count [0, 0]'))
+        self.assertEqual(1, interpret('count [9]'))
 
     def test3(self):
-        self.assertEqual(3, interpret('count [0, 0, 0]'))
+        self.assertEqual(0, interpret('count []'))
 
 
 class TestCountString(unittest.TestCase):
@@ -115,13 +87,10 @@ class TestCountString(unittest.TestCase):
         self.assertEqual(0, interpret('count ""'))
 
     def test1(self):
-        self.assertEqual(1, interpret('count "0"'))
+        self.assertEqual(1, interpret('count "f"'))
 
     def test2(self):
-        self.assertEqual(2, interpret('count "00"'))
-
-    def test3(self):
-        self.assertEqual(3, interpret('count "000"'))
+        self.assertEqual(2, interpret('count "du"'))
 
 
 class TestCountItem(unittest.TestCase):
