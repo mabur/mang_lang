@@ -11,7 +11,7 @@ def S(value) -> Mapping[str, Any]:
     return {"type": "string", "value": value}
 
 
-class TestArray(unittest.TestCase):
+class TestLists(unittest.TestCase):
     def test_array0(self):
         self.assertEqual([], interpret('[]'))
 
@@ -28,7 +28,7 @@ class TestArray(unittest.TestCase):
         self.assertEqual([V(1), V(2), V(3)], interpret('[1,2,3]'))
 
 
-class TestBuiltinFunctions(unittest.TestCase):
+class TestConditionals(unittest.TestCase):
     def test_if_then_else_true(self):
         self.assertEqual(V(1), interpret('if 1 then 1 else 2'))
 
@@ -207,7 +207,7 @@ class TestKeywordVariableClashes(unittest.TestCase):
         self.assertEqual(V(5), interpret('important<{important = 5}'))
 
 
-class TestConditionals(unittest.TestCase):
+class TestIndirection(unittest.TestCase):
     def test_indirection1(self):
         self.assertEqual(V(5), interpret('y<{x = 5, y = x}'))
 
