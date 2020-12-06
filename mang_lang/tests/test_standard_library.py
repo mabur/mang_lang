@@ -144,7 +144,7 @@ class TestCountIf(unittest.TestCase):
         self.assertEqual(2, interpret('count_if{list=[3,1,3], predicate=from x to equal[x, 3]}'))
 
 
-class TestFilter(unittest.TestCase):
+class TestFilterList(unittest.TestCase):
     def test0(self):
         self.assertEqual([], interpret('filter{list=[], predicate=from x to equal[x, 3]}'))
 
@@ -162,6 +162,26 @@ class TestFilter(unittest.TestCase):
 
     def test5(self):
         self.assertEqual([3, 3], interpret('filter{list=[3,2,3], predicate=from x to equal[x, 3]}'))
+
+
+class TestFilterString(unittest.TestCase):
+    def test0(self):
+        self.assertEqual("", interpret('filter{list="", predicate=from x to equal[x, "3"]}'))
+
+    def test1(self):
+        self.assertEqual("", interpret('filter{list="1", predicate=from x to equal[x, "3"]}'))
+
+    def test2(self):
+        self.assertEqual("", interpret('filter{list="12", predicate=from x to equal[x, "3"]}'))
+
+    def test3(self):
+        self.assertEqual("3", interpret('filter{list="123", predicate=from x to equal[x, "3"]}'))
+
+    def test4(self):
+        self.assertEqual("3", interpret('filter{list="321", predicate=from x to equal[x, "3"]}'))
+
+    def test5(self):
+        self.assertEqual("33", interpret('filter{list="323", predicate=from x to equal[x, "3"]}'))
 
 
 class TestEnumerate(unittest.TestCase):

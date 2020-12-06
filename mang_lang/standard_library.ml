@@ -72,7 +72,7 @@
             },
     filter = from input to
         if is_empty list<input then
-            []
+            list<input
         else
             result<{
                 list = list<input,
