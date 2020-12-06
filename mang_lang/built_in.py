@@ -79,11 +79,16 @@ def _last(x: Union[Array, String], code: CodeFragment):
         return String('"{}"'.format(element), code)
 
 
-def _first_part(x: Array, code: CodeFragment) -> Array:
-    return Array(x.value[:-1], code)
+def _first_part(x: Array, code: CodeFragment) -> Union[Array, String]:
+    if isinstance(x, Array):
+        return Array(x.value[:-1], code)
+    if isinstance(x, String):
+        return String('"{}"'.format(x.value[:-1]), code)
+    raise TypeError
 
 
 def _last_part(x: Array, code: CodeFragment) -> Array:
+    # TODO:
     return Array(x.value[1:], code)
 
 
