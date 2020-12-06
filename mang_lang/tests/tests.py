@@ -2,6 +2,14 @@ import unittest
 from interpreter import interpret
 
 
+class TestString(unittest.TestCase):
+    def test_string1(self):
+        self.assertEqual("hej", interpret('"hej"'))
+
+    def test_string2(self):
+        self.assertEqual("home\dir/image.png", interpret('"home\dir/image.png"'))
+
+
 class TestLists(unittest.TestCase):
     def test_array0(self):
         self.assertEqual([], interpret('[]'))
@@ -28,6 +36,9 @@ class TestConditionals(unittest.TestCase):
 
     def test_if_then_else_true2(self):
         self.assertEqual(1, interpret('if -1 then 1 else 2'))
+
+    def test_if_then_else_references(self):
+        self.assertEqual(1, interpret('y<{x=1,y=if x then x else x}'))
 
 
 class TestRecursion(unittest.TestCase):
