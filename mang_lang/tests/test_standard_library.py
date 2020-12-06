@@ -184,7 +184,7 @@ class TestFilterString(unittest.TestCase):
         self.assertEqual("33", interpret('filter{list="323", predicate=from x to equal[x, "3"]}'))
 
 
-class TestEnumerate(unittest.TestCase):
+class TestEnumerateList(unittest.TestCase):
     def test0(self):
         self.assertEqual([], interpret('enumerate []'))
 
@@ -202,6 +202,26 @@ class TestEnumerate(unittest.TestCase):
 
     def test5(self):
         self.assertEqual(7, interpret('item < last enumerate [6,5,7]'))
+
+
+class TestEnumerateString(unittest.TestCase):
+    def test0(self):
+        self.assertEqual([], interpret('enumerate ""'))
+
+    def test1(self):
+        self.assertEqual(3, interpret('count enumerate "657"'))
+
+    def test2(self):
+        self.assertEqual(0, interpret('index < first enumerate "657"'))
+
+    def test3(self):
+        self.assertEqual(2, interpret('index < last enumerate "657"'))
+
+    def test4(self):
+        self.assertEqual("6", interpret('item < first enumerate "657"'))
+
+    def test5(self):
+        self.assertEqual("7", interpret('item < last enumerate "657"'))
 
 
 class TestSplit(unittest.TestCase):
