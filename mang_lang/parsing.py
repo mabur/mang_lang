@@ -80,7 +80,7 @@ def _parse_string(code: CodeFragment) -> Tuple[String, CodeFragment]:
     value += body
     value += code.pop()
     code = _parse_optional_white_space(code)
-    return String(value, code=section), code
+    return String(value[1:-1], code=section), code
 
 
 def _parse_array(code: CodeFragment) -> Tuple[Array, CodeFragment]:

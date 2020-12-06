@@ -45,11 +45,10 @@ def _concat_tuple(x: Array, code: CodeFragment) -> Array:
 
 
 def _concat_string(x: Array, code: CodeFragment) -> String:
-    expressions = '"'
+    expressions = ""
     for e in x.value:
         assert isinstance(e, String)
         expressions += e.value
-    expressions += '"'
     return String(expressions, code)
 
 
@@ -61,29 +60,31 @@ def _concat(x: Array, code: CodeFragment):
     raise TypeError
 
 
-def _first(x: Union[Array, String], code: CodeFragment):
+def _first(x: Union[Array, String], code: CodeFragment) -> Union[Array, String]:
     assert x.value, "Cannot get first element from empty list or string"
     element = x.value[0]
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element), code)
+        return String(element, code)
+    raise TypeError
 
 
-def _last(x: Union[Array, String], code: CodeFragment):
+def _last(x: Union[Array, String], code: CodeFragment) -> Union[Array, String]:
     assert x.value, "Cannot get last element from empty list or string"
     element = x.value[-1]
     if isinstance(x, Array):
         return element
     if isinstance(x, String):
-        return String('"{}"'.format(element), code)
+        return String(element, code)
+    raise TypeError
 
 
 def _first_part(x: Array, code: CodeFragment) -> Union[Array, String]:
     if isinstance(x, Array):
         return Array(x.value[:-1], code)
     if isinstance(x, String):
-        return String('"{}"'.format(x.value[:-1]), code)
+        return String(x.value[:-1], code)
     raise TypeError
 
 
@@ -91,7 +92,7 @@ def _last_part(x: Array, code: CodeFragment) -> Union[Array, String]:
     if isinstance(x, Array):
         return Array(x.value[1:], code)
     if isinstance(x, String):
-        return String('"{}"'.format(x.value[1:]), code)
+        return String(x.value[1:], code)
     raise TypeError
 
 

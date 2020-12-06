@@ -63,7 +63,7 @@ class Number(Expression):
 class String(Expression):
     def __init__(self, value: str, code: CodeFragment, parent: Expression=None) -> None:
         super().__init__(code, parent)
-        self.value = value[1:-1]
+        self.value = value
 
     def to_json(self) -> Json:
         return {"type": "string", "value": self.value}
