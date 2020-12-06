@@ -31,6 +31,9 @@ class TestAppendList(unittest.TestCase):
     def test2(self):
         self.assertEqual([6,3], interpret('append{list=[6],item=3}'))
 
+    def test3(self):
+        self.assertEqual([], interpret('x<{x=[], y=append{list=x,item=3}}'))
+
 
 class TestAppendString(unittest.TestCase):
     def test1(self):
@@ -38,6 +41,9 @@ class TestAppendString(unittest.TestCase):
 
     def test2(self):
         self.assertEqual("uf", interpret('append{list="u",item="f"}'))
+
+    def test3(self):
+        self.assertEqual("", interpret('x<{x="", y=append{list=x,item="3"}}'))
 
 
 class TestConcatList(unittest.TestCase):
