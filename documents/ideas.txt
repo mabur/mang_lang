@@ -18,6 +18,26 @@ TODO:
   - what is not working now?
     - this is not generic: concat [beginning, [back]]
     - add append function that is overloaded for lists and strings
+* higher order function for for-loop
+ - iterate{init=1, apply=f, while=p}
+
+iterate = from input to output<{
+    init = init<input,
+    apply = apply<input,
+    while = while<input,
+    output =
+      if while init then
+        iterate {init = apply init, apply = apply, while = while}
+      else
+        init
+  }
+faculty = from input to output<{
+  init = {result=, index=},
+  apply = ,
+  while = ,
+  output = iterate {init = init, apply = apply, while = while}
+}
+
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
