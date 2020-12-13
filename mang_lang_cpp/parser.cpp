@@ -68,6 +68,15 @@ const CodeCharacter* parseCharacter(const CodeCharacter* it, char c) {
     return it;
 }
 
+template<typename Predicate>
+const CodeCharacter* parseCharacter(const CodeCharacter* it, Predicate predicate) {
+    if (!predicate(*it)) {
+        throw ParseException("Failed parsing");
+    }
+    ++it;
+    return it;
+}
+
 const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, char c) {
     if (it->character == c) {
         ++it;
@@ -75,24 +84,26 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, char c) {
     return it;
 }
 
+template<typename Predicate>
+const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, Predicate predicate) {
+    if (predicate(*it)) {
+        ++it;
+    }
+    return it;
+}
+
 std::string parseName(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
-    if (!isLetter(*it)) {
-        throw ParseException("could not parse name");
-    }
+    it = parseCharacter(it, isLetter);
     it = find_if_not(it, last, isNameCharacter);
     return rawString(first, it);
 }
 
 Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
-    if (isSign(*it)) {
-        ++it;
-    }
+    it = parseOptionalCharacter(it, isSign);
+    it = parseCharacter(it, isDigit);
     it = find_if_not(it, last, isDigit);
-    if (it == first) {
-        throw ParseException("could not parse number");
-    }
     it = parseOptionalCharacter(it, '.');
     it = find_if_not(it, last, isDigit);
     const auto value = std::stod(rawString(first, it));
@@ -129,6 +140,7 @@ List parseList(const CodeCharacter* first, const CodeCharacter* last) {
 Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, '{');
+    it = parseWhiteSpace(it, last);
     auto elements = std::vector<DictionaryElement>{};
     while (it->character != '}') {
         const auto name = parseName(it, last);
