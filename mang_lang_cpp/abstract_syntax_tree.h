@@ -18,7 +18,7 @@ struct Expression {
     const CodeCharacter* last;
     const CodeCharacter* begin() const {return first;}
     const CodeCharacter* end() const {return last;}
-    virtual std::string serialize() = 0;
+    virtual std::string serialize() const = 0;
     virtual ~Expression() = default;
 };
 
@@ -26,7 +26,7 @@ struct Number : public Expression {
     Number(const CodeCharacter* first, const CodeCharacter* last, double value)
         : Expression{first, last}, value{value} {}
     double value;
-    virtual std::string serialize() {
+    virtual std::string serialize() const {
         std::stringstream s;
         s << value;
         return s.str();
@@ -37,8 +37,17 @@ struct String : public Expression {
     String(const CodeCharacter* first, const CodeCharacter* last, std::string value)
         : Expression{first, last}, value{value} {}
     std::string value;
-    virtual std::string serialize() {
+    virtual std::string serialize() const {
         return "\"" + value + "\"";
+    };
+};
+
+struct Name : public Expression {
+    Name(const CodeCharacter* first, const CodeCharacter* last, std::string value)
+        : Expression{first, last}, value{value} {}
+    std::string value;
+    virtual std::string serialize() const {
+        return value;
     };
 };
 
@@ -50,7 +59,7 @@ struct List : public Expression {
     ) : Expression{first, last}, elements{std::move(elements)}
     {}
     std::vector<std::unique_ptr<Expression>> elements;
-    virtual std::string serialize() {
+    virtual std::string serialize() const {
         auto result = std::string{};
         result += '[';
         for (const auto& element : elements) {
@@ -68,10 +77,10 @@ struct List : public Expression {
 };
 
 struct DictionaryElement {
-    DictionaryElement(std::string name, std::unique_ptr<Expression>&& expression)
+    DictionaryElement(const Name& name, std::unique_ptr<Expression>&& expression)
         : name{name}, expression{std::move(expression)}
     {}
-    std::string name;
+    Name name;
     std::unique_ptr<Expression> expression;
 };
 
@@ -83,16 +92,21 @@ struct Dictionary : public Expression {
     ) : Expression{first, last}, elements{std::move(elements)}
     {}
     std::vector<DictionaryElement> elements;
-    virtual std::string serialize() {
+    virtual std::string serialize() const {
         auto result = std::string{};
-        result += '[';
+        result += '{';
         for (const auto& element : elements) {
-            result += element.name;
+            result += element.name.serialize();
             result += '=';
             result += element.expression->serialize();
             result += ',';
         }
-        result.back() = ']';
+        if (elements.empty()) {
+            result += '}';
+        }
+        else {
+            result.back() = '}';
+        }
         return result;
     }
 };

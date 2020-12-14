@@ -58,10 +58,11 @@ const CodeCharacter* parseWhiteSpace(
     return find_if_not(first, last, isWhiteSpace);
 }
 
-const CodeCharacter* parseCharacter(const CodeCharacter* it, char c) {
-    if (it->character != c) {
+const CodeCharacter* parseCharacter(const CodeCharacter* it, char expected) {
+    const auto actual = it->character;
+    if (it->character != expected) {
         throw ParseException(
-            std::string{"Failed parsing: "} + c
+            std::string{"Parsing expected "} + expected + " but got " + actual
         );
     }
     ++it;
@@ -71,7 +72,7 @@ const CodeCharacter* parseCharacter(const CodeCharacter* it, char c) {
 template<typename Predicate>
 const CodeCharacter* parseCharacter(const CodeCharacter* it, Predicate predicate) {
     if (!predicate(*it)) {
-        throw ParseException("Failed parsing");
+        throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
     ++it;
     return it;
@@ -92,11 +93,11 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, Predicate p
     return it;
 }
 
-std::string parseName(const CodeCharacter* first, const CodeCharacter* last) {
+Name parseName(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, isLetter);
     it = find_if_not(it, last, isNameCharacter);
-    return rawString(first, it);
+    return Name(first, it, rawString(first, it));
 }
 
 Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
@@ -144,10 +145,12 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
     auto elements = std::vector<DictionaryElement>{};
     while (it->character != '}') {
         const auto name = parseName(it, last);
+        it = name.end();
         it = parseWhiteSpace(it, last);
         it = parseCharacter(it, '=');
         it = parseWhiteSpace(it, last);
         auto expression = parseExpression(it, last);
+        it = expression->end();
         elements.emplace_back(name, std::move(expression));
         it = parseWhiteSpace(it, last);
         it = parseOptionalCharacter(it, ',');
