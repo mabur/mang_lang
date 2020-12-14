@@ -154,6 +154,7 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
         elements.emplace_back(name, std::move(expression));
         it = parseWhiteSpace(it, last);
         it = parseOptionalCharacter(it, ',');
+        it = parseWhiteSpace(it, last);
     }
     it = parseCharacter(it, '}');
     return Dictionary(first, it, std::move(elements));
