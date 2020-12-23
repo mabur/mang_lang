@@ -1,9 +1,7 @@
 TODO:
 * Support numbers in variable names.
-* Start writing standard library functions in Mang Lang instead of Python.
-* Try to implement Advent of Code problems to see what is missing
 * Use-case: programmable json.
-* Railroad diagram / flow chart / ebnf definition
+* Define both input source and output result as manglang.
 * Math functions: ceil/round_up, floor/round_down, round
 * How to handle mutable array like operations?
   - append / push_back, as primitive instead of concat.
@@ -31,11 +29,22 @@ iterate = from input to output<{
       else
         init
   }
-faculty = from input to output<{
-  init = {result=, index=},
-  apply = ,
-  while = ,
-  output = iterate {init = init, apply = apply, while = while}
+factorial = from x to iterate {
+    init = {out = 1, i = x},
+    apply = from in to {out = mul [out<in, i<in], i = sub [i<in, 1]},
+    while = from in to not equal [i<in, 1]
+}
+// Alternative function syntax
+factorial = function iterate {
+    init = {out = 1, i = $},
+    apply = function {out = mul [$out, $i], i = sub [$i, 1]},
+    while = function not equal [$i, 1]
+}
+// Alternative function input
+factorial = from x to iterate {
+    init = {out = 1, i = in},
+    apply = from {out, i} to {out = mul [out, i], i = sub [i, 1]},
+    while = from {i} to not equal [i, 1]
 }
 
 
@@ -342,7 +351,6 @@ find = from input to
             head = concat [[first list], center],
             result = [head, tail]
         }
-
 
 // Typ-förslag
 find : from {list: List Generic, query: Generic} to List List Generic =
