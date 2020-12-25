@@ -3,11 +3,8 @@
 #include <stdexcept>
 
 #include "abstract_syntax_tree.h"
+#include "parse_utils.h"
 
-struct ParseException : public std::runtime_error
-{
-    using runtime_error::runtime_error;
-};
 
 std::unique_ptr<Expression> parseExpression(
     const CodeCharacter* first, const CodeCharacter* last

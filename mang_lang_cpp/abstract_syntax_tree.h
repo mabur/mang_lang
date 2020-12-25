@@ -5,11 +5,7 @@
 #include <string>
 #include <vector>
 
-struct CodeCharacter {
-    char character;
-    size_t row;
-    size_t column;
-};
+#include "parse_utils.h"
 
 struct Expression {
     Expression(const CodeCharacter* first, const CodeCharacter* last)
