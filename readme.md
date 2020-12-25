@@ -1,9 +1,14 @@
 # Mang Lang
 
-Mang Lang is a toy programming language with the following **design trade-offs**:
+Mang Lang is an experimental programming language. It explores how to make a language as minimalistic as possible, while still being useful. What are the essential building blocks needed for programming? How can we design a minimal language that is easy to learn and easy to interpret/compile. It has the following **design trade-offs**:
 
-1. Minimalistic instead of feature-rich. The implementation is ~500 lines of Python code.
-2. Purely functional instead of imperative or object oriented.
+1. Minimalistic, instead of feature-rich.
+2. Purely functional, instead of imperative or object oriented.
+3. Eager evaluation, instead of lazy evaluation.
+4. Dynamically typed and interpreted. Static typing and compiling might be explored eventually.
+
+The motivation behind Mang Lang is somewhat similar to Lisp, but it has evolved its own unique solutions to a similar problem statement. Mang Lang could be described as a love child of Json and Lisp.
+
 
 **What it has**:
 
@@ -18,8 +23,10 @@ Mang Lang is a toy programming language with the following **design trade-offs**
 
 1. For loops and while loops. Loops are handled with recursion and higher order functions like map and filter.
 2. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
-3. Mutable variables. Everything is immutable / constant.
-4. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
+3. Macros. Functions are what you get.
+4. Mutable variables. Everything is immutable / constant.
+5. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
+
 
 
 **Language Comparison**
