@@ -73,6 +73,36 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
     return Dictionary(first, it, std::move(elements));
 }
 
+Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* last) {
+    auto it = first;
+
+    it = parseKeyword(it, "if");
+    it = parseWhiteSpace(it, last);
+    auto expression_if = parseExpression(it, last);
+    it = expression_if->end();
+    it = parseWhiteSpace(it, last);
+
+    it = parseKeyword(it, "then");
+    it = parseWhiteSpace(it, last);
+    auto expression_then = parseExpression(it, last);
+    it = expression_then->end();
+    it = parseWhiteSpace(it, last);
+
+    it = parseKeyword(it, "else");
+    it = parseWhiteSpace(it, last);
+    auto expression_else = parseExpression(it, last);
+    it = expression_else->end();
+    it = parseWhiteSpace(it, last);
+
+    return Conditional(
+        first,
+        it,
+        std::move(expression_if),
+        std::move(expression_then),
+        std::move(expression_else)
+    );
+}
+
 std::unique_ptr<Expression> parseExpression(
     const CodeCharacter* first, const CodeCharacter* last
 ) {
@@ -93,22 +123,10 @@ std::unique_ptr<Expression> parseExpression(
     if (isStringSeparator(*it)) {
         return std::make_unique<String>(parseString(it, last));
     }
-    throw ParseException("could not parse expression");
-}
-
-std::vector<CodeCharacter> makeCodeCharacters(const std::string& string) {
-    auto result = std::vector<CodeCharacter>{};
-    auto column = size_t{};
-    auto row = size_t{};
-    for (const auto& character : string) {
-        result.push_back({character, row, column});
-        ++column;
-        if (character == '\n') {
-            ++row;
-            column = 0;
-        }
+    if (isConditional(it)) {
+        return std::make_unique<Conditional>(parseConditional(it, last));
     }
-    return result;
+    throw ParseException("could not parse expression");
 }
 
 std::unique_ptr<Expression> parse(const std::string& string) {

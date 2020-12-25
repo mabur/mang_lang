@@ -11,6 +11,21 @@ std::string rawString(const CodeCharacter* first, const CodeCharacter* last) {
     return s;
 }
 
+std::vector<CodeCharacter> makeCodeCharacters(const std::string& string) {
+    auto result = std::vector<CodeCharacter>{};
+    auto column = size_t{};
+    auto row = size_t{};
+    for (const auto& character : string) {
+        result.push_back({character, row, column});
+        ++column;
+        if (character == '\n') {
+            ++row;
+            column = 0;
+        }
+    }
+    return result;
+}
+
 bool isDigit(CodeCharacter c) {
     return isdigit(c.character);
 }
@@ -47,6 +62,15 @@ bool isStringSeparator(CodeCharacter c) {
     return c.character == '"';
 }
 
+bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
+    return a.character == b.character;
+}
+
+bool isConditional(const CodeCharacter* first) {
+    const auto keyword = makeCodeCharacters("if");
+    std::equal(keyword.begin(), keyword.end(), first, haveSameCharacters);
+}
+
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
 ) {
@@ -67,6 +91,13 @@ const CodeCharacter* parseCharacter(const CodeCharacter* it, char expected) {
 const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, char c) {
     if (it->character == c) {
         ++it;
+    }
+    return it;
+}
+
+const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword) {
+    for (const auto c : keyword) {
+        it = parseCharacter(it, c);
     }
     return it;
 }

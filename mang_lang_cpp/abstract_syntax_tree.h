@@ -106,3 +106,26 @@ struct Dictionary : public Expression {
         return result;
     }
 };
+
+struct Conditional : public Expression {
+    Conditional(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        std::unique_ptr<Expression> expression_if,
+        std::unique_ptr<Expression> expression_then,
+        std::unique_ptr<Expression> expression_else
+    )
+        : Expression{first, last},
+        expression_if{std::move(expression_if)},
+        expression_then{std::move(expression_then)},
+        expression_else{std::move(expression_else)}
+    {}
+    std::unique_ptr<Expression> expression_if;
+    std::unique_ptr<Expression> expression_then;
+    std::unique_ptr<Expression> expression_else;
+    virtual std::string serialize() const {
+        return std::string{"if "} + expression_if->serialize()
+            + " then " + expression_then->serialize()
+            + " else " + expression_else->serialize();
+    };
+};

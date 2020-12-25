@@ -75,3 +75,11 @@ TEST_CASE("Dictionary") {
     }));
     CHECK(roundtrip(data.in) == data.out);
 }
+
+TEST_CASE("Conditional") {
+    auto data = GENERATE(values<Data>({
+        {"if 1 then 2 else 3", "if 1 then 2 else 3"},
+        {"if  1  then  2  else  3", "if 1 then 2 else 3"},
+    }));
+    CHECK(roundtrip(data.in) == data.out);
+}

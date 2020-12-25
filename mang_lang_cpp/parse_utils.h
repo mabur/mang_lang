@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 struct CodeCharacter {
     char character;
@@ -17,6 +18,8 @@ struct ParseException : public std::runtime_error
 char rawCharacter(CodeCharacter c);
 
 std::string rawString(const CodeCharacter* first, const CodeCharacter* last);
+
+std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
 
 bool isDigit(CodeCharacter c);
 
@@ -35,6 +38,8 @@ bool isList(CodeCharacter c);
 bool isDictionary(CodeCharacter c);
 
 bool isStringSeparator(CodeCharacter c);
+
+bool isConditional(const CodeCharacter* first);
 
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
@@ -60,3 +65,5 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, Predicate p
     }
     return it;
 }
+
+const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword);
