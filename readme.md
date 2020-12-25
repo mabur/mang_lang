@@ -2,11 +2,11 @@
 
 Mang Lang is an experimental programming language. It explores how to make a language as minimalistic as possible, while still being useful. What are the essential building blocks needed for programming? How can we design a minimal language that is easy to learn and easy to interpret/compile. It has the following **design trade-offs**:
 
-1. Minimalistic, instead of feature-rich.
-2. Purely functional, instead of imperative or object oriented.
-3. Eager evaluation, instead of lazy evaluation.
-4. Dynamically typed and interpreted. Static typing and compiling might be explored eventually.
-5. Code as Data and Data as Code. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!
+1. **Minimalistic**, instead of feature-rich.
+2. **Purely functional**, instead of imperative or object oriented.
+3. **Eager evaluation**, instead of lazy evaluation.
+4. **Dynamically typed and interpreted**. Static typing and compiling might be explored eventually.
+5. **Code as Data and Data as Code**. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!
    
 The motivation behind Mang Lang is somewhat similar to Lisp, but it has evolved its own unique solutions to a similar problem statement. Mang Lang could be described as a **love child of Json and Lisp**.
 
