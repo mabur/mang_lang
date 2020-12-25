@@ -7,27 +7,7 @@ Mang Lang is an experimental programming language. It explores how to make a lan
 3. Eager evaluation, instead of lazy evaluation.
 4. Dynamically typed and interpreted. Static typing and compiling might be explored eventually.
 
-The motivation behind Mang Lang is somewhat similar to Lisp, but it has evolved its own unique solutions to a similar problem statement. Mang Lang could be described as a love child of Json and Lisp.
-
-
-**What it has**:
-
-1. Numbers and strings are primitive data types.
-2. Lists.
-3. Dictionaries of symbols / variables.
-4. Conditional expressions (if then else).
-5. Functions, which are first-class citizens, supporting higher order functions and generics.
-
-
-**What it does NOT have**:
-
-1. For loops and while loops. Loops are handled with recursion and higher order functions like map and filter.
-2. Operators for arithmetic and boolean operations etc. Functions are used instead of operators.
-3. Macros. Functions are what you get.
-4. Mutable variables. Everything is immutable / constant.
-5. Object oriented stuff like constructors, destructors, inheritance. Dictionaries are used for simple objects.
-
-
+The motivation behind Mang Lang is somewhat similar to Lisp, but it has evolved its own unique solutions to a similar problem statement. Mang Lang could be described as a **love child of Json and Lisp**.
 
 **Language Comparison**
 
