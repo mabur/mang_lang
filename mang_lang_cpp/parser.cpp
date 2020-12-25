@@ -183,7 +183,7 @@ std::unique_ptr<Expression> parseExpression(
     throw ParseException("could not parse expression");
 }
 
-std::unique_ptr<Expression> parse(const std::string& string) {
+std::vector<CodeCharacter> makeCodeCharacters(const std::string& string) {
     auto result = std::vector<CodeCharacter>{};
     auto column = size_t{};
     auto row = size_t{};
@@ -195,5 +195,10 @@ std::unique_ptr<Expression> parse(const std::string& string) {
             column = 0;
         }
     }
+    return result;
+}
+
+std::unique_ptr<Expression> parse(const std::string& string) {
+    const auto result = makeCodeCharacters(string);
     return parseExpression(result.data(), result.data() + result.size());
 }
