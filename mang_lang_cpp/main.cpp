@@ -7,6 +7,10 @@ std::string roundtrip(std::string code) {
     return parse(code)->serialize();
 }
 
+std::string evaluate(std::string code) {
+    return parse(code)->evaluate()->serialize();
+}
+
 struct Data {
     std::string in;
     std::string out;
@@ -28,6 +32,7 @@ TEST_CASE("Number") {
         {"+1.0", "1"},
     }));
     CHECK(roundtrip(data.in) == data.out);
+    CHECK(evaluate(data.in) == data.out);
 }
 
 TEST_CASE("String") {
@@ -43,6 +48,7 @@ TEST_CASE("String") {
         R"("{}")",
     }));
     CHECK(roundtrip(data) == data);
+    CHECK(evaluate(data) == data);
 }
 
 TEST_CASE("List") {
@@ -62,6 +68,7 @@ TEST_CASE("List") {
         {"[[[]]]", "[[[]]]"},
     }));
     CHECK(roundtrip(data.in) == data.out);
+    CHECK(evaluate(data.in) == data.out);
 }
 
 TEST_CASE("Dictionary") {
@@ -74,6 +81,7 @@ TEST_CASE("Dictionary") {
         {"{ a = 1 , b = 2 }", "{a=1,b=2}"},
     }));
     CHECK(roundtrip(data.in) == data.out);
+    CHECK(evaluate(data.in) == data.out);
 }
 
 TEST_CASE("Conditional") {
@@ -82,4 +90,12 @@ TEST_CASE("Conditional") {
         {"if  1  then  2  else  3", "if 1 then 2 else 3"},
     }));
     CHECK(roundtrip(data.in) == data.out);
+}
+
+TEST_CASE("conditional_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"if 1 then 2 else 3", "2"},
+        {"if 0 then 2 else 3", "3"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
 }

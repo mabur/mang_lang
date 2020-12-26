@@ -16,6 +16,10 @@ struct Expression {
     const CodeCharacter* end() const {return last;}
     virtual std::string serialize() const = 0;
     virtual ~Expression() = default;
+    virtual std::unique_ptr<Expression> evaluate() const = 0;
+    virtual bool isTrue() const {
+        return false;
+    }
 };
 
 struct Number : public Expression {
@@ -27,6 +31,12 @@ struct Number : public Expression {
         s << value;
         return s.str();
     };
+    virtual std::unique_ptr<Expression> evaluate() const {
+        return std::make_unique<Number>(first, last, value);
+    }
+    virtual bool isTrue() const {
+        return static_cast<bool>(value);
+    }
 };
 
 struct String : public Expression {
@@ -36,15 +46,9 @@ struct String : public Expression {
     virtual std::string serialize() const {
         return "\"" + value + "\"";
     };
-};
-
-struct Name : public Expression {
-    Name(const CodeCharacter* first, const CodeCharacter* last, std::string value)
-        : Expression{first, last}, value{value} {}
-    std::string value;
-    virtual std::string serialize() const {
-        return value;
-    };
+    virtual std::unique_ptr<Expression> evaluate() const {
+        return std::make_unique<String>(first, last, value);
+    }
 };
 
 struct List : public Expression {
@@ -69,6 +73,25 @@ struct List : public Expression {
             result.back() = ']';
         }
         return result;
+    }
+    virtual std::unique_ptr<Expression> evaluate() const {
+        auto evaluated_elements = std::vector<std::unique_ptr<Expression>>{};
+        for (const auto& element : elements) {
+            evaluated_elements.emplace_back(element->evaluate());
+        }
+        return std::make_unique<List>(first, last, std::move(evaluated_elements));
+    }
+};
+
+struct Name : public Expression {
+    Name(const CodeCharacter* first, const CodeCharacter* last, std::string value)
+        : Expression{first, last}, value{value} {}
+    std::string value;
+    virtual std::string serialize() const {
+        return value;
+    };
+    virtual std::unique_ptr<Expression> evaluate() const {
+        return std::make_unique<Name>(first, last, value);
     }
 };
 
@@ -105,6 +128,14 @@ struct Dictionary : public Expression {
         }
         return result;
     }
+    virtual std::unique_ptr<Expression> evaluate() const {
+        auto evaluated_elements = std::vector<DictionaryElement>{};
+        for (const auto& element : elements) {
+            evaluated_elements.emplace_back(
+                element.name, element.expression->evaluate());
+        }
+        return std::make_unique<Dictionary>(first, last, std::move(evaluated_elements));
+    }
 };
 
 struct Conditional : public Expression {
@@ -128,4 +159,11 @@ struct Conditional : public Expression {
             + " then " + expression_then->serialize()
             + " else " + expression_else->serialize();
     };
+    virtual std::unique_ptr<Expression> evaluate() const {
+        if (expression_if->evaluate()->isTrue()) {
+            return expression_then->evaluate();
+        } else {
+            return expression_else->evaluate();
+        }
+    }
 };
