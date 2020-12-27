@@ -54,7 +54,7 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
     auto it = first;
     it = parseCharacter(it, '{');
     it = parseWhiteSpace(it, last);
-    auto elements = std::vector<DictionaryElement>{};
+    auto result = Dictionary(first, it, nullptr);
     while (it->character != '}') {
         const auto name = parseName(it, last);
         it = name.end();
@@ -63,13 +63,14 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
         it = parseWhiteSpace(it, last);
         auto expression = parseExpression(it, last);
         it = expression->end();
-        elements.emplace_back(name, std::move(expression));
+        result.add(DictionaryElement{name, std::move(expression)});
         it = parseWhiteSpace(it, last);
         it = parseOptionalCharacter(it, ',');
         it = parseWhiteSpace(it, last);
     }
     it = parseCharacter(it, '}');
-    return Dictionary(first, it, nullptr, std::move(elements));
+    result.last_ = it;
+    return result;
 }
 
 Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* last) {

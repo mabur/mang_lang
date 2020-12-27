@@ -126,11 +126,13 @@ struct Dictionary : public Expression {
     Dictionary(
         const CodeCharacter* first,
         const CodeCharacter* last,
-        const Expression* parent,
-        std::vector<DictionaryElement> elements
-    ) : Expression{first, last, parent}, elements{std::move(elements)}
+        const Expression* parent
+    ) : Expression{first, last, parent}
     {}
     std::vector<DictionaryElement> elements;
+    void add(DictionaryElement element) {
+        elements.push_back(std::move(element));
+    }
     virtual std::string serialize() const {
         auto result = std::string{};
         result += '{';
@@ -149,13 +151,15 @@ struct Dictionary : public Expression {
         return result;
     }
     virtual ExpressionPointer evaluate(const Expression* parent) const {
-        auto evaluated_elements = std::vector<DictionaryElement>{};
+        auto result = std::make_unique<Dictionary>(
+            begin(), end(), parent);
         for (const auto& element : elements) {
-            evaluated_elements.emplace_back(
-                element.name, element.expression->evaluate(parent));
+            result->add(DictionaryElement{
+                element.name,
+                element.expression->evaluate(result.get())
+            });
         }
-        // TODO(mabur): handle parent correctly above and below.
-        return std::make_unique<Dictionary>(begin(), end(), parent, std::move(evaluated_elements));
+        return result;
     }
 };
 
