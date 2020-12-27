@@ -25,7 +25,7 @@ struct Expression {
     const Expression* parent() const {return parent_;}
     virtual bool isTrue() const {return false;}
     virtual std::string serialize() const = 0;
-    virtual ExpressionPointer evaluate() const = 0;
+    virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
 };
 
 struct Number : public Expression {
@@ -41,8 +41,8 @@ struct Number : public Expression {
         s << value;
         return s.str();
     };
-    virtual ExpressionPointer evaluate() const {
-        return std::make_unique<Number>(begin(), end(), parent(), value);
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        return std::make_unique<Number>(begin(), end(), parent, value);
     }
     virtual bool isTrue() const {
         return static_cast<bool>(value);
@@ -60,8 +60,8 @@ struct String : public Expression {
     virtual std::string serialize() const {
         return "\"" + value + "\"";
     };
-    virtual ExpressionPointer evaluate() const {
-        return std::make_unique<String>(begin(), end(), parent(), value);
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        return std::make_unique<String>(begin(), end(), parent, value);
     }
 };
 
@@ -89,12 +89,12 @@ struct List : public Expression {
         }
         return result;
     }
-    virtual ExpressionPointer evaluate() const {
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
         auto evaluated_elements = std::vector<ExpressionPointer>{};
         for (const auto& element : elements) {
-            evaluated_elements.emplace_back(element->evaluate());
+            evaluated_elements.emplace_back(element->evaluate(parent));
         }
-        return std::make_unique<List>(begin(), end(), parent(), std::move(evaluated_elements));
+        return std::make_unique<List>(begin(), end(), parent, std::move(evaluated_elements));
     }
 };
 
@@ -109,8 +109,8 @@ struct Name : public Expression {
     virtual std::string serialize() const {
         return value;
     };
-    virtual ExpressionPointer evaluate() const {
-        return std::make_unique<Name>(begin(), end(), parent(), value);
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        return std::make_unique<Name>(begin(), end(), parent, value);
     }
 };
 
@@ -148,13 +148,14 @@ struct Dictionary : public Expression {
         }
         return result;
     }
-    virtual ExpressionPointer evaluate() const {
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
         auto evaluated_elements = std::vector<DictionaryElement>{};
         for (const auto& element : elements) {
             evaluated_elements.emplace_back(
-                element.name, element.expression->evaluate());
+                element.name, element.expression->evaluate(parent));
         }
-        return std::make_unique<Dictionary>(begin(), end(), parent(), std::move(evaluated_elements));
+        // TODO(mabur): handle parent correctly above and below.
+        return std::make_unique<Dictionary>(begin(), end(), parent, std::move(evaluated_elements));
     }
 };
 
@@ -180,11 +181,11 @@ struct Conditional : public Expression {
             + " then " + expression_then->serialize()
             + " else " + expression_else->serialize();
     };
-    virtual ExpressionPointer evaluate() const {
-        if (expression_if->evaluate()->isTrue()) {
-            return expression_then->evaluate();
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        if (expression_if->evaluate(parent)->isTrue()) {
+            return expression_then->evaluate(parent);
         } else {
-            return expression_else->evaluate();
+            return expression_else->evaluate(parent);
         }
     }
 };

@@ -8,7 +8,7 @@ std::string roundtrip(std::string code) {
 }
 
 std::string evaluate(std::string code) {
-    return parse(code)->evaluate()->serialize();
+    return parse(code)->evaluate(nullptr)->serialize();
 }
 
 struct Data {
