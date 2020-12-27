@@ -8,7 +8,7 @@
 #include "parse_utils.h"
 
 struct Expression;
-using ExpressionPointer = std::unique_ptr<Expression>;
+using ExpressionPointer = std::shared_ptr<const Expression>;
 
 struct Expression {
     Expression(
@@ -23,6 +23,12 @@ struct Expression {
     const CodeCharacter* begin() const {return first_;}
     const CodeCharacter* end() const {return last_;}
     const Expression* parent() const {return parent_;}
+    virtual const Expression* lookup(const std::string& name) const {
+        if (parent()) {
+            return parent()->lookup(name);
+        }
+        return nullptr;
+    }
     virtual bool isTrue() const {return false;}
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
@@ -42,7 +48,7 @@ struct Number : public Expression {
         return s.str();
     };
     virtual ExpressionPointer evaluate(const Expression* parent) const {
-        return std::make_unique<Number>(begin(), end(), parent, value);
+        return std::make_shared<Number>(begin(), end(), parent, value);
     }
     virtual bool isTrue() const {
         return static_cast<bool>(value);
@@ -61,7 +67,7 @@ struct String : public Expression {
         return "\"" + value + "\"";
     };
     virtual ExpressionPointer evaluate(const Expression* parent) const {
-        return std::make_unique<String>(begin(), end(), parent, value);
+        return std::make_shared<String>(begin(), end(), parent, value);
     }
 };
 
@@ -94,7 +100,7 @@ struct List : public Expression {
         for (const auto& element : elements) {
             evaluated_elements.emplace_back(element->evaluate(parent));
         }
-        return std::make_unique<List>(begin(), end(), parent, std::move(evaluated_elements));
+        return std::make_shared<List>(begin(), end(), parent, std::move(evaluated_elements));
     }
 };
 
@@ -110,7 +116,23 @@ struct Name : public Expression {
         return value;
     };
     virtual ExpressionPointer evaluate(const Expression* parent) const {
-        return std::make_unique<Name>(begin(), end(), parent, value);
+        return std::make_shared<Name>(begin(), end(), parent, value);
+    }
+};
+
+struct LookupSymbol : public Expression {
+    LookupSymbol(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent,
+        std::string value
+    ) : Expression{first, last, parent}, value{value} {}
+    std::string value;
+    virtual std::string serialize() const {
+        return value;
+    };
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        return ExpressionPointer{parent->lookup(value)};
     }
 };
 
@@ -133,6 +155,14 @@ struct Dictionary : public Expression {
     void add(DictionaryElement element) {
         elements.push_back(std::move(element));
     }
+    virtual const Expression* lookup(const std::string& name) const {
+        for (const auto& element : elements) {
+            if (element.name.value == name) {
+                return element.expression.get();
+            }
+        }
+        return Expression::lookup(name);
+    }
     virtual std::string serialize() const {
         auto result = std::string{};
         result += '{';
@@ -151,7 +181,7 @@ struct Dictionary : public Expression {
         return result;
     }
     virtual ExpressionPointer evaluate(const Expression* parent) const {
-        auto result = std::make_unique<Dictionary>(
+        auto result = std::make_shared<Dictionary>(
             begin(), end(), parent);
         for (const auto& element : elements) {
             result->add(DictionaryElement{

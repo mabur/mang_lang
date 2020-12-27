@@ -12,6 +12,13 @@ Name parseName(const CodeCharacter* first, const CodeCharacter* last) {
     return Name(first, it, nullptr, rawString(first, it));
 }
 
+LookupSymbol parseLookupSymbol(const CodeCharacter* first, const CodeCharacter* last) {
+    auto it = first;
+    it = parseCharacter(it, isLetter);
+    it = find_if_not(it, last, isNameCharacter);
+    return LookupSymbol(first, it, nullptr, rawString(first, it));
+}
+
 Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseOptionalCharacter(it, isSign);
@@ -113,19 +120,22 @@ ExpressionPointer parseExpression(
         throw ParseException("could not parse expression");
     }
     if (isList(*it)) {
-        return std::make_unique<List>(parseList(it, last));
+        return std::make_shared<List>(parseList(it, last));
     }
     if (isDictionary(*it)) {
-        return std::make_unique<Dictionary>(parseDictionary(it, last));
+        return std::make_shared<Dictionary>(parseDictionary(it, last));
     }
     if (isNumber(*it)) {
-        return std::make_unique<Number>(parseNumber(it, last));
+        return std::make_shared<Number>(parseNumber(it, last));
     }
     if (isStringSeparator(*it)) {
-        return std::make_unique<String>(parseString(it, last));
+        return std::make_shared<String>(parseString(it, last));
     }
     if (isConditional(it)) {
-        return std::make_unique<Conditional>(parseConditional(it, last));
+        return std::make_shared<Conditional>(parseConditional(it, last));
+    }
+    if (isLetter(*it)) {
+        return std::make_shared<LookupSymbol>(parseLookupSymbol(it, last));
     }
     throw ParseException("could not parse expression");
 }
