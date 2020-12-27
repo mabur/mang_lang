@@ -7,6 +7,9 @@
 
 #include "parse_utils.h"
 
+struct Expression;
+using ExpressionPointer = std::unique_ptr<Expression>;
+
 struct Expression {
     Expression(const CodeCharacter* first, const CodeCharacter* last)
     : first{first}, last{last} {}
@@ -16,7 +19,7 @@ struct Expression {
     const CodeCharacter* end() const {return last;}
     virtual std::string serialize() const = 0;
     virtual ~Expression() = default;
-    virtual std::unique_ptr<Expression> evaluate() const = 0;
+    virtual ExpressionPointer evaluate() const = 0;
     virtual bool isTrue() const {
         return false;
     }
@@ -31,7 +34,7 @@ struct Number : public Expression {
         s << value;
         return s.str();
     };
-    virtual std::unique_ptr<Expression> evaluate() const {
+    virtual ExpressionPointer evaluate() const {
         return std::make_unique<Number>(first, last, value);
     }
     virtual bool isTrue() const {
@@ -46,7 +49,7 @@ struct String : public Expression {
     virtual std::string serialize() const {
         return "\"" + value + "\"";
     };
-    virtual std::unique_ptr<Expression> evaluate() const {
+    virtual ExpressionPointer evaluate() const {
         return std::make_unique<String>(first, last, value);
     }
 };
@@ -55,10 +58,10 @@ struct List : public Expression {
     List(
         const CodeCharacter* first,
         const CodeCharacter* last,
-        std::vector<std::unique_ptr<Expression>> elements
+        std::vector<ExpressionPointer> elements
     ) : Expression{first, last}, elements{std::move(elements)}
     {}
-    std::vector<std::unique_ptr<Expression>> elements;
+    std::vector<ExpressionPointer> elements;
     virtual std::string serialize() const {
         auto result = std::string{};
         result += '[';
@@ -74,8 +77,8 @@ struct List : public Expression {
         }
         return result;
     }
-    virtual std::unique_ptr<Expression> evaluate() const {
-        auto evaluated_elements = std::vector<std::unique_ptr<Expression>>{};
+    virtual ExpressionPointer evaluate() const {
+        auto evaluated_elements = std::vector<ExpressionPointer>{};
         for (const auto& element : elements) {
             evaluated_elements.emplace_back(element->evaluate());
         }
@@ -90,17 +93,17 @@ struct Name : public Expression {
     virtual std::string serialize() const {
         return value;
     };
-    virtual std::unique_ptr<Expression> evaluate() const {
+    virtual ExpressionPointer evaluate() const {
         return std::make_unique<Name>(first, last, value);
     }
 };
 
 struct DictionaryElement {
-    DictionaryElement(const Name& name, std::unique_ptr<Expression>&& expression)
+    DictionaryElement(const Name& name, ExpressionPointer&& expression)
         : name{name}, expression{std::move(expression)}
     {}
     Name name;
-    std::unique_ptr<Expression> expression;
+    ExpressionPointer expression;
 };
 
 struct Dictionary : public Expression {
@@ -128,7 +131,7 @@ struct Dictionary : public Expression {
         }
         return result;
     }
-    virtual std::unique_ptr<Expression> evaluate() const {
+    virtual ExpressionPointer evaluate() const {
         auto evaluated_elements = std::vector<DictionaryElement>{};
         for (const auto& element : elements) {
             evaluated_elements.emplace_back(
@@ -142,24 +145,24 @@ struct Conditional : public Expression {
     Conditional(
         const CodeCharacter* first,
         const CodeCharacter* last,
-        std::unique_ptr<Expression> expression_if,
-        std::unique_ptr<Expression> expression_then,
-        std::unique_ptr<Expression> expression_else
+        ExpressionPointer expression_if,
+        ExpressionPointer expression_then,
+        ExpressionPointer expression_else
     )
         : Expression{first, last},
         expression_if{std::move(expression_if)},
         expression_then{std::move(expression_then)},
         expression_else{std::move(expression_else)}
     {}
-    std::unique_ptr<Expression> expression_if;
-    std::unique_ptr<Expression> expression_then;
-    std::unique_ptr<Expression> expression_else;
+    ExpressionPointer expression_if;
+    ExpressionPointer expression_then;
+    ExpressionPointer expression_else;
     virtual std::string serialize() const {
         return std::string{"if "} + expression_if->serialize()
             + " then " + expression_then->serialize()
             + " else " + expression_else->serialize();
     };
-    virtual std::unique_ptr<Expression> evaluate() const {
+    virtual ExpressionPointer evaluate() const {
         if (expression_if->evaluate()->isTrue()) {
             return expression_then->evaluate();
         } else {

@@ -39,7 +39,7 @@ List parseList(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, '[');
     it = parseWhiteSpace(it, last);
-    auto expressions = std::vector<std::unique_ptr<Expression>>{};
+    auto expressions = std::vector<ExpressionPointer>{};
     while (it->character != ']') {
         auto expression = parseExpression(it, last);
         it = expression->end();
@@ -103,7 +103,7 @@ Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* la
     );
 }
 
-std::unique_ptr<Expression> parseExpression(
+ExpressionPointer parseExpression(
     const CodeCharacter* first, const CodeCharacter* last
 ) {
     auto it = first;
@@ -129,7 +129,7 @@ std::unique_ptr<Expression> parseExpression(
     throw ParseException("could not parse expression");
 }
 
-std::unique_ptr<Expression> parse(const std::string& string) {
+ExpressionPointer parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
     return parseExpression(result.data(), result.data() + result.size());
 }
