@@ -11,23 +11,30 @@ struct Expression;
 using ExpressionPointer = std::unique_ptr<Expression>;
 
 struct Expression {
-    Expression(const CodeCharacter* first, const CodeCharacter* last)
-    : first{first}, last{last} {}
-    const CodeCharacter* first;
-    const CodeCharacter* last;
-    const CodeCharacter* begin() const {return first;}
-    const CodeCharacter* end() const {return last;}
-    virtual std::string serialize() const = 0;
+    Expression(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent
+    ) : first_{first}, last_{last}, parent_{parent} {}
     virtual ~Expression() = default;
+    const CodeCharacter* first_;
+    const CodeCharacter* last_;
+    const Expression* parent_;
+    const CodeCharacter* begin() const {return first_;}
+    const CodeCharacter* end() const {return last_;}
+    const Expression* parent() const {return parent_;}
+    virtual bool isTrue() const {return false;}
+    virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate() const = 0;
-    virtual bool isTrue() const {
-        return false;
-    }
 };
 
 struct Number : public Expression {
-    Number(const CodeCharacter* first, const CodeCharacter* last, double value)
-        : Expression{first, last}, value{value} {}
+    Number(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent,
+        double value
+    ) : Expression{first, last, parent}, value{value} {}
     double value;
     virtual std::string serialize() const {
         std::stringstream s;
@@ -35,7 +42,7 @@ struct Number : public Expression {
         return s.str();
     };
     virtual ExpressionPointer evaluate() const {
-        return std::make_unique<Number>(begin(), end(), value);
+        return std::make_unique<Number>(begin(), end(), parent(), value);
     }
     virtual bool isTrue() const {
         return static_cast<bool>(value);
@@ -43,14 +50,18 @@ struct Number : public Expression {
 };
 
 struct String : public Expression {
-    String(const CodeCharacter* first, const CodeCharacter* last, std::string value)
-        : Expression{first, last}, value{value} {}
+    String(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent,
+        std::string value
+    ) : Expression{first, last, parent}, value{value} {}
     std::string value;
     virtual std::string serialize() const {
         return "\"" + value + "\"";
     };
     virtual ExpressionPointer evaluate() const {
-        return std::make_unique<String>(begin(), end(), value);
+        return std::make_unique<String>(begin(), end(), parent(), value);
     }
 };
 
@@ -58,8 +69,9 @@ struct List : public Expression {
     List(
         const CodeCharacter* first,
         const CodeCharacter* last,
+        const Expression* parent,
         std::vector<ExpressionPointer> elements
-    ) : Expression{first, last}, elements{std::move(elements)}
+    ) : Expression{first, last, parent}, elements{std::move(elements)}
     {}
     std::vector<ExpressionPointer> elements;
     virtual std::string serialize() const {
@@ -82,19 +94,23 @@ struct List : public Expression {
         for (const auto& element : elements) {
             evaluated_elements.emplace_back(element->evaluate());
         }
-        return std::make_unique<List>(begin(), end(), std::move(evaluated_elements));
+        return std::make_unique<List>(begin(), end(), parent(), std::move(evaluated_elements));
     }
 };
 
 struct Name : public Expression {
-    Name(const CodeCharacter* first, const CodeCharacter* last, std::string value)
-        : Expression{first, last}, value{value} {}
+    Name(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent,
+        std::string value
+    ) : Expression{first, last, parent}, value{value} {}
     std::string value;
     virtual std::string serialize() const {
         return value;
     };
     virtual ExpressionPointer evaluate() const {
-        return std::make_unique<Name>(begin(), end(), value);
+        return std::make_unique<Name>(begin(), end(), parent(), value);
     }
 };
 
@@ -110,8 +126,9 @@ struct Dictionary : public Expression {
     Dictionary(
         const CodeCharacter* first,
         const CodeCharacter* last,
+        const Expression* parent,
         std::vector<DictionaryElement> elements
-    ) : Expression{first, last}, elements{std::move(elements)}
+    ) : Expression{first, last, parent}, elements{std::move(elements)}
     {}
     std::vector<DictionaryElement> elements;
     virtual std::string serialize() const {
@@ -137,7 +154,7 @@ struct Dictionary : public Expression {
             evaluated_elements.emplace_back(
                 element.name, element.expression->evaluate());
         }
-        return std::make_unique<Dictionary>(begin(), end(), std::move(evaluated_elements));
+        return std::make_unique<Dictionary>(begin(), end(), parent(), std::move(evaluated_elements));
     }
 };
 
@@ -145,11 +162,12 @@ struct Conditional : public Expression {
     Conditional(
         const CodeCharacter* first,
         const CodeCharacter* last,
+        const Expression* parent,
         ExpressionPointer expression_if,
         ExpressionPointer expression_then,
         ExpressionPointer expression_else
     )
-        : Expression{first, last},
+        : Expression{first, last, parent},
         expression_if{std::move(expression_if)},
         expression_then{std::move(expression_then)},
         expression_else{std::move(expression_else)}

@@ -1,7 +1,6 @@
 #include "parser.h"
 
 #include <algorithm>
-#include <cctype>
 #include <memory>
 
 using std::find_if_not;
@@ -10,7 +9,7 @@ Name parseName(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, isLetter);
     it = find_if_not(it, last, isNameCharacter);
-    return Name(first, it, rawString(first, it));
+    return Name(first, it, nullptr, rawString(first, it));
 }
 
 Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
@@ -21,7 +20,7 @@ Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
     it = parseOptionalCharacter(it, '.');
     it = find_if_not(it, last, isDigit);
     const auto value = std::stod(rawString(first, it));
-    return Number(first, it, value);
+    return Number(first, it, nullptr, value);
 }
 
 String parseString(const CodeCharacter* first, const CodeCharacter* last) {
@@ -32,7 +31,7 @@ String parseString(const CodeCharacter* first, const CodeCharacter* last) {
     const auto last_character = it;
     it = parseCharacter(it, '"');
     const auto value = rawString(first_character, last_character);
-    return String(first, it, value);
+    return String(first, it, nullptr, value);
 }
 
 List parseList(const CodeCharacter* first, const CodeCharacter* last) {
@@ -48,7 +47,7 @@ List parseList(const CodeCharacter* first, const CodeCharacter* last) {
         it = parseOptionalCharacter(it, ',');
     }
     it = parseCharacter(it, ']');
-    return List(first, it, std::move(expressions));
+    return List(first, it, nullptr, std::move(expressions));
 }
 
 Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last) {
@@ -70,7 +69,7 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
         it = parseWhiteSpace(it, last);
     }
     it = parseCharacter(it, '}');
-    return Dictionary(first, it, std::move(elements));
+    return Dictionary(first, it, nullptr, std::move(elements));
 }
 
 Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* last) {
@@ -97,6 +96,7 @@ Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* la
     return Conditional(
         first,
         it,
+        nullptr,
         std::move(expression_if),
         std::move(expression_then),
         std::move(expression_else)
