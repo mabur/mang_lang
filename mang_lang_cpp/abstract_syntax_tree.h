@@ -35,7 +35,7 @@ struct Number : public Expression {
         return s.str();
     };
     virtual ExpressionPointer evaluate() const {
-        return std::make_unique<Number>(first, last, value);
+        return std::make_unique<Number>(begin(), end(), value);
     }
     virtual bool isTrue() const {
         return static_cast<bool>(value);
@@ -50,7 +50,7 @@ struct String : public Expression {
         return "\"" + value + "\"";
     };
     virtual ExpressionPointer evaluate() const {
-        return std::make_unique<String>(first, last, value);
+        return std::make_unique<String>(begin(), end(), value);
     }
 };
 
@@ -82,7 +82,7 @@ struct List : public Expression {
         for (const auto& element : elements) {
             evaluated_elements.emplace_back(element->evaluate());
         }
-        return std::make_unique<List>(first, last, std::move(evaluated_elements));
+        return std::make_unique<List>(begin(), end(), std::move(evaluated_elements));
     }
 };
 
@@ -94,7 +94,7 @@ struct Name : public Expression {
         return value;
     };
     virtual ExpressionPointer evaluate() const {
-        return std::make_unique<Name>(first, last, value);
+        return std::make_unique<Name>(begin(), end(), value);
     }
 };
 
@@ -137,7 +137,7 @@ struct Dictionary : public Expression {
             evaluated_elements.emplace_back(
                 element.name, element.expression->evaluate());
         }
-        return std::make_unique<Dictionary>(first, last, std::move(evaluated_elements));
+        return std::make_unique<Dictionary>(begin(), end(), std::move(evaluated_elements));
     }
 };
 
