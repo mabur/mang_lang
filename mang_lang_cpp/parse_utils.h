@@ -39,6 +39,8 @@ bool isDictionary(CodeCharacter c);
 
 bool isStringSeparator(CodeCharacter c);
 
+bool isChildLookup(CodeCharacter c);
+
 bool isConditional(const CodeCharacter* first);
 
 const CodeCharacter* parseWhiteSpace(

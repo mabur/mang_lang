@@ -1,5 +1,8 @@
 #include "parse_utils.h"
 #include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <sstream>
 
 char rawCharacter(CodeCharacter c) {
     return c.character;
@@ -62,13 +65,17 @@ bool isStringSeparator(CodeCharacter c) {
     return c.character == '"';
 }
 
+bool isChildLookup(CodeCharacter c) {
+    return c.character == '<';
+}
+
 bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
 }
 
 bool isConditional(const CodeCharacter* first) {
     const auto keyword = makeCodeCharacters("if");
-    std::equal(keyword.begin(), keyword.end(), first, haveSameCharacters);
+    return std::equal(keyword.begin(), keyword.end(), first, haveSameCharacters);
 }
 
 const CodeCharacter* parseWhiteSpace(
@@ -80,9 +87,12 @@ const CodeCharacter* parseWhiteSpace(
 const CodeCharacter* parseCharacter(const CodeCharacter* it, char expected) {
     const auto actual = it->character;
     if (it->character != expected) {
-        throw ParseException(
-            std::string{"Parsing expected "} + expected + " but got " + actual
-        );
+        std::stringstream s;
+        s   << "Parsing expected \'" << expected
+            << "\' but got \'" << actual
+            << "\' at row " << it->row
+            << " and column " << it->column;
+        throw ParseException(s.str());
     }
     ++it;
     return it;

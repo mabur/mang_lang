@@ -23,11 +23,11 @@ struct Expression {
     const CodeCharacter* begin() const {return first_;}
     const CodeCharacter* end() const {return last_;}
     const Expression* parent() const {return parent_;}
-    virtual const Expression* lookup(const std::string& name) const {
+    virtual ExpressionPointer lookup(const std::string& name) const {
         if (parent()) {
             return parent()->lookup(name);
         }
-        return nullptr;
+        return {};
     }
     virtual bool isTrue() const {return false;}
     virtual std::string serialize() const = 0;
@@ -136,6 +136,25 @@ struct LookupSymbol : public Expression {
     }
 };
 
+struct LookupChild : public Expression {
+    LookupChild(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent,
+        std::string name,
+        ExpressionPointer child
+    ) : Expression{first, last, parent}, name{name}, child{child} {}
+    std::string name;
+    ExpressionPointer child;
+    virtual std::string serialize() const {
+        return name;
+    };
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        const auto evaluated_child = child->evaluate(parent);
+        return ExpressionPointer{evaluated_child->lookup(name)};
+    }
+};
+
 struct DictionaryElement {
     DictionaryElement(const Name& name, ExpressionPointer&& expression)
         : name{name}, expression{std::move(expression)}
@@ -155,10 +174,10 @@ struct Dictionary : public Expression {
     void add(DictionaryElement element) {
         elements.push_back(std::move(element));
     }
-    virtual const Expression* lookup(const std::string& name) const {
+    virtual ExpressionPointer lookup(const std::string& name) const {
         for (const auto& element : elements) {
             if (element.name.value == name) {
-                return element.expression.get();
+                return element.expression;
             }
         }
         return Expression::lookup(name);

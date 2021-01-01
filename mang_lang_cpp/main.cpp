@@ -99,3 +99,17 @@ TEST_CASE("conditional_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("symbol") {
+    auto data = GENERATE(values<Data>({
+        {"{a=1, b=a}", "{a=1,b=a}"},
+    }));
+    CHECK(roundtrip(data.in) == data.out);
+}
+
+TEST_CASE("symbol_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"{a=1, b=a}", "{a=1,b=1}"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}

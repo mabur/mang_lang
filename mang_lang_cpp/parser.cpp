@@ -12,11 +12,20 @@ Name parseName(const CodeCharacter* first, const CodeCharacter* last) {
     return Name(first, it, nullptr, rawString(first, it));
 }
 
-LookupSymbol parseLookupSymbol(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer parseLookupSymbol(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, isLetter);
     it = find_if_not(it, last, isNameCharacter);
-    return LookupSymbol(first, it, nullptr, rawString(first, it));
+    const auto name = rawString(first, it);
+    it = parseWhiteSpace(it, last);
+    if (isChildLookup(*it)) {
+        it = parseWhiteSpace(it, last);
+        auto child = parseExpression(it, last);
+        it = child->end();
+        return std::make_shared<LookupChild>(first, it, nullptr, name, std::move(child));
+    } else {
+        return std::make_shared<LookupSymbol>(first, it, nullptr, name);
+    }
 }
 
 Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
@@ -135,7 +144,7 @@ ExpressionPointer parseExpression(
         return std::make_shared<Conditional>(parseConditional(it, last));
     }
     if (isLetter(*it)) {
-        return std::make_shared<LookupSymbol>(parseLookupSymbol(it, last));
+        return parseLookupSymbol(it, last);
     }
     throw ParseException("could not parse expression");
 }
