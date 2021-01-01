@@ -147,7 +147,7 @@ struct LookupChild : public Expression {
     std::string name;
     ExpressionPointer child;
     virtual std::string serialize() const {
-        return name;
+        return name + "<" + child->serialize();
     };
     virtual ExpressionPointer evaluate(const Expression* parent) const {
         const auto evaluated_child = child->evaluate(parent);

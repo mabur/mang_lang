@@ -18,13 +18,14 @@ ExpressionPointer parseLookupSymbol(const CodeCharacter* first, const CodeCharac
     it = find_if_not(it, last, isNameCharacter);
     const auto name = rawString(first, it);
     it = parseWhiteSpace(it, last);
-    if (isChildLookup(*it)) {
+    if (!isChildLookup(*it)) {
+        return std::make_shared<LookupSymbol>(first, it, nullptr, name);
+    } else {
+        it = parseCharacter(it, '<');
         it = parseWhiteSpace(it, last);
         auto child = parseExpression(it, last);
         it = child->end();
         return std::make_shared<LookupChild>(first, it, nullptr, name, std::move(child));
-    } else {
-        return std::make_shared<LookupSymbol>(first, it, nullptr, name);
     }
 }
 

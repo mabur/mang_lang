@@ -113,3 +113,17 @@ TEST_CASE("symbol_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("child_symbol") {
+    auto data = GENERATE(values<Data>({
+        {"a<{a=1}", "a<{a=1}"},
+    }));
+    CHECK(roundtrip(data.in) == data.out);
+}
+
+TEST_CASE("child_symbol_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"a<{a=1}", "1"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
