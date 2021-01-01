@@ -29,7 +29,7 @@ ExpressionPointer parseLookupSymbol(const CodeCharacter* first, const CodeCharac
     }
 }
 
-Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseOptionalCharacter(it, isSign);
     it = parseCharacter(it, isDigit);
@@ -37,10 +37,10 @@ Number parseNumber(const CodeCharacter* first, const CodeCharacter* last) {
     it = parseOptionalCharacter(it, '.');
     it = find_if_not(it, last, isDigit);
     const auto value = std::stod(rawString(first, it));
-    return Number(first, it, nullptr, value);
+    return std::make_shared<Number>(first, it, nullptr, value);
 }
 
-String parseString(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer parseString(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, '"');
     const auto first_character = it;
@@ -48,10 +48,10 @@ String parseString(const CodeCharacter* first, const CodeCharacter* last) {
     const auto last_character = it;
     it = parseCharacter(it, '"');
     const auto value = rawString(first_character, last_character);
-    return String(first, it, nullptr, value);
+    return std::make_shared<String>(first, it, nullptr, value);
 }
 
-List parseList(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer parseList(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, '[');
     it = parseWhiteSpace(it, last);
@@ -64,14 +64,14 @@ List parseList(const CodeCharacter* first, const CodeCharacter* last) {
         it = parseOptionalCharacter(it, ',');
     }
     it = parseCharacter(it, ']');
-    return List(first, it, nullptr, std::move(expressions));
+    return std::make_shared<List>(first, it, nullptr, std::move(expressions));
 }
 
-Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer parseDictionary(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseCharacter(it, '{');
     it = parseWhiteSpace(it, last);
-    auto result = Dictionary(first, it, nullptr);
+    auto result = std::make_shared<Dictionary>(first, it, nullptr);
     while (it->character != '}') {
         const auto name = parseName(it, last);
         it = name.end();
@@ -80,17 +80,19 @@ Dictionary parseDictionary(const CodeCharacter* first, const CodeCharacter* last
         it = parseWhiteSpace(it, last);
         auto expression = parseExpression(it, last);
         it = expression->end();
-        result.add(DictionaryElement{name, std::move(expression)});
+        result->add(DictionaryElement{name, std::move(expression)});
         it = parseWhiteSpace(it, last);
         it = parseOptionalCharacter(it, ',');
         it = parseWhiteSpace(it, last);
     }
     it = parseCharacter(it, '}');
-    result.last_ = it;
+    result->last_ = it;
     return result;
 }
 
-Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer parseConditional(
+    const CodeCharacter* first, const CodeCharacter* last
+) {
     auto it = first;
 
     it = parseKeyword(it, "if");
@@ -111,7 +113,7 @@ Conditional parseConditional(const CodeCharacter* first, const CodeCharacter* la
     it = expression_else->end();
     it = parseWhiteSpace(it, last);
 
-    return Conditional(
+    return std::make_shared<Conditional>(
         first,
         it,
         nullptr,
@@ -126,27 +128,13 @@ ExpressionPointer parseExpression(
 ) {
     auto it = first;
     it = parseWhiteSpace(it, last);
-    if (it == last) {
-        throw ParseException("could not parse expression");
-    }
-    if (isList(*it)) {
-        return std::make_shared<List>(parseList(it, last));
-    }
-    if (isDictionary(*it)) {
-        return std::make_shared<Dictionary>(parseDictionary(it, last));
-    }
-    if (isNumber(*it)) {
-        return std::make_shared<Number>(parseNumber(it, last));
-    }
-    if (isStringSeparator(*it)) {
-        return std::make_shared<String>(parseString(it, last));
-    }
-    if (isConditional(it)) {
-        return std::make_shared<Conditional>(parseConditional(it, last));
-    }
-    if (isLetter(*it)) {
-        return parseLookupSymbol(it, last);
-    }
+    if (it == last) {throw ParseException("could not parse expression");}
+    if (isList(*it)) {return parseList(it, last);}
+    if (isDictionary(*it)) {return parseDictionary(it, last);}
+    if (isNumber(*it)) {return parseNumber(it, last);}
+    if (isStringSeparator(*it)) {return parseString(it, last);}
+    if (isConditional(it)) {return parseConditional(it, last);}
+    if (isLetter(*it)) {return parseLookupSymbol(it, last);}
     throw ParseException("could not parse expression");
 }
 
