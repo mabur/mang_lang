@@ -4,11 +4,20 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(mang_lang_cpp
-    catch_amalgamated.hpp
-    catch_amalgamated.cpp
-    main.cpp
-    parse_utils.h
-    parse_utils.cpp
-    parser.h
-    parser.cpp
-)
+        catch_amalgamated.hpp
+        catch_amalgamated.cpp
+        main.cpp
+        parse_utils.h
+        parse_utils.cpp
+        parser.h
+        parser.cpp
+        expressions/Conditional.cpp
+        expressions/Dictionary.cpp
+        expressions/Expression.cpp
+        expressions/List.cpp
+        expressions/LookupChild.cpp
+        expressions/LookupSymbol.cpp
+        expressions/Name.cpp
+        expressions/Number.cpp
+        expressions/String.cpp
+        )

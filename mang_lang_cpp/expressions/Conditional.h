@@ -18,16 +18,6 @@ struct Conditional : public Expression {
     ExpressionPointer expression_if;
     ExpressionPointer expression_then;
     ExpressionPointer expression_else;
-    virtual std::string serialize() const {
-        return std::string{"if "} + expression_if->serialize()
-            + " then " + expression_then->serialize()
-            + " else " + expression_else->serialize();
-    };
-    virtual ExpressionPointer evaluate(const Expression* parent) const {
-        if (expression_if->evaluate(parent)->isTrue()) {
-            return expression_then->evaluate(parent);
-        } else {
-            return expression_else->evaluate(parent);
-        }
-    }
+    virtual std::string serialize() const;
+    virtual ExpressionPointer evaluate(const Expression* parent) const;
 };

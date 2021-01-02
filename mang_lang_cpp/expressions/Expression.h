@@ -20,16 +20,11 @@ struct Expression {
     const CodeCharacter* first_;
     const CodeCharacter* last_;
     const Expression* parent_;
-    const CodeCharacter* begin() const {return first_;}
-    const CodeCharacter* end() const {return last_;}
-    const Expression* parent() const {return parent_;}
-    virtual ExpressionPointer lookup(const std::string& name) const {
-        if (parent()) {
-            return parent()->lookup(name);
-        }
-        return {};
-    }
-    virtual bool isTrue() const {return false;}
+    const CodeCharacter* begin() const;
+    const CodeCharacter* end() const;
+    const Expression* parent() const;
+    virtual ExpressionPointer lookup(const std::string& name) const;
+    virtual bool isTrue() const;
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
 };

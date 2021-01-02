@@ -9,15 +9,7 @@ struct Number : public Expression {
         double value
     ) : Expression{first, last, parent}, value{value} {}
     double value;
-    virtual std::string serialize() const {
-        std::stringstream s;
-        s << value;
-        return s.str();
-    };
-    virtual ExpressionPointer evaluate(const Expression* parent) const {
-        return std::make_shared<Number>(begin(), end(), parent, value);
-    }
-    virtual bool isTrue() const {
-        return static_cast<bool>(value);
-    }
+    virtual std::string serialize() const;
+    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    virtual bool isTrue() const;
 };

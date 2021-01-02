@@ -9,10 +9,6 @@ struct Name : public Expression {
         std::string value
     ) : Expression{first, last, parent}, value{value} {}
     std::string value;
-    virtual std::string serialize() const {
-        return value;
-    };
-    virtual ExpressionPointer evaluate(const Expression* parent) const {
-        return std::make_shared<Name>(begin(), end(), parent, value);
-    }
+    virtual std::string serialize() const;
+    virtual ExpressionPointer evaluate(const Expression* parent) const;
 };

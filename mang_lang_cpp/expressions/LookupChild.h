@@ -11,11 +11,6 @@ struct LookupChild : public Expression {
     ) : Expression{first, last, parent}, name{name}, child{child} {}
     std::string name;
     ExpressionPointer child;
-    virtual std::string serialize() const {
-        return name + "<" + child->serialize();
-    };
-    virtual ExpressionPointer evaluate(const Expression* parent) const {
-        const auto evaluated_child = child->evaluate(parent);
-        return ExpressionPointer{evaluated_child->lookup(name)};
-    }
+    virtual std::string serialize() const;
+    virtual ExpressionPointer evaluate(const Expression* parent) const;
 };

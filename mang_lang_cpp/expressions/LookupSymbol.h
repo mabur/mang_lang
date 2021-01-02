@@ -9,10 +9,6 @@ struct LookupSymbol : public Expression {
         std::string value
     ) : Expression{first, last, parent}, value{value} {}
     std::string value;
-    virtual std::string serialize() const {
-        return value;
-    };
-    virtual ExpressionPointer evaluate(const Expression* parent) const {
-        return ExpressionPointer{parent->lookup(value)};
-    }
+    virtual std::string serialize() const;
+    virtual ExpressionPointer evaluate(const Expression* parent) const;
 };
