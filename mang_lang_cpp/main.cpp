@@ -1,15 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch_amalgamated.hpp"
-#include "parser.h"
+#include "mang_lang.h"
 #include <string>
-
-std::string roundtrip(std::string code) {
-    return parse(code)->serialize();
-}
-
-std::string evaluate(std::string code) {
-    return parse(code)->evaluate(nullptr)->serialize();
-}
 
 struct Data {
     std::string in;
