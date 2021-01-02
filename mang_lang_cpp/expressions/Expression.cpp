@@ -36,21 +36,21 @@ ExpressionPointer Expression::parse(
     auto it = first;
     it = parseWhiteSpace(it, last);
     if (it == last) {throw ParseException("could not parse expression");}
-    if (List::startsWith(it)) {return List::parse(it, last);}
-    if (Dictionary::startsWith(it)) {return Dictionary::parse(it, last);}
-    if (Number::startsWith(it)) {return Number::parse(it, last);}
-    if (String::startsWith(it)) {return String::parse(it, last);}
-    if (Conditional::startsWith(it)) {return Conditional::parse(it, last);}
-    if (LookupSymbol::startsWith(it)) {return LookupSymbol::parse(it, last);}
+    if (List::startsWith(it, last)) {return List::parse(it, last);}
+    if (Dictionary::startsWith(it, last)) {return Dictionary::parse(it, last);}
+    if (Number::startsWith(it, last)) {return Number::parse(it, last);}
+    if (String::startsWith(it, last)) {return String::parse(it, last);}
+    if (Conditional::startsWith(it, last)) {return Conditional::parse(it, last);}
+    if (LookupSymbol::startsWith(it, last)) {return LookupSymbol::parse(it, last);}
     throw ParseException("could not parse expression");
 }
 
-static bool startsWith(const CodeCharacter* it) {
+static bool startsWith(const CodeCharacter* first, const CodeCharacter* last) {
     return
-        List::startsWith(it) ||
-        Dictionary::startsWith(it) ||
-        Number::startsWith(it) ||
-        String::startsWith(it) ||
-        Conditional::startsWith(it) ||
-        LookupSymbol::startsWith(it);
+        List::startsWith(first, last) ||
+        Dictionary::startsWith(first, last) ||
+        Number::startsWith(first, last) ||
+        String::startsWith(first, last) ||
+        Conditional::startsWith(first, last) ||
+        LookupSymbol::startsWith(first, last);
 }

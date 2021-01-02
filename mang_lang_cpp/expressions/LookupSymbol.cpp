@@ -27,6 +27,6 @@ ExpressionPointer LookupSymbol::parse(const CodeCharacter* first, const CodeChar
     }
 }
 
-bool LookupSymbol::startsWith(const CodeCharacter* c) {
-    return std::isalpha(c->character);
+bool LookupSymbol::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    return std::isalpha(first->character);
 }

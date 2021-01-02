@@ -24,6 +24,6 @@ ExpressionPointer String::parse(const CodeCharacter* first, const CodeCharacter*
     return std::make_shared<String>(first, it, nullptr, value);
 }
 
-bool String::startsWith(const CodeCharacter* c) {
-    return c->character == '"';
+bool String::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    return first->character == '"';
 }

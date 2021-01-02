@@ -83,6 +83,6 @@ ExpressionPointer Dictionary::parse(const CodeCharacter* first, const CodeCharac
     return result;
 }
 
-bool Dictionary::startsWith(const CodeCharacter* c) {
-    return c->character == '{';
+bool Dictionary::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    return first->character == '{';
 }

@@ -40,6 +40,6 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
     return std::make_shared<List>(first, it, nullptr, std::move(expressions));
 }
 
-bool List::startsWith(const CodeCharacter* c) {
-    return c->character == '[';
+bool List::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    return first->character == '[';
 }
