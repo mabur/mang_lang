@@ -12,5 +12,5 @@ struct String : public Expression {
     virtual std::string serialize() const;
     virtual ExpressionPointer evaluate(const Expression* parent) const;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
-    static bool startsWith(CodeCharacter c);
+    static bool startsWith(const CodeCharacter* c);
 };
