@@ -49,10 +49,6 @@ bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }
 
-bool isChildLookup(CodeCharacter c) {
-    return c.character == '<';
-}
-
 bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
 }

@@ -33,8 +33,6 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
-bool isChildLookup(CodeCharacter c);
-
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
 );
