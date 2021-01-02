@@ -15,6 +15,7 @@ add_executable(mang_lang_cpp
         expressions/List.cpp
         expressions/LookupChild.cpp
         expressions/LookupSymbol.cpp
+        expressions/Name.cpp
         expressions/Number.cpp
         expressions/String.cpp
         )
