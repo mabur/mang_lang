@@ -23,7 +23,7 @@ TEST_CASE("Number") {
         {"+1", "1"},
         {"+1.0", "1"},
     }));
-    CHECK(roundtrip(data.in) == data.out);
+    CHECK(reformat(data.in) == data.out);
     CHECK(evaluate(data.in) == data.out);
 }
 
@@ -39,7 +39,7 @@ TEST_CASE("String") {
         R"("[]")",
         R"("{}")",
     }));
-    CHECK(roundtrip(data) == data);
+    CHECK(reformat(data) == data);
     CHECK(evaluate(data) == data);
 }
 
@@ -59,7 +59,7 @@ TEST_CASE("List") {
         {"[[],[]]", "[[],[]]"},
         {"[[[]]]", "[[[]]]"},
     }));
-    CHECK(roundtrip(data.in) == data.out);
+    CHECK(reformat(data.in) == data.out);
     CHECK(evaluate(data.in) == data.out);
 }
 
@@ -72,7 +72,7 @@ TEST_CASE("Dictionary") {
         {"{a=1,b=2}", "{a=1,b=2}"},
         {"{ a = 1 , b = 2 }", "{a=1,b=2}"},
     }));
-    CHECK(roundtrip(data.in) == data.out);
+    CHECK(reformat(data.in) == data.out);
     CHECK(evaluate(data.in) == data.out);
 }
 
@@ -81,7 +81,7 @@ TEST_CASE("Conditional") {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
         {"if  1  then  2  else  3", "if 1 then 2 else 3"},
     }));
-    CHECK(roundtrip(data.in) == data.out);
+    CHECK(reformat(data.in) == data.out);
 }
 
 TEST_CASE("conditional_evaluation") {
@@ -96,7 +96,7 @@ TEST_CASE("symbol") {
     auto data = GENERATE(values<Data>({
         {"{a=1, b=a}", "{a=1,b=a}"},
     }));
-    CHECK(roundtrip(data.in) == data.out);
+    CHECK(reformat(data.in) == data.out);
 }
 
 TEST_CASE("symbol_evaluation") {
@@ -110,7 +110,7 @@ TEST_CASE("child_symbol") {
     auto data = GENERATE(values<Data>({
         {"a<{a=1}", "a<{a=1}"},
     }));
-    CHECK(roundtrip(data.in) == data.out);
+    CHECK(reformat(data.in) == data.out);
 }
 
 TEST_CASE("child_symbol_evaluation") {

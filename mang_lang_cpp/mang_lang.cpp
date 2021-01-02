@@ -6,7 +6,7 @@ ExpressionPointer parse(const std::string& string) {
     return Expression::parse(result.data(), result.data() + result.size());
 }
 
-std::string roundtrip(std::string code) {
+std::string reformat(std::string code) {
     return parse(code)->serialize();
 }
 
