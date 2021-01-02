@@ -7,10 +7,8 @@ add_executable(mang_lang_cpp
         catch_amalgamated.hpp
         catch_amalgamated.cpp
         main.cpp
-        parse_utils.h
+        mang_lang.cpp
         parse_utils.cpp
-        parser.h
-        parser.cpp
         expressions/Conditional.cpp
         expressions/Dictionary.cpp
         expressions/Expression.cpp

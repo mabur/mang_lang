@@ -1,5 +1,5 @@
 #include "Dictionary.h"
-#include "../parser.h"
+#include "../mang_lang.h"
 #include <algorithm>
 
 std::string Name::serialize() const {
