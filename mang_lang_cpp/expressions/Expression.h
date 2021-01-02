@@ -27,4 +27,7 @@ struct Expression {
     virtual bool isTrue() const;
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
+    static ExpressionPointer parse(
+        const CodeCharacter* first, const CodeCharacter* last
+    );
 };

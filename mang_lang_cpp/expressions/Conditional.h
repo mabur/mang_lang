@@ -20,4 +20,7 @@ struct Conditional : public Expression {
     ExpressionPointer expression_else;
     virtual std::string serialize() const;
     virtual ExpressionPointer evaluate(const Expression* parent) const;
+    static ExpressionPointer parse(
+        const CodeCharacter* first, const CodeCharacter* last
+    );
 };

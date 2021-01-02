@@ -1,4 +1,5 @@
 #include "Number.h"
+#include <algorithm>
 
 std::string Number::serialize() const {
     std::stringstream s;
@@ -12,4 +13,15 @@ ExpressionPointer Number::evaluate(const Expression* parent) const {
 
 bool Number::isTrue() const {
     return static_cast<bool>(value);
+}
+
+ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter* last) {
+    auto it = first;
+    it = parseOptionalCharacter(it, isSign);
+    it = parseCharacter(it, isDigit);
+    it = std::find_if_not(it, last, isDigit);
+    it = parseOptionalCharacter(it, '.');
+    it = std::find_if_not(it, last, isDigit);
+    const auto value = std::stod(rawString(first, it));
+    return std::make_shared<Number>(first, it, nullptr, value);
 }
