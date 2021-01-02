@@ -30,4 +30,5 @@ struct Expression {
     static ExpressionPointer parse(
         const CodeCharacter* first, const CodeCharacter* last
     );
+    static bool startsWith(const CodeCharacter* c);
 };

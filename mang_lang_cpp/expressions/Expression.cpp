@@ -44,3 +44,13 @@ ExpressionPointer Expression::parse(
     if (LookupSymbol::startsWith(it)) {return LookupSymbol::parse(it, last);}
     throw ParseException("could not parse expression");
 }
+
+static bool startsWith(const CodeCharacter* it) {
+    return
+        List::startsWith(it) ||
+        Dictionary::startsWith(it) ||
+        Number::startsWith(it) ||
+        String::startsWith(it) ||
+        Conditional::startsWith(it) ||
+        LookupSymbol::startsWith(it);
+}
