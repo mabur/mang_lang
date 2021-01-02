@@ -2,20 +2,16 @@
 #include <algorithm>
 
 std::string LookupSymbol::serialize() const {
-    return value;
+    return name.serialize();
 }
 
 ExpressionPointer LookupSymbol::evaluate(const Expression* parent) const {
-    return ExpressionPointer{parent->lookup(value)};
+    return ExpressionPointer{parent->lookup(name.value)};
 }
 
 ExpressionPointer LookupSymbol::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseCharacter(it, isLetter);
-    it = std::find_if_not(it, last, isNameCharacter);
-    const auto name = rawString(first, it);
-
-    return std::make_shared<LookupSymbol>(first, it, nullptr, name);
+    const auto name = Name::parse(first, last);
+    return std::make_shared<LookupSymbol>(first, name.end(), nullptr, name);
 }
 
 bool LookupSymbol::startsWith(const CodeCharacter* first, const CodeCharacter* last) {

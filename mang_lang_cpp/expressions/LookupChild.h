@@ -1,15 +1,16 @@
 #pragma once
 #include "Expression.h"
+#include "Name.h"
 
 struct LookupChild : public Expression {
     LookupChild(
         const CodeCharacter* first,
         const CodeCharacter* last,
         const Expression* parent,
-        std::string name,
+        Name name,
         ExpressionPointer child
     ) : Expression{first, last, parent}, name{name}, child{child} {}
-    std::string name;
+    Name name;
     ExpressionPointer child;
     virtual std::string serialize() const;
     virtual ExpressionPointer evaluate(const Expression* parent) const;
