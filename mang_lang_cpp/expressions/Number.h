@@ -13,4 +13,5 @@ struct Number : public Expression {
     virtual ExpressionPointer evaluate(const Expression* parent) const;
     virtual bool isTrue() const;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
+    static bool isNumber(CodeCharacter c);
 };

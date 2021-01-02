@@ -39,3 +39,7 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
     it = parseCharacter(it, ']');
     return std::make_shared<List>(first, it, nullptr, std::move(expressions));
 }
+
+bool List::isList(CodeCharacter c) {
+    return c.character == '[';
+}

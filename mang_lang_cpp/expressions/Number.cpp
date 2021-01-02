@@ -25,3 +25,7 @@ ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter*
     const auto value = std::stod(rawString(first, it));
     return std::make_shared<Number>(first, it, nullptr, value);
 }
+
+bool Number::isNumber(CodeCharacter c) {
+    return isSign(c) || isDigit(c);
+}

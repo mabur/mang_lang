@@ -19,3 +19,7 @@ ExpressionPointer String::parse(const CodeCharacter* first, const CodeCharacter*
     const auto value = rawString(first_character, last_character);
     return std::make_shared<String>(first, it, nullptr, value);
 }
+
+bool String::isStringSeparator(CodeCharacter c) {
+    return c.character == '"';
+}

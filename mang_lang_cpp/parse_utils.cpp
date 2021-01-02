@@ -37,10 +37,6 @@ bool isSign(CodeCharacter c) {
     return c.character == '+' || c.character == '-';
 }
 
-bool isNumber(CodeCharacter c) {
-    return isSign(c) || isDigit(c);
-}
-
 bool isLetter(CodeCharacter c) {
     return std::isalpha(c.character);
 }
@@ -53,29 +49,12 @@ bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }
 
-bool isList(CodeCharacter c) {
-    return c.character == '[';
-}
-
-bool isDictionary(CodeCharacter c) {
-    return c.character == '{';
-}
-
-bool isStringSeparator(CodeCharacter c) {
-    return c.character == '"';
-}
-
 bool isChildLookup(CodeCharacter c) {
     return c.character == '<';
 }
 
 bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
-}
-
-bool isConditional(const CodeCharacter* first) {
-    const auto keyword = makeCodeCharacters("if");
-    return std::equal(keyword.begin(), keyword.end(), first, haveSameCharacters);
 }
 
 const CodeCharacter* parseWhiteSpace(

@@ -82,3 +82,7 @@ ExpressionPointer Dictionary::parse(const CodeCharacter* first, const CodeCharac
     result->last_ = it;
     return result;
 }
+
+bool Dictionary::isDictionary(CodeCharacter c) {
+    return c.character == '{';
+}

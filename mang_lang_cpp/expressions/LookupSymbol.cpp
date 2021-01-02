@@ -26,3 +26,7 @@ ExpressionPointer LookupSymbol::parse(const CodeCharacter* first, const CodeChar
         return std::make_shared<LookupChild>(first, it, nullptr, name, std::move(child));
     }
 }
+
+bool LookupSymbol::isSymbol(CodeCharacter c) {
+    return std::isalpha(c.character);
+}

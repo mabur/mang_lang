@@ -21,11 +21,11 @@ std::string rawString(const CodeCharacter* first, const CodeCharacter* last);
 
 std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
 
+bool haveSameCharacters(CodeCharacter a, CodeCharacter b);
+
 bool isDigit(CodeCharacter c);
 
 bool isSign(CodeCharacter c);
-
-bool isNumber(CodeCharacter c);
 
 bool isLetter(CodeCharacter c);
 
@@ -33,15 +33,7 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
-bool isList(CodeCharacter c);
-
-bool isDictionary(CodeCharacter c);
-
-bool isStringSeparator(CodeCharacter c);
-
 bool isChildLookup(CodeCharacter c);
-
-bool isConditional(const CodeCharacter* first);
 
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
