@@ -36,11 +36,11 @@ ExpressionPointer Expression::parse(
     auto it = first;
     it = parseWhiteSpace(it, last);
     if (it == last) {throw ParseException("could not parse expression");}
-    if (List::isList(*it)) {return List::parse(it, last);}
-    if (Dictionary::isDictionary(*it)) {return Dictionary::parse(it, last);}
-    if (Number::isNumber(*it)) {return Number::parse(it, last);}
-    if (String::isStringSeparator(*it)) {return String::parse(it, last);}
-    if (Conditional::isConditional(it)) {return Conditional::parse(it, last);}
-    if (LookupSymbol::isSymbol(*it)) {return LookupSymbol::parse(it, last);}
+    if (List::startsWith(*it)) {return List::parse(it, last);}
+    if (Dictionary::startsWith(*it)) {return Dictionary::parse(it, last);}
+    if (Number::startsWith(*it)) {return Number::parse(it, last);}
+    if (String::startsWith(*it)) {return String::parse(it, last);}
+    if (Conditional::startsWith(it)) {return Conditional::parse(it, last);}
+    if (LookupSymbol::startsWith(*it)) {return LookupSymbol::parse(it, last);}
     throw ParseException("could not parse expression");
 }

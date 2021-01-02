@@ -23,5 +23,5 @@ struct Conditional : public Expression {
     static ExpressionPointer parse(
         const CodeCharacter* first, const CodeCharacter* last
     );
-    static bool isConditional(const CodeCharacter* first);
+    static bool startsWith(const CodeCharacter* first);
 };

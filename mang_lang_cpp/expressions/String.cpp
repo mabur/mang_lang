@@ -13,13 +13,13 @@ ExpressionPointer String::parse(const CodeCharacter* first, const CodeCharacter*
     auto it = first;
     it = parseCharacter(it, '"');
     const auto first_character = it;
-    it = std::find_if(it, last, isStringSeparator);
+    it = std::find_if(it, last, startsWith);
     const auto last_character = it;
     it = parseCharacter(it, '"');
     const auto value = rawString(first_character, last_character);
     return std::make_shared<String>(first, it, nullptr, value);
 }
 
-bool String::isStringSeparator(CodeCharacter c) {
+bool String::startsWith(CodeCharacter c) {
     return c.character == '"';
 }

@@ -47,7 +47,7 @@ ExpressionPointer Conditional::parse(
     );
 }
 
-bool Conditional::isConditional(const CodeCharacter* first) {
+bool Conditional::startsWith(const CodeCharacter* first) {
     const auto keyword = makeCodeCharacters("if");
     return std::equal(keyword.begin(), keyword.end(), first, haveSameCharacters);
 }
