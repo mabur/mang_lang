@@ -27,6 +27,6 @@ bool LookupChild::startsWith(const CodeCharacter* first, const CodeCharacter* la
     }
     auto it = first;
     it = std::find_if_not(it, last, isNameCharacter);
-    it = std::find_if_not(it, last, isWhiteSpace);
+    it = parseWhiteSpace(it, last);
     return it->character == '<';
 }
