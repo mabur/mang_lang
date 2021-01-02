@@ -3,6 +3,17 @@
 #include <algorithm>
 #include <memory>
 
+#include "expressions/Conditional.h"
+#include "expressions/Dictionary.h"
+#include "expressions/Expression.h"
+#include "expressions/List.h"
+#include "expressions/LookupChild.h"
+#include "expressions/LookupSymbol.h"
+#include "expressions/Name.h"
+#include "expressions/Number.h"
+#include "expressions/String.h"
+#include "expressions/String.h"
+
 using std::find_if_not;
 
 Name parseName(const CodeCharacter* first, const CodeCharacter* last) {

@@ -11,6 +11,4 @@ add_executable(mang_lang_cpp
     parse_utils.cpp
     parser.h
     parser.cpp
-    abstract_syntax_tree.h
-    abstract_syntax_tree.cpp
 )

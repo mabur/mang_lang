@@ -1,0 +1,35 @@
+#pragma once
+#include "Expression.h"
+
+struct List : public Expression {
+    List(
+        const CodeCharacter* first,
+        const CodeCharacter* last,
+        const Expression* parent,
+        std::vector<ExpressionPointer> elements
+    ) : Expression{first, last, parent}, elements{std::move(elements)}
+    {}
+    std::vector<ExpressionPointer> elements;
+    virtual std::string serialize() const {
+        auto result = std::string{};
+        result += '[';
+        for (const auto& element : elements) {
+            result += element->serialize();
+            result += ',';
+        }
+        if (elements.empty()) {
+            result += ']';
+        }
+        else {
+            result.back() = ']';
+        }
+        return result;
+    }
+    virtual ExpressionPointer evaluate(const Expression* parent) const {
+        auto evaluated_elements = std::vector<ExpressionPointer>{};
+        for (const auto& element : elements) {
+            evaluated_elements.emplace_back(element->evaluate(parent));
+        }
+        return std::make_shared<List>(begin(), end(), parent, std::move(evaluated_elements));
+    }
+};
