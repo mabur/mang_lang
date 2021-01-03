@@ -119,3 +119,10 @@ TEST_CASE("child_symbol_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("lookup_function") {
+    auto data = GENERATE(values<Data>({
+        {"add []", "add []"},
+    }));
+    CHECK(reformat(data.in) == data.out);
+}

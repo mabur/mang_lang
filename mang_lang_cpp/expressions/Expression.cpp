@@ -4,6 +4,7 @@
 #include "Dictionary.h"
 #include "List.h"
 #include "LookupChild.h"
+#include "LookupFunction.h"
 #include "LookupSymbol.h"
 #include "Number.h"
 #include "String.h"
@@ -43,11 +44,12 @@ ExpressionPointer Expression::parse(
     if (String::startsWith(it, last)) {return String::parse(it, last);}
     if (Conditional::startsWith(it, last)) {return Conditional::parse(it, last);}
     if (LookupChild::startsWith(it, last)) {return LookupChild::parse(it, last);}
+    if (LookupFunction::startsWith(it, last)) {return LookupFunction::parse(it, last);}
     if (LookupSymbol::startsWith(it, last)) {return LookupSymbol::parse(it, last);}
     throw ParseException("could not parse expression");
 }
 
-static bool startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
     return
         List::startsWith(first, last) ||
         Dictionary::startsWith(first, last) ||
@@ -55,5 +57,6 @@ static bool startsWith(const CodeCharacter* first, const CodeCharacter* last) {
         String::startsWith(first, last) ||
         Conditional::startsWith(first, last) ||
         LookupChild::startsWith(first, last) ||
+        LookupFunction::startsWith(first, last) ||
         LookupSymbol::startsWith(first, last);
 }
