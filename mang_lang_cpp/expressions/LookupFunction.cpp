@@ -1,14 +1,16 @@
 #include "LookupFunction.h"
 #include <algorithm>
+#include <cassert>
 
 std::string LookupFunction::serialize() const {
     return name.serialize() + " " + child->serialize();
 }
 
 ExpressionPointer LookupFunction::evaluate(const Expression* parent) const {
-    // TODO: implement function application.
+    const auto function = parent->lookup(name.value);
     const auto evaluated_child = child->evaluate(parent);
-    return ExpressionPointer{evaluated_child->lookup(name.value)};
+    assert(evaluated_child);
+    return function->apply(*evaluated_child);
 }
 
 ExpressionPointer LookupFunction::parse(const CodeCharacter* first, const CodeCharacter* last) {

@@ -126,3 +126,10 @@ TEST_CASE("lookup_function") {
     }));
     CHECK(reformat(data.in) == data.out);
 }
+
+TEST_CASE("lookup_function_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"add []", "0"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}

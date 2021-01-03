@@ -1,5 +1,6 @@
 #include "mang_lang.h"
 #include "expressions/Expression.h"
+#include "built_in_functions.h"
 
 ExpressionPointer parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
@@ -11,5 +12,6 @@ std::string reformat(std::string code) {
 }
 
 std::string evaluate(std::string code) {
-    return parse(code)->evaluate(nullptr)->serialize();
+    const auto built_ins = builtIns();
+    return parse(code)->evaluate(built_ins.get())->serialize();
 }

@@ -8,7 +8,7 @@
 #include "../parse_utils.h"
 
 struct Expression;
-using ExpressionPointer = std::shared_ptr<const Expression>;
+using ExpressionPointer = std::shared_ptr<Expression>;
 
 struct Expression {
     Expression(
@@ -23,6 +23,7 @@ struct Expression {
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
     const Expression* parent() const;
+    virtual ExpressionPointer apply(const Expression& input) const;
     virtual ExpressionPointer lookup(const std::string& name) const;
     virtual bool isTrue() const;
     virtual std::string serialize() const = 0;

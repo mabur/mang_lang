@@ -1,4 +1,7 @@
 #include "Expression.h"
+
+#include <cassert>
+
 #include "../mang_lang.h"
 #include "Conditional.h"
 #include "Dictionary.h"
@@ -59,4 +62,8 @@ bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* las
         LookupChild::startsWith(first, last) ||
         LookupFunction::startsWith(first, last) ||
         LookupSymbol::startsWith(first, last);
+}
+
+ExpressionPointer Expression::apply(const Expression& input) const {
+    assert(false);
 }

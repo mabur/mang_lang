@@ -4,6 +4,7 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(mang_lang_cpp
+        built_in_functions.cpp
         catch_amalgamated.hpp
         catch_amalgamated.cpp
         main.cpp
@@ -12,6 +13,7 @@ add_executable(mang_lang_cpp
         expressions/Conditional.cpp
         expressions/Dictionary.cpp
         expressions/Expression.cpp
+        expressions/FunctionBuiltIn.cpp
         expressions/List.cpp
         expressions/LookupChild.cpp
         expressions/LookupFunction.cpp
