@@ -29,3 +29,7 @@ ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter*
 bool Number::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
     return isSign(*first) || isDigit(*first);
 }
+
+double Number::number() const {
+    return value;
+}
