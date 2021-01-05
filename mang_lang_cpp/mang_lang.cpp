@@ -1,6 +1,6 @@
 #include "mang_lang.h"
 #include "expressions/Expression.h"
-#include "built_in_functions.h"
+#include "built_in_functions/built_in_functions.h"
 
 ExpressionPointer parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);

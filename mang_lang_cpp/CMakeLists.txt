@@ -4,12 +4,7 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(mang_lang_cpp
-        built_in_functions.cpp
-        catch_amalgamated.hpp
-        catch_amalgamated.cpp
-        main.cpp
-        mang_lang.cpp
-        parse_utils.cpp
+        built_in_functions/built_in_functions.cpp
         expressions/Conditional.cpp
         expressions/Dictionary.cpp
         expressions/Expression.cpp
@@ -21,4 +16,9 @@ add_executable(mang_lang_cpp
         expressions/Name.cpp
         expressions/Number.cpp
         expressions/String.cpp
+        catch_amalgamated.hpp
+        catch_amalgamated.cpp
+        main.cpp
+        mang_lang.cpp
+        parse_utils.cpp
         )

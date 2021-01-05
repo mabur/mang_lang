@@ -3,9 +3,9 @@
 #include <cmath>
 #include <limits>
 
-#include "expressions/Dictionary.h"
-#include "expressions/FunctionBuiltIn.h"
-#include "expressions/Number.h"
+#include "../expressions/Dictionary.h"
+#include "../expressions/FunctionBuiltIn.h"
+#include "../expressions/Number.h"
 
 namespace builtin {
 
