@@ -215,3 +215,22 @@ TEST_CASE("boolean_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("not_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"not -2", "0"},
+        {"not -1", "0"},
+        {"not -0", "1"},
+        {"not 0", "1"},
+        {"not +0", "1"},
+        {"not 1", "0"},
+        {"not 2", "0"},
+        {"not[]", "1"},
+        {"not[0]", "0"},
+        {"not[0,1]", "0"},
+        {"not{}", "1"},
+        {"not{x=0}", "0"},
+        {"not{x=0,y=1}", "0"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}

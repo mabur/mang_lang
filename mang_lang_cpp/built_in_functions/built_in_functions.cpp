@@ -28,5 +28,6 @@ ExpressionPointer builtIns() {
     environment->add(makeDictionaryElement("sqrt", arithmetic::sqrt));
 
     environment->add(makeDictionaryElement("boolean", logic::boolean));
+    environment->add(makeDictionaryElement("not", logic::logic_not));
     return environment;
 }

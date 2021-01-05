@@ -13,4 +13,8 @@ ExpressionPointer boolean(const Expression& in) {
     return makeNumber(in, in.boolean());
 }
 
+ExpressionPointer logic_not(const Expression& in) {
+    return makeNumber(in, !in.boolean());
+}
+
 }
