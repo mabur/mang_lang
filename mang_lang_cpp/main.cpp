@@ -149,3 +149,21 @@ TEST_CASE("mul_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("sub_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"sub[0,0]", "0"},
+        {"sub[6,3]", "3"},
+        {"sub[4,8]", "-4"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
+
+TEST_CASE("div_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"div[0,1]", "0"},
+        {"div[2,1]", "2"},
+        {"div[9,3]", "3"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
