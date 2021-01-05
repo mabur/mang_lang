@@ -127,9 +127,25 @@ TEST_CASE("lookup_function") {
     CHECK(reformat(data.in) == data.out);
 }
 
-TEST_CASE("lookup_function_evaluation") {
+TEST_CASE("add_evaluation") {
     auto data = GENERATE(values<Data>({
-        {"add []", "0"},
+        {"add[]", "0"},
+        {"add[0]", "0"},
+        {"add[1]", "1"},
+        {"add[0,1]", "1"},
+        {"add[0,1,2]", "3"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
+
+TEST_CASE("mul_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"mul[]", "1"},
+        {"mul[0]", "0"},
+        {"mul[1]", "1"},
+        {"mul[1,2]", "2"},
+        {"mul[1,2,3]", "6"},
+        {"mul[1,2,3,4]", "24"},
     }));
     CHECK(evaluate(data.in) == data.out);
 }
