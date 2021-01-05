@@ -16,11 +16,7 @@ ExpressionPointer  add(const Expression& in){
     }
     double sum = 0.0;
     for (const auto& element : list->elements) {
-        const auto number = dynamic_cast<const Number*>(element.get());
-        if (!number) {
-            throw std::runtime_error{"Expected number"};
-        }
-        sum += number->value;
+        sum += element->number();
     }
     return std::make_shared<Number>(in.begin(), in.end(), nullptr, sum);
 }

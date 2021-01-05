@@ -32,4 +32,6 @@ struct Expression {
         const CodeCharacter* first, const CodeCharacter* last
     );
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
+
+    virtual double number() const;
 };

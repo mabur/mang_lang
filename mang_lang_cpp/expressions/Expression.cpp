@@ -65,5 +65,9 @@ bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* las
 }
 
 ExpressionPointer Expression::apply(const Expression& input) const {
-    assert(false);
+    throw std::runtime_error{"Expected function"};
+}
+
+double Expression::number() const {
+    throw std::runtime_error{"Expected number"};
 }
