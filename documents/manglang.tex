@@ -8,6 +8,16 @@
 
 \maketitle
 
+\section{Overiew}
+
+Mang Lang is a functional language without any side efects. The lifetime of a Mang Lang program has four stages:
+\begin{enumerate}
+\item Program written in Mang Lang.
+\item Program parsed into a tree graph.
+\item Program evaluated into another tree graph.
+\item Program result presented in Mang Lang.
+\end{enumerate}
+
 \section{Minimal Language for Data}
 
 We start by defining a minimal language for storing data, similar to Json. It consists of these primitive values:
@@ -21,7 +31,7 @@ Values can be packaged in these collections:
 \item Lists like: \lstinline|[1, 2, 3]|
 \item Dictionaries like: \lstinline|{x = 1, y = 2}|
 \end{itemize}
-Collections can be nested. We can easily transform this format to Json by replacing = with : and adding quotes arounds dictionary keys.
+Collections can be nested. We can translate this format to Json by replacing = with : and adding quotes arounds dictionary keys.
 
 \section{Extended Language for Data}
 
@@ -38,11 +48,13 @@ We add the posibility for conditionals:
 
 \subsection{Evaluation}
 
-The evaluation of a program takes an AST from the extended language for data and collapses it to an AST for the minimal laguage by:
+To evaluate a program written in the extended language for data we follow these steps:
 \begin{enumerate}
-\item Collapsing the references to the expressions they refer to.
-\item Collapsing conditionals.
+\item Parse input written in the extended language for data. This results in a tree graph.
+\item Collapse references and conditionals to the expressions they refer to. This results in another tree graph.
+\item Serialize the evaluated tree to get the result written in the minimal language for data.
 \end{enumerate}
+We parse the input into a tree. In this tree a parent keeps references to its children, and each child also keeps a reference to its parent. We use this when collapsing references and conditionals.
 
 \section{Minimal Language for Algorithms}
 
@@ -60,12 +72,10 @@ We evaluate the program by transforming the AST to another graph. We keep a copy
 \item We do not collapse: numbers, strings, booleans
 \item We collapse conditionals.
 \item We collapse references.
-\item We collapse functions to bound functions. This is a function bound to an environment. Everything in the function body is untouched.
-\item We collapse function calls. When collapsing a function call we evaluate the body of the function, given the bound environment and the input to the function.
+\item We do NOT collapse functions and do NOT collapse anything in the function body.
+\item We collapse function calls. When collapsing a function call we evaluate the body of the function it refers to, given the input to the function.
 \end{enumerate}
-How to handle environments while evaluating? Do we want to link both up and down in the graph we get when evaluating the AST? Could be useful when collapsing references and function calls. We don't allow functions to survive their bound environment, i.e. to be the output.
-
-http://craftinginterpreters.com/contents.html
+We don't allow functions to survive their bound environment, i.e. to be the output. We do not have closures.
 
 \section{Implementation}
 
