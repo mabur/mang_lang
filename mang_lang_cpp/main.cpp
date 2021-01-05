@@ -196,3 +196,22 @@ TEST_CASE("sqrt_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("boolean_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"boolean -2", "1"},
+        {"boolean -1", "1"},
+        {"boolean -0", "0"},
+        {"boolean 0", "0"},
+        {"boolean +0", "0"},
+        {"boolean 1", "1"},
+        {"boolean 2", "1"},
+        {"boolean[]", "0"},
+        {"boolean[0]", "1"},
+        {"boolean[0,1]", "1"},
+        {"boolean{}", "0"},
+        {"boolean{x=0}", "1"},
+        {"boolean{x=0,y=1}", "1"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}

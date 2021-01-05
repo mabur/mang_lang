@@ -33,3 +33,7 @@ bool Number::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
 double Number::number() const {
     return value;
 }
+
+bool Number::boolean() const {
+    return value != 0;
+}

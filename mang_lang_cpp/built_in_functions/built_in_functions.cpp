@@ -4,6 +4,7 @@
 #include "../expressions/FunctionBuiltIn.h"
 
 #include "arithmetic.h"
+#include "logic.h"
 
 DictionaryElement makeDictionaryElement(
     std::string name,
@@ -25,5 +26,7 @@ ExpressionPointer builtIns() {
     environment->add(makeDictionaryElement("div", arithmetic::div));
     environment->add(makeDictionaryElement("abs", arithmetic::abs));
     environment->add(makeDictionaryElement("sqrt", arithmetic::sqrt));
+
+    environment->add(makeDictionaryElement("boolean", logic::boolean));
     return environment;
 }

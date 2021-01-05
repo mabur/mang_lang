@@ -72,6 +72,10 @@ double Expression::number() const {
     throw std::runtime_error{"Expected number"};
 }
 
+bool Expression::boolean() const {
+    throw std::runtime_error{"Expected boolean"};
+}
+
 const std::vector<ExpressionPointer>& Expression::list() const {
     throw std::runtime_error{"Expected list"};
 }

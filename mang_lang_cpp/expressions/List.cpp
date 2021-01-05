@@ -47,3 +47,7 @@ bool List::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
 const std::vector<ExpressionPointer>& List::list() const {
     return elements;
 }
+
+bool List::boolean() const {
+    return !elements.empty();
+}

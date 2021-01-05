@@ -15,4 +15,5 @@ struct Number : public Expression {
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
     double number() const;
+    bool boolean() const;
 };
