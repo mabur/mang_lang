@@ -8,7 +8,7 @@
 #include "../parse_utils.h"
 
 struct Expression;
-using ExpressionPointer = std::shared_ptr<Expression>;
+using ExpressionPointer = std::shared_ptr<const Expression>;
 
 struct Expression {
     Expression(
