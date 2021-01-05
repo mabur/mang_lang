@@ -34,4 +34,5 @@ struct Expression {
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 
     virtual double number() const;
+    virtual const std::vector<ExpressionPointer>& list() const;
 };

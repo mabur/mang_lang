@@ -71,3 +71,7 @@ ExpressionPointer Expression::apply(const Expression& input) const {
 double Expression::number() const {
     throw std::runtime_error{"Expected number"};
 }
+
+const std::vector<ExpressionPointer>& Expression::list() const {
+    throw std::runtime_error{"Expected list"};
+}

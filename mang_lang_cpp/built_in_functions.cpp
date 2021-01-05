@@ -1,21 +1,12 @@
 #include "built_in_functions.h"
 
-#include <stdexcept>
-
 #include "expressions/Dictionary.h"
-#include "expressions/Expression.h"
 #include "expressions/FunctionBuiltIn.h"
-#include "expressions/List.h"
 #include "expressions/Number.h"
 
-// TODO: Put the casts as virtual member functions in Expression?
 ExpressionPointer  add(const Expression& in){
-    const auto list = dynamic_cast<const List*>(&in);
-    if (!list) {
-        throw std::runtime_error{"Expected list"};
-    }
     double sum = 0.0;
-    for (const auto& element : list->elements) {
+    for (const auto& element : in.list()) {
         sum += element->number();
     }
     return std::make_shared<Number>(in.begin(), in.end(), nullptr, sum);

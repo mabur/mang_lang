@@ -43,3 +43,7 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
 bool List::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
     return first->character == '[';
 }
+
+const std::vector<ExpressionPointer>& List::list() const {
+    return elements;
+}
