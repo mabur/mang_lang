@@ -8,40 +8,44 @@
 
 namespace builtin {
 
+ExpressionPointer makeNumber(const Expression& in, double x) {
+    return std::make_shared<Number>(in.begin(), in.end(), nullptr, x);
+}
+
 ExpressionPointer add(const Expression& in) {
-    double result = 0.0;
+    auto result = 0.0;
     for (const auto& element : in.list()) {
         result += element->number();
     }
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+    return makeNumber(in, result);
 }
 
 ExpressionPointer  mul(const Expression& in) {
-    double result = 1.0;
+    auto result = 1.0;
     for (const auto& element : in.list()) {
         result *= element->number();
     }
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+    return makeNumber(in, result);
 }
 
 ExpressionPointer sub(const Expression& in) {
-    double result = in.list().at(0)->number() - in.list().at(1)->number();
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+    const auto result = in.list().at(0)->number() - in.list().at(1)->number();
+    return makeNumber(in, result);
 }
 
 ExpressionPointer div(const Expression& in) {
-    double result = in.list().at(0)->number() / in.list().at(1)->number();
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+    const auto result = in.list().at(0)->number() / in.list().at(1)->number();
+    return makeNumber(in, result);
 }
 
 ExpressionPointer abs(const Expression& in) {
-    double result = std::fabs(in.number());
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+    const auto result = std::fabs(in.number());
+    return makeNumber(in, result);
 }
 
 ExpressionPointer sqrt(const Expression& in) {
-    double result = std::sqrt(in.number());
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+    const auto result = std::sqrt(in.number());
+    return makeNumber(in, result);
 }
 
 }
