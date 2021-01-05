@@ -167,3 +167,21 @@ TEST_CASE("div_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("abs_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"abs -1", "1"},
+        {"abs 0", "0"},
+        {"abs 1", "1"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
+
+TEST_CASE("sqrt_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"sqrt 0", "0"},
+        {"sqrt 1", "1"},
+        {"sqrt 4", "2"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}

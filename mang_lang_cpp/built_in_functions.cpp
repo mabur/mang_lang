@@ -1,10 +1,14 @@
 #include "built_in_functions.h"
 
+#include <cmath>
+
 #include "expressions/Dictionary.h"
 #include "expressions/FunctionBuiltIn.h"
 #include "expressions/Number.h"
 
-ExpressionPointer  add(const Expression& in) {
+namespace builtin {
+
+ExpressionPointer add(const Expression& in) {
     double result = 0.0;
     for (const auto& element : in.list()) {
         result += element->number();
@@ -25,28 +29,48 @@ ExpressionPointer sub(const Expression& in) {
     return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
 }
 
-ExpressionPointer div2(const Expression& in) {
+ExpressionPointer div(const Expression& in) {
     double result = in.list().at(0)->number() / in.list().at(1)->number();
     return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+}
+
+ExpressionPointer abs(const Expression& in) {
+    double result = std::fabs(in.number());
+    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+}
+
+ExpressionPointer sqrt(const Expression& in) {
+    double result = std::sqrt(in.number());
+    return std::make_shared<Number>(in.begin(), in.end(), nullptr, result);
+}
+
 }
 
 ExpressionPointer builtIns() {
     auto environment = std::make_shared<Dictionary>(nullptr, nullptr, nullptr);
     environment->add(DictionaryElement(
         Name{nullptr, nullptr, nullptr, "add"},
-        std::make_shared<FunctionBuiltIn>(add)
+        std::make_shared<FunctionBuiltIn>(builtin::add)
     ));
     environment->add(DictionaryElement(
         Name{nullptr, nullptr, nullptr, "mul"},
-        std::make_shared<FunctionBuiltIn>(mul)
+        std::make_shared<FunctionBuiltIn>(builtin::mul)
     ));
     environment->add(DictionaryElement(
         Name{nullptr, nullptr, nullptr, "sub"},
-        std::make_shared<FunctionBuiltIn>(sub)
+        std::make_shared<FunctionBuiltIn>(builtin::sub)
     ));
     environment->add(DictionaryElement(
         Name{nullptr, nullptr, nullptr, "div"},
-        std::make_shared<FunctionBuiltIn>(div2)
+        std::make_shared<FunctionBuiltIn>(builtin::div)
+    ));
+    environment->add(DictionaryElement(
+        Name{nullptr, nullptr, nullptr, "abs"},
+        std::make_shared<FunctionBuiltIn>(builtin::abs)
+    ));
+    environment->add(DictionaryElement(
+        Name{nullptr, nullptr, nullptr, "sqrt"},
+        std::make_shared<FunctionBuiltIn>(builtin::sqrt)
     ));
     return environment;
 }
