@@ -127,6 +127,17 @@ TEST_CASE("lookup_function") {
     CHECK(reformat(data.in) == data.out);
 }
 
+TEST_CASE("min_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"min[0]", "0"},
+        {"min[0,1]", "0"},
+        {"min[1,0]", "0"},
+        {"min[3,6,1]", "1"},
+        {"min[7,-3,8,-9]", "-9"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
+
 TEST_CASE("add_evaluation") {
     auto data = GENERATE(values<Data>({
         {"add[]", "0"},
