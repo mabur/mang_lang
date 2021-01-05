@@ -20,7 +20,7 @@ ExpressionPointer add(const Expression& in) {
     return makeNumber(in, result);
 }
 
-ExpressionPointer  mul(const Expression& in) {
+ExpressionPointer mul(const Expression& in) {
     auto result = 1.0;
     for (const auto& element : in.list()) {
         result *= element->number();
@@ -50,31 +50,23 @@ ExpressionPointer sqrt(const Expression& in) {
 
 }
 
+DictionaryElement makeDictionaryElement(
+    std::string name,
+    std::function<ExpressionPointer(const Expression&)> function
+) {
+    return DictionaryElement(
+        Name{nullptr, nullptr, nullptr, name},
+        std::make_shared<FunctionBuiltIn>(function)
+    );
+}
+
 ExpressionPointer builtIns() {
     auto environment = std::make_shared<Dictionary>(nullptr, nullptr, nullptr);
-    environment->add(DictionaryElement(
-        Name{nullptr, nullptr, nullptr, "add"},
-        std::make_shared<FunctionBuiltIn>(builtin::add)
-    ));
-    environment->add(DictionaryElement(
-        Name{nullptr, nullptr, nullptr, "mul"},
-        std::make_shared<FunctionBuiltIn>(builtin::mul)
-    ));
-    environment->add(DictionaryElement(
-        Name{nullptr, nullptr, nullptr, "sub"},
-        std::make_shared<FunctionBuiltIn>(builtin::sub)
-    ));
-    environment->add(DictionaryElement(
-        Name{nullptr, nullptr, nullptr, "div"},
-        std::make_shared<FunctionBuiltIn>(builtin::div)
-    ));
-    environment->add(DictionaryElement(
-        Name{nullptr, nullptr, nullptr, "abs"},
-        std::make_shared<FunctionBuiltIn>(builtin::abs)
-    ));
-    environment->add(DictionaryElement(
-        Name{nullptr, nullptr, nullptr, "sqrt"},
-        std::make_shared<FunctionBuiltIn>(builtin::sqrt)
-    ));
+    environment->add(makeDictionaryElement("add", builtin::add));
+    environment->add(makeDictionaryElement("mul", builtin::mul));
+    environment->add(makeDictionaryElement("sub", builtin::sub));
+    environment->add(makeDictionaryElement("div", builtin::div));
+    environment->add(makeDictionaryElement("abs", builtin::abs));
+    environment->add(makeDictionaryElement("sqrt", builtin::sqrt));
     return environment;
 }
