@@ -13,4 +13,5 @@ struct String : public Expression {
     ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
+    bool boolean() const final;
 };

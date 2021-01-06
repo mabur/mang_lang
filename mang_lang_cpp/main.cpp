@@ -212,6 +212,11 @@ TEST_CASE("boolean_evaluation") {
         {"boolean{}", "0"},
         {"boolean{x=0}", "1"},
         {"boolean{x=0,y=1}", "1"},
+        {R"(boolean"")", "0"},
+        {R"(boolean"0")", "1"},
+        {R"(boolean"1")", "1"},
+        {R"(boolean"a")", "1"},
+        {R"(boolean"ab")", "1"},
     }));
     CHECK(evaluate(data.in) == data.out);
 }
@@ -231,6 +236,11 @@ TEST_CASE("not_evaluation") {
         {"not{}", "1"},
         {"not{x=0}", "0"},
         {"not{x=0,y=1}", "0"},
+        {R"(not"")", "1"},
+        {R"(not"0")", "0"},
+        {R"(not"1")", "0"},
+        {R"(not"a")", "0"},
+        {R"(not"ab")", "0"},
     }));
     CHECK(evaluate(data.in) == data.out);
 }

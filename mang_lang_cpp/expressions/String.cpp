@@ -27,3 +27,7 @@ ExpressionPointer String::parse(const CodeCharacter* first, const CodeCharacter*
 bool String::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
     return first->character == '"';
 }
+
+bool String::boolean() const {
+    return !value.empty();
+}
