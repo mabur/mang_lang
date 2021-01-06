@@ -11,10 +11,6 @@ ExpressionPointer Number::evaluate(const Expression* parent) const {
     return std::make_shared<Number>(begin(), end(), parent, value);
 }
 
-bool Number::isTrue() const {
-    return static_cast<bool>(value);
-}
-
 ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseOptionalCharacter(it, isSign);
@@ -35,5 +31,5 @@ double Number::number() const {
 }
 
 bool Number::boolean() const {
-    return value != 0;
+    return static_cast<bool>(value);
 }

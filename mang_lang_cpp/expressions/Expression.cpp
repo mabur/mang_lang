@@ -1,7 +1,5 @@
 #include "Expression.h"
 
-#include <cassert>
-
 #include "../mang_lang.h"
 #include "Conditional.h"
 #include "Dictionary.h"
@@ -29,10 +27,6 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
         return parent()->lookup(name);
     }
     return {};
-}
-
-bool Expression::isTrue() const {
-    return false;
 }
 
 ExpressionPointer Expression::parse(

@@ -15,5 +15,5 @@ struct List : public Expression {
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
     const std::vector<ExpressionPointer>& list() const;
-    bool boolean() const;
+    virtual bool boolean() const;
 };

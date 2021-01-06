@@ -7,7 +7,7 @@ std::string Conditional::serialize() const {
 }
 
 ExpressionPointer Conditional::evaluate(const Expression* parent) const {
-    if (expression_if->evaluate(parent)->isTrue()) {
+    if (expression_if->evaluate(parent)->boolean()) {
         return expression_then->evaluate(parent);
     } else {
         return expression_else->evaluate(parent);

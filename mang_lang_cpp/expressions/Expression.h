@@ -23,9 +23,6 @@ struct Expression {
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
     const Expression* parent() const;
-    virtual ExpressionPointer apply(const Expression& input) const;
-    virtual ExpressionPointer lookup(const std::string& name) const;
-    virtual bool isTrue() const;
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
     static ExpressionPointer parse(
@@ -33,6 +30,8 @@ struct Expression {
     );
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 
+    virtual ExpressionPointer apply(const Expression& input) const;
+    virtual ExpressionPointer lookup(const std::string& name) const;
     virtual double number() const;
     virtual bool boolean() const;
     virtual const std::vector<ExpressionPointer>& list() const;
