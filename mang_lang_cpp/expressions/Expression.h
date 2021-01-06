@@ -17,19 +17,22 @@ struct Expression {
         const Expression* parent
     ) : first_{first}, last_{last}, parent_{parent} {}
     virtual ~Expression() = default;
+
     const CodeCharacter* first_;
     const CodeCharacter* last_;
     const Expression* parent_;
+
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
     const Expression* parent() const;
-    virtual std::string serialize() const = 0;
-    virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
+
+    static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
     static ExpressionPointer parse(
         const CodeCharacter* first, const CodeCharacter* last
     );
-    static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 
+    virtual std::string serialize() const = 0;
+    virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
     virtual ExpressionPointer apply(const Expression& input) const;
     virtual ExpressionPointer lookup(const std::string& name) const;
     virtual double number() const;
