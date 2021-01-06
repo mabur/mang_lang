@@ -234,3 +234,39 @@ TEST_CASE("not_evaluation") {
     }));
     CHECK(evaluate(data.in) == data.out);
 }
+
+TEST_CASE("all_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"all[]", "1"},
+        {"all[0]", "0"},
+        {"all[1]", "1"},
+        {"all[0,0]", "0"},
+        {"all[0,1]", "0"},
+        {"all[1,1]", "1"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
+
+TEST_CASE("any_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"any[]", "0"},
+        {"any[0]", "0"},
+        {"any[1]", "1"},
+        {"any[0,0]", "0"},
+        {"any[0,1]", "1"},
+        {"any[1,1]", "1"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}
+
+TEST_CASE("none_evaluation") {
+    auto data = GENERATE(values<Data>({
+        {"none[]", "1"},
+        {"none[0]", "1"},
+        {"none[1]", "0"},
+        {"none[0,0]", "1"},
+        {"none[0,1]", "0"},
+        {"none[1,1]", "0"},
+    }));
+    CHECK(evaluate(data.in) == data.out);
+}

@@ -29,5 +29,8 @@ ExpressionPointer builtIns() {
 
     environment->add(makeDictionaryElement("boolean", logic::boolean));
     environment->add(makeDictionaryElement("not", logic::logic_not));
+    environment->add(makeDictionaryElement("all", logic::all));
+    environment->add(makeDictionaryElement("any", logic::any));
+    environment->add(makeDictionaryElement("none", logic::none));
     return environment;
 }
