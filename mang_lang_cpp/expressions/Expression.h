@@ -26,7 +26,9 @@ struct Expression {
     const CodeCharacter* end() const;
     const Expression* parent() const;
 
-    static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
+    static bool startsWith(
+        const CodeCharacter* first, const CodeCharacter* last
+    );
     static ExpressionPointer parse(
         const CodeCharacter* first, const CodeCharacter* last
     );
