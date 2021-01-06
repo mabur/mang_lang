@@ -10,8 +10,8 @@ struct LookupSymbol : public Expression {
         Name name
     ) : Expression{first, last, parent}, name{name} {}
     Name name;
-    virtual std::string serialize() const;
-    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    std::string serialize() const final;
+    ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 };

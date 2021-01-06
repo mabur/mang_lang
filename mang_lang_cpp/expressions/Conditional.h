@@ -18,8 +18,8 @@ struct Conditional : public Expression {
     ExpressionPointer expression_if;
     ExpressionPointer expression_then;
     ExpressionPointer expression_else;
-    virtual std::string serialize() const;
-    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    std::string serialize() const final;
+    ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(
         const CodeCharacter* first, const CodeCharacter* last
     );

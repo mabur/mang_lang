@@ -19,10 +19,10 @@ struct Dictionary : public Expression {
     {}
     std::vector<DictionaryElement> elements;
     void add(DictionaryElement element);
-    virtual ExpressionPointer lookup(const std::string& name) const;
-    virtual std::string serialize() const;
-    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    ExpressionPointer lookup(const std::string& name) const final;
+    std::string serialize() const final;
+    ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
-    virtual bool boolean() const;
+    bool boolean() const final;
 };

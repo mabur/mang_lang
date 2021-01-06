@@ -10,10 +10,10 @@ struct List : public Expression {
     ) : Expression{first, last, parent}, elements{std::move(elements)}
     {}
     std::vector<ExpressionPointer> elements;
-    virtual std::string serialize() const;
-    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    std::string serialize() const final;
+    ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
-    const std::vector<ExpressionPointer>& list() const;
-    virtual bool boolean() const;
+    const std::vector<ExpressionPointer>& list() const final;
+    bool boolean() const final;
 };

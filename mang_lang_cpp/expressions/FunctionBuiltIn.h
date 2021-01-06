@@ -8,9 +8,9 @@ struct FunctionBuiltIn : public Expression {
     ) : Expression{{}, {}, {}}, function(std::move(f))
     {}
     std::function<ExpressionPointer(const Expression&)> function;
-    virtual ExpressionPointer apply(const Expression& input) const;
-    virtual std::string serialize() const;
-    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    ExpressionPointer apply(const Expression& input) const final;
+    std::string serialize() const final;
+    ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 };

@@ -9,12 +9,12 @@ struct Number : public Expression {
         double value
     ) : Expression{first, last, parent}, value{value} {}
     double value;
-    virtual std::string serialize() const;
-    virtual ExpressionPointer evaluate(const Expression* parent) const;
+    std::string serialize() const final;
+    ExpressionPointer evaluate(const Expression* parent) const final;
 
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 
-    virtual double number() const;
-    virtual bool boolean() const;
+    double number() const final;
+    bool boolean() const final;
 };
