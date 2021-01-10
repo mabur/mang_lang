@@ -34,7 +34,7 @@ ExpressionPointer Expression::parse(
 ) {
     auto it = first;
     it = parseWhiteSpace(it, last);
-    if (it == last) {throw ParseException("could not parse expression");}
+    if (it == last) {throw ParseException("Missing expression to parse");}
     if (List::startsWith(it, last)) {return List::parse(it, last);}
     if (Dictionary::startsWith(it, last)) {return Dictionary::parse(it, last);}
     if (Number::startsWith(it, last)) {return Number::parse(it, last);}
@@ -43,7 +43,7 @@ ExpressionPointer Expression::parse(
     if (LookupChild::startsWith(it, last)) {return LookupChild::parse(it, last);}
     if (LookupFunction::startsWith(it, last)) {return LookupFunction::parse(it, last);}
     if (LookupSymbol::startsWith(it, last)) {return LookupSymbol::parse(it, last);}
-    throw ParseException("could not parse expression");
+    throw ParseException("Does not recognize expression to parse");
 }
 
 bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
