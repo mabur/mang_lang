@@ -3,7 +3,7 @@
 #include "Name.h"
 
 struct DictionaryElement {
-    DictionaryElement(const Name& name, ExpressionPointer&& expression)
+    DictionaryElement(const Name& name, ExpressionPointer expression)
         : name{name}, expression{std::move(expression)}
     {}
     Name name;

@@ -10,7 +10,7 @@ ExpressionPointer LookupFunction::evaluate(const Expression* parent) const {
     const auto function = parent->lookup(name.value);
     const auto evaluated_child = child->evaluate(parent);
     assert(evaluated_child);
-    return function->apply(*evaluated_child);
+    return function->apply(evaluated_child);
 }
 
 ExpressionPointer LookupFunction::parse(const CodeCharacter* first, const CodeCharacter* last) {

@@ -1,8 +1,8 @@
 #include "FunctionBuiltIn.h"
 #include <cassert>
 
-ExpressionPointer FunctionBuiltIn::apply(const Expression& input) const {
-    return function(input);
+ExpressionPointer FunctionBuiltIn::apply(ExpressionPointer input) const {
+    return function(*input);
 }
 
 std::string FunctionBuiltIn::serialize() const {

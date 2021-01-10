@@ -8,7 +8,7 @@ struct FunctionBuiltIn : public Expression {
     ) : Expression{{}, {}, {}}, function(std::move(f))
     {}
     std::function<ExpressionPointer(const Expression&)> function;
-    ExpressionPointer apply(const Expression& input) const final;
+    ExpressionPointer apply(ExpressionPointer input) const final;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
