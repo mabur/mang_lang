@@ -53,6 +53,14 @@ bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
 }
 
+bool isKeyword(
+    const CodeCharacter* it,
+    const std::string& keyword
+) {
+    const auto w = makeCodeCharacters(keyword);
+    return std::equal(w.begin(), w.end(), it, haveSameCharacters);
+}
+
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
 ) {

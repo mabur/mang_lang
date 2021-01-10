@@ -1,4 +1,5 @@
 #include "Conditional.h"
+#include "../parse_utils.h"
 
 std::string Conditional::serialize() const {
     return std::string{"if "} + expression_if->serialize()
@@ -48,6 +49,5 @@ ExpressionPointer Conditional::parse(
 }
 
 bool Conditional::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
-    const auto keyword = makeCodeCharacters("if");
-    return std::equal(keyword.begin(), keyword.end(), first, haveSameCharacters);
+    return isKeyword(first, "if");
 }
