@@ -23,10 +23,10 @@ const Expression* Expression::parent() const {
 }
 
 ExpressionPointer Expression::lookup(const std::string& name) const {
-    if (parent()) {
-        return parent()->lookup(name);
+    if (!parent()) {
+        throw ParseException("Cannot find symbol " + name);
     }
-    return {};
+    return parent()->lookup(name);
 }
 
 ExpressionPointer Expression::parse(
