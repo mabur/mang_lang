@@ -13,7 +13,7 @@ struct Test {
         cout << endl << num_good_total << "/" << num_good_total + num_bad_total
             << " tests successful in total" << std::endl;
         if (num_bad_total != 0) {
-            cout << "TESTS FAILING" << endl;
+            cout << num_bad_total << " TESTS FAILING!" << endl;
         }
     }
     size_t exitCode() {
@@ -40,7 +40,7 @@ struct Test {
                 ++num_good;
             } else {
                 ++num_bad;
-                cout << "" << function_name << "(" << input << ")"
+                cout << endl << "" << function_name << "(" << input << ")"
                     << " expected " << output_expected << " got " << output_actual << endl;
             }
         }
