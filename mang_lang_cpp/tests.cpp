@@ -35,13 +35,21 @@ struct Test {
         for (const auto& test : data) {
             const auto& input = test.first;
             const auto& output_expected = test.second;
-            const auto output_actual = function(input);
-            if (output_expected == output_actual) {
-                ++num_good;
-            } else {
+            try {
+                const auto output_actual = function(input);
+                if (output_expected == output_actual) {
+                    ++num_good;
+                } else {
+                    ++num_bad;
+                    cout << endl << "" << function_name << "(" << input << ")"
+                        << " expected " << output_expected << " got "
+                        << output_actual << endl;
+                }
+            } catch (const std::exception& e) {
                 ++num_bad;
                 cout << endl << "" << function_name << "(" << input << ")"
-                    << " expected " << output_expected << " got " << output_actual << endl;
+                    << " expected " << output_expected << " got exception "
+                    << e.what() << endl;
             }
         }
         cout << num_good << "/" << num_good + num_bad
