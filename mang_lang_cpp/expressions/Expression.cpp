@@ -58,7 +58,7 @@ bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* las
         LookupSymbol::startsWith(first, last);
 }
 
-ExpressionPointer Expression::apply(ExpressionPointer input) const {
+ExpressionPointer Expression::apply(ExpressionPointer) const {
     throw std::runtime_error{"Expected function"};
 }
 

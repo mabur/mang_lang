@@ -48,6 +48,6 @@ ExpressionPointer Conditional::parse(
     );
 }
 
-bool Conditional::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+bool Conditional::startsWith(const CodeCharacter* first, const CodeCharacter*) {
     return isKeyword(first, "if");
 }

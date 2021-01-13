@@ -23,3 +23,5 @@ add_library(shared
 
 add_executable(tests tests.cpp)
 target_link_libraries(tests shared)
+target_compile_options(shared PRIVATE -Wall -Wextra -pedantic -Werror)
+target_compile_options(tests PRIVATE -Wall -Wextra -pedantic -Werror)

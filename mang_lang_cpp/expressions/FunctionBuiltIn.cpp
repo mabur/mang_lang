@@ -7,16 +7,20 @@ ExpressionPointer FunctionBuiltIn::apply(ExpressionPointer input) const {
 
 std::string FunctionBuiltIn::serialize() const {
     assert(false);
+    return {};
 }
 
-ExpressionPointer FunctionBuiltIn::evaluate(const Expression* parent) const {
+ExpressionPointer FunctionBuiltIn::evaluate(const Expression*) const {
     assert(false);
+    return {};
 }
 
-ExpressionPointer FunctionBuiltIn::parse(const CodeCharacter* first, const CodeCharacter* last) {
+ExpressionPointer FunctionBuiltIn::parse(const CodeCharacter*, const CodeCharacter*) {
     assert(false);
+    return {};
 }
 
-bool FunctionBuiltIn::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+bool FunctionBuiltIn::startsWith(const CodeCharacter*, const CodeCharacter*) {
     assert(false);
+    return {};
 }

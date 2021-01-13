@@ -22,7 +22,7 @@ ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter*
     return std::make_shared<Number>(first, it, nullptr, value);
 }
 
-bool Number::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+bool Number::startsWith(const CodeCharacter* first, const CodeCharacter*) {
     return isSign(*first) || isDigit(*first);
 }
 
