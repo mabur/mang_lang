@@ -22,8 +22,8 @@ std::string rawString(const CodeCharacter* first, const CodeCharacter* last) {
 
 std::vector<CodeCharacter> makeCodeCharacters(const std::string& string) {
     auto result = std::vector<CodeCharacter>{};
-    auto column = size_t{};
-    auto row = size_t{};
+    auto column = size_t{0};
+    auto row = size_t{0};
     for (const auto& character : string) {
         result.push_back({character, row, column});
         ++column;
@@ -100,7 +100,7 @@ const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword) 
 
 void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last) {
     if (it == last) {
-        throw ParseException("Missing expression to parse", it);
+        throw ParseException("Unexpected end of source while parsing", (it - 1));
     }
 }
 
