@@ -43,7 +43,8 @@ ExpressionPointer Expression::parse(
     if (LookupChild::startsWith(it, last)) {return LookupChild::parse(it, last);}
     if (LookupFunction::startsWith(it, last)) {return LookupFunction::parse(it, last);}
     if (LookupSymbol::startsWith(it, last)) {return LookupSymbol::parse(it, last);}
-    throw ParseException("Does not recognize expression to parse");
+    throwParseException(it, last);
+    return {};
 }
 
 bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* last) {

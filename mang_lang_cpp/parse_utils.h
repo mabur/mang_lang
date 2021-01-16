@@ -63,3 +63,4 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, Predicate p
 const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword);
 
 void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last);
+void throwParseException(const CodeCharacter* it, const CodeCharacter* last);

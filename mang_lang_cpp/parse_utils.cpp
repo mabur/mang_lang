@@ -100,3 +100,7 @@ void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last) {
         throw ParseException("Missing expression to parse");
     }
 }
+
+void throwParseException(const CodeCharacter*, const CodeCharacter*) {
+    throw ParseException("Does not recognize expression to parse");
+}
