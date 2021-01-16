@@ -1,8 +1,14 @@
 #include "parse_utils.h"
 #include <algorithm>
 #include <cassert>
-#include <iostream>
-#include <sstream>
+
+ParseException::ParseException(const std::string& description, const CodeCharacter* it)
+    : std::runtime_error(
+        description
+        + " at row " + std::to_string(it->row)
+        + " and column " + std::to_string(it->column)
+    )
+{}
 
 char rawCharacter(CodeCharacter c) {
     return c.character;
@@ -70,12 +76,9 @@ const CodeCharacter* parseWhiteSpace(
 const CodeCharacter* parseCharacter(const CodeCharacter* it, char expected) {
     const auto actual = it->character;
     if (it->character != expected) {
-        std::stringstream s;
-        s   << "Parsing expected \'" << expected
-            << "\' but got \'" << actual
-            << "\' at row " << it->row
-            << " and column " << it->column;
-        throw ParseException(s.str());
+        const auto description = std::string{"Parsing expected \'"}
+            + expected + "\' but got \'" + actual + "\'";
+        throw ParseException(description, it);
     }
     ++it;
     return it;
@@ -97,10 +100,10 @@ const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword) 
 
 void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last) {
     if (it == last) {
-        throw ParseException("Missing expression to parse");
+        throw ParseException("Missing expression to parse", it);
     }
 }
 
-void throwParseException(const CodeCharacter*, const CodeCharacter*) {
-    throw ParseException("Does not recognize expression to parse");
+void throwParseException(const CodeCharacter* it, const CodeCharacter*) {
+    throw ParseException("Does not recognize expression to parse", it);
 }

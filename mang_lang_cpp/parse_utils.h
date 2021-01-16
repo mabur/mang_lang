@@ -12,6 +12,7 @@ struct CodeCharacter {
 
 struct ParseException : public std::runtime_error
 {
+    ParseException(const std::string& description, const CodeCharacter* it);
     using runtime_error::runtime_error;
 };
 
