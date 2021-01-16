@@ -254,5 +254,13 @@ int main() {
         {"none[0,1]", "0"},
         {"none[1,1]", "0"},
     });
+    test.evaluate("function", {
+        {"from x to x", "from x to x"},
+        {"f<{f=from x to x}", "from x to x"},
+        {"a<{f=from x to x,a=f 0}", "0"},
+        {"a<{f=from x to x,a=f []}", "[]"},
+        {"a<{f=from x to 1,a=f 0}", "1"},
+        {"a<{inc=from x to add[x,1],a=inc 0}", "1"},
+    });
     return test.exitCode();
 }

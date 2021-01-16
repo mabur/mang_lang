@@ -3,6 +3,7 @@
 #include "../mang_lang.h"
 #include "Conditional.h"
 #include "Dictionary.h"
+#include "Function.h"
 #include "List.h"
 #include "LookupChild.h"
 #include "LookupFunction.h"
@@ -40,6 +41,7 @@ ExpressionPointer Expression::parse(
     if (Number::startsWith(it, last)) {return Number::parse(it, last);}
     if (String::startsWith(it, last)) {return String::parse(it, last);}
     if (Conditional::startsWith(it, last)) {return Conditional::parse(it, last);}
+    if (Function::startsWith(it, last)) {return Function::parse(it, last);}
     if (LookupChild::startsWith(it, last)) {return LookupChild::parse(it, last);}
     if (LookupFunction::startsWith(it, last)) {return LookupFunction::parse(it, last);}
     if (LookupSymbol::startsWith(it, last)) {return LookupSymbol::parse(it, last);}
@@ -54,6 +56,7 @@ bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* las
         Number::startsWith(first, last) ||
         String::startsWith(first, last) ||
         Conditional::startsWith(first, last) ||
+        Function::startsWith(first, last) ||
         LookupChild::startsWith(first, last) ||
         LookupFunction::startsWith(first, last) ||
         LookupSymbol::startsWith(first, last);
