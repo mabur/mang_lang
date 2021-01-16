@@ -66,6 +66,10 @@ ExpressionPointer Expression::apply(ExpressionPointer) const {
     throw std::runtime_error{"Expected function"};
 }
 
+bool Expression::isEqual(const Expression*) const {
+    return false;
+}
+
 double Expression::number() const {
     throw std::runtime_error{"Expected number"};
 }

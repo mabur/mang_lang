@@ -4,6 +4,7 @@
 #include "../expressions/FunctionBuiltIn.h"
 
 #include "arithmetic.h"
+#include "equality.h"
 #include "logic.h"
 
 DictionaryElement makeDictionaryElement(
@@ -32,5 +33,8 @@ ExpressionPointer builtIns() {
     environment->add(makeDictionaryElement("all", logic::all));
     environment->add(makeDictionaryElement("any", logic::any));
     environment->add(makeDictionaryElement("none", logic::none));
+
+    environment->add(makeDictionaryElement("equal", equality::equal));
+    environment->add(makeDictionaryElement("unequal", equality::unequal));
     return environment;
 }

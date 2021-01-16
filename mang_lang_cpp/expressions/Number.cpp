@@ -26,6 +26,14 @@ bool Number::startsWith(const CodeCharacter* first, const CodeCharacter*) {
     return isSign(*first) || isDigit(*first);
 }
 
+bool Number::isEqual(const Expression* expression) const {
+    try {
+        return number() == expression->number();
+    } catch (...) {
+        return false;
+    }
+}
+
 double Number::number() const {
     return value;
 }

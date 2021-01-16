@@ -51,3 +51,23 @@ const std::vector<ExpressionPointer>& List::list() const {
 bool List::boolean() const {
     return !elements.empty();
 }
+
+bool List::isEqual(const Expression* expression) const {
+    try {
+        const auto& list_left = list();
+        const auto& list_right = expression->list();
+        if (list_left.size() != list_right.size()) {
+            return false;
+        }
+        for (size_t i = 0; i < list_left.size(); ++i) {
+            const auto& left = list_left.at(i);
+            const auto& right = list_right.at(i);
+            if (!left->isEqual(right.get())) {
+                return false;
+            }
+        }
+    } catch (...) {
+        return false;
+    }
+    return true;
+}

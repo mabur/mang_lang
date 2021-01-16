@@ -254,6 +254,30 @@ int main() {
         {"none[0,1]", "0"},
         {"none[1,1]", "0"},
     });
+    test.evaluate("equal", {
+        {"equal[0,0]", "1"},
+        {"equal[0,1]", "0"},
+        {"equal[1,0]", "0"},
+        {"equal[1,1]", "1"},
+        {"equal[[],[]]", "1"},
+        {"equal[[1],[1]]", "1"},
+        {"equal[[0],[1]]", "0"},
+        {"equal[[0,1],[0,1]]", "1"},
+        {"equal[[0,1],[1,1]]", "0"},
+        {"equal[[0,1],[0]]", "0"},
+    });
+    test.evaluate("unequal", {
+        {"unequal[0,0]", "0"},
+        {"unequal[0,1]", "1"},
+        {"unequal[1,0]", "1"},
+        {"unequal[1,1]", "0"},
+        {"unequal[[],[]]", "0"},
+        {"unequal[[1],[1]]", "0"},
+        {"unequal[[0],[1]]", "1"},
+        {"unequal[[0,1],[0,1]]", "0"},
+        {"unequal[[0,1],[1,1]]", "1"},
+        {"unequal[[0,1],[0]]", "1"},
+    });
     test.evaluate("function", {
         {"from x to x", "from x to x"},
         {"f<{f=from x to x}", "from x to x"},

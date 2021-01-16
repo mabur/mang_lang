@@ -37,6 +37,7 @@ struct Expression {
     virtual ExpressionPointer evaluate(const Expression* parent) const = 0;
     virtual ExpressionPointer apply(ExpressionPointer input) const;
     virtual ExpressionPointer lookup(const std::string& name) const;
+    virtual bool isEqual(const Expression* expression) const;
     virtual double number() const;
     virtual bool boolean() const;
     virtual const std::vector<ExpressionPointer>& list() const;

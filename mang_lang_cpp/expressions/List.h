@@ -16,4 +16,5 @@ struct List : public Expression {
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
     const std::vector<ExpressionPointer>& list() const final;
     bool boolean() const final;
+    bool isEqual(const Expression* expression) const;
 };
