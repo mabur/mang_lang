@@ -18,33 +18,35 @@ TODO:
     - add append function that is overloaded for lists and strings
 * higher order function for for-loop
  - iterate{init=1, apply=f, while=p}
+* c++ add systematic error messages when parsing fails
+ - Print all sub-expressions that it parsed
 
-iterate = from input to output<{
-    init = init<input,
-    apply = apply<input,
-    while = while<input,
-    output =
+iterate = from in to out<{
+    init = init<in,
+    apply = apply<in,
+    while = while<in,
+    out =
       if while init then
         iterate {init = apply init, apply = apply, while = while}
       else
         init
   }
-factorial = from x to iterate {
-    init = {out = 1, i = x},
-    apply = from in to {out = mul [out<in, i<in], i = sub [i<in, 1]},
-    while = from in to not equal [i<in, 1]
+factorial = from x to product<iterate{
+    init = {product = 1, x = x},
+    apply = from in to {product = mul [product<in, x<in], x = dec x<in},
+    while = from in to not equal [x<in, 1]
 }
-// Alternative function syntax
-factorial = function iterate {
-    init = {out = 1, i = $},
-    apply = function {out = mul [$out, $i], i = sub [$i, 1]},
-    while = function not equal [$i, 1]
+// Alternative function syntax. Short but confusing.
+factorial = function product<iterate{
+    init = {product = 1, x = $},
+    apply = function {product = mul [$product, $x], i = dec $x},
+    while = function not equal [$x, 1]
 }
-// Alternative function input
-factorial = from x to iterate {
-    init = {out = 1, i = in},
-    apply = from {out, i} to {out = mul [out, i], i = sub [i, 1]},
-    while = from {i} to not equal [i, 1]
+// Alternative function input. Good if consistent with type system.
+factorial = from x to product<iterate{
+    init = {product = 1, x = x},
+    apply = from {product, x} to {product = mul [product, x], i = dec x},
+    while = from {x} to not equal [x, 1]
 }
 
 
