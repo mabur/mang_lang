@@ -94,3 +94,9 @@ const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword) 
     }
     return it;
 }
+
+void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last) {
+    if (it == last) {
+        throw ParseException("Missing expression to parse");
+    }
+}

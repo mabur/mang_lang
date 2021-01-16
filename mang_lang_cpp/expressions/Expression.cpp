@@ -34,7 +34,7 @@ ExpressionPointer Expression::parse(
 ) {
     auto it = first;
     it = parseWhiteSpace(it, last);
-    if (it == last) {throw ParseException("Missing expression to parse");}
+    verifyThisIsNotTheEnd(it, last);
     if (List::startsWith(it, last)) {return List::parse(it, last);}
     if (Dictionary::startsWith(it, last)) {return Dictionary::parse(it, last);}
     if (Number::startsWith(it, last)) {return Number::parse(it, last);}
