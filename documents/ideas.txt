@@ -20,6 +20,7 @@ TODO:
  - iterate{init=1, apply=f, while=p}
 * c++ add systematic error messages when parsing fails
  - Print all sub-expressions that it parsed
+* child< as function that can be sent to map
 
 iterate = from in to out<{
     init = init<in,
