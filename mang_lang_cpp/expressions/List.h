@@ -9,7 +9,6 @@ struct List : public Expression {
         std::vector<ExpressionPointer> elements
     ) : Expression{first, last, parent}, elements{std::move(elements)}
     {}
-    std::vector<ExpressionPointer> elements;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
@@ -17,4 +16,6 @@ struct List : public Expression {
     const std::vector<ExpressionPointer>& list() const final;
     bool boolean() const final;
     bool isEqual(const Expression* expression) const;
+private:
+    std::vector<ExpressionPointer> elements;
 };
