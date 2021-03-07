@@ -30,3 +30,15 @@ template<typename T>
 SinglyLinkedList<T> reverse(SinglyLinkedList<T> list) {
     return leftFold(list, SinglyLinkedList<T>{}, add<T>);
 }
+
+template<typename Input, typename Output>
+SinglyLinkedList<Output> map(
+    SinglyLinkedList<Input> list, std::function<Output(Input)> f
+) {
+    const auto op = [&](
+        SinglyLinkedList<Output> output, Input x
+    ) -> SinglyLinkedList<Output> {
+        return add(output, f(x));
+    };
+    return reverse(leftFold(list, SinglyLinkedList<Output>{}, op));
+}

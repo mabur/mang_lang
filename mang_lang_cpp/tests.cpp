@@ -349,6 +349,13 @@ int main() {
         list = reverse(list);
         test.assertEqual<std::string>("a", list->first);
     }
+    {
+        auto list = SinglyLinkedList<int>{};
+        list = add(list, 0);
+        list = add(list, 1);
+        auto actual = map<int, int>(list, [](auto x){return x + 10;});
+        test.assertEqual(11, actual->first);
+    }
 
     return test.exitCode();
 }
