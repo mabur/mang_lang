@@ -6,6 +6,8 @@
 #include <tuple>
 #include <vector>
 
+#include "expressions/ListStorage.h"
+
 struct Test {
     Test() = default;
     ~Test() {
@@ -21,6 +23,24 @@ struct Test {
     }
     size_t num_good_total= 0;
     size_t num_bad_total = 0;
+
+    template<typename T>
+    void assertEqual(
+        const T left,
+        const T right
+    ) {
+        using namespace std;
+        if (left == right)
+        {
+            cout << "Test successful: " << left << " == " << right << endl;
+            ++num_good_total;
+        }
+        else
+        {
+            cout << "Test failed: " << left << " != " << right << endl;
+            ++num_bad_total;
+        }
+    }
 
     template<typename Input, typename Output>
     void parameterizedTest(
@@ -286,5 +306,49 @@ int main() {
         {"a<{f=from x to 1,a=f 0}", "1"},
         {"a<{inc=from x to add[x,1],a=inc 0}", "1"},
     });
+
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        list = add(list, std::string{"a"});
+        test.assertEqual<std::string>("a", list->first);
+    }
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        list = add(list, std::string{"a"});
+        list = add(list, std::string{"b"});
+        test.assertEqual<std::string>("b", list->first);
+    }
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        auto actual = leftFold(list, std::string{}, std::plus<std::string>{});
+        test.assertEqual<std::string>("", actual);
+    }
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        list = add(list, std::string{"a"});
+        auto actual = leftFold(list, std::string{}, std::plus<std::string>{});
+        test.assertEqual<std::string>("a", actual);
+    }
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        list = add(list, std::string{"a"});
+        list = add(list, std::string{"b"});
+        auto actual = leftFold(list, std::string{}, std::plus<std::string>{});
+        test.assertEqual<std::string>("ba", actual);
+    }
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        list = add(list, std::string{"a"});
+        list = reverse(list);
+        test.assertEqual<std::string>("a", list->first);
+    }
+    {
+        auto list = SinglyLinkedList<std::string>{};
+        list = add(list, std::string{"a"});
+        list = add(list, std::string{"b"});
+        list = reverse(list);
+        test.assertEqual<std::string>("a", list->first);
+    }
+
     return test.exitCode();
 }
