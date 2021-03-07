@@ -21,6 +21,9 @@ TODO:
 * c++ add systematic error messages when parsing fails
  - Print all sub-expressions that it parsed
 * child< as function that can be sent to map
+* Not turing complete
+  - Remove recursion and replace with map/filter/fold/list-comprehension/sql
+* Remove list and only use records as simplification, similar to lua?
 
 iterate = from in to out<{
     init = init<in,
