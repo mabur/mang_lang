@@ -309,13 +309,13 @@ int main() {
 
     {
         auto list = SinglyLinkedList<std::string>{};
-        list = add(list, std::string{"a"});
+        list = prepend(list, std::string{"a"});
         test.assertEqual<std::string>("a", list->first);
     }
     {
         auto list = SinglyLinkedList<std::string>{};
-        list = add(list, std::string{"a"});
-        list = add(list, std::string{"b"});
+        list = prepend(list, std::string{"a"});
+        list = prepend(list, std::string{"b"});
         test.assertEqual<std::string>("b", list->first);
     }
     {
@@ -325,34 +325,34 @@ int main() {
     }
     {
         auto list = SinglyLinkedList<std::string>{};
-        list = add(list, std::string{"a"});
+        list = prepend(list, std::string{"a"});
         auto actual = leftFold(list, std::string{}, std::plus<std::string>{});
         test.assertEqual<std::string>("a", actual);
     }
     {
         auto list = SinglyLinkedList<std::string>{};
-        list = add(list, std::string{"a"});
-        list = add(list, std::string{"b"});
+        list = prepend(list, std::string{"a"});
+        list = prepend(list, std::string{"b"});
         auto actual = leftFold(list, std::string{}, std::plus<std::string>{});
         test.assertEqual<std::string>("ba", actual);
     }
     {
         auto list = SinglyLinkedList<std::string>{};
-        list = add(list, std::string{"a"});
+        list = prepend(list, std::string{"a"});
         list = reverse(list);
         test.assertEqual<std::string>("a", list->first);
     }
     {
         auto list = SinglyLinkedList<std::string>{};
-        list = add(list, std::string{"a"});
-        list = add(list, std::string{"b"});
+        list = prepend(list, std::string{"a"});
+        list = prepend(list, std::string{"b"});
         list = reverse(list);
         test.assertEqual<std::string>("a", list->first);
     }
     {
         auto list = SinglyLinkedList<int>{};
-        list = add(list, 0);
-        list = add(list, 1);
+        list = prepend(list, 0);
+        list = prepend(list, 1);
         auto actual = map<int, int>(list, [](auto x){return x + 10;});
         test.assertEqual(11, actual->first);
     }

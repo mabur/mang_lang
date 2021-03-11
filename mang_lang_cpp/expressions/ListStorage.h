@@ -13,7 +13,7 @@ template<typename T>
 using SinglyLinkedList = std::shared_ptr<Node<T>>;
 
 template<typename T>
-SinglyLinkedList<T> add(SinglyLinkedList<T> list, T value) {
+SinglyLinkedList<T> prepend(SinglyLinkedList<T> list, T value) {
     return std::shared_ptr<Node<T>>(new Node<T>{std::move(value), std::move(list)});
 }
 
@@ -28,7 +28,7 @@ Init leftFold(SinglyLinkedList<T> list, Init init, Operation operation) {
 
 template<typename T>
 SinglyLinkedList<T> reverse(SinglyLinkedList<T> list) {
-    return leftFold(list, SinglyLinkedList<T>{}, add<T>);
+    return leftFold(list, SinglyLinkedList<T>{}, prepend<T>);
 }
 
 template<typename Input, typename Output>
@@ -38,7 +38,7 @@ SinglyLinkedList<Output> map(
     const auto op = [&](
         SinglyLinkedList<Output> output, Input x
     ) -> SinglyLinkedList<Output> {
-        return add(output, f(x));
+        return prepend(output, f(x));
     };
     return reverse(leftFold(list, SinglyLinkedList<Output>{}, op));
 }
