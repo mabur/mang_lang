@@ -25,6 +25,13 @@ TODO:
   - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * Remove list and only use records as simplification, similar to lua?
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
+* Migration to single-linked-list:
+ - Implement built in arithmethic functions using leftFold
+ - Implement built in logic functions using any or find_if
+ - Implement List::serialize using leftFold
+ - implement List::evaluate using map
+ - Use type alias for list storage
+
 
 from x to mul[x, x]
 from [a, b] to mul[a, b]
