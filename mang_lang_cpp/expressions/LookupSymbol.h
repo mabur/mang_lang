@@ -8,7 +8,7 @@ struct LookupSymbol : public Expression {
         const CodeCharacter* last,
         const Expression* parent,
         Name name
-    ) : Expression{first, last, parent}, name{name} {}
+    ) : Expression{first, last, parent}, name{std::move(name)} {}
     Name name;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent) const final;

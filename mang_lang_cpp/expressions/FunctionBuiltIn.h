@@ -4,7 +4,7 @@
 #include "Name.h"
 
 struct FunctionBuiltIn : public Expression {
-    FunctionBuiltIn(std::function<ExpressionPointer(const Expression&)> f
+    explicit FunctionBuiltIn(std::function<ExpressionPointer(const Expression&)> f
     ) : Expression{{}, {}, {}}, function(std::move(f))
     {}
     std::function<ExpressionPointer(const Expression&)> function;

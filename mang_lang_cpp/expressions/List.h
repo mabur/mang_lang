@@ -15,7 +15,7 @@ struct List : public Expression {
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
     const InternalList& list() const final;
     bool boolean() const final;
-    bool isEqual(const Expression* expression) const;
+    bool isEqual(const Expression* expression) const final;
 private:
     InternalList elements;
 };

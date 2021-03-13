@@ -9,7 +9,7 @@ struct LookupChild : public Expression {
         const Expression* parent,
         Name name,
         ExpressionPointer child
-    ) : Expression{first, last, parent}, name{name}, child{child} {}
+    ) : Expression{first, last, parent}, name{std::move(name)}, child{std::move(child)} {}
     Name name;
     ExpressionPointer child;
     std::string serialize() const final;
