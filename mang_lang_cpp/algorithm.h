@@ -18,3 +18,16 @@ auto map(const std::vector<ValueType>& v, Function f) {
     }
     return result;
 }
+
+template<typename Container, typename Predicate>
+typename Container::const_iterator findIf(
+    const Container& container, Predicate predicate
+) {
+    auto it = container.begin();
+    for (; it != container.end(); ++it) {
+        if (predicate(*it)) {
+            return it;
+        }
+    }
+    return it;
+}

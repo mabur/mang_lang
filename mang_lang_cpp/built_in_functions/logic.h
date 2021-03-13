@@ -5,6 +5,14 @@
 
 namespace logic {
 
+bool isTrue(const ExpressionPointer& x) {
+    return x->boolean();
+}
+
+bool isFalse(const ExpressionPointer& x) {
+    return !x->boolean();
+}
+
 ExpressionPointer makeNumber(const Expression& in, double x) {
     return std::make_shared<Number>(in.begin(), in.end(), nullptr, x);
 }
@@ -18,30 +26,18 @@ ExpressionPointer logic_not(const Expression& in) {
 }
 
 ExpressionPointer all(const Expression& in) {
-    for (const auto& element : in.list()) {
-        if (!element->boolean()) {
-            return makeNumber(in, false);
-        }
-    }
-    return makeNumber(in, true);
+    const auto result = findIf(in.list(), isFalse) == in.list().end();
+    return makeNumber(in, result);
 }
 
 ExpressionPointer any(const Expression& in) {
-    for (const auto& element : in.list()) {
-        if (element->boolean()) {
-            return makeNumber(in, true);
-        }
-    }
-    return makeNumber(in, false);
+    const auto result = findIf(in.list(), isTrue) != in.list().end();
+    return makeNumber(in, result);
 }
 
 ExpressionPointer none(const Expression& in) {
-    for (const auto& element : in.list()) {
-        if (element->boolean()) {
-            return makeNumber(in, false);
-        }
-    }
-    return makeNumber(in, true);
+    const auto result = findIf(in.list(), isTrue) == in.list().end();
+    return makeNumber(in, result);
 }
 
 }
