@@ -365,7 +365,7 @@ int main() {
         auto list = SinglyLinkedList<int>{};
         list = prepend(list, 0);
         auto actual = findIf(list, [](auto){return true;});
-        test.assertEqual(list.get(), actual.get());
+        test.assertEqual(list->first, actual->first);
     }
     {
         auto list = SinglyLinkedList<int>{};
