@@ -31,6 +31,7 @@ TODO:
  - Implement List::serialize using leftFold
  - implement List::evaluate using map
  - Use type alias for list storage
+* Can expression trees be implemented more like values and less like pointers? More like lisp?
 
 
 from x to mul[x, x]
