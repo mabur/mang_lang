@@ -1,18 +1,16 @@
 #include "List.h"
+#include "../algorithm.h"
 
 std::string List::serialize() const {
-    auto result = std::string{};
-    result += '[';
-    for (const auto& element : elements) {
-        result += element->serialize();
-        result += ',';
-    }
     if (elements.empty()) {
-        result += ']';
+        return "[]";
     }
-    else {
-        result.back() = ']';
-    }
+    const auto operation = [](const std::string& left, const ExpressionPointer& right) {
+        return left + right->serialize() + ",";
+    };
+    auto result = std::string{"["};
+    result = leftFold(elements, result, operation);
+    result.back() = ']';
     return result;
 }
 
