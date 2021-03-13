@@ -41,3 +41,13 @@ auto map(SinglyLinkedList<Input> list, Function f) {
     };
     return reverse(leftFold(list, SinglyLinkedList<Output>{}, op));
 }
+
+template<typename T, typename Predicate>
+SinglyLinkedList<T> findIf(SinglyLinkedList<T> list, Predicate predicate) {
+    for (; list; list = list->rest) {
+        if (predicate(list->first)) {
+            break;
+        }
+    }
+    return list;
+}

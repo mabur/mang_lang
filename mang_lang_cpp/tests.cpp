@@ -356,6 +356,24 @@ int main() {
         auto actual = map(list, [](auto x){return x + 10;});
         test.assertEqual(11, actual->first);
     }
+    {
+        auto list = SinglyLinkedList<int>{};
+        auto actual = findIf(list, [](auto){return true;});
+        test.assertEqual(list.get(), actual.get());
+    }
+    {
+        auto list = SinglyLinkedList<int>{};
+        list = prepend(list, 0);
+        auto actual = findIf(list, [](auto){return true;});
+        test.assertEqual(list.get(), actual.get());
+    }
+    {
+        auto list = SinglyLinkedList<int>{};
+        list = prepend(list, 1);
+        list = prepend(list, 0);
+        auto actual = findIf(list, [](auto x){return x != 0;});
+        test.assertEqual(1, actual->first);
+    }
 
     return test.exitCode();
 }
