@@ -26,7 +26,7 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
     auto it = first;
     it = parseCharacter(it, '[');
     it = parseWhiteSpace(it, last);
-    auto expressions = std::vector<ExpressionPointer>{};
+    auto expressions = InternalList{};
     while (it->character != ']') {
         auto expression = Expression::parse(it, last);
         it = expression->end();
@@ -42,7 +42,7 @@ bool List::startsWith(const CodeCharacter* first, const CodeCharacter*) {
     return first->character == '[';
 }
 
-const std::vector<ExpressionPointer>& List::list() const {
+const InternalList& List::list() const {
     return elements;
 }
 

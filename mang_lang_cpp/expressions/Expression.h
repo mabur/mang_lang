@@ -9,6 +9,7 @@
 
 struct Expression;
 using ExpressionPointer = std::shared_ptr<const Expression>;
+using InternalList = std::vector<ExpressionPointer>;
 
 struct Expression {
     Expression(
@@ -40,5 +41,5 @@ struct Expression {
     virtual bool isEqual(const Expression* expression) const;
     virtual double number() const;
     virtual bool boolean() const;
-    virtual const std::vector<ExpressionPointer>& list() const;
+    virtual const InternalList& list() const;
 };

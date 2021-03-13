@@ -6,16 +6,16 @@ struct List : public Expression {
         const CodeCharacter* first,
         const CodeCharacter* last,
         const Expression* parent,
-        std::vector<ExpressionPointer> elements
+        InternalList elements
     ) : Expression{first, last, parent}, elements{std::move(elements)}
     {}
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
-    const std::vector<ExpressionPointer>& list() const final;
+    const InternalList& list() const final;
     bool boolean() const final;
     bool isEqual(const Expression* expression) const;
 private:
-    std::vector<ExpressionPointer> elements;
+    InternalList elements;
 };

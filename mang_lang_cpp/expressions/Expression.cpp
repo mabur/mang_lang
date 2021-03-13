@@ -78,6 +78,6 @@ bool Expression::boolean() const {
     throw std::runtime_error{"Expected boolean"};
 }
 
-const std::vector<ExpressionPointer>& Expression::list() const {
+const InternalList& Expression::list() const {
     throw std::runtime_error{"Expected list"};
 }
