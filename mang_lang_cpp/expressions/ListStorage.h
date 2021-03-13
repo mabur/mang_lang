@@ -31,10 +31,9 @@ SinglyLinkedList<T> reverse(SinglyLinkedList<T> list) {
     return leftFold(list, SinglyLinkedList<T>{}, prepend<T>);
 }
 
-template<typename Input, typename Output>
-SinglyLinkedList<Output> map(
-    SinglyLinkedList<Input> list, std::function<Output(Input)> f
-) {
+template<typename Input, typename Function>
+auto map(SinglyLinkedList<Input> list, Function f) {
+    using Output = decltype(f(list->first));
     const auto op = [&](
         SinglyLinkedList<Output> output, Input x
     ) -> SinglyLinkedList<Output> {

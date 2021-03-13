@@ -26,6 +26,7 @@ TODO:
 * Remove list and only use records as simplification, similar to lua?
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
 * Migration to single-linked-list.
+  - implement isEqual without assuming array properties
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 
 from x to mul[x, x]

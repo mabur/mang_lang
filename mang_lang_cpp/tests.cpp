@@ -353,7 +353,7 @@ int main() {
         auto list = SinglyLinkedList<int>{};
         list = prepend(list, 0);
         list = prepend(list, 1);
-        auto actual = map<int, int>(list, [](auto x){return x + 10;});
+        auto actual = map(list, [](auto x){return x + 10;});
         test.assertEqual(11, actual->first);
     }
 
