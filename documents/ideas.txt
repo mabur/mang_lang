@@ -27,7 +27,6 @@ TODO:
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
 * Migration to single-linked-list:
  - Implement built in logic functions using any or find_if
- - implement List::evaluate using map
  - Use type alias for list storage
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 

@@ -15,10 +15,10 @@ std::string List::serialize() const {
 }
 
 ExpressionPointer List::evaluate(const Expression* parent) const {
-    auto evaluated_elements = std::vector<ExpressionPointer>{};
-    for (const auto& element : elements) {
-        evaluated_elements.emplace_back(element->evaluate(parent));
-    }
+    const auto operation = [=](const ExpressionPointer& expression) {
+        return expression->evaluate(parent);
+    };
+    auto evaluated_elements = map(elements, operation);
     return std::make_shared<List>(begin(), end(), parent, std::move(evaluated_elements));
 }
 

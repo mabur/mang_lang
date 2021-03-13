@@ -7,3 +7,14 @@ Init leftFold(const Container& container, Init init, Operation operation) {
     }
     return init;
 }
+
+template<typename ValueType, typename Function>
+auto map(const std::vector<ValueType>& v, Function f) {
+    using NewValueType = decltype(f(v.front()));
+    auto result = std::vector<NewValueType>{};
+    result.reserve(v.size());
+    for (const auto& x : v){
+        result.push_back(f(x));
+    }
+    return result;
+}
