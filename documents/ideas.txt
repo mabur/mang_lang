@@ -73,6 +73,12 @@ factorial = from x to product<iterate{
     apply = from {product, x} to {product = mul [product, x], i = dec x},
     while = from {x} to not equal [x, 1]
 }
+// Alternative function input
+factorial = x> product<iterate{
+    init = {product = 1, x = x},
+    apply = {product>, x>} {product = mul [product, x], i = dec x},
+    while = x> not equal [x, 1]
+}
 
 
 TODOS: TYPE CHECKING AND COMPILING
@@ -382,7 +388,20 @@ find = from input to
             head = concat [[first list], center],
             result = [head, tail]
         }
-
+// Alternativ
+find = from {list, query} to
+    if is_empty list then
+        [[],[]]
+    else if are_equal [first list, query] then
+        [[], list]
+    else
+        result<{
+            sub_result = find {list=last_part list, query=query}
+            center = first sub_result,
+            tail = last sub_result,
+            head = concat [[first list], center],
+            result = [head, tail]
+        }
 // Typ-förslag
 find : from {list: List Generic, query: Generic} to List List Generic =
     if is_empty list then
