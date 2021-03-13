@@ -6,10 +6,12 @@
 #include <vector>
 
 #include "../parse_utils.h"
+#include "../expressions/ListStorage.h"
 
 struct Expression;
 using ExpressionPointer = std::shared_ptr<const Expression>;
 using InternalList = std::vector<ExpressionPointer>;
+//using InternalList = SinglyLinkedList<ExpressionPointer>;
 
 struct Expression {
     Expression(
