@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "../expressions/Number.h"
+#include "../algorithm.h"
 
 namespace arithmetic {
 
@@ -12,34 +13,38 @@ ExpressionPointer makeNumber(const Expression& in, double x) {
 }
 
 ExpressionPointer min(const Expression& in) {
-    auto result = std::numeric_limits<double>::infinity();
-    for (const auto& element : in.list()) {
-        result = std::min(result, element->number());
-    }
+    const auto operation = [](double left, const ExpressionPointer& right) -> double {
+        return std::min(left, right->number());
+    };
+    const auto init = std::numeric_limits<double>::infinity();
+    const auto result = leftFold(in.list(), init, operation);
     return makeNumber(in, result);
 }
 
 ExpressionPointer max(const Expression& in) {
-    auto result = -std::numeric_limits<double>::infinity();
-    for (const auto& element : in.list()) {
-        result = std::max(result, element->number());
-    }
+    const auto operation = [](double left, const ExpressionPointer& right) -> double {
+        return std::max(left, right->number());
+    };
+    const auto init = -std::numeric_limits<double>::infinity();
+    const auto result = leftFold(in.list(), init, operation);
     return makeNumber(in, result);
 }
 
 ExpressionPointer add(const Expression& in) {
-    auto result = 0.0;
-    for (const auto& element : in.list()) {
-        result += element->number();
-    }
+    const auto operation = [](double left, const ExpressionPointer& right) -> double {
+        return left + right->number();
+    };
+    const auto init = 0;
+    const auto result = leftFold(in.list(), init, operation);
     return makeNumber(in, result);
 }
 
 ExpressionPointer mul(const Expression& in) {
-    auto result = 1.0;
-    for (const auto& element : in.list()) {
-        result *= element->number();
-    }
+    const auto operation = [](double left, const ExpressionPointer& right) -> double {
+        return left * right->number();
+    };
+    const auto init = 1.0;
+    const auto result = leftFold(in.list(), init, operation);
     return makeNumber(in, result);
 }
 
