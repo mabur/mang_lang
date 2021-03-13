@@ -28,16 +28,22 @@ TODO:
 * Migration to single-linked-list.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 
-
 from x to mul[x, x]
 from [a, b] to mul[a, b]
 from {a, b} to mul[a, b]
 x: -> mul[x, x]
 [a:, b:] -> mul[a, b]
 {a:, b:} -> mul[a, b]
+x> mul[x, x]
+[a> b>] mul[a, b]
+{a> b>} mul[a, b]
 
+Equivalence of:
+input>list<input
+list<
 
-
+country>street<city<country
+street<city<
 
 
 iterate = from in to out<{
