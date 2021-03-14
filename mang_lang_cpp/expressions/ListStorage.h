@@ -18,12 +18,11 @@ SinglyLinkedList<T> prepend(SinglyLinkedList<T> list, T value) {
 }
 
 template<typename T, typename Init, typename Operation>
-Init leftFold(SinglyLinkedList<T> list, Init init, Operation operation) {
-    auto result = init;
-    for (auto x = list; x; x = x->rest) {
-        result = operation(result, x->first);
+Init leftFold(SinglyLinkedList<T> list, Init value, Operation operation) {
+    for (; list; list = list->rest) {
+        value = operation(value, list->first);
     }
-    return result;
+    return value;
 }
 
 template<typename T>
