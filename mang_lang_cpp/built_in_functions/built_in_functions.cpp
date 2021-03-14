@@ -5,6 +5,7 @@
 
 #include "arithmetic.h"
 #include "equality.h"
+#include "list.h"
 #include "logic.h"
 
 DictionaryElement makeDictionaryElement(
@@ -36,5 +37,9 @@ ExpressionPointer builtIns() {
 
     environment->add(makeDictionaryElement("equal", equality::equal));
     environment->add(makeDictionaryElement("unequal", equality::unequal));
+
+    environment->add(makeDictionaryElement("first", list_functions::first));
+    environment->add(makeDictionaryElement("rest", list_functions::rest));
+    environment->add(makeDictionaryElement("prepend", list_functions::prepend));
     return environment;
 }

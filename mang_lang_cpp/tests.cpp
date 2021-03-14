@@ -306,6 +306,20 @@ int main() {
         {"a<{f=from x to 1,a=f 0}", "1"},
         {"a<{inc=from x to add[x,1],a=inc 0}", "1"},
     });
+    test.evaluate("first list", {
+        {"first[4]", "4"},
+        {"first[3,4]", "3"},
+    });
+    test.evaluate("rest list", {
+        {"rest[4]", "[]"},
+        {"rest[4,3]", "[3]"},
+        {"rest[4,3,7]", "[3,7]"},
+    });
+    test.evaluate("prepend list", {
+        {"prepend{item=3,list=[]}", "[3]"},
+        {"prepend{item=4,list=[5]}", "[4,5]"},
+        {"prepend{item=4,list=[6,8]}", "[4,6,8]"},
+    });
 
     {
         auto list = SinglyLinkedList<std::string>{};
