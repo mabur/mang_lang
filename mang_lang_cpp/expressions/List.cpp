@@ -2,7 +2,7 @@
 #include "../algorithm.h"
 
 std::string List::serialize() const {
-    if (elements.empty()) {
+    if (!elements) {
         return "[]";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
@@ -30,12 +30,12 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
     while (it->character != ']') {
         auto expression = Expression::parse(it, last);
         it = expression->end();
-        expressions.push_back(std::move(expression));
+        expressions = prepend(expressions, std::move(expression));
         it = parseWhiteSpace(it, last);
         it = parseOptionalCharacter(it, ',');
     }
     it = parseCharacter(it, ']');
-    return std::make_shared<List>(first, it, nullptr, std::move(expressions));
+    return std::make_shared<List>(first, it, nullptr, reverse(expressions));
 }
 
 bool List::startsWith(const CodeCharacter* first, const CodeCharacter*) {
@@ -47,18 +47,16 @@ const InternalList& List::list() const {
 }
 
 bool List::boolean() const {
-    return !elements.empty();
+    return !!elements;
 }
 
 bool List::isEqual(const Expression* expression) const {
-    const auto& list_left = list();
-    const auto& list_right = expression->list();
-    auto left = list().begin();
-    auto right = expression->list().begin();
-    for (; left != list_left.end() && right != list_right.end(); ++left, ++right) {
-        if (!(*left)->isEqual(right->get())) {
+    auto left = list();
+    auto right = expression->list();
+    for (; left && right; left = left->rest, right = right->rest) {
+        if (!(left->first)->isEqual(right->first.get())) {
             return false;
         }
     }
-    return left == list_left.end() && right == list_right.end();
+    return !left && !right;
 }

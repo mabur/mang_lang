@@ -49,12 +49,12 @@ ExpressionPointer mul(const Expression& in) {
 }
 
 ExpressionPointer sub(const Expression& in) {
-    const auto result = in.list().at(0)->number() - in.list().at(1)->number();
+    const auto result = in.list()->first->number() - in.list()->rest->first->number();
     return makeNumber(in, result);
 }
 
 ExpressionPointer div(const Expression& in) {
-    const auto result = in.list().at(0)->number() / in.list().at(1)->number();
+    const auto result = in.list()->first->number() / in.list()->rest->first->number();
     return makeNumber(in, result);
 }
 

@@ -11,16 +11,16 @@ ExpressionPointer makeNumber(const Expression &in, double x) {
 
 ExpressionPointer equal(const Expression &in) {
     const auto &elements = in.list();
-    const auto &left = elements.at(0);
-    const auto &right = elements.at(1);
+    const auto &left = elements->first;
+    const auto &right = elements->rest->first;
     const auto value = left->isEqual(right.get());
     return makeNumber(in, value);
 }
 
 ExpressionPointer unequal(const Expression &in) {
     const auto &elements = in.list();
-    const auto &left = elements.at(0);
-    const auto &right = elements.at(1);
+    const auto &left = elements->first;
+    const auto &right = elements->rest->first;
     const auto value = !left->isEqual(right.get());
     return makeNumber(in, value);
 }
