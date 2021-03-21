@@ -7,8 +7,10 @@ std::string Number::serialize() const {
     return s.str();
 }
 
-ExpressionPointer Number::evaluate(const Expression* parent) const {
-    return std::make_shared<Number>(begin(), end(), parent, value);
+ExpressionPointer Number::evaluate(const Expression* parent, std::ostream& log) const {
+    auto result = std::make_shared<Number>(begin(), end(), parent, value);
+    log << result->serialize() << std::endl;
+    return result;
 }
 
 ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter* last) {

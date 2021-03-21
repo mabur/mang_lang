@@ -5,8 +5,10 @@ std::string String::serialize() const {
     return "\"" + value + "\"";
 }
 
-ExpressionPointer String::evaluate(const Expression* parent) const {
-    return std::make_shared<String>(begin(), end(), parent, value);
+ExpressionPointer String::evaluate(const Expression* parent, std::ostream& log) const {
+    auto result = std::make_shared<String>(begin(), end(), parent, value);
+    log << result->serialize();
+    return result;
 }
 
 bool endsWith(CodeCharacter c) {

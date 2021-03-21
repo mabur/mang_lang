@@ -6,11 +6,13 @@ std::string LookupFunction::serialize() const {
     return name.serialize() + " " + child->serialize();
 }
 
-ExpressionPointer LookupFunction::evaluate(const Expression* parent) const {
+ExpressionPointer LookupFunction::evaluate(const Expression* parent, std::ostream& log) const {
     const auto function = parent->lookup(name.value);
-    const auto evaluated_child = child->evaluate(parent);
+    const auto evaluated_child = child->evaluate(parent, log);
     assert(evaluated_child);
-    return function->apply(evaluated_child);
+    auto result = function->apply(evaluated_child, log);
+    log << result->serialize() << std::endl;
+    return result;
 }
 
 ExpressionPointer LookupFunction::parse(const CodeCharacter* first, const CodeCharacter* last) {

@@ -5,9 +5,11 @@ std::string LookupChild::serialize() const {
     return name.serialize() + "<" + child->serialize();
 }
 
-ExpressionPointer LookupChild::evaluate(const Expression* parent) const {
-    const auto evaluated_child = child->evaluate(parent);
-    return ExpressionPointer{evaluated_child->lookup(name.value)};
+ExpressionPointer LookupChild::evaluate(const Expression* parent, std::ostream& log) const {
+    const auto evaluated_child = child->evaluate(parent, log);
+    auto result = ExpressionPointer{evaluated_child->lookup(name.value)};
+    log << result->serialize() << std::endl;
+    return result;
 }
 
 ExpressionPointer LookupChild::parse(const CodeCharacter* first, const CodeCharacter* last) {

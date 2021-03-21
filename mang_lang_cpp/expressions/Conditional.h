@@ -19,7 +19,7 @@ struct Conditional : public Expression {
     ExpressionPointer expression_then;
     ExpressionPointer expression_else;
     std::string serialize() const final;
-    ExpressionPointer evaluate(const Expression* parent) const final;
+    ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static ExpressionPointer parse(
         const CodeCharacter* first, const CodeCharacter* last
     );

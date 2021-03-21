@@ -16,8 +16,8 @@ struct Function : public Expression {
     Name input_name;
     ExpressionPointer body;
     std::string serialize() const final;
-    ExpressionPointer evaluate(const Expression* parent) const final;
-    ExpressionPointer apply(ExpressionPointer input) const final;
+    ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
+    ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const final;
     static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
     static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
 };

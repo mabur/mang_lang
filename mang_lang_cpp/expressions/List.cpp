@@ -14,12 +14,14 @@ std::string List::serialize() const {
     return result;
 }
 
-ExpressionPointer List::evaluate(const Expression* parent) const {
-    const auto operation = [=](const ExpressionPointer& expression) {
-        return expression->evaluate(parent);
+ExpressionPointer List::evaluate(const Expression* parent, std::ostream& log) const {
+    const auto operation = [&](const ExpressionPointer& expression) {
+        return expression->evaluate(parent, log);
     };
     auto evaluated_elements = map(elements, operation);
-    return std::make_shared<List>(begin(), end(), parent, std::move(evaluated_elements));
+    auto result = std::make_shared<List>(begin(), end(), parent, std::move(evaluated_elements));
+    log << result->serialize() << std::endl;
+    return result;
 }
 
 ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* last) {

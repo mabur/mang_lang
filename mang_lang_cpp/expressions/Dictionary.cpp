@@ -33,15 +33,16 @@ std::string Dictionary::serialize() const {
     return result;
 }
 
-ExpressionPointer Dictionary::evaluate(const Expression* parent) const {
+ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
     auto result = std::make_shared<Dictionary>(
         begin(), end(), parent);
     for (const auto& element : elements) {
         result->add(DictionaryElement{
             element.name,
-            element.expression->evaluate(result.get())
+            element.expression->evaluate(result.get(), log)
         });
     }
+    log << result->serialize() << std::endl;
     return result;
 }
 
