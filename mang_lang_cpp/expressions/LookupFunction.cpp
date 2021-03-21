@@ -25,8 +25,7 @@ ExpressionPointer LookupFunction::parse(const CodeCharacter* first, const CodeCh
 }
 
 bool LookupFunction::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
-    const auto keywords = std::vector<std::string>{"if", "then", "else", "from", "to"};
-    if (isAnyKeyword(first, last, keywords)) {
+    if (isAnyKeyword(first, last, KEYWORDS)) {
         return false;
     }
     if (!std::isalpha(first->character)) {

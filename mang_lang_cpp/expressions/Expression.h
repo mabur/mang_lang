@@ -13,6 +13,8 @@ struct Expression;
 using ExpressionPointer = std::shared_ptr<const Expression>;
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
+const auto KEYWORDS = std::vector<std::string>{"if", "then", "else", "from", "to"};
+
 struct Expression {
     Expression(
         const CodeCharacter* first,
