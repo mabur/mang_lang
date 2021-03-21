@@ -34,7 +34,9 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
-bool isKeyword(const CodeCharacter* it, const std::string& keyword);
+bool isKeyword(
+    const CodeCharacter* first, const CodeCharacter* last, const std::string& keyword
+);
 
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last

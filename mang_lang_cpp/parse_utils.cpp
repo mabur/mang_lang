@@ -60,11 +60,15 @@ bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
 }
 
 bool isKeyword(
-    const CodeCharacter* it,
+    const CodeCharacter* first,
+    const CodeCharacter* last,
     const std::string& keyword
 ) {
     const auto w = makeCodeCharacters(keyword);
-    return std::equal(w.begin(), w.end(), it, haveSameCharacters);
+    if (last - first < w.end() - w.begin()) {
+        return false;
+    }
+    return std::equal(w.begin(), w.end(), first, haveSameCharacters);
 }
 
 const CodeCharacter* parseWhiteSpace(

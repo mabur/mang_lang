@@ -33,6 +33,6 @@ ExpressionPointer Function::parse(const CodeCharacter* first, const CodeCharacte
     return std::make_shared<Function>(first, it, nullptr, input_name, body);
 }
 
-bool Function::startsWith(const CodeCharacter* first, const CodeCharacter*) {
-    return isKeyword(first, "from ");
+bool Function::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    return isKeyword(first, last, "from ");
 }
