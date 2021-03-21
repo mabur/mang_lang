@@ -95,7 +95,12 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, char c) {
     return it;
 }
 
-const CodeCharacter* parseKeyword(const CodeCharacter* it, std::string keyword) {
+const CodeCharacter* parseKeyword(
+    const CodeCharacter* first, const CodeCharacter* last, std::string keyword) {
+    if (last - first < keyword.end() - keyword.begin()) {
+        throw ParseException("Reached end of file when parsing " + keyword, first);
+    }
+    auto it = first;
     for (const auto c : keyword) {
         it = parseCharacter(it, c);
     }

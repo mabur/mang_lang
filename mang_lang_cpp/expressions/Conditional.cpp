@@ -20,19 +20,19 @@ ExpressionPointer Conditional::parse(
 ) {
     auto it = first;
 
-    it = parseKeyword(it, "if");
+    it = parseKeyword(it, last, "if");
     it = parseWhiteSpace(it, last);
     auto expression_if = Expression::parse(it, last);
     it = expression_if->end();
     it = parseWhiteSpace(it, last);
 
-    it = parseKeyword(it, "then");
+    it = parseKeyword(it, last, "then");
     it = parseWhiteSpace(it, last);
     auto expression_then = Expression::parse(it, last);
     it = expression_then->end();
     it = parseWhiteSpace(it, last);
 
-    it = parseKeyword(it, "else");
+    it = parseKeyword(it, last, "else");
     it = parseWhiteSpace(it, last);
     auto expression_else = Expression::parse(it, last);
     it = expression_else->end();

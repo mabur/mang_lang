@@ -22,12 +22,12 @@ ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) co
 
 ExpressionPointer Function::parse(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
-    it = parseKeyword(it, "from");
+    it = parseKeyword(it, last, "from");
     it = parseWhiteSpace(it, last);
     auto input_name = Name::parse(it, last);
     it = input_name.end();
     it = parseWhiteSpace(it, last);
-    it = parseKeyword(it, "to");
+    it = parseKeyword(it, last, "to");
     auto body = Expression::parse(it, last);
     it = body->end();
     return std::make_shared<Function>(first, it, nullptr, input_name, body);
