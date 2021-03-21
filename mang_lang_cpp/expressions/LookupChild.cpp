@@ -24,6 +24,9 @@ ExpressionPointer LookupChild::parse(const CodeCharacter* first, const CodeChara
 }
 
 bool LookupChild::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    if (isAnyKeyword(first, last, KEYWORDS)) {
+        return false;
+    }
     if (!std::isalpha(first->character)) {
         return false;
     }
