@@ -60,10 +60,14 @@ const CodeCharacter* parseCharacter(
     return it;
 }
 
-const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, const CodeCharacter* last, char c);
+const CodeCharacter* parseOptionalCharacter(
+    const CodeCharacter* it, const CodeCharacter* last, char c
+);
 
 template<typename Predicate>
-const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, const CodeCharacter* last, Predicate predicate) {
+const CodeCharacter* parseOptionalCharacter(
+    const CodeCharacter* it, const CodeCharacter* last, Predicate predicate
+) {
     if (it == last) {
         return it;
     }
@@ -73,4 +77,6 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, const CodeC
     return it;
 }
 
-const CodeCharacter* parseKeyword(const CodeCharacter* first, const CodeCharacter* last, std::string keyword);
+const CodeCharacter* parseKeyword(
+    const CodeCharacter* first, const CodeCharacter* last, std::string keyword
+);
