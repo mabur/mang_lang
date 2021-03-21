@@ -16,6 +16,9 @@ struct ParseException : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
+void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last);
+void throwParseException(const CodeCharacter* it, const CodeCharacter* last);
+
 char rawCharacter(CodeCharacter c);
 
 std::string rawString(const CodeCharacter* first, const CodeCharacter* last);
@@ -46,7 +49,10 @@ const CodeCharacter* parseCharacter(
     const CodeCharacter* it, const CodeCharacter* last, char expected);
 
 template<typename Predicate>
-const CodeCharacter* parseCharacter(const CodeCharacter* it, Predicate predicate) {
+const CodeCharacter* parseCharacter(
+    const CodeCharacter* it, const CodeCharacter* last, Predicate predicate
+) {
+    verifyThisIsNotTheEnd(it, last);
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
@@ -65,6 +71,3 @@ const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, Predicate p
 }
 
 const CodeCharacter* parseKeyword(const CodeCharacter* first, const CodeCharacter* last, std::string keyword);
-
-void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last);
-void throwParseException(const CodeCharacter* it, const CodeCharacter* last);

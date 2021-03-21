@@ -16,7 +16,7 @@ ExpressionPointer Number::evaluate(const Expression* parent, std::ostream& log) 
 ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
     it = parseOptionalCharacter(it, isSign);
-    it = parseCharacter(it, isDigit);
+    it = parseCharacter(it, last, isDigit);
     it = std::find_if_not(it, last, isDigit);
     it = parseOptionalCharacter(it, '.');
     it = std::find_if_not(it, last, isDigit);

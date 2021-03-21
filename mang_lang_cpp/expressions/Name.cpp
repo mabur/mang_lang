@@ -13,7 +13,7 @@ ExpressionPointer Name::evaluate(const Expression* parent, std::ostream& log) co
 
 Name Name::parse(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
-    it = parseCharacter(it, isLetter);
+    it = parseCharacter(it, last, isLetter);
     it = std::find_if_not(it, last, isNameCharacter);
     return Name(first, it, nullptr, rawString(first, it));
 }
