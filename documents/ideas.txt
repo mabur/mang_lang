@@ -11,6 +11,7 @@ TODO:
 * Not turing complete
   - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
+* Improve home-page. 9 kinds of expressions
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 * make generic sequence algorithms work for both lists and strings
   - what is not working now?
