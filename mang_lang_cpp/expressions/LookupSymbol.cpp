@@ -16,6 +16,12 @@ ExpressionPointer LookupSymbol::parse(const CodeCharacter* first, const CodeChar
     return std::make_shared<LookupSymbol>(first, name.end(), nullptr, name);
 }
 
-bool LookupSymbol::startsWith(const CodeCharacter* first, const CodeCharacter*) {
+bool LookupSymbol::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+    const auto keywords = std::vector<std::string>{"if", "then", "else", "from", "to"};
+    for (const auto& keyword : keywords) {
+        if (isKeyword(first, last, keyword)) {
+            return false;
+        }
+    }
     return std::isalpha(first->character);
 }
