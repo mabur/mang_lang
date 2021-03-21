@@ -34,7 +34,7 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
         it = expression->end();
         expressions = prepend(expressions, std::move(expression));
         it = parseWhiteSpace(it, last);
-        it = parseOptionalCharacter(it, ',');
+        it = parseOptionalCharacter(it, last, ',');
     }
     it = parseCharacter(it, last, ']');
     return std::make_shared<List>(first, it, nullptr, reverse(expressions));

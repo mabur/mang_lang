@@ -91,7 +91,11 @@ const CodeCharacter* parseCharacter(
     return it;
 }
 
-const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, char c) {
+const CodeCharacter* parseOptionalCharacter(
+    const CodeCharacter* it, const CodeCharacter* last, char c) {
+    if (it == last) {
+        return it;
+    }
     if (it->character == c) {
         ++it;
     }

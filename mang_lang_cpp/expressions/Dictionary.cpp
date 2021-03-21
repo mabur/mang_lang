@@ -61,7 +61,7 @@ ExpressionPointer Dictionary::parse(const CodeCharacter* first, const CodeCharac
         it = expression->end();
         result->add(DictionaryElement{name, std::move(expression)});
         it = parseWhiteSpace(it, last);
-        it = parseOptionalCharacter(it, ',');
+        it = parseOptionalCharacter(it, last, ',');
         it = parseWhiteSpace(it, last);
     }
     it = parseCharacter(it, last, '}');

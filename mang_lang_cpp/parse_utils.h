@@ -60,10 +60,13 @@ const CodeCharacter* parseCharacter(
     return it;
 }
 
-const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, char c);
+const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, const CodeCharacter* last, char c);
 
 template<typename Predicate>
-const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, Predicate predicate) {
+const CodeCharacter* parseOptionalCharacter(const CodeCharacter* it, const CodeCharacter* last, Predicate predicate) {
+    if (it == last) {
+        return it;
+    }
     if (predicate(*it)) {
         ++it;
     }
