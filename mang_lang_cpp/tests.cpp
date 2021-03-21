@@ -156,6 +156,7 @@ int main() {
         {"if [] then 2 else 3", "3"},
     });
     test.reformat("symbol", {
+        {"a", "a"},
         {"{a=1, b=a}", "{a=1,b=a}"},
     });
     test.evaluate("symbol", {
