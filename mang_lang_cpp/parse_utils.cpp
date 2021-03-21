@@ -71,6 +71,19 @@ bool isKeyword(
     return std::equal(w.begin(), w.end(), first, haveSameCharacters);
 }
 
+bool isAnyKeyword(
+    const CodeCharacter* first,
+    const CodeCharacter* last,
+    const std::vector<std::string>& keywords
+) {
+    for (const auto& keyword : keywords) {
+        if (isKeyword(first, last, keyword)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
 ) {

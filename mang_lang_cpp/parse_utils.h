@@ -41,6 +41,12 @@ bool isKeyword(
     const CodeCharacter* first, const CodeCharacter* last, const std::string& keyword
 );
 
+bool isAnyKeyword(
+    const CodeCharacter* first,
+    const CodeCharacter* last,
+    const std::vector<std::string>& keywords
+);
+
 const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
 );
