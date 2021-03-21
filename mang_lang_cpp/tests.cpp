@@ -152,6 +152,8 @@ int main() {
     test.evaluate("conditional", {
         {"if 1 then 2 else 3", "2"},
         {"if 0 then 2 else 3", "3"},
+        {"if [0] then 2 else 3", "2"},
+        {"if [] then 2 else 3", "3"},
     });
     test.reformat("symbol", {
         {"{a=1, b=a}", "{a=1,b=a}"},
