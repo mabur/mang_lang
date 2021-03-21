@@ -320,6 +320,9 @@ int main() {
         {"prepend{item=4,list=[5]}", "[4,5]"},
         {"prepend{item=4,list=[6,8]}", "[4,6,8]"},
     });
+    test.evaluate("standard library", {
+        {"inc 0", "1"},
+    });
 
     {
         auto list = SinglyLinkedList<std::string>{};
