@@ -26,7 +26,7 @@ ExpressionPointer List::evaluate(const Expression* parent, std::ostream& log) co
 
 ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
-    it = parseCharacter(it, '[');
+    it = parseCharacter(it, last, '[');
     it = parseWhiteSpace(it, last);
     auto expressions = InternalList{};
     while (it->character != ']') {
@@ -36,7 +36,7 @@ ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* l
         it = parseWhiteSpace(it, last);
         it = parseOptionalCharacter(it, ',');
     }
-    it = parseCharacter(it, ']');
+    it = parseCharacter(it, last, ']');
     return std::make_shared<List>(first, it, nullptr, reverse(expressions));
 }
 

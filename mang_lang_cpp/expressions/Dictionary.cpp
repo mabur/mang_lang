@@ -48,14 +48,14 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
 
 ExpressionPointer Dictionary::parse(const CodeCharacter* first, const CodeCharacter* last) {
     auto it = first;
-    it = parseCharacter(it, '{');
+    it = parseCharacter(it, last, '{');
     it = parseWhiteSpace(it, last);
     auto result = std::make_shared<Dictionary>(first, it, nullptr);
     while (it->character != '}') {
         const auto name = Name::parse(it, last);
         it = name.end();
         it = parseWhiteSpace(it, last);
-        it = parseCharacter(it, '=');
+        it = parseCharacter(it, last, '=');
         it = parseWhiteSpace(it, last);
         auto expression = Expression::parse(it, last);
         it = expression->end();
@@ -64,7 +64,7 @@ ExpressionPointer Dictionary::parse(const CodeCharacter* first, const CodeCharac
         it = parseOptionalCharacter(it, ',');
         it = parseWhiteSpace(it, last);
     }
-    it = parseCharacter(it, '}');
+    it = parseCharacter(it, last, '}');
     result->last_ = it;
     return result;
 }

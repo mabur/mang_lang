@@ -16,7 +16,7 @@ ExpressionPointer LookupChild::parse(const CodeCharacter* first, const CodeChara
     auto name = Name::parse(first, last);
     auto it = name.end();
     it = parseWhiteSpace(it, last);
-    it = parseCharacter(it, '<');
+    it = parseCharacter(it, last, '<');
     it = parseWhiteSpace(it, last);
     auto child = Expression::parse(it, last);
     it = child->end();

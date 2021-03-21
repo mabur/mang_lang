@@ -77,7 +77,10 @@ const CodeCharacter* parseWhiteSpace(
     return std::find_if_not(first, last, isWhiteSpace);
 }
 
-const CodeCharacter* parseCharacter(const CodeCharacter* it, char expected) {
+const CodeCharacter* parseCharacter(
+    const CodeCharacter* it, const CodeCharacter* last, char expected
+) {
+    verifyThisIsNotTheEnd(it, last);
     const auto actual = it->character;
     if (it->character != expected) {
         const auto description = std::string{"Parsing expected \'"}
@@ -102,7 +105,7 @@ const CodeCharacter* parseKeyword(
     }
     auto it = first;
     for (const auto c : keyword) {
-        it = parseCharacter(it, c);
+        it = parseCharacter(it, last, c);
     }
     return it;
 }

@@ -42,7 +42,8 @@ const CodeCharacter* parseWhiteSpace(
     const CodeCharacter* first, const CodeCharacter* last
 );
 
-const CodeCharacter* parseCharacter(const CodeCharacter* it, char expected);
+const CodeCharacter* parseCharacter(
+    const CodeCharacter* it, const CodeCharacter* last, char expected);
 
 template<typename Predicate>
 const CodeCharacter* parseCharacter(const CodeCharacter* it, Predicate predicate) {
