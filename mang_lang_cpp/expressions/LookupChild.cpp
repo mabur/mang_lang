@@ -38,5 +38,5 @@ bool LookupChild::startsWith(CodeRange code) {
     }
     code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);
     code = parseWhiteSpace(code);
-    return startsWidth(code, '<');
+    return ::startsWith(code, '<');
 }

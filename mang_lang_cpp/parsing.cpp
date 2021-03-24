@@ -76,7 +76,7 @@ bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords) {
     return false;
 }
 
-bool startsWidth(CodeRange code, char c) {
+bool startsWith(CodeRange code, char c) {
     return !code.empty() && code.begin()->character == c;
 }
 
