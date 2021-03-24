@@ -27,6 +27,9 @@ ExpressionPointer LookupChild::parse(CodeRange code) {
 }
 
 bool LookupChild::startsWith(CodeRange code) {
+    if (code.empty()) {
+        return false;
+    }
     if (isAnyKeyword(code, KEYWORDS)) {
         return false;
     }
@@ -35,6 +38,8 @@ bool LookupChild::startsWith(CodeRange code) {
     }
     code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);
     code = parseWhiteSpace(code);
-    // TOOD: handle end
+    if (code.empty()) {
+        return false;
+    }
     return code.begin()->character == '<';
 }

@@ -21,5 +21,5 @@ bool LookupSymbol::startsWith(CodeRange code) {
     if (isAnyKeyword(code, KEYWORDS)) {
         return false;
     }
-    return std::isalpha(code.begin()->character);
+    return !code.empty() && std::isalpha(code.begin()->character);
 }

@@ -25,7 +25,7 @@ ExpressionPointer Number::parse(CodeRange code) {
 }
 
 bool Number::startsWith(CodeRange code) {
-    return isSign(*code.begin()) || isDigit(*code.begin());
+    return !code.empty() && (isSign(*code.begin()) || isDigit(*code.begin()));
 }
 
 bool Number::isEqual(const Expression* expression) const {

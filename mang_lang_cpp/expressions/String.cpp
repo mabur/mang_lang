@@ -27,7 +27,7 @@ ExpressionPointer String::parse(CodeRange code) {
 }
 
 bool String::startsWith(CodeRange code) {
-    return code.begin()->character == '"';
+    return !code.empty() && code.begin()->character == '"';
 }
 
 bool String::boolean() const {
