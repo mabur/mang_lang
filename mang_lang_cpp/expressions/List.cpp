@@ -29,7 +29,8 @@ ExpressionPointer List::parse(CodeRange code) {
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
     auto expressions = InternalList{};
-    while (code.begin()->character != ']') {
+    while (!::startsWith(code, ']')) {
+        verifyThisIsNotTheEnd(code);
         auto expression = Expression::parse(code);
         code.first = expression->end();
         expressions = prepend(expressions, std::move(expression));

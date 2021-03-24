@@ -51,7 +51,8 @@ ExpressionPointer Dictionary::parse(CodeRange code_range) {
     range = parseCharacter(range, '{');
     range = parseWhiteSpace(range);
     auto result = std::make_shared<Dictionary>(code_range.begin(), range.begin(), nullptr);
-    while (range.begin()->character != '}') {
+    while (!::startsWith(range, '}')) {
+        verifyThisIsNotTheEnd(range);
         const auto name = Name::parse(range);
         range = {name.end(), code_range.end()};
         range = parseWhiteSpace(range);
