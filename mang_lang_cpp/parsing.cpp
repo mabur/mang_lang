@@ -76,6 +76,10 @@ bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords) {
     return false;
 }
 
+bool startsWidth(CodeRange code, char c) {
+    return !code.empty() && code.begin()->character == c;
+}
+
 CodeRange parseWhiteSpace(CodeRange code) {
     auto first = std::find_if_not(code.begin(), code.end(), isWhiteSpace);
     return {first, code.end()};

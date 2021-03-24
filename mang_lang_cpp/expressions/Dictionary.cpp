@@ -70,7 +70,7 @@ ExpressionPointer Dictionary::parse(CodeRange code_range) {
 }
 
 bool Dictionary::startsWith(CodeRange code) {
-    return code.startsWidth('{');
+    return startsWidth(code, '{');
 }
 
 bool Dictionary::boolean() const {
