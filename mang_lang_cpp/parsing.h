@@ -17,6 +17,7 @@ struct CodeRange {
     const CodeCharacter* end() const {return last;}
     bool empty() const {return first == last;}
     size_t size() const {return last - first;}
+    bool startsWidth(char c) {return !empty() && begin()->character == c;}
 };
 
 struct ParseException : public std::runtime_error

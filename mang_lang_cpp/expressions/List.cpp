@@ -41,7 +41,7 @@ ExpressionPointer List::parse(CodeRange code) {
 }
 
 bool List::startsWith(CodeRange code) {
-    return !code.empty() && code.begin()->character == '[';
+    return code.startsWidth('[');
 }
 
 const InternalList& List::list() const {
