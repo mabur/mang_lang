@@ -25,12 +25,12 @@ struct ParseException : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
-void verifyThisIsNotTheEnd(CodeRange code_range);
-void throwParseException(CodeRange code_range);
+void verifyThisIsNotTheEnd(CodeRange code);
+void throwParseException(CodeRange code);
 
 char rawCharacter(CodeCharacter c);
 
-std::string rawString(CodeRange code_range);
+std::string rawString(CodeRange code);
 
 std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
 
@@ -46,37 +46,37 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
-bool isKeyword(CodeRange code_range, const std::string& keyword);
+bool isKeyword(CodeRange code, const std::string& keyword);
 
-bool isAnyKeyword(CodeRange code_range, const std::vector<std::string>& keywords);
+bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords);
 
-CodeRange parseWhiteSpace(CodeRange code_range);
+CodeRange parseWhiteSpace(CodeRange code);
 
-CodeRange parseCharacter(CodeRange code_range, char expected);
+CodeRange parseCharacter(CodeRange code, char expected);
 
 template<typename Predicate>
-CodeRange parseCharacter(CodeRange code_range, Predicate predicate) {
-    verifyThisIsNotTheEnd(code_range);
-    auto it = code_range.begin();
+CodeRange parseCharacter(CodeRange code, Predicate predicate) {
+    verifyThisIsNotTheEnd(code);
+    auto it = code.begin();
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
     ++it;
-    return {it, code_range.end()};
+    return {it, code.end()};
 }
 
-CodeRange parseOptionalCharacter(CodeRange code_range, char c);
+CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 template<typename Predicate>
-CodeRange parseOptionalCharacter(CodeRange code_range, Predicate predicate) {
-    auto it = code_range.first;
-    if (it == code_range.last) {
-        return {it, code_range.end()};
+CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
+    auto it = code.first;
+    if (it == code.last) {
+        return {it, code.end()};
     }
     if (predicate(*it)) {
         ++it;
     }
-    return {it, code_range.end()};
+    return {it, code.end()};
 }
 
-CodeRange parseKeyword(CodeRange code_range, std::string keyword);
+CodeRange parseKeyword(CodeRange code, std::string keyword);
