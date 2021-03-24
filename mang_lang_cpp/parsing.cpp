@@ -115,11 +115,10 @@ CodeRange parseKeyword(CodeRange code, std::string keyword) {
             "Reached end of file when parsing " + keyword, code.begin()
         );
     }
-    auto range = code;
     for (const auto c : keyword) {
-        range = parseCharacter(range, c);
+        code = parseCharacter(code, c);
     }
-    return range;
+    return code;
 }
 
 void throwIfEmpty(CodeRange code) {
