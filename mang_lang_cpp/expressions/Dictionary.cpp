@@ -46,27 +46,27 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     return result;
 }
 
-ExpressionPointer Dictionary::parse(CodeRange code_range) {
-    auto range = code_range;
-    range = parseCharacter(range, '{');
-    range = parseWhiteSpace(range);
-    auto result = std::make_shared<Dictionary>(code_range.begin(), range.begin(), nullptr);
-    while (!::startsWith(range, '}')) {
-        verifyThisIsNotTheEnd(range);
-        const auto name = Name::parse(range);
-        range = {name.end(), code_range.end()};
-        range = parseWhiteSpace(range);
-        range = parseCharacter(range, '=');
-        range = parseWhiteSpace(range);
-        auto expression = Expression::parse(range);
-        range = {expression->end(), code_range.end()};
+ExpressionPointer Dictionary::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '{');
+    code = parseWhiteSpace(code);
+    auto result = std::make_shared<Dictionary>(first, code.begin(), nullptr);
+    while (!::startsWith(code, '}')) {
+        verifyThisIsNotTheEnd(code);
+        const auto name = Name::parse(code);
+        code.first = name.end();
+        code = parseWhiteSpace(code);
+        code = parseCharacter(code, '=');
+        code = parseWhiteSpace(code);
+        auto expression = Expression::parse(code);
+        code.first = expression->end();
         result->add(DictionaryElement{name, std::move(expression)});
-        range = parseWhiteSpace(range);
-        range = parseOptionalCharacter(range, ',');
-        range = parseWhiteSpace(range);
+        code = parseWhiteSpace(code);
+        code = parseOptionalCharacter(code, ',');
+        code = parseWhiteSpace(code);
     }
-    range = parseCharacter(range, '}');
-    result->last_ = range.begin();
+    code = parseCharacter(code, '}');
+    result->last_ = code.begin();
     return result;
 }
 
