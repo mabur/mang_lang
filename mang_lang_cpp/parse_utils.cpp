@@ -14,9 +14,9 @@ char rawCharacter(CodeCharacter c) {
     return c.character;
 }
 
-std::string rawString(const CodeCharacter* first, const CodeCharacter* last) {
+std::string rawString(CodeRange code_range) {
     auto s = std::string{};
-    std::transform(first, last, std::back_inserter(s), rawCharacter);
+    std::transform(code_range.begin(), code_range.end(), std::back_inserter(s), rawCharacter);
     return s;
 }
 
@@ -59,41 +59,31 @@ bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
 }
 
-bool isKeyword(
-    const CodeCharacter* first,
-    const CodeCharacter* last,
-    const std::string& keyword
-) {
+bool isKeyword(CodeRange code_range, const std::string& keyword) {
     const auto w = makeCodeCharacters(keyword);
-    if (last - first < w.end() - w.begin()) {
+    if (code_range.size() < w.size()) {
         return false;
     }
-    return std::equal(w.begin(), w.end(), first, haveSameCharacters);
+    return std::equal(w.begin(), w.end(), code_range.begin(), haveSameCharacters);
 }
 
-bool isAnyKeyword(
-    const CodeCharacter* first,
-    const CodeCharacter* last,
-    const std::vector<std::string>& keywords
-) {
+bool isAnyKeyword(CodeRange code_range, const std::vector<std::string>& keywords) {
     for (const auto& keyword : keywords) {
-        if (isKeyword(first, last, keyword)) {
+        if (isKeyword(code_range, keyword)) {
             return true;
         }
     }
     return false;
 }
 
-const CodeCharacter* parseWhiteSpace(
-    const CodeCharacter* first, const CodeCharacter* last
-) {
-    return std::find_if_not(first, last, isWhiteSpace);
+CodeRange parseWhiteSpace(CodeRange code_range) {
+    auto first = std::find_if_not(code_range.begin(), code_range.end(), isWhiteSpace);
+    return {first, code_range.end()};
 }
 
-const CodeCharacter* parseCharacter(
-    const CodeCharacter* it, const CodeCharacter* last, char expected
-) {
-    verifyThisIsNotTheEnd(it, last);
+CodeRange parseCharacter(CodeRange code_range, char expected) {
+    verifyThisIsNotTheEnd(code_range);
+    auto it = code_range.begin();
     const auto actual = it->character;
     if (it->character != expected) {
         const auto description = std::string{"Parsing expected \'"}
@@ -101,38 +91,41 @@ const CodeCharacter* parseCharacter(
         throw ParseException(description, it);
     }
     ++it;
-    return it;
+    return {it, code_range.end()};
 }
 
-const CodeCharacter* parseOptionalCharacter(
-    const CodeCharacter* it, const CodeCharacter* last, char c) {
-    if (it == last) {
-        return it;
+CodeRange parseOptionalCharacter(CodeRange code_range, char c) {
+    if (code_range.empty()) {
+        return code_range;
     }
+    auto it = code_range.begin();
     if (it->character == c) {
         ++it;
     }
-    return it;
+    return {it, code_range.end()};
 }
 
-const CodeCharacter* parseKeyword(
-    const CodeCharacter* first, const CodeCharacter* last, std::string keyword) {
-    if (last - first < keyword.end() - keyword.begin()) {
-        throw ParseException("Reached end of file when parsing " + keyword, first);
+CodeRange parseKeyword(CodeRange code_range, std::string keyword) {
+    if (code_range.size() < keyword.size()) {
+        throw ParseException(
+            "Reached end of file when parsing " + keyword, code_range.begin()
+        );
     }
-    auto it = first;
+    auto range = code_range;
     for (const auto c : keyword) {
-        it = parseCharacter(it, last, c);
+        range = parseCharacter(range, c);
     }
-    return it;
+    return range;
 }
 
-void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last) {
-    if (it == last) {
-        throw ParseException("Unexpected end of source while parsing", (it - 1));
+void verifyThisIsNotTheEnd(CodeRange code_range) {
+    if (code_range.first == code_range.last) {
+        throw ParseException(
+            "Unexpected end of source while parsing", (code_range.first - 1)
+        );
     }
 }
 
-void throwParseException(const CodeCharacter* it, const CodeCharacter*) {
-    throw ParseException("Does not recognize expression to parse", it);
+void throwParseException(CodeRange code_range) {
+    throw ParseException("Does not recognize expression to parse", code_range.begin());
 }

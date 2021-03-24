@@ -11,5 +11,5 @@ struct Name : public Expression {
     std::string value;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
-    static Name parse(const CodeCharacter* first, const CodeCharacter* last);
+    static Name parse(CodeRange code);
 };

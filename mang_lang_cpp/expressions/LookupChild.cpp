@@ -12,26 +12,29 @@ ExpressionPointer LookupChild::evaluate(const Expression* parent, std::ostream& 
     return result;
 }
 
-ExpressionPointer LookupChild::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto name = Name::parse(first, last);
-    auto it = name.end();
-    it = parseWhiteSpace(it, last);
-    it = parseCharacter(it, last, '<');
-    it = parseWhiteSpace(it, last);
-    auto child = Expression::parse(it, last);
-    it = child->end();
-    return std::make_shared<LookupChild>(first, it, nullptr, name, std::move(child));
+ExpressionPointer LookupChild::parse(CodeRange code) {
+    auto first = code.begin();
+    auto name = Name::parse(code);
+    code.first = name.end();
+    code = parseWhiteSpace(code);
+    code = parseCharacter(code, '<');
+    code = parseWhiteSpace(code);
+    auto child = Expression::parse(code);
+    code.first = child->end();
+    return std::make_shared<LookupChild>(
+        first, code.first, nullptr, name, std::move(child)
+    );
 }
 
-bool LookupChild::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
-    if (isAnyKeyword(first, last, KEYWORDS)) {
+bool LookupChild::startsWith(CodeRange code) {
+    if (isAnyKeyword(code, KEYWORDS)) {
         return false;
     }
-    if (!std::isalpha(first->character)) {
+    if (!std::isalpha(code.begin()->character)) {
         return false;
     }
-    auto it = first;
-    it = std::find_if_not(it, last, isNameCharacter);
-    it = parseWhiteSpace(it, last);
-    return it->character == '<';
+    code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);
+    code = parseWhiteSpace(code);
+    // TOOD: handle end
+    return code.begin()->character == '<';
 }

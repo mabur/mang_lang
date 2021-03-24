@@ -11,9 +11,9 @@ ExpressionPointer Name::evaluate(const Expression* parent, std::ostream& log) co
     return  result;
 }
 
-Name Name::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseCharacter(it, last, isLetter);
-    it = std::find_if_not(it, last, isNameCharacter);
-    return Name(first, it, nullptr, rawString(first, it));
+Name Name::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, isLetter);
+    code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);
+    return Name(first, code.first, nullptr, rawString({first, code.first}));
 }

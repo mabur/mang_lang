@@ -31,12 +31,8 @@ struct Expression {
     const CodeCharacter* end() const;
     const Expression* parent() const;
 
-    static bool startsWith(
-        const CodeCharacter* first, const CodeCharacter* last
-    );
-    static ExpressionPointer parse(
-        const CodeCharacter* first, const CodeCharacter* last
-    );
+    static bool startsWith(CodeRange code_range);
+    static ExpressionPointer parse(CodeRange code);
 
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const = 0;

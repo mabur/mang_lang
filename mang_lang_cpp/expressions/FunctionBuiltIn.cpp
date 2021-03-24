@@ -15,12 +15,12 @@ ExpressionPointer FunctionBuiltIn::evaluate(const Expression*, std::ostream&) co
     return {};
 }
 
-ExpressionPointer FunctionBuiltIn::parse(const CodeCharacter*, const CodeCharacter*) {
+ExpressionPointer FunctionBuiltIn::parse(CodeRange) {
     assert(false);
     return {};
 }
 
-bool FunctionBuiltIn::startsWith(const CodeCharacter*, const CodeCharacter*) {
+bool FunctionBuiltIn::startsWith(CodeRange) {
     assert(false);
     return {};
 }

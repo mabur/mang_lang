@@ -46,31 +46,31 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     return result;
 }
 
-ExpressionPointer Dictionary::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseCharacter(it, last, '{');
-    it = parseWhiteSpace(it, last);
-    auto result = std::make_shared<Dictionary>(first, it, nullptr);
-    while (it->character != '}') {
-        const auto name = Name::parse(it, last);
-        it = name.end();
-        it = parseWhiteSpace(it, last);
-        it = parseCharacter(it, last, '=');
-        it = parseWhiteSpace(it, last);
-        auto expression = Expression::parse(it, last);
-        it = expression->end();
+ExpressionPointer Dictionary::parse(CodeRange code_range) {
+    auto range = code_range;
+    range = parseCharacter(range, '{');
+    range = parseWhiteSpace(range);
+    auto result = std::make_shared<Dictionary>(code_range.begin(), range.begin(), nullptr);
+    while (range.begin()->character != '}') {
+        const auto name = Name::parse(range);
+        range = {name.end(), code_range.end()};
+        range = parseWhiteSpace(range);
+        range = parseCharacter(range, '=');
+        range = parseWhiteSpace(range);
+        auto expression = Expression::parse(range);
+        range = {expression->end(), code_range.end()};
         result->add(DictionaryElement{name, std::move(expression)});
-        it = parseWhiteSpace(it, last);
-        it = parseOptionalCharacter(it, last, ',');
-        it = parseWhiteSpace(it, last);
+        range = parseWhiteSpace(range);
+        range = parseOptionalCharacter(range, ',');
+        range = parseWhiteSpace(range);
     }
-    it = parseCharacter(it, last, '}');
-    result->last_ = it;
+    range = parseCharacter(range, '}');
+    result->last_ = range.begin();
     return result;
 }
 
-bool Dictionary::startsWith(const CodeCharacter* first, const CodeCharacter*) {
-    return first->character == '{';
+bool Dictionary::startsWith(CodeRange code_range) {
+    return code_range.begin()->character == '{';
 }
 
 bool Dictionary::boolean() const {

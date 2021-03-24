@@ -24,24 +24,24 @@ ExpressionPointer List::evaluate(const Expression* parent, std::ostream& log) co
     return result;
 }
 
-ExpressionPointer List::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseCharacter(it, last, '[');
-    it = parseWhiteSpace(it, last);
+ExpressionPointer List::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '[');
+    code = parseWhiteSpace(code);
     auto expressions = InternalList{};
-    while (it->character != ']') {
-        auto expression = Expression::parse(it, last);
-        it = expression->end();
+    while (code.begin()->character != ']') {
+        auto expression = Expression::parse(code);
+        code.first = expression->end();
         expressions = prepend(expressions, std::move(expression));
-        it = parseWhiteSpace(it, last);
-        it = parseOptionalCharacter(it, last, ',');
+        code = parseWhiteSpace(code);
+        code = parseOptionalCharacter(code, ',');
     }
-    it = parseCharacter(it, last, ']');
-    return std::make_shared<List>(first, it, nullptr, reverse(expressions));
+    code = parseCharacter(code, ']');
+    return std::make_shared<List>(first, code.first, nullptr, reverse(expressions));
 }
 
-bool List::startsWith(const CodeCharacter* first, const CodeCharacter*) {
-    return first->character == '[';
+bool List::startsWith(CodeRange code) {
+    return code.begin()->character == '[';
 }
 
 const InternalList& List::list() const {

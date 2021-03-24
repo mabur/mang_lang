@@ -15,19 +15,19 @@ bool endsWith(CodeCharacter c) {
     return c.character == '"';
 }
 
-ExpressionPointer String::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseCharacter(it, last, '"');
-    const auto first_character = it;
-    it = std::find_if(it, last, endsWith);
-    const auto last_character = it;
-    it = parseCharacter(it, last, '"');
-    const auto value = rawString(first_character, last_character);
-    return std::make_shared<String>(first, it, nullptr, value);
+ExpressionPointer String::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '"');
+    const auto first_character = code.begin();
+    code.first = std::find_if(code.begin(), code.end(), endsWith);
+    const auto last_character = code.begin();
+    code = parseCharacter(code, '"');
+    const auto value = rawString({first_character, last_character});
+    return std::make_shared<String>(first, code.begin(), nullptr, value);
 }
 
-bool String::startsWith(const CodeCharacter* first, const CodeCharacter*) {
-    return first->character == '"';
+bool String::startsWith(CodeRange code) {
+    return code.begin()->character == '"';
 }
 
 bool String::boolean() const {

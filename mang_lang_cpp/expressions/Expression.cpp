@@ -30,36 +30,33 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
     return parent()->lookup(name);
 }
 
-ExpressionPointer Expression::parse(
-    const CodeCharacter* first, const CodeCharacter* last
-) {
-    auto it = first;
-    it = parseWhiteSpace(it, last);
-    verifyThisIsNotTheEnd(it, last);
-    if (List::startsWith(it, last)) {return List::parse(it, last);}
-    if (Dictionary::startsWith(it, last)) {return Dictionary::parse(it, last);}
-    if (Number::startsWith(it, last)) {return Number::parse(it, last);}
-    if (String::startsWith(it, last)) {return String::parse(it, last);}
-    if (Conditional::startsWith(it, last)) {return Conditional::parse(it, last);}
-    if (Function::startsWith(it, last)) {return Function::parse(it, last);}
-    if (LookupChild::startsWith(it, last)) {return LookupChild::parse(it, last);}
-    if (LookupFunction::startsWith(it, last)) {return LookupFunction::parse(it, last);}
-    if (LookupSymbol::startsWith(it, last)) {return LookupSymbol::parse(it, last);}
-    throwParseException(it, last);
+ExpressionPointer Expression::parse(CodeRange code) {
+    code = parseWhiteSpace(code);
+    verifyThisIsNotTheEnd(code);
+    if (List::startsWith(code)) {return List::parse(code);}
+    if (Dictionary::startsWith(code)) {return Dictionary::parse(code);}
+    if (Number::startsWith(code)) {return Number::parse(code);}
+    if (String::startsWith(code)) {return String::parse(code);}
+    if (Conditional::startsWith(code)) {return Conditional::parse(code);}
+    if (Function::startsWith(code)) {return Function::parse(code);}
+    if (LookupChild::startsWith(code)) {return LookupChild::parse(code);}
+    if (LookupFunction::startsWith(code)) {return LookupFunction::parse(code);}
+    if (LookupSymbol::startsWith(code)) {return LookupSymbol::parse(code);}
+    throwParseException(code);
     return {};
 }
 
-bool Expression::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
+bool Expression::startsWith(CodeRange code) {
     return
-        List::startsWith(first, last) ||
-        Dictionary::startsWith(first, last) ||
-        Number::startsWith(first, last) ||
-        String::startsWith(first, last) ||
-        Conditional::startsWith(first, last) ||
-        Function::startsWith(first, last) ||
-        LookupChild::startsWith(first, last) ||
-        LookupFunction::startsWith(first, last) ||
-        LookupSymbol::startsWith(first, last);
+        List::startsWith(code) ||
+        Dictionary::startsWith(code) ||
+        Number::startsWith(code) ||
+        String::startsWith(code) ||
+        Conditional::startsWith(code) ||
+        Function::startsWith(code) ||
+        LookupChild::startsWith(code) ||
+        LookupFunction::startsWith(code) ||
+        LookupSymbol::startsWith(code);
 }
 
 ExpressionPointer Expression::apply(ExpressionPointer, std::ostream&) const {

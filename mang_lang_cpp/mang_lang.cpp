@@ -13,7 +13,7 @@ auto nullStream() {
 
 ExpressionPointer parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
-    return Expression::parse(result.data(), result.data() + result.size());
+    return Expression::parse({result.data(), result.data() + result.size()});
 }
 
 std::string reformat(std::string code) {

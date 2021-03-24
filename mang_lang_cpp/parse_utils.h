@@ -10,18 +10,27 @@ struct CodeCharacter {
     size_t column;
 };
 
+struct CodeRange {
+    const CodeCharacter* first;
+    const CodeCharacter* last;
+    const CodeCharacter* begin() const {return first;}
+    const CodeCharacter* end() const {return last;}
+    bool empty() const {return first == last;}
+    size_t size() const {return last - first;}
+};
+
 struct ParseException : public std::runtime_error
 {
     ParseException(const std::string& description, const CodeCharacter* it);
     using runtime_error::runtime_error;
 };
 
-void verifyThisIsNotTheEnd(const CodeCharacter* it, const CodeCharacter* last);
-void throwParseException(const CodeCharacter* it, const CodeCharacter* last);
+void verifyThisIsNotTheEnd(CodeRange code_range);
+void throwParseException(CodeRange code_range);
 
 char rawCharacter(CodeCharacter c);
 
-std::string rawString(const CodeCharacter* first, const CodeCharacter* last);
+std::string rawString(CodeRange code_range);
 
 std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
 
@@ -37,52 +46,37 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
-bool isKeyword(
-    const CodeCharacter* first, const CodeCharacter* last, const std::string& keyword
-);
+bool isKeyword(CodeRange code_range, const std::string& keyword);
 
-bool isAnyKeyword(
-    const CodeCharacter* first,
-    const CodeCharacter* last,
-    const std::vector<std::string>& keywords
-);
+bool isAnyKeyword(CodeRange code_range, const std::vector<std::string>& keywords);
 
-const CodeCharacter* parseWhiteSpace(
-    const CodeCharacter* first, const CodeCharacter* last
-);
+CodeRange parseWhiteSpace(CodeRange code_range);
 
-const CodeCharacter* parseCharacter(
-    const CodeCharacter* it, const CodeCharacter* last, char expected);
+CodeRange parseCharacter(CodeRange code_range, char expected);
 
 template<typename Predicate>
-const CodeCharacter* parseCharacter(
-    const CodeCharacter* it, const CodeCharacter* last, Predicate predicate
-) {
-    verifyThisIsNotTheEnd(it, last);
+CodeRange parseCharacter(CodeRange code_range, Predicate predicate) {
+    verifyThisIsNotTheEnd(code_range);
+    auto it = code_range.begin();
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
     ++it;
-    return it;
+    return {it, code_range.end()};
 }
 
-const CodeCharacter* parseOptionalCharacter(
-    const CodeCharacter* it, const CodeCharacter* last, char c
-);
+CodeRange parseOptionalCharacter(CodeRange code_range, char c);
 
 template<typename Predicate>
-const CodeCharacter* parseOptionalCharacter(
-    const CodeCharacter* it, const CodeCharacter* last, Predicate predicate
-) {
-    if (it == last) {
-        return it;
+CodeRange parseOptionalCharacter(CodeRange code_range, Predicate predicate) {
+    auto it = code_range.first;
+    if (it == code_range.last) {
+        return {it, code_range.end()};
     }
     if (predicate(*it)) {
         ++it;
     }
-    return it;
+    return {it, code_range.end()};
 }
 
-const CodeCharacter* parseKeyword(
-    const CodeCharacter* first, const CodeCharacter* last, std::string keyword
-);
+CodeRange parseKeyword(CodeRange code_range, std::string keyword);

@@ -20,19 +20,19 @@ ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) co
     return output;
 }
 
-ExpressionPointer Function::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseKeyword(it, last, "from");
-    it = parseWhiteSpace(it, last);
-    auto input_name = Name::parse(it, last);
-    it = input_name.end();
-    it = parseWhiteSpace(it, last);
-    it = parseKeyword(it, last, "to");
-    auto body = Expression::parse(it, last);
-    it = body->end();
-    return std::make_shared<Function>(first, it, nullptr, input_name, body);
+ExpressionPointer Function::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseKeyword(code, "from");
+    code = parseWhiteSpace(code);
+    auto input_name = Name::parse(code);
+    code.first = input_name.end();
+    code = parseWhiteSpace(code);
+    code = parseKeyword(code, "to");
+    auto body = Expression::parse(code);
+    code.first = body->end();
+    return std::make_shared<Function>(first, code.begin(), nullptr, input_name, body);
 }
 
-bool Function::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
-    return isKeyword(first, last, "from ");
+bool Function::startsWith(CodeRange code_range) {
+    return isKeyword(code_range, "from ");
 }

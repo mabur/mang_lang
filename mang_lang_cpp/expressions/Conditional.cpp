@@ -15,32 +15,30 @@ ExpressionPointer Conditional::evaluate(const Expression* parent, std::ostream& 
     return result;
 }
 
-ExpressionPointer Conditional::parse(
-    const CodeCharacter* first, const CodeCharacter* last
-) {
-    auto it = first;
+ExpressionPointer Conditional::parse(CodeRange code_range) {
+    auto range = code_range;
 
-    it = parseKeyword(it, last, "if");
-    it = parseWhiteSpace(it, last);
-    auto expression_if = Expression::parse(it, last);
-    it = expression_if->end();
-    it = parseWhiteSpace(it, last);
+    range = parseKeyword(range, "if");
+    range = parseWhiteSpace(range);
+    auto expression_if = Expression::parse(range);
+    range = {expression_if->end(), range.end()};
+    range = parseWhiteSpace(range);
 
-    it = parseKeyword(it, last, "then");
-    it = parseWhiteSpace(it, last);
-    auto expression_then = Expression::parse(it, last);
-    it = expression_then->end();
-    it = parseWhiteSpace(it, last);
+    range = parseKeyword(range, "then");
+    range = parseWhiteSpace(range);
+    auto expression_then = Expression::parse(range);
+    range = {expression_then->end(), range.end()};
+    range = parseWhiteSpace(range);
 
-    it = parseKeyword(it, last, "else");
-    it = parseWhiteSpace(it, last);
-    auto expression_else = Expression::parse(it, last);
-    it = expression_else->end();
-    it = parseWhiteSpace(it, last);
+    range = parseKeyword(range, "else");
+    range = parseWhiteSpace(range);
+    auto expression_else = Expression::parse(range);
+    range = {expression_else->end(), range.end()};
+    range = parseWhiteSpace(range);
 
     return std::make_shared<Conditional>(
-        first,
-        it,
+        code_range.begin(),
+        range.begin(),
         nullptr,
         std::move(expression_if),
         std::move(expression_then),
@@ -48,6 +46,6 @@ ExpressionPointer Conditional::parse(
     );
 }
 
-bool Conditional::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
-    return isKeyword(first, last, "if");
+bool Conditional::startsWith(CodeRange code_range) {
+    return isKeyword(code_range, "if");
 }

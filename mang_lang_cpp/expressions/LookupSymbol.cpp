@@ -11,14 +11,15 @@ ExpressionPointer LookupSymbol::evaluate(const Expression* parent, std::ostream&
     return result;
 }
 
-ExpressionPointer LookupSymbol::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    const auto name = Name::parse(first, last);
+ExpressionPointer LookupSymbol::parse(CodeRange code) {
+    auto first = code.begin();
+    const auto name = Name::parse(code);
     return std::make_shared<LookupSymbol>(first, name.end(), nullptr, name);
 }
 
-bool LookupSymbol::startsWith(const CodeCharacter* first, const CodeCharacter* last) {
-    if (isAnyKeyword(first, last, KEYWORDS)) {
+bool LookupSymbol::startsWith(CodeRange code) {
+    if (isAnyKeyword(code, KEYWORDS)) {
         return false;
     }
-    return std::isalpha(first->character);
+    return std::isalpha(code.begin()->character);
 }

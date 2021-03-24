@@ -13,19 +13,19 @@ ExpressionPointer Number::evaluate(const Expression* parent, std::ostream& log) 
     return result;
 }
 
-ExpressionPointer Number::parse(const CodeCharacter* first, const CodeCharacter* last) {
-    auto it = first;
-    it = parseOptionalCharacter(it, last, isSign);
-    it = parseCharacter(it, last, isDigit);
-    it = std::find_if_not(it, last, isDigit);
-    it = parseOptionalCharacter(it, last, '.');
-    it = std::find_if_not(it, last, isDigit);
-    const auto value = std::stod(rawString(first, it));
-    return std::make_shared<Number>(first, it, nullptr, value);
+ExpressionPointer Number::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseOptionalCharacter(code, isSign);
+    code = parseCharacter(code, isDigit);
+    code.first = std::find_if_not(code.begin(), code.end(), isDigit);
+    code = parseOptionalCharacter(code, '.');
+    code.first = std::find_if_not(code.begin(), code.end(), isDigit);
+    const auto value = std::stod(rawString({first, code.first}));
+    return std::make_shared<Number>(first, code.first, nullptr, value);
 }
 
-bool Number::startsWith(const CodeCharacter* first, const CodeCharacter*) {
-    return isSign(*first) || isDigit(*first);
+bool Number::startsWith(CodeRange code) {
+    return isSign(*code.begin()) || isDigit(*code.begin());
 }
 
 bool Number::isEqual(const Expression* expression) const {

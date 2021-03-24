@@ -14,6 +14,6 @@ struct LookupChild : public Expression {
     ExpressionPointer child;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
-    static ExpressionPointer parse(const CodeCharacter* first, const CodeCharacter* last);
-    static bool startsWith(const CodeCharacter* first, const CodeCharacter* last);
+    static ExpressionPointer parse(CodeRange code);
+    static bool startsWith(CodeRange code_range);
 };
