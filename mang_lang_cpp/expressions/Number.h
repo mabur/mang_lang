@@ -13,7 +13,7 @@ struct Number : public Expression {
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
 
     static ExpressionPointer parse(CodeRange code);
-    static bool startsWith(CodeRange code_range);
+    static bool startsWith(CodeRange code);
 
     bool isEqual(const Expression* expression) const final;
     double number() const final;

@@ -33,6 +33,6 @@ ExpressionPointer Function::parse(CodeRange code) {
     return std::make_shared<Function>(first, code.begin(), nullptr, input_name, body);
 }
 
-bool Function::startsWith(CodeRange code_range) {
-    return isKeyword(code_range, "from ");
+bool Function::startsWith(CodeRange code) {
+    return isKeyword(code, "from ");
 }

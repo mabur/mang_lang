@@ -19,5 +19,5 @@ struct Function : public Expression {
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const final;
     static ExpressionPointer parse(CodeRange code);
-    static bool startsWith(CodeRange code_range);
+    static bool startsWith(CodeRange code);
 };

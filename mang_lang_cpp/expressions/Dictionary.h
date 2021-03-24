@@ -22,7 +22,7 @@ struct Dictionary : public Expression {
     ExpressionPointer lookup(const std::string& name) const final;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
-    static ExpressionPointer parse(CodeRange code_range);
-    static bool startsWith(CodeRange code_range);
+    static ExpressionPointer parse(CodeRange code);
+    static bool startsWith(CodeRange code);
     bool boolean() const final;
 };

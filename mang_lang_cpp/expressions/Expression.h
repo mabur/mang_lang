@@ -31,7 +31,7 @@ struct Expression {
     const CodeCharacter* end() const;
     const Expression* parent() const;
 
-    static bool startsWith(CodeRange code_range);
+    static bool startsWith(CodeRange code);
     static ExpressionPointer parse(CodeRange code);
 
     virtual std::string serialize() const = 0;

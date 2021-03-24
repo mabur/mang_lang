@@ -69,8 +69,8 @@ ExpressionPointer Dictionary::parse(CodeRange code_range) {
     return result;
 }
 
-bool Dictionary::startsWith(CodeRange code_range) {
-    return code_range.begin()->character == '{';
+bool Dictionary::startsWith(CodeRange code) {
+    return code.begin()->character == '{';
 }
 
 bool Dictionary::boolean() const {

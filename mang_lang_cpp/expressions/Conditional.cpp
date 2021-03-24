@@ -15,30 +15,30 @@ ExpressionPointer Conditional::evaluate(const Expression* parent, std::ostream& 
     return result;
 }
 
-ExpressionPointer Conditional::parse(CodeRange code_range) {
-    auto range = code_range;
+ExpressionPointer Conditional::parse(CodeRange code) {
+    auto first = code.begin();
 
-    range = parseKeyword(range, "if");
-    range = parseWhiteSpace(range);
-    auto expression_if = Expression::parse(range);
-    range = {expression_if->end(), range.end()};
-    range = parseWhiteSpace(range);
+    code = parseKeyword(code, "if");
+    code = parseWhiteSpace(code);
+    auto expression_if = Expression::parse(code);
+    code.first = expression_if->end();
+    code = parseWhiteSpace(code);
 
-    range = parseKeyword(range, "then");
-    range = parseWhiteSpace(range);
-    auto expression_then = Expression::parse(range);
-    range = {expression_then->end(), range.end()};
-    range = parseWhiteSpace(range);
+    code = parseKeyword(code, "then");
+    code = parseWhiteSpace(code);
+    auto expression_then = Expression::parse(code);
+    code.first = expression_then->end();
+    code = parseWhiteSpace(code);
 
-    range = parseKeyword(range, "else");
-    range = parseWhiteSpace(range);
-    auto expression_else = Expression::parse(range);
-    range = {expression_else->end(), range.end()};
-    range = parseWhiteSpace(range);
+    code = parseKeyword(code, "else");
+    code = parseWhiteSpace(code);
+    auto expression_else = Expression::parse(code);
+    code.first = expression_else->end();
+    code = parseWhiteSpace(code);
 
     return std::make_shared<Conditional>(
-        code_range.begin(),
-        range.begin(),
+        first,
+        code.begin(),
         nullptr,
         std::move(expression_if),
         std::move(expression_then),
@@ -46,6 +46,6 @@ ExpressionPointer Conditional::parse(CodeRange code_range) {
     );
 }
 
-bool Conditional::startsWith(CodeRange code_range) {
-    return isKeyword(code_range, "if");
+bool Conditional::startsWith(CodeRange code) {
+    return isKeyword(code, "if");
 }
