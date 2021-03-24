@@ -18,6 +18,8 @@ TODO:
     - this is not generic: concat [beginning, [back]]
     - prepend, first, rest, as primitives instead of concat, first, last, first_part, last_part
     - overload these lists and strings
+* Make "1 2" throw a parse error
+* Handle end of ranges in all parse ans startswidth functions
 
 from x to mul[x, x]
 from [a, b] to mul[a, b]
