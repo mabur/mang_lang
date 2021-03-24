@@ -52,7 +52,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     auto result = std::make_shared<Dictionary>(first, code.begin(), nullptr);
     while (!::startsWith(code, '}')) {
-        verifyThisIsNotTheEnd(code);
+        throwIfEmpty(code);
         const auto name = Name::parse(code);
         code.first = name.end();
         code = parseWhiteSpace(code);

@@ -32,7 +32,7 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
 
 ExpressionPointer Expression::parse(CodeRange code) {
     code = parseWhiteSpace(code);
-    verifyThisIsNotTheEnd(code);
+    throwIfEmpty(code);
     if (List::startsWith(code)) {return List::parse(code);}
     if (Dictionary::startsWith(code)) {return Dictionary::parse(code);}
     if (Number::startsWith(code)) {return Number::parse(code);}

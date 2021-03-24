@@ -25,7 +25,7 @@ struct ParseException : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
-void verifyThisIsNotTheEnd(CodeRange code);
+void throwIfEmpty(CodeRange code);
 void throwParseException(CodeRange code);
 
 char rawCharacter(CodeCharacter c);
@@ -58,7 +58,7 @@ CodeRange parseCharacter(CodeRange code, char expected);
 
 template<typename Predicate>
 CodeRange parseCharacter(CodeRange code, Predicate predicate) {
-    verifyThisIsNotTheEnd(code);
+    throwIfEmpty(code);
     auto it = code.begin();
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);

@@ -86,7 +86,7 @@ CodeRange parseWhiteSpace(CodeRange code) {
 }
 
 CodeRange parseCharacter(CodeRange code, char expected) {
-    verifyThisIsNotTheEnd(code);
+    throwIfEmpty(code);
     auto it = code.begin();
     const auto actual = it->character;
     if (it->character != expected) {
@@ -122,8 +122,8 @@ CodeRange parseKeyword(CodeRange code, std::string keyword) {
     return range;
 }
 
-void verifyThisIsNotTheEnd(CodeRange code) {
-    if (code.first == code.last) {
+void throwIfEmpty(CodeRange code) {
+    if (code.empty()) {
         throw ParseException(
             "Unexpected end of source while parsing", (code.first - 1)
         );
