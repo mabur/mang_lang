@@ -148,6 +148,7 @@ int main() {
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
         {"if  1  then  2  else  3", "if 1 then 2 else 3"},
+        {"if a then b else c", "if a then b else c"},
     });
     test.evaluate("conditional", {
         {"if 1 then 2 else 3", "2"},
