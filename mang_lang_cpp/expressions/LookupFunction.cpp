@@ -28,10 +28,7 @@ ExpressionPointer LookupFunction::parse(CodeRange code) {
 }
 
 bool LookupFunction::startsWith(CodeRange code) {
-    if (isAnyKeyword(code, KEYWORDS)) {
-        return false;
-    }
-    if (!std::isalpha(code.begin()->character)) {
+    if (!Name::startsWith(code)) {
         return false;
     }
     code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);

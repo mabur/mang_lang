@@ -1,6 +1,8 @@
 #include "LookupSymbol.h"
 #include <algorithm>
 
+#include "Name.h"
+
 std::string LookupSymbol::serialize() const {
     return name.serialize();
 }
@@ -18,8 +20,5 @@ ExpressionPointer LookupSymbol::parse(CodeRange code) {
 }
 
 bool LookupSymbol::startsWith(CodeRange code) {
-    if (isAnyKeyword(code, KEYWORDS)) {
-        return false;
-    }
-    return !code.empty() && std::isalpha(code.begin()->character);
+    return Name::startsWith(code);
 }

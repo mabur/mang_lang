@@ -17,3 +17,10 @@ Name Name::parse(CodeRange code) {
     code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);
     return Name(first, code.first, nullptr, rawString({first, code.first}));
 }
+
+bool Name::startsWith(CodeRange code) {
+    if (isAnyKeyword(code, KEYWORDS)) {
+        return false;
+    }
+    return !code.empty() && std::isalpha(code.begin()->character);
+}

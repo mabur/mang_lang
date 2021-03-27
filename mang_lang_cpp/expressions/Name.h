@@ -12,4 +12,5 @@ struct Name : public Expression {
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static Name parse(CodeRange code);
+    static bool startsWith(CodeRange code);
 };
