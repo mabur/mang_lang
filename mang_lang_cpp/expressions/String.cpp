@@ -11,15 +11,15 @@ ExpressionPointer String::evaluate(const Expression* parent, std::ostream& log) 
     return result;
 }
 
-bool endsWith(CodeCharacter c) {
-    return c.character == '"';
+bool isNotEndOfString(CodeCharacter c) {
+    return c.character != '"';
 }
 
 ExpressionPointer String::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
     const auto first_character = code.begin();
-    code.first = std::find_if(code.begin(), code.end(), endsWith);
+    code = parseWhile(code, isNotEndOfString);
     const auto last_character = code.begin();
     code = parseCharacter(code, '"');
     const auto value = rawString({first_character, last_character});
