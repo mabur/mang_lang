@@ -336,6 +336,9 @@ int main() {
         {"count []", "0"},
         {"count [[]]", "1"},
         {"count [[], []]", "2"},
+        {"map{list=[],f=inc}", "[]"},
+        {"map{list=[0],f=inc}", "[1]"},
+        {"map{list=[0,1],f=inc}", "[1,2]"},
     });
 
     {
