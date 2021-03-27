@@ -1,5 +1,4 @@
 #include "Number.h"
-#include <algorithm>
 
 std::string Number::serialize() const {
     std::stringstream s;
@@ -17,9 +16,9 @@ ExpressionPointer Number::parse(CodeRange code) {
     auto first = code.begin();
     code = parseOptionalCharacter(code, isSign);
     code = parseCharacter(code, isDigit);
-    code.first = std::find_if_not(code.begin(), code.end(), isDigit);
+    code = parseWhile(code, isDigit);
     code = parseOptionalCharacter(code, '.');
-    code.first = std::find_if_not(code.begin(), code.end(), isDigit);
+    code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString({first, code.first}));
     return std::make_shared<Number>(first, code.first, nullptr, value);
 }

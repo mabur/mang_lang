@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -82,3 +83,8 @@ CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
 }
 
 CodeRange parseKeyword(CodeRange code, std::string keyword);
+
+template<typename Predicate>
+CodeRange parseWhile(CodeRange code, Predicate predicate) {
+    return {std::find_if_not(code.begin(), code.end(), predicate), code.end()};
+}

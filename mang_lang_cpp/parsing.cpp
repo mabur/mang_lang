@@ -81,8 +81,7 @@ bool startsWith(CodeRange code, char c) {
 }
 
 CodeRange parseWhiteSpace(CodeRange code) {
-    auto first = std::find_if_not(code.begin(), code.end(), isWhiteSpace);
-    return {first, code.end()};
+    return parseWhile(code, isWhiteSpace);
 }
 
 CodeRange parseCharacter(CodeRange code, char expected) {

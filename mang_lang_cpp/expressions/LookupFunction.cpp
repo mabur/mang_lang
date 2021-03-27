@@ -1,5 +1,4 @@
 #include "LookupFunction.h"
-#include <algorithm>
 #include <cassert>
 
 std::string LookupFunction::serialize() const {
@@ -31,7 +30,7 @@ bool LookupFunction::startsWith(CodeRange code) {
     if (!Name::startsWith(code)) {
         return false;
     }
-    code.first = std::find_if_not(code.begin(), code.end(), isNameCharacter);
+    code = parseWhile(code, isNameCharacter);
     code = parseWhiteSpace(code);
     return Expression::startsWith(code);
 }
