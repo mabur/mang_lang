@@ -319,6 +319,12 @@ int main() {
         {"rest[4,3]", "[3]"},
         {"rest[4,3,7]", "[3,7]"},
     });
+    test.evaluate("reverse list", {
+        {"reverse[]", "[]"},
+        {"reverse[0]", "[0]"},
+        {"reverse[0,1]", "[1,0]"},
+        {"reverse[0,1,2]", "[2,1,0]"},
+    });
     test.evaluate("prepend list", {
         {"prepend{item=3,list=[]}", "[3]"},
         {"prepend{item=4,list=[5]}", "[4,5]"},

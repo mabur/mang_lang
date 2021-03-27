@@ -13,6 +13,10 @@ ExpressionPointer rest(const Expression& in) {
     return std::make_shared<List>(in.begin(), in.end(), nullptr, in.list()->rest);
 }
 
+ExpressionPointer reverse(const Expression& in) {
+    return std::make_shared<List>(in.begin(), in.end(), nullptr, reverse(in.list()));
+}
+
 ExpressionPointer prepend(const Expression& in) {
     auto list = in.lookup("list")->list();
     auto item = in.lookup("item");

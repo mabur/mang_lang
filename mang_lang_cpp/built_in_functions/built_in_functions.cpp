@@ -40,6 +40,7 @@ ExpressionPointer builtIns() {
 
     environment->add(makeDictionaryElement("first", list_functions::first));
     environment->add(makeDictionaryElement("rest", list_functions::rest));
+    environment->add(makeDictionaryElement("reverse", list_functions::reverse));
     environment->add(makeDictionaryElement("prepend", list_functions::prepend));
     return environment;
 }
