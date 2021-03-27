@@ -1,5 +1,4 @@
 #include "List.h"
-#include "../algorithm.h"
 
 std::string List::serialize() const {
     if (!elements) {
