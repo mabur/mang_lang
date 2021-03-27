@@ -339,6 +339,9 @@ int main() {
         {"map{list=[],f=inc}", "[]"},
         {"map{list=[0],f=inc}", "[1]"},
         {"map{list=[0,1],f=inc}", "[1,2]"},
+        {"filter{list=[],predicate=from x to 1}", "[]"},
+        {"filter{list=[[]],predicate=from x to 1}", "[[]]"},
+        {"filter{list=[[]],predicate=from x to 0}", "[]"},
     });
 
     {

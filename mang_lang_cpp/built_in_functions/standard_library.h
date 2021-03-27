@@ -21,6 +21,21 @@ const std::string STANDARD_LIBRARY = R"(
                 new_list = prepend {item = new_first, list = new_rest}
             }
         else
+            list<input,
+    filter = from input to
+        if list<input then
+            new_list<{
+                list = list<input,
+                predicate = predicate<input,
+                new_first = first list,
+                new_rest = filter {list = rest list, predicate = predicate},
+                new_list =
+                    if predicate new_first then
+                        prepend {item = new_first, list = new_rest}
+                    else
+                        new_rest
+            }
+        else
             list<input
 }
 )";
