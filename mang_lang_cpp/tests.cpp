@@ -327,6 +327,9 @@ int main() {
     test.evaluate("standard library", {
         {"inc 0", "1"},
         {"dec 0", "-1"},
+        {"count []", "0"},
+        {"count [[]]", "1"},
+        {"count [[], []]", "2"},
     });
 
     {
