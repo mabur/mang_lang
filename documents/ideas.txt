@@ -20,6 +20,7 @@ TODO:
     - overload these lists and strings
 * Make "1 2" throw a parse error
 * Handle end of ranges in all parse ans startswidth functions
+https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 
 from x to mul[x, x]
 from [a, b] to mul[a, b]
