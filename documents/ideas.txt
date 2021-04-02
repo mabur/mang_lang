@@ -12,7 +12,7 @@ TODO:
 * Not turing complete
   - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
-* Improve home-page. 9 kinds of expressions
+* Improve home-page. 10 kinds of expressions
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 * make generic sequence algorithms work for both lists and strings
   - what is not working now?
@@ -30,14 +30,39 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - avoid global mutable state
   - hides mutation, so that each unit is pure from the outside
   - do not allow other side-effects
-* Built-in operations on strings: first, rest, prepend, reverse?
-  - add char to Expresion interface? Is that needed?
-  - Implement by adding these 4 operations to Expression interface and have different implementatations for string and list.
-  - Name input to prepend as first and rest.
+* Implement lists as dictionaries {first, rest} or {}?
+  - functions first and rest can be replaced with member lookup first< and rest<
+  - prepend can be replaced with dict construction {first=first, rest=rest}
+  - Can reverse be implemented in standard-library? yes, but I don't know if it can be made generic
+  - How to differentiate between strings and lists?
+
+    [] -> {type=list}
+    [1] -> {first=1,rest={},type=list}
+    [1,2] -> {first=1,rest={first=2,rest={},type=list},type=list}
+
+    "" -> {type=character}
+    "a" -> {first='a',rest={},type=list}
+    "ab" -> {first='a',rest={first='b',rest={},type=list},type=list}
+
+    {first=1,rest=[1,2], type=list}
+    prepend{first=1,rest=[1,2]}
+    list{first=1,rest=[1,2]}
+    string{first='a',rest="bc"}
+
+
+    How to serialize?
+    - Have type field {type=character}
+    - Have hidden type information
+    How to store efficiently? No problem.
+    - Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
+
+* Implement equal for more types
+* Functions for Character
 
 LEVELS
 1. Data
    - numbers
+   - characters
    - strings
    - lists
    - dictionaries
