@@ -24,3 +24,7 @@ ExpressionPointer Character::parse(CodeRange code) {
 bool Character::startsWith(CodeRange code) {
     return ::startsWith(code, '\'');
 }
+
+char Character::character() const {
+    return value;
+}

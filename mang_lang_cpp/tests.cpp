@@ -325,10 +325,19 @@ int main() {
         {"first[4]", "4"},
         {"first[3,4]", "3"},
     });
+    test.evaluate("first string", {
+        {R"(first "b")", R"('b')"},
+        {R"(first "ab")", R"('a')"},
+    });
     test.evaluate("rest list", {
         {"rest[4]", "[]"},
         {"rest[4,3]", "[3]"},
         {"rest[4,3,7]", "[3,7]"},
+    });
+    test.evaluate("rest string", {
+        {R"(rest "a")", R"("")"},
+        {R"(rest "ab")", R"("b")"},
+        {R"(rest "abc")", R"("bc")"},
     });
     test.evaluate("reverse list", {
         {"reverse[]", "[]"},
@@ -336,10 +345,21 @@ int main() {
         {"reverse[0,1]", "[1,0]"},
         {"reverse[0,1,2]", "[2,1,0]"},
     });
+    test.evaluate("reverse string", {
+        {R"(reverse "")", R"("")"},
+        {R"(reverse "a")", R"("a")"},
+        {R"(reverse "ab")", R"("ba")"},
+        {R"(reverse "abc")", R"("cba")"},
+    });
     test.evaluate("prepend list", {
         {"prepend{item=3,list=[]}", "[3]"},
         {"prepend{item=4,list=[5]}", "[4,5]"},
         {"prepend{item=4,list=[6,8]}", "[4,6,8]"},
+    });
+    test.evaluate("prepend string", {
+        {R"(prepend{item='a',list=""})", R"("a")"},
+        {R"(prepend{item='a',list="b"})", R"("ab")"},
+        {R"(prepend{item='a',list="bc"})", R"("abc")"},
     });
     test.evaluate("standard library", {
         {"inc 0", "1"},
@@ -347,6 +367,9 @@ int main() {
         {"count []", "0"},
         {"count [[]]", "1"},
         {"count [[], []]", "2"},
+        {R"(count "")", "0"},
+        {R"(count "a")", "1"},
+        {R"(count "ab")", "2"},
         {"map{list=[],f=inc}", "[]"},
         {"map{list=[0],f=inc}", "[1]"},
         {"map{list=[0,1],f=inc}", "[1,2]"},

@@ -17,4 +17,9 @@ struct String : public Expression {
     static ExpressionPointer parse(CodeRange code);
     static bool startsWith(CodeRange code);
     bool boolean() const final;
+
+    ExpressionPointer first() const final;
+    ExpressionPointer rest() const final;
+    ExpressionPointer reverse() const final;
+    ExpressionPointer prepend(ExpressionPointer item) const final;
 };

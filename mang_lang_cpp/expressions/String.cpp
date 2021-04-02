@@ -1,6 +1,8 @@
 #include "String.h"
 #include <algorithm>
 
+#include "Character.h"
+
 std::string String::serialize() const {
     auto value = std::string{"\""};
     auto list = elements;
@@ -42,4 +44,21 @@ bool String::startsWith(CodeRange code) {
 
 bool String::boolean() const {
     return !!elements;
+}
+
+ExpressionPointer String::first() const {
+    return std::make_shared<Character>(begin(), end(), nullptr, elements->first);
+}
+
+ExpressionPointer String::rest() const {
+    return std::make_shared<String>(begin(), end(), nullptr, elements->rest);
+}
+
+ExpressionPointer String::reverse() const {
+    return std::make_shared<String>(begin(), end(), nullptr, ::reverse(elements));
+}
+
+ExpressionPointer String::prepend(ExpressionPointer item) const {
+    auto new_list = ::prepend(elements, item->character());
+    return std::make_shared<String>(begin(), end(), nullptr, new_list);
 }
