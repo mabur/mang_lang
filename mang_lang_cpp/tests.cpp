@@ -352,14 +352,14 @@ int main() {
         {R"(reverse "abc")", R"("cba")"},
     });
     test.evaluate("prepend list", {
-        {"prepend{item=3,list=[]}", "[3]"},
-        {"prepend{item=4,list=[5]}", "[4,5]"},
-        {"prepend{item=4,list=[6,8]}", "[4,6,8]"},
+        {"prepend{first=3,rest=[]}", "[3]"},
+        {"prepend{first=4,rest=[5]}", "[4,5]"},
+        {"prepend{first=4,rest=[6,8]}", "[4,6,8]"},
     });
     test.evaluate("prepend string", {
-        {R"(prepend{item='a',list=""})", R"("a")"},
-        {R"(prepend{item='a',list="b"})", R"("ab")"},
-        {R"(prepend{item='a',list="bc"})", R"("abc")"},
+        {R"(prepend{first='a',rest=""})", R"("a")"},
+        {R"(prepend{first='a',rest="b"})", R"("ab")"},
+        {R"(prepend{first='a',rest="bc"})", R"("abc")"},
     });
     test.evaluate("standard library", {
         {"inc 0", "1"},

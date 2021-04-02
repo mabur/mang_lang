@@ -18,8 +18,8 @@ ExpressionPointer reverse(const Expression& in) {
 }
 
 ExpressionPointer prepend(const Expression& in) {
-    auto list = in.lookup("list");
-    auto item = in.lookup("item");
+    auto list = in.lookup("rest");
+    auto item = in.lookup("first");
     return list->prepend(item);
 }
 

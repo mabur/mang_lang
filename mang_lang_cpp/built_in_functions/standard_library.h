@@ -18,7 +18,7 @@ const std::string STANDARD_LIBRARY = R"(
                 f = f<input,
                 new_first = f first list,
                 new_rest = map {list = rest list, f = f},
-                new_list = prepend {item = new_first, list = new_rest}
+                new_list = prepend {first = new_first, rest = new_rest}
             }
         else
             list<input,
@@ -31,7 +31,7 @@ const std::string STANDARD_LIBRARY = R"(
                 new_rest = filter {list = rest list, predicate = predicate},
                 new_list =
                     if predicate new_first then
-                        prepend {item = new_first, list = new_rest}
+                        prepend {first = new_first, rest = new_rest}
                     else
                         new_rest
             }
