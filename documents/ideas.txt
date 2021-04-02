@@ -31,6 +31,9 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - hides mutation, so that each unit is pure from the outside
   - do not allow other side-effects
 * Built-in operations on strings: first, rest, prepend, reverse?
+  - add char to Expresion interface? Is that needed?
+  - Implement by adding these 4 operations to Expression interface and have different implementatations for string and list.
+  - Name input to prepend as first and rest.
 
 LEVELS
 1. Data
