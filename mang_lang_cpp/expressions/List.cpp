@@ -32,12 +32,12 @@ ExpressionPointer List::parse(CodeRange code) {
         throwIfEmpty(code);
         auto expression = Expression::parse(code);
         code.first = expression->end();
-        expressions = prepend(expressions, std::move(expression));
+        expressions = ::prepend(expressions, std::move(expression));
         code = parseWhiteSpace(code);
         code = parseOptionalCharacter(code, ',');
     }
     code = parseCharacter(code, ']');
-    return std::make_shared<List>(first, code.first, nullptr, reverse(expressions));
+    return std::make_shared<List>(first, code.first, nullptr, ::reverse(expressions));
 }
 
 bool List::startsWith(CodeRange code) {
@@ -61,4 +61,21 @@ bool List::isEqual(const Expression* expression) const {
         }
     }
     return !left && !right;
+}
+
+ExpressionPointer List::first() const {
+    return list()->first;
+}
+
+ExpressionPointer List::rest() const {
+    return std::make_shared<List>(begin(), end(), nullptr, list()->rest);
+}
+
+ExpressionPointer List::reverse() const {
+    return std::make_shared<List>(begin(), end(), nullptr, ::reverse(list()));
+}
+
+ExpressionPointer List::prepend(ExpressionPointer item) const {
+    auto new_list = ::prepend(list(), item);
+    return std::make_shared<List>(begin(), end(), nullptr, new_list);
 }

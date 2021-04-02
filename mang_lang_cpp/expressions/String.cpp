@@ -30,9 +30,9 @@ ExpressionPointer String::parse(CodeRange code) {
     code = parseCharacter(code, '"');
     auto value = InternalString{};
     for (auto it = first_character; it != last_character; ++it) {
-        value = prepend(value, it->character);
+        value = ::prepend(value, it->character);
     }
-    value = reverse(value);
+    value = ::reverse(value);
     return std::make_shared<String>(first, code.begin(), nullptr, value);
 }
 

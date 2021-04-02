@@ -42,4 +42,9 @@ struct Expression {
     virtual double number() const;
     virtual bool boolean() const;
     virtual const InternalList& list() const;
+
+    virtual ExpressionPointer first() const;
+    virtual ExpressionPointer rest() const;
+    virtual ExpressionPointer reverse() const;
+    virtual ExpressionPointer prepend(ExpressionPointer item) const;
 };

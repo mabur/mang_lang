@@ -16,6 +16,12 @@ struct List : public Expression {
     const InternalList& list() const final;
     bool boolean() const final;
     bool isEqual(const Expression* expression) const final;
+
+    ExpressionPointer first() const final;
+    ExpressionPointer rest() const final;
+    ExpressionPointer reverse() const final;
+    ExpressionPointer prepend(ExpressionPointer item) const final;
+
 private:
     InternalList elements;
 };

@@ -6,22 +6,21 @@
 namespace list_functions {
 
 ExpressionPointer first(const Expression& in) {
-    return in.list()->first;
+    return in.first();
 }
 
 ExpressionPointer rest(const Expression& in) {
-    return std::make_shared<List>(in.begin(), in.end(), nullptr, in.list()->rest);
+    return in.rest();
 }
 
 ExpressionPointer reverse(const Expression& in) {
-    return std::make_shared<List>(in.begin(), in.end(), nullptr, reverse(in.list()));
+    return in.reverse();
 }
 
 ExpressionPointer prepend(const Expression& in) {
-    auto list = in.lookup("list")->list();
+    auto list = in.lookup("list");
     auto item = in.lookup("item");
-    auto new_list = prepend(list, item);
-    return std::make_shared<List>(in.begin(), in.end(), nullptr, new_list);
+    return list->prepend(item);
 }
 
 }
