@@ -1,14 +1,17 @@
 #pragma once
 #include "Expression.h"
+#include "../SinglyLinkedList.h"
+
+using InternalString = SinglyLinkedList<char>;
 
 struct String : public Expression {
     String(
         const CodeCharacter* first,
         const CodeCharacter* last,
         const Expression* parent,
-        std::string value
-    ) : Expression{first, last, parent}, value{std::move(value)} {}
-    std::string value;
+        InternalString elements
+    ) : Expression{first, last, parent}, elements{std::move(elements)} {}
+    InternalString elements;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static ExpressionPointer parse(CodeRange code);

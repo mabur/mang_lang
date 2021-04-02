@@ -12,6 +12,7 @@ struct Node {
 template<typename T>
 using SinglyLinkedList = std::shared_ptr<Node<T>>;
 
+// TODO: change order of input
 template<typename T>
 SinglyLinkedList<T> prepend(SinglyLinkedList<T> list, T value) {
     return std::shared_ptr<Node<T>>(new Node<T>{std::move(value), std::move(list)});

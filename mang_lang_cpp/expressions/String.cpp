@@ -2,11 +2,17 @@
 #include <algorithm>
 
 std::string String::serialize() const {
-    return "\"" + value + "\"";
+    auto value = std::string{"\""};
+    auto list = elements;
+    for (; list; list = list->rest) {
+        value += list->first;
+    }
+    value += "\"";
+    return value;
 }
 
 ExpressionPointer String::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<String>(begin(), end(), parent, value);
+    auto result = std::make_shared<String>(begin(), end(), parent, elements);
     log << result->serialize();
     return result;
 }
@@ -22,7 +28,11 @@ ExpressionPointer String::parse(CodeRange code) {
     code = parseWhile(code, isNotEndOfString);
     const auto last_character = code.begin();
     code = parseCharacter(code, '"');
-    const auto value = rawString({first_character, last_character});
+    auto value = InternalString{};
+    for (auto it = first_character; it != last_character; ++it) {
+        value = prepend(value, it->character);
+    }
+    value = reverse(value);
     return std::make_shared<String>(first, code.begin(), nullptr, value);
 }
 
@@ -31,5 +41,5 @@ bool String::startsWith(CodeRange code) {
 }
 
 bool String::boolean() const {
-    return !value.empty();
+    return !!elements;
 }
