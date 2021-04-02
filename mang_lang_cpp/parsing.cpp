@@ -84,6 +84,13 @@ CodeRange parseWhiteSpace(CodeRange code) {
     return parseWhile(code, isWhiteSpace);
 }
 
+CodeRange parseCharacter(CodeRange code) {
+    throwIfEmpty(code);
+    auto it = code.begin();
+    ++it;
+    return {it, code.end()};
+}
+
 CodeRange parseCharacter(CodeRange code, char expected) {
     throwIfEmpty(code);
     auto it = code.begin();

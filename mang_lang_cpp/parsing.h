@@ -55,6 +55,8 @@ bool startsWith(CodeRange code, char c);
 
 CodeRange parseWhiteSpace(CodeRange code);
 
+CodeRange parseCharacter(CodeRange code);
+
 CodeRange parseCharacter(CodeRange code, char expected);
 
 template<typename Predicate>

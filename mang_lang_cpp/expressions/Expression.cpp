@@ -1,6 +1,7 @@
 #include "Expression.h"
 
 #include "../mang_lang.h"
+#include "Character.h"
 #include "Conditional.h"
 #include "Dictionary.h"
 #include "Function.h"
@@ -36,6 +37,8 @@ ExpressionPointer Expression::parse(CodeRange code) {
     if (List::startsWith(code)) {return List::parse(code);}
     if (Dictionary::startsWith(code)) {return Dictionary::parse(code);}
     if (Number::startsWith(code)) {return Number::parse(code);}
+    if (Character::startsWith(code)) {return Character::parse(code);}
+    if (String::startsWith(code)) {return String::parse(code);}
     if (String::startsWith(code)) {return String::parse(code);}
     if (Conditional::startsWith(code)) {return Conditional::parse(code);}
     if (Function::startsWith(code)) {return Function::parse(code);}
@@ -51,6 +54,7 @@ bool Expression::startsWith(CodeRange code) {
         List::startsWith(code) ||
         Dictionary::startsWith(code) ||
         Number::startsWith(code) ||
+        Character::startsWith(code) ||
         String::startsWith(code) ||
         Conditional::startsWith(code) ||
         Function::startsWith(code) ||
