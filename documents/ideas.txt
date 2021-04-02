@@ -5,6 +5,7 @@ TODO:
 * Math functions: ceil/round_up, floor/round_down, round
 * higher order function for for-loop
  - iterate{init=1, apply=f, while=p}
+ - fold
 * c++ add systematic error messages when parsing fails
  - Print all sub-expressions that it parsed
 * child< as function that can be sent to map
@@ -19,8 +20,41 @@ TODO:
     - prepend, first, rest, as primitives instead of concat, first, last, first_part, last_part
     - overload these lists and strings
 * Make "1 2" throw a parse error
+* implement concat in standard library using prepend and reverse
 * Handle end of ranges in all parse ans startswidth functions
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
+* Imperative Support
+  - Redefinition of symbols in dictionaries
+  - while in dictionaries
+  - only support mutation of symbols in current dictionary
+  - avoid global mutable state
+  - hides mutation, so that each unit is pure from the outside
+  - do not allow other side-effects
+* Built-in operations on strings: first, rest, prepend, reverse?
+
+LEVELS
+1. Data
+   - numbers
+   - strings
+   - lists
+   - dictionaries
+2. References
+   - reference (substitution)
+   - child reference (substitution)
+3. Computation
+   - if (substitution)
+   - function definition
+   - function call (substitution)
+4. Imperative
+   - while in dictionaries and updating of symbols (substitution)
+
+SIMILAR LANGUAGES
+* Lisp family
+* Json
+* Yaml
+* L1 https://mlajtos.github.io/L1/
+* Dhall https://dhall-lang.org/
+* Jsonnet https://jsonnet.org/
 
 from x to mul[x, x]
 from [a, b] to mul[a, b]
