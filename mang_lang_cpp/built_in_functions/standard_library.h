@@ -36,6 +36,11 @@ const std::string STANDARD_LIBRARY = R"(
                         new_rest
             }
         else
-            list<input
+            list<input,
+    get_index = from input to
+        if equal[index<input, 0] then
+            first list<input
+        else
+            get_index {index=dec index<input, list=rest list<input}
 }
 )";

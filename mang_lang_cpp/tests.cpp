@@ -376,6 +376,12 @@ int main() {
         {"filter{list=[],predicate=from x to 1}", "[]"},
         {"filter{list=[[]],predicate=from x to 1}", "[[]]"},
         {"filter{list=[[]],predicate=from x to 0}", "[]"},
+        {"get_index{index=0,list=[3,7,6]}", "3"},
+        {"get_index{index=1,list=[3,7,6]}", "7"},
+        {"get_index{index=2,list=[3,7,6]}", "6"},
+        {R"(get_index{index=0,list="abc"})", R"('a')"},
+        {R"(get_index{index=1,list="abc"})", R"('b')"},
+        {R"(get_index{index=2,list="abc"})", R"('c')"},
     });
 
     {
