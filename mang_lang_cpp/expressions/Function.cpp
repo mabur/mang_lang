@@ -8,13 +8,13 @@ std::string Function::serialize() const {
 }
 
 ExpressionPointer Function::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Function>(begin(), end(), parent, input_name, body);
+    auto result = std::make_shared<Function>(range(), parent, input_name, body);
     log << result->serialize() << std::endl;
     return result;
 }
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
-    auto middle = Dictionary(nullptr, nullptr, parent());
+    auto middle = Dictionary({}, parent());
     middle.add(DictionaryElement(input_name, input));
     auto output = body->evaluate(&middle, log);
     return output;
@@ -30,7 +30,9 @@ ExpressionPointer Function::parse(CodeRange code) {
     code = parseKeyword(code, "to");
     auto body = Expression::parse(code);
     code.first = body->end();
-    return std::make_shared<Function>(first, code.begin(), nullptr, input_name, body);
+    return std::make_shared<Function>(
+        CodeRange{first, code.begin()}, nullptr, input_name, body
+    );
 }
 
 bool Function::startsWith(CodeRange code) {

@@ -34,8 +34,7 @@ std::string Dictionary::serialize() const {
 }
 
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Dictionary>(
-        begin(), end(), parent);
+    auto result = std::make_shared<Dictionary>(range(), parent);
     for (const auto& element : elements) {
         result->add(DictionaryElement{
             element.name,
@@ -50,7 +49,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto result = std::make_shared<Dictionary>(first, code.begin(), nullptr);
+    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         const auto name = Name::parse(code);

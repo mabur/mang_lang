@@ -16,16 +16,14 @@ using InternalList = SinglyLinkedList<ExpressionPointer>;
 const auto KEYWORDS = std::vector<std::string>{"if", "then", "else", "from", "to"};
 
 struct Expression {
-    Expression(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
-        const Expression* parent
-    ) : range_{first, last}, parent_{parent} {}
+    Expression(CodeRange range, const Expression* parent)
+        : range_{range}, parent_{parent} {}
     virtual ~Expression() = default;
 
     CodeRange range_;
     const Expression* parent_;
 
+    CodeRange range() const;
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
     const Expression* parent() const;

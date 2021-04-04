@@ -20,6 +20,10 @@ const CodeCharacter* Expression::end() const {
     return range_.end();
 }
 
+CodeRange Expression::range() const {
+    return range_;
+}
+
 const Expression* Expression::parent() const {
     return parent_;
 }

@@ -11,11 +11,8 @@ struct DictionaryElement {
 };
 
 struct Dictionary : public Expression {
-    Dictionary(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
-        const Expression* parent
-    ) : Expression{first, last, parent}
+    Dictionary(CodeRange range, const Expression* parent)
+        : Expression{range, parent}
     {}
     std::vector<DictionaryElement> elements;
     void add(DictionaryElement element);

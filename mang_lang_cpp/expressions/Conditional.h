@@ -3,14 +3,13 @@
 
 struct Conditional : public Expression {
     Conditional(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
+        CodeRange range,
         const Expression* parent,
         ExpressionPointer expression_if,
         ExpressionPointer expression_then,
         ExpressionPointer expression_else
     )
-        : Expression{first, last, parent},
+        : Expression{range, parent},
         expression_if{std::move(expression_if)},
         expression_then{std::move(expression_then)},
         expression_else{std::move(expression_else)}

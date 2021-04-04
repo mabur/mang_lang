@@ -21,7 +21,7 @@ ExpressionPointer LookupChild::parse(CodeRange code) {
     auto child = Expression::parse(code);
     code.first = child->end();
     return std::make_shared<LookupChild>(
-        first, code.first, nullptr, name, std::move(child)
+        CodeRange{first, code.first}, nullptr, name, std::move(child)
     );
 }
 

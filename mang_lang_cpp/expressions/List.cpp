@@ -18,7 +18,7 @@ ExpressionPointer List::evaluate(const Expression* parent, std::ostream& log) co
         return expression->evaluate(parent, log);
     };
     auto evaluated_elements = map(elements, operation);
-    auto result = std::make_shared<List>(begin(), end(), parent, std::move(evaluated_elements));
+    auto result = std::make_shared<List>(range(), parent, std::move(evaluated_elements));
     log << result->serialize() << std::endl;
     return result;
 }
@@ -37,7 +37,9 @@ ExpressionPointer List::parse(CodeRange code) {
         code = parseOptionalCharacter(code, ',');
     }
     code = parseCharacter(code, ']');
-    return std::make_shared<List>(first, code.first, nullptr, ::reverse(expressions));
+    return std::make_shared<List>(
+        CodeRange{first, code.first}, nullptr, ::reverse(expressions)
+    );
 }
 
 bool List::startsWith(CodeRange code) {
@@ -68,14 +70,14 @@ ExpressionPointer List::first() const {
 }
 
 ExpressionPointer List::rest() const {
-    return std::make_shared<List>(begin(), end(), nullptr, list()->rest);
+    return std::make_shared<List>(range(), nullptr, list()->rest);
 }
 
 ExpressionPointer List::reverse() const {
-    return std::make_shared<List>(begin(), end(), nullptr, ::reverse(list()));
+    return std::make_shared<List>(range(), nullptr, ::reverse(list()));
 }
 
 ExpressionPointer List::prepend(ExpressionPointer item) const {
     auto new_list = ::prepend(list(), item);
-    return std::make_shared<List>(begin(), end(), nullptr, new_list);
+    return std::make_shared<List>(range(), nullptr, new_list);
 }

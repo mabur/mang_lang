@@ -14,7 +14,7 @@ std::string String::serialize() const {
 }
 
 ExpressionPointer String::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<String>(begin(), end(), parent, elements);
+    auto result = std::make_shared<String>(range(), parent, elements);
     log << result->serialize();
     return result;
 }
@@ -35,7 +35,7 @@ ExpressionPointer String::parse(CodeRange code) {
         value = ::prepend(value, it->character);
     }
     value = ::reverse(value);
-    return std::make_shared<String>(first, code.begin(), nullptr, value);
+    return std::make_shared<String>(CodeRange{first, code.begin()}, nullptr, value);
 }
 
 bool String::startsWith(CodeRange code) {
@@ -47,18 +47,18 @@ bool String::boolean() const {
 }
 
 ExpressionPointer String::first() const {
-    return std::make_shared<Character>(begin(), end(), nullptr, elements->first);
+    return std::make_shared<Character>(range(), nullptr, elements->first);
 }
 
 ExpressionPointer String::rest() const {
-    return std::make_shared<String>(begin(), end(), nullptr, elements->rest);
+    return std::make_shared<String>(range(), nullptr, elements->rest);
 }
 
 ExpressionPointer String::reverse() const {
-    return std::make_shared<String>(begin(), end(), nullptr, ::reverse(elements));
+    return std::make_shared<String>(range(), nullptr, ::reverse(elements));
 }
 
 ExpressionPointer String::prepend(ExpressionPointer item) const {
     auto new_list = ::prepend(elements, item->character());
-    return std::make_shared<String>(begin(), end(), nullptr, new_list);
+    return std::make_shared<String>(range(), nullptr, new_list);
 }

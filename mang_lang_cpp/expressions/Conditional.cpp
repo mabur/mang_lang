@@ -37,8 +37,7 @@ ExpressionPointer Conditional::parse(CodeRange code) {
     code = parseWhiteSpace(code);
 
     return std::make_shared<Conditional>(
-        first,
-        code.begin(),
+        CodeRange{first, code.begin()},
         nullptr,
         std::move(expression_if),
         std::move(expression_then),

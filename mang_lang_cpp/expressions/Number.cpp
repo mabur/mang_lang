@@ -7,7 +7,7 @@ std::string Number::serialize() const {
 }
 
 ExpressionPointer Number::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Number>(begin(), end(), parent, value);
+    auto result = std::make_shared<Number>(range(), parent, value);
     log << result->serialize() << std::endl;
     return result;
 }
@@ -20,7 +20,7 @@ ExpressionPointer Number::parse(CodeRange code) {
     code = parseOptionalCharacter(code, '.');
     code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString({first, code.first}));
-    return std::make_shared<Number>(first, code.first, nullptr, value);
+    return std::make_shared<Number>(CodeRange{first, code.first}, nullptr, value);
 }
 
 bool Number::startsWith(CodeRange code) {

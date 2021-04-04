@@ -5,12 +5,8 @@
 using InternalString = SinglyLinkedList<char>;
 
 struct String : public Expression {
-    String(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
-        const Expression* parent,
-        InternalString elements
-    ) : Expression{first, last, parent}, elements{std::move(elements)} {}
+    String(CodeRange range, const Expression* parent, InternalString elements)
+        : Expression{range, parent}, elements{std::move(elements)} {}
     InternalString elements;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;

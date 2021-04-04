@@ -16,7 +16,9 @@ ExpressionPointer LookupSymbol::evaluate(const Expression* parent, std::ostream&
 ExpressionPointer LookupSymbol::parse(CodeRange code) {
     auto first = code.begin();
     const auto name = Name::parse(code);
-    return std::make_shared<LookupSymbol>(first, name.end(), nullptr, name);
+    return std::make_shared<LookupSymbol>(
+        CodeRange{first, name.end()}, nullptr, name
+    );
 }
 
 bool LookupSymbol::startsWith(CodeRange code) {

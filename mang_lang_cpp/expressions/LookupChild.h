@@ -4,12 +4,11 @@
 
 struct LookupChild : public Expression {
     LookupChild(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
+        CodeRange range,
         const Expression* parent,
         Name name,
         ExpressionPointer child
-    ) : Expression{first, last, parent}, name{std::move(name)}, child{std::move(child)} {}
+    ) : Expression{range, parent}, name{std::move(name)}, child{std::move(child)} {}
     Name name;
     ExpressionPointer child;
     std::string serialize() const final;

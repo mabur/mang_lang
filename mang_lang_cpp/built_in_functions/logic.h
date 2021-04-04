@@ -14,7 +14,7 @@ bool isFalse(const ExpressionPointer& x) {
 }
 
 ExpressionPointer makeNumber(const Expression& in, double x) {
-    return std::make_shared<Number>(in.begin(), in.end(), nullptr, x);
+    return std::make_shared<Number>(in.range(), nullptr, x);
 }
 
 ExpressionPointer boolean(const Expression& in) {

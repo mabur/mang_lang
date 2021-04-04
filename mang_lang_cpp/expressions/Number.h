@@ -2,12 +2,8 @@
 #include "Expression.h"
 
 struct Number : public Expression {
-    Number(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
-        const Expression* parent,
-        double value
-    ) : Expression{first, last, parent}, value{value} {}
+    Number(CodeRange range, const Expression* parent, double value)
+        : Expression{range, parent}, value{value} {}
     double value;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;

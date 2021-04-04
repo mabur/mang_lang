@@ -4,12 +4,11 @@
 
 struct Function : public Expression {
     Function(
-        const CodeCharacter* first,
-        const CodeCharacter* last,
+        CodeRange range,
         const Expression* parent,
         Name input_name,
         ExpressionPointer body
-    ) : Expression{first, last, parent},
+    ) : Expression{range, parent},
         input_name{std::move(input_name)},
         body{std::move(body)}
     {}

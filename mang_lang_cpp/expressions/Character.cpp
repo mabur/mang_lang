@@ -6,7 +6,7 @@ std::string Character::serialize() const {
 }
 
 ExpressionPointer Character::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Character>(begin(), end(), parent, value);
+    auto result = std::make_shared<Character>(range(), parent, value);
     log << result->serialize();
     return result;
 }
@@ -18,7 +18,7 @@ ExpressionPointer Character::parse(CodeRange code) {
     code = parseCharacter(code);
     code = parseCharacter(code, '\'');
     const auto value = it->character;
-    return std::make_shared<Character>(first, code.begin(), nullptr, value);
+    return std::make_shared<Character>(CodeRange{first, code.begin()}, nullptr, value);
 }
 
 bool Character::startsWith(CodeRange code) {
