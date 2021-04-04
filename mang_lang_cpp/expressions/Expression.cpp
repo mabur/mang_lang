@@ -13,11 +13,11 @@
 #include "String.h"
 
 const CodeCharacter* Expression::begin() const {
-    return first_;
+    return range_.begin();
 }
 
 const CodeCharacter* Expression::end() const {
-    return last_;
+    return range_.end();
 }
 
 const Expression* Expression::parent() const {

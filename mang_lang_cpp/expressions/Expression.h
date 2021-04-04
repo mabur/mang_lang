@@ -20,11 +20,10 @@ struct Expression {
         const CodeCharacter* first,
         const CodeCharacter* last,
         const Expression* parent
-    ) : first_{first}, last_{last}, parent_{parent} {}
+    ) : range_{first, last}, parent_{parent} {}
     virtual ~Expression() = default;
 
-    const CodeCharacter* first_;
-    const CodeCharacter* last_;
+    CodeRange range_;
     const Expression* parent_;
 
     const CodeCharacter* begin() const;

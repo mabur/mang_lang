@@ -66,7 +66,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, '}');
-    result->last_ = code.begin();
+    result->range_.last = code.begin();
     return result;
 }
 
