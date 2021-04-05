@@ -289,21 +289,47 @@ int main() {
         {"none[0,1]", "0"},
         {"none[1,1]", "0"},
     });
-    test.evaluate("equal", {
+    test.evaluate("equal number", {
         {"equal[0,0]", "1"},
         {"equal[0,1]", "0"},
         {"equal[1,0]", "0"},
         {"equal[1,1]", "1"},
+    });
+    test.evaluate("unequal number", {
+        {"unequal[0,0]", "0"},
+        {"unequal[0,1]", "1"},
+        {"unequal[1,0]", "1"},
+        {"unequal[1,1]", "0"},
+    });
+    test.evaluate("equal character", {
         {"equal['a','a']", "1"},
         {"equal['a','b']", "0"},
         {"equal['b','a']", "0"},
         {"equal['b','b']", "1"},
+    });
+    test.evaluate("unequal character", {
+        {"unequal['a','a']", "0"},
+        {"unequal['a','b']", "1"},
+        {"unequal['b','a']", "1"},
+        {"unequal['b','b']", "0"},
+    });
+    test.evaluate("equal list", {
         {"equal[[],[]]", "1"},
         {"equal[[1],[1]]", "1"},
         {"equal[[0],[1]]", "0"},
         {"equal[[0,1],[0,1]]", "1"},
         {"equal[[0,1],[1,1]]", "0"},
         {"equal[[0,1],[0]]", "0"},
+    });
+    test.evaluate("unequal list", {
+        {"unequal[[],[]]", "0"},
+        {"unequal[[1],[1]]", "0"},
+        {"unequal[[0],[1]]", "1"},
+        {"unequal[[0,1],[0,1]]", "0"},
+        {"unequal[[0,1],[1,1]]", "1"},
+        {"unequal[[0,1],[0]]", "1"},
+    });
+    test.evaluate("equal string", {
         {R"(equal["",""])", "1"},
         {R"(equal["a",""])", "0"},
         {R"(equal["","a"])", "0"},
@@ -313,17 +339,15 @@ int main() {
         {R"(equal["abc","ab"])", "0"},
         {R"(equal["ab","abc"])", "0"},
     });
-    test.evaluate("unequal", {
-        {"unequal[0,0]", "0"},
-        {"unequal[0,1]", "1"},
-        {"unequal[1,0]", "1"},
-        {"unequal[1,1]", "0"},
-        {"unequal[[],[]]", "0"},
-        {"unequal[[1],[1]]", "0"},
-        {"unequal[[0],[1]]", "1"},
-        {"unequal[[0,1],[0,1]]", "0"},
-        {"unequal[[0,1],[1,1]]", "1"},
-        {"unequal[[0,1],[0]]", "1"},
+    test.evaluate("unequal string", {
+        {R"(unequal["",""])", "0"},
+        {R"(unequal["a",""])", "1"},
+        {R"(unequal["","a"])", "1"},
+        {R"(unequal["a","a"])", "0"},
+        {R"(unequal["a","b"])", "1"},
+        {R"(unequal["ab","ab"])", "0"},
+        {R"(unequal["abc","ab"])", "1"},
+        {R"(unequal["ab","abc"])", "1"},
     });
     test.evaluate("function", {
         {"from x to x", "from x to x"},
