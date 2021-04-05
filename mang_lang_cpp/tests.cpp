@@ -471,6 +471,20 @@ int main() {
         {R"(enumerate"a")", R"([{index=0,item='a'}])"},
         {R"(enumerate"ab")", R"([{index=0,item='a'},{index=1,item='b'}])"},
     });
+    test.evaluate("concat list", {
+        {"concat[[],[]]", "[]"},
+        {"concat[[],[2]]", "[2]"},
+        {"concat[[1],[]]", "[1]"},
+        {"concat[[1],[2]]", "[1,2]"},
+        {"concat[[1,2,3],[4,5,6]]", "[1,2,3,4,5,6]"},
+    });
+    test.evaluate("concat string", {
+        {R"(concat["",""])", R"("")"},
+        {R"(concat["","b"])", R"("b")"},
+        {R"(concat["a",""])", R"("a")"},
+        {R"(concat["a","b"])", R"("ab")"},
+        {R"(concat["abc","def"])", R"("abcdef")"},
+    });
     test.evaluate("get_index list", {
         {"get_index{index=0,list=[3,7,6]}", "3"},
         {"get_index{index=1,list=[3,7,6]}", "7"},

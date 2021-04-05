@@ -77,6 +77,16 @@ const std::string STANDARD_LIBRARY = R"(
             enumerate_from {list = list, index = 0}
         else
             [],
+    concat = from input to
+        result<{
+            left = first input,
+            right = first rest input,
+            result =
+                if left then
+                    prepend {first = first left, rest = concat [rest left, right]}
+                else
+                    right
+        },
     get_index = from input to
         if equal[index<input, 0] then
             first list<input
