@@ -61,6 +61,22 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             list<input,
+    enumerate_from = from input to
+        if list<input then
+            result<{
+                index = index<input,
+                list = list<input,
+                item = {index = index, item = first list},
+                sub_result = enumerate_from{index=inc index, list=rest list},
+                result = prepend {first = item, rest = sub_result}
+            }
+        else
+            [],
+    enumerate = from list to
+        if list then
+            enumerate_from {list = list, index = 0}
+        else
+            [],
     get_index = from input to
         if equal[index<input, 0] then
             first list<input

@@ -461,6 +461,16 @@ int main() {
         {R"(filter{list="ba",predicate=from x to equal[x,'a']})", R"("a")"},
         {R"(filter{list="aba",predicate=from x to equal[x,'a']})", R"("aa")"},
     });
+    test.evaluate("enumerate list", {
+        {"enumerate[]", "[]"},
+        {"enumerate[4]", "[{index=0,item=4}]"},
+        {"enumerate[4,3]", "[{index=0,item=4},{index=1,item=3}]"},
+    });
+    test.evaluate("enumerate string", {
+        {R"(enumerate"")", R"([])"},
+        {R"(enumerate"a")", R"([{index=0,item='a'}])"},
+        {R"(enumerate"ab")", R"([{index=0,item='a'},{index=1,item='b'}])"},
+    });
     test.evaluate("get_index list", {
         {"get_index{index=0,list=[3,7,6]}", "3"},
         {"get_index{index=1,list=[3,7,6]}", "7"},
