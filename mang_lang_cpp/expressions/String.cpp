@@ -49,6 +49,10 @@ bool String::boolean() const {
     return !!elements;
 }
 
+const InternalList& String::list() const {
+    return elements;
+}
+
 ExpressionPointer String::first() const {
     return elements->first;
 }

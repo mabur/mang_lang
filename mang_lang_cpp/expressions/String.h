@@ -10,6 +10,7 @@ struct String : public Expression {
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static ExpressionPointer parse(CodeRange code);
     static bool startsWith(CodeRange code);
+    const InternalList& list() const final;
     bool boolean() const final;
 
     ExpressionPointer first() const final;
