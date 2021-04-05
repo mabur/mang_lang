@@ -3,6 +3,7 @@ TODO:
 * Use-case: programmable json.
 * Define both input source and output result as manglang.
 * Math functions: ceil/round_up, floor/round_down, round
+* Functions for Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
 * higher order function for for-loop
  - iterate{init=1, apply=f, while=p}
  - fold
@@ -50,11 +51,11 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     - Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
 
 * Implement equal for dictionary
-* Functions for Character
 * rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
 * How to name input for functions that take both list and string?
   - list, collection, container, items?
   - take input as list instead of dictionary to avoid naming and getting more concise code?
+* Syntactic sugar for functions that take dictionaries as input.
 
 LEVELS
 1. Data
