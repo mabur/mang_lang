@@ -1,14 +1,14 @@
 #include "List.h"
 
 std::string List::serialize() const {
-    if (!elements) {
+    if (!list()) {
         return "[]";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
         return left + right->serialize() + ",";
     };
     auto result = std::string{"["};
-    result = leftFold(elements, result, operation);
+    result = leftFold(list(), result, operation);
     result.back() = ']';
     return result;
 }
@@ -17,7 +17,7 @@ ExpressionPointer List::evaluate(const Expression* parent, std::ostream& log) co
     const auto operation = [&](const ExpressionPointer& expression) {
         return expression->evaluate(parent, log);
     };
-    auto evaluated_elements = map(elements, operation);
+    auto evaluated_elements = map(list(), operation);
     auto result = std::make_shared<List>(range(), parent, std::move(evaluated_elements));
     log << result->serialize() << std::endl;
     return result;
@@ -44,40 +44,4 @@ ExpressionPointer List::parse(CodeRange code) {
 
 bool List::startsWith(CodeRange code) {
     return ::startsWith(code, '[');
-}
-
-const InternalList& List::list() const {
-    return elements;
-}
-
-bool List::boolean() const {
-    return !!elements;
-}
-
-bool List::isEqual(const Expression* expression) const {
-    auto left = list();
-    auto right = expression->list();
-    for (; left && right; left = left->rest, right = right->rest) {
-        if (!(left->first)->isEqual(right->first.get())) {
-            return false;
-        }
-    }
-    return !left && !right;
-}
-
-ExpressionPointer List::first() const {
-    return list()->first;
-}
-
-ExpressionPointer List::rest() const {
-    return std::make_shared<List>(range(), nullptr, list()->rest);
-}
-
-ExpressionPointer List::reverse() const {
-    return std::make_shared<List>(range(), nullptr, ::reverse(list()));
-}
-
-ExpressionPointer List::prepend(ExpressionPointer item) const {
-    auto new_list = ::prepend(list(), item);
-    return std::make_shared<List>(range(), nullptr, new_list);
 }
