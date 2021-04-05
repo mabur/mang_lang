@@ -9,6 +9,6 @@ struct Character : public Expression {
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static ExpressionPointer parse(CodeRange code);
     static bool startsWith(CodeRange code);
-    bool isEqual(const Expression* expression) const;
+    bool isEqual(const Expression* expression) const final;
     char character() const final;
 };
