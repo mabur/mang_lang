@@ -397,32 +397,50 @@ int main() {
         {R"(prepend{first='a',rest="b"})", R"("ab")"},
         {R"(prepend{first='a',rest="bc"})", R"("abc")"},
     });
-    test.evaluate("standard library", {
+    test.evaluate("inc", {
         {"inc 0", "1"},
+    });
+    test.evaluate("dec", {
         {"dec 0", "-1"},
+    });
+    test.evaluate("count list", {
         {"count []", "0"},
         {"count [[]]", "1"},
         {"count [[], []]", "2"},
+    });
+    test.evaluate("count string", {
         {R"(count "")", "0"},
         {R"(count "a")", "1"},
         {R"(count "ab")", "2"},
+    });
+    test.evaluate("count_item list", {
         {"count_item{list=[],item=1}", "0"},
         {"count_item{list=[1],item=1}", "1"},
         {"count_item{list=[1,1],item=1}", "2"},
         {"count_item{list=[1,0,1],item=1}", "2"},
+    });
+    test.evaluate("count_item string", {
         {R"(count_item{list="",item='a'})", "0"},
         {R"(count_item{list="a",item='a'})", "1"},
         {R"(count_item{list="aa",item='a'})", "2"},
         {R"(count_item{list="aba",item='a'})", "2"},
+    });
+    test.evaluate("map list", {
         {"map{list=[],f=inc}", "[]"},
         {"map{list=[0],f=inc}", "[1]"},
         {"map{list=[0,1],f=inc}", "[1,2]"},
+    });
+    test.evaluate("filter list", {
         {"filter{list=[],predicate=from x to 1}", "[]"},
         {"filter{list=[[]],predicate=from x to 1}", "[[]]"},
         {"filter{list=[[]],predicate=from x to 0}", "[]"},
+    });
+    test.evaluate("get_index list", {
         {"get_index{index=0,list=[3,7,6]}", "3"},
         {"get_index{index=1,list=[3,7,6]}", "7"},
         {"get_index{index=2,list=[3,7,6]}", "6"},
+    });
+    test.evaluate("get_index string", {
         {R"(get_index{index=0,list="abc"})", R"('a')"},
         {R"(get_index{index=1,list="abc"})", R"('b')"},
         {R"(get_index{index=2,list="abc"})", R"('c')"},
