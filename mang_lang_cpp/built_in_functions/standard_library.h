@@ -23,6 +23,18 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             0,
+    count_if = from input to
+        if list<input then
+            result<{
+                predicate = predicate<input,
+                list = list<input,
+                head = first list,
+                tail = rest list,
+                x = if predicate head then 1 else 0,
+                result = add [x, count_if {list=tail, predicate=predicate}],
+            }
+        else
+            0,
     map = from input to
         if list<input then
             new_list<{
