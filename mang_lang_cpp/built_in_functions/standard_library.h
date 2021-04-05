@@ -11,6 +11,18 @@ const std::string STANDARD_LIBRARY = R"(
             inc count rest list
         else
             0,
+    count_item = from input to
+        if list<input then
+            result<{
+                item = item<input,
+                list = list<input,
+                head = first list,
+                tail = rest list,
+                x = if equal [head, item] then 1 else 0,
+                result = add [x, count_item {list=tail, item=item}],
+            }
+        else
+            0,
     map = from input to
         if list<input then
             new_list<{
