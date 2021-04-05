@@ -14,14 +14,7 @@ TODO:
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
 * Improve home-page. 10 kinds of expressions
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
-* make generic sequence algorithms work for both lists and strings
-  - what is not working now?
-    - this is not generic: concat [beginning, [back]]
-    - prepend, first, rest, as primitives instead of concat, first, last, first_part, last_part
-    - overload these lists and strings
 * Make "1 2" throw a parse error
-* implement concat in standard library using prepend and reverse
-* Handle end of ranges in all parse ans startswidth functions
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Imperative Support
   - Redefinition of symbols in dictionaries
@@ -56,8 +49,12 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     How to store efficiently? No problem.
     - Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
 
-* Implement equal for more types
+* Implement equal for dictionary
 * Functions for Character
+* rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
+* How to name input for functions that take both list and string?
+  - list, collection, container, items?
+  - take input as list instead of dictionary to avoid naming and getting more concise code?
 
 LEVELS
 1. Data
