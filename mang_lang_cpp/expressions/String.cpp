@@ -7,7 +7,7 @@ std::string String::serialize() const {
     auto value = std::string{"\""};
     auto list = elements;
     for (; list; list = list->rest) {
-        value += list->first;
+        value += list->first->character();
     }
     value += "\"";
     return value;
@@ -30,9 +30,12 @@ ExpressionPointer String::parse(CodeRange code) {
     code = parseWhile(code, isNotEndOfString);
     const auto last_character = code.begin();
     code = parseCharacter(code, '"');
-    auto value = InternalString{};
+    auto value = InternalList{};
     for (auto it = first_character; it != last_character; ++it) {
-        value = ::prepend(value, it->character);
+        auto item = std::make_shared<Character>(
+            CodeRange{it, it + 1}, nullptr, it->character
+        );
+        value = ::prepend<ExpressionPointer>(value, item);
     }
     value = ::reverse(value);
     return std::make_shared<String>(CodeRange{first, code.begin()}, nullptr, value);
@@ -47,7 +50,7 @@ bool String::boolean() const {
 }
 
 ExpressionPointer String::first() const {
-    return std::make_shared<Character>(range(), nullptr, elements->first);
+    return elements->first;
 }
 
 ExpressionPointer String::rest() const {
@@ -59,6 +62,6 @@ ExpressionPointer String::reverse() const {
 }
 
 ExpressionPointer String::prepend(ExpressionPointer item) const {
-    auto new_list = ::prepend(elements, item->character());
+    auto new_list = ::prepend(elements, item);
     return std::make_shared<String>(range(), nullptr, new_list);
 }

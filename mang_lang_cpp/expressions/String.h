@@ -2,12 +2,10 @@
 #include "Expression.h"
 #include "../SinglyLinkedList.h"
 
-using InternalString = SinglyLinkedList<char>;
-
 struct String : public Expression {
-    String(CodeRange range, const Expression* parent, InternalString elements)
+    String(CodeRange range, const Expression* parent, InternalList elements)
         : Expression{range, parent}, elements{std::move(elements)} {}
-    InternalString elements;
+    InternalList elements;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static ExpressionPointer parse(CodeRange code);
