@@ -304,6 +304,14 @@ int main() {
         {"equal[[0,1],[0,1]]", "1"},
         {"equal[[0,1],[1,1]]", "0"},
         {"equal[[0,1],[0]]", "0"},
+        {R"(equal["",""])", "1"},
+        {R"(equal["a",""])", "0"},
+        {R"(equal["","a"])", "0"},
+        {R"(equal["a","a"])", "1"},
+        {R"(equal["a","b"])", "0"},
+        {R"(equal["ab","ab"])", "1"},
+        {R"(equal["abc","ab"])", "0"},
+        {R"(equal["ab","abc"])", "0"},
     });
     test.evaluate("unequal", {
         {"unequal[0,0]", "0"},

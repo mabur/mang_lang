@@ -49,6 +49,17 @@ bool String::boolean() const {
     return !!elements;
 }
 
+bool String::isEqual(const Expression* expression) const {
+    auto left = list();
+    auto right = expression->list();
+    for (; left && right; left = left->rest, right = right->rest) {
+        if (!(left->first)->isEqual(right->first.get())) {
+            return false;
+        }
+    }
+    return !left && !right;
+}
+
 const InternalList& String::list() const {
     return elements;
 }

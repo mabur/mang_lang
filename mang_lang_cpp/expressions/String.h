@@ -12,6 +12,7 @@ struct String : public Expression {
     static bool startsWith(CodeRange code);
     const InternalList& list() const final;
     bool boolean() const final;
+    bool isEqual(const Expression* expression) const final;
 
     ExpressionPointer first() const final;
     ExpressionPointer rest() const final;
