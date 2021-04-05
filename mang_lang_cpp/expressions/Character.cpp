@@ -25,6 +25,14 @@ bool Character::startsWith(CodeRange code) {
     return ::startsWith(code, '\'');
 }
 
+bool Character::isEqual(const Expression* expression) const {
+    try {
+        return character() == expression->character();
+    } catch (...) {
+        return false;
+    }
+}
+
 char Character::character() const {
     return value;
 }
