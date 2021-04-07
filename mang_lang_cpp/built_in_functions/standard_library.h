@@ -11,11 +11,9 @@ const std::string STANDARD_LIBRARY = R"(
             inc count rest list
         else
             0,
-    count_item = from input to
-        if list<input then
+    count_item = from {list, item} to
+        if list then
             result<{
-                item = item<input,
-                list = list<input,
                 head = first list,
                 tail = rest list,
                 x = if equal [head, item] then 1 else 0,
@@ -23,11 +21,9 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             0,
-    count_if = from input to
-        if list<input then
+    count_if = from {list, predicate} to
+        if list then
             result<{
-                predicate = predicate<input,
-                list = list<input,
                 head = first list,
                 tail = rest list,
                 x = if predicate head then 1 else 0,
@@ -35,22 +31,18 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             0,
-    map = from input to
-        if list<input then
+    map = from {list, f} to
+        if list then
             new_list<{
-                list = list<input,
-                f = f<input,
                 new_first = f first list,
                 new_rest = map {list = rest list, f = f},
                 new_list = prepend {first = new_first, rest = new_rest}
             }
         else
-            list<input,
-    filter = from input to
-        if list<input then
+            list,
+    filter = from {list, predicate} to
+        if list then
             new_list<{
-                list = list<input,
-                predicate = predicate<input,
                 new_first = first list,
                 new_rest = filter {list = rest list, predicate = predicate},
                 new_list =
@@ -60,12 +52,10 @@ const std::string STANDARD_LIBRARY = R"(
                         new_rest
             }
         else
-            list<input,
-    enumerate_from = from input to
-        if list<input then
+            list,
+    enumerate_from = from {list, index} to
+        if list then
             result<{
-                index = index<input,
-                list = list<input,
                 item = {index = index, item = first list},
                 sub_result = enumerate_from{index=inc index, list=rest list},
                 result = prepend {first = item, rest = sub_result}
@@ -77,20 +67,20 @@ const std::string STANDARD_LIBRARY = R"(
             enumerate_from {list = list, index = 0}
         else
             [],
-    concat = from input to
+    concat = from list to
         result<{
-            left = first input,
-            right = first rest input,
+            left = first list,
+            right = first rest list,
             result =
                 if left then
                     prepend {first = first left, rest = concat [rest left, right]}
                 else
                     right
         },
-    get_index = from input to
-        if equal[index<input, 0] then
-            first list<input
+    get_index = from {list, index} to
+        if equal[index, 0] then
+            first list
         else
-            get_index {index=dec index<input, list=rest list<input}
+            get_index {index=dec index, list=rest list}
 }
 )";
