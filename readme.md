@@ -53,7 +53,7 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 
 **Example code**:
 
-```(
+```HiveQL
 {
 factorial = from x to 
     if equal [x, 0] then
@@ -72,7 +72,7 @@ In the example above the result gets the value `1*2*3*4=24`.
 
 Another example of how Mang Lang uses dictionaries both for structuring a program into multiple lines and creating objects/records:
 
-```
+```HiveQL
 {
 rectangle = {width = 4, height = 5},
 area = mul [width<rectangle, height<rectangle]
@@ -97,21 +97,21 @@ We use the syntax `width<rectangle` to get the field `width` from the dictionary
 
 Mang Lang can be used as a calculator. This is a trivial program that just contains a single number:
 
-```
+```HiveQL
 8
 ```
 This program is unsurprisingly evaluated to the value  `8`.
 Lists of numbers are created like this:
-```
+```HiveQL
 [7,3,4]
 ```
 Computations are done by calling functions:
-```
+```HiveQL
 add [7,3,4]
 ```
 This program is evaluated to `14`. Mang Lang does not have any operators for arithmetics etc, but instead uses functions for all computations. Function calls can be nested like this:
 
-````
+````HiveQL
 mul [add [1,2,3], div [7,2]]
 ````
 
@@ -121,7 +121,7 @@ This program is evaluated to `(1+2+3)*(7-2) = 3*5 = 15`.
 
 Mang Lang uses dictionaries as flexible building blocks for many different things. Variables can be defined and used like this:
 
-```
+```HiveQL
 {
 x=3,
 y=2,
@@ -129,11 +129,11 @@ z=mul [x,y]
 }
 ```
 This program defines three variables, inside a dictionary `{}`. When evaluating this program `z` gets the value `6`. White space and new lines are optional in Mang Lang so the same program can also be written:
-```
+```HiveQL
 {x = 3, y = 2, z = mul [x, y]}
 ```
 Dictionaries can be nested:
-```
+```HiveQL
 {
 rectangle = {width = 4, height = 5},
 area = mul [width<rectangle, height<rectangle]
@@ -144,7 +144,7 @@ We use the syntax `width<rectangle` to get the field `width` from the dictionary
 ## lists
 
 Example program:
-```
+```HiveQL
 {
 list = [1, 3],
 one = first list,
@@ -156,7 +156,7 @@ s = count dubble_list
 }
 ```
 which is evaluated to:
-```
+```HiveQL
 {
 list = [1, 3],
 one = 1,
@@ -172,7 +172,7 @@ s = 4
 
 Functions are defined using they keywords `from` and `to` like this:
 
-```
+```HiveQL
 {
 square = from x to mul [x, x],
 result = square 3
@@ -182,7 +182,7 @@ result = square 3
 The if-then-else operator is used to choose what value to return based on a condition.
 Recursive function calls and the if-then-else operator are used for loops:
 
-```
+```HiveQL
 {
 factorial = from x to 
     if equal [x, 0] then
@@ -194,7 +194,7 @@ result = factorial 4
 ```
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
 
-```
+```HiveQL
 {
 square_norm = from vec2 to result<{
     x = first vec2,
@@ -210,7 +210,7 @@ result = square_norm vector
 
 ## Strings
 Strings are similar to lists: 
-```
+```HiveQL
 {
 first_name = "Magnus",
 last_name = "Burenius",
@@ -223,14 +223,14 @@ In this example `full_name` gets the value "Magnus Burenius" and `initials` gets
 ## Importing code in different source files
 
 Source code can be put in different source files. If you have a file called `math` that contains the following:
-```
+```HiveQL
 {
 square = from x to mul [x, x],
 pi = 3.14151965
 }
 ```
 then you can import those definitions into another source file by using the `import` function:
-```
+```HiveQL
 {
 math   = import "math",
 tau    = mul [2, pi<math],
