@@ -104,19 +104,19 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 # Examples
 
 1. Data
-    1. [Numbers](#1.i-numbers)
-    2. [Characters](#1.ii-characters)
-    3. [Strings](#1.iii-strings)
-    4. [Lists](#1.iv-lists)
-    5. [Dictionaries](#1.v-dictionaries)
+    1. [Numbers](#1i-numbers)
+    2. [Characters](#1ii-characters)
+    3. [Strings](#1iii-strings)
+    4. [Lists](#1iv-lists)
+    5. [Dictionaries](#1v-dictionaries)
 2. References
-    1. [Name lookup](#2.i-name-lookup)
-    2. [Child name lookup](#2.i-child-name-lookup)
+    1. [Name lookup](#2i-name-lookup)
+    2. [Child name lookup](#2i-child-name-lookup)
 3. Computation
-    1. [Conditionals](#3.i-conditionals)
-    2. [Function calls](#3.ii-function-calls)
-    3. [Function definitions](#3.iii-function-definitions)
-    4. [Function of dictionary definitions](#3.iv-function-of-dictionary-definitions)
+    1. [Conditionals](#3i-conditionals)
+    2. [Function calls](#3ii-function-calls)
+    3. [Function definitions](#3iii-function-definitions)
+    4. [Function of dictionary definitions](#3iv-function-of-dictionary-definitions)
  
 
 ## 1.I Numbers
