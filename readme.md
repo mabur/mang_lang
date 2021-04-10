@@ -1,17 +1,57 @@
 # Mang Lang
 
-Mang Lang is an experimental programming language. It explores how to make a language as minimalistic as possible, while still being useful. What are the essential building blocks needed for programming? How can we design a minimal language that is easy to learn and easy to interpret/compile. It has the following **design trade-offs**:
+Mang Lang is an experimental minimalistic programming language.
+It explores how to make a language as minimalistic as possible, while still being useful.
+What are the essential building blocks needed for programming?
+How can we design a minimal language that is easy to learn and easy to interpret/compile?
+
+Mang lang is a purely functional and interpreted language.
+It takes source code written in Mang lang and evaluates it:  
+```HiveQL
+{
+  get_area = from {width, height} to mul[width, height],
+  rectangles = [
+    {width = 3, height = 1},
+    {width = 6, height = 2},
+    {width = 3, height = 6},
+    {width = 8, height = 4}
+  ],
+  areas = map{list = rectangles, f = get_area},
+  total_area = add areas,
+  num_rectangles = count rectangles,
+  average_area = div[total_area, num_rectangles]
+}
+```
+When we evaluate the source code above we get the result below:  
+```HiveQL
+{
+  get_area = from {width, height} to mul[width, height],
+  rectangles = [
+    {width = 3, height = 1},
+    {width = 6, height = 2},
+    {width = 3, height = 6},
+    {width = 8, height = 4}
+  ],
+  areas = [3, 12, 18, 32],
+  total_area = 65,
+  num_rectangles = 4,
+  average_area = 16.25
+}
+```
+Note that both the input and output of the mang lang interpreter is given as mang lang source code!
+
+# Design Trade-offs
+
+Mang lang has the following **design trade-offs**:
 
 1. **Minimalistic**, instead of feature-rich.
 2. **Prinicipled**, instead of pragmatic.
 2. **Purely functional**, instead of imperative or object oriented.
 3. **Eager evaluation**, instead of lazy evaluation.
-4. **Dynamically typed and interpreted**. Static typing and compiling might be explored eventually.
+4. **Dynamically typed and interpreted**. Static typing and compiling might come later.
 5. **Code as Data and Data as Code**. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!
-   
-The motivation behind Mang Lang is somewhat similar to Lisp, but it has evolved its own unique solutions to a similar problem statement. Mang Lang could be described as a **love child of Json and Lisp**.
 
-**Language Comparison**
+# Language Comparison
 
 The minimalism of Manglang makes it resemble a simple data format like Json or Yaml.
 Manglang only adds conditionals and functions to allow computations.
@@ -35,8 +75,15 @@ Manglang only adds conditionals and functions to allow computations.
 | Operators             | -    | -    | -        | Yes  |
 | Macros                | -    | -    | -        | Yes  | 
 
+Mang lang is similar to these languages:
+* [Json](https://www.json.org/)
+* [Yaml](https://yaml.org/)
+* [Jsonnet](https://jsonnet.org/)
+* [Dhall](https://dhall-lang.org/)
+* [L1](https://mlajtos.github.io/L1/)
+* [Lisp Family](https://en.wikipedia.org/wiki/Lisp_(programming_language))
 
-**Grammar**
+# Grammar
 
 Manglang has a minimal syntax. A program/expression is built up from these building blocks:
  
@@ -54,62 +101,37 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |function dictionary | from {name, ...} to expression                |
 |function call       | name expression                               |
 
-**Example code**:
-
-```HiveQL
-{
-factorial = from x to 
-    if x then
-        mul[x, factorial dec x]
-    else
-        1,
-result = factorial 4
-}
-```
-This example program defines two symbols: `factorial` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{factorial = ..., result = ...}`. White space and new lines are optional.
-
-Functions are defined using the syntax `from ... to ...`, and called using the syntax `function input`.
-Mang Lang has built in functions like `mul` and `dec` instead of having operators like `*` and `--`.
-Functions take a single input and a single output. Multiple things are passed to and from functions by first putting them in either a list `[]` or a dictionary `{}`.
-
-In the example above the result gets the value `1*2*3*4=24`.
-
-Another example of how Mang Lang uses dictionaries both for structuring a program into multiple lines and creating objects/records:
-
-```HiveQL
-{
-rectangle = {width = 4, height = 5},
-area = mul [width<rectangle, height<rectangle]
-}
-```
-
-In this example area gets the value `4*5=20`.
-We use the syntax `width<rectangle` to get the field `width` from the dictionary `rectangle`.
-
 # Examples
 
-1. [Numbers and Built-in Functions](#numbers-and-built-in-functions)
-2. [Dictionaries and Variables](#dictionaries-and-variables)
-3. [Lists](#lists)
-4. [Functions and Control Flow](#functions-and-control-flow)
-5. [Strings](#Strings)
-6. [Importing code in different source files](#importing-code-in-different-source-files)
-7. [List of built-in functions](#list-of-built-in-functions)
-8. [List of functions in standard library](#list-of-functions-in-standard-library) 
+1. Data
+    1. [Numbers](#1.i-numbers)
+    2. [Characters](#1.ii-characters)
+    3. [Strings](#1.iii-strings)
+    4. [Lists](#1.iv-lists)
+    5. [Dictionaries](#1.v-dictionaries)
+2. References
+    1. [Name lookup](#2.i-name-lookup)
+    2. [Child name lookup](#2.i-child-name-lookup)
+3. Computation
+    1. [Conditionals](#3.i-conditionals)
+    2. [Function calls](#3.ii-function-calls)
+    3. [Function definitions](#3.iii-function-definitions)
+    4. [Function dictionary definitions](#3.iv-function-dictionary-definitions)
+ 
 
-## Numbers
+## 1.I Numbers
 Mang lang has a single number type that is used for both integers and floats:
 ```HiveQL
 12.34
 ```
 
-## Characters
+## 1.II Characters
 A single ascii character is written as:
 ```HiveQL
 'a'
 ```
 
-## Strings
+## 1.III Strings
 Strings are written as:
 ```HiveQL
 "Mang lang"
@@ -135,7 +157,7 @@ d = "EMang lang",
 }
 ``` 
 
-## Lists
+## 1.IV Lists
 Lists of values are written as:
 ```HiveQL
 [3, 6, 4]
@@ -161,7 +183,7 @@ e = [9, 4, 6, 3],
 }
 ``` 
 
-## Dictionaries
+## 1.V Dictionaries
 
 Dictionaries are used to associate names/symbols with expressions:
 ```HiveQL
@@ -186,7 +208,7 @@ In Mang lang dictionaries are the only way to associate names/symbols with expre
 So Mang lang uses dictionaries to represent both: variables, objects, function input, function output.
 This is a beautiful generalization and simplification.
 
-## Name Lookup
+## 2.I Name Lookup
 
 A name/symbol defined in a dictionary can be referenced after it is defined:
 ```HiveQL
@@ -217,7 +239,7 @@ b = {c = 2, d = 1}
 }
 ```
 
-## Child Name Lookup
+## 2.II Child Name Lookup
 
 In the previous section we looked at how to refer to names defined in the current dictionary, or in a parent dictionary.
 You can also refer to names in a child dictionary like this:
@@ -237,7 +259,7 @@ d = 3
 The syntax `name<dictionary` is used to get the value corresponding to the name/key inside the dictionary.
 We interpret `<` as an arrow that indicates that we get the name from the dictionary.
 
-## Conditionals
+## 3.I Conditionals
 
 A conditional is written as `if a then b else c` and this expression is evaluated to b or c depending of if a is true or false.
 Mang lang has no explicit type for boolean values but interprets other values as true or false.
@@ -269,7 +291,7 @@ c = "world"
 }
 ```
 
-## Function calls
+## 3.II Function calls
 
 We have already seen some examples of calling functions in mang lang.
 A function is called like `function_name input_expression`.
@@ -307,7 +329,7 @@ mul[add[1, 2], sub[7, 2]]
 This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
 
 
-## Function Definition
+## 3.III Function Definition
 
 Functions are defined using they keywords `from` and `to` like this:
 
@@ -376,7 +398,7 @@ vector = [3, 4, 5],
 result = square_norm vector
 }
 ```
-## Function Dictionary Definition
+## 3.IV Function Dictionary Definition
 
 Mang lang provides syntactic sugar for defining functions that take multiple input,
 in the form of a dictionary with named entries.
