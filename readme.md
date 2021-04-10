@@ -111,7 +111,7 @@ Manglang has a minimal syntax. A program/expression is built up from these build
     5. [Dictionaries](#1v-dictionaries)
 2. References
     1. [Name lookup](#2i-name-lookup)
-    2. [Child name lookup](#2i-child-name-lookup)
+    2. [Child name lookup](#2ii-child-name-lookup)
 3. Computation
     1. [Conditionals](#3i-conditionals)
     2. [Function calls](#3ii-function-calls)
