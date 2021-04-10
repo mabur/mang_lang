@@ -329,7 +329,7 @@ mul[add[1, 2], sub[7, 2]]
 This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
 
 
-## 3.III Function Definition
+## 3.III Function Definitions
 
 Functions are defined using they keywords `from` and `to` like this:
 
@@ -398,7 +398,7 @@ vector = [3, 4, 5],
 result = square_norm vector
 }
 ```
-## 3.IV Function of Dictionary Definition
+## 3.IV Function of Dictionary Definitions
 
 Mang lang provides syntactic sugar for defining functions that take multiple input,
 in the form of a dictionary with named entries.
