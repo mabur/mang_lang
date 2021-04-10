@@ -506,6 +506,20 @@ int main() {
         {R"(get_index{index=1,list="abc"})", R"('b')"},
         {R"(get_index{index=2,list="abc"})", R"('c')"},
     });
+    test.evaluate("indexing list", {
+        {"first[1,2,3,4,5]", "1"},
+        {"second[1,2,3,4,5]", "2"},
+        {"third[1,2,3,4,5]", "3"},
+        {"fourth[1,2,3,4,5]", "4"},
+        {"fifth[1,2,3,4,5]", "5"},
+    });
+    test.evaluate("indexing string", {
+        {R"(first"abcde")", R"('a')"},
+        {R"(second"abcde")", R"('b')"},
+        {R"(third"abcde")", R"('c')"},
+        {R"(fourth"abcde")", R"('d')"},
+        {R"(fifth"abcde")", R"('e')"},
+    });
 
     {
         auto list = SinglyLinkedList<std::string>{};

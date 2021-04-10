@@ -81,6 +81,10 @@ const std::string STANDARD_LIBRARY = R"(
         if equal[index, 0] then
             first list
         else
-            get_index {index=dec index, list=rest list}
+            get_index {index=dec index, list=rest list},
+    second = from x to first rest x,
+    third = from x to first rest rest x,
+    fourth = from x to first rest rest rest x,
+    fifth = from x to first rest rest rest rest x,
 }
 )";
