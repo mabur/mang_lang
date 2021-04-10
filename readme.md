@@ -87,19 +87,19 @@ Mang lang is similar to these languages:
 
 Manglang has a minimal syntax. A program/expression is built up from these building blocks:
  
-| Kind of Expression | Syntax                                        |
-| :----------------- | :-------------------------------------------- |
-|number              | 12.34                                         |
-|character           | 'a'                                           |
-|string              | "abc"                                         |
-|list                | [expression, ...]                             |
-|dictionary          | {name = expression, ...}                      |
-|reference           | name                                          |
-|child reference     | name<expression                               |
-|conditional         | if expression then expression else expression |
-|function            | from name to expression                       |
-|function dictionary | from {name, ...} to expression                |
-|function call       | name expression                               |
+| Kind of Expression    | Syntax                                        |
+| :-------------------- | :-------------------------------------------- |
+|number                 | 12.34                                         |
+|character              | 'a'                                           |
+|string                 | "abc"                                         |
+|list                   | [expression, ...]                             |
+|dictionary             | {name = expression, ...}                      |
+|reference              | name                                          |
+|child reference        | name<expression                               |
+|conditional            | if expression then expression else expression |
+|function               | from name to expression                       |
+|function of dictionary | from {name, ...} to expression                |
+|function call          | name expression                               |
 
 # Examples
 
@@ -116,7 +116,7 @@ Manglang has a minimal syntax. A program/expression is built up from these build
     1. [Conditionals](#3.i-conditionals)
     2. [Function calls](#3.ii-function-calls)
     3. [Function definitions](#3.iii-function-definitions)
-    4. [Function dictionary definitions](#3.iv-function-dictionary-definitions)
+    4. [Function of dictionary definitions](#3.iv-function-of-dictionary-definitions)
  
 
 ## 1.I Numbers
@@ -398,7 +398,7 @@ vector = [3, 4, 5],
 result = square_norm vector
 }
 ```
-## 3.IV Function Dictionary Definition
+## 3.IV Function of Dictionary Definition
 
 Mang lang provides syntactic sugar for defining functions that take multiple input,
 in the form of a dictionary with named entries.
