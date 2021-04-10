@@ -3,6 +3,7 @@
 Mang Lang is an experimental programming language. It explores how to make a language as minimalistic as possible, while still being useful. What are the essential building blocks needed for programming? How can we design a minimal language that is easy to learn and easy to interpret/compile. It has the following **design trade-offs**:
 
 1. **Minimalistic**, instead of feature-rich.
+2. **Prinicipled**, instead of pragmatic.
 2. **Purely functional**, instead of imperative or object oriented.
 3. **Eager evaluation**, instead of lazy evaluation.
 4. **Dynamically typed and interpreted**. Static typing and compiling might be explored eventually.
@@ -39,9 +40,10 @@ Manglang only adds conditionals and functions to allow computations.
 
 Manglang has a minimal syntax. A program/expression is built up from these building blocks:
  
-| Kind of Expression | Syntax                                       |
+| Kind of Expression | Syntax                                        |
 | :----------------- | :-------------------------------------------- |
 |number              | 12.34                                         |
+|character           | 'a'                                           |
 |string              | "abc"                                         |
 |list                | [expression, ...]                             |
 |dictionary          | {name = expression, ...}                      |
@@ -49,6 +51,7 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |child reference     | name<expression                               |
 |conditional         | if expression then expression else expression |
 |function            | from name to expression                       |
+|function dictionary | from {name, ...} to expression                |
 |function call       | name expression                               |
 
 **Example code**:
@@ -56,17 +59,18 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 ```HiveQL
 {
 factorial = from x to 
-    if equal [x, 0] then
-        1
+    if x then
+        mul[x, factorial dec x]
     else
-        mul [x, factorial sub [x, 1]],
+        1,
 result = factorial 4
 }
 ```
 This example program defines two symbols: `factorial` which is a function and `result` which is a number. Symbols are always defined within a dictionary `{factorial = ..., result = ...}`. White space and new lines are optional.
 
 Functions are defined using the syntax `from ... to ...`, and called using the syntax `function input`.
-Mang Lang has built in functions like `equal`, `mul`, `sub` instead of having operators like `==`, `*` , `-`. Functions take a single input and a single output. Multiple things are passed to and from functions by first putting them in either a list `[]` or a dictionary `{}`.
+Mang Lang has built in functions like `mul` and `dec` instead of having operators like `*` and `--`.
+Functions take a single input and a single output. Multiple things are passed to and from functions by first putting them in either a list `[]` or a dictionary `{}`.
 
 In the example above the result gets the value `1*2*3*4=24`.
 
@@ -93,82 +97,217 @@ We use the syntax `width<rectangle` to get the field `width` from the dictionary
 7. [List of built-in functions](#list-of-built-in-functions)
 8. [List of functions in standard library](#list-of-functions-in-standard-library) 
 
-## Numbers and Built-in Functions
-
-Mang Lang can be used as a calculator. This is a trivial program that just contains a single number:
-
+## Numbers
+Mang lang has a single number type that is used for both integers and floats:
 ```HiveQL
-8
+12.34
 ```
-This program is unsurprisingly evaluated to the value  `8`.
-Lists of numbers are created like this:
+
+## Characters
+A single ascii character is written as:
 ```HiveQL
-[7,3,4]
+'a'
 ```
-Computations are done by calling functions:
+
+## Strings
+Strings are written as:
 ```HiveQL
-add [7,3,4]
+"Mang lang"
 ```
-This program is evaluated to `14`. Mang Lang does not have any operators for arithmetics etc, but instead uses functions for all computations. Function calls can be nested like this:
-
-````HiveQL
-mul [add [1,2,3], div [7,2]]
-````
-
-This program is evaluated to `(1+2+3)*(7-2) = 3*5 = 15`.
-
-## Dictionaries and Variables
-
-Mang Lang uses dictionaries as flexible building blocks for many different things. Variables can be defined and used like this:
-
+They can be seen as lists of characters. Example of a program using functions on strings:
 ```HiveQL
 {
-x=3,
-y=2,
-z=mul [x,y]
+a = "Mang lang",
+b = first a,
+c = rest a,
+d = reverse a,
+e = prepend{first='E', rest=a}
 }
 ```
-This program defines three variables, inside a dictionary `{}`. When evaluating this program `z` gets the value `6`. White space and new lines are optional in Mang Lang so the same program can also be written:
+This program is evaluated to:
 ```HiveQL
-{x = 3, y = 2, z = mul [x, y]}
+{
+a = "Mang lang",
+b = 'M',
+c = "ang lang",
+d = "gnal gnaM",
+d = "EMang lang",
+}
+``` 
+
+## Lists
+Lists of values are written as:
+```HiveQL
+[3, 6, 4]
+```
+Example of a program using functions on lists:
+```HiveQL
+{
+a = [3, 6, 4],
+b = first a,
+c = rest a,
+d = reverse a,
+e = prepend{first=9, rest=a} 
+}
+```
+This program is evaluated to:
+```HiveQL
+{
+a = [3, 6, 4],
+b = 3,
+c = [6, 4],
+d = [4, 6, 3],
+e = [9, 4, 6, 3],
+}
+``` 
+
+## Dictionaries
+
+Dictionaries are used to associate names/symbols with expressions:
+```HiveQL
+{a = 1, b = 'A', c = "abc"}
+```
+Mang lang doesn't care about whitespace so the program above can also be written as:
+```HiveQL
+{
+a = 1,
+b = 'A',
+c = "abc"
+}
 ```
 Dictionaries can be nested:
 ```HiveQL
 {
 rectangle = {width = 4, height = 5},
-area = mul [width<rectangle, height<rectangle]
+circle = {radius = 5}
 }
 ```
-We use the syntax `width<rectangle` to get the field `width` from the dictionary `rectangle`.
+In Mang lang dictionaries are the only way to associate names/symbols with expressions.
+So Mang lang uses dictionaries to represent both: variables, objects, function input, function output.
+This is a beautiful generalization and simplification.
 
-## lists
+## Name Lookup
 
-Example program:
+A name/symbol defined in a dictionary can be referenced after it is defined:
 ```HiveQL
 {
-list = [1, 3],
-one = first list,
-three = last list,
-result1 = add [first list, last list],
-result2 = add list,
-dubble_list = concat [list, list],
-s = count dubble_list
+a = 1,
+b = a
 }
 ```
-which is evaluated to:
+This program is evaluated to the dictionary:
 ```HiveQL
 {
-list = [1, 3],
-one = 1,
-three = 3,
-result1 = 4,
-result2 = 4,
-dubble_list = [1, 3, 1, 3],
-s = 4
+a = 1,
+b = 1
 }
-``` 
+```
+Dictionaries can be nested. You can refer to symbols in the current dictionary or in parent dictionaries in this way:
+```HiveQL
+{
+a = 1,
+b = {c = 2, d = a}
+}
+```
+This program is evaluated to:
+```HiveQL
+{
+a = 1,
+b = {c = 2, d = 1}
+}
+```
 
-## Functions and Control Flow
+## Child Name Lookup
+
+In the previous section we looked at how to refer to names defined in the current dictionary, or in a parent dictionary.
+You can also refer to names in a child dictionary like this:
+```HiveQL
+{
+a = {b=2, c=3},
+d = c<a
+}
+```
+This program is evaluated to:
+```HiveQL
+{
+a = {b=2, c=3},
+d = 3
+}
+```
+The syntax `name<dictionary` is used to get the value corresponding to the name/key inside the dictionary.
+We interpret `<` as an arrow that indicates that we get the name from the dictionary.
+
+## Conditionals
+
+A conditional is written as `if a then b else c` and this expression is evaluated to b or c depending of if a is true or false.
+Mang lang has no explicit type for boolean values but interprets other values as true or false.
+* Values that are interpreted as false:
+  - the number zero `0`
+  - the empty list `[]`
+  - the empty string `""` 
+* Values that are interpreted as true:
+  - all other numbers, lists and strings.
+
+Consider this program as an example:
+
+```HiveQL
+{
+a = [0, 1],
+b = if a then
+        first a
+    else
+        1,
+c = if b then "hello" else "world"
+}
+```
+This program is evaluated to:
+```HiveQL
+{
+a = [0, 1],
+b = 0,
+c = "world"
+}
+```
+
+## Function calls
+
+We have already seen some examples of calling functions in mang lang.
+A function is called like `function_name input_expression`.
+Functions in take a single value as input.
+However, this single value can be a list or a dictionary, that has multiple values inside them.
+```HiveQL
+{
+list = [4, 2, 1],
+sum0 = add list,
+head0 = first list,
+sum1 = add[4, 2, 1],
+head1 = first[4, 2, 1],
+list2 = prepend{first=3, rest=list}
+}
+```
+This program is evaluated to:
+```HiveQL
+{
+list = [4, 2, 1],
+sum0 = 7,
+head0 = 4,
+sum1 = 7,
+head1 = 4,
+list2 = [3, 4, 2, 1]
+}
+```
+Mang Lang does not have any special operators for arithmetics, boolean, list operations etc.
+Instead functions are used for all computations.
+Function calls can be nested like this:
+
+````HiveQL
+mul[add[1, 2], sub[7, 2]]
+````
+
+This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
+
+
+## Function Definition
 
 Functions are defined using they keywords `from` and `to` like this:
 
@@ -179,63 +318,78 @@ result = square 3
 }
 ```
 
+A function definition is on the form `from x to expression`
+where `x` is the single input and expression is an expression using `x`.
+Functions are first class values and can be given a name by putting them inside a dictionary.
+Here are some examples of defining and calling functions:
+```HiveQL
+{
+square = from x to mul[x, x],
+inc = from x to add [x, 1],
+dec = from x to sub [x, 1],
+count = from list to if list then inc count rest list else 0,
+a = square 3,
+b = inc 3,
+c = dec 3,
+d = count [3,7,3,8,2],
+e = count "apple"        
+}
+```
+This program is evaluated to:
+```HiveQL
+{
+square = from x to mul[x, x],
+inc = from x to add [x, 1],
+dec = from x to sub [x, 1],
+count = from list to if list then inc count rest list else 0,
+a = 9,
+b = 4,
+c = 2,
+d = 5,
+e = 5        
+}
+```
 The if-then-else operator is used to choose what value to return based on a condition.
 Recursive function calls and the if-then-else operator are used for loops:
 
 ```HiveQL
 {
 factorial = from x to 
-    if equal [x, 0] then
-        1
+    if x then
+        mul [x, factorial dec x]
     else
-        mul [x, factorial sub [x, 1]],
+        1,
 result = factorial 4
 }
 ```
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
-
 ```HiveQL
 {
-square_norm = from vec2 to result<{
-    x = first vec2,
-    y = last vec2,
-    x2 = mul [x, x],
-    y2 = mul [y, y],
-    result = add [x2, y2]
+square = from x to mul[x, x]
+square_norm = from vec3 to result<{
+    x = first vec3,
+    y = second vec3,
+    z = third vec3,
+    result = add[square x, square y, square z]
     }
-vector = [3, 4],
+vector = [3, 4, 5],
 result = square_norm vector
 }
 ```
+## Function Dictionary Definition
 
-## Strings
-Strings are similar to lists: 
+Mang lang provides syntactic sugar for defining functions that take multiple input,
+in the form of a dictionary with named entries.
+Here are some examples of equivalent ways of defining and calling functions: 
 ```HiveQL
 {
-first_name = "Magnus",
-last_name = "Burenius",
-full_name = concat [first_name, " ", last_name],
-initials = concat [first first_name, first last_name]
-}
-```
-In this example `full_name` gets the value "Magnus Burenius" and `initials` gets the value "MB".
-
-## Importing code in different source files
-
-Source code can be put in different source files. If you have a file called `math` that contains the following:
-```HiveQL
-{
-square = from x to mul [x, x],
-pi = 3.14151965
-}
-```
-then you can import those definitions into another source file by using the `import` function:
-```HiveQL
-{
-math   = import "math",
-tau    = mul [2, pi<math],
-square = square<math,
-four   = square 2
+area1 = from rectangle to mul [width<rectangle, height<rectangle],
+area2 = from {width, height} to mul [width, height],
+rectangle = {width = 5, height = 4},
+a = area1 rectangle,
+b = area2 rectangle,
+c = area1 {width = 5, height = 4},
+d = area2 {width = 5, height = 4},
 }
 ```
 
@@ -246,6 +400,10 @@ four   = square 2
 * **mul**: multiplies a list of numbers.
 * **sub**: subtracts two numbers.
 * **div**: divides two numbers.
+
+
+* **inc**: adds 1 to a number.
+* **dec**: subtracts 1 from a number.
 
 
 * **abs**: absolute value of a number.
@@ -268,34 +426,23 @@ four   = square 2
 * **any**: true if at least one item of a list is true.
 * **none**: true if all items of a list are false.
 
+
 ### List and string functions
-* **is_empty**: true if a list/string has zero items.
 * **append**: Given input `{list,item}` return a copy of the list/string with the item appended at the end.
-* **concat**: concatenates two lists/strings.
 * **first**: pick the first item in a non-empty list/string.
-* **last**: pick the last item in a non-empty list/string.
-* **first_part**: list/string of all items except the last.
-* **last_part**: list/string of all items except the first.
+* **rest**: list/string of all items except the first.
+* **reverse**: takes a list/string and return it in reversed order.
 
-
-## List of functions in standard library
 
 * **map**: Given input `{list, f}` return a list where the function f has been applied to each item.
 * **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
 * **enumerate**: Given a list return a new list where each element is a dictionary `{item, index}` containing the items from the original list together with the corresponding index.
-* **reverse**: flip the order of a list.
 * **split**: Given input `{list,separator}` split the list at the separators and return a list of sub lists.
 * **get_index**: Given input `{list,index}` return the item at given index.
-* **get_wrapped_index**: Given input `{list,index}` return the item at given index. If the index is outside the range of the list then it wraps around. 
+* **get_wrapped_index**: Given input `{list,index}` return the item at given index. If the index is outside the range of the list then it wraps around.
+* **concat**: concatenates two lists/strings.
 
 
 * **count**: The number of items of a list or string.
 * **count_item**: Given input `{list, item}` count number of occurrences of a specific item in list.
 * **count_if**: Given input `{list, predicate}` count number of items in list for which the predicate is true.
-
-
-* **find**: Given input `{list, item}` find the first occurrence of a specific item in the list.
-  Returns two lists. The list up until but excluding the item, and the remaining list from the item and to the end.  
-* **find_if**: Given input `{list, predicate}` find the first item in the list for which the predicate is true.
-  Returns two lists. The list up until but excluding the item, and the remaining list from the item and to the end.
- 
