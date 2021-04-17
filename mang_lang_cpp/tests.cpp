@@ -414,6 +414,18 @@ int main() {
     test.evaluate("dec", {
         {"dec 0", "-1"},
     });
+    test.evaluate("reverse_range", {
+        {"reverse_range 0", "[]"},
+        {"reverse_range 1", "[0]"},
+        {"reverse_range 2", "[1,0]"},
+        {"reverse_range 3", "[2,1,0]"},
+    });
+    test.evaluate("range", {
+        {"range 0", "[]"},
+        {"range 1", "[0]"},
+        {"range 2", "[0,1]"},
+        {"range 3", "[0,1,2]"},
+    });
     test.evaluate("count list", {
         {"count []", "0"},
         {"count [[]]", "1"},

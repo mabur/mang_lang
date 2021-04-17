@@ -6,6 +6,12 @@ const std::string STANDARD_LIBRARY = R"(
 {
     inc = from x to add [x, 1],
     dec = from x to sub [x, 1],
+    reverse_range = from x to
+            if x then
+                prepend {first = dec x, rest = reverse_range dec x}
+            else
+                [],
+    range = from x to reverse reverse_range x,
     count = from list to
         if list then
             inc count rest list
