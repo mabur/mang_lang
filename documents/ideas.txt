@@ -114,20 +114,15 @@ country>street<city<country
 street<city<
 
 
-iterate = from in to out<{
-    init = init<in,
-    apply = apply<in,
-    while = while<in,
-    out =
-      if while init then
-        iterate {init = apply init, apply = apply, while = while}
-      else
+iterate = from {start, update, while} to 
+    if while start then
+        iterate {start = update start, update = update, while = while}
+    else
         init
-}
 // Alternative function input. Good if consistent with type system.
 factorial = from x to product<iterate{
-    init = {product = 1, x = x},
-    apply = from {product, x} to {product = mul [product, x], i = dec x},
+    start = {product = 1, x = x},
+    update = from {product, x} to {product = mul [product, x], i = dec x},
     while = from {x} to not equal [x, 1]
 }
 
