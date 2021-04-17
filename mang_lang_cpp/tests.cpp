@@ -426,6 +426,9 @@ int main() {
         {"range 2", "[0,1]"},
         {"range 3", "[0,1,2]"},
     });
+    test.evaluate("recursion", {
+        {"add reverse_range 100", "4950"},
+    });
     test.evaluate("count list", {
         {"count []", "0"},
         {"count [[]]", "1"},
