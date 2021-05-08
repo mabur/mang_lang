@@ -358,6 +358,11 @@ int main() {
         {"from {x,y} to x", "from {x,y} to x"},
         {"from  {  x  ,  y  }  to  x", "from {x,y} to x"},
     });
+    test.evaluate("function list", {
+        {"from [x] to x", "from [x] to x"},
+        {"from [x,y] to x", "from [x,y] to x"},
+        {"from  [  x  ,  y  ]  to  x", "from [x,y] to x"},
+    });
     test.evaluate("lookup function", {
         {"a@{f=from x to x,a=f 0}", "0"},
         {"a@{f=from x to x,a=f []}", "[]"},
@@ -367,6 +372,10 @@ int main() {
     test.evaluate("lookup function dictionary", {
         {"a@{f=from {x} to x,a=f{x=0}}", "0"},
         {"a@{f=from {x,y} to add[x,y],a=f{x=2,y=3}}", "5"},
+    });
+    test.evaluate("lookup function list", {
+        {"a@{f=from [x] to x,a=f[0]}", "0"},
+        {"a@{f=from [x,y] to add[x,y],a=f[2,3]}", "5"},
     });
     test.evaluate("first list", {
         {"first[4]", "4"},

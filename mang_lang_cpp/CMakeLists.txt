@@ -12,6 +12,7 @@ add_library(shared
         expressions/Function.cpp
         expressions/FunctionBuiltIn.cpp
         expressions/FunctionDictionary.cpp
+        expressions/FunctionList.cpp
         expressions/List.cpp
         expressions/LookupChild.cpp
         expressions/LookupFunction.cpp

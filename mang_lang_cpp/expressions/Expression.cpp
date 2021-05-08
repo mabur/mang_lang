@@ -6,6 +6,7 @@
 #include "Dictionary.h"
 #include "Function.h"
 #include "FunctionDictionary.h"
+#include "FunctionList.h"
 #include "List.h"
 #include "LookupChild.h"
 #include "LookupFunction.h"
@@ -47,6 +48,7 @@ ExpressionPointer Expression::parse(CodeRange code) {
     if (String::startsWith(code)) {return String::parse(code);}
     if (Conditional::startsWith(code)) {return Conditional::parse(code);}
     if (FunctionDictionary::startsWith(code)) {return FunctionDictionary::parse(code);}
+    if (FunctionList::startsWith(code)) {return FunctionList::parse(code);}
     if (Function::startsWith(code)) {return Function::parse(code);}
     if (LookupChild::startsWith(code)) {return LookupChild::parse(code);}
     if (LookupFunction::startsWith(code)) {return LookupFunction::parse(code);}
