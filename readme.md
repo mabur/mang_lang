@@ -95,7 +95,7 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |list                   | [expression, ...]                             |
 |dictionary             | {name = expression, ...}                      |
 |reference              | name                                          |
-|child reference        | name<expression                               |
+|child reference        | name@expression                               |
 |conditional            | if expression then expression else expression |
 |function               | from name to expression                       |
 |function of dictionary | from {name, ...} to expression                |
@@ -246,7 +246,7 @@ You can also refer to names in a child dictionary like this:
 ```HiveQL
 {
 a = {b=2, c=3},
-d = c<a
+d = c@a
 }
 ```
 This program is evaluated to:
@@ -256,8 +256,10 @@ a = {b=2, c=3},
 d = 3
 }
 ```
-The syntax `name<dictionary` is used to get the value corresponding to the name/key inside the dictionary.
-We interpret `<` as an arrow that indicates that we get the name from the dictionary.
+The syntax `name@dictionary` is used to get the value corresponding to the name/key inside the dictionary.
+This syntax is reversed compared to most languages that instead write this as `dictionary.name`.
+However, having it like this simplifies the syntax of Mangalng and makes it easier to parse.
+It also makes both function application and dictionary lookup follow the same order and pattern. 
 
 ## 3.I Conditionals
 
@@ -388,7 +390,7 @@ Function definitions and computations can be broken up into smaller parts by usi
 ```HiveQL
 {
 square = from x to mul[x, x]
-square_norm = from vec3 to result<{
+square_norm = from vec3 to result@{
     x = first vec3,
     y = second vec3,
     z = third vec3,
@@ -405,7 +407,7 @@ in the form of a dictionary with named entries.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```HiveQL
 {
-area1 = from rectangle to mul [width<rectangle, height<rectangle],
+area1 = from rectangle to mul [width@rectangle, height@rectangle],
 area2 = from {width, height} to mul [width, height],
 rectangle = {width = 5, height = 4},
 a = area1 rectangle,

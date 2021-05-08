@@ -175,10 +175,10 @@ int main() {
         {"{a=1, b=a}", "{a=1,b=1}"},
     });
     test.reformat("child_symbol", {
-        {"a<{a=1}", "a<{a=1}"},
+        {"a@{a=1}", "a@{a=1}"},
     });
     test.evaluate("child_symbol", {
-        {"a<{a=1}", "1"},
+        {"a@{a=1}", "1"},
     });
     test.reformat("lookup_function", {
         {"add []", "add []"},
@@ -351,7 +351,7 @@ int main() {
     });
     test.evaluate("function", {
         {"from x to x",       "from x to x"},
-        {"f<{f=from x to x}", "from x to x"},
+        {"f@{f=from x to x}", "from x to x"},
     });
     test.evaluate("function dictionary", {
         {"from {x} to x", "from {x} to x"},
@@ -359,14 +359,14 @@ int main() {
         {"from  {  x  ,  y  }  to  x", "from {x,y} to x"},
     });
     test.evaluate("lookup function", {
-        {"a<{f=from x to x,a=f 0}", "0"},
-        {"a<{f=from x to x,a=f []}", "[]"},
-        {"a<{f=from x to 1,a=f 0}", "1"},
-        {"a<{inc=from x to add[x,1],a=inc 0}", "1"},
+        {"a@{f=from x to x,a=f 0}", "0"},
+        {"a@{f=from x to x,a=f []}", "[]"},
+        {"a@{f=from x to 1,a=f 0}", "1"},
+        {"a@{inc=from x to add[x,1],a=inc 0}", "1"},
     });
     test.evaluate("lookup function dictionary", {
-        {"a<{f=from {x} to x,a=f{x=0}}", "0"},
-        {"a<{f=from {x,y} to add[x,y],a=f{x=2,y=3}}", "5"},
+        {"a@{f=from {x} to x,a=f{x=0}}", "0"},
+        {"a@{f=from {x,y} to add[x,y],a=f{x=2,y=3}}", "5"},
     });
     test.evaluate("first list", {
         {"first[4]", "4"},

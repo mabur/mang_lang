@@ -3,16 +3,11 @@ TODO:
 * Use-case: programmable json.
 * Math functions: ceil/round_up, floor/round_down, round
 * Functions for Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
-* higher order function for for-loop
- - iterate{init=1, apply=f, while=p}
- - fold
 * c++ add systematic error messages when parsing fails
  - Print all sub-expressions that it parsed
-* child< as function that can be sent to map
-* Not turing complete
-  - Remove recursion and replace with map/filter/fold/list-comprehension/sql
+* child@ as function that can be sent to map
 * Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
-* Improve home-page. 11 kinds of expressions
+* Improve home-page.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 * Make "1 2" throw a parse error
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
@@ -23,32 +18,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - avoid global mutable state
   - hides mutation, so that each unit is pure from the outside
   - do not allow other side-effects
-* Implement lists as dictionaries {first, rest} or {}?
-  - functions first and rest can be replaced with member lookup first< and rest<
-  - prepend can be replaced with dict construction {first=first, rest=rest}
-  - Can reverse be implemented in standard-library? yes, but I don't know if it can be made generic
-  - How to differentiate between strings and lists?
-
-    [] -> {type=list}
-    [1] -> {first=1,rest={},type=list}
-    [1,2] -> {first=1,rest={first=2,rest={},type=list},type=list}
-
-    "" -> {type=character}
-    "a" -> {first='a',rest={},type=list}
-    "ab" -> {first='a',rest={first='b',rest={},type=list},type=list}
-
-    {first=1,rest=[1,2], type=list}
-    prepend{first=1,rest=[1,2]}
-    list{first=1,rest=[1,2]}
-    string{first='a',rest="bc"}
-
-
-    How to serialize?
-    - Have type field {type=character}
-    - Have hidden type information
-    How to store efficiently? No problem.
-    - Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
-
 * Implement equal for dictionary
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
@@ -56,8 +25,23 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * How to name input for functions that take both list and string?
   - list, collection, container, items?
   - take input as list instead of dictionary to avoid naming and getting more concise code?
-* Define both input source and output result as manglang.
-  - Add this to documentation
+* Not turing complete
+  - Remove recursion and replace with map/filter/fold/list-comprehension/sql
+* higher order function for for-loop, that can be used instead of recursion for long lists
+ - iterate{start=1, while=p, update=f}
+ - operator:
+    iterate "start" while "while" update "update"
+    iterate "start" by "update" while "while"
+    iterate "start" with "update" while "while"
+    for "start" while "while" update "update"
+ - function comprehension:
+    from ... to ... while ...
+    iterate ... to ... while ...
+    repeat ... to ... while ...
+    iterate ... while ...
+ - fold
+* Command line interface for reading source from file and piping it to interpretor
+* Funtion syntatctic sugar for unwrapping lists similar as dicts
 
 LEVELS
 1. Data
@@ -83,6 +67,7 @@ SIMILAR LANGUAGES
 * L1 https://mlajtos.github.io/L1/
 * Dhall https://dhall-lang.org/
 * Jsonnet https://jsonnet.org/
+* Azor: https://github.com/cstuartroe/azor
 
 WEBPAGE
 https://www.passerine.io/
@@ -107,11 +92,11 @@ x> mul[x, x]
 {a> b>} mul[a, b]
 
 Equivalence of:
-input>list<input
-list<
+input>list@input
+list@
 
-country>street<city<country
-street<city<
+country>street@city@country
+street@city@
 
 
 iterate = from {start, update, while} to 
@@ -119,31 +104,70 @@ iterate = from {start, update, while} to
         iterate {start = update start, update = update, while = while}
     else
         init
-// Alternative function input. Good if consistent with type system.
-factorial = from x to product<iterate{
-    start = {product = 1, x = x},
+// Higher order function:
+factorial = from x to product@{
     update = from {product, x} to {product = mul [product, x], i = dec x},
-    while = from {x} to not equal [x, 1]
+    while = from {x} to not equal [x, 1],
+    product = produxct@iterate{start = {product = 1, x = x}, update = update, while = while} 
 }
+// Operator:
+factorial = from x to product@
+    iterate {product = 1, x = x}
+    to {product = mul [product, x], x = dec x}
+    while not equal [x, 1]
+// Function comprehension:
+factorial = from x to product@{
+    f = from {product, x} to {product = mul [product, x], x = dec x} while not equal [x, 1]
+    product = f {product=1, x=x}
+}
+// Function comprehension alternative:
+factorial = from x to product@{
+    f = iterate {product = mul [product, x], x = dec x} while not equal [x, 1]
+    product = f {product=1, x=x}
+}
+// Recursion:
+count = from list to
+    if list then
+        inc count rest list
+    else
+        0,
+// Operator:
+count = from list to count@
+    iterate {count=0, list=list}
+    to {count = inc count, list = rest list}
+    while list
+
+* Implement lists as dictionaries {first, rest} or {}?
+  - functions first and rest can be replaced with member lookup first@ and rest@
+  - prepend can be replaced with dict construction {first=first, rest=rest}
+  - Can reverse be implemented in standard-library? yes, but I don't know if it can be made generic
+  - How to differentiate between strings and lists?
+
+    [] -> {type=list}
+    [1] -> {first=1,rest={},type=list}
+    [1,2] -> {first=1,rest={first=2,rest={},type=list},type=list}
+
+    "" -> {type=character}
+    "a" -> {first='a',rest={},type=list}
+    "ab" -> {first='a',rest={first='b',rest={},type=list},type=list}
+
+    {first=1,rest=[1,2], type=list}
+    prepend{first=1,rest=[1,2]}
+    list{first=1,rest=[1,2]}
+    string{first='a',rest="bc"}
+
+
+    How to serialize?
+    - Have type field {type=character}
+    - Have hidden type information
+    How to store efficiently? No problem.
+    - Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
 
 
 TODOS: TYPE CHECKING AND COMPILING
 * Type annotation and linter.
 * Generics.
 * How to handle compiled functions. Inlining vs jump.
-
-
-DESCRIPTION
-number               12.34
-string               "abc"
-list                 [expression, ...]
-dictionary           {name = expression, ...}
-reference            name
-child reference      name<expression
-conditional          if expression then expression else expression
-function             from name to expression
-function dictionary  from {name, ...} to expression
-function call        name expression
 
 
 TYPES
@@ -215,15 +239,15 @@ Vec2 = (x=Real, y=Real)
 
 split = from input to result of
 {
-  queue  = queue<input,
-  query  = query<input,
+  queue  = queue@input,
+  query  = query@input,
   result = recursive_split {queue=queue, query=query, result=[]}
 }
 
 recursive_split = from input to
-    if check_empty queue<input
+    if check_empty queue@input
     then input
-    else output of
+    else output@
     {
       find_result = find {list=queue, query=","}, // Relies on find/split_first
       tail        = tail find_result,
@@ -233,11 +257,11 @@ recursive_split = from input to
     }
 
 move_element = from input to
-    if equal [front source, query<input] then undefined else
+    if equal [front source, query@input] then undefined else
     {
-        target = concat [target<input, front source<input],
-        source = without_front source<input,
-        query = query<input
+        target = concat [target@input, front source@input],
+        source = without_front source@input,
+        query = query@input
     }
 move_word = move_element unfold {source=,target=[], query=","}
     
@@ -341,33 +365,33 @@ std::tuple<std::string, std::string> next_word(std::string source, char query) {
 
 // Recursive split in Mang lang:
 split_recursive = from input to
-    if is_empty source<input then
+    if is_empty source@input then
         []
     else
-        result<{
-            query = query<input,
-            source = source<input,
+        result@{
+            query = query@input,
+            source = source@input,
             split = next_word {source = source, query = query},
-            word = word<split,
-            rest = rest<split,
+            word = word@split,
+            rest = rest@split,
             recursive_result = split_recursive {source = rest, query = query},
             result = concat [word, recursive_result]
         }
 
 next_word = from input to
-    if is_empty source<input then
+    if is_empty source@input then
         {word = [], rest = []}
-    else if equal [first source<input, query<input] then
-        {word = [], rest = last_part source<input}
+    else if equal [first source@input, query@input] then
+        {word = [], rest = last_part source@input}
     else
-        result<{
-            source = source<input,
-            query = query<input,
+        result@{
+            source = source@input,
+            query = query@input,
             tail = last_part source,
             split = next_word {source = tail, query = query},
-            word = word<split,
-            rest = rest<split,
-            result = {word = concat [[first<source], word], rest = rest}
+            word = word@split,
+            rest = rest@split,
+            result = {word = concat [[first@source], word], rest = rest}
         }
 
 // Multiple named input/output for functions:
@@ -375,7 +399,7 @@ split_recursive = from source, query to
     if is_empty source then
         []
     else
-        result<{
+        result@{
             word, rest = next_word {source = source, query = query},
             recursive_result = split_recursive {source = rest, query = query},
             result = concat [word, recursive_result]
@@ -387,7 +411,7 @@ next_word = from source, query to
     else if equal [first source, query] then
         {word = [], rest = last_part source}
     else
-        result<{
+        result@{
             word, rest = next_word {source = last_part source, query = query},
             result = {word = concat [[first source], word], rest = rest}
         }
@@ -426,7 +450,7 @@ find = from {list, query} to
     else if are_equal [first list, query] then
         [[], list]
     else
-        result<{
+        result@{
             sub_result = find {list=rest list, query=query}
             center = first sub_result,
             tail = first rest sub_result,

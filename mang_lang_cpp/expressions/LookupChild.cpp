@@ -1,7 +1,7 @@
 #include "LookupChild.h"
 
 std::string LookupChild::serialize() const {
-    return name.serialize() + "<" + child->serialize();
+    return name.serialize() + "@" + child->serialize();
 }
 
 ExpressionPointer LookupChild::evaluate(const Expression* parent, std::ostream& log) const {
@@ -16,7 +16,7 @@ ExpressionPointer LookupChild::parse(CodeRange code) {
     auto name = Name::parse(code);
     code.first = name.end();
     code = parseWhiteSpace(code);
-    code = parseCharacter(code, '<');
+    code = parseCharacter(code, '@');
     code = parseWhiteSpace(code);
     auto child = Expression::parse(code);
     code.first = child->end();
@@ -31,5 +31,5 @@ bool LookupChild::startsWith(CodeRange code) {
     }
     code = parseWhile(code, isNameCharacter);
     code = parseWhiteSpace(code);
-    return ::startsWith(code, '<');
+    return ::startsWith(code, '@');
 }
