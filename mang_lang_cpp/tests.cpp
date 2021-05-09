@@ -482,19 +482,19 @@ int main() {
         {"map[inc, [0,1]]", "[1,2]"},
     });
     test.evaluate("filter list", {
-        {"filter{list=[],predicate=from x to 1}", "[]"},
-        {"filter{list=[[]],predicate=from x to 1}", "[[]]"},
-        {"filter{list=[[]],predicate=from x to 0}", "[]"},
+        {"filter[from x to 1, []]", "[]"},
+        {"filter[from x to 1, [[]]]", "[[]]"},
+        {"filter[from x to 0, [[]]]", "[]"},
     });
     test.evaluate("filter string", {
-        {R"(filter{list="",predicate=from x to 0})", R"("")"},
-        {R"(filter{list="a",predicate=from x to 0})", R"("")"},
-        {R"(filter{list="",predicate=from x to 1})", R"("")"},
-        {R"(filter{list="a",predicate=from x to 1})", R"("a")"},
-        {R"(filter{list="a",predicate=from x to equal[x,'a']})", R"("a")"},
-        {R"(filter{list="ab",predicate=from x to equal[x,'a']})", R"("a")"},
-        {R"(filter{list="ba",predicate=from x to equal[x,'a']})", R"("a")"},
-        {R"(filter{list="aba",predicate=from x to equal[x,'a']})", R"("aa")"},
+        {R"(filter[from x to 0, ""])", R"("")"},
+        {R"(filter[from x to 0, "a"])", R"("")"},
+        {R"(filter[from x to 1, ""])", R"("")"},
+        {R"(filter[from x to 1, "a"])", R"("a")"},
+        {R"(filter[from x to equal[x,'a'], "a"])", R"("a")"},
+        {R"(filter[from x to equal[x,'a'], "ab"])", R"("a")"},
+        {R"(filter[from x to equal[x,'a'], "ba"])", R"("a")"},
+        {R"(filter[from x to equal[x,'a'], "aba"])", R"("aa")"},
     });
     test.evaluate("enumerate list", {
         {"enumerate[]", "[]"},

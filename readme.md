@@ -459,7 +459,7 @@ d = area2 {width = 5, height = 4},
 
 
 * **map**: Given input `[f, list]` return a list where the function f has been applied to each item.
-* **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
+* **filter**: Given input `[predicate, list]` return a list of all items for which the predicate is true.
 * **enumerate**: Given a list return a new list where each element is a dictionary `{item, index}` containing the items from the original list together with the corresponding index.
 * **split**: Given input `{list,separator}` split the list at the separators and return a list of sub lists.
 * **get_index**: Given input `{list,index}` return the item at given index.

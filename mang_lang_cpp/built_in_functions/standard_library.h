@@ -46,11 +46,11 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             list,
-    filter = from {list, predicate} to
+    filter = from [predicate, list] to
         if list then
             new_list@{
                 new_first = first list,
-                new_rest = filter {list = rest list, predicate = predicate},
+                new_rest = filter [predicate, rest list],
                 new_list =
                     if predicate new_first then
                         prepend [new_first, new_rest]
