@@ -1,13 +1,22 @@
 TODO:
-* Math functions: ceil/round_up, floor/round_down, round
-* Functions for Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
-* c++ add systematic error messages when parsing fails
- - Print all sub-expressions that it parsed
-* child@ as function that can be sent to map
-* Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
-* Improve home-page.
+* Functions:
+  - Math: ceil/round_up, floor/round_down, round
+  - Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
+  - child@ as function that can be sent to map
+  - Implement equal for dictionary
+  - rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
+  - Naming of count_*, range, reverse_range, enumerate.
+* Error handling:
+  - Make "1 2" throw a parse error
+  - c++ add systematic error messages when parsing fails
+    - Print all sub-expressions that it parsed
+* Command line interface for reading source from file and piping it to interpretor
+* Homepage
+  - Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
+  - Improve home-page.
+  - Prettier homepage.
+  - Syntax high-lighting.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
-* Make "1 2" throw a parse error
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Imperative Support
   - Redefinition of symbols in dictionaries
@@ -16,12 +25,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - avoid global mutable state
   - hides mutation, so that each unit is pure from the outside
   - do not allow other side-effects
-* Implement equal for dictionary
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
-* rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
-* Command line interface for reading source from file and piping it to interpretor
-* Naming of count_*, range, reverse_range, enumerate.
 * Not turing complete
   - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * higher order function for for-loop, that can be used instead of recursion for long lists
@@ -29,6 +34,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
  - operator:
     iterate "start" while "while" update "update"
     iterate "start" by "update" while "while"
+    iterate "start" to "update" while "while"
     iterate "start" with "update" while "while"
     for "start" while "while" update "update"
  - function comprehension:
@@ -37,6 +43,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     repeat ... to ... while ...
     iterate ... while ...
  - fold
+ - How to specify starting point for generic functions () and "", when not using recursion?
+* Tail call optimization.
 
 LEVELS
 1. Data
@@ -132,6 +140,11 @@ count = from list to
         0,
 // Operator:
 count = from list to count@
+    iterate {count=0, list=list}
+    to {count = inc count, list = rest list}
+    while list
+// Operator:
+map = from [f, list] to count@
     iterate {count=0, list=list}
     to {count = inc count, list = rest list}
     while list
