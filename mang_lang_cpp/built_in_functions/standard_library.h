@@ -46,18 +46,18 @@ const std::string STANDARD_LIBRARY = R"(
                 filter [predicate, rest list]
         else
             list,
-    enumerate_from = from {list, index} to
+    enumerate_from = from [index, list] to
         if list then
             result@{
                 item = {index = index, item = first list},
-                sub_result = enumerate_from{index=inc index, list=rest list},
+                sub_result = enumerate_from[inc index, rest list],
                 result = prepend [item, sub_result]
             }
         else
             [],
     enumerate = from list to
         if list then
-            enumerate_from {list = list, index = 0}
+            enumerate_from [0, list]
         else
             [],
     concat = from list to
