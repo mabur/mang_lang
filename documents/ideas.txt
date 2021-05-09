@@ -1,6 +1,5 @@
 TODO:
 * Support numbers in variable names.
-* Use-case: programmable json.
 * Math functions: ceil/round_up, floor/round_down, round
 * Functions for Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
 * c++ add systematic error messages when parsing fails
@@ -22,9 +21,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
 * rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
-* How to name input for functions that take both list and string?
-  - list, collection, container, items?
-  - take input as list instead of dictionary to avoid naming and getting more concise code?
+* Command line interface for reading source from file and piping it to interpretor
 * Not turing complete
   - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * higher order function for for-loop, that can be used instead of recursion for long lists
@@ -40,8 +37,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     repeat ... to ... while ...
     iterate ... while ...
  - fold
-* Command line interface for reading source from file and piping it to interpretor
-* Funtion syntatctic sugar for unwrapping lists similar as dicts
 
 LEVELS
 1. Data
@@ -64,9 +59,9 @@ SIMILAR LANGUAGES
 * Lisp family
 * Json
 * Yaml
-* L1 https://mlajtos.github.io/L1/
-* Dhall https://dhall-lang.org/
 * Jsonnet https://jsonnet.org/
+* Dhall https://dhall-lang.org/
+* L1 https://mlajtos.github.io/L1/
 * Azor: https://github.com/cstuartroe/azor
 
 WEBPAGE
@@ -82,6 +77,7 @@ HiveQL
 
 replace x with mul[x, x]
 from x to mul[x, x]
+to mul[x, x] from x
 from [a, b] to mul[a, b]
 from {a, b} to mul[a, b]
 x: -> mul[x, x]
@@ -92,12 +88,15 @@ x> mul[x, x]
 {a> b>} mul[a, b]
 
 Equivalence of:
+from input to list@input
+list@input from input
 input>list@input
 list@
 
+from country to street@city@country
 country>street@city@country
 street@city@
-
+street@city@country from country
 
 iterate = from {start, update, while} to 
     if while start then
