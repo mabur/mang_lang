@@ -521,14 +521,14 @@ int main() {
         {R"(concat["abc","def"])", R"("abcdef")"},
     });
     test.evaluate("get_index list", {
-        {"get_index{index=0,list=[3,7,6]}", "3"},
-        {"get_index{index=1,list=[3,7,6]}", "7"},
-        {"get_index{index=2,list=[3,7,6]}", "6"},
+        {"get_index[0,[3,7,6]]", "3"},
+        {"get_index[1,[3,7,6]]", "7"},
+        {"get_index[2,[3,7,6]]", "6"},
     });
     test.evaluate("get_index string", {
-        {R"(get_index{index=0,list="abc"})", R"('a')"},
-        {R"(get_index{index=1,list="abc"})", R"('b')"},
-        {R"(get_index{index=2,list="abc"})", R"('c')"},
+        {R"(get_index[0,"abc"])", R"('a')"},
+        {R"(get_index[1,"abc"])", R"('b')"},
+        {R"(get_index[2,"abc"])", R"('c')"},
     });
     test.evaluate("indexing list", {
         {"first[1,2,3,4,5]", "1"},
