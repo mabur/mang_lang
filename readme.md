@@ -469,4 +469,4 @@ d = area2 {width = 5, height = 4},
 
 * **count**: The number of items of a list or string.
 * **count_item**: Given input `[item, list]` count number of occurrences of a specific item in list.
-* **count_if**: Given input `list, predicate}` count number of items in list for which the predicate is true.
+* **count_if**: Given input `[predicate, list]` count number of items in list for which the predicate is true.

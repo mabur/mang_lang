@@ -461,20 +461,20 @@ int main() {
         {R"(count_item['a', "aba"])", "2"},
     });
     test.evaluate("count_if list", {
-        {"count_if{list=[],predicate=from x to 0}", "0"},
-        {"count_if{list=[1],predicate=from x to 0}", "0"},
-        {"count_if{list=[],predicate=from x to 1}", "0"},
-        {"count_if{list=[1],predicate=from x to 1}", "1"},
-        {"count_if{list=[1,2,3],predicate=from x to equal[x,3]}", "1"},
-        {"count_if{list=[3,2,3],predicate=from x to equal[x,3]}", "2"},
+        {"count_if[from x to 0, []]", "0"},
+        {"count_if[from x to 0, [1]]", "0"},
+        {"count_if[from x to 1, []]", "0"},
+        {"count_if[from x to 1, [1]]", "1"},
+        {"count_if[from x to equal[x,3], [1,2,3]]", "1"},
+        {"count_if[from x to equal[x,3], [3,2,3]]", "2"},
     });
     test.evaluate("count_if string", {
-        {R"(count_if{list="",predicate=from x to 0})", "0"},
-        {R"(count_if{list="a",predicate=from x to 0})", "0"},
-        {R"(count_if{list="",predicate=from x to 1})", "0"},
-        {R"(count_if{list="a",predicate=from x to 1})", "1"},
-        {R"(count_if{list="abc",predicate=from x to equal[x,'c']})", "1"},
-        {R"(count_if{list="cbc",predicate=from x to equal[x,'c']})", "2"},
+        {R"(count_if[from x to 0, ""])", "0"},
+        {R"(count_if[from x to 0, "a"])", "0"},
+        {R"(count_if[from x to 1, ""])", "0"},
+        {R"(count_if[from x to 1, "a"])", "1"},
+        {R"(count_if[from x to equal[x,'c'], "abc",])", "1"},
+        {R"(count_if[from x to equal[x,'c'], "cbc",])", "2"},
     });
     test.evaluate("map list", {
         {"map[inc, []]", "[]"},

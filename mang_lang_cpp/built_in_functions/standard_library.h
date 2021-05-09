@@ -27,13 +27,13 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             0,
-    count_if = from {list, predicate} to
+    count_if = from [predicate, list] to
         if list then
             result@{
                 head = first list,
                 tail = rest list,
                 x = if predicate head then 1 else 0,
-                result = add [x, count_if {list=tail, predicate=predicate}],
+                result = add [x, count_if [predicate, tail]],
             }
         else
             0,
