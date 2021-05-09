@@ -1,9 +1,12 @@
 # Mang Lang
 
 Mang Lang is an experimental minimalistic programming language.
-It explores how to make a language as minimalistic as possible, while still being useful.
-What are the essential building blocks needed for programming?
-How can we design a minimal language that is easy to learn and easy to interpret/compile?
+Its primary goal is to be a simple and minimal language that is easy to implement and interpret.
+Mang lang is similar to the [Json](https://www.json.org/) data format,
+but with a minimal set of programming primitives added:
+* References to entries in dictionaries
+* If-then-else conditionals
+* First class functions
 
 Mang lang is a purely functional and interpreted language.
 It takes source code written in Mang lang and evaluates it:  
@@ -51,7 +54,7 @@ Mang lang has the following **design trade-offs**:
 2. **Prinicipled**, instead of pragmatic.
 2. **Purely functional**, instead of imperative or object oriented.
 3. **Eager evaluation**, instead of lazy evaluation.
-4. **Dynamically typed and interpreted**. Static typing and compiling might come later.
+4. **Dynamically typed and interpreted**, instead of statically typed and compiled.
 5. **Code as Data and Data as Code**. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!
 
 # Language Comparison
