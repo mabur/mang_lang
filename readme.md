@@ -9,30 +9,30 @@ Mang lang is a purely functional and interpreted language.
 It takes source code written in Mang lang and evaluates it:  
 ```HiveQL
 {
-  get_area = from {width, height} to mul[width, height],
-  rectangles = [
+  get_area = from {width, height} to mul(width, height),
+  rectangles = (
     {width = 3, height = 1},
     {width = 6, height = 2},
     {width = 3, height = 6},
     {width = 8, height = 4}
-  ],
-  areas = map[get_area, rectangles],
+  ),
+  areas = map(get_area, rectangles),
   total_area = add areas,
   num_rectangles = count rectangles,
-  average_area = div[total_area, num_rectangles]
+  average_area = div(total_area, num_rectangles)
 }
 ```
 When we evaluate the source code above we get the result below:  
 ```HiveQL
 {
-  get_area = from {width, height} to mul[width, height],
-  rectangles = [
+  get_area = from {width, height} to mul(width, height),
+  rectangles = (
     {width = 3, height = 1},
     {width = 6, height = 2},
     {width = 3, height = 6},
     {width = 8, height = 4}
-  ],
-  areas = [3, 12, 18, 32],
+  ),
+  areas = (3, 12, 18, 32),
   total_area = 65,
   num_rectangles = 4,
   average_area = 16.25
@@ -96,13 +96,13 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |number                 | 12.34                                         |
 |character              | 'a'                                           |
 |string                 | "abc"                                         |
-|list                   | [expression, ...]                             |
+|list                   | (expression, ...)                             |
 |dictionary             | {name = expression, ...}                      |
 |reference              | name                                          |
 |child reference        | name@expression                               |
 |conditional            | if expression then expression else expression |
 |function               | from name to expression                       |
-|function of list       | from [name, ...] to expression                |
+|function of list       | from (name, ...) to expression                |
 |function of dictionary | from {name, ...} to expression                |
 |function call          | name expression                               |
 
@@ -149,7 +149,7 @@ a = "Mang lang",
 b = first a,
 c = rest a,
 d = reverse a,
-e = prepend{first='E', rest=a}
+e = prepend('E', a)
 }
 ```
 This program is evaluated to:
@@ -166,26 +166,26 @@ d = "EMang lang",
 ## 1.IV Lists
 Lists of values are written as:
 ```HiveQL
-[3, 6, 4]
+(3, 6, 4)
 ```
 Example of a program using functions on lists:
 ```HiveQL
 {
-a = [3, 6, 4],
+a = (3, 6, 4),
 b = first a,
 c = rest a,
 d = reverse a,
-e = prepend{first=9, rest=a} 
+e = prepend(9, a) 
 }
 ```
 This program is evaluated to:
 ```HiveQL
 {
-a = [3, 6, 4],
+a = (3, 6, 4),
 b = 3,
-c = [6, 4],
-d = [4, 6, 3],
-e = [9, 4, 6, 3],
+c = (6, 4),
+d = (4, 6, 3),
+e = (9, 4, 6, 3),
 }
 ``` 
 
@@ -273,7 +273,7 @@ A conditional is written as `if a then b else c` and this expression is evaluate
 Mang lang has no explicit type for boolean values but interprets other values as true or false.
 * Values that are interpreted as false:
   - the number zero `0`
-  - the empty list `[]`
+  - the empty list `()`
   - the empty string `""` 
 * Values that are interpreted as true:
   - all other numbers, lists and strings.
@@ -282,7 +282,7 @@ Consider this program as an example:
 
 ```HiveQL
 {
-a = [0, 1],
+a = (0, 1),
 b = if a then
         first a
     else
@@ -293,7 +293,7 @@ c = if b then "hello" else "world"
 This program is evaluated to:
 ```HiveQL
 {
-a = [0, 1],
+a = (0, 1),
 b = 0,
 c = "world"
 }
@@ -307,23 +307,23 @@ Functions in take a single value as input.
 However, this single value can be a list or a dictionary, that has multiple values inside them.
 ```HiveQL
 {
-list = [4, 2, 1],
+list = (4, 2, 1),
 sum0 = add list,
 head0 = first list,
-sum1 = add[4, 2, 1],
-head1 = first[4, 2, 1],
-list2 = prepend{first=3, rest=list}
+sum1 = add(4, 2, 1),
+head1 = first(4, 2, 1),
+list2 = prepend(3, list)
 }
 ```
 This program is evaluated to:
 ```HiveQL
 {
-list = [4, 2, 1],
+list = (4, 2, 1),
 sum0 = 7,
 head0 = 4,
 sum1 = 7,
 head1 = 4,
-list2 = [3, 4, 2, 1]
+list2 = (3, 4, 2, 1)
 }
 ```
 Mang Lang does not have any special operators for arithmetics, boolean, list operations etc.
@@ -331,7 +331,7 @@ Instead functions are used for all computations.
 Function calls can be nested like this:
 
 ````HiveQL
-mul[add[1, 2], sub[7, 2]]
+mul(add(1, 2), sub(7, 2))
 ````
 
 This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
@@ -343,7 +343,7 @@ Functions are defined using they keywords `from` and `to` like this:
 
 ```HiveQL
 {
-square = from x to mul [x, x],
+square = from x to mul(x, x),
 result = square 3
 }
 ```
@@ -354,23 +354,23 @@ Functions are first class values and can be given a name by putting them inside 
 Here are some examples of defining and calling functions:
 ```HiveQL
 {
-square = from x to mul[x, x],
-inc = from x to add [x, 1],
-dec = from x to sub [x, 1],
+square = from x to mul(x, x),
+inc = from x to add(x, 1),
+dec = from x to sub(x, 1),
 count = from list to if list then inc count rest list else 0,
 a = square 3,
 b = inc 3,
 c = dec 3,
-d = count [3,7,3,8,2],
+d = count(3,7,3,8,2),
 e = count "apple"        
 }
 ```
 This program is evaluated to:
 ```HiveQL
 {
-square = from x to mul[x, x],
-inc = from x to add [x, 1],
-dec = from x to sub [x, 1],
+square = from x to mul(x, x),
+inc = from x to add(x, 1),
+dec = from x to sub(x, 1),
 count = from list to if list then inc count rest list else 0,
 a = 9,
 b = 4,
@@ -386,7 +386,7 @@ Recursive function calls and the if-then-else operator are used for loops:
 {
 factorial = from x to 
     if x then
-        mul [x, factorial dec x]
+        mul(x, factorial dec x)
     else
         1,
 result = factorial 4
@@ -395,14 +395,14 @@ result = factorial 4
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
 ```HiveQL
 {
-square = from x to mul[x, x]
+square = from x to mul(x, x)
 square_norm = from vec3 to result@{
     x = first vec3,
     y = second vec3,
     z = third vec3,
-    result = add[square x, square y, square z]
+    result = add(square x, square y, square z)
     }
-vector = [3, 4, 5],
+vector = (3, 4, 5),
 result = square_norm vector
 }
 ```
@@ -413,13 +413,13 @@ in the form of a list.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```HiveQL
 {
-area1 = from rectangle to mul [first rectangle, second rectangle],
-area2 = from [width, height] to mul [width, height],
-rectangle = [5, 4],
+area1 = from rectangle to mul(first rectangle, second rectangle),
+area2 = from (width, height) to mul(width, height),
+rectangle = (5, 4),
 a = area1 rectangle,
 b = area2 rectangle,
-c = area1 [5, 4],
-d = area2 [5, 4],
+c = area1(5, 4),
+d = area2(5, 4),
 }
 ```
 
@@ -430,13 +430,13 @@ in the form of a dictionary with named entries.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```HiveQL
 {
-area1 = from rectangle to mul [width@rectangle, height@rectangle],
-area2 = from {width, height} to mul [width, height],
+area1 = from rectangle to mul(width@rectangle, height@rectangle),
+area2 = from {width, height} to mul(width, height),
 rectangle = {width = 5, height = 4},
 a = area1 rectangle,
 b = area2 rectangle,
-c = area1 {width = 5, height = 4},
-d = area2 {width = 5, height = 4},
+c = area1{width = 5, height = 4},
+d = area2{width = 5, height = 4},
 }
 ```
 
@@ -475,19 +475,19 @@ d = area2 {width = 5, height = 4},
 
 
 ### List and string functions
-* **prepend**: Given input `[item, list]` return a copy of the list/string with the item prepended at the beginning.
+* **prepend**: Given input `(item, list)` return a copy of the list/string with the item prepended at the beginning.
 * **first**: pick the first item in a non-empty list/string.
 * **rest**: list/string of all items except the first.
 * **reverse**: takes a list/string and return it in reversed order.
 
 
-* **map**: Given input `[f, list]` return a list where the function f has been applied to each item.
-* **filter**: Given input `[predicate, list]` return a list of all items for which the predicate is true.
+* **map**: Given input `(f, list)` return a list where the function f has been applied to each item.
+* **filter**: Given input `(predicate, list)` return a list of all items for which the predicate is true.
 * **enumerate**: Given a list return a new list where each element is a dictionary `{item, index}` containing the items from the original list together with the corresponding index.
-* **get_index**: Given input `[index, list]` return the item at given index.
+* **get_index**: Given input `(index, list)` return the item at given index.
 * **concat**: concatenates two lists/strings.
 
 
 * **count**: The number of items of a list or string.
-* **count_item**: Given input `[item, list]` count number of occurrences of a specific item in list.
-* **count_if**: Given input `[predicate, list]` count number of items in list for which the predicate is true.
+* **count_item**: Given input `(item, list)` count number of occurrences of a specific item in list.
+* **count_if**: Given input `(predicate, list)` count number of items in list for which the predicate is true.

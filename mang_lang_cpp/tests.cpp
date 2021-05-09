@@ -117,8 +117,8 @@ int main() {
         {R"('+')", R"('+')"},
         {R"('-')", R"('-')"},
         {R"('"')", R"('"')"},
-        {R"('[')", R"('[')"},
-        {R"(']')", R"(']')"},
+        {R"(')')", R"(')')"},
+        {R"(')')", R"(')')"},
         {R"('{')", R"('{')"},
         {R"('}')", R"('}')"},
     });
@@ -130,23 +130,23 @@ int main() {
         {R"("1")", R"("1")"},
         {R"("-1")", R"("-1")"},
         {R"("+1")", R"("+1")"},
-        {R"("[]")", R"("[]")"},
+        {R"#("()")#", R"#("()")#"},
         {R"("{}")", R"("{}")"},
     });
     test.evaluate("list", {
-        {"[]", "[]"},
-        {"[ ]", "[]"},
-        {"[  ]", "[]"},
-        {"[1]", "[1]"},
-        {"[ 1]", "[1]"},
-        {"[1 ]", "[1]"},
-        {"[ 1 ]", "[1]"},
-        {"[1,2]", "[1,2]"},
-        {"[1, 2]", "[1,2]"},
-        {"[ 1, 2 ]", "[1,2]"},
-        {"[[]]", "[[]]"},
-        {"[[],[]]", "[[],[]]"},
-        {"[[[]]]", "[[[]]]"},
+        {"()", "()"},
+        {"( )", "()"},
+        {"(  )", "()"},
+        {"(1)", "(1)"},
+        {"( 1)", "(1)"},
+        {"(1 )", "(1)"},
+        {"( 1 )", "(1)"},
+        {"(1,2)", "(1,2)"},
+        {"(1, 2)", "(1,2)"},
+        {"( 1, 2 )", "(1,2)"},
+        {"(())", "(())"},
+        {"((),())", "((),())"},
+        {"((()))", "((()))"},
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},
@@ -164,8 +164,8 @@ int main() {
     test.evaluate("conditional", {
         {"if 1 then 2 else 3", "2"},
         {"if 0 then 2 else 3", "3"},
-        {"if [0] then 2 else 3", "2"},
-        {"if [] then 2 else 3", "3"},
+        {"if (0) then 2 else 3", "2"},
+        {"if () then 2 else 3", "3"},
     });
     test.reformat("symbol", {
         {"a", "a"},
@@ -181,39 +181,39 @@ int main() {
         {"a@{a=1}", "1"},
     });
     test.reformat("lookup_function", {
-        {"add []", "add []"},
+        {"add ()", "add ()"},
     });
     test.evaluate("min", {
-        {"min[0]", "0"},
-        {"min[0,1]", "0"},
-        {"min[1,0]", "0"},
-        {"min[3,6,1]", "1"},
-        {"min[7,-3,8,-9]", "-9"},
+        {"min(0)", "0"},
+        {"min(0,1)", "0"},
+        {"min(1,0)", "0"},
+        {"min(3,6,1)", "1"},
+        {"min(7,-3,8,-9)", "-9"},
     });
     test.evaluate("add", {
-        {"add[]", "0"},
-        {"add[0]", "0"},
-        {"add[1]", "1"},
-        {"add[0,1]", "1"},
-        {"add[0,1,2]", "3"},
+        {"add()", "0"},
+        {"add(0)", "0"},
+        {"add(1)", "1"},
+        {"add(0,1)", "1"},
+        {"add(0,1,2)", "3"},
     });
     test.evaluate("mul", {
-        {"mul[]", "1"},
-        {"mul[0]", "0"},
-        {"mul[1]", "1"},
-        {"mul[1,2]", "2"},
-        {"mul[1,2,3]", "6"},
-        {"mul[1,2,3,4]", "24"},
+        {"mul()", "1"},
+        {"mul(0)", "0"},
+        {"mul(1)", "1"},
+        {"mul(1,2)", "2"},
+        {"mul(1,2,3)", "6"},
+        {"mul(1,2,3,4)", "24"},
     });
     test.evaluate("sub", {
-        {"sub[0,0]", "0"},
-        {"sub[6,3]", "3"},
-        {"sub[4,8]", "-4"},
+        {"sub(0,0)", "0"},
+        {"sub(6,3)", "3"},
+        {"sub(4,8)", "-4"},
     });
     test.evaluate("div", {
-        {"div[0,1]", "0"},
-        {"div[2,1]", "2"},
-        {"div[9,3]", "3"},
+        {"div(0,1)", "0"},
+        {"div(2,1)", "2"},
+        {"div(9,3)", "3"},
     });
     test.evaluate("abs", {
         {"abs -1", "1"},
@@ -233,9 +233,9 @@ int main() {
         {"boolean +0", "0"},
         {"boolean 1", "1"},
         {"boolean 2", "1"},
-        {"boolean[]", "0"},
-        {"boolean[0]", "1"},
-        {"boolean[0,1]", "1"},
+        {"boolean()", "0"},
+        {"boolean(0)", "1"},
+        {"boolean(0,1)", "1"},
         {"boolean{}", "0"},
         {"boolean{x=0}", "1"},
         {"boolean{x=0,y=1}", "1"},
@@ -253,9 +253,9 @@ int main() {
         {"not +0", "1"},
         {"not 1", "0"},
         {"not 2", "0"},
-        {"not[]", "1"},
-        {"not[0]", "0"},
-        {"not[0,1]", "0"},
+        {"not()", "1"},
+        {"not(0)", "0"},
+        {"not(0,1)", "0"},
         {"not{}", "1"},
         {"not{x=0}", "0"},
         {"not{x=0,y=1}", "0"},
@@ -266,88 +266,88 @@ int main() {
         {R"(not"ab")", "0"},
     });
     test.evaluate("all", {
-        {"all[]", "1"},
-        {"all[0]", "0"},
-        {"all[1]", "1"},
-        {"all[0,0]", "0"},
-        {"all[0,1]", "0"},
-        {"all[1,1]", "1"},
+        {"all()", "1"},
+        {"all(0)", "0"},
+        {"all(1)", "1"},
+        {"all(0,0)", "0"},
+        {"all(0,1)", "0"},
+        {"all(1,1)", "1"},
     });
     test.evaluate("any", {
-        {"any[]", "0"},
-        {"any[0]", "0"},
-        {"any[1]", "1"},
-        {"any[0,0]", "0"},
-        {"any[0,1]", "1"},
-        {"any[1,1]", "1"},
+        {"any()", "0"},
+        {"any(0)", "0"},
+        {"any(1)", "1"},
+        {"any(0,0)", "0"},
+        {"any(0,1)", "1"},
+        {"any(1,1)", "1"},
     });
     test.evaluate("none", {
-        {"none[]", "1"},
-        {"none[0]", "1"},
-        {"none[1]", "0"},
-        {"none[0,0]", "1"},
-        {"none[0,1]", "0"},
-        {"none[1,1]", "0"},
+        {"none()", "1"},
+        {"none(0)", "1"},
+        {"none(1)", "0"},
+        {"none(0,0)", "1"},
+        {"none(0,1)", "0"},
+        {"none(1,1)", "0"},
     });
     test.evaluate("equal number", {
-        {"equal[0,0]", "1"},
-        {"equal[0,1]", "0"},
-        {"equal[1,0]", "0"},
-        {"equal[1,1]", "1"},
+        {"equal(0,0)", "1"},
+        {"equal(0,1)", "0"},
+        {"equal(1,0)", "0"},
+        {"equal(1,1)", "1"},
     });
     test.evaluate("unequal number", {
-        {"unequal[0,0]", "0"},
-        {"unequal[0,1]", "1"},
-        {"unequal[1,0]", "1"},
-        {"unequal[1,1]", "0"},
+        {"unequal(0,0)", "0"},
+        {"unequal(0,1)", "1"},
+        {"unequal(1,0)", "1"},
+        {"unequal(1,1)", "0"},
     });
     test.evaluate("equal character", {
-        {"equal['a','a']", "1"},
-        {"equal['a','b']", "0"},
-        {"equal['b','a']", "0"},
-        {"equal['b','b']", "1"},
+        {"equal('a','a')", "1"},
+        {"equal('a','b')", "0"},
+        {"equal('b','a')", "0"},
+        {"equal('b','b')", "1"},
     });
     test.evaluate("unequal character", {
-        {"unequal['a','a']", "0"},
-        {"unequal['a','b']", "1"},
-        {"unequal['b','a']", "1"},
-        {"unequal['b','b']", "0"},
+        {"unequal('a','a')", "0"},
+        {"unequal('a','b')", "1"},
+        {"unequal('b','a')", "1"},
+        {"unequal('b','b')", "0"},
     });
     test.evaluate("equal list", {
-        {"equal[[],[]]", "1"},
-        {"equal[[1],[1]]", "1"},
-        {"equal[[0],[1]]", "0"},
-        {"equal[[0,1],[0,1]]", "1"},
-        {"equal[[0,1],[1,1]]", "0"},
-        {"equal[[0,1],[0]]", "0"},
+        {"equal((),())", "1"},
+        {"equal((1),(1))", "1"},
+        {"equal((0),(1))", "0"},
+        {"equal((0,1),(0,1))", "1"},
+        {"equal((0,1),(1,1))", "0"},
+        {"equal((0,1),(0))", "0"},
     });
     test.evaluate("unequal list", {
-        {"unequal[[],[]]", "0"},
-        {"unequal[[1],[1]]", "0"},
-        {"unequal[[0],[1]]", "1"},
-        {"unequal[[0,1],[0,1]]", "0"},
-        {"unequal[[0,1],[1,1]]", "1"},
-        {"unequal[[0,1],[0]]", "1"},
+        {"unequal((),())", "0"},
+        {"unequal((1),(1))", "0"},
+        {"unequal((0),(1))", "1"},
+        {"unequal((0,1),(0,1))", "0"},
+        {"unequal((0,1),(1,1))", "1"},
+        {"unequal((0,1),(0))", "1"},
     });
     test.evaluate("equal string", {
-        {R"(equal["",""])", "1"},
-        {R"(equal["a",""])", "0"},
-        {R"(equal["","a"])", "0"},
-        {R"(equal["a","a"])", "1"},
-        {R"(equal["a","b"])", "0"},
-        {R"(equal["ab","ab"])", "1"},
-        {R"(equal["abc","ab"])", "0"},
-        {R"(equal["ab","abc"])", "0"},
+        {R"(equal("",""))", "1"},
+        {R"(equal("a",""))", "0"},
+        {R"(equal("","a"))", "0"},
+        {R"(equal("a","a"))", "1"},
+        {R"(equal("a","b"))", "0"},
+        {R"(equal("ab","ab"))", "1"},
+        {R"(equal("abc","ab"))", "0"},
+        {R"(equal("ab","abc"))", "0"},
     });
     test.evaluate("unequal string", {
-        {R"(unequal["",""])", "0"},
-        {R"(unequal["a",""])", "1"},
-        {R"(unequal["","a"])", "1"},
-        {R"(unequal["a","a"])", "0"},
-        {R"(unequal["a","b"])", "1"},
-        {R"(unequal["ab","ab"])", "0"},
-        {R"(unequal["abc","ab"])", "1"},
-        {R"(unequal["ab","abc"])", "1"},
+        {R"(unequal("",""))", "0"},
+        {R"(unequal("a",""))", "1"},
+        {R"(unequal("","a"))", "1"},
+        {R"(unequal("a","a"))", "0"},
+        {R"(unequal("a","b"))", "1"},
+        {R"(unequal("ab","ab"))", "0"},
+        {R"(unequal("abc","ab"))", "1"},
+        {R"(unequal("ab","abc"))", "1"},
     });
     test.evaluate("function", {
         {"from x to x",       "from x to x"},
@@ -359,36 +359,36 @@ int main() {
         {"from  {  x  ,  y  }  to  x", "from {x,y} to x"},
     });
     test.evaluate("function list", {
-        {"from [x] to x", "from [x] to x"},
-        {"from [x,y] to x", "from [x,y] to x"},
-        {"from  [  x  ,  y  ]  to  x", "from [x,y] to x"},
+        {"from (x) to x", "from (x) to x"},
+        {"from (x,y) to x", "from (x,y) to x"},
+        {"from  (  x  ,  y  )  to  x", "from (x,y) to x"},
     });
     test.evaluate("lookup function", {
         {"a@{f=from x to x,a=f 0}", "0"},
-        {"a@{f=from x to x,a=f []}", "[]"},
+        {"a@{f=from x to x,a=f ()}", "()"},
         {"a@{f=from x to 1,a=f 0}", "1"},
-        {"a@{inc=from x to add[x,1],a=inc 0}", "1"},
+        {"a@{inc=from x to add(x,1),a=inc 0}", "1"},
     });
     test.evaluate("lookup function dictionary", {
         {"a@{f=from {x} to x,a=f{x=0}}", "0"},
-        {"a@{f=from {x,y} to add[x,y],a=f{x=2,y=3}}", "5"},
+        {"a@{f=from {x,y} to add(x,y),a=f{x=2,y=3}}", "5"},
     });
     test.evaluate("lookup function list", {
-        {"a@{f=from [x] to x,a=f[0]}", "0"},
-        {"a@{f=from [x,y] to add[x,y],a=f[2,3]}", "5"},
+        {"a@{f=from (x) to x,a=f(0)}", "0"},
+        {"a@{f=from (x,y) to add(x,y),a=f(2,3)}", "5"},
     });
     test.evaluate("first list", {
-        {"first[4]", "4"},
-        {"first[3,4]", "3"},
+        {"first(4)", "4"},
+        {"first(3,4)", "3"},
     });
     test.evaluate("first string", {
         {R"(first "b")", R"('b')"},
         {R"(first "ab")", R"('a')"},
     });
     test.evaluate("rest list", {
-        {"rest[4]", "[]"},
-        {"rest[4,3]", "[3]"},
-        {"rest[4,3,7]", "[3,7]"},
+        {"rest(4)", "()"},
+        {"rest(4,3)", "(3)"},
+        {"rest(4,3,7)", "(3,7)"},
     });
     test.evaluate("rest string", {
         {R"(rest "a")", R"("")"},
@@ -396,10 +396,10 @@ int main() {
         {R"(rest "abc")", R"("bc")"},
     });
     test.evaluate("reverse list", {
-        {"reverse[]", "[]"},
-        {"reverse[0]", "[0]"},
-        {"reverse[0,1]", "[1,0]"},
-        {"reverse[0,1,2]", "[2,1,0]"},
+        {"reverse()", "()"},
+        {"reverse(0)", "(0)"},
+        {"reverse(0,1)", "(1,0)"},
+        {"reverse(0,1,2)", "(2,1,0)"},
     });
     test.evaluate("reverse string", {
         {R"(reverse "")", R"("")"},
@@ -408,14 +408,14 @@ int main() {
         {R"(reverse "abc")", R"("cba")"},
     });
     test.evaluate("prepend list", {
-        {"prepend[3,[]]", "[3]"},
-        {"prepend[4,[5]]", "[4,5]"},
-        {"prepend[4,[6,8]]", "[4,6,8]"},
+        {"prepend(3,())", "(3)"},
+        {"prepend(4,(5))", "(4,5)"},
+        {"prepend(4,(6,8))", "(4,6,8)"},
     });
     test.evaluate("prepend string", {
-        {R"(prepend['a',""])", R"("a")"},
-        {R"(prepend['a',"b"])", R"("ab")"},
-        {R"(prepend['a',"bc"])", R"("abc")"},
+        {R"(prepend('a',""))", R"("a")"},
+        {R"(prepend('a',"b"))", R"("ab")"},
+        {R"(prepend('a',"bc"))", R"("abc")"},
     });
     test.evaluate("inc", {
         {"inc 0", "1"},
@@ -424,24 +424,24 @@ int main() {
         {"dec 0", "-1"},
     });
     test.evaluate("reverse_range", {
-        {"reverse_range 0", "[]"},
-        {"reverse_range 1", "[0]"},
-        {"reverse_range 2", "[1,0]"},
-        {"reverse_range 3", "[2,1,0]"},
+        {"reverse_range 0", "()"},
+        {"reverse_range 1", "(0)"},
+        {"reverse_range 2", "(1,0)"},
+        {"reverse_range 3", "(2,1,0)"},
     });
     test.evaluate("range", {
-        {"range 0", "[]"},
-        {"range 1", "[0]"},
-        {"range 2", "[0,1]"},
-        {"range 3", "[0,1,2]"},
+        {"range 0", "()"},
+        {"range 1", "(0)"},
+        {"range 2", "(0,1)"},
+        {"range 3", "(0,1,2)"},
     });
     test.evaluate("recursion", {
         {"add reverse_range 100", "4950"},
     });
     test.evaluate("count list", {
-        {"count []", "0"},
-        {"count [[]]", "1"},
-        {"count [[], []]", "2"},
+        {"count ()", "0"},
+        {"count (())", "1"},
+        {"count ((), ())", "2"},
     });
     test.evaluate("count string", {
         {R"(count "")", "0"},
@@ -449,93 +449,93 @@ int main() {
         {R"(count "ab")", "2"},
     });
     test.evaluate("count_item list", {
-        {"count_item[1, []]", "0"},
-        {"count_item[1, [1]]", "1"},
-        {"count_item[1, [1,1]]", "2"},
-        {"count_item[1, [1,0,1]]", "2"},
+        {"count_item(1, ())", "0"},
+        {"count_item(1, (1))", "1"},
+        {"count_item(1, (1,1))", "2"},
+        {"count_item(1, (1,0,1))", "2"},
     });
     test.evaluate("count_item string", {
-        {R"(count_item['a', ""])", "0"},
-        {R"(count_item['a', "a"])", "1"},
-        {R"(count_item['a', "aa"])", "2"},
-        {R"(count_item['a', "aba"])", "2"},
+        {R"(count_item('a', ""))", "0"},
+        {R"(count_item('a', "a"))", "1"},
+        {R"(count_item('a', "aa"))", "2"},
+        {R"(count_item('a', "aba"))", "2"},
     });
     test.evaluate("count_if list", {
-        {"count_if[from x to 0, []]", "0"},
-        {"count_if[from x to 0, [1]]", "0"},
-        {"count_if[from x to 1, []]", "0"},
-        {"count_if[from x to 1, [1]]", "1"},
-        {"count_if[from x to equal[x,3], [1,2,3]]", "1"},
-        {"count_if[from x to equal[x,3], [3,2,3]]", "2"},
+        {"count_if(from x to 0, ())", "0"},
+        {"count_if(from x to 0, (1))", "0"},
+        {"count_if(from x to 1, ())", "0"},
+        {"count_if(from x to 1, (1))", "1"},
+        {"count_if(from x to equal(x,3), (1,2,3))", "1"},
+        {"count_if(from x to equal(x,3), (3,2,3))", "2"},
     });
     test.evaluate("count_if string", {
-        {R"(count_if[from x to 0, ""])", "0"},
-        {R"(count_if[from x to 0, "a"])", "0"},
-        {R"(count_if[from x to 1, ""])", "0"},
-        {R"(count_if[from x to 1, "a"])", "1"},
-        {R"(count_if[from x to equal[x,'c'], "abc",])", "1"},
-        {R"(count_if[from x to equal[x,'c'], "cbc",])", "2"},
+        {R"(count_if(from x to 0, ""))", "0"},
+        {R"(count_if(from x to 0, "a"))", "0"},
+        {R"(count_if(from x to 1, ""))", "0"},
+        {R"(count_if(from x to 1, "a"))", "1"},
+        {R"(count_if(from x to equal(x,'c'), "abc",))", "1"},
+        {R"(count_if(from x to equal(x,'c'), "cbc",))", "2"},
     });
     test.evaluate("map list", {
-        {"map[inc, []]", "[]"},
-        {"map[inc, [0]]", "[1]"},
-        {"map[inc, [0,1]]", "[1,2]"},
+        {"map(inc, ())", "()"},
+        {"map(inc, (0))", "(1)"},
+        {"map(inc, (0,1))", "(1,2)"},
     });
     test.evaluate("filter list", {
-        {"filter[from x to 1, []]", "[]"},
-        {"filter[from x to 1, [[]]]", "[[]]"},
-        {"filter[from x to 0, [[]]]", "[]"},
+        {"filter(from x to 1, ())", "()"},
+        {"filter(from x to 1, (()))", "(())"},
+        {"filter(from x to 0, (()))", "()"},
     });
     test.evaluate("filter string", {
-        {R"(filter[from x to 0, ""])", R"("")"},
-        {R"(filter[from x to 0, "a"])", R"("")"},
-        {R"(filter[from x to 1, ""])", R"("")"},
-        {R"(filter[from x to 1, "a"])", R"("a")"},
-        {R"(filter[from x to equal[x,'a'], "a"])", R"("a")"},
-        {R"(filter[from x to equal[x,'a'], "ab"])", R"("a")"},
-        {R"(filter[from x to equal[x,'a'], "ba"])", R"("a")"},
-        {R"(filter[from x to equal[x,'a'], "aba"])", R"("aa")"},
+        {R"(filter(from x to 0, ""))", R"("")"},
+        {R"(filter(from x to 0, "a"))", R"("")"},
+        {R"(filter(from x to 1, ""))", R"("")"},
+        {R"(filter(from x to 1, "a"))", R"("a")"},
+        {R"(filter(from x to equal(x,'a'), "a"))", R"("a")"},
+        {R"(filter(from x to equal(x,'a'), "ab"))", R"("a")"},
+        {R"(filter(from x to equal(x,'a'), "ba"))", R"("a")"},
+        {R"(filter(from x to equal(x,'a'), "aba"))", R"("aa")"},
     });
     test.evaluate("enumerate list", {
-        {"enumerate[]", "[]"},
-        {"enumerate[4]", "[{index=0,item=4}]"},
-        {"enumerate[4,3]", "[{index=0,item=4},{index=1,item=3}]"},
+        {"enumerate()", "()"},
+        {"enumerate(4)", "({index=0,item=4})"},
+        {"enumerate(4,3)", "({index=0,item=4},{index=1,item=3})"},
     });
     test.evaluate("enumerate string", {
-        {R"(enumerate"")", R"([])"},
-        {R"(enumerate"a")", R"([{index=0,item='a'}])"},
-        {R"(enumerate"ab")", R"([{index=0,item='a'},{index=1,item='b'}])"},
+        {R"(enumerate"")", R"(())"},
+        {R"(enumerate"a")", R"(({index=0,item='a'}))"},
+        {R"(enumerate"ab")", R"(({index=0,item='a'},{index=1,item='b'}))"},
     });
     test.evaluate("concat list", {
-        {"concat[[],[]]", "[]"},
-        {"concat[[],[2]]", "[2]"},
-        {"concat[[1],[]]", "[1]"},
-        {"concat[[1],[2]]", "[1,2]"},
-        {"concat[[1,2,3],[4,5,6]]", "[1,2,3,4,5,6]"},
+        {"concat((),())", "()"},
+        {"concat((),(2))", "(2)"},
+        {"concat((1),())", "(1)"},
+        {"concat((1),(2))", "(1,2)"},
+        {"concat((1,2,3),(4,5,6))", "(1,2,3,4,5,6)"},
     });
     test.evaluate("concat string", {
-        {R"(concat["",""])", R"("")"},
-        {R"(concat["","b"])", R"("b")"},
-        {R"(concat["a",""])", R"("a")"},
-        {R"(concat["a","b"])", R"("ab")"},
-        {R"(concat["abc","def"])", R"("abcdef")"},
+        {R"(concat("",""))", R"("")"},
+        {R"(concat("","b"))", R"("b")"},
+        {R"(concat("a",""))", R"("a")"},
+        {R"(concat("a","b"))", R"("ab")"},
+        {R"(concat("abc","def"))", R"("abcdef")"},
     });
     test.evaluate("get_index list", {
-        {"get_index[0,[3,7,6]]", "3"},
-        {"get_index[1,[3,7,6]]", "7"},
-        {"get_index[2,[3,7,6]]", "6"},
+        {"get_index(0,(3,7,6))", "3"},
+        {"get_index(1,(3,7,6))", "7"},
+        {"get_index(2,(3,7,6))", "6"},
     });
     test.evaluate("get_index string", {
-        {R"(get_index[0,"abc"])", R"('a')"},
-        {R"(get_index[1,"abc"])", R"('b')"},
-        {R"(get_index[2,"abc"])", R"('c')"},
+        {R"(get_index(0,"abc"))", R"('a')"},
+        {R"(get_index(1,"abc"))", R"('b')"},
+        {R"(get_index(2,"abc"))", R"('c')"},
     });
     test.evaluate("indexing list", {
-        {"first[1,2,3,4,5]", "1"},
-        {"second[1,2,3,4,5]", "2"},
-        {"third[1,2,3,4,5]", "3"},
-        {"fourth[1,2,3,4,5]", "4"},
-        {"fifth[1,2,3,4,5]", "5"},
+        {"first(1,2,3,4,5)", "1"},
+        {"second(1,2,3,4,5)", "2"},
+        {"third(1,2,3,4,5)", "3"},
+        {"fourth(1,2,3,4,5)", "4"},
+        {"fifth(1,2,3,4,5)", "5"},
     });
     test.evaluate("indexing string", {
         {R"(first"abcde")", R"('a')"},

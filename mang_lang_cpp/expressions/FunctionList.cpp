@@ -6,16 +6,16 @@
 std::string FunctionList::serialize() const {
     auto result = std::string{};
     result += "from ";
-    result += "[";
+    result += "(";
     for (const auto& name : input_names) {
         result += name.serialize();
         result += ",";
     }
     if (input_names.empty()) {
-        result += ']';
+        result += ')';
     }
     else {
-        result.back() = ']';
+        result.back() = ')';
     }
     result += " to " + body->serialize();
     return result;
@@ -42,10 +42,10 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "from");
     code = parseWhiteSpace(code);
-    code = parseCharacter(code, '[');
+    code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
     auto input_names = std::vector<Name>{};
-    while (!::startsWith(code, ']')) {
+    while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = Name::parse(code);
         code.first = name.end();
@@ -54,7 +54,7 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
         code = parseOptionalCharacter(code, ',');
         code = parseWhiteSpace(code);
     }
-    code = parseCharacter(code, ']');
+    code = parseCharacter(code, ')');
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "to");
     auto body = Expression::parse(code);
@@ -70,5 +70,5 @@ bool FunctionList::startsWith(CodeRange code) {
     }
     code = parseKeyword(code, "from");
     code = parseWhiteSpace(code);
-    return ::startsWith(code, '[');
+    return ::startsWith(code, '(');
 }
