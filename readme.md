@@ -41,7 +41,7 @@ When we evaluate the source code above we get the result below:
 Note that both the input and output of the mang lang interpreter is given as mang lang source code!
 
 For more code examples continue reading below, or have a look in the
-[standard library](https://github.com/mabur/mang_lang/blob/master/mang_lang/standard_library.ml).
+[standard library](https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h).
 
 # Design Trade-offs
 
