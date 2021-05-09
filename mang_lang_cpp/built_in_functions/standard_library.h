@@ -7,10 +7,10 @@ const std::string STANDARD_LIBRARY = R"(
     inc = from x to add [x, 1],
     dec = from x to sub [x, 1],
     reverse_range = from x to
-            if x then
-                prepend [dec x, reverse_range dec x]
-            else
-                [],
+        if x then
+            prepend [dec x, reverse_range dec x]
+        else
+            [],
     range = from x to reverse reverse_range x,
     count = from list to
         if list then
@@ -19,44 +19,31 @@ const std::string STANDARD_LIBRARY = R"(
             0,
     count_item = from [item, list] to
         if list then
-            result@{
-                head = first list,
-                tail = rest list,
-                x = if equal [head, item] then 1 else 0,
-                result = add [x, count_item [item, tail]],
-            }
+            if equal [first list, item] then
+                inc count_item [item, rest list]
+            else
+                count_item [item, rest list]
         else
             0,
     count_if = from [predicate, list] to
         if list then
-            result@{
-                head = first list,
-                tail = rest list,
-                x = if predicate head then 1 else 0,
-                result = add [x, count_if [predicate, tail]],
-            }
+            if predicate first list then
+                inc count_if [predicate, rest list]
+            else
+                count_if [predicate, rest list]
         else
             0,
     map = from [f, list] to
         if list then
-            new_list@{
-                new_first = f first list,
-                new_rest = map [f, rest list],
-                new_list = prepend [new_first, new_rest]
-            }
+            prepend [f first list, map [f, rest list]]
         else
             list,
     filter = from [predicate, list] to
         if list then
-            new_list@{
-                new_first = first list,
-                new_rest = filter [predicate, rest list],
-                new_list =
-                    if predicate new_first then
-                        prepend [new_first, new_rest]
-                    else
-                        new_rest
-            }
+            if predicate first list then
+                prepend [first list, filter [predicate, rest list]]
+            else
+                filter [predicate, rest list]
         else
             list,
     enumerate_from = from {list, index} to
@@ -84,10 +71,10 @@ const std::string STANDARD_LIBRARY = R"(
                     right
         },
     get_index = from [index, list] to
-        if equal[index, 0] then
-            first list
+        if index then
+            get_index [dec index, rest list]
         else
-            get_index [dec index, rest list],
+            first list,
     second = from x to first rest x,
     third = from x to first rest rest x,
     fourth = from x to first rest rest rest x,
