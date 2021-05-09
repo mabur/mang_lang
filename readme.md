@@ -9,13 +9,13 @@ Mang lang is a purely functional and interpreted language.
 It takes source code written in Mang lang and evaluates it:  
 ```HiveQL
 {
-  get_area = from {width, height} to mul(width, height),
   rectangles = (
     {width = 3, height = 1},
     {width = 6, height = 2},
     {width = 3, height = 6},
     {width = 8, height = 4}
   ),
+  get_area = from {width, height} to mul(width, height),
   areas = map(get_area, rectangles),
   total_area = add areas,
   num_rectangles = count rectangles,
@@ -25,13 +25,13 @@ It takes source code written in Mang lang and evaluates it:
 When we evaluate the source code above we get the result below:  
 ```HiveQL
 {
-  get_area = from {width, height} to mul(width, height),
   rectangles = (
     {width = 3, height = 1},
     {width = 6, height = 2},
     {width = 3, height = 6},
     {width = 8, height = 4}
   ),
+  get_area = from {width, height} to mul(width, height),
   areas = (3, 12, 18, 32),
   total_area = 65,
   num_rectangles = 4,
@@ -40,7 +40,7 @@ When we evaluate the source code above we get the result below:
 ```
 Note that both the input and output of the mang lang interpreter is given as mang lang source code!
 
-For more code examples continue reading below, or have a look in the
+For more code examples continue reading below, or look inside the
 [standard library](https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h).
 
 # Design Trade-offs
