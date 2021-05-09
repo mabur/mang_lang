@@ -81,6 +81,7 @@ Mang lang is similar to these languages:
 * [Jsonnet](https://jsonnet.org/)
 * [Dhall](https://dhall-lang.org/)
 * [L1](https://mlajtos.github.io/L1/)
+* [Azor](https://github.com/cstuartroe/azor/)
 * [Lisp Family](https://en.wikipedia.org/wiki/Lisp_(programming_language))
 
 # Grammar
