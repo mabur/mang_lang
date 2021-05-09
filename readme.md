@@ -102,6 +102,7 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |child reference        | name@expression                               |
 |conditional            | if expression then expression else expression |
 |function               | from name to expression                       |
+|function of list       | from [name, ...] to expression                |
 |function of dictionary | from {name, ...} to expression                |
 |function call          | name expression                               |
 
@@ -120,7 +121,8 @@ Manglang has a minimal syntax. A program/expression is built up from these build
     1. [Conditionals](#3i-conditionals)
     2. [Function calls](#3ii-function-calls)
     3. [Function definitions](#3iii-function-definitions)
-    4. [Function of dictionary definitions](#3iv-function-of-dictionary-definitions)
+    4. [Function of list definitions](#3iv-function-of-list-definitions)
+    5. [Function of dictionary definitions](#3iv-function-of-dictionary-definitions)
  
 
 ## 1.I Numbers
@@ -404,7 +406,24 @@ vector = [3, 4, 5],
 result = square_norm vector
 }
 ```
-## 3.IV Function of Dictionary Definitions
+## 3.IV Function of List Definitions
+
+Mang lang provides syntactic sugar for defining functions that take multiple input,
+in the form of a list.
+Here are some examples of equivalent ways of defining and calling functions: 
+```HiveQL
+{
+area1 = from rectangle to mul [first rectangle, second rectangle],
+area2 = from [width, height] to mul [width, height],
+rectangle = [5, 4],
+a = area1 rectangle,
+b = area2 rectangle,
+c = area1 [5, 4],
+d = area2 [5, 4],
+}
+```
+
+## 3.V Function of Dictionary Definitions
 
 Mang lang provides syntactic sugar for defining functions that take multiple input,
 in the form of a dictionary with named entries.
