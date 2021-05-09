@@ -425,7 +425,10 @@ c = area1(5, 4),
 d = area2(5, 4),
 }
 ```
-
+The functions `area1` and `area2` are equivalent.
+They expect the same input and return the same result.
+`area2` just uses syntactic sugar to make it its implementation more clear,
+by unpacking the elements of the input list.
 ## 3.V Function of Dictionary Definitions
 
 Mang lang provides syntactic sugar for defining functions that take multiple input,
@@ -442,6 +445,10 @@ c = area1{width = 5, height = 4},
 d = area2{width = 5, height = 4},
 }
 ```
+The functions `area1` and `area2` are equivalent.
+They expect the same input and return the same result.
+`area2` just uses syntactic sugar to make it its implementation more clear,
+by unpacking the elements of the input dictionary.
 
 ## List of built-in functions
 
