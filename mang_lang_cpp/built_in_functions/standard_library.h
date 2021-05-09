@@ -85,15 +85,10 @@ const std::string STANDARD_LIBRARY = R"(
         else
             (),
 
-    concat = from list to
-        result@{
-            left = first list,
-            right = first rest list,
-            result =
-                if left then
-                    prepend(first left, concat(rest left, right))
-                else
-                    right
-        }
+    concat = from (left, right) to
+        if left then
+            prepend(first left, concat(rest left, right))
+        else
+            right
 }
 )";
