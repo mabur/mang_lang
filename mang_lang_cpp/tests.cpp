@@ -449,16 +449,16 @@ int main() {
         {R"(count "ab")", "2"},
     });
     test.evaluate("count_item list", {
-        {"count_item{list=[],item=1}", "0"},
-        {"count_item{list=[1],item=1}", "1"},
-        {"count_item{list=[1,1],item=1}", "2"},
-        {"count_item{list=[1,0,1],item=1}", "2"},
+        {"count_item[1, []]", "0"},
+        {"count_item[1, [1]]", "1"},
+        {"count_item[1, [1,1]]", "2"},
+        {"count_item[1, [1,0,1]]", "2"},
     });
     test.evaluate("count_item string", {
-        {R"(count_item{list="",item='a'})", "0"},
-        {R"(count_item{list="a",item='a'})", "1"},
-        {R"(count_item{list="aa",item='a'})", "2"},
-        {R"(count_item{list="aba",item='a'})", "2"},
+        {R"(count_item['a', ""])", "0"},
+        {R"(count_item['a', "a"])", "1"},
+        {R"(count_item['a', "aa"])", "2"},
+        {R"(count_item['a', "aba"])", "2"},
     });
     test.evaluate("count_if list", {
         {"count_if{list=[],predicate=from x to 0}", "0"},

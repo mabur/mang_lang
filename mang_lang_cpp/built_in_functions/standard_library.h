@@ -17,13 +17,13 @@ const std::string STANDARD_LIBRARY = R"(
             inc count rest list
         else
             0,
-    count_item = from {list, item} to
+    count_item = from [item, list] to
         if list then
             result@{
                 head = first list,
                 tail = rest list,
                 x = if equal [head, item] then 1 else 0,
-                result = add [x, count_item {list=tail, item=item}],
+                result = add [x, count_item [item, tail]],
             }
         else
             0,
