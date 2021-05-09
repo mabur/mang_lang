@@ -452,7 +452,7 @@ d = area2 {width = 5, height = 4},
 
 
 ### List and string functions
-* **append**: Given input `{list,item}` return a copy of the list/string with the item appended at the end.
+* **prepend**: Given input `[item, list]` return a copy of the list/string with the item prepended at the beginning.
 * **first**: pick the first item in a non-empty list/string.
 * **rest**: list/string of all items except the first.
 * **reverse**: takes a list/string and return it in reversed order.

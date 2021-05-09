@@ -408,14 +408,14 @@ int main() {
         {R"(reverse "abc")", R"("cba")"},
     });
     test.evaluate("prepend list", {
-        {"prepend{first=3,rest=[]}", "[3]"},
-        {"prepend{first=4,rest=[5]}", "[4,5]"},
-        {"prepend{first=4,rest=[6,8]}", "[4,6,8]"},
+        {"prepend[3,[]]", "[3]"},
+        {"prepend[4,[5]]", "[4,5]"},
+        {"prepend[4,[6,8]]", "[4,6,8]"},
     });
     test.evaluate("prepend string", {
-        {R"(prepend{first='a',rest=""})", R"("a")"},
-        {R"(prepend{first='a',rest="b"})", R"("ab")"},
-        {R"(prepend{first='a',rest="bc"})", R"("abc")"},
+        {R"(prepend['a',""])", R"("a")"},
+        {R"(prepend['a',"b"])", R"("ab")"},
+        {R"(prepend['a',"bc"])", R"("abc")"},
     });
     test.evaluate("inc", {
         {"inc 0", "1"},

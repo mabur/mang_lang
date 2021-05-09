@@ -8,7 +8,7 @@ const std::string STANDARD_LIBRARY = R"(
     dec = from x to sub [x, 1],
     reverse_range = from x to
             if x then
-                prepend {first = dec x, rest = reverse_range dec x}
+                prepend [dec x, reverse_range dec x]
             else
                 [],
     range = from x to reverse reverse_range x,
@@ -42,7 +42,7 @@ const std::string STANDARD_LIBRARY = R"(
             new_list@{
                 new_first = f first list,
                 new_rest = map {list = rest list, f = f},
-                new_list = prepend {first = new_first, rest = new_rest}
+                new_list = prepend [new_first, new_rest]
             }
         else
             list,
@@ -53,7 +53,7 @@ const std::string STANDARD_LIBRARY = R"(
                 new_rest = filter {list = rest list, predicate = predicate},
                 new_list =
                     if predicate new_first then
-                        prepend {first = new_first, rest = new_rest}
+                        prepend [new_first, new_rest]
                     else
                         new_rest
             }
@@ -64,7 +64,7 @@ const std::string STANDARD_LIBRARY = R"(
             result@{
                 item = {index = index, item = first list},
                 sub_result = enumerate_from{index=inc index, list=rest list},
-                result = prepend {first = item, rest = sub_result}
+                result = prepend [item, sub_result]
             }
         else
             [],
@@ -79,7 +79,7 @@ const std::string STANDARD_LIBRARY = R"(
             right = first rest list,
             result =
                 if left then
-                    prepend {first = first left, rest = concat [rest left, right]}
+                    prepend [first left, concat [rest left, right]]
                 else
                     right
         },
