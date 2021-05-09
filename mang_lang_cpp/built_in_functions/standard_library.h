@@ -37,11 +37,11 @@ const std::string STANDARD_LIBRARY = R"(
             }
         else
             0,
-    map = from {list, f} to
+    map = from [f, list] to
         if list then
             new_list@{
                 new_first = f first list,
-                new_rest = map {list = rest list, f = f},
+                new_rest = map [f, rest list],
                 new_list = prepend [new_first, new_rest]
             }
         else

@@ -477,9 +477,9 @@ int main() {
         {R"(count_if{list="cbc",predicate=from x to equal[x,'c']})", "2"},
     });
     test.evaluate("map list", {
-        {"map{list=[],f=inc}", "[]"},
-        {"map{list=[0],f=inc}", "[1]"},
-        {"map{list=[0,1],f=inc}", "[1,2]"},
+        {"map[inc, []]", "[]"},
+        {"map[inc, [0]]", "[1]"},
+        {"map[inc, [0,1]]", "[1,2]"},
     });
     test.evaluate("filter list", {
         {"filter{list=[],predicate=from x to 1}", "[]"},

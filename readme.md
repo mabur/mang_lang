@@ -16,7 +16,7 @@ It takes source code written in Mang lang and evaluates it:
     {width = 3, height = 6},
     {width = 8, height = 4}
   ],
-  areas = map{list = rectangles, f = get_area},
+  areas = map[get_area, rectangles],
   total_area = add areas,
   num_rectangles = count rectangles,
   average_area = div[total_area, num_rectangles]
@@ -458,7 +458,7 @@ d = area2 {width = 5, height = 4},
 * **reverse**: takes a list/string and return it in reversed order.
 
 
-* **map**: Given input `{list, f}` return a list where the function f has been applied to each item.
+* **map**: Given input `[f, list]` return a list where the function f has been applied to each item.
 * **filter**: Given input `{list, predicate}` return a list of all items for which the predicate is true.
 * **enumerate**: Given a list return a new list where each element is a dictionary `{item, index}` containing the items from the original list together with the corresponding index.
 * **split**: Given input `{list,separator}` split the list at the separators and return a list of sub lists.
