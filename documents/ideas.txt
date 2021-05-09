@@ -1,5 +1,4 @@
 TODO:
-* Support numbers in variable names.
 * Math functions: ceil/round_up, floor/round_down, round
 * Functions for Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
 * c++ add systematic error messages when parsing fails
@@ -22,6 +21,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Dynamic creation of dictionaries. 
 * rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
 * Command line interface for reading source from file and piping it to interpretor
+* Naming of count_*, range, reverse_range, enumerate.
 * Not turing complete
   - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * higher order function for for-loop, that can be used instead of recursion for long lists
