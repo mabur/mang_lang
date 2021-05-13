@@ -44,7 +44,14 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     iterate ... while ...
  - fold
  - How to specify starting point for generic functions () and "", when not using recursion?
+   - Return input if empty otherwise start with first element instead of empty element? Would that work?
+   - have empty function?
+* Parser combinators
 * Tail call optimization.
+* Mutable dictionary definition
+
+count = from list to (if list then (inc (count (rest (list)))) else 0)
+
 
 LEVELS
 1. Data
@@ -143,11 +150,30 @@ count = from list to count@
     iterate {count=0, list=list}
     to {count = inc count, list = rest list}
     while list
+// Mutable dictionaries:
+count = from list to result@{
+  result = 0,
+  tail = list,
+  while tail
+    result = inc result,
+    tail = rest tail,
+  end
+}
 // Operator:
-map = from [f, list] to count@
-    iterate {count=0, list=list}
-    to {count = inc count, list = rest list}
-    while list
+reverse = from list to new_list@
+    iterate {new_list = empty(list), tail = list}
+    to {new_list = prepend(first tail, new_list), tail = rest tail}
+    while tail
+// Mutable dictionaries:
+reverse = from list to new_list@{
+    new_list = empty(list),
+    tail = list,
+    while tail
+      new_list = prepend(first tail, new_list),
+      tail = rest tail,
+    end
+}
+
 
 * Implement lists as dictionaries {first, rest} or {}?
   - functions first and rest can be replaced with member lookup first@ and rest@
