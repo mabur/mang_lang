@@ -4,7 +4,6 @@
 #include <limits>
 
 #include "../expressions/Number.h"
-#include "../algorithm.h"
 
 namespace arithmetic {
 
