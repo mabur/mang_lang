@@ -8,6 +8,7 @@ add_library(shared
         expressions/Character.cpp
         expressions/Conditional.cpp
         expressions/Dictionary.cpp
+        expressions/DictionaryElement.cpp
         expressions/Expression.cpp
         expressions/Function.cpp
         expressions/FunctionBuiltIn.cpp
