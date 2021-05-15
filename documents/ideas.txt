@@ -52,13 +52,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 
 count = in list out (if list then (inc (count (rest (list)))) else 0)
 
-given x return mul[x, x]
-in x out mul[x, x]
-in x out mul[x, x]
->> x >> mul[x, x]
--> x -> mul[x, x]
-> x > mul[x, x]
-
 LEVELS
 1. Data
    - numbers
@@ -96,28 +89,6 @@ https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
 Candidates:
 HiveQL
 
-replace x with mul[x, x]
-in x out mul[x, x]
-out mul[x, x] in x
-in [a, b] out mul[a, b]
-in {a, b} out mul[a, b]
-x: -> mul[x, x]
-[a:, b:] -> mul[a, b]
-{a:, b:} -> mul[a, b]
-x> mul[x, x]
-[a> b>] mul[a, b]
-{a> b>} mul[a, b]
-
-Equivalence of:
-in input out list@input
-list@input in input
-input>list@input
-list@
-
-in country out street@city@country
-country>street@city@country
-street@city@
-street@city@country in country
 
 iterate = in {start, update, while} out 
     if while start then
