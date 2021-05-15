@@ -2,13 +2,13 @@
 #include "../mang_lang.h"
 #include <algorithm>
 
-void Dictionary::add(DictionaryElement element) {
+void Dictionary::add(ExpressionPointer element) {
     elements.push_back(std::move(element));
 }
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
-        auto expression = element.lookup(name);
+        auto expression = element->lookup(name);
         if (expression) {
             return expression;
         }
@@ -20,7 +20,7 @@ std::string Dictionary::serialize() const {
     auto result = std::string{};
     result += '{';
     for (const auto& element : elements) {
-        result += element.serialize();
+        result += element->serialize();
     }
     if (elements.empty()) {
         result += '}';
@@ -34,12 +34,7 @@ std::string Dictionary::serialize() const {
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
     auto result = std::make_shared<Dictionary>(range(), parent);
     for (const auto& element : elements) {
-        result->add(DictionaryElement{
-            {},
-            nullptr,
-            element.name,
-            element.expression->evaluate(result.get(), log)
-        });
+        result->add(element->evaluate(result.get(), log));
     }
     log << result->serialize() << std::endl;
     return result;
@@ -53,7 +48,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = DictionaryElement::parse(code);
-        code.first = element.end();
+        code.first = element->end();
         result->add(std::move(element));
     }
     code = parseCharacter(code, '}');

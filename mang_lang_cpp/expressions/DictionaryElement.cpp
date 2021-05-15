@@ -15,8 +15,15 @@ std::string DictionaryElement::serialize() const {
     return name.serialize() + '=' + expression->serialize() + ',';
 }
 
-ExpressionPointer DictionaryElement::evaluate(const Expression*, std::ostream&) const {
-    return {};
+ExpressionPointer DictionaryElement::evaluate(
+    const Expression* parent, std::ostream& log) const
+{
+    return std::make_shared<DictionaryElement>(
+        range(),
+        nullptr,
+        name,
+        expression->evaluate(parent, log)
+    );
 }
 
 ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
@@ -26,7 +33,7 @@ ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
     return nullptr;
 }
 
-DictionaryElement DictionaryElement::parse(CodeRange code) {
+ExpressionPointer DictionaryElement::parse(CodeRange code) {
     auto first = code.begin();
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
@@ -39,7 +46,7 @@ DictionaryElement DictionaryElement::parse(CodeRange code) {
     code.first = expression->end();
     code = parseWhiteSpace(code);
     code = parseOptionalCharacter(code, ',');
-    return DictionaryElement(
+    return std::make_shared<DictionaryElement>(
         CodeRange{first, code.first}, nullptr, name, std::move(expression)
     );
 }

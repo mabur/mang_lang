@@ -1,6 +1,9 @@
 #include "built_in_functions.h"
 
+#include <memory>
+
 #include "../expressions/Dictionary.h"
+#include "../expressions/DictionaryElement.h"
 #include "../expressions/FunctionBuiltIn.h"
 
 #include "arithmetic.h"
@@ -8,12 +11,12 @@
 #include "list.h"
 #include "logic.h"
 
-DictionaryElement makeDictionaryElement(
+ExpressionPointer makeDictionaryElement(
     std::string name,
     std::function<ExpressionPointer(const Expression&)> function
 ) {
-    return DictionaryElement(
-        {},
+    return std::make_shared<DictionaryElement>(
+        CodeRange{},
         nullptr,
         Name{{}, nullptr, name},
         std::make_shared<FunctionBuiltIn>(function)

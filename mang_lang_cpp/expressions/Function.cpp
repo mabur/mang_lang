@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "../parsing.h"
 #include "Dictionary.h"
+#include "DictionaryElement.h"
 
 std::string Function::serialize() const {
     return std::string{"from "} + input_name.serialize() + " to " + body->serialize();
@@ -15,7 +16,7 @@ ExpressionPointer Function::evaluate(const Expression* parent, std::ostream& log
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
     auto middle = Dictionary({}, parent());
-    middle.add(DictionaryElement({}, nullptr, input_name, input));
+    middle.add(std::make_shared<DictionaryElement>(range(), nullptr, input_name, input));
     auto output = body->evaluate(&middle, log);
     return output;
 }

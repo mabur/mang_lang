@@ -14,6 +14,6 @@ struct DictionaryElement : Expression {
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression*, std::ostream&) const final;
     ExpressionPointer lookup(const std::string& s) const final;
-    static DictionaryElement parse(CodeRange code);
+    static ExpressionPointer parse(CodeRange code);
     static bool startsWith(CodeRange);
 };
