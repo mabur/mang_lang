@@ -38,9 +38,9 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     iterate "start" with "update" while "while"
     for "start" while "while" update "update"
  - function comprehension:
-    from ... to ... while ...
-    iterate ... to ... while ...
-    repeat ... to ... while ...
+    in ... out ... while ...
+    iterate ... out ... while ...
+    repeat ... out ... while ...
     iterate ... while ...
  - fold
  - How to specify starting point for generic functions () and "", when not using recursion?
@@ -50,8 +50,14 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Tail call optimization.
 * Mutable dictionary definition
 
-count = from list to (if list then (inc (count (rest (list)))) else 0)
+count = in list out (if list then (inc (count (rest (list)))) else 0)
 
+given x return mul[x, x]
+in x out mul[x, x]
+in x out mul[x, x]
+>> x >> mul[x, x]
+-> x -> mul[x, x]
+> x > mul[x, x]
 
 LEVELS
 1. Data
@@ -91,10 +97,10 @@ Candidates:
 HiveQL
 
 replace x with mul[x, x]
-from x to mul[x, x]
-to mul[x, x] from x
-from [a, b] to mul[a, b]
-from {a, b} to mul[a, b]
+in x out mul[x, x]
+out mul[x, x] in x
+in [a, b] out mul[a, b]
+in {a, b} out mul[a, b]
 x: -> mul[x, x]
 [a:, b:] -> mul[a, b]
 {a:, b:} -> mul[a, b]
@@ -103,72 +109,72 @@ x> mul[x, x]
 {a> b>} mul[a, b]
 
 Equivalence of:
-from input to list@input
-list@input from input
+in input out list@input
+list@input in input
 input>list@input
 list@
 
-from country to street@city@country
+in country out street@city@country
 country>street@city@country
 street@city@
-street@city@country from country
+street@city@country in country
 
-iterate = from {start, update, while} to 
+iterate = in {start, update, while} out 
     if while start then
         iterate {start = update start, update = update, while = while}
     else
         init
 // Higher order function:
-factorial = from x to product@{
-    update = from {product, x} to {product = mul [product, x], i = dec x},
-    while = from {x} to not equal [x, 1],
+factorial = in x out product@{
+    update = in {product, x} out {product = mul [product, x], i = dec x},
+    while = in {x} out not equal [x, 1],
     product = produxct@iterate{start = {product = 1, x = x}, update = update, while = while} 
 }
 // Operator:
-factorial = from x to product@
+factorial = in x out product@
     iterate {product = 1, x = x}
-    to {product = mul [product, x], x = dec x}
+    out {product = mul [product, x], x = dec x}
     while not equal [x, 1]
 // Function comprehension:
-factorial = from x to product@{
-    f = from {product, x} to {product = mul [product, x], x = dec x} while not equal [x, 1]
+factorial = in x out product@{
+    f = in {product, x} out {product = mul [product, x], x = dec x} while not equal [x, 1]
     product = f {product=1, x=x}
 }
 // Function comprehension alternative:
-factorial = from x to product@{
+factorial = in x out product@{
     f = iterate {product = mul [product, x], x = dec x} while not equal [x, 1]
     product = f {product=1, x=x}
 }
 // Recursion:
-count = from list to
+count = in list out
     if list then
         inc count rest list
     else
         0,
 // Operator:
-count = from list to count@
+count = in list out count@
     iterate {count=0, list=list}
-    to {count = inc count, list = rest list}
+    out {count = inc count, list = rest list}
     while list
 // Mutable dictionaries:
-count = from list to result@{
+count = in list out result@{
   result = 0,
   tail = list,
-  while tail
+  while tail,
     result = inc result,
     tail = rest tail,
   end
 }
 // Operator:
-reverse = from list to new_list@
+reverse = in list out new_list@
     iterate {new_list = empty(list), tail = list}
-    to {new_list = prepend(first tail, new_list), tail = rest tail}
+    out {new_list = prepend(first tail, new_list), tail = rest tail}
     while tail
 // Mutable dictionaries:
-reverse = from list to new_list@{
+reverse = in list out new_list@{
     new_list = empty(list),
     tail = list,
-    while tail
+    while tail,
       new_list = prepend(first tail, new_list),
       tail = rest tail,
     end
@@ -224,21 +230,21 @@ x : Distance = 3
 square : Number = mul[x, x]
 
 // primitive to primitive:
-square : from x:Number to Number = mul[x, x]
+square : in x:Number out Number = mul[x, x]
 square : x : Number -> Number = mul[x, x]
 square : x : -> = mul[x, x]
 square: = x: -> mul[x, x]
-square = from x to mul[x, x]
+square = in x out mul[x, x]
 
 // record to primitive:
-hyp : from {x:Number, y:Number} to Number = sqrt add[mul[x, x], mul[y, y]
+hyp : in {x:Number, y:Number} out Number = sqrt add[mul[x, x], mul[y, y]
 
 // list to list:
-conjugate : from x : List Number to List Number = [first x, neg last x]
+conjugate : in x : List Number out List Number = [first x, neg last x]
 
 // record to record:
-conjugate : from {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
-conjugate : from Complex to Complex = {r := r, i := neg i}
+conjugate : in {r:Number, i:Number} out {r:Number, i:Number} = {r := r, i := neg i}
+conjugate : in Complex out Complex = {r := r, i := neg i}
 
 // Type alias:
 Complex : Type = {re:Number, im:Number}
@@ -246,19 +252,19 @@ complex := {re := 1, im := 1}
 complex : Complex = {re : Number = 1, im : Number = 1}
 re = re complex
 im = im complex
-conjugate : from {r:Number, i:Number} to {r:Number, i:Number} = {r := r, i := neg i}
-conjugate : from Complex to Complex = {r := r, i := neg i}
+conjugate : in {r:Number, i:Number} out {r:Number, i:Number} = {r := r, i := neg i}
+conjugate : in Complex out Complex = {r := r, i := neg i}
 complex2 = conjugate complex1
 
 // Generics:
-max_value : from List Generic to Generic = ...
-max_index : from List Generic to Number = ...
-max_split : from List Generic to List List Generic = ...
+max_value : in List Generic out Generic = ...
+max_index : in List Generic out Number = ...
+max_split : in List Generic out List List Generic = ...
 
-count_if : from {list: List Generic, predicate: from Generic to Boolean} to Number = ...
-map: from {list: List Generic0, operation: from Generic0 to Generic1} to List Generic1 = ...
-map2 : from {list0: List Generic0, list1: List Generic0, operation: from List Generic0 to Generic1} to List Generic1 = ...
-map2heterogeneous : from {list0: List Generic0, list1: List Generic1, operation: from {value0: Generic0, value1: Generic1} to Generic2} to List Generic2 = ...
+count_if : in {list: List Generic, predicate: in Generic out Boolean} out Number = ...
+map: in {list: List Generic0, operation: in Generic0 out Generic1} out List Generic1 = ...
+map2 : in {list0: List Generic0, list1: List Generic0, operation: in List Generic0 out Generic1} out List Generic1 = ...
+map2heterogeneous : in {list0: List Generic0, list1: List Generic1, operation: in {value0: Generic0, value1: Generic1} out Generic2} out List Generic2 = ...
 
 TYPER
 *Number
@@ -275,14 +281,14 @@ Vec2 = (x=Real, y=Real)
 
 -------------------------------------------------------------------------------------------------
 
-split = from input to result of
+split = in input out result of
 {
   queue  = queue@input,
   query  = query@input,
   result = recursive_split {queue=queue, query=query, result=[]}
 }
 
-recursive_split = from input to
+recursive_split = in input out
     if check_empty queue@input
     then input
     else output@
@@ -294,7 +300,7 @@ recursive_split = from input to
       output      = recursive_split {queue=tail, result=result}
     }
 
-move_element = from input to
+move_element = in input out
     if equal [front source, query@input] then undefined else
     {
         target = concat [target@input, front source@input],
@@ -317,7 +323,7 @@ find(list=[1,2,3,4], query=3)
 
 Parse "123,+56,345,-76,23"
 
-parse_element = from input to find(list=input.string, query=',')
+parse_element = in input out find(list=input.string, query=',')
 
 def split_for(input, query):
   output = []
@@ -336,7 +342,7 @@ def split_generator(first, last, query):
   if first != last:
     next = find_if(first, last, query)
     yield [first, next]
-    yield from split_generator(++next, last, query)
+    yield in split_generator(++next, last, query)
 
 // Denna verkar enkel. Skulle liknande funka i Manglang?
 def split_recursive(first, last, query):
@@ -402,7 +408,7 @@ std::tuple<std::string, std::string> next_word(std::string source, char query) {
 }
 
 // Recursive split in Mang lang:
-split_recursive = from input to
+split_recursive = in input out
     if is_empty source@input then
         []
     else
@@ -416,7 +422,7 @@ split_recursive = from input to
             result = concat [word, recursive_result]
         }
 
-next_word = from input to
+next_word = in input out
     if is_empty source@input then
         {word = [], rest = []}
     else if equal [first source@input, query@input] then
@@ -433,7 +439,7 @@ next_word = from input to
         }
 
 // Multiple named input/output for functions:
-split_recursive = from source, query to
+split_recursive = in source, query out
     if is_empty source then
         []
     else
@@ -443,7 +449,7 @@ split_recursive = from source, query to
             result = concat [word, recursive_result]
         }
 
-next_word = from source, query to
+next_word = in source, query out
     if is_empty source then
         {word = [], rest = []}
     else if equal [first source, query] then
@@ -482,7 +488,7 @@ def find(list, query):
     return [head, tail]
 
 // Nuvarande
-find = from {list, query} to
+find = in {list, query} out
     if is_empty list then
         [[],[]]
     else if are_equal [first list, query] then
@@ -496,7 +502,7 @@ find = from {list, query} to
             result = [head, tail]
         }
 // Typ-förslag
-find : from {list: List Generic, query: Generic} to List List Generic =
+find : in {list: List Generic, query: Generic} out List List Generic =
     if is_empty list then
         [[], []]
     else if are_equal [first list, query] then
@@ -511,7 +517,7 @@ find : from {list: List Generic, query: Generic} to List List Generic =
         }
 
 // Typ-förslag och pattern matching
-find : from {list: List Generic, query: Generic} to List List Generic =
+find : in {list: List Generic, query: Generic} out List List Generic =
     if is_empty list then
         [[], []]
     else if are_equal [first list, query] then
