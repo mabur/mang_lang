@@ -5,7 +5,7 @@
 #include "DictionaryElement.h"
 
 std::string Function::serialize() const {
-    return std::string{"from "} + input_name.serialize() + " to " + body->serialize();
+    return std::string{"in "} + input_name.serialize() + " out " + body->serialize();
 }
 
 ExpressionPointer Function::evaluate(const Expression* parent, std::ostream& log) const {
@@ -23,12 +23,12 @@ ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) co
 
 ExpressionPointer Function::parse(CodeRange code) {
     auto first = code.begin();
-    code = parseKeyword(code, "from");
+    code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     auto input_name = Name::parse(code);
     code.first = input_name.end();
     code = parseWhiteSpace(code);
-    code = parseKeyword(code, "to");
+    code = parseKeyword(code, "out");
     auto body = Expression::parse(code);
     code.first = body->end();
     return std::make_shared<Function>(
@@ -37,5 +37,5 @@ ExpressionPointer Function::parse(CodeRange code) {
 }
 
 bool Function::startsWith(CodeRange code) {
-    return isKeyword(code, "from ");
+    return isKeyword(code, "in ");
 }

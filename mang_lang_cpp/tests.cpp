@@ -355,32 +355,32 @@ int main() {
         {R"(unequal("ab","abc"))", "1"},
     });
     test.evaluate("function", {
-        {"from x to x",       "from x to x"},
-        {"f@{f=from x to x}", "from x to x"},
+        {"in x out x",       "in x out x"},
+        {"f@{f=in x out x}", "in x out x"},
     });
     test.evaluate("function dictionary", {
-        {"from {x} to x", "from {x} to x"},
-        {"from {x,y} to x", "from {x,y} to x"},
-        {"from  {  x  ,  y  }  to  x", "from {x,y} to x"},
+        {"in {x} out x", "in {x} out x"},
+        {"in {x,y} out x", "in {x,y} out x"},
+        {"in  {  x  ,  y  }  out  x", "in {x,y} out x"},
     });
     test.evaluate("function list", {
-        {"from (x) to x", "from (x) to x"},
-        {"from (x,y) to x", "from (x,y) to x"},
-        {"from  (  x  ,  y  )  to  x", "from (x,y) to x"},
+        {"in (x) out x", "in (x) out x"},
+        {"in (x,y) out x", "in (x,y) out x"},
+        {"in  (  x  ,  y  )  out  x", "in (x,y) out x"},
     });
     test.evaluate("lookup function", {
-        {"a@{f=from x to x,a=f 0}", "0"},
-        {"a@{f=from x to x,a=f ()}", "()"},
-        {"a@{f=from x to 1,a=f 0}", "1"},
-        {"a@{inc=from x to add(x,1),a=inc 0}", "1"},
+        {"a@{f=in x out x,a=f 0}", "0"},
+        {"a@{f=in x out x,a=f ()}", "()"},
+        {"a@{f=in x out 1,a=f 0}", "1"},
+        {"a@{inc=in x out add(x,1),a=inc 0}", "1"},
     });
     test.evaluate("lookup function dictionary", {
-        {"a@{f=from {x} to x,a=f{x=0}}", "0"},
-        {"a@{f=from {x,y} to add(x,y),a=f{x=2,y=3}}", "5"},
+        {"a@{f=in {x} out x,a=f{x=0}}", "0"},
+        {"a@{f=in {x,y} out add(x,y),a=f{x=2,y=3}}", "5"},
     });
     test.evaluate("lookup function list", {
-        {"a@{f=from (x) to x,a=f(0)}", "0"},
-        {"a@{f=from (x,y) to add(x,y),a=f(2,3)}", "5"},
+        {"a@{f=in (x) out x,a=f(0)}", "0"},
+        {"a@{f=in (x,y) out add(x,y),a=f(2,3)}", "5"},
     });
     test.evaluate("first list", {
         {"first(4)", "4"},
@@ -466,20 +466,20 @@ int main() {
         {R"(count_item('a', "aba"))", "2"},
     });
     test.evaluate("count_if list", {
-        {"count_if(from x to 0, ())", "0"},
-        {"count_if(from x to 0, (1))", "0"},
-        {"count_if(from x to 1, ())", "0"},
-        {"count_if(from x to 1, (1))", "1"},
-        {"count_if(from x to equal(x,3), (1,2,3))", "1"},
-        {"count_if(from x to equal(x,3), (3,2,3))", "2"},
+        {"count_if(in x out 0, ())", "0"},
+        {"count_if(in x out 0, (1))", "0"},
+        {"count_if(in x out 1, ())", "0"},
+        {"count_if(in x out 1, (1))", "1"},
+        {"count_if(in x out equal(x,3), (1,2,3))", "1"},
+        {"count_if(in x out equal(x,3), (3,2,3))", "2"},
     });
     test.evaluate("count_if string", {
-        {R"(count_if(from x to 0, ""))", "0"},
-        {R"(count_if(from x to 0, "a"))", "0"},
-        {R"(count_if(from x to 1, ""))", "0"},
-        {R"(count_if(from x to 1, "a"))", "1"},
-        {R"(count_if(from x to equal(x,'c'), "abc",))", "1"},
-        {R"(count_if(from x to equal(x,'c'), "cbc",))", "2"},
+        {R"(count_if(in x out 0, ""))", "0"},
+        {R"(count_if(in x out 0, "a"))", "0"},
+        {R"(count_if(in x out 1, ""))", "0"},
+        {R"(count_if(in x out 1, "a"))", "1"},
+        {R"(count_if(in x out equal(x,'c'), "abc",))", "1"},
+        {R"(count_if(in x out equal(x,'c'), "cbc",))", "2"},
     });
     test.evaluate("map list", {
         {"map(inc, ())", "()"},
@@ -487,19 +487,19 @@ int main() {
         {"map(inc, (0,1))", "(1,2)"},
     });
     test.evaluate("filter list", {
-        {"filter(from x to 1, ())", "()"},
-        {"filter(from x to 1, (()))", "(())"},
-        {"filter(from x to 0, (()))", "()"},
+        {"filter(in x out 1, ())", "()"},
+        {"filter(in x out 1, (()))", "(())"},
+        {"filter(in x out 0, (()))", "()"},
     });
     test.evaluate("filter string", {
-        {R"(filter(from x to 0, ""))", R"("")"},
-        {R"(filter(from x to 0, "a"))", R"("")"},
-        {R"(filter(from x to 1, ""))", R"("")"},
-        {R"(filter(from x to 1, "a"))", R"("a")"},
-        {R"(filter(from x to equal(x,'a'), "a"))", R"("a")"},
-        {R"(filter(from x to equal(x,'a'), "ab"))", R"("a")"},
-        {R"(filter(from x to equal(x,'a'), "ba"))", R"("a")"},
-        {R"(filter(from x to equal(x,'a'), "aba"))", R"("aa")"},
+        {R"(filter(in x out 0, ""))", R"("")"},
+        {R"(filter(in x out 0, "a"))", R"("")"},
+        {R"(filter(in x out 1, ""))", R"("")"},
+        {R"(filter(in x out 1, "a"))", R"("a")"},
+        {R"(filter(in x out equal(x,'a'), "a"))", R"("a")"},
+        {R"(filter(in x out equal(x,'a'), "ab"))", R"("a")"},
+        {R"(filter(in x out equal(x,'a'), "ba"))", R"("a")"},
+        {R"(filter(in x out equal(x,'a'), "aba"))", R"("aa")"},
     });
     test.evaluate("enumerate list", {
         {"enumerate()", "()"},

@@ -18,7 +18,7 @@ It takes source code written in Mang lang and evaluates it:
     {width = 3, height = 6},
     {width = 8, height = 4}
   ),
-  get_area = from {width, height} to mul(width, height),
+  get_area = in {width, height} out mul(width, height),
   areas = map(get_area, rectangles),
   total_area = add areas,
   num_rectangles = count rectangles,
@@ -34,7 +34,7 @@ When we evaluate the source code above we get the result below:
     {width = 3, height = 6},
     {width = 8, height = 4}
   ),
-  get_area = from {width, height} to mul(width, height),
+  get_area = in {width, height} out mul(width, height),
   areas = (3, 12, 18, 32),
   total_area = 65,
   num_rectangles = 4,
@@ -104,9 +104,9 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |reference              | name                                          |
 |child reference        | name@expression                               |
 |conditional            | if expression then expression else expression |
-|function               | from name to expression                       |
-|function of list       | from (name, ...) to expression                |
-|function of dictionary | from {name, ...} to expression                |
+|function               | in name out expression                        |
+|function of list       | in (name, ...) out expression                 |
+|function of dictionary | in {name, ...} out expression                 |
 |function call          | name expression                               |
 
 # Examples
@@ -342,25 +342,25 @@ This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
 
 ## 3.III Function Definitions
 
-Functions are defined using they keywords `from` and `to` like this:
+Functions are defined using they keywords `in` and `out` like this:
 
 ```HiveQL
 {
-square = from x to mul(x, x),
+square = in x out mul(x, x),
 result = square 3
 }
 ```
 
-A function definition is on the form `from x to expression`
+A function definition is on the form `in x out expression`
 where `x` is the single input and expression is an expression using `x`.
 Functions are first class values and can be given a name by putting them inside a dictionary.
 Here are some examples of defining and calling functions:
 ```HiveQL
 {
-square = from x to mul(x, x),
-inc = from x to add(x, 1),
-dec = from x to sub(x, 1),
-count = from list to if list then inc count rest list else 0,
+square = in x out mul(x, x),
+inc = in x out add(x, 1),
+dec = in x out sub(x, 1),
+count = in list out if list then inc count rest list else 0,
 a = square 3,
 b = inc 3,
 c = dec 3,
@@ -371,10 +371,10 @@ e = count "apple"
 This program is evaluated to:
 ```HiveQL
 {
-square = from x to mul(x, x),
-inc = from x to add(x, 1),
-dec = from x to sub(x, 1),
-count = from list to if list then inc count rest list else 0,
+square = in x out mul(x, x),
+inc = in x out add(x, 1),
+dec = in x out sub(x, 1),
+count = in list out if list then inc count rest list else 0,
 a = 9,
 b = 4,
 c = 2,
@@ -387,7 +387,7 @@ Recursive function calls and the if-then-else operator are used for loops:
 
 ```HiveQL
 {
-factorial = from x to 
+factorial = in x out 
     if x then
         mul(x, factorial dec x)
     else
@@ -398,8 +398,8 @@ result = factorial 4
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
 ```HiveQL
 {
-square = from x to mul(x, x)
-square_norm = from vec3 to result@{
+square = in x out mul(x, x)
+square_norm = in vec3 out result@{
     x = first vec3,
     y = second vec3,
     z = third vec3,
@@ -416,8 +416,8 @@ in the form of a list.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```HiveQL
 {
-area1 = from rectangle to mul(first rectangle, second rectangle),
-area2 = from (width, height) to mul(width, height),
+area1 = in rectangle out mul(first rectangle, second rectangle),
+area2 = in (width, height) out mul(width, height),
 rectangle = (5, 4),
 a = area1 rectangle,
 b = area2 rectangle,
@@ -436,8 +436,8 @@ in the form of a dictionary with named entries.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```HiveQL
 {
-area1 = from rectangle to mul(width@rectangle, height@rectangle),
-area2 = from {width, height} to mul(width, height),
+area1 = in rectangle out mul(width@rectangle, height@rectangle),
+area2 = in {width, height} out mul(width, height),
 rectangle = {width = 5, height = 4},
 a = area1 rectangle,
 b = area2 rectangle,

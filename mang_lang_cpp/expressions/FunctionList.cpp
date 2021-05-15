@@ -6,7 +6,7 @@
 
 std::string FunctionList::serialize() const {
     auto result = std::string{};
-    result += "from ";
+    result += "in ";
     result += "(";
     for (const auto& name : input_names) {
         result += name.serialize();
@@ -18,7 +18,7 @@ std::string FunctionList::serialize() const {
     else {
         result.back() = ')';
     }
-    result += " to " + body->serialize();
+    result += " out " + body->serialize();
     return result;
 }
 
@@ -45,7 +45,7 @@ ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log
 
 ExpressionPointer FunctionList::parse(CodeRange code) {
     auto first = code.begin();
-    code = parseKeyword(code, "from");
+    code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
@@ -61,7 +61,7 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
     }
     code = parseCharacter(code, ')');
     code = parseWhiteSpace(code);
-    code = parseKeyword(code, "to");
+    code = parseKeyword(code, "out");
     auto body = Expression::parse(code);
     code.first = body->end();
     return std::make_shared<FunctionList>(
@@ -70,10 +70,10 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
 }
 
 bool FunctionList::startsWith(CodeRange code) {
-    if (!isKeyword(code, "from ")) {
+    if (!isKeyword(code, "in ")) {
         return false;
     }
-    code = parseKeyword(code, "from");
+    code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     return ::startsWith(code, '(');
 }

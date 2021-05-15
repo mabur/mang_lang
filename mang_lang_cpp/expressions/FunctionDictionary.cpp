@@ -5,7 +5,7 @@
 
 std::string FunctionDictionary::serialize() const {
     auto result = std::string{};
-    result += "from ";
+    result += "in ";
     result += "{";
     for (const auto& name : input_names) {
         result += name.serialize();
@@ -17,7 +17,7 @@ std::string FunctionDictionary::serialize() const {
     else {
         result.back() = '}';
     }
-    result += " to " + body->serialize();
+    result += " out " + body->serialize();
     return result;
 }
 
@@ -35,7 +35,7 @@ ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostrea
 
 ExpressionPointer FunctionDictionary::parse(CodeRange code) {
     auto first = code.begin();
-    code = parseKeyword(code, "from");
+    code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
@@ -51,7 +51,7 @@ ExpressionPointer FunctionDictionary::parse(CodeRange code) {
     }
     code = parseCharacter(code, '}');
     code = parseWhiteSpace(code);
-    code = parseKeyword(code, "to");
+    code = parseKeyword(code, "out");
     auto body = Expression::parse(code);
     code.first = body->end();
     return std::make_shared<FunctionDictionary>(
@@ -60,10 +60,10 @@ ExpressionPointer FunctionDictionary::parse(CodeRange code) {
 }
 
 bool FunctionDictionary::startsWith(CodeRange code) {
-    if (!isKeyword(code, "from ")) {
+    if (!isKeyword(code, "in ")) {
         return false;
     }
-    code = parseKeyword(code, "from");
+    code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     return ::startsWith(code, '{');
 }
