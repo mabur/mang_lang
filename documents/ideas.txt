@@ -52,6 +52,39 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 
 count = in list out (if list then (inc (count (rest (list)))) else 0)
 
+// Parsed:
+{
+sum = 0,
+y = 0,
+while less(y, 240),
+  x = 0,
+  while less(x, 320),
+    sum = add(sum, x, y),
+    x = inc x,
+  end,
+  y = inc y,
+end,
+}
+// Evaluated:
+{
+sum = ?,
+y = 240,
+x = 320
+}
+Iterera igenom den parsade dictionaryn.
+for (auto it = elements.begin(); it != elements.end(); ){
+  (*it)->update(evaluated, it);
+}
+
+* Kalla på: (*element)->update(evaluated, element)
+  - För en vanlig så evaluerar den value och lägger till den till key, om den inte finns, eller uppdaterar key om den finns.
+    Den gör ++parsed_iterator
+  - För en end så subtraherar den parsed_iterator tills man kommer till motsvarande while
+  - För while så evaluerar den predicate.
+    Om det är sant så ++parsed_iterator,
+    annars ger adderar den parsed_iterator till man kommer till motsvarande end
+
+
 LEVELS
 1. Data
    - numbers
