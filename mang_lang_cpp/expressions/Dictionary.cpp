@@ -8,8 +8,9 @@ void Dictionary::add(DictionaryElement element) {
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
-        if (element.name.value == name) {
-            return element.expression;
+        auto expression = element.lookup(name);
+        if (expression) {
+            return expression;
         }
     }
     return Expression::lookup(name);

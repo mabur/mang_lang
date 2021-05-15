@@ -19,6 +19,12 @@ struct DictionaryElement : Expression {
     ExpressionPointer evaluate(const Expression*, std::ostream&) const final {
         return {};
     }
+    ExpressionPointer lookup(const std::string& s) const final {
+        if (name.value == s) {
+            return expression;
+        }
+        return nullptr;
+    };
     static DictionaryElement parse(CodeRange code) {
         auto first = code.begin();
         code = parseWhiteSpace(code);
