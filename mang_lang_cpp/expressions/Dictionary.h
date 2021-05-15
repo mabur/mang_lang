@@ -8,6 +8,9 @@ struct DictionaryElement {
     {}
     Name name;
     ExpressionPointer expression;
+    std::string serialize() const {
+        return name.serialize() + '=' + expression->serialize() + ',';
+    }
 };
 
 struct Dictionary : public Expression {

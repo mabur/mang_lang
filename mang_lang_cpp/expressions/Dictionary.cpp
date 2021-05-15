@@ -19,10 +19,7 @@ std::string Dictionary::serialize() const {
     auto result = std::string{};
     result += '{';
     for (const auto& element : elements) {
-        result += element.name.serialize();
-        result += '=';
-        result += element.expression->serialize();
-        result += ',';
+        result += element.serialize();
     }
     if (elements.empty()) {
         result += '}';
