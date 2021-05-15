@@ -31,7 +31,7 @@ ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log
     auto dictionary = std::make_shared<Dictionary>(range(), nullptr);
     auto i = 0;
     for (auto list = input->list(); list; list = list->rest, ++i) {
-        dictionary->add(DictionaryElement(input_names[i], list->first));
+        dictionary->add(DictionaryElement({}, nullptr, input_names[i], list->first));
     }
     auto middle = dictionary->evaluate(parent(), log);
     auto output = body->evaluate(middle.get(), log);

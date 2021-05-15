@@ -34,6 +34,8 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     auto result = std::make_shared<Dictionary>(range(), parent);
     for (const auto& element : elements) {
         result->add(DictionaryElement{
+            {},
+            nullptr,
             element.name,
             element.expression->evaluate(result.get(), log)
         });
@@ -49,17 +51,9 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
-        const auto name = Name::parse(code);
-        code.first = name.end();
-        code = parseWhiteSpace(code);
-        code = parseCharacter(code, '=');
-        code = parseWhiteSpace(code);
-        auto expression = Expression::parse(code);
-        code.first = expression->end();
-        result->add(DictionaryElement{name, std::move(expression)});
-        code = parseWhiteSpace(code);
-        code = parseOptionalCharacter(code, ',');
-        code = parseWhiteSpace(code);
+        auto element = DictionaryElement::parse(code);
+        code.first = element.end();
+        result->add(std::move(element));
     }
     code = parseCharacter(code, '}');
     result->range_.last = code.begin();

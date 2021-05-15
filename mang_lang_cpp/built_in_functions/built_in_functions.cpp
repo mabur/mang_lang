@@ -13,6 +13,8 @@ DictionaryElement makeDictionaryElement(
     std::function<ExpressionPointer(const Expression&)> function
 ) {
     return DictionaryElement(
+        {},
+        nullptr,
         Name{{}, nullptr, name},
         std::make_shared<FunctionBuiltIn>(function)
     );
