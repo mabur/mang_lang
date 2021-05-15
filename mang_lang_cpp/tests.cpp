@@ -148,6 +148,10 @@ int main() {
         {"((),())", "((),())"},
         {"((()))", "((()))"},
     });
+    test.reformat("dictionary", {
+        {"{while 1, end}", "{while 1,end}"},
+        {"{i=10,while i,i=dec i,end,j=1}", "{i=10,while i,i=dec i,end,j=1}"},
+    });
     test.evaluate("dictionary", {
         {"{}", "{}"},
         {"{ }", "{}"},
