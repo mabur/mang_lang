@@ -16,7 +16,7 @@ ExpressionPointer Function::evaluate(const Expression* parent, std::ostream& log
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
     auto middle = Dictionary({}, parent());
-    middle.add(std::make_shared<DictionaryElement>(range(), nullptr, input_name, input));
+    middle.elements.push_back(std::make_shared<DictionaryElement>(range(), nullptr, input_name, input));
     auto output = body->evaluate(&middle, log);
     return output;
 }

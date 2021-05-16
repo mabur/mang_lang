@@ -8,7 +8,6 @@ struct Dictionary : public Expression {
         : Expression{range, parent}
     {}
     std::vector<DictionaryElementBasePointer> elements;
-    void add(DictionaryElementBasePointer element);
     ExpressionPointer lookup(const std::string& name) const final;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;

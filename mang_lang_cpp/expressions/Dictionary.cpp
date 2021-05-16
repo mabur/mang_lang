@@ -2,10 +2,6 @@
 #include "../mang_lang.h"
 #include <algorithm>
 
-void Dictionary::add(DictionaryElementBasePointer element) {
-    elements.push_back(std::move(element));
-}
-
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
         auto expression = element->lookup(name);
@@ -34,7 +30,7 @@ std::string Dictionary::serialize() const {
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
     auto result = std::make_shared<Dictionary>(range(), parent);
     for (auto element = elements.begin(); element != elements.end(); ++element) {
-        result->add((*element)->evaluate(result.get(), log));
+        result->elements.push_back((*element)->evaluate(result.get(), log));
     }
     log << result->serialize() << std::endl;
     return result;
@@ -57,7 +53,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
             element = DictionaryElement::parse(code);
         }
         code.first = element->end();
-        result->add(std::move(element));
+        result->elements.push_back(std::move(element));
     }
     code = parseCharacter(code, '}');
     result->range_.last = code.begin();

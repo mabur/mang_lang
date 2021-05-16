@@ -32,7 +32,7 @@ ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log
     auto dictionary = std::make_shared<Dictionary>(range(), nullptr);
     auto i = 0;
     for (auto list = input->list(); list; list = list->rest, ++i) {
-        dictionary->add(
+        dictionary->elements.push_back(
             std::make_shared<DictionaryElement>(
                 range(), nullptr, input_names[i], list->first
             )
