@@ -85,17 +85,36 @@ ExpressionPointer DictionaryIteration::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
+    auto while_positions = std::vector<size_t>{};
     auto result = std::make_shared<DictionaryIteration>(CodeRange{first, code.begin()}, nullptr);
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = DictionaryElementBasePointer{};
         if (While::startsWith(code)) {
             element = While::parse(code);
+            while_positions.push_back(result->elements.size());
         }
         else if (End::startsWith(code)) {
             element = End::parse(code);
+            assert(!while_positions.empty()); // TODO: parse error message
+            const auto while_position = while_positions.back();
+            const auto end_position = result->elements.size();
+            while_positions.pop_back();
+            element->index = while_position;
+            result->elements[while_position]->index = end_position;
         } else {
             element = DictionaryElement::parse(code);
+            if (!while_positions.empty()) {
+                // TODO: find key
+                const auto is_same_name = [&](const DictionaryElementBasePointer& x) -> bool {
+                    return x->name() == element->name();
+                };
+                const auto it = std::find_if(
+                    result->elements.begin(), result->elements.end(), is_same_name
+                );
+                assert(it != result->elements.end()); // TODO: parse error message
+                element->index = std::distance(result->elements.begin(), it);
+            }
         }
         code.first = element->end();
         result->elements.push_back(std::move(element));

@@ -6,9 +6,11 @@ struct DictionaryElementBase : Expression {
     DictionaryElementBase(CodeRange range, const Expression* parent)
         : Expression(range, parent) {
     }
+    size_t index;
+    virtual std::string name() const {return "";}
 };
 
-using DictionaryElementBasePointer = std::shared_ptr<const DictionaryElementBase>;
+using DictionaryElementBasePointer = std::shared_ptr<DictionaryElementBase>;
 
 struct DictionaryElement : DictionaryElementBase {
     DictionaryElement(
@@ -16,23 +18,24 @@ struct DictionaryElement : DictionaryElementBase {
         const Expression* parent,
         const Name& name,
         ExpressionPointer expression
-    ) : DictionaryElementBase{range, parent}, name{name}, expression{std::move(expression)}
+    ) : DictionaryElementBase{range, parent}, name_{name}, expression{std::move(expression)}
     {}
-    Name name;
+    Name name_;
     ExpressionPointer expression;
+    std::string name() const final {return name_.value;}
     std::string serialize() const final {
-        return name.serialize() + '=' + expression->serialize() + ',';
+        return name_.serialize() + '=' + expression->serialize() + ',';
     }
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final {
         return std::make_shared<DictionaryElement>(
             range(),
             nullptr,
-            name,
+            name_,
             expression->evaluate(parent, log)
         );
     }
     ExpressionPointer lookup(const std::string& s) const final {
-        if (name.value == s) {
+        if (name_.value == s) {
             return expression;
         }
         return nullptr;
