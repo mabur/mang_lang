@@ -2,13 +2,13 @@
 #include "Expression.h"
 #include "Name.h"
 
-using DictionaryElementBasePointer = std::shared_ptr<const Expression>;
-
 struct DictionaryElementBase : Expression {
     DictionaryElementBase(CodeRange range, const Expression* parent)
         : Expression(range, parent) {
     }
 };
+
+using DictionaryElementBasePointer = std::shared_ptr<const DictionaryElementBase>;
 
 struct DictionaryElement : DictionaryElementBase {
     DictionaryElement(

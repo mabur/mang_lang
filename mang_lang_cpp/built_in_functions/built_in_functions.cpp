@@ -24,7 +24,7 @@ ExpressionPointer makeDictionaryElement(
 }
 
 ExpressionPointer builtIns() {
-    auto elements = std::vector<DictionaryElementBasePointer>{};
+    auto elements = std::vector<ExpressionPointer>{};
     elements.push_back(makeDictionaryElement("min", arithmetic::min));
     elements.push_back(makeDictionaryElement("max", arithmetic::max));
     elements.push_back(makeDictionaryElement("add", arithmetic::add));

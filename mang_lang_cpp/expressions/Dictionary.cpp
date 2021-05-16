@@ -88,7 +88,7 @@ ExpressionPointer DictionaryIteration::parse(CodeRange code) {
     auto result = std::make_shared<DictionaryIteration>(CodeRange{first, code.begin()}, nullptr);
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
-        auto element = ExpressionPointer{};
+        auto element = DictionaryElementBasePointer{};
         if (While::startsWith(code)) {
             element = While::parse(code);
         }
