@@ -2,13 +2,21 @@
 #include "Expression.h"
 #include "Name.h"
 
-struct DictionaryElement : Expression {
+using DictionaryElementBasePointer = std::shared_ptr<const Expression>;
+
+struct DictionaryElementBase : Expression {
+    DictionaryElementBase(CodeRange range, const Expression* parent)
+        : Expression(range, parent) {
+    }
+};
+
+struct DictionaryElement : DictionaryElementBase {
     DictionaryElement(
         CodeRange range,
         const Expression* parent,
         const Name& name,
         ExpressionPointer expression
-    ) : Expression{range, parent}, name{name}, expression{std::move(expression)}
+    ) : DictionaryElementBase{range, parent}, name{name}, expression{std::move(expression)}
     {}
     Name name;
     ExpressionPointer expression;
@@ -29,7 +37,7 @@ struct DictionaryElement : Expression {
         }
         return nullptr;
     }
-    static ExpressionPointer parse(CodeRange code) {
+    static DictionaryElementBasePointer parse(CodeRange code) {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
@@ -51,8 +59,8 @@ struct DictionaryElement : Expression {
     }
 };
 
-struct End : Expression {
-    End(CodeRange range, const Expression* parent) : Expression(range, parent)
+struct End : DictionaryElementBase {
+    End(CodeRange range, const Expression* parent) : DictionaryElementBase(range, parent)
     {}
     std::string serialize() const final {
         return "end,";
@@ -60,7 +68,7 @@ struct End : Expression {
     ExpressionPointer evaluate(const Expression*, std::ostream&) const final {
         return nullptr;
     }
-    static ExpressionPointer parse(CodeRange code) {
+    static DictionaryElementBasePointer parse(CodeRange code) {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         code = parseKeyword(code, "end");
@@ -74,18 +82,19 @@ struct End : Expression {
     }
 };
 
-struct While : Expression {
+struct While : DictionaryElementBase {
     While(CodeRange range, const Expression* parent, ExpressionPointer predicate)
-    : Expression(range, parent), predicate_(predicate)
+    : DictionaryElementBase(range, parent), predicate_(predicate)
     {}
     ExpressionPointer predicate_;
+    size_t end_index_;
     std::string serialize() const final {
         return "while " + predicate_->serialize() + ",";
     }
     ExpressionPointer evaluate(const Expression*, std::ostream&) const final {
         return nullptr;
     }
-    static ExpressionPointer parse(CodeRange code) {
+    static DictionaryElementBasePointer parse(CodeRange code) {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         code = parseKeyword(code, "while");

@@ -2,7 +2,7 @@
 #include "../mang_lang.h"
 #include <algorithm>
 
-void Dictionary::add(ExpressionPointer element) {
+void Dictionary::add(DictionaryElementBasePointer element) {
     elements.push_back(std::move(element));
 }
 
