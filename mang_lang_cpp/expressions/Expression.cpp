@@ -41,7 +41,7 @@ ExpressionPointer Expression::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
     if (List::startsWith(code)) {return List::parse(code);}
-    if (Dictionary::startsWith(code)) {return Dictionary::parse(code);}
+    if (DictionaryIteration::startsWith(code)) {return DictionaryIteration::parse(code);}
     if (Number::startsWith(code)) {return Number::parse(code);}
     if (Character::startsWith(code)) {return Character::parse(code);}
     if (String::startsWith(code)) {return String::parse(code);}
