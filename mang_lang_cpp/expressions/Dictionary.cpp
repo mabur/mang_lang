@@ -1,6 +1,7 @@
 #include "Dictionary.h"
 #include "../mang_lang.h"
 #include <algorithm>
+#include <cassert>
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
@@ -36,32 +37,13 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     return result;
 }
 
-ExpressionPointer Dictionary::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '{');
-    code = parseWhiteSpace(code);
-    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
-    while (!::startsWith(code, '}')) {
-        throwIfEmpty(code);
-        auto element = ExpressionPointer{};
-        if (While::startsWith(code)) {
-            element = While::parse(code);
-        }
-        else if (End::startsWith(code)) {
-            element = End::parse(code);
-        } else {
-            element = DictionaryElement::parse(code);
-        }
-        code.first = element->end();
-        result->elements.push_back(std::move(element));
-    }
-    code = parseCharacter(code, '}');
-    result->range_.last = code.begin();
-    return result;
+ExpressionPointer Dictionary::parse(CodeRange) {
+    assert(false);
+    return nullptr;
 }
 
-bool Dictionary::startsWith(CodeRange code) {
-    return ::startsWith(code, '{');
+bool Dictionary::startsWith(CodeRange) {
+    return false;
 }
 
 bool Dictionary::boolean() const {
@@ -70,14 +52,9 @@ bool Dictionary::boolean() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ExpressionPointer DictionaryIteration::lookup(const std::string& name) const {
-    for (const auto& element : elements) {
-        auto expression = element->lookup(name);
-        if (expression) {
-            return expression;
-        }
-    }
-    return Expression::lookup(name);
+ExpressionPointer DictionaryIteration::lookup(const std::string&) const {
+    assert(false);
+    return nullptr;
 }
 
 std::string DictionaryIteration::serialize() const {
@@ -133,5 +110,6 @@ bool DictionaryIteration::startsWith(CodeRange code) {
 }
 
 bool DictionaryIteration::boolean() const {
-    return !elements.empty();
+    assert(false);
+    return false;
 }

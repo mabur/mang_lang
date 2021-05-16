@@ -60,7 +60,7 @@ ExpressionPointer Expression::parse(CodeRange code) {
 bool Expression::startsWith(CodeRange code) {
     return
         List::startsWith(code) ||
-        Dictionary::startsWith(code) ||
+        DictionaryIteration::startsWith(code) ||
         Number::startsWith(code) ||
         Character::startsWith(code) ||
         String::startsWith(code) ||
