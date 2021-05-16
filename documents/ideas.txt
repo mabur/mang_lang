@@ -104,6 +104,8 @@ for (auto it = elements.begin(); it != elements.end(); it = (*it)->update(evalua
   - While
   - End
 * Efter evaluering så har man bara kvar ElementDefinition.
+* Splitta upp Dictionary så att det finns en Dictionary, som bara har ElementDefinition, och en DictionaryLoop, som kan ha alla.
+  Evaluering av en DictionaryLoop ger en vanlig Dictionary. Detta borde koppla isär den komplicerade logiken.
 
 
 LEVELS
