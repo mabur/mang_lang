@@ -56,6 +56,7 @@ count = in list out (if list then (inc (count (rest (list)))) else 0)
 {
 sum = 0,
 y = 0,
+x = 0,
 while less(y, 240),
   x = 0,
   while less(x, 320),
@@ -64,25 +65,45 @@ while less(y, 240),
   end,
   y = inc y,
 end,
+result = square sum
 }
 // Evaluated:
 {
 sum = ?,
 y = 240,
-x = 320
+x = 320,
+result = ?
+}
+// Evaluated with constants such that loops are skipped:
+{
+sum = 0,
+y = 0,
+x = 0,
+result = 0
 }
 Iterera igenom den parsade dictionaryn.
-for (auto it = elements.begin(); it != elements.end(); ){
-  (*it)->update(evaluated, it);
+for (auto it = elements.begin(); it != elements.end(); it = (*it)->update(evaluated, it)){
 }
 
 * Kalla på: (*element)->update(evaluated, element)
   - För en vanlig så evaluerar den value och lägger till den till key, om den inte finns, eller uppdaterar key om den finns.
+    Vilket interface vill man ha för detta?
+    Hur ska man göra för att det ska vara effektivt att både hitta en key och hoppa för while och end?
+    Förberäkna vart man ska hoppa till när man parsar.
+    - Kanske behöver en EmptyNode också, ifall ett namn förekommer innuti en while men aldrig evalueras, vilket man inte vet i förväg.
+    - Alternativt lägga till ett undefined/null/none värde som default i dicten.
+    - Alternativt kräva att alla initieras utanför while, före eller efter, dvs att innuti while sker bara mutation av tidigare definierade och ingen definition. Ok att definiera efteråt.
     Den gör ++parsed_iterator
   - För en end så subtraherar den parsed_iterator tills man kommer till motsvarande while
   - För while så evaluerar den predicate.
     Om det är sant så ++parsed_iterator,
     annars ger adderar den parsed_iterator till man kommer till motsvarande end
+* Implementera som DictionaryElementBase:
+  - ElementDefinition
+  - ElementMutation
+  - While
+  - End
+* Efter evaluering så har man bara kvar ElementDefinition.
 
 
 LEVELS
