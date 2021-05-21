@@ -16,6 +16,7 @@ TODO:
   - Improve home-page.
   - Prettier homepage.
   - Syntax high-lighting.
+* Skill tree visualization for manglang syntax and taxonomy.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Imperative Support
@@ -555,3 +556,99 @@ find : in {list: List Generic, query: Generic} out List List Generic =
             head = concat [[first list], center],
             result = [head, tail]
         }
+
+
+LEVELS
+1. Data
+   - numbers
+   - characters
+   - strings
+   - lists
+   - dictionaries
+2. References
+   - reference (substitution)
+   - child reference (substitution)
+3. Computation
+   - if (substitution)
+   - function definition
+   - function call (substitution)
+4. Imperative
+   - while in dictionaries and updating of symbols (substitution)
+
+
+Level 0    - Primitive data:       Numbers, Characters
+Level 1    - Aggregate Data:       Lists, Strings, Dictionaries
+Level 2    - References:           Reference, Child Reference
+Level 3    - Branching:            Conditional
+Level 4ai  - Function call:        Function call
+Level 4aii - Functions definition: Function, (Function of List), (Function of Dictionary)
+Level 4b   - Imperative:           Iterative dictionary
+
+        PRIMITIVE DATA
+╔══ NUMBERS ══╗  ╔═ CHARCTERS ═╗
+║ 12.34       ║  ║ 'a'         ║
+╚═════════════╝  ╚═════════════╝
+
+╔═ LISTS ════════════╗  ╔═ STRINGS ══════════╗  ╔═ DICTIONARIES ═════════╗
+║ (EXPRESSION, ...)  ║  ║ "CHARACTER..."     ║  ║ {NAME=EXPRESSION, ...} ║
+║                    ║  ║                    ║  ║                        ║
+║ ()                 ║  ║ ""                 ║  ║ {width=320,height=240} ║
+║                    ║  ║                    ║  ║                        ║
+║ (1,2,3)            ║  ║ "abc"              ║  ║ {                      ║
+║                    ║  ║                    ║  ║     x = 1,             ║
+║ (                  ║  ║ "Mang Lang"        ║  ║     y = 2,             ║
+║     1,             ║  ║                    ║  ║     z = 3              ║
+║     2,             ║  ║                    ║  ║ }                      ║
+║     3              ║  ║                    ║  ║                        ║
+║ )                  ║  ║                    ║  ║                        ║
+╚════════════════════╝  ╚════════════════════╝  ╚════════════════════════╝
+
+╔═ REFERENCES ═══════╗  ╔═ CHILD REFERENCES ══════════════════╗
+║ NAME               ║  ║ NAME@EXPRESSION                     ║
+║                    ║  ║                                     ║
+║ {                  ║  ║ {                                   ║
+║     x = 1,         ║  ║     rectangle = {width=1,height=2}, ║
+║     y = x,         ║  ║     w = width@rectangle,            ║
+║     z = {a=1, b=y} ║  ║     coordinate = z@{x=1,y=2,z=3}    ║
+║ }                  ║  ║ }                                   ║
+╚════════════════════╝  ╚═════════════════════════════════════╝
+
+╔══ CONDITIONALS ═══════════════════════════════╗  ╔══ FUNCTION APPLICATION ════════════════════╗
+║ if EXPRESSION then EXPRESSION else EXPRESSION ║  ║ NAME EXPRESSION                            ║
+║                                               ║  ║                                            ║
+║ {                                             ║  ║ {                                          ║
+║     is_rich = 0,                              ║  ║     list = (1, 2, 3),                      ║
+║     money = if is_rich then 1000000 else 1,   ║  ║     num_elements = count list,             ║
+║     list = (),                                ║  ║     longer_list = prepend(0, list),        ║
+║     is_list_empty = if list then 1 else 0     ║  ║     backwards = reverse "Mang Lang",       ║
+║ }                                             ║  ║     area = get_area{width=320, height=240} ║
+║                                               ║  ║ }                                          ║
+╚═══════════════════════════════════════════════╝  ╚════════════════════════════════════════════╝
+
+╔══ FUNCTIONS ══════════════════════════════════════╗  ╔══ FUNCTIONS OF LISTS ════════════╗  ╔══ FUNCTIONS OF DICTIONARIES ═══════════════╗
+║ in NAME out EXPRESSION                            ║  ║ in (NAME, ...) out EXPRESSION    ║  ║ in {NAME, ...} out EXPRESSION              ║
+║                                                   ║  ║                                  ║  ║                                            ║
+║ {                                                 ║  ║                                  ║  ║                                            ║
+║     square = in x out mul(x, x),                  ║  ║                                  ║  ║                                            ║
+║     nine = square 3,                              ║  ║ {                                ║  ║                                            ║
+║     square_norm2 = in vec out                     ║  ║     square_norm2 = in (x, y) out ║  ║                                            ║
+║         add(square first vec, square second vec), ║  ║         add(square x, square y), ║  ║                                            ║
+║     n = square_norm2(3, 4),                       ║  ║     n = square_norm2(3, 4),      ║  ║ {                                          ║
+║     get_area = in shape out                       ║  ║     conj = in (re, im) out       ║  ║     get_area = in {width, height} out      ║
+║         mul(width@shape, height@shape),           ║  ║         (re, neg im),            ║  ║         mul(width, height),                ║
+║     area = get_area{width=320, height=240}        ║  ║     c = conj(0, 1)               ║  ║     area = get_area{width=320, height=240} ║
+║ }                                                 ║  ║ }                                ║  ║ }                                          ║
+╚═══════════════════════════════════════════════════╝  ╚══════════════════════════════════╝  ╚════════════════════════════════════════════╝
+
+╔═ ITERATIVE DICTIONARIES ══════════════════════════════════╗
+║ {NAME=EXPRESSION, while EXPRESSION, NAME=EXPRESSION, end} ║
+║                                                           ║
+║ {                                                         ║
+║     sum = 0,                                              ║
+║     i = 10,                                               ║
+║     while i,                                              ║
+║         i = dec i,                                        ║
+║         sum = add(sum, i),                                ║
+║     end                                                   ║
+║ }                                                         ║
+╚═══════════════════════════════════════════════════════════╝
