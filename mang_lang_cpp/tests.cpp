@@ -157,6 +157,7 @@ int main() {
         {"{i=2,while i,i=dec i,end}", "{i=0}"},
         {"{i=2,while i,i=dec i,end,j=1}", "{i=0,j=1}"},
         {"{i=2,sum=0,while i,sum=add(sum,i),i=dec i,end}", "{i=0,sum=3}"},
+        {"{i=1000,sum=0,while i,sum=add(sum,i),i=dec i,end}", "{i=0,sum=500500}"},
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},
