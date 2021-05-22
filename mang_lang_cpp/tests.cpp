@@ -452,9 +452,11 @@ int main() {
         {"range 2", "(0,1)"},
         {"range 3", "(0,1,2)"},
     });
-    test.evaluate("recursion", {
+    test.evaluate("iteration", {
         {"count reverse_range 100", "100"},
         {"count_imperative reverse_range_imperative 100", "100"},
+        {"add reverse_range 100", "4950"},
+        {"add reverse_range_imperative 100", "4950"},
     });
     test.evaluate("count list", {
         {"count ()", "0"},
