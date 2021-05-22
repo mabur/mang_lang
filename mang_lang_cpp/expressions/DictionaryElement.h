@@ -6,6 +6,8 @@
 
 struct DictionaryElement;
 
+using DictionaryElementPointer = std::shared_ptr<DictionaryElement>;
+
 struct DictionaryElement : Expression {
     DictionaryElement(
         CodeRange range,
@@ -16,7 +18,10 @@ struct DictionaryElement : Expression {
     {}
     NamePointer name_;
     ExpressionPointer expression;
-    
+    size_t jump_true = 1;
+    size_t jump_false = 0;
+    size_t dictionary_index = 0;
+
     std::string name() const {return name_->value;}
     std::string serialize() const final {
         if (isWhile()) {
@@ -41,7 +46,7 @@ struct DictionaryElement : Expression {
         }
         return nullptr;
     }
-    static ExpressionPointer parse(CodeRange code) {
+    static DictionaryElementPointer parse(CodeRange code) {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
@@ -80,7 +85,6 @@ struct DictionaryElement : Expression {
     static bool startsWith(CodeRange) {
         return false;
     }
-private:
     bool isWhile() const {return !name_ && expression;}
     bool isEnd() const {return !name_ && !expression;}
 };

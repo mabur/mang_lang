@@ -45,16 +45,49 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto while_positions = std::vector<size_t>{};
-    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
+    auto elements = std::vector<DictionaryElementPointer>{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = DictionaryElement::parse(code);
         code.first = element->end();
-        result->elements.push_back(std::move(element));
+        elements.push_back(element);
     }
     code = parseCharacter(code, '}');
-    result->range_.last = code.begin();
+    // Forward pass to set backward jumps:
+    auto while_positions = std::vector<size_t>{};
+    for (size_t i = 0; i < elements.size(); ++i) {
+        auto& element = elements[i];
+        if (element->isWhile()) {
+            while_positions.push_back(i);
+        }
+        if (element->isEnd()) {
+            element->jump_true = while_positions.back() - i;
+            while_positions.pop_back();
+        }
+    }
+    if (!while_positions.empty()) {
+        throw ParseException("Too many while", code.begin());
+    }
+    // Backward pass to set forward jumps:
+    auto end_positions = std::vector<size_t>{};
+    for (size_t i = elements.size() - 1; i < elements.size(); --i) {
+        auto& element = elements[i];
+        if (element->isEnd()) {
+            end_positions.push_back(i);
+        }
+        if (element->isWhile()) {
+            element->jump_false = end_positions.back() - i + 1;
+            end_positions.pop_back();
+        }
+    }
+    if (!end_positions.empty()) {
+        throw ParseException("Too many end", code.begin());
+    }
+
+    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
+    for (auto& element : elements) {
+        result->elements.push_back(std::move(element));
+    }
     return result;
 }
 
