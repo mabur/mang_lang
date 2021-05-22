@@ -66,7 +66,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
         }
     }
     if (!while_positions.empty()) {
-        throw ParseException("Too many while", code.begin());
+        throw ParseException("More while than end", code.begin());
     }
     // Backward pass to set forward jumps:
     auto end_positions = std::vector<size_t>{};
@@ -81,9 +81,21 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
         }
     }
     if (!end_positions.empty()) {
-        throw ParseException("Too many end", code.begin());
+        throw ParseException("Fewer while than end", code.begin());
     }
-
+    // Forward pass to set dictionary_index:
+    auto names = std::vector<std::string>{};
+    for (size_t i = 0; i < elements.size(); ++i) {
+        auto& element = elements[i];
+        if (element->isSymbolDefinition()) {
+            const auto name = element->name();
+            const auto it = std::find(names.begin(), names.end(), name);
+            element->dictionary_index = std::distance(names.begin(), it);
+            if (it == names.end()) {
+                names.push_back(name);
+            }
+        }
+    }
     auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
     for (auto& element : elements) {
         result->elements.push_back(std::move(element));

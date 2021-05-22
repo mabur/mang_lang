@@ -87,4 +87,5 @@ struct DictionaryElement : Expression {
     }
     bool isWhile() const {return !name_ && expression;}
     bool isEnd() const {return !name_ && !expression;}
+    bool isSymbolDefinition() const {return name_ && expression;}
 };
