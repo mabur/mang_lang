@@ -40,14 +40,6 @@ struct DictionaryElement : Expression {
             expression->evaluate(parent, log)
         );
     }
-    DictionaryElementPointer evaluate2(const Expression* parent, std::ostream& log) const{
-        return std::make_shared<DictionaryElement>(
-            range(),
-            nullptr,
-            name_,
-            expression->evaluate(parent, log)
-        );
-    }
     ExpressionPointer lookup(const std::string& s) const final {
         if (name_->value == s) {
             return expression;
