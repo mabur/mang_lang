@@ -307,256 +307,6 @@ Vec2 = (x=Real, y=Real)
 *Enum?
 *Type (The type of types. What is the type of Type itself?)
 
--------------------------------------------------------------------------------------------------
-
-split = in input out result of
-{
-  queue  = queue@input,
-  query  = query@input,
-  result = recursive_split {queue=queue, query=query, result=[]}
-}
-
-recursive_split = in input out
-    if check_empty queue@input
-    then input
-    else output@
-    {
-      find_result = find {list=queue, query=","}, // Relies on find/split_first
-      tail        = tail find_result,
-      head        = head find_result,
-      result      = concat [result, [head]]
-      output      = recursive_split {queue=tail, result=result}
-    }
-
-move_element = in input out
-    if equal [front source, query@input] then undefined else
-    {
-        target = concat [target@input, front source@input],
-        source = without_front source@input,
-        query = query@input
-    }
-move_word = move_element unfold {source=,target=[], query=","}
-    
-
-
-// Take a list and return a pair of lists: head and tail, or head, query, tail
-find = ...
-find_inclusive = ...
-find_exclusive = ...
-
-[1,2,3,4]
-
-find(list=[1,2,3,4], query=3)
--> (head=[1,2], query=[3], tail=[4])
-
-Parse "123,+56,345,-76,23"
-
-parse_element = in input out find(list=input.string, query=',')
-
-def split_for(input, query):
-  output = []
-  last_split_index = 0
-  for index, element in enumerate(input):
-      if element == query:
-        word = input[last_split_index + 1:index]
-        output.append(word)
-        last_split_index = index
-  word = input[last_split_index + 1:]
-  if word:
-    output.append(word)
-  return output
-
-def split_generator(first, last, query):
-  if first != last:
-    next = find_if(first, last, query)
-    yield [first, next]
-    yield in split_generator(++next, last, query)
-
-// Denna verkar enkel. Skulle liknande funka i Manglang?
-def split_recursive(first, last, query):
-  if first == last:
-    return []
-  next = find_if(first, last, query)
-  return [[first, next]] + split_generator(++next, last, query)
-
-
-// Recursive split in Python:
-def split_recursive(source, query):
-  if not source:
-    return []
-  word, rest = next_word(source, query)
-  return [word] + split_recursive(rest, query)
-
-def next_word(source, query):
-  if not source:
-      return [], []
-  if source[0] == query:
-    return [], source[1:]
-  word, rest = next_word(source[1:], query)
-  return [source[0]] + word, rest
-
-// Iterator split in C++:
-std::vector<std::string> split(first, last, char query) {
-  using namespace std;
-  auto result = vector<string>{};
-  auto next = find(first, last, query);
-  do {
-    if (first != next) {
-      result.append(string{first, next});
-    }
-    first = ++next;
-    next = find(first, last, query);
-  } while (next != last)
-  return result;
-}
-
-// Recursive split in C++:
-std::vector<std::string> split_recursive(std::string source, char query)
-{
-    if (source.empty())
-        return {};
-    auto split = next_word(source, query);
-    auto word = split[0];
-    auto rest = split[1];
-    auto recursive_result = split_recursive(rest, query);
-    recursive_result.push_front(word);
-    return recursive_result;
-}
-
-std::tuple<std::string, std::string> next_word(std::string source, char query) {
-    using namespace std;
-    if (source.empty)
-        return make_tuple("", "");
-    if (source[0] == query)
-        return {{}, source.substr(1)};
-    auto split = next_word(source.substr(1), query);
-    auto word = get<0>(split);
-    auto rest = get<1>(split);
-    return make_tuple(source[0] + word, rest);
-}
-
-// Recursive split in Mang lang:
-split_recursive = in input out
-    if is_empty source@input then
-        []
-    else
-        result@{
-            query = query@input,
-            source = source@input,
-            split = next_word {source = source, query = query},
-            word = word@split,
-            rest = rest@split,
-            recursive_result = split_recursive {source = rest, query = query},
-            result = concat [word, recursive_result]
-        }
-
-next_word = in input out
-    if is_empty source@input then
-        {word = [], rest = []}
-    else if equal [first source@input, query@input] then
-        {word = [], rest = last_part source@input}
-    else
-        result@{
-            source = source@input,
-            query = query@input,
-            tail = last_part source,
-            split = next_word {source = tail, query = query},
-            word = word@split,
-            rest = rest@split,
-            result = {word = concat [[first@source], word], rest = rest}
-        }
-
-// Multiple named input/output for functions:
-split_recursive = in source, query out
-    if is_empty source then
-        []
-    else
-        result@{
-            word, rest = next_word {source = source, query = query},
-            recursive_result = split_recursive {source = rest, query = query},
-            result = concat [word, recursive_result]
-        }
-
-next_word = in source, query out
-    if is_empty source then
-        {word = [], rest = []}
-    else if equal [first source, query] then
-        {word = [], rest = last_part source}
-    else
-        result@{
-            word, rest = next_word {source = last_part source, query = query},
-            result = {word = concat [[first source], word], rest = rest}
-        }
-
-// Blir bra. Implementera algoritmer från STL som find, find_if,
-// men som returnerar listor istället för arrayer.
-// find ger ger listorna [first, it] [it, end],
-// där it kan vara end ifall den inte hittar något.
-// next word ovan är typ find_if.
-
-// F#
-let find list query =
-    match list width
-        [] -> [[]; []]
-        [query:] -> [[]; list]
-        _ ->
-            let [head: tail] = list
-            let [center; new_tail] = find tail query
-            let new_head = [head] + center
-            [new_head, new_tail]
-
-// Python
-def find(list, query):
-    if not list:
-        return [[], []]
-    if list[0] == query:
-        return [[], list]
-    center, tail = find(list=list[1:], query=query)
-    head = [list[0]] + center
-    return [head, tail]
-
-// Nuvarande
-find = in {list, query} out
-    if is_empty list then
-        [[],[]]
-    else if are_equal [first list, query] then
-        [[], list]
-    else
-        result@{
-            sub_result = find {list=rest list, query=query}
-            center = first sub_result,
-            tail = first rest sub_result,
-            head = concat [[first list], center],
-            result = [head, tail]
-        }
-// Typ-förslag
-find : in {list: List Generic, query: Generic} out List List Generic =
-    if is_empty list then
-        [[], []]
-    else if are_equal [first list, query] then
-        [[], list]
-    else
-        result {
-            sub_result = find {list=rest list, query=query},
-            center = first sub_result,
-            tail = first rest sub_result,
-            head = concat [[first list], center],
-            result = [head, tail]
-        }
-
-// Typ-förslag och pattern matching
-find : in {list: List Generic, query: Generic} out List List Generic =
-    if is_empty list then
-        [[], []]
-    else if are_equal [first list, query] then
-        [[], list]
-    else
-        result {
-            center, tail = find {list=rest list, query=query},
-            head = concat [[first list], center],
-            result = [head, tail]
-        }
-
 
 LEVELS
 1. Data
@@ -585,60 +335,62 @@ Level 4aii - Functions definition: Function, (Function of List), (Function of Di
 Level 4b   - Imperative:           Iterative dictionary
 
         PRIMITIVE DATA
-╔══ NUMBERS ══╗  ╔═ CHARCTERS ═╗
-║ 12.34       ║  ║ 'a'         ║
-╚═════════════╝  ╚═════════════╝
+╔══ NUMBERS ══╔═ CHARCTERS ═╗
+║ 1           ║ 'a'         ║
+║ 1.0         ║ 'b'         ║
+║ -3.34       ║ 'c'         ║
+╚═════════════╚═════════════╝
 
-╔═ LISTS ════════════╗  ╔═ STRINGS ══════════╗  ╔═ DICTIONARIES ═════════╗
-║ (EXPRESSION, ...)  ║  ║ "CHARACTER..."     ║  ║ {NAME=EXPRESSION, ...} ║
-║                    ║  ║                    ║  ║                        ║
-║ ()                 ║  ║ ""                 ║  ║ {width=320,height=240} ║
-║                    ║  ║                    ║  ║                        ║
-║ (1,2,3)            ║  ║ "abc"              ║  ║ {                      ║
-║                    ║  ║                    ║  ║     x = 1,             ║
-║ (                  ║  ║ "Mang Lang"        ║  ║     y = 2,             ║
-║     1,             ║  ║                    ║  ║     z = 3              ║
-║     2,             ║  ║                    ║  ║ }                      ║
-║     3              ║  ║                    ║  ║                        ║
-║ )                  ║  ║                    ║  ║                        ║
-╚════════════════════╝  ╚════════════════════╝  ╚════════════════════════╝
+╔═ LISTS ════════════╔═ STRINGS ══════════╔═ DICTIONARIES ═════════╗
+║ (EXPRESSION, ...)  ║ "CHARACTER..."     ║ {NAME=EXPRESSION, ...} ║
+║                    ║                    ║                        ║
+║ ()                 ║ ""                 ║ {}                     ║
+║                    ║                    ║                        ║
+║ (1,2,3)            ║ "abc"              ║ {width=320,height=240} ║
+║                    ║                    ║                        ║
+║ (                  ║ "Mang Lang"        ║ {                      ║
+║     1,             ║                    ║     x = 1,             ║
+║     2,             ║                    ║     y = 2,             ║
+║     3              ║                    ║     z = 3              ║
+║ )                  ║                    ║ }                      ║
+╚════════════════════╚════════════════════╚════════════════════════╝
 
-╔═ REFERENCES ═══════╗  ╔═ CHILD REFERENCES ══════════════════╗
-║ NAME               ║  ║ NAME@EXPRESSION                     ║
-║                    ║  ║                                     ║
-║ {                  ║  ║ {                                   ║
-║     x = 1,         ║  ║     rectangle = {width=1,height=2}, ║
-║     y = x,         ║  ║     w = width@rectangle,            ║
-║     z = {a=1, b=y} ║  ║     coordinate = z@{x=1,y=2,z=3}    ║
-║ }                  ║  ║ }                                   ║
-╚════════════════════╝  ╚═════════════════════════════════════╝
+╔═ REFERENCES ═══════╔═ CHILD REFERENCES ══════════════════╗
+║ NAME               ║ NAME@EXPRESSION                     ║
+║                    ║                                     ║
+║ {                  ║ {                                   ║
+║     x = 1,         ║     rectangle = {width=1,height=2}, ║
+║     y = x,         ║     w = width@rectangle,            ║
+║     z = {a=1, b=y} ║     coordinate = z@{x=1,y=2,z=3}    ║
+║ }                  ║ }                                   ║
+╚════════════════════╚═════════════════════════════════════╝
 
-╔══ CONDITIONALS ═══════════════════════════════╗  ╔══ FUNCTION APPLICATION ════════════════════╗
-║ if EXPRESSION then EXPRESSION else EXPRESSION ║  ║ NAME EXPRESSION                            ║
-║                                               ║  ║                                            ║
-║ {                                             ║  ║ {                                          ║
-║     is_rich = 0,                              ║  ║     list = (1, 2, 3),                      ║
-║     money = if is_rich then 1000000 else 1,   ║  ║     num_elements = count list,             ║
-║     list = (),                                ║  ║     longer_list = prepend(0, list),        ║
-║     is_list_empty = if list then 1 else 0     ║  ║     backwards = reverse "Mang Lang",       ║
-║ }                                             ║  ║     area = get_area{width=320, height=240} ║
-║                                               ║  ║ }                                          ║
-╚═══════════════════════════════════════════════╝  ╚════════════════════════════════════════════╝
+╔══ CONDITIONALS ═══════════════════════════════╔══ FUNCTION APPLICATION ════════════════════╗
+║ if EXPRESSION then EXPRESSION else EXPRESSION ║ NAME EXPRESSION                            ║
+║                                               ║                                            ║
+║ {                                             ║ {                                          ║
+║     is_rich = 0,                              ║     list = (1, 2, 3),                      ║
+║     money = if is_rich then 1000000 else 1,   ║     num_elements = count list,             ║
+║     list = (),                                ║     longer_list = prepend(0, list),        ║
+║     is_list_empty = if list then 1 else 0     ║     backwards = reverse "Mang Lang",       ║
+║ }                                             ║     area = get_area{width=320, height=240} ║
+║                                               ║ }                                          ║
+╚═══════════════════════════════════════════════╚════════════════════════════════════════════╝
 
-╔══ FUNCTIONS ══════════════════════════════════════╗  ╔══ FUNCTIONS OF LISTS ════════════╗  ╔══ FUNCTIONS OF DICTIONARIES ═══════════════╗
-║ in NAME out EXPRESSION                            ║  ║ in (NAME, ...) out EXPRESSION    ║  ║ in {NAME, ...} out EXPRESSION              ║
-║                                                   ║  ║                                  ║  ║                                            ║
-║ {                                                 ║  ║                                  ║  ║                                            ║
-║     square = in x out mul(x, x),                  ║  ║                                  ║  ║                                            ║
-║     nine = square 3,                              ║  ║ {                                ║  ║                                            ║
-║     square_norm2 = in vec out                     ║  ║     square_norm2 = in (x, y) out ║  ║                                            ║
-║         add(square first vec, square second vec), ║  ║         add(square x, square y), ║  ║                                            ║
-║     n = square_norm2(3, 4),                       ║  ║     n = square_norm2(3, 4),      ║  ║ {                                          ║
-║     get_area = in shape out                       ║  ║     conj = in (re, im) out       ║  ║     get_area = in {width, height} out      ║
-║         mul(width@shape, height@shape),           ║  ║         (re, neg im),            ║  ║         mul(width, height),                ║
-║     area = get_area{width=320, height=240}        ║  ║     c = conj(0, 1)               ║  ║     area = get_area{width=320, height=240} ║
-║ }                                                 ║  ║ }                                ║  ║ }                                          ║
-╚═══════════════════════════════════════════════════╝  ╚══════════════════════════════════╝  ╚════════════════════════════════════════════╝
+╔══ FUNCTIONS ══════════════════════════════════════╔══ FUNCTIONS OF LISTS ════════════╔══ FUNCTIONS OF DICTIONARIES ═══════════════╗
+║ in NAME out EXPRESSION                            ║ in (NAME, ...) out EXPRESSION    ║ in {NAME, ...} out EXPRESSION              ║
+║                                                   ║                                  ║                                            ║
+║ {                                                 ║                                  ║                                            ║
+║     square = in x out mul(x, x),                  ║                                  ║                                            ║
+║     nine = square 3,                              ║ {                                ║                                            ║
+║     square_norm2 = in vec out                     ║     square_norm2 = in (x, y) out ║                                            ║
+║         add(square first vec, square second vec), ║         add(square x, square y), ║                                            ║
+║     n = square_norm2(3, 4),                       ║     n = square_norm2(3, 4),      ║ {                                          ║
+║     get_area = in shape out                       ║     conj = in (re, im) out       ║     get_area = in {width, height} out      ║
+║         mul(width@shape, height@shape),           ║         (re, neg im),            ║         mul(width, height),                ║
+║     area = get_area{width=320, height=240}        ║     c = conj(0, 1)               ║     area = get_area{width=320, height=240} ║
+║ }                                                 ║ }                                ║ }                                          ║
+╚═══════════════════════════════════════════════════╚══════════════════════════════════╚════════════════════════════════════════════╝
 
 ╔═ ITERATIVE DICTIONARIES ══════════════════════════════════╗
 ║ {NAME=EXPRESSION, while EXPRESSION, NAME=EXPRESSION, end} ║
