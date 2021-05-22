@@ -6,9 +6,11 @@
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
-        auto expression = element->lookup(name);
-        if (expression) {
-            return expression;
+        if (element) {
+            auto expression = element->lookup(name);
+            if (expression) {
+                return expression;
+            }
         }
     }
     return Expression::lookup(name);
@@ -44,10 +46,9 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
         return result;
     }
     const auto num_names = 1 + max_element->get()->dictionary_index_;
-    //result->elements.resize(num_names);
 
+    result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
     assert(elements.size() == num_names);
-
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto& element = elements[i];
         auto evaluated_element = std::make_shared<DictionaryElement>(
@@ -57,11 +58,9 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
             element->expression->evaluate(result.get(), log),
             element->dictionary_index_
         );
-        const auto dictionary_index = element->dictionary_index_;
-        assert(dictionary_index == result->elements.size());
+        const auto dictionary_index = evaluated_element->dictionary_index_;
         assert(dictionary_index == i);
-        result->elements.push_back(evaluated_element);
-        //result->elements.at(dictionary_index) = evaluated_element;
+        result->elements.at(dictionary_index) = evaluated_element;
     }
     assert(num_names == result->elements.size());
 
