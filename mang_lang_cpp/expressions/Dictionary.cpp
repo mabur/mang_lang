@@ -52,11 +52,11 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
             element->range(),
             nullptr,
             element->name_,
-            element->expression->evaluate(result.get(), log)
+            element->expression->evaluate(result.get(), log),
+            element->dictionary_index_
         );
         const auto dictionary_index = element->dictionary_index_;
         assert(dictionary_index == result->elements.size());
-        evaluated_element->dictionary_index_ = dictionary_index;
         result->elements.push_back(evaluated_element);
         //result->elements[element->dictionary_index_] = evaluated_element;
     }

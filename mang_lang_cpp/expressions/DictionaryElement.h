@@ -13,14 +13,18 @@ struct DictionaryElement : Expression {
         CodeRange range,
         const Expression* parent,
         NamePointer name,
-        ExpressionPointer expression
-    ) : Expression{range, parent}, name_{std::move(name)}, expression{std::move(expression)}
+        ExpressionPointer expression,
+        size_t dictionary_index
+    ) : Expression{range, parent},
+    name_{std::move(name)},
+    expression{std::move(expression)},
+    dictionary_index_{dictionary_index}
     {}
     NamePointer name_;
     ExpressionPointer expression;
     size_t jump_true = 1;
     size_t jump_false = 0;
-    size_t dictionary_index_ = 0;
+    size_t dictionary_index_;
 
     std::string name() const {return name_->value;}
     std::string serialize() const final {
@@ -32,13 +36,14 @@ struct DictionaryElement : Expression {
         }
         return name_->serialize() + '=' + expression->serialize() + ',';
     }
-    ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final {
-        return std::make_shared<DictionaryElement>(
-            range(),
-            nullptr,
-            name_,
-            expression->evaluate(parent, log)
-        );
+    ExpressionPointer evaluate(const Expression*, std::ostream&) const final {
+        return nullptr;
+        //return std::make_shared<DictionaryElement>(
+        //    range(),
+        //    nullptr,
+        //    name_,
+        //    expression->evaluate(parent, log)
+        //);
     }
     ExpressionPointer lookup(const std::string& s) const final {
         if (name_->value == s) {
@@ -55,7 +60,7 @@ struct DictionaryElement : Expression {
             code = parseWhiteSpace(code);
             code = parseOptionalCharacter(code, ',');
             return std::make_shared<DictionaryElement>(
-                CodeRange{first, code.first}, nullptr, nullptr, nullptr
+                CodeRange{first, code.first}, nullptr, nullptr, nullptr, 0
             );
         }
         if (isKeyword(code, "while")) {
@@ -66,7 +71,7 @@ struct DictionaryElement : Expression {
             code = parseWhiteSpace(code);
             code = parseOptionalCharacter(code, ',');
             return std::make_shared<DictionaryElement>(
-                CodeRange{first, code.first}, nullptr, nullptr, std::move(expression)
+                CodeRange{first, code.first}, nullptr, nullptr, std::move(expression), 0
             );
         }
         auto name = Name::parse(code);
@@ -79,7 +84,7 @@ struct DictionaryElement : Expression {
         code = parseWhiteSpace(code);
         code = parseOptionalCharacter(code, ',');
         return std::make_shared<DictionaryElement>(
-            CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression)
+            CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression), 0
         );
     }
     static bool startsWith(CodeRange) {
