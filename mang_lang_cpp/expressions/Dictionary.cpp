@@ -46,6 +46,8 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     const auto num_names = 1 + max_element->get()->dictionary_index_;
     //result->elements.resize(num_names);
 
+    assert(elements.size() == num_names);
+
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto& element = elements[i];
         auto evaluated_element = std::make_shared<DictionaryElement>(
@@ -57,8 +59,9 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
         );
         const auto dictionary_index = element->dictionary_index_;
         assert(dictionary_index == result->elements.size());
+        assert(dictionary_index == i);
         result->elements.push_back(evaluated_element);
-        //result->elements[element->dictionary_index_] = evaluated_element;
+        //result->elements.at(dictionary_index) = evaluated_element;
     }
     assert(num_names == result->elements.size());
 
