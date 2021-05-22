@@ -32,7 +32,7 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     auto result = std::make_shared<Dictionary>(range(), parent);
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto& element = elements[i];
-        result->elements.push_back(element->evaluate(result.get(), log));
+        result->elements.push_back(element->evaluate2(result.get(), log));
     }
     log << result->serialize() << std::endl;
     return result;

@@ -11,7 +11,7 @@
 #include "list.h"
 #include "logic.h"
 
-ExpressionPointer makeDictionaryElement(
+DictionaryElementPointer makeDictionaryElement(
     std::string name,
     std::function<ExpressionPointer(const Expression&)> function
 ) {
@@ -24,7 +24,7 @@ ExpressionPointer makeDictionaryElement(
 }
 
 ExpressionPointer builtIns() {
-    auto elements = std::vector<ExpressionPointer>{};
+    auto elements = std::vector<DictionaryElementPointer>{};
     elements.push_back(makeDictionaryElement("min", arithmetic::min));
     elements.push_back(makeDictionaryElement("max", arithmetic::max));
     elements.push_back(makeDictionaryElement("add", arithmetic::add));

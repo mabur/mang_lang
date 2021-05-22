@@ -7,7 +7,7 @@ struct Dictionary : public Expression {
     Dictionary(CodeRange range, const Expression* parent)
         : Expression{range, parent}
     {}
-    std::vector<ExpressionPointer> elements;
+    std::vector<DictionaryElementPointer> elements;
     ExpressionPointer lookup(const std::string& name) const final;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
