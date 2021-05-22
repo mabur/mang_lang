@@ -2,11 +2,11 @@
 #include <cassert>
 
 std::string LookupFunction::serialize() const {
-    return name.serialize() + " " + child->serialize();
+    return name->serialize() + " " + child->serialize();
 }
 
 ExpressionPointer LookupFunction::evaluate(const Expression* parent, std::ostream& log) const {
-    const auto function = parent->lookup(name.value);
+    const auto function = parent->lookup(name->value);
     const auto evaluated_child = child->evaluate(parent, log);
     assert(evaluated_child);
     auto result = function->apply(evaluated_child, log);
@@ -17,7 +17,7 @@ ExpressionPointer LookupFunction::evaluate(const Expression* parent, std::ostrea
 ExpressionPointer LookupFunction::parse(CodeRange code) {
     auto first = code.begin();
     auto name = Name::parse(code);
-    code.first = name.end();
+    code.first = name->end();
     code = parseWhiteSpace(code);
     auto child = Expression::parse(code);
     code.first = child->end();

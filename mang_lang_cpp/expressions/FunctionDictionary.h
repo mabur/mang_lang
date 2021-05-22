@@ -6,13 +6,13 @@ struct FunctionDictionary : public Expression {
     FunctionDictionary(
         CodeRange range,
         const Expression* parent,
-        const std::vector<Name>& input_names,
+        std::vector<NamePointer> input_names,
         ExpressionPointer body
     ) : Expression{range, parent},
-        input_names{input_names},
+        input_names{std::move(input_names)},
         body{std::move(body)}
     {}
-    std::vector<Name> input_names;
+    std::vector<NamePointer> input_names;
     ExpressionPointer body;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;

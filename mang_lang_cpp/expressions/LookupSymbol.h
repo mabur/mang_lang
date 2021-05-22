@@ -6,9 +6,9 @@ struct LookupSymbol : public Expression {
     LookupSymbol(
         CodeRange range,
         const Expression* parent,
-        Name name
+        NamePointer name
     ) : Expression{range, parent}, name{std::move(name)} {}
-    Name name;
+    NamePointer name;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
     static ExpressionPointer parse(CodeRange code);

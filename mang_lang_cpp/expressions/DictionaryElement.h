@@ -10,15 +10,15 @@ struct DictionaryElement : Expression {
     DictionaryElement(
         CodeRange range,
         const Expression* parent,
-        const Name& name,
+        NamePointer name,
         ExpressionPointer expression
-    ) : Expression{range, parent}, name_{name}, expression{std::move(expression)}
+    ) : Expression{range, parent}, name_{std::move(name)}, expression{std::move(expression)}
     {}
-    Name name_;
+    NamePointer name_;
     ExpressionPointer expression;
-    std::string name() const {return name_.value;}
+    std::string name() const {return name_->value;}
     std::string serialize() const final {
-        return name_.serialize() + '=' + expression->serialize() + ',';
+        return name_->serialize() + '=' + expression->serialize() + ',';
     }
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final {
         return std::make_shared<DictionaryElement>(
@@ -29,7 +29,7 @@ struct DictionaryElement : Expression {
         );
     }
     ExpressionPointer lookup(const std::string& s) const final {
-        if (name_.value == s) {
+        if (name_->value == s) {
             return expression;
         }
         return nullptr;
@@ -38,8 +38,15 @@ struct DictionaryElement : Expression {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        const auto name = Name::parse(code);
-        code.first = name.end();
+
+        if (isKeyword(code, "end")) {
+            code = parseKeyword(code, "end");
+        }
+        if (isKeyword(code, "while")) {
+            code = parseKeyword(code, "while");
+        }
+        auto name = Name::parse(code);
+        code.first = name->end();
         code = parseWhiteSpace(code);
         code = parseCharacter(code, '=');
         code = parseWhiteSpace(code);
@@ -48,7 +55,7 @@ struct DictionaryElement : Expression {
         code = parseWhiteSpace(code);
         code = parseOptionalCharacter(code, ',');
         return std::make_shared<DictionaryElement>(
-            CodeRange{first, code.first}, nullptr, name, std::move(expression)
+            CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression)
         );
     }
     static bool startsWith(CodeRange) {

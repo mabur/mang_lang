@@ -18,7 +18,7 @@ ExpressionPointer makeDictionaryElement(
     return std::make_shared<DictionaryElement>(
         CodeRange{},
         nullptr,
-        Name{{}, nullptr, name},
+        std::make_shared<Name>(CodeRange{}, nullptr, name),
         std::make_shared<FunctionBuiltIn>(function)
     );
 }

@@ -5,7 +5,7 @@
 #include "DictionaryElement.h"
 
 std::string Function::serialize() const {
-    return std::string{"in "} + input_name.serialize() + " out " + body->serialize();
+    return std::string{"in "} + input_name->serialize() + " out " + body->serialize();
 }
 
 ExpressionPointer Function::evaluate(const Expression* parent, std::ostream& log) const {
@@ -26,7 +26,7 @@ ExpressionPointer Function::parse(CodeRange code) {
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     auto input_name = Name::parse(code);
-    code.first = input_name.end();
+    code.first = input_name->end();
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = Expression::parse(code);

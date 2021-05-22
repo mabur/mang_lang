@@ -9,7 +9,7 @@ std::string FunctionList::serialize() const {
     result += "in ";
     result += "(";
     for (const auto& name : input_names) {
-        result += name.serialize();
+        result += name->serialize();
         result += ",";
     }
     if (input_names.empty()) {
@@ -49,11 +49,11 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto input_names = std::vector<Name>{};
+    auto input_names = std::vector<NamePointer>{};
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = Name::parse(code);
-        code.first = name.end();
+        code.first = name->end();
         input_names.push_back(name);
         code = parseWhiteSpace(code);
         code = parseOptionalCharacter(code, ',');

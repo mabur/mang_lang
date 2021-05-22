@@ -10,11 +10,13 @@ ExpressionPointer Name::evaluate(const Expression* parent, std::ostream& log) co
     return  result;
 }
 
-Name Name::parse(CodeRange code) {
+NamePointer Name::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, isLetter);
     code = parseWhile(code, isNameCharacter);
-    return Name(CodeRange{first, code.first}, nullptr, rawString({first, code.first}));
+    return std::make_shared<Name>(
+        CodeRange{first, code.first}, nullptr, rawString({first, code.first})
+    );
 }
 
 bool Name::startsWith(CodeRange code) {

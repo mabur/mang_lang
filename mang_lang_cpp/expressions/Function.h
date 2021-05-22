@@ -6,13 +6,13 @@ struct Function : public Expression {
     Function(
         CodeRange range,
         const Expression* parent,
-        Name input_name,
+        NamePointer input_name,
         ExpressionPointer body
     ) : Expression{range, parent},
         input_name{std::move(input_name)},
         body{std::move(body)}
     {}
-    Name input_name;
+    NamePointer input_name;
     ExpressionPointer body;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
