@@ -37,56 +37,16 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
     return result;
 }
 
-ExpressionPointer Dictionary::parse(CodeRange) {
-    assert(false);
-    return nullptr;
-}
-
-bool Dictionary::startsWith(CodeRange) {
-    return false;
-}
-
 bool Dictionary::boolean() const {
     return !elements.empty();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-ExpressionPointer DictionaryIteration::lookup(const std::string&) const {
-    assert(false);
-    return nullptr;
-}
-
-std::string DictionaryIteration::serialize() const {
-    auto result = std::string{};
-    result += '{';
-    for (const auto& element : elements) {
-        result += element->serialize();
-    }
-    if (elements.empty()) {
-        result += '}';
-    }
-    else {
-        result.back() = '}';
-    }
-    return result;
-}
-
-ExpressionPointer DictionaryIteration::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Dictionary>(range(), parent);
-    for (auto element = elements.begin(); element != elements.end(); ++element) {
-        result->elements.push_back((*element)->evaluate(result.get(), log));
-    }
-    log << result->serialize() << std::endl;
-    return result;
-}
-
-ExpressionPointer DictionaryIteration::parse(CodeRange code) {
+ExpressionPointer Dictionary::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto while_positions = std::vector<size_t>{};
-    auto result = std::make_shared<DictionaryIteration>(CodeRange{first, code.begin()}, nullptr);
+    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = DictionaryElement::parse(code);
@@ -98,11 +58,6 @@ ExpressionPointer DictionaryIteration::parse(CodeRange code) {
     return result;
 }
 
-bool DictionaryIteration::startsWith(CodeRange code) {
+bool Dictionary::startsWith(CodeRange code) {
     return ::startsWith(code, '{');
-}
-
-bool DictionaryIteration::boolean() const {
-    assert(false);
-    return false;
 }
