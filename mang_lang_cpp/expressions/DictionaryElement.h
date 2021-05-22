@@ -18,7 +18,13 @@ struct DictionaryElement : Expression {
     ExpressionPointer expression;
     std::string name() const {return name_->value;}
     std::string serialize() const final {
-        return name_->serialize() + '=' + expression->serialize() + ',';
+        if (name_ && expression) {
+            return name_->serialize() + '=' + expression->serialize() + ',';
+        }
+        if (expression) {
+            return "while " + expression->serialize() + ',';
+        }
+        return "end,";
     }
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final {
         return std::make_shared<DictionaryElement>(
@@ -38,12 +44,24 @@ struct DictionaryElement : Expression {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-
         if (isKeyword(code, "end")) {
             code = parseKeyword(code, "end");
+            code = parseWhiteSpace(code);
+            code = parseOptionalCharacter(code, ',');
+            return std::make_shared<DictionaryElement>(
+                CodeRange{first, code.first}, nullptr, nullptr, nullptr
+            );
         }
         if (isKeyword(code, "while")) {
             code = parseKeyword(code, "while");
+            code = parseWhiteSpace(code);
+            auto expression = Expression::parse(code);
+            code.first = expression->end();
+            code = parseWhiteSpace(code);
+            code = parseOptionalCharacter(code, ',');
+            return std::make_shared<DictionaryElement>(
+                CodeRange{first, code.first}, nullptr, nullptr, std::move(expression)
+            );
         }
         auto name = Name::parse(code);
         code.first = name->end();
