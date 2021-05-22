@@ -43,6 +43,15 @@ const std::string STANDARD_LIBRARY = R"(
         else
             0,
 
+    count_imperative = in list out result@{
+            result = 0,
+            tail = list,
+            while tail,
+                result = inc result,
+                tail = rest tail,
+            end
+        },
+
     count_item = in (item, list) out
         if list then
             if equal(first list, item) then
@@ -66,6 +75,15 @@ const std::string STANDARD_LIBRARY = R"(
             prepend(dec x, reverse_range dec x)
         else
             (),
+
+    reverse_range_imperative = in x out result@{
+            result = (),
+            y = x,
+            while y,
+                result = prepend(dec y, result),
+                y = dec y,
+            end
+        },
 
     range = in x out reverse reverse_range x,
 
