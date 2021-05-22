@@ -1,28 +1,22 @@
 #pragma once
+
+#include <memory>
 #include "Expression.h"
 #include "Name.h"
 
-struct DictionaryElementBase : Expression {
-    DictionaryElementBase(CodeRange range, const Expression* parent)
-        : Expression(range, parent) {
-    }
-    size_t index;
-    virtual std::string name() const {return "";}
-};
+struct DictionaryElement;
 
-using DictionaryElementBasePointer = std::shared_ptr<DictionaryElementBase>;
-
-struct DictionaryElement : DictionaryElementBase {
+struct DictionaryElement : Expression {
     DictionaryElement(
         CodeRange range,
         const Expression* parent,
         const Name& name,
         ExpressionPointer expression
-    ) : DictionaryElementBase{range, parent}, name_{name}, expression{std::move(expression)}
+    ) : Expression{range, parent}, name_{name}, expression{std::move(expression)}
     {}
     Name name_;
     ExpressionPointer expression;
-    std::string name() const final {return name_.value;}
+    std::string name() const {return name_.value;}
     std::string serialize() const final {
         return name_.serialize() + '=' + expression->serialize() + ',';
     }
@@ -40,7 +34,7 @@ struct DictionaryElement : DictionaryElementBase {
         }
         return nullptr;
     }
-    static DictionaryElementBasePointer parse(CodeRange code) {
+    static ExpressionPointer parse(CodeRange code) {
         auto first = code.begin();
         code = parseWhiteSpace(code);
         throwIfEmpty(code);

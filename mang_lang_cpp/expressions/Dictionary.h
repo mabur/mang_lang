@@ -20,7 +20,7 @@ struct DictionaryIteration : public Expression {
     DictionaryIteration(CodeRange range, const Expression* parent)
         : Expression{range, parent}
     {}
-    std::vector<DictionaryElementBasePointer> elements;
+    std::vector<ExpressionPointer> elements;
     ExpressionPointer lookup(const std::string& name) const final;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final;
