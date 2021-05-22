@@ -2,6 +2,7 @@
 #include "../mang_lang.h"
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
@@ -28,8 +29,23 @@ std::string Dictionary::serialize() const {
     return result;
 }
 
+bool compareDictionaryIndex(
+    const DictionaryElementPointer& a, const DictionaryElementPointer& b) {
+    return a->dictionary_index < b->dictionary_index;
+}
+
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
     auto result = std::make_shared<Dictionary>(range(), parent);
+    const auto max_element = std::max_element(
+        elements.begin(), elements.end(), compareDictionaryIndex
+    );
+    if (max_element == elements.end()) {
+        log << result->serialize() << std::endl;
+        return result;
+    }
+    const auto num_names = 1 + max_element->get()->dictionary_index;
+    //result->elements.resize(num_names);
+
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto& element = elements[i];
         auto evaluated_element = std::make_shared<DictionaryElement>(
@@ -38,8 +54,14 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
             element->name_,
             element->expression->evaluate(result.get(), log)
         );
+        const auto dictionary_index = element->dictionary_index;
+        assert(dictionary_index == result->elements.size());
+        evaluated_element->dictionary_index = dictionary_index;
         result->elements.push_back(evaluated_element);
+        //result->elements[element->dictionary_index] = evaluated_element;
     }
+    assert(num_names == result->elements.size());
+
     log << result->serialize() << std::endl;
     return result;
 }

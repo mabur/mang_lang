@@ -45,6 +45,9 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("reverse", list_functions::reverse));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
     auto environment = std::make_shared<Dictionary>(CodeRange{}, nullptr);
+    for (size_t i = 0; i < elements.size(); ++i) {
+        elements[i]->dictionary_index = i;
+    }
     environment->elements = elements;
     return environment;
 }
