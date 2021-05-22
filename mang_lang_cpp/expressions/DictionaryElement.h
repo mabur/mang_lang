@@ -20,7 +20,7 @@ struct DictionaryElement : Expression {
     ExpressionPointer expression;
     size_t jump_true = 1;
     size_t jump_false = 0;
-    size_t dictionary_index = 0;
+    size_t dictionary_index_ = 0;
 
     std::string name() const {return name_->value;}
     std::string serialize() const final {

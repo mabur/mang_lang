@@ -31,7 +31,7 @@ std::string Dictionary::serialize() const {
 
 bool compareDictionaryIndex(
     const DictionaryElementPointer& a, const DictionaryElementPointer& b) {
-    return a->dictionary_index < b->dictionary_index;
+    return a->dictionary_index_ < b->dictionary_index_;
 }
 
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
@@ -43,7 +43,7 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
         log << result->serialize() << std::endl;
         return result;
     }
-    const auto num_names = 1 + max_element->get()->dictionary_index;
+    const auto num_names = 1 + max_element->get()->dictionary_index_;
     //result->elements.resize(num_names);
 
     for (size_t i = 0; i < elements.size(); ++i) {
@@ -54,11 +54,11 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
             element->name_,
             element->expression->evaluate(result.get(), log)
         );
-        const auto dictionary_index = element->dictionary_index;
+        const auto dictionary_index = element->dictionary_index_;
         assert(dictionary_index == result->elements.size());
-        evaluated_element->dictionary_index = dictionary_index;
+        evaluated_element->dictionary_index_ = dictionary_index;
         result->elements.push_back(evaluated_element);
-        //result->elements[element->dictionary_index] = evaluated_element;
+        //result->elements[element->dictionary_index_] = evaluated_element;
     }
     assert(num_names == result->elements.size());
 
@@ -112,14 +112,14 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     if (!end_positions.empty()) {
         throw ParseException("Fewer while than end", code.begin());
     }
-    // Forward pass to set dictionary_index:
+    // Forward pass to set dictionary_index_:
     auto names = std::vector<std::string>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
         if (element->isSymbolDefinition()) {
             const auto name = element->name();
             const auto it = std::find(names.begin(), names.end(), name);
-            element->dictionary_index = std::distance(names.begin(), it);
+            element->dictionary_index_ = std::distance(names.begin(), it);
             if (it == names.end()) {
                 names.push_back(name);
             }
