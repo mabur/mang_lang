@@ -16,15 +16,16 @@ struct DictionaryElement : Expression {
     {}
     NamePointer name_;
     ExpressionPointer expression;
+    
     std::string name() const {return name_->value;}
     std::string serialize() const final {
-        if (name_ && expression) {
-            return name_->serialize() + '=' + expression->serialize() + ',';
-        }
-        if (expression) {
+        if (isWhile()) {
             return "while " + expression->serialize() + ',';
         }
-        return "end,";
+        if (isEnd()) {
+            return "end,";
+        }
+        return name_->serialize() + '=' + expression->serialize() + ',';
     }
     ExpressionPointer evaluate(const Expression* parent, std::ostream& log) const final {
         return std::make_shared<DictionaryElement>(
@@ -79,4 +80,7 @@ struct DictionaryElement : Expression {
     static bool startsWith(CodeRange) {
         return false;
     }
+private:
+    bool isWhile() const {return !name_ && expression;}
+    bool isEnd() const {return !name_ && !expression;}
 };
