@@ -26,10 +26,8 @@ NamedElement::NamedElement(
 WhileElement::WhileElement(
     CodeRange range,
     const Expression* parent,
-    NamePointer name,
-    ExpressionPointer expression,
-    size_t dictionary_index
-) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
+    ExpressionPointer expression
+) : DictionaryElement{range, parent, nullptr, std::move(expression), 0}
 {}
 
 EndElement::EndElement(CodeRange range, const Expression* parent)
@@ -92,7 +90,7 @@ DictionaryElementPointer WhileElement::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseOptionalCharacter(code, ',');
     return std::make_shared<WhileElement>(
-        CodeRange{first, code.first}, nullptr, nullptr, std::move(expression), 0
+        CodeRange{first, code.first}, nullptr, std::move(expression)
     );
 }
 

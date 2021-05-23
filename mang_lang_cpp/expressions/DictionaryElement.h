@@ -53,9 +53,7 @@ struct WhileElement : DictionaryElement {
     WhileElement(
         CodeRange range,
         const Expression* parent,
-        NamePointer name,
-        ExpressionPointer expression,
-        size_t dictionary_index
+        ExpressionPointer expression
     );
     std::string serialize() const final;
     static DictionaryElementPointer parse(CodeRange code);
