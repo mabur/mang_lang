@@ -34,6 +34,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * How to specify starting point for generic functions () and "", when not using recursion?
    - Return input if empty otherwise start with first element instead of empty element? Would that work?
    - have empty function?
+* Add tests for dictionary names that start like keywords.
 
 
 LEVELS
