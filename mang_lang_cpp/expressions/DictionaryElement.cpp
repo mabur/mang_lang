@@ -9,12 +9,10 @@ DictionaryElement::DictionaryElement(
     ExpressionPointer expression,
     size_t dictionary_index
 ) : Expression{range, parent},
-    name_{std::move(name)},
+    name{std::move(name)},
     expression{std::move(expression)},
     dictionary_index_{dictionary_index}
 {}
-
-std::string DictionaryElement::name() const {return name_->value;}
 
 std::string DictionaryElement::serialize() const {
     if (isWhile()) {
@@ -23,11 +21,11 @@ std::string DictionaryElement::serialize() const {
     if (isEnd()) {
         return "end,";
     }
-    return name_->serialize() + '=' + expression->serialize() + ',';
+    return name->serialize() + '=' + expression->serialize() + ',';
 }
 
 ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
-    if (name_->value == s) {
+    if (name->value == s) {
         return expression;
     }
     return nullptr;
@@ -75,6 +73,6 @@ bool DictionaryElement::startsWith(CodeRange) {
     return false;
 }
 
-bool DictionaryElement::isWhile() const {return !name_ && expression;}
-bool DictionaryElement::isEnd() const {return !name_ && !expression;}
-bool DictionaryElement::isSymbolDefinition() const {return name_ && expression;}
+bool DictionaryElement::isWhile() const {return !name && expression;}
+bool DictionaryElement::isEnd() const {return !name && !expression;}
+bool DictionaryElement::isSymbolDefinition() const {return name && expression;}

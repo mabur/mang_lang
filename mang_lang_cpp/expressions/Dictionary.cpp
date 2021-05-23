@@ -55,7 +55,7 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
             auto evaluated_element = std::make_shared<DictionaryElement>(
                 element->range(),
                 nullptr,
-                element->name_,
+                element->name,
                 element->expression->evaluate(result.get(), log),
                 element->dictionary_index_
             );
@@ -130,7 +130,7 @@ ExpressionPointer Dictionary::parse(CodeRange code) {
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
         if (element->isSymbolDefinition()) {
-            const auto name = element->name();
+            const auto name = element->name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             element->dictionary_index_ = std::distance(names.begin(), it);
             if (it == names.end()) {
