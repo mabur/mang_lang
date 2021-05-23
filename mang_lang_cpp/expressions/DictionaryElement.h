@@ -56,6 +56,7 @@ struct WhileElement : DictionaryElement {
         ExpressionPointer expression
     );
     std::string serialize() const final;
+    static bool startsWith(CodeRange code);
     static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* parent, std::ostream& log,
         DictionaryElements& elements) const final;
@@ -65,6 +66,7 @@ struct WhileElement : DictionaryElement {
 struct EndElement : DictionaryElement {
     EndElement(CodeRange range, const Expression* parent);
     std::string serialize() const final;
+    static bool startsWith(CodeRange code);
     static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* parent, std::ostream& log,
         DictionaryElements& elements) const final;

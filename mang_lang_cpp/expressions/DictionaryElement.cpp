@@ -53,14 +53,22 @@ ExpressionPointer NamedElement::lookup(const std::string& s) const {
     return nullptr;
 }
 
+bool WhileElement::startsWith(CodeRange code) {
+    return isKeyword(code, "while");
+}
+
+bool EndElement::startsWith(CodeRange code) {
+    return isKeyword(code, "end");
+}
+
 DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (isKeyword(code, "end")) {
-        return EndElement::parse(code);
-    }
-    if (isKeyword(code, "while")) {
+    if (WhileElement::startsWith(code)) {
         return WhileElement::parse(code);
+    }
+    if (EndElement::startsWith(code)) {
+        return EndElement::parse(code);
     }
     return NamedElement::parse(code);
 }
