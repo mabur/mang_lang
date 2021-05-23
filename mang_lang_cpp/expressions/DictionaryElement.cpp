@@ -1,5 +1,7 @@
 #include "DictionaryElement.h"
 
+#include <cassert>
+
 DictionaryElement::DictionaryElement(
     CodeRange range,
     const Expression* parent,
@@ -25,13 +27,8 @@ std::string DictionaryElement::serialize() const {
 }
 
 ExpressionPointer DictionaryElement::evaluate(const Expression*, std::ostream&) const {
+    assert(false);
     return nullptr;
-    //return std::make_shared<DictionaryElement>(
-    //    range(),
-    //    nullptr,
-    //    name_,
-    //    expression->evaluate(parent, log)
-    //);
 }
 
 ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
@@ -79,6 +76,7 @@ DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
 }
 
 bool DictionaryElement::startsWith(CodeRange) {
+    assert(false);
     return false;
 }
 
