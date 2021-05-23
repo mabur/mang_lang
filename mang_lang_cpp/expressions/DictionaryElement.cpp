@@ -26,11 +26,6 @@ std::string DictionaryElement::serialize() const {
     return name_->serialize() + '=' + expression->serialize() + ',';
 }
 
-ExpressionPointer DictionaryElement::evaluate(const Expression*, std::ostream&) const {
-    assert(false);
-    return nullptr;
-}
-
 ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
     if (name_->value == s) {
         return expression;

@@ -5,11 +5,6 @@ std::string Name::serialize() const {
     return value;
 }
 
-ExpressionPointer Name::evaluate(const Expression*, std::ostream&) const {
-    assert(false);
-    return nullptr;
-}
-
 NamePointer Name::parse(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, isLetter);
