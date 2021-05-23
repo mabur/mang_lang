@@ -28,8 +28,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - do not allow other side-effects
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
-* Not turing complete
-  - Remove recursion and replace with map/filter/fold/list-comprehension/sql
 * Parser combinators
 * How to specify starting point for generic functions () and "", when not using recursion?
    - Return input if empty otherwise start with first element instead of empty element? Would that work?
