@@ -16,7 +16,7 @@ DictionaryElementPointer makeDictionaryElement(
     std::function<ExpressionPointer(const Expression&)> function,
     size_t dictionary_index
 ) {
-    return std::make_shared<DictionaryElement>(
+    return std::make_shared<NamedElement>(
         CodeRange{},
         nullptr,
         std::make_shared<Name>(CodeRange{}, nullptr, name),

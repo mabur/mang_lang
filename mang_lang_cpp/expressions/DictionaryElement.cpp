@@ -14,17 +14,47 @@ DictionaryElement::DictionaryElement(
     dictionary_index_{dictionary_index}
 {}
 
-std::string DictionaryElement::serialize() const {
-    if (isWhile()) {
-        return "while " + expression->serialize() + ',';
-    }
-    if (isEnd()) {
-        return "end,";
-    }
+NamedElement::NamedElement(
+    CodeRange range,
+    const Expression* parent,
+    NamePointer name,
+    ExpressionPointer expression,
+    size_t dictionary_index
+) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
+{}
+
+WhileElement::WhileElement(
+    CodeRange range,
+    const Expression* parent,
+    NamePointer name,
+    ExpressionPointer expression,
+    size_t dictionary_index
+) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
+{}
+
+EndElement::EndElement(
+    CodeRange range,
+    const Expression* parent,
+    NamePointer name,
+    ExpressionPointer expression,
+    size_t dictionary_index
+) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
+{}
+
+
+std::string NamedElement::serialize() const {
     return name->serialize() + '=' + expression->serialize() + ',';
 }
 
-ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
+std::string WhileElement::serialize() const {
+    return "while " + expression->serialize() + ',';
+}
+
+std::string EndElement::serialize() const {
+    return "end,";
+}
+
+ExpressionPointer NamedElement::lookup(const std::string& s) const {
     if (name->value == s) {
         return expression;
     }
@@ -32,28 +62,19 @@ ExpressionPointer DictionaryElement::lookup(const std::string& s) const {
 }
 
 DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
-    auto first = code.begin();
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
     if (isKeyword(code, "end")) {
-        code = parseKeyword(code, "end");
-        code = parseWhiteSpace(code);
-        code = parseOptionalCharacter(code, ',');
-        return std::make_shared<DictionaryElement>(
-            CodeRange{first, code.first}, nullptr, nullptr, nullptr, 0
-        );
+        return EndElement::parse(code);
     }
     if (isKeyword(code, "while")) {
-        code = parseKeyword(code, "while");
-        code = parseWhiteSpace(code);
-        auto expression = Expression::parse(code);
-        code.first = expression->end();
-        code = parseWhiteSpace(code);
-        code = parseOptionalCharacter(code, ',');
-        return std::make_shared<DictionaryElement>(
-            CodeRange{first, code.first}, nullptr, nullptr, std::move(expression), 0
-        );
+        return WhileElement::parse(code);
     }
+    return NamedElement::parse(code);
+}
+
+DictionaryElementPointer NamedElement::parse(CodeRange code) {
+    auto first = code.begin();
     auto name = Name::parse(code);
     code.first = name->end();
     code = parseWhiteSpace(code);
@@ -63,46 +84,71 @@ DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
     code.first = expression->end();
     code = parseWhiteSpace(code);
     code = parseOptionalCharacter(code, ',');
-    return std::make_shared<DictionaryElement>(
+    return std::make_shared<NamedElement>(
         CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression), 0
     );
 }
 
-void DictionaryElement::mutate(const Expression* parent, std::ostream& log,
-    std::vector<DictionaryElementPointer>& elements) const {
-    if (isSymbolDefinition()) {
-        elements.at(dictionary_index_) = std::make_shared<DictionaryElement>(
-            range(),
-            nullptr,
-            name,
-            expression->evaluate(parent, log),
-            dictionary_index_
-        );
-    }
+DictionaryElementPointer WhileElement::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseKeyword(code, "while");
+    code = parseWhiteSpace(code);
+    auto expression = Expression::parse(code);
+    code.first = expression->end();
+    code = parseWhiteSpace(code);
+    code = parseOptionalCharacter(code, ',');
+    return std::make_shared<WhileElement>(
+        CodeRange{first, code.first}, nullptr, nullptr, std::move(expression), 0
+    );
 }
 
-size_t DictionaryElement::jump(const Expression* parent, std::ostream& log) const {
-    if (isSymbolDefinition()) {
+DictionaryElementPointer EndElement::parse(CodeRange code) {
+    auto first = code.begin();
+    code = parseKeyword(code, "end");
+    code = parseWhiteSpace(code);
+    code = parseOptionalCharacter(code, ',');
+    return std::make_shared<EndElement>(
+        CodeRange{first, code.first}, nullptr, nullptr, nullptr, 0
+    );
+}
+
+void NamedElement::mutate(const Expression* parent, std::ostream& log,
+    std::vector<DictionaryElementPointer>& elements) const {
+    elements.at(dictionary_index_) = std::make_shared<NamedElement>(
+        range(),
+        nullptr,
+        name,
+        expression->evaluate(parent, log),
+        dictionary_index_
+    );
+}
+
+void WhileElement::mutate(const Expression*, std::ostream&,
+    std::vector<DictionaryElementPointer>&) const {
+}
+
+void EndElement::mutate(const Expression*, std::ostream&,
+    std::vector<DictionaryElementPointer>&) const {
+}
+
+size_t NamedElement::jump(const Expression*, std::ostream&) const {
+    return jump_true;
+}
+
+size_t WhileElement::jump(const Expression* parent, std::ostream& log) const {
+    if (expression->evaluate(parent, log)->boolean()) {
         return jump_true;
     }
-    if (isEnd()) {
-        return jump_true;
-    }
-    if (isWhile()) {
-        if (expression->evaluate(parent, log)->boolean()) {
-            return jump_true;
-        } else {
-            return jump_false;
-        }
-    }
-    assert(false);
-    return {};
+    return jump_false;
+}
+
+size_t EndElement::jump(const Expression*, std::ostream&) const {
+    return jump_true;
 }
 
 bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
-
 
 void setContext(DictionaryElements& elements) {
     // Forward pass to set backward jumps:
