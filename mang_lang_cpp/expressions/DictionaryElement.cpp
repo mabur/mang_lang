@@ -32,15 +32,9 @@ WhileElement::WhileElement(
 ) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
 {}
 
-EndElement::EndElement(
-    CodeRange range,
-    const Expression* parent,
-    NamePointer name,
-    ExpressionPointer expression,
-    size_t dictionary_index
-) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
+EndElement::EndElement(CodeRange range, const Expression* parent)
+    : DictionaryElement{range, parent, nullptr, nullptr, 0}
 {}
-
 
 std::string NamedElement::serialize() const {
     return name->serialize() + '=' + expression->serialize() + ',';
@@ -108,7 +102,7 @@ DictionaryElementPointer EndElement::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseOptionalCharacter(code, ',');
     return std::make_shared<EndElement>(
-        CodeRange{first, code.first}, nullptr, nullptr, nullptr, 0
+        CodeRange{first, code.first}, nullptr
     );
 }
 

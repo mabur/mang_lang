@@ -65,13 +65,7 @@ struct WhileElement : DictionaryElement {
 };
 
 struct EndElement : DictionaryElement {
-    EndElement(
-        CodeRange range,
-        const Expression* parent,
-        NamePointer name,
-        ExpressionPointer expression,
-        size_t dictionary_index
-    );
+    EndElement(CodeRange range, const Expression* parent);
     std::string serialize() const final;
     static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* parent, std::ostream& log,
