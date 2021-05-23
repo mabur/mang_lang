@@ -13,40 +13,39 @@
 
 DictionaryElementPointer makeDictionaryElement(
     std::string name,
-    std::function<ExpressionPointer(const Expression&)> function,
-    size_t dictionary_index
+    std::function<ExpressionPointer(const Expression&)> function
 ) {
     return std::make_shared<NamedElement>(
         CodeRange{},
         nullptr,
         std::make_shared<Name>(CodeRange{}, nullptr, name),
         std::make_shared<FunctionBuiltIn>(function),
-        dictionary_index
+        0
     );
 }
 
 ExpressionPointer builtIns() {
-    size_t i = 0;
     auto elements = std::vector<DictionaryElementPointer>{};
-    elements.push_back(makeDictionaryElement("min", arithmetic::min, i++));
-    elements.push_back(makeDictionaryElement("max", arithmetic::max, i++));
-    elements.push_back(makeDictionaryElement("add", arithmetic::add, i++));
-    elements.push_back(makeDictionaryElement("mul", arithmetic::mul, i++));
-    elements.push_back(makeDictionaryElement("sub", arithmetic::sub, i++));
-    elements.push_back(makeDictionaryElement("div", arithmetic::div, i++));
-    elements.push_back(makeDictionaryElement("abs", arithmetic::abs, i++));
-    elements.push_back(makeDictionaryElement("sqrt", arithmetic::sqrt, i++));
-    elements.push_back(makeDictionaryElement("boolean", logic::boolean, i++));
-    elements.push_back(makeDictionaryElement("not", logic::logic_not, i++));
-    elements.push_back(makeDictionaryElement("all", logic::all, i++));
-    elements.push_back(makeDictionaryElement("any", logic::any, i++));
-    elements.push_back(makeDictionaryElement("none", logic::none, i++));
-    elements.push_back(makeDictionaryElement("equal", equality::equal, i++));
-    elements.push_back(makeDictionaryElement("unequal", equality::unequal, i++));
-    elements.push_back(makeDictionaryElement("first", list_functions::first, i++));
-    elements.push_back(makeDictionaryElement("rest", list_functions::rest, i++));
-    elements.push_back(makeDictionaryElement("reverse", list_functions::reverse, i++));
-    elements.push_back(makeDictionaryElement("prepend", list_functions::prepend, i++));
+    elements.push_back(makeDictionaryElement("min", arithmetic::min));
+    elements.push_back(makeDictionaryElement("max", arithmetic::max));
+    elements.push_back(makeDictionaryElement("add", arithmetic::add));
+    elements.push_back(makeDictionaryElement("mul", arithmetic::mul));
+    elements.push_back(makeDictionaryElement("sub", arithmetic::sub));
+    elements.push_back(makeDictionaryElement("div", arithmetic::div));
+    elements.push_back(makeDictionaryElement("abs", arithmetic::abs));
+    elements.push_back(makeDictionaryElement("sqrt", arithmetic::sqrt));
+    elements.push_back(makeDictionaryElement("boolean", logic::boolean));
+    elements.push_back(makeDictionaryElement("not", logic::logic_not));
+    elements.push_back(makeDictionaryElement("all", logic::all));
+    elements.push_back(makeDictionaryElement("any", logic::any));
+    elements.push_back(makeDictionaryElement("none", logic::none));
+    elements.push_back(makeDictionaryElement("equal", equality::equal));
+    elements.push_back(makeDictionaryElement("unequal", equality::unequal));
+    elements.push_back(makeDictionaryElement("first", list_functions::first));
+    elements.push_back(makeDictionaryElement("rest", list_functions::rest));
+    elements.push_back(makeDictionaryElement("reverse", list_functions::reverse));
+    elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
+    setContext(elements);
     auto environment = std::make_shared<Dictionary>(CodeRange{}, nullptr);
     environment->elements = elements;
     return environment;
