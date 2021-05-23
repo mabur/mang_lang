@@ -104,7 +104,7 @@ bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
 
 
-void setContext(std::vector<DictionaryElementPointer>& elements) {
+void setContext(DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
@@ -155,7 +155,7 @@ bool compareDictionaryIndex(
     return a->dictionary_index_ < b->dictionary_index_;
 }
 
-size_t numNames(const std::vector<DictionaryElementPointer>& elements) {
+size_t numNames(const DictionaryElements& elements) {
     if (elements.empty()) {
         return 0;
     }

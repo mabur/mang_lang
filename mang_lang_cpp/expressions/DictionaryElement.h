@@ -1,12 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include "Expression.h"
 #include "Name.h"
 
 struct DictionaryElement;
 
 using DictionaryElementPointer = std::shared_ptr<DictionaryElement>;
+using DictionaryElements = std::vector<DictionaryElementPointer>;
 
 struct DictionaryElement : Expression {
     DictionaryElement(
@@ -26,13 +28,13 @@ struct DictionaryElement : Expression {
     ExpressionPointer lookup(const std::string& s) const final;
     static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* parent, std::ostream& log,
-        std::vector<DictionaryElementPointer>& elements) const;
+        DictionaryElements& elements) const;
     size_t jump(const Expression* parent, std::ostream& log) const;
     bool isWhile() const;
     bool isEnd() const;
     bool isSymbolDefinition() const;
 };
 
-void setContext(std::vector<DictionaryElementPointer>& elements);
+void setContext(DictionaryElements& elements);
 
-size_t numNames(const std::vector<DictionaryElementPointer>& elements);
+size_t numNames(const DictionaryElements& elements);
