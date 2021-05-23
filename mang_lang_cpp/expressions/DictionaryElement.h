@@ -25,6 +25,9 @@ struct DictionaryElement : Expression {
     std::string serialize() const final;
     ExpressionPointer lookup(const std::string& s) const final;
     static DictionaryElementPointer parse(CodeRange code);
+    void mutate(const Expression* parent, std::ostream& log,
+        std::vector<DictionaryElementPointer>& elements) const;
+    size_t jump(const Expression* parent, std::ostream& log) const;
     bool isWhile() const;
     bool isEnd() const;
     bool isSymbolDefinition() const;

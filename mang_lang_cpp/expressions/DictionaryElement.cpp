@@ -68,6 +68,37 @@ DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
     );
 }
 
+void DictionaryElement::mutate(const Expression* parent, std::ostream& log,
+    std::vector<DictionaryElementPointer>& elements) const {
+    if (isSymbolDefinition()) {
+        elements.at(dictionary_index_) = std::make_shared<DictionaryElement>(
+            range(),
+            nullptr,
+            name,
+            expression->evaluate(parent, log),
+            dictionary_index_
+        );
+    }
+}
+
+size_t DictionaryElement::jump(const Expression* parent, std::ostream& log) const {
+    if (isSymbolDefinition()) {
+        return jump_true;
+    }
+    if (isEnd()) {
+        return jump_true;
+    }
+    if (isWhile()) {
+        if (expression->evaluate(parent, log)->boolean()) {
+            return jump_true;
+        } else {
+            return jump_false;
+        }
+    }
+    assert(false);
+    return {};
+}
+
 bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}

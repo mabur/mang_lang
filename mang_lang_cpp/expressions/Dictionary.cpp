@@ -51,28 +51,8 @@ ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& l
 
     for (size_t i = 0; i < elements.size();) {
         const auto& element = elements[i];
-        if (element->isSymbolDefinition()) {
-            auto evaluated_element = std::make_shared<DictionaryElement>(
-                element->range(),
-                nullptr,
-                element->name,
-                element->expression->evaluate(result.get(), log),
-                element->dictionary_index_
-            );
-            const auto dictionary_index = evaluated_element->dictionary_index_;
-            result->elements.at(dictionary_index) = evaluated_element;
-            i += element->jump_true;
-        }
-        if (element->isEnd()) {
-            i += element->jump_true;
-        }
-        if (element->isWhile()) {
-            if (element->expression->evaluate(result.get(), log)->boolean()) {
-                i += element->jump_true;
-            } else {
-                i += element->jump_false;
-            }
-        }
+        element->mutate(result.get(), log, result->elements);
+        i += element->jump(result.get(), log);
     }
     assert(num_names == result->elements.size());
     log << result->serialize() << std::endl;
