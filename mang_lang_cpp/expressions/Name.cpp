@@ -1,13 +1,13 @@
 #include "Name.h"
+#include <cassert>
 
 std::string Name::serialize() const {
     return value;
 }
 
-ExpressionPointer Name::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Name>(range(), parent, value);
-    log << result->serialize() << std::endl;
-    return  result;
+ExpressionPointer Name::evaluate(const Expression*, std::ostream&) const {
+    assert(false);
+    return nullptr;
 }
 
 NamePointer Name::parse(CodeRange code) {
