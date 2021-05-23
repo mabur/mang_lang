@@ -68,11 +68,6 @@ DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
     );
 }
 
-bool DictionaryElement::startsWith(CodeRange) {
-    assert(false);
-    return false;
-}
-
 bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
