@@ -33,4 +33,6 @@ struct DictionaryElement : Expression {
     bool isSymbolDefinition() const;
 };
 
+void setContext(std::vector<DictionaryElementPointer>& elements);
+
 size_t numNames(const std::vector<DictionaryElementPointer>& elements);

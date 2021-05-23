@@ -103,6 +103,53 @@ bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
 
+
+void setContext(std::vector<DictionaryElementPointer>& elements) {
+    // Forward pass to set backward jumps:
+    auto while_positions = std::vector<size_t>{};
+    for (size_t i = 0; i < elements.size(); ++i) {
+        auto& element = elements[i];
+        if (element->isWhile()) {
+            while_positions.push_back(i);
+        }
+        if (element->isEnd()) {
+            element->jump_true = while_positions.back() - i;
+            while_positions.pop_back();
+        }
+    }
+    if (!while_positions.empty()) {
+        throw ParseException("More while than end", elements.front()->begin());
+    }
+    // Backward pass to set forward jumps:
+    auto end_positions = std::vector<size_t>{};
+    for (size_t i = elements.size() - 1; i < elements.size(); --i) {
+        auto& element = elements[i];
+        if (element->isEnd()) {
+            end_positions.push_back(i);
+        }
+        if (element->isWhile()) {
+            element->jump_false = end_positions.back() - i + 1;
+            end_positions.pop_back();
+        }
+    }
+    if (!end_positions.empty()) {
+        throw ParseException("Fewer while than end", elements.front()->begin());
+    }
+    // Forward pass to set dictionary_index_:
+    auto names = std::vector<std::string>{};
+    for (size_t i = 0; i < elements.size(); ++i) {
+        auto& element = elements[i];
+        if (element->isSymbolDefinition()) {
+            const auto name = element->name->value;
+            const auto it = std::find(names.begin(), names.end(), name);
+            element->dictionary_index_ = std::distance(names.begin(), it);
+            if (it == names.end()) {
+                names.push_back(name);
+            }
+        }
+    }
+}
+
 bool compareDictionaryIndex(
     const DictionaryElementPointer& a, const DictionaryElementPointer& b) {
     return a->dictionary_index_ < b->dictionary_index_;
