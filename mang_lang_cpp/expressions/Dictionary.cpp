@@ -31,25 +31,14 @@ std::string Dictionary::serialize() const {
     return result;
 }
 
-bool compareDictionaryIndex(
-    const DictionaryElementPointer& a, const DictionaryElementPointer& b) {
-    return a->dictionary_index_ < b->dictionary_index_;
-}
-
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
+    const auto num_names = numNames(elements);
     auto result = std::make_shared<Dictionary>(range(), parent);
-
-    if (!elements.empty()) {
-        const auto max_element = std::max_element(
-            elements.begin(), elements.end(), compareDictionaryIndex
-        );
-        const auto num_names = 1 + max_element->get()->dictionary_index_;
-        result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
-        size_t i = 0;
-        while (i < elements.size()) {
-            elements[i]->mutate(result.get(), log, result->elements);
-            i += elements[i]->jump(result.get(), log);
-        }
+    result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
+    auto i = size_t{0};
+    while (i < elements.size()) {
+        elements[i]->mutate(result.get(), log, result->elements);
+        i += elements[i]->jump(result.get(), log);
     }
     log << result->serialize() << std::endl;
     return result;

@@ -102,3 +102,18 @@ size_t DictionaryElement::jump(const Expression* parent, std::ostream& log) cons
 bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
+
+bool compareDictionaryIndex(
+    const DictionaryElementPointer& a, const DictionaryElementPointer& b) {
+    return a->dictionary_index_ < b->dictionary_index_;
+}
+
+size_t numNames(const std::vector<DictionaryElementPointer>& elements) {
+    if (elements.empty()) {
+        return 0;
+    }
+    const auto max_element = std::max_element(
+        elements.begin(), elements.end(), compareDictionaryIndex
+    );
+    return 1 + max_element->get()->dictionary_index_;
+}
