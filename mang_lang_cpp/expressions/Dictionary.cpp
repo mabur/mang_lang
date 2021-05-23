@@ -38,23 +38,19 @@ bool compareDictionaryIndex(
 
 ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
     auto result = std::make_shared<Dictionary>(range(), parent);
-    const auto max_element = std::max_element(
-        elements.begin(), elements.end(), compareDictionaryIndex
-    );
-    if (max_element == elements.end()) {
-        log << result->serialize() << std::endl;
-        return result;
-    }
-    const auto num_names = 1 + max_element->get()->dictionary_index_;
 
-    result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
-
-    for (size_t i = 0; i < elements.size();) {
-        const auto& element = elements[i];
-        element->mutate(result.get(), log, result->elements);
-        i += element->jump(result.get(), log);
+    if (!elements.empty()) {
+        const auto max_element = std::max_element(
+            elements.begin(), elements.end(), compareDictionaryIndex
+        );
+        const auto num_names = 1 + max_element->get()->dictionary_index_;
+        result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
+        size_t i = 0;
+        while (i < elements.size()) {
+            elements[i]->mutate(result.get(), log, result->elements);
+            i += elements[i]->jump(result.get(), log);
+        }
     }
-    assert(num_names == result->elements.size());
     log << result->serialize() << std::endl;
     return result;
 }
