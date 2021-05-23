@@ -201,7 +201,7 @@ Level 4aii - Functions definition: Function, (Function of List), (Function of Di
 Level 4b   - Imperative:           Iterative dictionary
 
         PRIMITIVE DATA
-╔══ NUMBERS ══╔═ CHARCTERS ═╗
+╔══ NUMBERS ══╔═ CHARACTERS═╗
 ║ 1           ║ 'a'         ║
 ║ 1.0         ║ 'b'         ║
 ║ -3.34       ║ 'c'         ║
