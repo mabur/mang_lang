@@ -19,13 +19,6 @@ TODO:
 * Skill tree visualization for manglang syntax and taxonomy.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
-* Imperative Support
-  - Redefinition of symbols in dictionaries
-  - while in dictionaries
-  - only support mutation of symbols in current dictionary
-  - avoid global mutable state
-  - hides mutation, so that each unit is pure from the outside
-  - do not allow other side-effects
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
 * Parser combinators
@@ -36,6 +29,11 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
      - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
    - Algorithms that returns subset of input can check if empty? But is that enough?
    - Reduction algorithms are simpler.
+* Generic container interface
+  - empty function.
+  - arrays. Let empty(x) give an empty array with same capacity as x.
+  - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
+
 * Add tests for dictionary names that start like keywords.
 
 filter = in (predicate, list) out
