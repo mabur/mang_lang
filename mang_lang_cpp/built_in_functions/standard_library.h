@@ -46,11 +46,14 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse reversed_result
         },
 
-    count = in list out
-        if list then
-            inc count rest list
-        else
-            0,
+    count = in list out result@{
+            result = 0,
+            tail = list,
+            while tail,
+                result = inc result,
+                tail = rest tail,
+            end
+        },
 
     count_imperative = in list out result@{
             result = 0,
