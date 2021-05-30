@@ -111,10 +111,13 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse reversed_result
         },
 
-    concat = in (left, right) out
-        if left then
-            prepend(first left, concat(rest left, right))
-        else
-            right
+    concat = in (left, right) out result@{
+            result = right,
+            tail = reverse left,
+            while tail,
+                result = prepend(first tail, result),
+                tail = rest tail,
+            end
+        }
 }
 )";
