@@ -68,14 +68,18 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    count_if = in (predicate, list) out
-        if list then
-            if predicate first list then
-                inc count_if(predicate, rest list)
-            else
-                count_if(predicate, rest list)
-        else
-            0,
+    count_if = in (predicate, list) out result@{
+            result = 0,
+            tail = list,
+            while tail,
+                result =
+                    if predicate first tail then
+                        inc result
+                    else
+                        result,
+                tail = rest tail,
+            end
+        },
 
     reverse = in list out result@{
             result = empty list,
