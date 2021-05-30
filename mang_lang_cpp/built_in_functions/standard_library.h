@@ -55,15 +55,6 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    count_imperative = in list out result@{
-            result = 0,
-            tail = list,
-            while tail,
-                result = inc result,
-                tail = rest tail,
-            end
-        },
-
     count_item = in (item, list) out
         if list then
             if equal(first list, item) then

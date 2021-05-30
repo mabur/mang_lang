@@ -464,7 +464,6 @@ int main() {
     });
     test.evaluate("iteration", {
         {"count reverse_range 100", "100"},
-        {"count_imperative reverse_range_imperative 100", "100"},
         {"add reverse_range 100", "4950"},
         {"add reverse_range_imperative 100", "4950"},
     });
