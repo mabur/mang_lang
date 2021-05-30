@@ -5,6 +5,10 @@
 
 namespace list_functions {
 
+ExpressionPointer empty(const Expression& in) {
+    return in.empty();
+}
+
 ExpressionPointer first(const Expression& in) {
     return in.first();
 }

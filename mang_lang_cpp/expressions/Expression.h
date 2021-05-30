@@ -41,6 +41,7 @@ struct Expression {
     virtual bool boolean() const;
     virtual const InternalList& list() const;
 
+    virtual ExpressionPointer empty() const;
     virtual ExpressionPointer first() const;
     virtual ExpressionPointer rest() const;
     virtual ExpressionPointer reverse() const;

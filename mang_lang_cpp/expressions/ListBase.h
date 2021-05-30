@@ -22,6 +22,9 @@ struct ListBase : public Expression {
         }
         return !left && !right;
     }
+    ExpressionPointer empty() const final {
+        return std::make_shared<T>(range(), nullptr, nullptr);
+    }
     ExpressionPointer first() const final {
         return list()->first;
     }

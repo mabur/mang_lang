@@ -41,6 +41,7 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("none", logic::none));
     elements.push_back(makeDictionaryElement("equal", equality::equal));
     elements.push_back(makeDictionaryElement("unequal", equality::unequal));
+    elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("first", list_functions::first));
     elements.push_back(makeDictionaryElement("rest", list_functions::rest));
     elements.push_back(makeDictionaryElement("reverse", list_functions::reverse));
