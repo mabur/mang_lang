@@ -10,7 +10,7 @@ but with a minimal set of programming primitives added:
 
 Mang lang is a purely functional and interpreted language.
 It takes source code written in Mang lang and evaluates it:  
-```HiveQL
+```vhdl
 {
   rectangles = (
     {width = 3, height = 1},
@@ -26,7 +26,7 @@ It takes source code written in Mang lang and evaluates it:
 }
 ```
 When we evaluate the source code above we get the result below:  
-```HiveQL
+```vhdl
 {
   rectangles = (
     {width = 3, height = 1},
@@ -130,23 +130,23 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 
 ## 1.I Numbers
 Mang lang has a single number type that is used for both integers and floats:
-```HiveQL
+```vhdl
 12.34
 ```
 
 ## 1.II Characters
 A single ascii character is written as:
-```HiveQL
+```vhdl
 'a'
 ```
 
 ## 1.III Strings
 Strings are written as:
-```HiveQL
+```vhdl
 "Mang lang"
 ```
 They can be seen as lists of characters. Example of a program using functions on strings:
-```HiveQL
+```vhdl
 {
 a = "Mang lang",
 b = first a,
@@ -156,7 +156,7 @@ e = prepend('E', a)
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 a = "Mang lang",
 b = 'M',
@@ -168,11 +168,11 @@ d = "EMang lang",
 
 ## 1.IV Lists
 Lists of values are written as:
-```HiveQL
+```vhdl
 (3, 6, 4)
 ```
 Example of a program using functions on lists:
-```HiveQL
+```vhdl
 {
 a = (3, 6, 4),
 b = first a,
@@ -182,7 +182,7 @@ e = prepend(9, a)
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 a = (3, 6, 4),
 b = 3,
@@ -195,11 +195,11 @@ e = (9, 4, 6, 3),
 ## 1.V Dictionaries
 
 Dictionaries are used to associate names/symbols with expressions:
-```HiveQL
+```vhdl
 {a = 1, b = 'A', c = "abc"}
 ```
 Mang lang doesn't care about whitespace so the program above can also be written as:
-```HiveQL
+```vhdl
 {
 a = 1,
 b = 'A',
@@ -207,7 +207,7 @@ c = "abc"
 }
 ```
 Dictionaries can be nested:
-```HiveQL
+```vhdl
 {
 rectangle = {width = 4, height = 5},
 circle = {radius = 5}
@@ -220,28 +220,28 @@ This is a beautiful generalization and simplification.
 ## 2.I Name Lookup
 
 A name/symbol defined in a dictionary can be referenced after it is defined:
-```HiveQL
+```vhdl
 {
 a = 1,
 b = a
 }
 ```
 This program is evaluated to the dictionary:
-```HiveQL
+```vhdl
 {
 a = 1,
 b = 1
 }
 ```
 Dictionaries can be nested. You can refer to symbols in the current dictionary or in parent dictionaries in this way:
-```HiveQL
+```vhdl
 {
 a = 1,
 b = {c = 2, d = a}
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 a = 1,
 b = {c = 2, d = 1}
@@ -252,14 +252,14 @@ b = {c = 2, d = 1}
 
 In the previous section we looked at how to refer to names defined in the current dictionary, or in a parent dictionary.
 You can also refer to names in a child dictionary like this:
-```HiveQL
+```vhdl
 {
 a = {b=2, c=3},
 d = c@a
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 a = {b=2, c=3},
 d = 3
@@ -283,7 +283,7 @@ Mang lang has no explicit type for boolean values but interprets other values as
 
 Consider this program as an example:
 
-```HiveQL
+```vhdl
 {
 a = (0, 1),
 b = if a then
@@ -294,7 +294,7 @@ c = if b then "hello" else "world"
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 a = (0, 1),
 b = 0,
@@ -308,7 +308,7 @@ We have already seen some examples of calling functions in mang lang.
 A function is called like `function_name input_expression`.
 Functions in take a single value as input.
 However, this single value can be a list or a dictionary, that has multiple values inside them.
-```HiveQL
+```vhdl
 {
 list = (4, 2, 1),
 sum0 = add list,
@@ -319,7 +319,7 @@ list2 = prepend(3, list)
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 list = (4, 2, 1),
 sum0 = 7,
@@ -333,7 +333,7 @@ Mang Lang does not have any special operators for arithmetics, boolean, list ope
 Instead functions are used for all computations.
 Function calls can be nested like this:
 
-````HiveQL
+````vhdl
 mul(add(1, 2), sub(7, 2))
 ````
 
@@ -344,7 +344,7 @@ This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
 
 Functions are defined using they keywords `in` and `out` like this:
 
-```HiveQL
+```vhdl
 {
 square = in x out mul(x, x),
 result = square 3
@@ -355,7 +355,7 @@ A function definition is on the form `in x out expression`
 where `x` is the single input and expression is an expression using `x`.
 Functions are first class values and can be given a name by putting them inside a dictionary.
 Here are some examples of defining and calling functions:
-```HiveQL
+```vhdl
 {
 square = in x out mul(x, x),
 inc = in x out add(x, 1),
@@ -369,7 +369,7 @@ e = count "apple"
 }
 ```
 This program is evaluated to:
-```HiveQL
+```vhdl
 {
 square = in x out mul(x, x),
 inc = in x out add(x, 1),
@@ -385,7 +385,7 @@ e = 5
 The if-then-else operator is used to choose what value to return based on a condition.
 Recursive function calls and the if-then-else operator are used for loops:
 
-```HiveQL
+```vhdl
 {
 factorial = in x out 
     if x then
@@ -396,7 +396,7 @@ result = factorial 4
 }
 ```
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
-```HiveQL
+```vhdl
 {
 square = in x out mul(x, x)
 square_norm = in vec3 out result@{
@@ -414,7 +414,7 @@ result = square_norm vector
 Mang lang provides syntactic sugar for defining functions that take multiple input,
 in the form of a list.
 Here are some examples of equivalent ways of defining and calling functions: 
-```HiveQL
+```vhdl
 {
 area1 = in rectangle out mul(first rectangle, second rectangle),
 area2 = in (width, height) out mul(width, height),
@@ -434,7 +434,7 @@ by unpacking the elements of the input list.
 Mang lang provides syntactic sugar for defining functions that take multiple input,
 in the form of a dictionary with named entries.
 Here are some examples of equivalent ways of defining and calling functions: 
-```HiveQL
+```vhdl
 {
 area1 = in rectangle out mul(width@rectangle, height@rectangle),
 area2 = in {width, height} out mul(width, height),
