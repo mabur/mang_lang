@@ -32,14 +32,19 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse reversed_result
         },
 
-    filter = in (predicate, list) out
-        if list then
-            if predicate first list then
-                prepend(first list, filter(predicate, rest list))
-            else
-                filter(predicate, rest list)
-        else
-            list,
+    filter = in (predicate, list) out result@{
+            reversed_result = empty list,
+            tail = list,
+            while tail,
+                reversed_result =
+                    if predicate first tail then
+                        prepend(first tail, reversed_result)
+                    else
+                        reversed_result,
+                tail = rest tail,
+            end,
+            result = reverse reversed_result
+        },
 
     count = in list out
         if list then
