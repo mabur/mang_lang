@@ -82,13 +82,7 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    reverse_range = in x out
-        if x then
-            prepend(dec x, reverse_range dec x)
-        else
-            (),
-
-    reverse_range_imperative = in x out result@{
+    range = in x out result@{
             result = (),
             y = x,
             while y,
@@ -96,8 +90,6 @@ const std::string STANDARD_LIBRARY = R"(
                 y = dec y,
             end
         },
-
-    range = in x out reverse reverse_range x,
 
     enumerate_from = in (index, list) out
         if list then

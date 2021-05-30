@@ -450,12 +450,6 @@ int main() {
     test.evaluate("dec", {
         {"dec 0", "-1"},
     });
-    test.evaluate("reverse_range", {
-        {"reverse_range 0", "()"},
-        {"reverse_range 1", "(0)"},
-        {"reverse_range 2", "(1,0)"},
-        {"reverse_range 3", "(2,1,0)"},
-    });
     test.evaluate("range", {
         {"range 0", "()"},
         {"range 1", "(0)"},
@@ -463,9 +457,8 @@ int main() {
         {"range 3", "(0,1,2)"},
     });
     test.evaluate("iteration", {
-        {"count reverse_range 100", "100"},
-        {"add reverse_range 100", "4950"},
-        {"add reverse_range_imperative 100", "4950"},
+        {"count range 100", "100"},
+        {"add range 100", "4950"},
     });
     test.evaluate("count list", {
         {"count ()", "0"},
