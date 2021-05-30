@@ -99,21 +99,17 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    enumerate_from = in (index, list) out
-        if list then
-            result@{
-                item = {index = index, item = first list},
-                sub_result = enumerate_from(inc index, rest list),
-                result = prepend(item, sub_result)
-            }
-        else
-            (),
-
-    enumerate = in list out
-        if list then
-            enumerate_from(0, list)
-        else
-            (),
+    enumerate = in list out result@{
+            reversed_result = (),
+            tail = list,
+            index = 0,
+            while tail,
+                reversed_result = prepend({index=index, item=first tail}, reversed_result),
+                tail = rest tail,
+                index = inc index,
+            end,
+            result = reverse reversed_result
+        },
 
     concat = in (left, right) out
         if left then
