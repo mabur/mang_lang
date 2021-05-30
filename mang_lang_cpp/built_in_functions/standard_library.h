@@ -22,11 +22,15 @@ const std::string STANDARD_LIBRARY = R"(
         else
             first list,
 
-    map = in (f, list) out
-        if list then
-            prepend(f first list, map(f, rest list))
-        else
-            list,
+    map = in (f, list) out result@{
+            reversed_result = empty list,
+            tail = list,
+            while tail,
+                reversed_result = prepend(f first tail, reversed_result),
+                tail = rest tail,
+            end,
+            result = reverse reversed_result
+        },
 
     filter = in (predicate, list) out
         if list then
