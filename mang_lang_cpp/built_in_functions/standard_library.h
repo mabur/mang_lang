@@ -16,11 +16,15 @@ const std::string STANDARD_LIBRARY = R"(
 
     fifth = in x out first rest rest rest rest x,
 
-    get_index = in (index, list) out
-        if index then
-            get_index(dec index, rest list)
-        else
-            first list,
+    get_index = in (index, list) out result@{
+            i = 0,
+            tail = list,
+            while not equal(i, index),
+                tail = rest tail,
+                i = inc i,
+            end,
+            result = first tail
+        },
 
     map = in (f, list) out result@{
             reversed_result = empty list,
