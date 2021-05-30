@@ -55,14 +55,18 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    count_item = in (item, list) out
-        if list then
-            if equal(first list, item) then
-                inc count_item(item, rest list)
-            else
-                count_item(item, rest list)
-        else
-            0,
+    count_item = in (item, list) out result@{
+            result = 0,
+            tail = list,
+            while tail,
+                result =
+                    if equal(first tail, item) then
+                        inc result
+                    else
+                        result,
+                tail = rest tail,
+            end
+        },
 
     count_if = in (predicate, list) out
         if list then
