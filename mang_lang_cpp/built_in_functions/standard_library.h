@@ -26,6 +26,45 @@ const std::string STANDARD_LIBRARY = R"(
             result = first tail
         },
 
+    reverse = in list out result@{
+            result = empty list,
+            tail = list,
+            while tail,
+                result = prepend(first tail, result),
+                tail = rest tail,
+            end
+        },
+
+    concat = in (left, right) out result@{
+            result = right,
+            tail = reverse left,
+            while tail,
+                result = prepend(first tail, result),
+                tail = rest tail,
+            end
+        },
+
+    range = in x out result@{
+            result = (),
+            y = x,
+            while y,
+                result = prepend(dec y, result),
+                y = dec y,
+            end
+        },
+
+    enumerate = in list out result@{
+            reversed_result = (),
+            tail = list,
+            index = 0,
+            while tail,
+                reversed_result = prepend({index=index, item=first tail}, reversed_result),
+                tail = rest tail,
+                index = inc index,
+            end,
+            result = reverse reversed_result
+        },
+
     map = in (f, list) out result@{
             reversed_result = empty list,
             tail = list,
@@ -81,45 +120,6 @@ const std::string STANDARD_LIBRARY = R"(
                         inc result
                     else
                         result,
-                tail = rest tail,
-            end
-        },
-
-    reverse = in list out result@{
-            result = empty list,
-            tail = list,
-            while tail,
-                result = prepend(first tail, result),
-                tail = rest tail,
-            end
-        },
-
-    range = in x out result@{
-            result = (),
-            y = x,
-            while y,
-                result = prepend(dec y, result),
-                y = dec y,
-            end
-        },
-
-    enumerate = in list out result@{
-            reversed_result = (),
-            tail = list,
-            index = 0,
-            while tail,
-                reversed_result = prepend({index=index, item=first tail}, reversed_result),
-                tail = rest tail,
-                index = inc index,
-            end,
-            result = reverse reversed_result
-        },
-
-    concat = in (left, right) out result@{
-            result = right,
-            tail = reverse left,
-            while tail,
-                result = prepend(first tail, result),
                 tail = rest tail,
             end
         }
