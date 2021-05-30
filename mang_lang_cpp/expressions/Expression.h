@@ -44,6 +44,5 @@ struct Expression {
     virtual ExpressionPointer empty() const;
     virtual ExpressionPointer first() const;
     virtual ExpressionPointer rest() const;
-    virtual ExpressionPointer reverse() const;
     virtual ExpressionPointer prepend(ExpressionPointer item) const;
 };

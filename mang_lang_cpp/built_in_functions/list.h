@@ -17,10 +17,6 @@ ExpressionPointer rest(const Expression& in) {
     return in.rest();
 }
 
-ExpressionPointer reverse(const Expression& in) {
-    return in.reverse();
-}
-
 ExpressionPointer prepend(const Expression& in) {
     auto item = in.list()->first;
     auto list = in.list()->rest->first;

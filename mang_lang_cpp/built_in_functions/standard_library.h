@@ -73,6 +73,15 @@ const std::string STANDARD_LIBRARY = R"(
         else
             0,
 
+    reverse = in list out result@{
+            result = empty list,
+            tail = list,
+            while tail,
+                result = prepend(first tail, result),
+                tail = rest tail,
+            end
+        },
+
     reverse_range = in x out
         if x then
             prepend(dec x, reverse_range dec x)

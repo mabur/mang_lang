@@ -31,9 +31,6 @@ struct ListBase : public Expression {
     ExpressionPointer rest() const final {
         return std::make_shared<T>(range(), nullptr, list()->rest);
     }
-    ExpressionPointer reverse() const final {
-        return std::make_shared<T>(range(), nullptr, ::reverse(list()));
-    }
     ExpressionPointer prepend(ExpressionPointer item) const final {
         auto new_list = ::prepend(list(), item);
         return std::make_shared<T>(range(), nullptr, new_list);

@@ -44,7 +44,6 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("first", list_functions::first));
     elements.push_back(makeDictionaryElement("rest", list_functions::rest));
-    elements.push_back(makeDictionaryElement("reverse", list_functions::reverse));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
     setContext(elements);
     auto environment = std::make_shared<Dictionary>(CodeRange{}, nullptr);
