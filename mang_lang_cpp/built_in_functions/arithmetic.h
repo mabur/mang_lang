@@ -67,4 +67,14 @@ ExpressionPointer sqrt(const Expression& in) {
     return makeNumber(in, result);
 }
 
+ExpressionPointer less(const Expression& in) {
+    const auto result = in.list()->first->number() < in.list()->rest->first->number();
+    return makeNumber(in, result);
+}
+
+ExpressionPointer less_or_equal(const Expression& in) {
+    const auto result = in.list()->first->number() <= in.list()->rest->first->number();
+    return makeNumber(in, result);
+}
+
 }

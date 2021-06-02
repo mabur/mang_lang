@@ -231,6 +231,24 @@ int main() {
         {"div(2,1)", "2"},
         {"div(9,3)", "3"},
     });
+    test.evaluate("less", {
+        {"less(0,0)", "0"},
+        {"less(0,1)", "1"},
+        {"less(-1,0)", "1"},
+        {"less(1,0)", "0"},
+        {"less(0,-1)", "0"},
+        {"less(1,1)", "0"},
+        {"less(-1,-1)", "0"},
+    });
+    test.evaluate("less_or_equal", {
+        {"less_or_equal(0,0)", "1"},
+        {"less_or_equal(0,1)", "1"},
+        {"less_or_equal(-1,0)", "1"},
+        {"less_or_equal(1,0)", "0"},
+        {"less_or_equal(0,-1)", "0"},
+        {"less_or_equal(1,1)", "1"},
+        {"less_or_equal(-1,-1)", "1"},
+    });
     test.evaluate("abs", {
         {"abs -1", "1"},
         {"abs 0", "0"},
