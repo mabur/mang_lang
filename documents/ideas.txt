@@ -1,7 +1,7 @@
 TODO:
 * Functions:
   - Math: trigonometry
-  - Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
+  - Character: character_from_number, string_from_number, number_from_character, number_from_string, then to_upper, to_lower, is_alpha, is_digit.
   - child@ as function that can be sent to map
   - Implement equal for dictionary
   - rename functions first and rest to first! and rest! or get_first get_rest to not confuse noun/result from verb/function
