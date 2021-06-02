@@ -77,4 +77,16 @@ ExpressionPointer less_or_equal(const Expression& in) {
     return makeNumber(in, result);
 }
 
+ExpressionPointer round(const Expression& in) {
+    return makeNumber(in, std::round(in.number()));
+}
+
+ExpressionPointer round_up(const Expression& in) {
+    return makeNumber(in, std::ceil(in.number()));
+}
+
+ExpressionPointer round_down(const Expression& in) {
+    return makeNumber(in, std::floor(in.number()));
+}
+
 }

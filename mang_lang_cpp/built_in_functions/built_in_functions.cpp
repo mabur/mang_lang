@@ -34,6 +34,9 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("div", arithmetic::div));
     elements.push_back(makeDictionaryElement("less", arithmetic::less));
     elements.push_back(makeDictionaryElement("less_or_equal", arithmetic::less_or_equal));
+    elements.push_back(makeDictionaryElement("round", arithmetic::round));
+    elements.push_back(makeDictionaryElement("round_up", arithmetic::round_up));
+    elements.push_back(makeDictionaryElement("round_down", arithmetic::round_down));
     elements.push_back(makeDictionaryElement("abs", arithmetic::abs));
     elements.push_back(makeDictionaryElement("sqrt", arithmetic::sqrt));
     elements.push_back(makeDictionaryElement("boolean", logic::boolean));

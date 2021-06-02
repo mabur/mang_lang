@@ -249,6 +249,39 @@ int main() {
         {"less_or_equal(1,1)", "1"},
         {"less_or_equal(-1,-1)", "1"},
     });
+    test.evaluate("round", {
+        {"round -0.9", "-1"},
+        {"round -0.6", "-1"},
+        {"round -0.4", "-0"},
+        {"round -0.1", "-0"},
+        {"round 0", "0"},
+        {"round 0.1", "0"},
+        {"round 0.4", "0"},
+        {"round 0.6", "1"},
+        {"round 0.9", "1"},
+    });
+    test.evaluate("round_up", {
+        {"round_up -0.9", "-0"},
+        {"round_up -0.6", "-0"},
+        {"round_up -0.4", "-0"},
+        {"round_up -0.1", "-0"},
+        {"round_up 0", "0"},
+        {"round_up 0.1", "1"},
+        {"round_up 0.4", "1"},
+        {"round_up 0.6", "1"},
+        {"round_up 0.9", "1"},
+    });
+    test.evaluate("round_down", {
+        {"round_down -0.9", "-1"},
+        {"round_down -0.6", "-1"},
+        {"round_down -0.4", "-1"},
+        {"round_down -0.1", "-1"},
+        {"round_down 0", "0"},
+        {"round_down 0.1", "0"},
+        {"round_down 0.4", "0"},
+        {"round_down 0.6", "0"},
+        {"round_down 0.9", "0"},
+    });
     test.evaluate("abs", {
         {"abs -1", "1"},
         {"abs 0", "0"},
