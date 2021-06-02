@@ -1,6 +1,6 @@
 TODO:
 * Functions:
-  - Math: ceil/round_up, floor/round_down, round
+  - Math: trigonometry
   - Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
   - child@ as function that can be sent to map
   - Implement equal for dictionary
@@ -22,19 +22,15 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
 * Parser combinators
-* How to specify starting point for generic functions () and "", when not using recursion, and whne using recursion?
-   - Return input if empty otherwise start with first element instead of empty element? Would that work?
-   - have empty function?
-   - map outputs other type than input, so more difficult case, both with and without recursion.
-     - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
-   - Algorithms that returns subset of input can check if empty? But is that enough?
-   - Reduction algorithms are simpler.
+* How to specify starting point for generic functions () and ""?
+   - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
 * Generic container interface
-  - empty function.
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 
 * Add tests for dictionary names that start like keywords.
+* Add tests from python to c++
+* Remove python
 
 filter = in (predicate, list) out
   if list then
