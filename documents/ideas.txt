@@ -4,7 +4,7 @@ TODO:
   - Character: to_upper, to_lower, is_alpha, is_digit, to_number, to_ascii
   - child@ as function that can be sent to map
   - Implement equal for dictionary
-  - rename functions first and rest to first! and rest! to not confuse noun/result from verb/function
+  - rename functions first and rest to first! and rest! or get_first get_rest to not confuse noun/result from verb/function
   - Naming of count_*, range, reverse_range, enumerate.
 * Error handling:
   - Make "1 2" throw a parse error
@@ -32,45 +32,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Add tests from python to c++
 * Remove python
 
-filter = in (predicate, list) out
-  if list then
-    result@{
-      result = empty(list),
-      tail = list,
-      while tail,
-        head = first list,
-        result = if predicate head then prepend(head, result) else result,
-      end,
-      result = reverse result
-    }
-  else
-    list,
-map = in (f, list) out result@{
-  result = empty(list),
-  tail = list,
-  while tail,
-    result = prepend(f first list, result),
-  end,
-  result = reverse result
-},
-
-
-LEVELS
-1. Data
-   - numbers
-   - characters
-   - strings
-   - lists
-   - dictionaries
-2. References
-   - reference (substitution)
-   - child reference (substitution)
-3. Computation
-   - if (substitution)
-   - function definition
-   - function call (substitution)
-4. Imperative
-   - while in dictionaries and updating of symbols (substitution)
 
 SIMILAR LANGUAGES
 * Lisp family
@@ -91,7 +52,6 @@ Languages supported by Github:
 https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
 Candidates:
 HiveQL
-
 
 
 * Implement lists as dictionaries {first, rest} or {}?
