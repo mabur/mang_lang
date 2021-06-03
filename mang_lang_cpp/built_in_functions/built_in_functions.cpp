@@ -42,7 +42,7 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("boolean", logic::boolean));
     elements.push_back(makeDictionaryElement("not", logic::logic_not));
     elements.push_back(makeDictionaryElement("and", logic::all));
-    elements.push_back(makeDictionaryElement("any", logic::any));
+    elements.push_back(makeDictionaryElement("or", logic::any));
     elements.push_back(makeDictionaryElement("none", logic::none));
     elements.push_back(makeDictionaryElement("equal", equality::equal));
     elements.push_back(makeDictionaryElement("unequal", equality::unequal));
