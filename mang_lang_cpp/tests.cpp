@@ -207,6 +207,14 @@ int main() {
         {"ABBA@{ABBA = 1}", "1"},
         {"ABBA@{ABBA = 1, PADDA = 2}", "1"},
     });
+    test.evaluate("child_symbol_keyword_confusion", {
+        {"input@{input=5}", "5"},
+        {"output@{output=5}", "5"},
+        {"iffy@{iffy=5}", "5"},
+        {"thenner@{thenner=5}", "5"},
+        {"elsewhere@{elsewhere=5}", "5"},
+        {"whiler@{whiler=5}", "5"},
+        {"endar@{endar=5}", "5"},
     });
     test.reformat("lookup_function", {
         {"add ()", "add ()"},

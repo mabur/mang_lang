@@ -37,5 +37,5 @@ ExpressionPointer Function::parse(CodeRange code) {
 }
 
 bool Function::startsWith(CodeRange code) {
-    return isKeyword(code, "in ");
+    return isKeyword(code, "in");
 }

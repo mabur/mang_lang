@@ -1,6 +1,7 @@
 #include "parsing.h"
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 ParseException::ParseException(const std::string& description, const CodeCharacter* it)
     : std::runtime_error(
@@ -61,7 +62,11 @@ bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
 
 bool isKeyword(CodeRange code, const std::string& keyword) {
     const auto w = makeCodeCharacters(keyword);
-    if (code.size() < w.size()) {
+    if (code.size() <= w.size()) {
+        return false;
+    }
+    const auto after = code.begin() + w.size();
+    if (isLetter(*after)) {
         return false;
     }
     return std::equal(w.begin(), w.end(), code.begin(), haveSameCharacters);

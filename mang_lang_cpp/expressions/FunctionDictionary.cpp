@@ -60,7 +60,7 @@ ExpressionPointer FunctionDictionary::parse(CodeRange code) {
 }
 
 bool FunctionDictionary::startsWith(CodeRange code) {
-    if (!isKeyword(code, "in ")) {
+    if (!isKeyword(code, "in")) {
         return false;
     }
     code = parseKeyword(code, "in");

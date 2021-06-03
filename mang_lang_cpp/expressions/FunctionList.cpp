@@ -70,7 +70,7 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
 }
 
 bool FunctionList::startsWith(CodeRange code) {
-    if (!isKeyword(code, "in ")) {
+    if (!isKeyword(code, "in")) {
         return false;
     }
     code = parseKeyword(code, "in");
