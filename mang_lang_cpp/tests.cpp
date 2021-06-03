@@ -461,7 +461,7 @@ int main() {
         {"x@{a={b=1,f=in x out b},b=2,f=f@a,x=f()}", "1"},
         {"x@{f=in a out 1, g = in b out f b, x = g 2}", "1"},
         {"y@{apply=in (f,x) out f x, y = apply(inc,2)}", "3"},
-        {"y@{apply=in (f,x) out f x, y = apply(in z out 3,2)}", "3"},
+        {"y@{apply=in (f,x) out f x, id=in x out apply(in x out x,x), y = id 1}", "1"},
     });
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add(x,f dec x) else 0,y=f 3}", "6"},
