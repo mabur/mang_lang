@@ -195,6 +195,18 @@ int main() {
     test.evaluate("child_symbol", {
         {"a@{a=1}", "1"},
         {"A_0@{A_0=1}", "1"},
+        {"y@{x=5,y=x}", "5"},
+        {"c@{a=1,b=a,c=b}", "1"},
+        {"y@x@{x = {y = 1}}", "1"},
+        {"b@x@{x={a=1,b=2}}", "2"},
+        {"z@y@x@{x = {y = {z = 1}}}", "1"},
+        {"w@z@y@x@{x = {y = {z = {w=1}}}}", "1"},
+        {"b@{a={f=in x out 1}, g=f@a, b=g 3}", "1"},
+        {"b@{a={f = in x out inc x}, g=f@a, b = g 3}", "4"},
+        {"c@{a={b={f=in x out inc x}}, g=f@b@a, c = g 3}", "4"},
+        {"ABBA@{ABBA = 1}", "1"},
+        {"ABBA@{ABBA = 1, PADDA = 2}", "1"},
+    });
     });
     test.reformat("lookup_function", {
         {"add ()", "add ()"},
