@@ -579,6 +579,7 @@ int main() {
         {"map(inc, ())", "()"},
         {"map(inc, (0))", "(1)"},
         {"map(inc, (0,1))", "(1,2)"},
+        {"map(in x out 2, (0,0))", "(2,2)"},
     });
     test.evaluate("filter list", {
         {"filter(in x out 1, ())", "()"},
