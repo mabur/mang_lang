@@ -462,6 +462,8 @@ int main() {
         {"x@{f=in a out 1, g = in b out f b, x = g 2}", "1"},
         {"y@{apply=in (f,x) out f x, y = apply(inc,2)}", "3"},
         {"y@{apply=in (f,x) out f x, id=in x out apply(in x out x,x), y = id 1}", "1"},
+        {"y@{f=in list out map(in y out 2, list), y=f(0,0)}", "(2,2)"},
+        //{"y@{f=in (x,list) out map(in y out x, list), y=f(2,(0,0))}", "(2,2)"},
     });
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add(x,f dec x) else 0,y=f 3}", "6"},
@@ -599,6 +601,12 @@ int main() {
         {R"(filter(in x out equal(x,'a'), "ab"))", R"("a")"},
         {R"(filter(in x out equal(x,'a'), "ba"))", R"("a")"},
         {R"(filter(in x out equal(x,'a'), "aba"))", R"("aa")"},
+    });
+    test.evaluate("replace list", {
+        {"replace(1,2,())", "()"},
+        //{"replace(1,2,(1))", "(2)"},
+        //{"replace(1,2,(2))", "(1)"},
+        //{"replace(1,2,(0,1,0,1,1))", "(0,2,0,2,2)"},
     });
     test.evaluate("enumerate list", {
         {"enumerate()", "()"},

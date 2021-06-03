@@ -89,6 +89,9 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse reversed_result
         },
 
+    replace = in (old_item, new_item, list) out
+        map(in item out if equal(item, old_item) then new_item else item, list),
+
     count = in list out result@{
             result = 0,
             tail = list,
