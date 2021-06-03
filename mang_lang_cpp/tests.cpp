@@ -446,7 +446,13 @@ int main() {
         {"a@{f=in x out x,a=f 0}", "0"},
         {"a@{f=in x out x,a=f ()}", "()"},
         {"a@{f=in x out 1,a=f 0}", "1"},
-        {"a@{inc=in x out add(x,1),a=inc 0}", "1"},
+        {"z@{f=in x out y@{y = 3}, z=f 2}", "3"},
+        {"z@{f=in x out result@{y=3,result=add(x, y)}, z=f 2}", "5"},
+        {"z@{y=2,f=in x out result@{y=3,result=add(x,y)}, z=f 2}", "5"},
+        {"x@{a={b=1,f=in x out b},b=2,f=f@a,x=f()}", "1"},
+    });
+    test.evaluate("recursive function", {
+        {"y@{f=in x out if x then add(x,f dec x) else 0,y=f 3}", "6"},
     });
     test.evaluate("lookup function dictionary", {
         {"a@{f=in {x} out x,a=f{x=0}}", "0"},
