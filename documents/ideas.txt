@@ -1,7 +1,7 @@
 TODO:
 * Functions:
   - Math: trigonometry
-  - Character: character_from_number, string_from_number, number_from_character, number_from_string, then to_upper, to_lower, is_alpha, is_digit.
+  - Character: character_from_number, number_from_character, string_from_number, number_from_string, then to_upper, to_lower, is_alpha, is_digit.
   - child@ as function that can be sent to map
   - Implement equal for dictionary
   - rename functions first and rest to first! and rest! or get_first get_rest to not confuse noun/result from verb/function
@@ -10,7 +10,11 @@ TODO:
   - Make "1 2" throw a parse error
   - c++ add systematic error messages when parsing fails
     - Print all sub-expressions that it parsed
-* Command line interface for reading source from file and piping it to interpretor
+  - Better error messages
+  - Tests for syntax error and run-time error.
+* Tools:
+  - Command line interface for reading source from file and piping it to interpretor
+  - Reformat to html with syntax high-lighting.
 * Homepage
   - Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
   - Improve home-page.
@@ -27,11 +31,26 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Generic container interface
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
+* Importing source files.
 
-* Add tests for dictionary names that start like keywords.
-* Add tests from python to c++
 * Remove python
 
+* Fix bug about captured variables that happens e.g. when calling map inside another function like in replace:
+  y@{f=in (x,list) out map(in y out x, list), y=f(2,(0,0))}
+
+  replace = in (old_item, new_item, list) out
+        map(in item out if equal(item, old_item) then new_item else item, list),
+
+
+{
+  list0 = ...,
+  list1 = empty list0,
+  tail = list0,
+  while tail,
+    list1 = prepend(first tail, list1),
+    tail = rest tail,
+  end
+}
 
 SIMILAR LANGUAGES
 * Lisp family
