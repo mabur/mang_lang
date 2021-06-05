@@ -26,6 +26,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
 * Parser combinators
+* Is manglang suitable for numerical computations on arrays?
 * How to specify starting point for generic functions () and ""?
    - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
 * Generic container interface
@@ -35,11 +36,32 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 
 * Remove python
 
+* Pointers
+  - Ownership model of raw and smart pointers in different passes.
+  - When are nullpointers allowed?
+  - Separate storage of parent and rest of node, for simple reseting of parent for lookups, without sacrificinf immutability
+  - How to represent the environment/parent tree during evaluation?
+  - Parent is needed for lookup and apply.
+    - Can we store the chain of parents locally when calling evaluate,
+      instead of writing it to the tree?
+    - When evaluating a functions we need to store its parent,
+      so that we can later refer to the function from another place,
+      and bind it to another name.
+
 * Fix bug about captured variables that happens e.g. when calling map inside another function like in replace:
   y@{f=in (x,list) out map(in y out x, list), y=f(2,(0,0))}
 
   replace = in (old_item, new_item, list) out
         map(in item out if equal(item, old_item) then new_item else item, list),
+
+EVALUATION EXAMPLES
+{a = 0, b = a} -> {a = 0, b = 0}
+a@{a = 0} -> 0
+{f = in x out 0, g = f}          -> {f = in x out 0, g = ?} // Let it be undefined?
+{f = in x out 0, a = f 1}        -> {f = in x out 0, a = 0}
+{f = in x out 0, g = f, a = g 1} -> {f = in x out 0, g = ?, a = 0}
+{a = {a = 0, f = in x out a}, g = f@a, b = g 1} -> {a = {a = 0, f = in x out a}, g = ?, b = 1}
+a@{apply=in(f,x)out f x, g=in x out 0,a=apply(g,1)}
 
 
 {
