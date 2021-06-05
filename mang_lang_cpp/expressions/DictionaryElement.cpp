@@ -116,7 +116,7 @@ void NamedElement::mutate(const Expression* parent, std::ostream& log,
     std::vector<DictionaryElementPointer>& elements) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(
         range(),
-        nullptr,
+        parent,
         name,
         expression->evaluate(parent, log),
         dictionary_index_
