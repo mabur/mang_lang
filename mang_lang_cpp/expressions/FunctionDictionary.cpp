@@ -28,9 +28,7 @@ ExpressionPointer FunctionDictionary::evaluate(const Expression* parent, std::os
 }
 
 ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostream& log) const {
-    auto middle = input->evaluate(parent(), log);
-    auto output = body->evaluate(middle.get(), log);
-    return output;
+    return body->evaluate(input.get(), log);
 }
 
 ExpressionPointer FunctionDictionary::parse(CodeRange code) {

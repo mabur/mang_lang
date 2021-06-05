@@ -29,17 +29,16 @@ ExpressionPointer FunctionList::evaluate(const Expression* parent, std::ostream&
 }
 
 ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log) const {
-    auto dictionary = std::make_shared<Dictionary>(range(), nullptr);
+    auto middle = Dictionary(range(), parent());
     auto i = 0;
     for (auto list = input->list(); list; list = list->rest, ++i) {
-        dictionary->elements.push_back(
+        middle.elements.push_back(
             std::make_shared<NamedElement>(
-                range(), nullptr, input_names[i], list->first, i
+                range(), &middle, input_names[i], list->first, i
             )
         );
     }
-    auto middle = dictionary->evaluate(parent(), log);
-    auto output = body->evaluate(middle.get(), log);
+    auto output = body->evaluate(&middle, log);
     return output;
 }
 
