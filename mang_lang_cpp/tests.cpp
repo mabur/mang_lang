@@ -463,6 +463,7 @@ int main() {
         {"y@{apply=in (f,x) out f x, y = apply(inc,2)}", "3"},
         {"y@{apply=in (f,x) out f x, id=in x out apply(in x out x,x), y = id 1}", "1"},
         {"y@{f=in list out map(in y out 2, list), y=f(0,0)}", "(2,2)"},
+        {"b@{a={a=0,f=in x out a},g=f@a,b=g 1}", "0"},
         //{"y@{f=in (x,list) out map(in y out x, list), y=f(2,(0,0))}", "(2,2)"},
     });
     test.evaluate("recursive function", {
