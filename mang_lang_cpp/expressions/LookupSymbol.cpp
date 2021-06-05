@@ -8,7 +8,7 @@ std::string LookupSymbol::serialize() const {
 }
 
 ExpressionPointer LookupSymbol::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = ExpressionPointer{parent->lookup(name->value)};
+    auto result = parent->lookup(name->value);
     log << result->serialize() << std::endl;
     return result;
 }

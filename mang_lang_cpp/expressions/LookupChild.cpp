@@ -5,8 +5,7 @@ std::string LookupChild::serialize() const {
 }
 
 ExpressionPointer LookupChild::evaluate(const Expression* parent, std::ostream& log) const {
-    const auto evaluated_child = child->evaluate(parent, log);
-    auto result = ExpressionPointer{evaluated_child->lookup(name->value)};
+    auto result = child->evaluate(parent, log)->lookup(name->value);
     log << result->serialize() << std::endl;
     return result;
 }
