@@ -463,6 +463,10 @@ int main() {
         {"y@{apply=in (f,x) out f x, y = apply(inc,2)}", "3"},
         {"y@{apply=in (f,x) out f x, id=in x out apply(in x out x,x), y = id 1}", "1"},
         {"y@{f=in list out map(in y out 2, list), y=f(0,0)}", "(2,2)"},
+        {"a@{call=in f out f(),g=in x out 0,a=call g}", "0"},
+        {"a@{call=in f out f(),b={a=0,g=in x out a},g=g@b,a=call g}", "0"},
+        //{"y@{a=1,g=in y out a,f=in list out map(g, list), y=f(0,0)}", "(2,2)"},
+        //{"y@{a=1,f=in list out map(in y out a, list), y=f(0,0)}", "(2,2)"},
         {"b@{a={a=0,f=in x out a},g=f@a,b=g 1}", "0"},
         //{"y@{f=in (x,list) out map(in y out x, list), y=f(2,(0,0))}", "(2,2)"},
     });
