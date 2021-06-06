@@ -33,7 +33,7 @@ When we evaluate the source code above we get the result below:
     {width = 6 height = 2}
     {width = 3 height = 6}
     {width = 8 height = 4}
-  ),
+  )
   get_area = in {width height} out mul!(width height)
   areas = (3 12 18 32)
   total_area = 65
