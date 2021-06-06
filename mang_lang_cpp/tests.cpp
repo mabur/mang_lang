@@ -149,15 +149,15 @@ int main() {
         {"((()))", "((()))"},
     });
     test.reformat("dictionary iteration", {
-        {"{while 1, end}", "{while 1 end}"},
-        {"{i=2,while i,i=dec!i,end}", "{i=2 while i i=dec!i end}"},
-        {"{i=10,while i,i=dec!i,end,j=1}", "{i=10 while i i=dec!i end j=1}"},
+        {"{while 1 end}", "{while 1 end}"},
+        {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
+        {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
     });
     test.evaluate("dictionary iterations", {
-        {"{i=2,while i,i=dec!i,end}", "{i=0}"},
-        {"{i=2,while i,i=dec!i,end,j=1}", "{i=0 j=1}"},
-        {"{i=2,sum=0,while i,sum=add!(sum i),i=dec!i,end}", "{i=0 sum=3}"},
-        {"{i=1000,sum=0,while i,sum=add!(sum i),i=dec!i,end}", "{i=0 sum=500500}"},
+        {"{i=2 while i i=dec!i end}", "{i=0}"},
+        {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
+        {"{i=2 sum=0 while i sum=add!(sum i) i=dec!i end}", "{i=0 sum=3}"},
+        {"{i=1000 sum=0 while i sum=add!(sum i) i=dec!i end}", "{i=0 sum=500500}"},
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},
@@ -166,8 +166,8 @@ int main() {
         {"{a0=1}", "{a0=1}"},
         {"{a_0=1}", "{a_0=1}"},
         {"{ a = 1 }", "{a=1}"},
-        {"{a=1,b=2}", "{a=1 b=2}"},
-        {"{ a = 1 , b = 2 }", "{a=1 b=2}"},
+        {"{a=1 b=2}", "{a=1 b=2}"},
+        {"{ a = 1  b = 2 }", "{a=1 b=2}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
@@ -182,11 +182,11 @@ int main() {
     });
     test.reformat("symbol", {
         {"a", "a"},
-        {"{a=1, b=a}", "{a=1 b=a}"},
+        {"{a=1 b=a}", "{a=1 b=a}"},
     });
     test.evaluate("symbol", {
-        {"{a=1, b=a}", "{a=1 b=1}"},
-        {"{a=1, b_0=a}", "{a=1 b_0=1}"},
+        {"{a=1 b=a}", "{a=1 b=1}"},
+        {"{a=1 b_0=a}", "{a=1 b_0=1}"},
     });
     test.reformat("child_symbol", {
         {"a@{a=1}", "a@{a=1}"},
@@ -196,17 +196,17 @@ int main() {
         {"a@{a=1}", "1"},
         {"A_0@{A_0=1}", "1"},
         {"_0@{_0=1}", "1"},
-        {"y@{x=5,y=x}", "5"},
-        {"c@{a=1,b=a,c=b}", "1"},
+        {"y@{x=5 y=x}", "5"},
+        {"c@{a=1 b=a c=b}", "1"},
         {"y@x@{x = {y = 1}}", "1"},
-        {"b@x@{x={a=1,b=2}}", "2"},
+        {"b@x@{x={a=1 b=2}}", "2"},
         {"z@y@x@{x = {y = {z = 1}}}", "1"},
         {"w@z@y@x@{x = {y = {z = {w=1}}}}", "1"},
-        {"b@{a={f=in x out 1}, g=f@a, b=g!3}", "1"},
-        {"b@{a={f = in x out inc!x}, g=f@a, b = g!3}", "4"},
-        {"c@{a={b={f=in x out inc!x}}, g=f@b@a, c = g!3}", "4"},
+        {"b@{a={f=in x out 1} g=f@a b=g!3}", "1"},
+        {"b@{a={f = in x out inc!x} g=f@a b = g!3}", "4"},
+        {"c@{a={b={f=in x out inc!x}} g=f@b@a c = g!3}", "4"},
         {"ABBA@{ABBA = 1}", "1"},
-        {"ABBA@{ABBA = 1, PADDA = 2}", "1"},
+        {"ABBA@{ABBA = 1 PADDA = 2}", "1"},
     });
     test.evaluate("child_symbol_keyword_confusion", {
         {"input@{input=5}", "5"},
@@ -326,7 +326,7 @@ int main() {
         {"boolean!(0 1)", "1"},
         {"boolean!{}", "0"},
         {"boolean!{x=0}", "1"},
-        {"boolean!{x=0,y=1}", "1"},
+        {"boolean!{x=0 y=1}", "1"},
         {R"(boolean!"")", "0"},
         {R"(boolean!"0")", "1"},
         {R"(boolean!"1")", "1"},
@@ -346,7 +346,7 @@ int main() {
         {"not!(0 1)", "0"},
         {"not!{}", "1"},
         {"not!{x=0}", "0"},
-        {"not!{x=0,y=1}", "0"},
+        {"not!{x=0 y=1}", "0"},
         {R"(not!"")", "1"},
         {R"(not!"0")", "0"},
         {R"(not!"1")", "0"},
@@ -452,36 +452,36 @@ int main() {
         {"in  (  x    y  )  out  x", "in (x y) out x"},
     });
     test.evaluate("lookup function", {
-        {"a@{f=in x out x,a=f!0}", "0"},
-        {"a@{f=in x out x,a=f!()}", "()"},
-        {"a@{f=in x out 1,a=f!0}", "1"},
-        {"z@{f=in x out y@{y = 3}, z=f!2}", "3"},
-        {"z@{f=in x out result@{y=3,result=add!(x y)}, z=f!2}", "5"},
-        {"z@{y=2,f=in x out result@{y=3,result=add!(x y)}, z=f!2}", "5"},
-        {"x@{a={b=1,f=in x out b},b=2,f=f@a,x=f!()}", "1"},
-        {"x@{f=in a out 1, g = in b out f!b, x = g!2}", "1"},
-        {"y@{apply=in (f x) out f!x, y = apply!(inc 2)}", "3"},
-        {"y@{apply=in (f x) out f!x, id=in x out apply!(in x out x x), y = id!1}", "1"},
-        {"y@{f=in list out map!(in y out 2 list), y=f!(0 0)}", "(2 2)"},
-        {"a@{call=in f out f!(),g=in x out 0,a=call!g}", "0"},
-        {"a@{call=in f out f!(),b={a=0,g=in x out a},g=g@b,a=call!g}", "0"},
-        {"a@{call=in(f)out f!(()),b={a=0,g=in(x)out a},g=g@b,a=call!(g)}", "0"},
+        {"a@{f=in x out x a=f!0}", "0"},
+        {"a@{f=in x out x a=f!()}", "()"},
+        {"a@{f=in x out 1 a=f!0}", "1"},
+        {"z@{f=in x out y@{y = 3} z=f!2}", "3"},
+        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "5"},
+        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "5"},
+        {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f!()}", "1"},
+        {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
+        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
+        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "1"},
+        {"y@{f=in list out map!(in y out 2 list) y=f!(0 0)}", "(2 2)"},
+        {"a@{call=in f out f!() g=in x out 0 a=call!g}", "0"},
+        {"a@{call=in f out f!() b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
+        {"a@{call=in(f)out f!(()) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "0"},
         //{"y@{a=1,g=in y out a,f=in list out map(g, list), y=f(0,0)}", "(2,2)"},
         //{"y@{a=1,f=in list out map(in y out a, list), y=f(0,0)}", "(2,2)"},
-        {"b@{a={a=0,f=in x out a},g=f@a,b=g!1}", "0"},
+        {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
         //{"y@{f=in (x,list) out map(in y out x, list), y=f(2,(0,0))}", "(2,2)"},
     });
     test.evaluate("recursive function", {
-        {"y@{f=in x out if x then add!(x f!dec!x) else 0,y=f!3}", "6"},
+        {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     });
     test.evaluate("lookup function dictionary", {
-        {"a@{f=in {x} out x,a=f!{x=0}}", "0"},
-        {"a@{f=in {x,y} out add!(x y),a=f!{x=2,y=3}}", "5"},
-        {"a@{f=in {x,y,z} out add!(x y z),a=f!{x=2,y=3,z=4}}", "9"},
+        {"a@{f=in {x} out x a=f!{x=0}}", "0"},
+        {"a@{f=in {x,y} out add!(x y) a=f!{x=2 y=3}}", "5"},
+        {"a@{f=in {x,y,z} out add!(x y z) a=f!{x=2 y=3 z=4}}", "9"},
     });
     test.evaluate("lookup function list", {
-        {"a@{f=in (x) out x,a=f!(0)}", "0"},
-        {"a@{f=in (x y) out add!(x y),a=f!(2 3)}", "5"},
+        {"a@{f=in (x) out x a=f!(0)}", "0"},
+        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
     test.evaluate("empty list", {
         {"empty!()", "()"},
@@ -592,7 +592,7 @@ int main() {
         {"map!(inc (0))", "(1)"},
         {"map!(inc (0 1))", "(1 2)"},
         {"map!(in x out 2 (0 0))", "(2 2)"},
-        {"a@{b=2, f=in x out b, a=map!(f (0 0))}", "(2 2)"},
+        {"a@{b=2 f=in x out b a=map!(f (0 0))}", "(2 2)"},
     });
     test.evaluate("filter list", {
         {"filter!(in x out 1 ())", "()"},
