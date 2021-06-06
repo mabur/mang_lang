@@ -63,15 +63,99 @@ a@{a = 0} -> 0
 {a = {a = 0, f = in x out a}, g = f@a, b = g 1} -> {a = {a = 0, f = in x out a}, g = ?, b = 1}
 a@{apply=in(f,x)out f x, g=in x out 0,a=apply(g,1)}
 
+Identity for empty, prepend, first, rest:
+{
+    list0 = ...,
+    list1 = empty list0,
+    tail = list0,
+    while tail,
+        list1 = prepend(first tail, list1),
+        tail = rest tail,
+    end
+}
+
+SYNTAX FOR COLLECTIONS AND FUNCTION CALLS
+
+BEFORE
+
+concat = in (left, right) out result@{
+    result = right,
+    tail = reverse left,
+    while tail,
+        result = prepend(first tail, result),
+        tail = rest tail,
+    end
+},
+
+AFTER
+
+concat = in (left right) out result@{
+    result = right
+    tail = reverse!left
+    while tail
+        result = prepend!(first!tail result)
+        tail = rest!tail
+    end
+}
+
+BEFORE
 
 {
-  list0 = ...,
-  list1 = empty list0,
-  tail = list0,
-  while tail,
-    list1 = prepend(first tail, list1),
-    tail = rest tail,
-  end
+    rectangles = (
+        {width = 3, height = 1},
+        {width = 6, height = 2},
+        {width = 3, height = 6},
+        {width = 8, height = 4}
+    ),
+    get_area = in {width, height} out mul(width, height),
+    areas = map(get_area, rectangles),
+    total_area = add areas,
+    num_rectangles = count rectangles,
+    average_area = div(total_area, num_rectangles)
+}
+
+AFTER
+
+{
+    rectangles = (
+        {width = 3 height = 1}
+        {width = 6 height = 2}
+        {width = 3 height = 6}
+        {width = 8 height = 4}
+    )
+    get_area = in {width height} out mul!(width height)
+    areas = map!(get_area rectangles)
+    total_area = add!areas
+    num_rectangles = count!rectangles
+    average_area = div!(total_area num_rectangles)
+}
+
+BEFORE
+
+count_if = in (predicate, list) out result@{
+    result = 0,
+    tail = list,
+    while tail,
+        result =
+            if predicate first tail then
+                inc result
+            else
+                result,
+        tail = rest tail,
+    end
+}
+
+count_if = in (predicate list) out result@{
+    result = 0
+    tail = list
+    while tail
+        result =
+            if predicate!first!tail then
+                inc!result
+            else
+                result
+        tail = rest!tail
+    end
 }
 
 SIMILAR LANGUAGES
