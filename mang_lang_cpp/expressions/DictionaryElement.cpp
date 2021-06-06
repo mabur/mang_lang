@@ -35,15 +35,15 @@ EndElement::EndElement(CodeRange range, const Expression* parent)
 {}
 
 std::string NamedElement::serialize() const {
-    return name->serialize() + '=' + expression->serialize() + ',';
+    return name->serialize() + '=' + expression->serialize() + ' ';
 }
 
 std::string WhileElement::serialize() const {
-    return "while " + expression->serialize() + ',';
+    return "while " + expression->serialize() + ' ';
 }
 
 std::string EndElement::serialize() const {
-    return "end,";
+    return "end ";
 }
 
 ExpressionPointer NamedElement::lookup(const std::string& s) const {

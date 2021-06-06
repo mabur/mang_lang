@@ -149,15 +149,15 @@ int main() {
         {"((()))", "((()))"},
     });
     test.reformat("dictionary iteration", {
-        {"{while 1, end}", "{while 1,end}"},
-        {"{i=2,while i,i=dec!i,end}", "{i=2,while i,i=dec!i,end}"},
-        {"{i=10,while i,i=dec!i,end,j=1}", "{i=10,while i,i=dec!i,end,j=1}"},
+        {"{while 1, end}", "{while 1 end}"},
+        {"{i=2,while i,i=dec!i,end}", "{i=2 while i i=dec!i end}"},
+        {"{i=10,while i,i=dec!i,end,j=1}", "{i=10 while i i=dec!i end j=1}"},
     });
     test.evaluate("dictionary iterations", {
         {"{i=2,while i,i=dec!i,end}", "{i=0}"},
-        {"{i=2,while i,i=dec!i,end,j=1}", "{i=0,j=1}"},
-        {"{i=2,sum=0,while i,sum=add!(sum i),i=dec!i,end}", "{i=0,sum=3}"},
-        {"{i=1000,sum=0,while i,sum=add!(sum i),i=dec!i,end}", "{i=0,sum=500500}"},
+        {"{i=2,while i,i=dec!i,end,j=1}", "{i=0 j=1}"},
+        {"{i=2,sum=0,while i,sum=add!(sum i),i=dec!i,end}", "{i=0 sum=3}"},
+        {"{i=1000,sum=0,while i,sum=add!(sum i),i=dec!i,end}", "{i=0 sum=500500}"},
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},
@@ -166,8 +166,8 @@ int main() {
         {"{a0=1}", "{a0=1}"},
         {"{a_0=1}", "{a_0=1}"},
         {"{ a = 1 }", "{a=1}"},
-        {"{a=1,b=2}", "{a=1,b=2}"},
-        {"{ a = 1 , b = 2 }", "{a=1,b=2}"},
+        {"{a=1,b=2}", "{a=1 b=2}"},
+        {"{ a = 1 , b = 2 }", "{a=1 b=2}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
@@ -182,11 +182,11 @@ int main() {
     });
     test.reformat("symbol", {
         {"a", "a"},
-        {"{a=1, b=a}", "{a=1,b=a}"},
+        {"{a=1, b=a}", "{a=1 b=a}"},
     });
     test.evaluate("symbol", {
-        {"{a=1, b=a}", "{a=1,b=1}"},
-        {"{a=1, b_0=a}", "{a=1,b_0=1}"},
+        {"{a=1, b=a}", "{a=1 b=1}"},
+        {"{a=1, b_0=a}", "{a=1 b_0=1}"},
     });
     test.reformat("child_symbol", {
         {"a@{a=1}", "a@{a=1}"},
@@ -617,13 +617,13 @@ int main() {
     });
     test.evaluate("enumerate list", {
         {"enumerate!()", "()"},
-        {"enumerate!(4)", "({index=0,item=4})"},
-        {"enumerate!(4 3)", "({index=0,item=4} {index=1,item=3})"},
+        {"enumerate!(4)", "({index=0 item=4})"},
+        {"enumerate!(4 3)", "({index=0 item=4} {index=1 item=3})"},
     });
     test.evaluate("enumerate string", {
         {R"(enumerate!"")", R"(())"},
-        {R"(enumerate!"a")", R"(({index=0,item='a'}))"},
-        {R"(enumerate!"ab")", R"(({index=0,item='a'} {index=1,item='b'}))"},
+        {R"(enumerate!"a")", R"(({index=0 item='a'}))"},
+        {R"(enumerate!"ab")", R"(({index=0 item='a'} {index=1 item='b'}))"},
     });
     test.evaluate("concat list", {
         {"concat!(() ())", "()"},
