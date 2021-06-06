@@ -25,4 +25,5 @@ std::string evaluate(std::string code) {
     const auto built_ins = builtIns();
     const auto standard_library = parse(STANDARD_LIBRARY)->evaluate(built_ins.get(), log);
     return parse(code)->evaluate(standard_library.get(), log)->serialize();
+    //return parse(code)->evaluate(nullptr, log)->serialize();
 }
