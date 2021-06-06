@@ -2,7 +2,7 @@
 #include <cassert>
 
 std::string LookupFunction::serialize() const {
-    return name->serialize() + " " + child->serialize();
+    return name->serialize() + "!" + child->serialize();
 }
 
 ExpressionPointer LookupFunction::evaluate(const Expression* parent, std::ostream& log) const {
@@ -18,7 +18,7 @@ ExpressionPointer LookupFunction::parse(CodeRange code) {
     auto first = code.begin();
     auto name = Name::parse(code);
     code.first = name->end();
-    code = parseWhiteSpace(code);
+    code = parseCharacter(code, '!');
     auto child = Expression::parse(code);
     code.first = child->end();
     return std::make_shared<LookupFunction>(
@@ -31,6 +31,5 @@ bool LookupFunction::startsWith(CodeRange code) {
         return false;
     }
     code = parseWhile(code, isNameCharacter);
-    code = parseWhiteSpace(code);
-    return Expression::startsWith(code);
+    return ::startsWith(code, '!');
 }
