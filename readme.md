@@ -13,31 +13,31 @@ It takes source code written in Mang lang and evaluates it:
 ```vhdl
 {
   rectangles = (
-    {width = 3, height = 1},
-    {width = 6, height = 2},
-    {width = 3, height = 6},
-    {width = 8, height = 4}
-  ),
-  get_area = in {width, height} out mul(width, height),
-  areas = map(get_area, rectangles),
-  total_area = add areas,
-  num_rectangles = count rectangles,
-  average_area = div(total_area, num_rectangles)
+    {width = 3 height = 1}
+    {width = 6 height = 2}
+    {width = 3 height = 6}
+    {width = 8 height = 4}
+  )
+  get_area = in {width height} out mul!(width height)
+  areas = map!(get_area rectangles)
+  total_area = add!areas
+  num_rectangles = count!rectangles
+  average_area = div!(total_area num_rectangles)
 }
 ```
 When we evaluate the source code above we get the result below:  
 ```vhdl
 {
   rectangles = (
-    {width = 3, height = 1},
-    {width = 6, height = 2},
-    {width = 3, height = 6},
-    {width = 8, height = 4}
+    {width = 3 height = 1}
+    {width = 6 height = 2}
+    {width = 3 height = 6}
+    {width = 8 height = 4}
   ),
-  get_area = in {width, height} out mul(width, height),
-  areas = (3, 12, 18, 32),
-  total_area = 65,
-  num_rectangles = 4,
+  get_area = in {width height} out mul!(width height)
+  areas = (3 12 18 32)
+  total_area = 65
+  num_rectangles = 4
   average_area = 16.25
 }
 ```
@@ -62,24 +62,24 @@ Mang lang has the following **design trade-offs**:
 The minimalism of Manglang makes it resemble a simple data format like Json or Yaml.
 Manglang only adds conditionals and functions to allow computations.
 
-|                       | Json | Yaml | Manglang | C    |
-| :-------------------- | :--- | :--- | :------- | :--- |
-| Numbers               | Yes  | Yes  | Yes      | Yes  |
-| Strings               | Yes  | Yes  | Yes      | Yes  |
-| Lists/Arrays          | Yes  | Yes  | Yes      | Yes  |
-| Dictionaries/Structs  | Yes  | Yes  | Yes      | Yes  |
-| Null                  | Yes  | Yes  | -        | Yes  |
-| Enum                  | -    | -    | -        | Yes  |
-| Comments              | -    | Yes  | -        | Yes  |
-| Aliases               | -    | Yes  | Yes      | Yes  |
-| Pointers              | -    | -    | -        | Yes  |
-| Mutable Variables     | -    | -    | -        | Yes  |
-| Types                 | -    | -    | -        | Yes  |
-| Conditionals          | -    | -    | Yes      | Yes  |
-| Loops                 | -    | -    | -        | Yes  |
-| Functions             | -    | -    | Yes      | Yes  |
-| Operators             | -    | -    | -        | Yes  |
-| Macros                | -    | -    | -        | Yes  | 
+|                 | Json | Yaml | Manglang | Scheme | C    |
+| :-------------- | :--- | :--- | :------- | :----- | :--- |
+| Numbers         | Yes  | Yes  | Yes      | Yes    | Yes  |
+| Strings         | Yes  | Yes  | Yes      | Yes    | Yes  |
+| Lists           | Yes  | Yes  | Yes      | Yes    | Yes  |
+| Symbols         | Yes  | Yes  | Yes      | Yes    | Yes  |
+| Null            | Yes  | Yes  | -        | -      | Yes  |
+| Comments        | -    | Yes  | -        | Yes    | Yes  |
+| Aliases         | -    | Yes  | Yes      | Yes    | Yes  |
+| Conditionals    | -    | -    | Yes      | Yes    | Yes  |
+| Loops           | -    | -    | Yes      | Yes    | Yes  |
+| Functions       | -    | -    | Yes      | Yes    | Yes  |
+| Mutable objects | -    | -    | -        | Yes    | Yes  |
+| Operators       | -    | -    | -        | Yes    | Yes  |
+| Macros          | -    | -    | -        | Yes    | Yes  | 
+| Enum            | -    | -    | -        | -      | Yes  |
+| Pointers        | -    | -    | -        | -      | Yes  |
+| Static types    | -    | -    | -        | -      | Yes  |
 
 Mang lang is similar to these languages:
 * [Json](https://www.json.org/)
@@ -99,15 +99,15 @@ Manglang has a minimal syntax. A program/expression is built up from these build
 |number                 | 12.34                                         |
 |character              | 'a'                                           |
 |string                 | "abc"                                         |
-|list                   | (expression, ...)                             |
-|dictionary             | {name = expression, ...}                      |
+|list                   | (expression ...)                              |
+|dictionary             | {name = expression ...}                       |
 |reference              | name                                          |
 |child reference        | name@expression                               |
 |conditional            | if expression then expression else expression |
 |function               | in name out expression                        |
-|function of list       | in (name, ...) out expression                 |
-|function of dictionary | in {name, ...} out expression                 |
-|function call          | name expression                               |
+|function of list       | in (name ...) out expression                  |
+|function of dictionary | in {name ...} out expression                  |
+|function call          | name!expression                               |
 
 # Examples
 
@@ -148,47 +148,47 @@ Strings are written as:
 They can be seen as lists of characters. Example of a program using functions on strings:
 ```vhdl
 {
-a = "Mang lang",
-b = first a,
-c = rest a,
-d = reverse a,
-e = prepend('E', a)
+a = "Mang lang"
+b = first!a
+c = rest!a
+d = reverse!a
+e = prepend!('E' a)
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-a = "Mang lang",
-b = 'M',
-c = "ang lang",
-d = "gnal gnaM",
-d = "EMang lang",
+a = "Mang lang"
+b = 'M'
+c = "ang lang"
+d = "gnal gnaM"
+d = "EMang lang"
 }
 ``` 
 
 ## 1.IV Lists
 Lists of values are written as:
 ```vhdl
-(3, 6, 4)
+(3 6 4)
 ```
 Example of a program using functions on lists:
 ```vhdl
 {
-a = (3, 6, 4),
-b = first a,
-c = rest a,
-d = reverse a,
-e = prepend(9, a) 
+a = (3 6 4)
+b = first!a
+c = rest!a
+d = reverse!a
+e = prepend!(9 a) 
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-a = (3, 6, 4),
-b = 3,
-c = (6, 4),
-d = (4, 6, 3),
-e = (9, 4, 6, 3),
+a = (3 6 4)
+b = 3
+c = (6 4)
+d = (4 6 3)
+e = (9 4 6 3)
 }
 ``` 
 
@@ -196,20 +196,20 @@ e = (9, 4, 6, 3),
 
 Dictionaries are used to associate names/symbols with expressions:
 ```vhdl
-{a = 1, b = 'A', c = "abc"}
+{a = 1 b = 'A' c = "abc"}
 ```
-Mang lang doesn't care about whitespace so the program above can also be written as:
+Mang lang doesn't care about extra whitespace so the program above can also be written as:
 ```vhdl
 {
-a = 1,
-b = 'A',
+a = 1
+b = 'A'
 c = "abc"
 }
 ```
 Dictionaries can be nested:
 ```vhdl
 {
-rectangle = {width = 4, height = 5},
+rectangle = {width = 4 height = 5}
 circle = {radius = 5}
 }
 ```
@@ -222,29 +222,29 @@ This is a beautiful generalization and simplification.
 A name/symbol defined in a dictionary can be referenced after it is defined:
 ```vhdl
 {
-a = 1,
+a = 1
 b = a
 }
 ```
 This program is evaluated to the dictionary:
 ```vhdl
 {
-a = 1,
+a = 1
 b = 1
 }
 ```
 Dictionaries can be nested. You can refer to symbols in the current dictionary or in parent dictionaries in this way:
 ```vhdl
 {
-a = 1,
-b = {c = 2, d = a}
+a = 1
+b = {c = 2 d = a}
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-a = 1,
-b = {c = 2, d = 1}
+a = 1
+b = {c = 2 d = 1}
 }
 ```
 
@@ -254,14 +254,14 @@ In the previous section we looked at how to refer to names defined in the curren
 You can also refer to names in a child dictionary like this:
 ```vhdl
 {
-a = {b=2, c=3},
+a = {b=2 c=3}
 d = c@a
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-a = {b=2, c=3},
+a = {b=2 c=3}
 d = 3
 }
 ```
@@ -285,19 +285,19 @@ Consider this program as an example:
 
 ```vhdl
 {
-a = (0, 1),
+a = (0 1)
 b = if a then
-        first a
+        first!a
     else
-        1,
+        1
 c = if b then "hello" else "world"
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-a = (0, 1),
-b = 0,
+a = (0 1)
+b = 0
 c = "world"
 }
 ```
@@ -305,28 +305,28 @@ c = "world"
 ## 3.II Function calls
 
 We have already seen some examples of calling functions in mang lang.
-A function is called like `function_name input_expression`.
+A function is called using `!` like `function_name!input_expression`.
 Functions in take a single value as input.
 However, this single value can be a list or a dictionary, that has multiple values inside them.
 ```vhdl
 {
-list = (4, 2, 1),
-sum0 = add list,
-head0 = first list,
-sum1 = add(4, 2, 1),
-head1 = first(4, 2, 1),
-list2 = prepend(3, list)
+list = (4 2 1)
+sum0 = add!list
+head0 = first!list
+sum1 = add!(4 2 1)
+head1 = first!(4 2 1)
+list2 = prepend!(3 list)
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-list = (4, 2, 1),
-sum0 = 7,
-head0 = 4,
-sum1 = 7,
-head1 = 4,
-list2 = (3, 4, 2, 1)
+list = (4 2 1)
+sum0 = 7
+head0 = 4
+sum1 = 7
+head1 = 4
+list2 = (3 4 2 1)
 }
 ```
 Mang Lang does not have any special operators for arithmetics, boolean, list operations etc.
@@ -334,10 +334,12 @@ Instead functions are used for all computations.
 Function calls can be nested like this:
 
 ````vhdl
-mul(add(1, 2), sub(7, 2))
+mul!(add!(1 2) sub!(7 2))
 ````
 
 This program is evaluated to `(1+2)*(7-2) = 3*5 = 15`.
+Function calls are right associative.
+Manglang does not support currying.
 
 
 ## 3.III Function Definitions
@@ -346,8 +348,8 @@ Functions are defined using they keywords `in` and `out` like this:
 
 ```vhdl
 {
-square = in x out mul(x, x),
-result = square 3
+square = in x out mul!(x x)
+result = square!3
 }
 ```
 
@@ -357,56 +359,46 @@ Functions are first class values and can be given a name by putting them inside 
 Here are some examples of defining and calling functions:
 ```vhdl
 {
-square = in x out mul(x, x),
-inc = in x out add(x, 1),
-dec = in x out sub(x, 1),
-count = in list out if list then inc count rest list else 0,
-a = square 3,
-b = inc 3,
-c = dec 3,
-d = count(3,7,3,8,2),
-e = count "apple"        
+square = in x out mul!(x x)
+inc = in x out add!(x 1)
+dec = in x out sub!(x 1)
+count = in list out if list then inc!count!rest!list else 0
+a = square 3
+b = inc 3
+c = dec 3
+d = count!(3 7 3 8 2)
+e = count!"apple"        
 }
 ```
 This program is evaluated to:
 ```vhdl
 {
-square = in x out mul(x, x),
-inc = in x out add(x, 1),
-dec = in x out sub(x, 1),
-count = in list out if list then inc count rest list else 0,
-a = 9,
-b = 4,
-c = 2,
-d = 5,
+square = in x out mul!(x x)
+inc = in x out add!(x 1)
+dec = in x out sub!(x 1)
+count = in list out if list then inc!count!rest!list else 0
+a = 9
+b = 4
+c = 2
+d = 5
 e = 5        
 }
 ```
 The if-then-else operator is used to choose what value to return based on a condition.
-Recursive function calls and the if-then-else operator are used for loops:
+Functions can be recursive like the `count` example above.
 
-```vhdl
-{
-factorial = in x out 
-    if x then
-        mul(x, factorial dec x)
-    else
-        1,
-result = factorial 4
-}
-```
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
 ```vhdl
 {
-square = in x out mul(x, x)
+square = in x out mul!(x x)
 square_norm = in vec3 out result@{
-    x = first vec3,
-    y = second vec3,
-    z = third vec3,
-    result = add(square x, square y, square z)
+    x = first!vec3
+    y = second!vec3
+    z = third!vec3
+    result = add!(square!x square!y square!z)
     }
-vector = (3, 4, 5),
-result = square_norm vector
+vector = (3 4 5)
+result = square_norm!vector
 }
 ```
 ## 3.IV Function of List Definitions
@@ -416,18 +408,18 @@ in the form of a list.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```vhdl
 {
-area1 = in rectangle out mul(first rectangle, second rectangle),
-area2 = in (width, height) out mul(width, height),
-rectangle = (5, 4),
-a = area1 rectangle,
-b = area2 rectangle,
-c = area1(5, 4),
-d = area2(5, 4),
+area1 = in rectangle out mul!(first!rectangle second!rectangle)
+area2 = in (width height) out mul!(width height)
+rectangle = (5 4)
+a = area1!rectangle,
+b = area2!rectangle,
+c = area1!(5 4)
+d = area2!(5 4)
 }
 ```
 The functions `area1` and `area2` are equivalent.
 They expect the same input and return the same result.
-`area2` just uses syntactic sugar to make it its implementation more clear,
+`area2` just uses syntactic sugar to make its implementation more concise,
 by unpacking the elements of the input list.
 ## 3.V Function of Dictionary Definitions
 
@@ -436,18 +428,18 @@ in the form of a dictionary with named entries.
 Here are some examples of equivalent ways of defining and calling functions: 
 ```vhdl
 {
-area1 = in rectangle out mul(width@rectangle, height@rectangle),
-area2 = in {width, height} out mul(width, height),
-rectangle = {width = 5, height = 4},
-a = area1 rectangle,
-b = area2 rectangle,
-c = area1{width = 5, height = 4},
-d = area2{width = 5, height = 4},
+area1 = in rectangle out mul!(width@rectangle height@rectangle)
+area2 = in {width height} out mul!(width height)
+rectangle = {width = 5 height = 4}
+a = area1!rectangle
+b = area2!rectangle
+c = area1!{width = 5 height = 4}
+d = area2!{width = 5 height = 4}
 }
 ```
 The functions `area1` and `area2` are equivalent.
 They expect the same input and return the same result.
-`area2` just uses syntactic sugar to make it its implementation more clear,
+`area2` just uses syntactic sugar to make it its implementation more concise,
 by unpacking the elements of the input dictionary.
 
 ## List of built-in functions
@@ -485,19 +477,20 @@ by unpacking the elements of the input dictionary.
 
 
 ### List and string functions
-* **prepend**: Given input `(item, list)` return a copy of the list/string with the item prepended at the beginning.
+* **prepend**: Given input `(item list)` return a copy of the list/string with the item prepended at the beginning.
 * **first**: pick the first item in a non-empty list/string.
 * **rest**: list/string of all items except the first.
 * **reverse**: takes a list/string and return it in reversed order.
 
 
-* **map**: Given input `(f, list)` return a list where the function f has been applied to each item.
-* **filter**: Given input `(predicate, list)` return a list of all items for which the predicate is true.
-* **enumerate**: Given a list return a new list where each element is a dictionary `{item, index}` containing the items from the original list together with the corresponding index.
-* **get_index**: Given input `(index, list)` return the item at given index.
+* **map**: Given input `(f list)` return a list where the function f has been applied to each item.
+* **filter**: Given input `(predicate list)` return a list of all items for which the predicate is true.
+* **enumerate**: Given a list return a new list
+  where each element is a dictionary `{item index}` containing the items from the original list together with the corresponding index.
+* **get_index**: Given input `(index list)` return the item at given index.
 * **concat**: concatenates two lists/strings.
 
 
 * **count**: The number of items of a list or string.
-* **count_item**: Given input `(item, list)` count number of occurrences of a specific item in list.
-* **count_if**: Given input `(predicate, list)` count number of items in list for which the predicate is true.
+* **count_item**: Given input `(item list)` count number of occurrences of a specific item in list.
+* **count_if**: Given input `(predicate list)` count number of items in list for which the predicate is true.

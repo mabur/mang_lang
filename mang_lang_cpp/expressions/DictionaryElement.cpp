@@ -35,15 +35,15 @@ EndElement::EndElement(CodeRange range, const Expression* parent)
 {}
 
 std::string NamedElement::serialize() const {
-    return name->serialize() + '=' + expression->serialize() + ',';
+    return name->serialize() + '=' + expression->serialize() + ' ';
 }
 
 std::string WhileElement::serialize() const {
-    return "while " + expression->serialize() + ',';
+    return "while " + expression->serialize() + ' ';
 }
 
 std::string EndElement::serialize() const {
-    return "end,";
+    return "end ";
 }
 
 ExpressionPointer NamedElement::lookup(const std::string& s) const {
@@ -83,7 +83,6 @@ DictionaryElementPointer NamedElement::parse(CodeRange code) {
     auto expression = Expression::parse(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    code = parseOptionalCharacter(code, ',');
     return std::make_shared<NamedElement>(
         CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression), 0
     );
@@ -96,7 +95,6 @@ DictionaryElementPointer WhileElement::parse(CodeRange code) {
     auto expression = Expression::parse(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    code = parseOptionalCharacter(code, ',');
     return std::make_shared<WhileElement>(
         CodeRange{first, code.first}, nullptr, std::move(expression)
     );
@@ -106,7 +104,6 @@ DictionaryElementPointer EndElement::parse(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    code = parseOptionalCharacter(code, ',');
     return std::make_shared<EndElement>(
         CodeRange{first, code.first}, nullptr
     );

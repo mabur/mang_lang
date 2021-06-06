@@ -5,7 +5,7 @@ std::string List::serialize() const {
         return "()";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
-        return left + right->serialize() + ",";
+        return left + right->serialize() + " ";
     };
     auto result = std::string{"("};
     result = leftFold(list(), result, operation);
@@ -34,7 +34,6 @@ ExpressionPointer List::parse(CodeRange code) {
         code.first = expression->end();
         expressions = ::prepend(expressions, std::move(expression));
         code = parseWhiteSpace(code);
-        code = parseOptionalCharacter(code, ',');
     }
     code = parseCharacter(code, ')');
     return std::make_shared<List>(

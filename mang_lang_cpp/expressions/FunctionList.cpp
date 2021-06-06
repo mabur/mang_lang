@@ -10,7 +10,7 @@ std::string FunctionList::serialize() const {
     result += "(";
     for (const auto& name : input_names) {
         result += name->serialize();
-        result += ",";
+        result += " ";
     }
     if (input_names.empty()) {
         result += ')';
@@ -54,8 +54,6 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
         const auto name = Name::parse(code);
         code.first = name->end();
         input_names.push_back(name);
-        code = parseWhiteSpace(code);
-        code = parseOptionalCharacter(code, ',');
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
