@@ -448,8 +448,8 @@ int main() {
     });
     test.evaluate("function list", {
         {"in (x) out x", "in (x) out x"},
-        {"in (x,y) out x", "in (x y) out x"},
-        {"in  (  x  ,  y  )  out  x", "in (x y) out x"},
+        {"in (x y) out x", "in (x y) out x"},
+        {"in  (  x    y  )  out  x", "in (x y) out x"},
     });
     test.evaluate("lookup function", {
         {"a@{f=in x out x,a=f!0}", "0"},
@@ -460,8 +460,8 @@ int main() {
         {"z@{y=2,f=in x out result@{y=3,result=add!(x y)}, z=f!2}", "5"},
         {"x@{a={b=1,f=in x out b},b=2,f=f@a,x=f!()}", "1"},
         {"x@{f=in a out 1, g = in b out f!b, x = g!2}", "1"},
-        {"y@{apply=in (f,x) out f!x, y = apply!(inc 2)}", "3"},
-        {"y@{apply=in (f,x) out f!x, id=in x out apply!(in x out x x), y = id!1}", "1"},
+        {"y@{apply=in (f x) out f!x, y = apply!(inc 2)}", "3"},
+        {"y@{apply=in (f x) out f!x, id=in x out apply!(in x out x x), y = id!1}", "1"},
         {"y@{f=in list out map!(in y out 2 list), y=f!(0 0)}", "(2 2)"},
         {"a@{call=in f out f!(),g=in x out 0,a=call!g}", "0"},
         {"a@{call=in f out f!(),b={a=0,g=in x out a},g=g@b,a=call!g}", "0"},

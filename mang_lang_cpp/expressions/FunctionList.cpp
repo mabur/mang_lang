@@ -55,8 +55,6 @@ ExpressionPointer FunctionList::parse(CodeRange code) {
         code.first = name->end();
         input_names.push_back(name);
         code = parseWhiteSpace(code);
-        code = parseOptionalCharacter(code, ',');
-        code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
     code = parseWhiteSpace(code);

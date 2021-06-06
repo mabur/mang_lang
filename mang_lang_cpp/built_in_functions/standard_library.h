@@ -16,7 +16,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     fifth = in x out first!rest!rest!rest!rest!x,
 
-    get_index = in (index, list) out result@{
+    get_index = in (index list) out result@{
             i = 0,
             tail = list,
             while not!equal!(i index),
@@ -35,7 +35,7 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    concat = in (left, right) out result@{
+    concat = in (left right) out result@{
             result = right,
             tail = reverse!left,
             while tail,
@@ -65,7 +65,7 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse!reversed_result
         },
 
-    map = in (f, list) out result@{
+    map = in (f list) out result@{
             reversed_result = empty!list,
             tail = list,
             while tail,
@@ -75,7 +75,7 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse!reversed_result
         },
 
-    filter = in (predicate, list) out result@{
+    filter = in (predicate list) out result@{
             reversed_result = empty!list,
             tail = list,
             while tail,
@@ -89,7 +89,7 @@ const std::string STANDARD_LIBRARY = R"(
             result = reverse!reversed_result
         },
 
-    replace = in (old_item, new_item, list) out
+    replace = in (old_item new_item list) out
         map!(in item out if equal!(item old_item) then new_item else item list),
 
     count = in list out result@{
@@ -101,7 +101,7 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    count_item = in (item, list) out result@{
+    count_item = in (item list) out result@{
             result = 0,
             tail = list,
             while tail,
@@ -114,7 +114,7 @@ const std::string STANDARD_LIBRARY = R"(
             end
         },
 
-    count_if = in (predicate, list) out result@{
+    count_if = in (predicate list) out result@{
             result = 0,
             tail = list,
             while tail,
