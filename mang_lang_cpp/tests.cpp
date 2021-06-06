@@ -448,8 +448,8 @@ int main() {
     });
     test.evaluate("function list", {
         {"in (x) out x", "in (x) out x"},
-        {"in (x,y) out x", "in (x,y) out x"},
-        {"in  (  x  ,  y  )  out  x", "in (x,y) out x"},
+        {"in (x,y) out x", "in (x y) out x"},
+        {"in  (  x  ,  y  )  out  x", "in (x y) out x"},
     });
     test.evaluate("lookup function", {
         {"a@{f=in x out x,a=f!0}", "0"},

@@ -10,7 +10,7 @@ std::string FunctionList::serialize() const {
     result += "(";
     for (const auto& name : input_names) {
         result += name->serialize();
-        result += ",";
+        result += " ";
     }
     if (input_names.empty()) {
         result += ')';
