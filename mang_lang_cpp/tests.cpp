@@ -443,8 +443,8 @@ int main() {
     });
     test.evaluate("function dictionary", {
         {"in {x} out x", "in {x} out x"},
-        {"in {x,y} out x", "in {x,y} out x"},
-        {"in  {  x  ,  y  }  out  x", "in {x,y} out x"},
+        {"in {x y} out x", "in {x y} out x"},
+        {"in  {  x    y  }  out  x", "in {x y} out x"},
     });
     test.evaluate("function list", {
         {"in (x) out x", "in (x) out x"},
@@ -476,8 +476,8 @@ int main() {
     });
     test.evaluate("lookup function dictionary", {
         {"a@{f=in {x} out x a=f!{x=0}}", "0"},
-        {"a@{f=in {x,y} out add!(x y) a=f!{x=2 y=3}}", "5"},
-        {"a@{f=in {x,y,z} out add!(x y z) a=f!{x=2 y=3 z=4}}", "9"},
+        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
+        {"a@{f=in {x y z} out add!(x y z) a=f!{x=2 y=3 z=4}}", "9"},
     });
     test.evaluate("lookup function list", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
