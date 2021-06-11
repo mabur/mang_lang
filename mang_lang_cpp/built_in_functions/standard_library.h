@@ -20,8 +20,8 @@ const std::string STANDARD_LIBRARY = R"(
         i = 0
         list = list
         while less?(i index)
-            list = rest@list
             i = inc!i
+            list = rest@list
         end
     }
 
@@ -63,8 +63,8 @@ const std::string STANDARD_LIBRARY = R"(
                 {index=index item=first@list}
                 reversed_result
             )
-            list = rest@list
             index = inc!index
+            list = rest@list
         end
         result = reverse!reversed_result
     }
