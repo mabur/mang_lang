@@ -8,14 +8,6 @@ const std::string STANDARD_LIBRARY = R"(
 
     dec = in x out sub!(x 1)
 
-    second = in x out first@rest@x
-
-    third = in x out first@rest@rest@x
-
-    fourth = in x out first@rest@rest@rest@x
-
-    fifth = in x out first@rest@rest@rest@rest@x
-
     drop = in (index list) out list@{
         i = 0
         list = list
