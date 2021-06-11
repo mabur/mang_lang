@@ -16,11 +16,11 @@ const std::string STANDARD_LIBRARY = R"(
 
     fifth = in x out first@rest@rest@rest@rest@x
 
-    drop = in (index list) out tail@{
+    drop = in (index list) out list@{
         i = 0
-        tail = list
+        list = list
         while less!(i index)
-            tail = rest@tail
+            list = rest@list
             i = inc!i
         end
     }
@@ -29,19 +29,19 @@ const std::string STANDARD_LIBRARY = R"(
 
     reverse = in list out result@{
         result = empty!list
-        tail = list
-        while tail
-            result = prepend!(first@tail result)
-            tail = rest@tail
+        list = list
+        while list
+            result = prepend!(first@list result)
+            list = rest@list
         end
     }
 
     concat = in (left right) out result@{
         result = right
-        tail = reverse!left
-        while tail
-            result = prepend!(first@tail result)
-            tail = rest@tail
+        list = reverse!left
+        while list
+            result = prepend!(first@list result)
+            list = rest@list
         end
     }
 
@@ -56,14 +56,14 @@ const std::string STANDARD_LIBRARY = R"(
 
     enumerate = in list out result@{
         reversed_result = ()
-        tail = list
+        list = list
         index = 0
-        while tail
+        while list
             reversed_result = prepend!(
-                {index=index item=first@tail}
+                {index=index item=first@list}
                 reversed_result
             )
-            tail = rest@tail
+            list = rest@list
             index = inc!index
         end
         result = reverse!reversed_result
@@ -71,24 +71,24 @@ const std::string STANDARD_LIBRARY = R"(
 
     map = in (f list) out result@{
         reversed_result = empty!list
-        tail = list
-        while tail
-            reversed_result = prepend!(f!first@tail reversed_result)
-            tail = rest@tail
+        list = list
+        while list
+            reversed_result = prepend!(f!first@list reversed_result)
+            list = rest@list
         end
         result = reverse!reversed_result
     }
 
     filter = in (predicate list) out result@{
         reversed_result = empty!list
-        tail = list
-        while tail
+        list = list
+        while list
             reversed_result =
-                if predicate!first@tail then
-                    prepend!(first@tail reversed_result)
+                if predicate!first@list then
+                    prepend!(first@list reversed_result)
                 else
                     reversed_result
-            tail = rest@tail
+            list = rest@list
         end
         result = reverse!reversed_result
     }
@@ -98,36 +98,36 @@ const std::string STANDARD_LIBRARY = R"(
 
     count = in list out result@{
         result = 0
-        tail = list
-        while tail
+        list = list
+        while list
             result = inc!result
-            tail = rest@tail
+            list = rest@list
         end
     }
 
     count_item = in (item list) out result@{
         result = 0
-        tail = list
-        while tail
+        list = list
+        while list
             result =
-                if equal!(first@tail item) then
+                if equal!(first@list item) then
                     inc!result
                 else
                     result
-            tail = rest@tail
+            list = rest@list
         end
     }
 
     count_if = in (predicate list) out result@{
         result = 0
-        tail = list
-        while tail
+        list = list
+        while list
             result =
-                if predicate!first@tail then
+                if predicate!first@list then
                     inc!result
                 else
                     result
-            tail = rest@tail
+            list = rest@list
         end
     }
 }
