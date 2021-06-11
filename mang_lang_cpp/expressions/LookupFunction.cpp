@@ -18,7 +18,8 @@ ExpressionPointer LookupFunction::parse(CodeRange code) {
     auto first = code.begin();
     auto name = Name::parse(code);
     code.first = name->end();
-    code = parseCharacter(code, '!');
+    const auto expected = ::startsWith(code, '!') ? '!' : '?';
+    code = parseCharacter(code, expected);
     auto child = Expression::parse(code);
     code.first = child->end();
     return std::make_shared<LookupFunction>(
@@ -31,5 +32,5 @@ bool LookupFunction::startsWith(CodeRange code) {
         return false;
     }
     code = parseWhile(code, isNameCharacter);
-    return ::startsWith(code, '!');
+    return ::startsWith(code, '!') || ::startsWith(code, '?');
 }

@@ -19,7 +19,7 @@ const std::string STANDARD_LIBRARY = R"(
     drop = in (index list) out list@{
         i = 0
         list = list
-        while less!(i index)
+        while less?(i index)
             list = rest@list
             i = inc!i
         end
@@ -84,7 +84,7 @@ const std::string STANDARD_LIBRARY = R"(
         list = list
         while list
             reversed_result =
-                if predicate!first@list then
+                if predicate?first@list then
                     prepend!(first@list reversed_result)
                 else
                     reversed_result
@@ -94,7 +94,7 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     replace = in (old_item new_item list) out
-        map!(in item out if equal!(item old_item) then new_item else item list)
+        map!(in item out if equal?(item old_item) then new_item else item list)
 
     count = in list out result@{
         result = 0
@@ -110,7 +110,7 @@ const std::string STANDARD_LIBRARY = R"(
         list = list
         while list
             result =
-                if equal!(first@list item) then
+                if equal?(first@list item) then
                     inc!result
                 else
                     result
@@ -123,7 +123,7 @@ const std::string STANDARD_LIBRARY = R"(
         list = list
         while list
             result =
-                if predicate!first@list then
+                if predicate?first@list then
                     inc!result
                 else
                     result
