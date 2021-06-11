@@ -28,20 +28,20 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_index = in (index list) out first@drop!(index list)
 
-    reverse = in list out result@{
-        result = empty!list
+    reverse = in list out reversed_list@{
+        reversed_list = empty!list
         list = list
         while list
-            result = prepend!(first@list result)
+            reversed_list = prepend!(first@list reversed_list)
             list = rest@list
         end
     }
 
-    concat = in (left right) out result@{
-        result = right
-        list = reverse!left
+    concat = in (left_list right_list) out long_list@{
+        long_list = right_list
+        list = reverse!left_list
         while list
-            result = prepend!(first@list result)
+            long_list = prepend!(first@list long_list)
             list = rest@list
         end
     }
