@@ -19,7 +19,7 @@ const std::string STANDARD_LIBRARY = R"(
     get_index = in (index list) out result@{
         i = 0
         tail = list
-        while not!equal!(i index)
+        while less!(i index)
             tail = rest@tail
             i = inc!i
         end
