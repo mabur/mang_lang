@@ -26,6 +26,18 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    take = in (num_elements list) out short_list@{
+        reversed_result = empty!list
+        i = 0
+        list = list
+        while less?(i num_elements)
+            reversed_result = prepend!(first@list reversed_result)
+            i = inc!i
+            list = rest@list
+        end
+        short_list = reverse!reversed_result
+    }
+
     get_index = in (index list) out first@drop!(index list)
 
     reverse = in list out reversed_list@{

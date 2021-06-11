@@ -651,6 +651,18 @@ int main() {
         {R"(drop!(2 "abc"))", R"("c")"},
         {R"(drop!(3 "abc"))", R"("")"},
     });
+    test.evaluate("take list", {
+        {"take!(0 (3 7 6))", "()"},
+        {"take!(1 (3 7 6))", "(3)"},
+        {"take!(2 (3 7 6))", "(3 7)"},
+        {"take!(3 (3 7 6))", "(3 7 6)"},
+    });
+    test.evaluate("take string", {
+        {R"(take!(0 "abc"))", R"("")"},
+        {R"(take!(1 "abc"))", R"("a")"},
+        {R"(take!(2 "abc"))", R"("ab")"},
+        {R"(take!(3 "abc"))", R"("abc")"},
+    });
     test.evaluate("get_index list", {
         {"get_index!(0 (3 7 6))", "3"},
         {"get_index!(1 (3 7 6))", "7"},
