@@ -8,6 +8,15 @@ const std::string STANDARD_LIBRARY = R"(
 
     dec = in x out sub!(x 1)
 
+    range = in x out list@{
+        list = ()
+        x = x
+        while x
+            list = prepend!(dec!x list)
+            x = dec!x
+        end
+    }
+
     drop = in (index list) out list@{
         i = 0
         list = list
@@ -34,15 +43,6 @@ const std::string STANDARD_LIBRARY = R"(
         while list
             result = prepend!(first@list result)
             list = rest@list
-        end
-    }
-
-    range = in x out result@{
-        result = ()
-        y = x
-        while y
-            result = prepend!(dec!y result)
-            y = dec!y
         end
     }
 
