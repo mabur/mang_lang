@@ -6,6 +6,15 @@ struct ListBase : public Expression {
     ListBase(CodeRange range, const Expression* parent, InternalList elements)
         : Expression{range, parent}, elements{std::move(elements)}
     {}
+    ExpressionPointer lookup(const std::string& name) const final {
+        if (name == "first") {
+            return list()->first;
+        }
+        if (name == "rest") {
+            return std::make_shared<T>(range(), nullptr, list()->rest);
+        }
+        throw ParseException("List does not contain symbol " + name);
+    }
     const InternalList& list() const final {
         return elements;
     }
@@ -24,12 +33,6 @@ struct ListBase : public Expression {
     }
     ExpressionPointer empty() const final {
         return std::make_shared<T>(range(), nullptr, nullptr);
-    }
-    ExpressionPointer first() const final {
-        return list()->first;
-    }
-    ExpressionPointer rest() const final {
-        return std::make_shared<T>(range(), nullptr, list()->rest);
     }
     ExpressionPointer prepend(ExpressionPointer item) const final {
         auto new_list = ::prepend(list(), item);

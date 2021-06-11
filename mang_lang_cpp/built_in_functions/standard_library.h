@@ -8,30 +8,30 @@ const std::string STANDARD_LIBRARY = R"(
 
     dec = in x out sub!(x 1)
 
-    second = in x out first!rest!x
+    second = in x out first@rest@x
 
-    third = in x out first!rest!rest!x
+    third = in x out first@rest@rest@x
 
-    fourth = in x out first!rest!rest!rest!x
+    fourth = in x out first@rest@rest@rest@x
 
-    fifth = in x out first!rest!rest!rest!rest!x
+    fifth = in x out first@rest@rest@rest@rest@x
 
     get_index = in (index list) out result@{
         i = 0
         tail = list
         while not!equal!(i index)
-            tail = rest!tail
+            tail = rest@tail
             i = inc!i
         end
-        result = first!tail
+        result = first@tail
     }
 
     reverse = in list out result@{
         result = empty!list
         tail = list
         while tail
-            result = prepend!(first!tail result)
-            tail = rest!tail
+            result = prepend!(first@tail result)
+            tail = rest@tail
         end
     }
 
@@ -39,8 +39,8 @@ const std::string STANDARD_LIBRARY = R"(
         result = right
         tail = reverse!left
         while tail
-            result = prepend!(first!tail result)
-            tail = rest!tail
+            result = prepend!(first@tail result)
+            tail = rest@tail
         end
     }
 
@@ -59,10 +59,10 @@ const std::string STANDARD_LIBRARY = R"(
         index = 0
         while tail
             reversed_result = prepend!(
-                {index=index item=first!tail}
+                {index=index item=first@tail}
                 reversed_result
             )
-            tail = rest!tail
+            tail = rest@tail
             index = inc!index
         end
         result = reverse!reversed_result
@@ -72,8 +72,8 @@ const std::string STANDARD_LIBRARY = R"(
         reversed_result = empty!list
         tail = list
         while tail
-            reversed_result = prepend!(f!first!tail reversed_result)
-            tail = rest!tail
+            reversed_result = prepend!(f!first@tail reversed_result)
+            tail = rest@tail
         end
         result = reverse!reversed_result
     }
@@ -83,11 +83,11 @@ const std::string STANDARD_LIBRARY = R"(
         tail = list
         while tail
             reversed_result =
-                if predicate!first!tail then
-                    prepend!(first!tail reversed_result)
+                if predicate!first@tail then
+                    prepend!(first@tail reversed_result)
                 else
                     reversed_result
-            tail = rest!tail
+            tail = rest@tail
         end
         result = reverse!reversed_result
     }
@@ -100,7 +100,7 @@ const std::string STANDARD_LIBRARY = R"(
         tail = list
         while tail
             result = inc!result
-            tail = rest!tail
+            tail = rest@tail
         end
     }
 
@@ -109,11 +109,11 @@ const std::string STANDARD_LIBRARY = R"(
         tail = list
         while tail
             result =
-                if equal!(first!tail item) then
+                if equal!(first@tail item) then
                     inc!result
                 else
                     result
-            tail = rest!tail
+            tail = rest@tail
         end
     }
 
@@ -122,11 +122,11 @@ const std::string STANDARD_LIBRARY = R"(
         tail = list
         while tail
             result =
-                if predicate!first!tail then
+                if predicate!first@tail then
                     inc!result
                 else
                     result
-            tail = rest!tail
+            tail = rest@tail
         end
     }
 }

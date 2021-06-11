@@ -494,22 +494,22 @@ int main() {
         {R"(empty!"ab")", R"("")"},
     });
     test.evaluate("first list", {
-        {"first!(4)", "4"},
-        {"first!(3 4)", "3"},
+        {"first@(4)", "4"},
+        {"first@(3 4)", "3"},
     });
     test.evaluate("first string", {
-        {R"(first!"b")", R"('b')"},
-        {R"(first!"ab")", R"('a')"},
+        {R"(first@"b")", R"('b')"},
+        {R"(first@"ab")", R"('a')"},
     });
     test.evaluate("rest list", {
-        {"rest!(4)", "()"},
-        {"rest!(4 3)", "(3)"},
-        {"rest!(4 3 7)", "(3 7)"},
+        {"rest@(4)", "()"},
+        {"rest@(4 3)", "(3)"},
+        {"rest@(4 3 7)", "(3 7)"},
     });
     test.evaluate("rest string", {
-        {R"(rest!"a")", R"("")"},
-        {R"(rest!"ab")", R"("b")"},
-        {R"(rest!"abc")", R"("bc")"},
+        {R"(rest@"a")", R"("")"},
+        {R"(rest@"ab")", R"("b")"},
+        {R"(rest@"abc")", R"("bc")"},
     });
     test.evaluate("reverse list", {
         {"reverse!()", "()"},
@@ -650,14 +650,14 @@ int main() {
         {R"(get_index!(2 "abc"))", R"('c')"},
     });
     test.evaluate("indexing list", {
-        {"first!(1 2 3 4 5)", "1"},
+        {"first@(1 2 3 4 5)", "1"},
         {"second!(1 2 3 4 5)", "2"},
         {"third!(1 2 3 4 5)", "3"},
         {"fourth!(1 2 3 4 5)", "4"},
         {"fifth!(1 2 3 4 5)", "5"},
     });
     test.evaluate("indexing string", {
-        {R"(first!"abcde")", R"('a')"},
+        {R"(first@"abcde")", R"('a')"},
         {R"(second!"abcde")", R"('b')"},
         {R"(third!"abcde")", R"('c')"},
         {R"(fourth!"abcde")", R"('d')"},

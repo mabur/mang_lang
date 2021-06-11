@@ -42,7 +42,5 @@ struct Expression {
     virtual const InternalList& list() const;
 
     virtual ExpressionPointer empty() const;
-    virtual ExpressionPointer first() const;
-    virtual ExpressionPointer rest() const;
     virtual ExpressionPointer prepend(ExpressionPointer item) const;
 };
