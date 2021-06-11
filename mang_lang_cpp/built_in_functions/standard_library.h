@@ -25,15 +25,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    get_index = in (index list) out result@{
-        i = 0
-        tail = list
-        while less!(i index)
-            tail = rest@tail
-            i = inc!i
-        end
-        result = first@tail
-    }
+    get_index = in (index list) out first@drop!(index list)
 
     reverse = in list out result@{
         result = empty!list
