@@ -36,6 +36,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 
 * Remove python
 
+* Implement list and string as syntactic sugar for dictionary {first=... rest={...}}
+
 * Pointers
   - Ownership model of raw and smart pointers in different passes.
   - When are nullpointers allowed?
