@@ -17,12 +17,12 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    drop = in (index list) out list@{
+    drop = in (num_elements list) out short_list@{
         i = 0
-        list = list
-        while less?(i index)
+        short_list = list
+        while less?(i num_elements)
             i = inc!i
-            list = rest@list
+            short_list = rest@short_list
         end
     }
 
