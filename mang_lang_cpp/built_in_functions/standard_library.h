@@ -97,19 +97,6 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    count_item = in (item list) out result@{
-        result = 0
-        list = list
-        while list
-            result =
-                if equal?(first@list item) then
-                    inc!result
-                else
-                    result
-            list = rest@list
-        end
-    }
-
     count_if = in (predicate list) out result@{
         result = 0
         list = list
@@ -122,5 +109,9 @@ const std::string STANDARD_LIBRARY = R"(
             list = rest@list
         end
     }
+
+    count_item = in (item list) out
+        count_if!(in x out equal?(x item) list)
+
 }
 )";
