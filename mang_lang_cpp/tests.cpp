@@ -639,6 +639,18 @@ int main() {
         {R"(concat!("a" "b"))", R"("ab")"},
         {R"(concat!("abc" "def"))", R"("abcdef")"},
     });
+    test.evaluate("drop list", {
+        {"drop!(0 (3 7 6))", "(3 7 6)"},
+        {"drop!(1 (3 7 6))", "(7 6)"},
+        {"drop!(2 (3 7 6))", "(6)"},
+        {"drop!(3 (3 7 6))", "()"},
+    });
+    test.evaluate("drop string", {
+        {R"(drop!(0 "abc"))", R"("abc")"},
+        {R"(drop!(1 "abc"))", R"("bc")"},
+        {R"(drop!(2 "abc"))", R"("c")"},
+        {R"(drop!(3 "abc"))", R"("")"},
+    });
     test.evaluate("get_index list", {
         {"get_index!(0 (3 7 6))", "3"},
         {"get_index!(1 (3 7 6))", "7"},

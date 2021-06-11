@@ -16,6 +16,15 @@ const std::string STANDARD_LIBRARY = R"(
 
     fifth = in x out first@rest@rest@rest@rest@x
 
+    drop = in (index list) out tail@{
+        i = 0
+        tail = list
+        while less!(i index)
+            tail = rest@tail
+            i = inc!i
+        end
+    }
+
     get_index = in (index list) out result@{
         i = 0
         tail = list
