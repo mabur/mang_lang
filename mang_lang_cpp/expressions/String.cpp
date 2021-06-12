@@ -13,8 +13,8 @@ std::string String::serialize() const {
     return value;
 }
 
-ExpressionPointer String::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<String>(range(), parent, list());
+ExpressionPointer String::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = std::make_shared<String>(range(), environment, list());
     log << result->serialize();
     return result;
 }

@@ -26,16 +26,16 @@ CodeRange Expression::range() const {
     return range_;
 }
 
-const Expression* Expression::parent() const {
+const Expression* Expression::environment() const {
     return parent_;
 }
 
 ExpressionPointer Expression::lookup(const std::string& name) const {
-    if (!parent()) {
+    if (!environment()) {
         // TODO: define evaluation exception.
         throw ParseException("Cannot find symbol " + name);
     }
-    return parent()->lookup(name);
+    return environment()->lookup(name);
 }
 
 ExpressionPointer Expression::parse(CodeRange code) {

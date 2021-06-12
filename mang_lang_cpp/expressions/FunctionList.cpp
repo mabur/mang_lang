@@ -22,14 +22,14 @@ std::string FunctionList::serialize() const {
     return result;
 }
 
-ExpressionPointer FunctionList::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<FunctionList>(range(), parent, input_names, body);
+ExpressionPointer FunctionList::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = std::make_shared<FunctionList>(range(), environment, input_names, body);
     log << result->serialize() << std::endl;
     return result;
 }
 
 ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log) const {
-    auto middle = Dictionary(range(), parent());
+    auto middle = Dictionary(range(), environment());
     auto i = 0;
     for (auto list = input->list(); list; list = list->rest, ++i) {
         middle.elements.push_back(

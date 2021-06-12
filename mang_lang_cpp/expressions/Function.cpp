@@ -8,14 +8,14 @@ std::string Function::serialize() const {
     return std::string{"in "} + input_name->serialize() + " out " + body->serialize();
 }
 
-ExpressionPointer Function::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Function>(range(), parent, input_name, body);
+ExpressionPointer Function::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = std::make_shared<Function>(range(), environment, input_name, body);
     log << result->serialize() << std::endl;
     return result;
 }
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
-    auto middle = Dictionary({}, parent());
+    auto middle = Dictionary({}, environment());
     middle.elements.push_back(std::make_shared<NamedElement>(range(), &middle, input_name, input, 0));
     auto output = body->evaluate(&middle, log);
     return output;

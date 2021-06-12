@@ -13,7 +13,7 @@ using DictionaryElements = std::vector<DictionaryElementPointer>;
 struct DictionaryElement : Expression {
     DictionaryElement(
         CodeRange range,
-        const Expression* parent,
+        const Expression* environment,
         NamePointer name,
         ExpressionPointer expression,
         size_t dictionary_index
@@ -25,9 +25,9 @@ struct DictionaryElement : Expression {
     size_t dictionary_index_;
 
     static DictionaryElementPointer parse(CodeRange code);
-    virtual void mutate(const Expression* parent, std::ostream& log,
+    virtual void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const = 0;
-    virtual size_t jump(const Expression* parent, std::ostream& log) const = 0;
+    virtual size_t jump(const Expression* environment, std::ostream& log) const = 0;
     virtual bool isWhile() const;
     virtual bool isEnd() const;
     virtual bool isSymbolDefinition() const;
@@ -36,7 +36,7 @@ struct DictionaryElement : Expression {
 struct NamedElement : DictionaryElement {
     NamedElement(
         CodeRange range,
-        const Expression* parent,
+        const Expression* environment,
         NamePointer name,
         ExpressionPointer expression,
         size_t dictionary_index
@@ -44,33 +44,33 @@ struct NamedElement : DictionaryElement {
     std::string serialize() const final;
     ExpressionPointer lookup(const std::string& s) const final;
     static DictionaryElementPointer parse(CodeRange code);
-    void mutate(const Expression* parent, std::ostream& log,
+    void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const final;
-    size_t jump(const Expression* parent, std::ostream& log) const final;
+    size_t jump(const Expression* environment, std::ostream& log) const final;
 };
 
 struct WhileElement : DictionaryElement {
     WhileElement(
         CodeRange range,
-        const Expression* parent,
+        const Expression* environment,
         ExpressionPointer expression
     );
     std::string serialize() const final;
     static bool startsWith(CodeRange code);
     static DictionaryElementPointer parse(CodeRange code);
-    void mutate(const Expression* parent, std::ostream& log,
+    void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const final;
-    size_t jump(const Expression* parent, std::ostream& log) const final;
+    size_t jump(const Expression* environment, std::ostream& log) const final;
 };
 
 struct EndElement : DictionaryElement {
-    EndElement(CodeRange range, const Expression* parent);
+    EndElement(CodeRange range, const Expression* environment);
     std::string serialize() const final;
     static bool startsWith(CodeRange code);
     static DictionaryElementPointer parse(CodeRange code);
-    void mutate(const Expression* parent, std::ostream& log,
+    void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const final;
-    size_t jump(const Expression* parent, std::ostream& log) const final;
+    size_t jump(const Expression* environment, std::ostream& log) const final;
 };
 
 void setContext(DictionaryElements& elements);

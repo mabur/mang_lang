@@ -7,10 +7,10 @@ std::string Conditional::serialize() const {
         + " else " + expression_else->serialize();
 }
 
-ExpressionPointer Conditional::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = expression_if->evaluate(parent, log)->boolean() ?
-        expression_then->evaluate(parent, log) :
-        expression_else->evaluate(parent, log);
+ExpressionPointer Conditional::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = expression_if->evaluate(environment, log)->boolean() ?
+        expression_then->evaluate(environment, log) :
+        expression_else->evaluate(environment, log);
     log << result->serialize() << std::endl;
     return result;
 }

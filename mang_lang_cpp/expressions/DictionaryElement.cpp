@@ -4,11 +4,11 @@
 
 DictionaryElement::DictionaryElement(
     CodeRange range,
-    const Expression* parent,
+    const Expression* environment,
     NamePointer name,
     ExpressionPointer expression,
     size_t dictionary_index
-) : Expression{range, parent},
+) : Expression{range, environment},
     name{std::move(name)},
     expression{std::move(expression)},
     dictionary_index_{dictionary_index}
@@ -16,22 +16,22 @@ DictionaryElement::DictionaryElement(
 
 NamedElement::NamedElement(
     CodeRange range,
-    const Expression* parent,
+    const Expression* environment,
     NamePointer name,
     ExpressionPointer expression,
     size_t dictionary_index
-) : DictionaryElement{range, parent, std::move(name), std::move(expression), dictionary_index}
+) : DictionaryElement{range, environment, std::move(name), std::move(expression), dictionary_index}
 {}
 
 WhileElement::WhileElement(
     CodeRange range,
-    const Expression* parent,
+    const Expression* environment,
     ExpressionPointer expression
-) : DictionaryElement{range, parent, nullptr, std::move(expression), 0}
+) : DictionaryElement{range, environment, nullptr, std::move(expression), 0}
 {}
 
-EndElement::EndElement(CodeRange range, const Expression* parent)
-    : DictionaryElement{range, parent, nullptr, nullptr, 0}
+EndElement::EndElement(CodeRange range, const Expression* environment)
+    : DictionaryElement{range, environment, nullptr, nullptr, 0}
 {}
 
 std::string NamedElement::serialize() const {
@@ -109,13 +109,13 @@ DictionaryElementPointer EndElement::parse(CodeRange code) {
     );
 }
 
-void NamedElement::mutate(const Expression* parent, std::ostream& log,
+void NamedElement::mutate(const Expression* environment, std::ostream& log,
     std::vector<DictionaryElementPointer>& elements) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(
         range(),
-        parent,
+        environment,
         name,
-        expression->evaluate(parent, log),
+        expression->evaluate(environment, log),
         dictionary_index_
     );
 }
@@ -132,8 +132,8 @@ size_t NamedElement::jump(const Expression*, std::ostream&) const {
     return jump_true;
 }
 
-size_t WhileElement::jump(const Expression* parent, std::ostream& log) const {
-    if (expression->evaluate(parent, log)->boolean()) {
+size_t WhileElement::jump(const Expression* environment, std::ostream& log) const {
+    if (expression->evaluate(environment, log)->boolean()) {
         return jump_true;
     }
     return jump_false;

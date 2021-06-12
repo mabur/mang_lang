@@ -5,8 +5,8 @@ std::string Character::serialize() const {
     return "\'" + std::string{value} + "\'";
 }
 
-ExpressionPointer Character::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<Character>(range(), parent, value);
+ExpressionPointer Character::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = std::make_shared<Character>(range(), environment, value);
     log << result->serialize();
     return result;
 }

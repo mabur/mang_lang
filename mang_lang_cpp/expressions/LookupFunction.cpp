@@ -5,9 +5,9 @@ std::string LookupFunction::serialize() const {
     return name->serialize() + "!" + child->serialize();
 }
 
-ExpressionPointer LookupFunction::evaluate(const Expression* parent, std::ostream& log) const {
-    const auto function = parent->lookup(name->value);
-    const auto evaluated_child = child->evaluate(parent, log);
+ExpressionPointer LookupFunction::evaluate(const Expression* environment, std::ostream& log) const {
+    const auto function = environment->lookup(name->value);
+    const auto evaluated_child = child->evaluate(environment, log);
     assert(evaluated_child);
     auto result = function->apply(evaluated_child, log);
     log << result->serialize() << std::endl;

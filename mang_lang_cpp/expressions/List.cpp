@@ -13,12 +13,12 @@ std::string List::serialize() const {
     return result;
 }
 
-ExpressionPointer List::evaluate(const Expression* parent, std::ostream& log) const {
+ExpressionPointer List::evaluate(const Expression* environment, std::ostream& log) const {
     const auto operation = [&](const ExpressionPointer& expression) {
-        return expression->evaluate(parent, log);
+        return expression->evaluate(environment, log);
     };
     auto evaluated_elements = map(list(), operation);
-    auto result = std::make_shared<List>(range(), parent, std::move(evaluated_elements));
+    auto result = std::make_shared<List>(range(), environment, std::move(evaluated_elements));
     log << result->serialize() << std::endl;
     return result;
 }

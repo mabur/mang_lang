@@ -3,8 +3,8 @@
 
 template<typename T>
 struct ListBase : public Expression {
-    ListBase(CodeRange range, const Expression* parent, InternalList elements)
-        : Expression{range, parent}, elements{std::move(elements)}
+    ListBase(CodeRange range, const Expression* environment, InternalList elements)
+        : Expression{range, environment}, elements{std::move(elements)}
     {}
     ExpressionPointer lookup(const std::string& name) const final {
         if (name == "first") {

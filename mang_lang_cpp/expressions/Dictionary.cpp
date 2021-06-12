@@ -31,9 +31,9 @@ std::string Dictionary::serialize() const {
     return result;
 }
 
-ExpressionPointer Dictionary::evaluate(const Expression* parent, std::ostream& log) const {
+ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {
     const auto num_names = numNames(elements);
-    auto result = std::make_shared<Dictionary>(range(), parent);
+    auto result = std::make_shared<Dictionary>(range(), environment);
     result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
     auto i = size_t{0};
     while (i < elements.size()) {

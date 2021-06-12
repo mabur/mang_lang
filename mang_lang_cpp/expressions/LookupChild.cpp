@@ -4,8 +4,8 @@ std::string LookupChild::serialize() const {
     return name->serialize() + "@" + child->serialize();
 }
 
-ExpressionPointer LookupChild::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = child->evaluate(parent, log)->lookup(name->value);
+ExpressionPointer LookupChild::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = child->evaluate(environment, log)->lookup(name->value);
     log << result->serialize() << std::endl;
     return result;
 }

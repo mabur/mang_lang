@@ -21,8 +21,8 @@ std::string FunctionDictionary::serialize() const {
     return result;
 }
 
-ExpressionPointer FunctionDictionary::evaluate(const Expression* parent, std::ostream& log) const {
-    auto result = std::make_shared<FunctionDictionary>(range(), parent, input_names, body);
+ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, std::ostream& log) const {
+    auto result = std::make_shared<FunctionDictionary>(range(), environment, input_names, body);
     log << result->serialize() << std::endl;
     return result;
 }
