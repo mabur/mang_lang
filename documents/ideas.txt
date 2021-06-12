@@ -192,19 +192,19 @@ Level 4b   - Imperative:           Iterative dictionary
 ║ -3.34       ║ 'c'         ║
 ╚═════════════╚═════════════╝
 
-╔═ LISTS ════════════╔═ STRINGS ══════════╔═ DICTIONARIES ═════════╗
-║ (EXPRESSION ...)   ║ "CHARACTER..."     ║ {NAME=EXPRESSION ...}  ║
-║                    ║                    ║                        ║
-║ ()                 ║ ""                 ║ {}                     ║
-║                    ║                    ║                        ║
-║ (1 2 3)            ║ "abc"              ║ {width=320 height=240} ║
-║                    ║                    ║                        ║
-║ (                  ║ "Mang Lang"        ║ {                      ║
-║     1              ║                    ║     x = 1              ║
-║     2              ║                    ║     y = 2              ║
-║     3              ║                    ║     z = 3              ║
-║ )                  ║                    ║ }                      ║
-╚════════════════════╚════════════════════╚════════════════════════╝
+╔═ DICTIONARIES ═════════╔═ LISTS ══════════╔═ STRINGS ══════╗
+║ {NAME=EXPRESSION ...}  ║ (EXPRESSION ...) ║ "CHARACTER..." ║
+║                        ║                  ║                ║
+║ {}                     ║ ()               ║ ""             ║
+║                        ║                  ║                ║
+║ {width=320 height=240} ║ (1 2 3)          ║ "abc"          ║
+║                        ║                  ║                ║
+║ {                      ║ (                ║ "Mang Lang"    ║
+║     x = 1              ║     1            ║                ║
+║     y = 2              ║     2            ║                ║
+║     z = 3              ║     3            ║                ║
+║ }                      ║ )                ║                ║
+╚════════════════════════╚══════════════════╚════════════════╝
 
 ╔═ REFERENCES ═══════╔═ CHILD REFERENCES ══════════════════╗
 ║ NAME               ║ NAME@EXPRESSION                     ║
