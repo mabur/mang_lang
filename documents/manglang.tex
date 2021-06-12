@@ -98,13 +98,13 @@ lookup(self: Node, reference: str) -> Node
 \subsection{Evaluation Rules}
 What about handling environment, by setting it for each node, or tracking it when doing lookups?
 
-\paragraph{Number} is evaluated to itself.
-\paragraph{Character} is evaluated to itself.
-\paragraph{String} is evaluated to itself.
-\paragraph{Function} is evaluated to itself.
-\paragraph{List} is evaluated to a new list where we have evaluated each of its elements.
-\paragraph{Dictionary} is evaluated to a new dictionary where we have evaluated each of its elements.
-\paragraph{Conditional} is evaluated by first evaluating the condition and then either the if-child or else-child.
+\paragraph{Number} is evaluated to itself. Has no environment.
+\paragraph{Character} is evaluated to itself. Has no environment.
+\paragraph{String} is evaluated to itself. Has no environment.
+\paragraph{Function} is evaluated to itself except that environment is set to its parent.
+\paragraph{List} is evaluated to a new list where we have evaluated each of its elements. Environment is set to its parent.
+\paragraph{Dictionary} is evaluated to a new dictionary where we have evaluated each of its elements. Environment is set to its parent.
+\paragraph{Conditional} is evaluated by first evaluating the condition and then delegating evaluation to either the if-child or else-child.
 \paragraph{Child reference} is evaluated by first evaluating its child and then looking up the name in it.
 \paragraph{Reference} is evaluated by looking up the name in the environment until it is found. The found node is returned. Note that the environment of the node found is not changed.
 \paragraph{Function application} is evaluated by evaluating the input. Then by looking up the name of the function in the environment until it is found. Then by evaluating the body of the function in its environment, extended with the input.
