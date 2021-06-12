@@ -96,7 +96,7 @@ lookup(self: Node, reference: str) -> Node
 \end{verbatim}
 
 \subsection{Evaluation Rules}
-What about handling environment, by setting it for each node, or tracking it when doing lookups?
+During evaluation we pass the environment to each expression that should be evaluated. During evaluation we also set the environment when creating new expressions.
 
 \paragraph{Number} is evaluated to itself. Has no environment.
 \paragraph{Character} is evaluated to itself. Has no environment.
