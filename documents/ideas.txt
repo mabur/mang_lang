@@ -4,7 +4,6 @@ TODO:
   - Character: character_from_number, number_from_character, string_from_number, number_from_string, then to_upper, to_lower, is_alpha, is_digit.
   - child@ as function that can be sent to map
   - Implement equal for dictionary
-  - rename functions first and rest to first! and rest! or get_first get_rest to not confuse noun/result from verb/function
   - Naming of count_*, range, reverse_range, enumerate.
 * Error handling:
   - Make "1 2" throw a parse error
@@ -37,6 +36,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Remove python
 
 * Implement list and string as syntactic sugar for dictionary {first=... rest={...}}
+  - How to store efficiently? Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
 
 * Pointers
   - Ownership model of raw and smart pointers in different passes.
@@ -65,16 +65,6 @@ a@{a = 0} -> 0
 {a = {a = 0 f = in x out a} g = f@a b = g!1} -> {a = {a = 0 f = in x out a} g = ? b = 1}
 a@{apply=in(f x)out f!x g=in x out 0 a=apply!(g 1)}
 
-Identity for empty, prepend, first, rest:
-{
-    list0 = ...
-    list1 = empty!list0
-    tail = list0
-    while tail
-        list1 = prepend!(first!tail list1)
-        tail = rest!tail
-    end
-}
 
 SIMILAR LANGUAGES
 * Lisp family
@@ -95,33 +85,6 @@ Languages supported by Github:
 https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
 Candidates:
 HiveQL
-
-
-* Implement lists as dictionaries {first, rest} or {}?
-  - functions first and rest can be replaced with member lookup first@ and rest@
-  - prepend can be replaced with dict construction {first=first, rest=rest}
-  - Can reverse be implemented in standard-library? yes, but I don't know if it can be made generic
-  - How to differentiate between strings and lists?
-
-    [] -> {type=list}
-    [1] -> {first=1,rest={},type=list}
-    [1,2] -> {first=1,rest={first=2,rest={},type=list},type=list}
-
-    "" -> {type=character}
-    "a" -> {first='a',rest={},type=list}
-    "ab" -> {first='a',rest={first='b',rest={},type=list},type=list}
-
-    {first=1,rest=[1,2], type=list}
-    prepend{first=1,rest=[1,2]}
-    list{first=1,rest=[1,2]}
-    string{first='a',rest="bc"}
-
-
-    How to serialize?
-    - Have type field {type=character}
-    - Have hidden type information
-    How to store efficiently? No problem.
-    - Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
 
 
 TODOS: TYPE CHECKING AND COMPILING
@@ -156,7 +119,7 @@ square = in x out mul!(x x)
 hyp : in {x:Number y:Number} out Number = sqrt!add!(mul!(x x) mul!(y y))
 
 // list to list:
-conjugate : in x : List Number out List Number = (first!x neg!second!x)
+conjugate : in x : List Number out List Number = (first@x neg!second!x)
 
 // record to record:
 conjugate : in {r:Number i:Number} out {r:Number i:Number} = {r := r i := neg!i}
@@ -272,7 +235,7 @@ Level 4b   - Imperative:           Iterative dictionary
 ║     square = in x out mul!(x x)                   ║                                 ║                                            ║
 ║     nine = square 3                               ║ {                               ║                                            ║
 ║     square_norm2 = in vec out                     ║     square_norm2 = in (x y) out ║                                            ║
-║         add!(square!first!vec, square!second!vec) ║         add!(square!x square!y) ║                                            ║
+║         add!(square!first@vec, square!second!vec) ║         add!(square!x square!y) ║                                            ║
 ║     n = square_norm2!(3 4)                        ║     n = square_norm2!(3 4)      ║ {                                          ║
 ║     get_area = in shape out                       ║     conj = in (re im) out       ║     get_area = in {width height} out       ║
 ║         mul!(width@shape height@shape)            ║         (re neg!im)             ║         mul!(width height)                 ║
