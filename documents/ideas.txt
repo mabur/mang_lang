@@ -25,6 +25,9 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Implement everything needed to convert between json and manglang in manglang.
   - Dynamic creation of dictionaries. 
 * Parser combinators
+* Subsets of manglang:
+  - Data: number, character, dictionaries, list, string
+  - Minimal computation: number, dictionaries, references, child references, function application, function definition
 * Is manglang suitable for numerical computations on arrays?
 * How to specify starting point for generic functions () and ""?
    - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
@@ -41,7 +44,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Pointers
   - Ownership model of raw and smart pointers in different passes.
   - When are nullpointers allowed?
-  - Separate storage of parent and rest of node, for simple reseting of parent for lookups, without sacrificinf immutability
+  - Separate storage of parent and rest of node, for simple reseting of parent for lookups, without sacrificing immutability
   - How to represent the environment/parent tree during evaluation?
   - Parent is needed for lookup and apply.
     - Can we store the chain of parents locally when calling evaluate,
