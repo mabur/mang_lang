@@ -12,10 +12,10 @@
 
 Mang Lang is a functional language without any side efects. The lifetime of a Mang Lang program has four stages:
 \begin{enumerate}
-\item Program written in Mang Lang.
+\item Program written in Mang Lang as text.
 \item Program parsed into a tree graph.
 \item Program evaluated into another tree graph.
-\item Program result presented in Mang Lang.
+\item Program result presented in Mang Lang as text.
 \end{enumerate}
 
 \section{Minimal Language for Data}
@@ -23,27 +23,23 @@ Mang Lang is a functional language without any side efects. The lifetime of a Ma
 We start by defining a minimal language for storing data, similar to Json. It consists of these primitive values:
 \begin{itemize}
 \item Numbers like: \lstinline|1.0|
-\item Strings like: \lstinline|''Magnus''|
-\item Booleans true and false
+\item Characters like: \lstinline|'a'|
 \end{itemize}
 Values can be packaged in these collections:
 \begin{itemize}
-\item Lists like: \lstinline|[1, 2, 3]|
-\item Dictionaries like: \lstinline|{x = 1, y = 2}|
+\item Dictionaries like: \lstinline|{x = 1  y = 2}|
+\item Lists like: \lstinline|(1 2 3)|
+\item Strings like: \lstinline|''Magnus''|
 \end{itemize}
-Collections can be nested. We can translate this format to Json by replacing = with : and adding quotes arounds dictionary keys.
+Dictionaries and strings can be nested.
 
 \section{Extended Language for Data}
 
 We add the posibility to refer back to symbols:
 \begin{itemize}
-\item Reference to symbol in current scope like: \lstinline|{x = 1, y = x}|
-\item Reference to symbol in parent scope like:  \lstinline|{x = 1, y = {z = x}}|
-\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1}, z = y<x}|
-\end{itemize}
-We add the posibility for conditionals:
-\begin{itemize}
-\item Conditionals like: \lstinline|if x then y else z|
+\item Reference to symbol in current scope like: \lstinline|{x = 1 y = x}|
+\item Reference to symbol in environment scope like:  \lstinline|{x = 1 y = {z = x}}|
+\item Reference to symbol in child scope like:  \lstinline|{x = {y = 1} z = y@x}|
 \end{itemize}
 
 \subsection{Evaluation}
@@ -51,18 +47,19 @@ We add the posibility for conditionals:
 To evaluate a program written in the extended language for data we follow these steps:
 \begin{enumerate}
 \item Parse input written in the extended language for data. This results in a tree graph.
-\item Collapse references and conditionals to the expressions they refer to. This results in another tree graph.
+\item Collapse references to the expressions they refer to. This results in another tree graph.
 \item Serialize the evaluated tree to get the result written in the minimal language for data.
 \end{enumerate}
-We parse the input into a tree. In this tree a parent keeps references to its children, and each child also keeps a reference to its parent. We use this when collapsing references and conditionals.
+We parse the input into a tree. In this tree a parent keeps references to its children, and each child also keeps a reference to its environment, which can be different from its parent. We use this when looking up references and collapsing them.
 
 \section{Minimal Language for Algorithms}
 
 We will now extend our language to handle functions. We extend the abstract syntax tree with these nodes:
 \begin{itemize}
-\item Functions like: \lstinline|from x to [x, x]|
-\item Reference to function input like: \lstinline|from x to [x, x]|
-\item Function application like: \lstinline|{f = from x to [x, x], y = f 1}|
+\item Conditionals like: \lstinline|if x then y else z|
+\item Functions like: \lstinline|in x out (x x)|
+\item Reference to function input like: \lstinline|in x out (x x)|
+\item Function application like: \lstinline|{f = in x out (x x) y = f!1}|
 \end{itemize}
 
 \subsection{Evaluation}
@@ -75,38 +72,41 @@ We evaluate the program by transforming the AST to another graph. We keep a copy
 \item We do NOT collapse functions and do NOT collapse anything in the function body.
 \item We collapse function calls. When collapsing a function call we evaluate the body of the function it refers to, given the input to the function.
 \end{enumerate}
-We don't allow functions to survive their bound environment, i.e. to be the output. We do not have closures.
 
 \section{Implementation}
 
 \subsection{Abstract Syntax Tree}
-The parsing takes a string and builds an Abstract Syntax Tree which consist of the following nodes:
-\begin{verbatim}
-type Number = {value: float}
-type String = {value: str}
-type Boolean = {value: str}
-type List = {values: list<Node>}
-type Dictionary = {values: list<tuple<str, Node>>}
-type Conditional = {condition: Node; a: Node; b: Node}
-type LookupSymbol = {name: str}
-type LookupChild = {name: str; child: Node}
-type LookupFunction = {name: str; input: Node}
-type Function = {input_name: str; body: Node}
-\end{verbatim}
+The parsing takes a string and builds an Abstract Syntax Tree.
 
 \subsection{Evaluation Tree}
 
-The evaluation takes an Abstact Syntax Tree and builds an Evaluation Tree which consists of similar nodes but with a parent pointing to another Evaluation Node. The nodes in the Abstract Syntax Tree are cloned during the evaluation and given parents.
+The evaluation takes an Abstact Syntax Tree and builds an Evaluation Tree. In the evaluation tree each node can have a pointer to its environment Node, which can be different from its parent node, e.g. for functions. The nodes in the Abstract Syntax Tree are cloned during the evaluation and given environment pointers.
+
+In the evaluation tree each node is owned by its parent. The environment pointers are raw pointers. We do not allow a node to survive its environment. Therefore we do not allow functions to survive their bound environment, i.e. to be the output.
 
 \subsection{Methods}
 
 Each Node provides an evaluation method that generates new nodes:
 \begin{verbatim}
-evaluate(self: Node, parent: Node) -> Node
+evaluate(self: Node, environment: Node) -> Node
 \end{verbatim}
-Each Node provides a lookup method that search for a reference in the node and if nothing is find passes the query to its parent. The lookup does not generate new nodes:
+Each Node provides a lookup method that search for a reference in the node and if nothing is find passes the query to its environment. The lookup does not generate new nodes:
 \begin{verbatim}
 lookup(self: Node, reference: str) -> Node
 \end{verbatim}
+
+\subsection{Evaluation Rules}
+What about handling environment, by setting it for each node, or tracking it when doing lookups?
+
+\paragraph{Number} is evaluated to itself.
+\paragraph{Character} is evaluated to itself.
+\paragraph{String} is evaluated to itself.
+\paragraph{Function} is evaluated to itself.
+\paragraph{List} is evaluated to a new list where we have evaluated each of its elements.
+\paragraph{Dictionary} is evaluated to a new dictionary where we have evaluated each of its elements.
+\paragraph{Conditional} is evaluated by first evaluating the condition and then either the if-child or else-child.
+\paragraph{Child reference} is evaluated by first evaluating its child and then looking up the name in it.
+\paragraph{Reference} is evaluated by looking up the name in the environment until it is found. The found node is returned. Note that the environment of the node found is not changed.
+\paragraph{Function application} is evaluated by evaluating the input. Then by looking up the name of the function in the environment until it is found. Then by evaluating the body of the function in its environment, extended with the input.
 
 \end{document}
