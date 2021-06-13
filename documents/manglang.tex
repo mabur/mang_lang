@@ -86,14 +86,21 @@ In the evaluation tree each node is owned by its parent. The environment pointer
 
 \subsection{Methods}
 
-Each Node provides an evaluation method that generates new nodes:
+Each Node provides an evaluation method:
 \begin{verbatim}
-evaluate(self: Node, environment: Node) -> Node
+shared_ptr<Node> Expression::evaluate(const Node* environment);
 \end{verbatim}
-Each Node provides a lookup method that search for a reference in the node and if nothing is find passes the query to its environment. The lookup does not generate new nodes:
+Each Node provides a lookup method that search for a reference in the node and if nothing is find passes the query to its environment.
 \begin{verbatim}
-lookup(self: Node, reference: str) -> Node
+shared_ptr<Node> Expression::lookup(string reference);
 \end{verbatim}
+TODO: Check implementation of apply:
+\begin{verbatim}
+shared_ptr<Node> Expression::apply(shared_ptr<Node> input);
+\end{verbatim}
+How does the evaluation of the function body know about its environment?
+
+\clearpage
 
 \subsection{Evaluation Rules}
 During evaluation we pass the environment to each expression that should be evaluated. During evaluation we also set the environment when creating new expressions.
@@ -101,7 +108,7 @@ During evaluation we pass the environment to each expression that should be eval
 \paragraph{Number} is evaluated to itself. Has no environment.
 \paragraph{Character} is evaluated to itself. Has no environment.
 \paragraph{String} is evaluated to itself. Has no environment.
-\paragraph{Function} is evaluated to itself except that environment is set to its parent.
+\paragraph{Function} is evaluated to a copy of itself. Environment is set to its parent.
 \paragraph{List} is evaluated to a new list where we have evaluated each of its elements. Environment is set to its parent.
 \paragraph{Dictionary} is evaluated to a new dictionary where we have evaluated each of its elements. Environment is set to its parent.
 \paragraph{Conditional} is evaluated by first evaluating the condition and then delegating evaluation to either the if-child or else-child.
