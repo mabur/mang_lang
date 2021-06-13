@@ -611,9 +611,9 @@ int main() {
     });
     test.evaluate("replace list", {
         {"replace!(1 2 ())", "()"},
-        //{"replace(1,2,(1))", "(2)"},
-        //{"replace(1,2,(2))", "(1)"},
-        //{"replace(1,2,(0,1,0,1,1))", "(0,2,0,2,2)"},
+        {"replace!(1 2 (1))", "(2)"},
+        {"replace!(1 2 (2))", "(2)"},
+        {"replace!(1 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
     test.evaluate("enumerate list", {
         {"enumerate!()", "()"},
