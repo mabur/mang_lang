@@ -35,6 +35,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Importing source files.
+    end
+  }
 
 * Remove python
 
@@ -235,17 +237,30 @@ SUB LANGUAGES
 ║ }                  ║ }                                   ║
 ╚════════════════════╚═════════════════════════════════════╝
 
-╔══ CONDITIONALS ═══════════════════════════════╔══ FUNCTION APPLICATION ════════════════════╗
-║ if EXPRESSION then EXPRESSION else EXPRESSION ║ NAME!EXPRESSION                            ║
-║                                               ║                                            ║
-║ {                                             ║ {                                          ║
-║     is_rich = 0                               ║     list = (1 2 3)                         ║
-║     money = if is_rich then 1000000 else 1    ║     num_elements = count!list              ║
-║     list = ()                                 ║     longer_list = prepend!(0 list)         ║
-║     is_list_empty = if list then 1 else 0     ║     backwards = reverse!"Mang Lang"        ║
-║ }                                             ║     area = get_area!{width=320 height=240} ║
-║                                               ║ }                                          ║
-╚═══════════════════════════════════════════════╚════════════════════════════════════════════╝
+╔══ FUNCTION APPLICATION ════════════════════╗
+║ NAME!EXPRESSION                            ║
+║                                            ║
+║ {                                          ║
+║     list = (1 2 3)                         ║
+║     num_elements = count!list              ║
+║     longer_list = prepend!(0 list)         ║
+║     backwards = reverse!"Mang Lang"        ║
+║     area = get_area!{width=320 height=240} ║
+║ }                                          ║
+╚════════════════════════════════════════════╝
+
+╔══ CONDITIONALS ═══════════════════════════════╔═ ITERATIVE DICTIONARIES ═══════════════════════════════╗
+║ if EXPRESSION then EXPRESSION else EXPRESSION ║ {NAME=EXPRESSION while EXPRESSION NAME=EXPRESSION end} ║
+║                                               ║                                                        ║
+║ {                                             ║ {                                                      ║
+║     is_rich = 0                               ║     sum = 0                                            ║
+║     money = if is_rich then 1000000 else 1    ║     i = 10                                             ║
+║     list = ()                                 ║     while i                                            ║
+║     is_list_empty = if list then 1 else 0     ║         i = dec!i                                      ║
+║ }                                             ║         sum = add!(sum i)                              ║
+║                                               ║     end                                                ║
+║                                               ║ }                                                      ║
+╚═══════════════════════════════════════════════╚════════════════════════════════════════════════════════╝
 
 ╔══ FUNCTIONS ══════════════════════════════════════╔══ FUNCTIONS OF LISTS ═══════════╔══ FUNCTIONS OF DICTIONARIES ═══════════════╗
 ║ in NAME out EXPRESSION                            ║ in (NAME ...) out EXPRESSION    ║ in {NAME ...} out EXPRESSION               ║
@@ -261,16 +276,3 @@ SUB LANGUAGES
 ║     area = get_area!{width=320 height=240}        ║     c = conj!(0 1)              ║     area = get_area!{width=320 height=240} ║
 ║ }                                                 ║ }                               ║ }                                          ║
 ╚═══════════════════════════════════════════════════╚═════════════════════════════════╚════════════════════════════════════════════╝
-
-╔═ ITERATIVE DICTIONARIES ═══════════════════════════════╗
-║ {NAME=EXPRESSION while EXPRESSION NAME=EXPRESSION end} ║
-║                                                        ║
-║ {                                                      ║
-║     sum = 0                                            ║
-║     i = 10                                             ║
-║     while i                                            ║
-║         i = dec!i                                      ║
-║         sum = add!(sum i)                              ║
-║     end                                                ║
-║ }                                                      ║
-╚════════════════════════════════════════════════════════╝
