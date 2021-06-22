@@ -35,6 +35,12 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Importing source files.
+* Change if-then-else to normal function, and stop supporting recursion?
+  - if?(condition then_expression else_expression)
+  - In standard library if then else is only used in similar way as:
+  {
+    if conditional
+      result = new_result
     end
   }
 
