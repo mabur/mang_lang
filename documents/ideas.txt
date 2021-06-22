@@ -77,6 +77,10 @@ SIMILAR LANGUAGES
 * Dhall https://dhall-lang.org/
 * L1 https://mlajtos.github.io/L1/
 * Azor: https://github.com/cstuartroe/azor
+* Pico?
+* CUE?
+* GCL
+* HCL?
 
 WEBPAGE
 https://www.passerine.io/
@@ -164,29 +168,41 @@ Vec2 = (x=Real y=Real)
 
 LEVELS
 1. Data
-   - numbers
-   - characters
-   - strings
-   - lists
-   - dictionaries
+  - Primitive
+      - numbers
+      - characters
+  - Aggregate
+    - strings
+    - lists
+    - dictionaries
 2. References
-   - reference (substitution)
-   - child reference (substitution)
-3. Computation
-   - if (substitution)
-   - function definition
-   - function call (substitution)
-4. Imperative
-   - while in dictionaries and updating of symbols (substitution)
+  - reference (substitution)
+  - child reference (substitution)
+3. Calculation (not turing complete)
+  - function application (substitution)
+4. Control flow (turing complete)
+  - Conditional if (substitution)
+  - Iterative dictionary, while in dictionaries and updating of symbols (substitution)
+5. Function Definition
+  - Function
+  - Function of list
+  - Function of dictionary
+
+When evaluating level 1-4 the result is level 1.
+When evaluating level 5 the result is level 5.
+
+Have different levels per file, so that the functions can be in one file
+and then the result file can import them and evaluate its result to level 1.
 
 
-Level 0    - Primitive data:       Numbers, Characters
-Level 1    - Aggregate Data:       Lists, Strings, Dictionaries
-Level 2    - References:           Reference, Child Reference
-Level 3    - Branching:            Conditional
-Level 4ai  - Function call:        Function call
-Level 4aii - Functions definition: Function, (Function of List), (Function of Dictionary)
-Level 4b   - Imperative:           Iterative dictionary
+SUB LANGUAGES
+* Json-like: level 1
+* Yaml-like: level 2
+* Non-turing complete calculator: level 3
+* Turing complete: level 4
+* Full: level 5
+* Minimal computation: numbers & dictionaries & References & Computation
+
 
         PRIMITIVE DATA
 ╔══ NUMBERS ══╔═ CHARACTERS═╗
