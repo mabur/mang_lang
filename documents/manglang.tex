@@ -69,8 +69,8 @@ We evaluate the program by transforming the AST to another graph. We keep a copy
 \item We do not collapse: numbers, strings, booleans
 \item We collapse conditionals.
 \item We collapse references.
-\item We do NOT collapse functions and do NOT collapse anything in the function body.
 \item We collapse function calls. When collapsing a function call we evaluate the body of the function it refers to, given the input to the function.
+\item We do NOT collapse functions and do NOT collapse anything in the function body.
 \end{enumerate}
 
 \section{Implementation}
@@ -94,13 +94,32 @@ Each Node provides a lookup method that search for a reference in the node and i
 \begin{verbatim}
 shared_ptr<Node> Expression::lookup(string reference);
 \end{verbatim}
+Functions provide an a method for function application:
+
 TODO: Check implementation of apply:
 \begin{verbatim}
 shared_ptr<Node> Expression::apply(shared_ptr<Node> input);
 \end{verbatim}
 How does the evaluation of the function body know about its environment?
+The environment for a function body is not only its parent, but also its input.
 
 \clearpage
+
+\subsection{Lookup rules}
+
+\paragraph{General Fallback}
+Delegate lookup to environment. If the expression does not have an environment then report run-time error for missing symbol.
+
+\paragraph{Dictionary}
+Try lookup for each dictionary element. If the name is not found in any of the dictionary elemenets then fallback to general lookup.
+
+\paragraph{Named Element}
+If the lookup name corresponds to the name of the element then return its expression. Otherwise return null.
+
+\paragraph{List}
+If lookup name is ``first'' or ``rest'' then return that part of the list. Otherwise?
+
+TODO: think about child lookup vs environment lookup. Will child lookup fallback to general lookup in environment? Can we have the same lookup interface for both cases or should we have two lookup interfaces?
 
 \subsection{Evaluation Rules}
 During evaluation we pass the environment to each expression that should be evaluated. During evaluation we also set the environment when creating new expressions.
@@ -109,11 +128,41 @@ During evaluation we pass the environment to each expression that should be eval
 \paragraph{Character} is evaluated to itself. Has no environment.
 \paragraph{String} is evaluated to itself. Has no environment.
 \paragraph{Function} is evaluated to a copy of itself. Environment is set to its parent.
-\paragraph{List} is evaluated to a new list where we have evaluated each of its elements. Environment is set to its parent.
-\paragraph{Dictionary} is evaluated to a new dictionary where we have evaluated each of its elements. Environment is set to its parent.
-\paragraph{Conditional} is evaluated by first evaluating the condition and then delegating evaluation to either the if-child or else-child.
-\paragraph{Child reference} is evaluated by first evaluating its child and then looking up the name in it.
-\paragraph{Reference} is evaluated by looking up the name in the environment until it is found. The found node is returned. Note that the environment of the node found is not changed.
-\paragraph{Function application} is evaluated by evaluating the input. Then by looking up the name of the function in the environment until it is found. Then by evaluating the body of the function in its environment, extended with the input.
+\paragraph{List}
+\begin{enumerate}
+\item is evaluated to a new list where we have evaluated each of its elements. Environment is set to its parent.
+\end{enumerate}
+
+\paragraph{Dictionary}
+\begin{enumerate}
+\item Create a new dictionary.
+\item Evaluate each element, with an environment set to its parent extended with the partially evaluated dictionary.
+\item Set environment of new dictionary to its parent.
+\end{enumerate}
+
+\paragraph{Conditional}
+\begin{enumerate}
+\item Evaluate the condition.
+\item Delegate evaluation to either the if-child or else-child.
+\end{enumerate}
+
+\paragraph{Child reference}
+\begin{enumerate}
+\item Evaluate the child.
+\item Look up the name in evaluated child.
+\end{enumerate}
+
+\paragraph{Reference}
+\begin{enumerate}
+\item Look up the name in the environment.
+\item The found expreession is returned. Note that the environment of the node found is not changed.
+\end{enumerate}
+
+\paragraph{Function application}
+\begin{enumerate}
+\item Evaluate the input.
+\item Look up the name of the function in the environment.
+\item Evaluate the body of the function in its environment, extended with the input.
+\end{enumerate}
 
 \end{document}
