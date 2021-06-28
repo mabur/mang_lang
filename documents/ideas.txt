@@ -19,6 +19,7 @@ TODO:
   - Improve home-page.
   - Prettier homepage.
   - Syntax high-lighting.
+  - Implement tool that takes a source file and outputs an html.
 * Skill tree visualization for manglang syntax and taxonomy.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
@@ -35,6 +36,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Importing source files.
+* Describe ListBase as a "Concept".
 * Change if-then-else to normal function, and stop supporting recursion?
   - if?(condition then_expression else_expression)
   - In standard library if then else is only used in similar way as:
@@ -43,8 +45,44 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
       result = new_result
     end
   }
-
+* Describe semantics of evlaution rules formaly as algebra.
 * Remove python
+* Problem with lookup of first and rest inside list environment 
+{
+  first = ...
+  rest = ...
+  result = f(first rest)
+}
+* Meta language for describing semantic rules more formally?
+  - C with indices instead of pointers?
+* How would an implementation in modern c look?
+  - Modern C and What We Can Learn From It - Luca Sas [ ACCU 2021 ]
+ https://www.youtube.com/watch?v=QpAhX-gsHMs&t=1775s
+  - https://floooh.github.io/2019/09/27/modern-c-for-cpp-peeps.html
+  - Pass by value everywhere. Can all pointers be pointers to constants so that everything is immutable?
+  - Error handling - have a "valid" member variable in CodeRange to handle parse errors.
+  - Memory ownership.
+    - Have a global array for each type of expression.
+    - Pass around indices to elements in it.
+    - Re-allocate when runnig out of capacity.
+    - Deallocate everything at the same time at the end of the program.
+      No distinction between owning and non-owning pointers.
+  - Generic algorithms?
+    - What are the needs for the interpretor?
+
+struct ExpressionPointer
+{
+  int type;
+  size_t index;
+};
+
+struct Conditional
+{
+  ExpressionPointer expression_if;
+  ExpressionPointer expression_then;
+  ExpressionPointer expression_else;
+};
+
 
 * Implement list and string as syntactic sugar for dictionary {first=... rest={...}}
   - How to store efficiently? Use hash-function to go from string to number, so that we internally can store keys as numbers instead of strings.
