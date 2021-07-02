@@ -97,6 +97,9 @@ const std::string STANDARD_LIBRARY = R"(
         result = reverse!reversed_result
     }
 
+    replace_if = in (predicate new_item list) out
+        map!(in item out if predicate?item then new_item else item list)
+
     replace = in (old_item new_item list) out
         map!(in item out if equal?(item old_item) then new_item else item list)
 
