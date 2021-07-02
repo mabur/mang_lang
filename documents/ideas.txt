@@ -67,6 +67,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     - Re-allocate when runnig out of capacity.
     - Deallocate everything at the same time at the end of the program.
       No distinction between owning and non-owning pointers.
+    - Store every value computed during the life-time of the program as immutable state.
   - Generic algorithms?
     - What are the needs for the interpretor?
 
