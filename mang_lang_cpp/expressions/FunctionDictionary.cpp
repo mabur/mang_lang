@@ -28,6 +28,7 @@ ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, st
 }
 
 ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostream& log) const {
+    // TODO: pass along environment.
     return body->evaluate(input.get(), log);
 }
 
