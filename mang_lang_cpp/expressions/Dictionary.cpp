@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 
+#include "../operations/boolean.h"
 #include "../operations/evaluate.h"
 #include "../operations/serialize.h"
 
@@ -29,5 +30,5 @@ ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostre
 }
 
 bool Dictionary::boolean() const {
-    return !elements.empty();
+    return ::boolean(*this);
 }

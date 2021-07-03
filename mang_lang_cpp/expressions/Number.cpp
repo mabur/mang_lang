@@ -1,5 +1,6 @@
 #include "Number.h"
 
+#include "../operations/boolean.h"
 #include "../operations/evaluate.h"
 #include "../operations/serialize.h"
 
@@ -24,5 +25,5 @@ double Number::number() const {
 }
 
 bool Number::boolean() const {
-    return static_cast<bool>(value);
+    return ::boolean(*this);
 }

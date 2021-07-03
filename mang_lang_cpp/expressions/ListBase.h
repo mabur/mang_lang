@@ -1,6 +1,7 @@
 #pragma once
 #include "Expression.h"
 
+#include "../operations/boolean.h"
 #include "../operations/list.h"
 
 template<typename T>
@@ -23,7 +24,7 @@ struct ListBase : public Expression {
         return ::listListBase(*this);
     }
     bool boolean() const final {
-        return !!list();
+        return ::boolean(*this);
     }
     bool isEqual(const Expression* expression) const final {
         auto left = list();
