@@ -22,6 +22,7 @@ add_library(shared
         expressions/Number.cpp
         expressions/String.cpp
         operations/apply.cpp
+        operations/evaluate.cpp
         mang_lang.cpp
         parsing.cpp
         )

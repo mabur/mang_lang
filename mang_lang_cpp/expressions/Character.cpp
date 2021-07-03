@@ -1,14 +1,14 @@
 #include "Character.h"
 #include <algorithm>
 
+#include "../operations/evaluate.h"
+
 std::string Character::serialize() const {
     return "\'" + std::string{value} + "\'";
 }
 
 ExpressionPointer Character::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = std::make_shared<Character>(range(), environment, value);
-    log << result->serialize();
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer Character::parse(CodeRange code) {
