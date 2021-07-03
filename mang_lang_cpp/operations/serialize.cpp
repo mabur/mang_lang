@@ -3,6 +3,7 @@
 #include "../expressions/Character.h"
 #include "../expressions/Conditional.h"
 #include "../expressions/Dictionary.h"
+#include "../expressions/Function.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -39,4 +40,9 @@ std::string serialize(const WhileElement& element) {
 
 std::string serialize(const EndElement&) {
     return "end ";
+}
+
+std::string serialize(const Function& function) {
+    return "in " + function.input_name->serialize()
+        + " out " + function.body->serialize();
 }

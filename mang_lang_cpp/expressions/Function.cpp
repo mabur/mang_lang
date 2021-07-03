@@ -6,9 +6,10 @@
 
 #include "../operations/apply.h"
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string Function::serialize() const {
-    return std::string{"in "} + input_name->serialize() + " out " + body->serialize();
+    return ::serialize(*this);
 }
 
 ExpressionPointer Function::evaluate(const Expression* environment, std::ostream& log) const {
