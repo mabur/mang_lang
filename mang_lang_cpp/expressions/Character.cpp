@@ -2,9 +2,10 @@
 #include <algorithm>
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string Character::serialize() const {
-    return "\'" + std::string{value} + "\'";
+    return ::serialize(*this);
 }
 
 ExpressionPointer Character::evaluate(const Expression* environment, std::ostream& log) const {

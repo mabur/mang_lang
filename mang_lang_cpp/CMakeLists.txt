@@ -23,6 +23,7 @@ add_library(shared
         expressions/String.cpp
         operations/apply.cpp
         operations/evaluate.cpp
+        operations/serialize.cpp
         mang_lang.cpp
         parsing.cpp
         )
