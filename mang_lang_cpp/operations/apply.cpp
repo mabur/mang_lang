@@ -1,10 +1,7 @@
 #include "apply.h"
 
-#include <memory>
-
-#include "../expressions/Function.h"
 #include "../expressions/Dictionary.h"
-#include "../expressions/DictionaryElement.h"
+#include "../expressions/Function.h"
 
 ExpressionPointer apply(
     const Function& function, ExpressionPointer input, std::ostream& log

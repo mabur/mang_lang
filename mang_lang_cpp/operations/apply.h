@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ostream>
-
 #include "../expressions/Expression.h"
 
 struct Function;
