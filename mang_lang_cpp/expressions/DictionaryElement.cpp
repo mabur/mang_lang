@@ -63,54 +63,6 @@ bool EndElement::startsWith(CodeRange code) {
     return isKeyword(code, "end");
 }
 
-DictionaryElementPointer DictionaryElement::parse(CodeRange code) {
-    code = parseWhiteSpace(code);
-    throwIfEmpty(code);
-    if (WhileElement::startsWith(code)) {
-        return WhileElement::parse(code);
-    }
-    if (EndElement::startsWith(code)) {
-        return EndElement::parse(code);
-    }
-    return NamedElement::parse(code);
-}
-
-DictionaryElementPointer NamedElement::parse(CodeRange code) {
-    auto first = code.begin();
-    auto name = Name::parse(code);
-    code.first = name->end();
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '=');
-    code = parseWhiteSpace(code);
-    auto expression = Expression::parse(code);
-    code.first = expression->end();
-    code = parseWhiteSpace(code);
-    return std::make_shared<NamedElement>(
-        CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression), 0
-    );
-}
-
-DictionaryElementPointer WhileElement::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseKeyword(code, "while");
-    code = parseWhiteSpace(code);
-    auto expression = Expression::parse(code);
-    code.first = expression->end();
-    code = parseWhiteSpace(code);
-    return std::make_shared<WhileElement>(
-        CodeRange{first, code.first}, nullptr, std::move(expression)
-    );
-}
-
-DictionaryElementPointer EndElement::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseKeyword(code, "end");
-    code = parseWhiteSpace(code);
-    return std::make_shared<EndElement>(
-        CodeRange{first, code.first}, nullptr
-    );
-}
-
 void NamedElement::mutate(const Expression* environment, std::ostream& log,
     std::vector<DictionaryElementPointer>& elements) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(

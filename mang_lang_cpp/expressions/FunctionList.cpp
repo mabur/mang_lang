@@ -20,30 +20,6 @@ ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log
     return ::apply(*this, input, log);
 }
 
-ExpressionPointer FunctionList::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '(');
-    code = parseWhiteSpace(code);
-    auto input_names = std::vector<NamePointer>{};
-    while (!::startsWith(code, ')')) {
-        throwIfEmpty(code);
-        const auto name = Name::parse(code);
-        code.first = name->end();
-        input_names.push_back(name);
-        code = parseWhiteSpace(code);
-    }
-    code = parseCharacter(code, ')');
-    code = parseWhiteSpace(code);
-    code = parseKeyword(code, "out");
-    auto body = Expression::parse(code);
-    code.first = body->end();
-    return std::make_shared<FunctionList>(
-        CodeRange{first, code.begin()}, nullptr, input_names, body
-    );
-}
-
 bool FunctionList::startsWith(CodeRange code) {
     if (!isKeyword(code, "in")) {
         return false;

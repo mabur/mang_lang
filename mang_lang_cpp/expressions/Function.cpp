@@ -20,21 +20,6 @@ ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) co
     return ::apply(*this, input, log);
 }
 
-ExpressionPointer Function::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
-    auto input_name = Name::parse(code);
-    code.first = input_name->end();
-    code = parseWhiteSpace(code);
-    code = parseKeyword(code, "out");
-    auto body = Expression::parse(code);
-    code.first = body->end();
-    return std::make_shared<Function>(
-        CodeRange{first, code.begin()}, nullptr, input_name, body
-    );
-}
-
 bool Function::startsWith(CodeRange code) {
     return isKeyword(code, "in");
 }

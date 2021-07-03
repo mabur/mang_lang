@@ -9,6 +9,5 @@ struct Name : public Expression {
         : Expression{range, environment}, value{std::move(value)} {}
     std::string value;
     std::string serialize() const final;
-    static NamePointer parse(CodeRange code);
     static bool startsWith(CodeRange code);
 };

@@ -8,6 +8,5 @@ struct String : public ListBase<String> {
         : ListBase<String>{range, environment, std::move(elements)}{}
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-    static ExpressionPointer parse(CodeRange code);
     static bool startsWith(CodeRange code);
 };

@@ -31,26 +31,6 @@ bool Dictionary::boolean() const {
     return !elements.empty();
 }
 
-ExpressionPointer Dictionary::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '{');
-    code = parseWhiteSpace(code);
-    auto elements = std::vector<DictionaryElementPointer>{};
-    while (!::startsWith(code, '}')) {
-        throwIfEmpty(code);
-        auto element = DictionaryElement::parse(code);
-        code.first = element->end();
-        elements.push_back(element);
-    }
-    code = parseCharacter(code, '}');
-    setContext(elements);
-    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
-    for (auto& element : elements) {
-        result->elements.push_back(std::move(element));
-    }
-    return result;
-}
-
 bool Dictionary::startsWith(CodeRange code) {
     return ::startsWith(code, '{');
 }

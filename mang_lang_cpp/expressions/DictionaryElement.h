@@ -24,7 +24,6 @@ struct DictionaryElement : Expression {
     size_t jump_false = 0;
     size_t dictionary_index_;
 
-    static DictionaryElementPointer parse(CodeRange code);
     virtual void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const = 0;
     virtual size_t jump(const Expression* environment, std::ostream& log) const = 0;
@@ -43,7 +42,6 @@ struct NamedElement : DictionaryElement {
     );
     std::string serialize() const final;
     ExpressionPointer lookup(const std::string& s) const final;
-    static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const final;
     size_t jump(const Expression* environment, std::ostream& log) const final;
@@ -57,7 +55,6 @@ struct WhileElement : DictionaryElement {
     );
     std::string serialize() const final;
     static bool startsWith(CodeRange code);
-    static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const final;
     size_t jump(const Expression* environment, std::ostream& log) const final;
@@ -67,7 +64,6 @@ struct EndElement : DictionaryElement {
     EndElement(CodeRange range, const Expression* environment);
     std::string serialize() const final;
     static bool startsWith(CodeRange code);
-    static DictionaryElementPointer parse(CodeRange code);
     void mutate(const Expression* environment, std::ostream& log,
         DictionaryElements& elements) const final;
     size_t jump(const Expression* environment, std::ostream& log) const final;

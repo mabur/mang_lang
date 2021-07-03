@@ -14,6 +14,8 @@
 #include "Number.h"
 #include "String.h"
 
+#include "../operations/parse.h"
+
 const CodeCharacter* Expression::begin() const {
     return range_.begin();
 }
@@ -41,19 +43,19 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
 ExpressionPointer Expression::parse(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (List::startsWith(code)) {return List::parse(code);}
-    if (Dictionary::startsWith(code)) {return Dictionary::parse(code);}
-    if (Number::startsWith(code)) {return Number::parse(code);}
-    if (Character::startsWith(code)) {return Character::parse(code);}
-    if (String::startsWith(code)) {return String::parse(code);}
-    if (String::startsWith(code)) {return String::parse(code);}
-    if (Conditional::startsWith(code)) {return Conditional::parse(code);}
-    if (FunctionDictionary::startsWith(code)) {return FunctionDictionary::parse(code);}
-    if (FunctionList::startsWith(code)) {return FunctionList::parse(code);}
-    if (Function::startsWith(code)) {return Function::parse(code);}
-    if (LookupChild::startsWith(code)) {return LookupChild::parse(code);}
-    if (LookupFunction::startsWith(code)) {return LookupFunction::parse(code);}
-    if (LookupSymbol::startsWith(code)) {return LookupSymbol::parse(code);}
+    if (List::startsWith(code)) {return parseList(code);}
+    if (Dictionary::startsWith(code)) {return parseDictionary(code);}
+    if (Number::startsWith(code)) {return parseNumber(code);}
+    if (Character::startsWith(code)) {return parseCharacterExpression(code);}
+    if (String::startsWith(code)) {return parseString(code);}
+    if (String::startsWith(code)) {return parseString(code);}
+    if (Conditional::startsWith(code)) {return parseConditional(code);}
+    if (FunctionDictionary::startsWith(code)) {return parseFunctionDictionary(code);}
+    if (FunctionList::startsWith(code)) {return parseFunctionList(code);}
+    if (Function::startsWith(code)) {return parseFunction(code);}
+    if (LookupChild::startsWith(code)) {return parseLookupChild(code);}
+    if (LookupFunction::startsWith(code)) {return parseLookupFunction(code);}
+    if (LookupSymbol::startsWith(code)) {return parseLookupSymbol(code);}
     throwParseException(code);
     return {};
 }

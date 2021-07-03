@@ -19,30 +19,6 @@ ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostrea
     return ::apply(*this, input, log);
 }
 
-ExpressionPointer FunctionDictionary::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '{');
-    code = parseWhiteSpace(code);
-    auto input_names = std::vector<NamePointer>{};
-    while (!::startsWith(code, '}')) {
-        throwIfEmpty(code);
-        const auto name = Name::parse(code);
-        code.first = name->end();
-        input_names.push_back(name);
-        code = parseWhiteSpace(code);
-    }
-    code = parseCharacter(code, '}');
-    code = parseWhiteSpace(code);
-    code = parseKeyword(code, "out");
-    auto body = Expression::parse(code);
-    code.first = body->end();
-    return std::make_shared<FunctionDictionary>(
-        CodeRange{first, code.begin()}, nullptr, input_names, body
-    );
-}
-
 bool FunctionDictionary::startsWith(CodeRange code) {
     if (!isKeyword(code, "in")) {
         return false;

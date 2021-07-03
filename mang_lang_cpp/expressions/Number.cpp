@@ -11,17 +11,6 @@ ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& 
     return ::evaluate(*this, environment, log);
 }
 
-ExpressionPointer Number::parse(CodeRange code) {
-    auto first = code.begin();
-    code = parseOptionalCharacter(code, isSign);
-    code = parseCharacter(code, isDigit);
-    code = parseWhile(code, isDigit);
-    code = parseOptionalCharacter(code, '.');
-    code = parseWhile(code, isDigit);
-    const auto value = std::stod(rawString({first, code.first}));
-    return std::make_shared<Number>(CodeRange{first, code.first}, nullptr, value);
-}
-
 bool Number::startsWith(CodeRange code) {
     return !code.empty() && (isSign(*code.begin()) || isDigit(*code.begin()));
 }
