@@ -1,8 +1,10 @@
 #include "Name.h"
 #include <cassert>
 
+#include "../operations/serialize.h"
+
 std::string Name::serialize() const {
-    return value;
+    return ::serialize(*this);
 }
 
 NamePointer Name::parse(CodeRange code) {
