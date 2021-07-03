@@ -5,6 +5,7 @@
 #include "DictionaryElement.h"
 
 #include "../operations/apply.h"
+#include "../operations/evaluate.h"
 
 std::string FunctionList::serialize() const {
     auto result = std::string{};
@@ -25,9 +26,7 @@ std::string FunctionList::serialize() const {
 }
 
 ExpressionPointer FunctionList::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = std::make_shared<FunctionList>(range(), environment, input_names, body);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log) const {
