@@ -13,6 +13,8 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "starts_with.h"
+
 ExpressionPointer parseCharacterExpression(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '\'');
@@ -100,10 +102,10 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
 DictionaryElementPointer parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (WhileElement::startsWith(code)) {
+    if (startsWithWhileElement(code)) {
         return parseWhileElement(code);
     }
-    if (EndElement::startsWith(code)) {
+    if (startsWithEndElement(code)) {
         return parseEndElement(code);
     }
     return parseNamedElement(code);
@@ -281,19 +283,19 @@ ExpressionPointer parseString(CodeRange code) {
 ExpressionPointer parseExpression(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (List::startsWith(code)) {return parseList(code);}
-    if (Dictionary::startsWith(code)) {return parseDictionary(code);}
-    if (Number::startsWith(code)) {return parseNumber(code);}
-    if (Character::startsWith(code)) {return parseCharacterExpression(code);}
-    if (String::startsWith(code)) {return parseString(code);}
-    if (String::startsWith(code)) {return parseString(code);}
-    if (Conditional::startsWith(code)) {return parseConditional(code);}
-    if (FunctionDictionary::startsWith(code)) {return parseFunctionDictionary(code);}
-    if (FunctionList::startsWith(code)) {return parseFunctionList(code);}
-    if (Function::startsWith(code)) {return parseFunction(code);}
-    if (LookupChild::startsWith(code)) {return parseLookupChild(code);}
-    if (LookupFunction::startsWith(code)) {return parseLookupFunction(code);}
-    if (LookupSymbol::startsWith(code)) {return parseLookupSymbol(code);}
+    if (startsWithList(code)) {return parseList(code);}
+    if (startsWithDictionary(code)) {return parseDictionary(code);}
+    if (startsWithNumber(code)) {return parseNumber(code);}
+    if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
+    if (startsWithString(code)) {return parseString(code);}
+    if (startsWithString(code)) {return parseString(code);}
+    if (startsWithConditional(code)) {return parseConditional(code);}
+    if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
+    if (startsWithFunctionList(code)) {return parseFunctionList(code);}
+    if (startsWithFunction(code)) {return parseFunction(code);}
+    if (startsWithLookupChild(code)) {return parseLookupChild(code);}
+    if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
+    if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}
     throwParseException(code);
     return {};
 }

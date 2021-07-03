@@ -13,7 +13,3 @@ std::string String::serialize() const {
 ExpressionPointer String::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(*this, environment, log);
 }
-
-bool String::startsWith(CodeRange code) {
-    return ::startsWith(code, '"');
-}

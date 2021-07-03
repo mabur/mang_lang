@@ -13,5 +13,4 @@ struct LookupFunction : public Expression {
     ExpressionPointer child;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-    static bool startsWith(CodeRange code);
 };

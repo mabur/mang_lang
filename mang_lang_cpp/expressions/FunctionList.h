@@ -17,5 +17,4 @@ struct FunctionList : public Expression {
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
     ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const final;
-    static bool startsWith(CodeRange code);
 };

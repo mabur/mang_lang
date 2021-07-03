@@ -55,14 +55,6 @@ ExpressionPointer NamedElement::lookup(const std::string& s) const {
     return nullptr;
 }
 
-bool WhileElement::startsWith(CodeRange code) {
-    return isKeyword(code, "while");
-}
-
-bool EndElement::startsWith(CodeRange code) {
-    return isKeyword(code, "end");
-}
-
 void NamedElement::mutate(const Expression* environment, std::ostream& log,
     std::vector<DictionaryElementPointer>& elements) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(

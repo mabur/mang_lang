@@ -13,7 +13,3 @@ std::string LookupSymbol::serialize() const {
 ExpressionPointer LookupSymbol::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(*this, environment, log);
 }
-
-bool LookupSymbol::startsWith(CodeRange code) {
-    return Name::startsWith(code);
-}

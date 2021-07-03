@@ -16,6 +16,7 @@ ExpressionPointer Dictionary::lookup(const std::string& name) const {
             }
         }
     }
+
     return Expression::lookup(name);
 }
 
@@ -29,8 +30,4 @@ ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostre
 
 bool Dictionary::boolean() const {
     return !elements.empty();
-}
-
-bool Dictionary::startsWith(CodeRange code) {
-    return ::startsWith(code, '{');
 }

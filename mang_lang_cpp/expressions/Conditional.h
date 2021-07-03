@@ -19,5 +19,4 @@ struct Conditional : public Expression {
     ExpressionPointer expression_else;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-    static bool startsWith(CodeRange code);
 };

@@ -19,7 +19,3 @@ ExpressionPointer Function::evaluate(const Expression* environment, std::ostream
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
     return ::apply(*this, input, log);
 }
-
-bool Function::startsWith(CodeRange code) {
-    return isKeyword(code, "in");
-}

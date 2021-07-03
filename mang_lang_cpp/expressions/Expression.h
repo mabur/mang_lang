@@ -13,8 +13,6 @@ struct Expression;
 using ExpressionPointer = std::shared_ptr<const Expression>;
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
-const auto KEYWORDS = std::vector<std::string>{"if", "then", "else", "from", "to"};
-
 struct Expression {
     Expression(CodeRange range, const Expression* environment)
         : range_{range}, parent_{environment} {}
@@ -27,8 +25,6 @@ struct Expression {
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
     const Expression* environment() const;
-
-    static bool startsWith(CodeRange code);
 
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const;

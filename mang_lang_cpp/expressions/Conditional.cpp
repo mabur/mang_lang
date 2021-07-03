@@ -12,7 +12,3 @@ std::string Conditional::serialize() const {
 ExpressionPointer Conditional::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(*this, environment, log);
 }
-
-bool Conditional::startsWith(CodeRange code) {
-    return isKeyword(code, "if");
-}

@@ -10,7 +10,3 @@ std::string List::serialize() const {
 ExpressionPointer List::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(*this, environment, log);
 }
-
-bool List::startsWith(CodeRange code) {
-    return ::startsWith(code, '(');
-}

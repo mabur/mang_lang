@@ -20,11 +20,3 @@ ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log
     return ::apply(*this, input, log);
 }
 
-bool FunctionList::startsWith(CodeRange code) {
-    if (!isKeyword(code, "in")) {
-        return false;
-    }
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
-    return ::startsWith(code, '(');
-}

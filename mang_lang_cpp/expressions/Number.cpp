@@ -11,10 +11,6 @@ ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& 
     return ::evaluate(*this, environment, log);
 }
 
-bool Number::startsWith(CodeRange code) {
-    return !code.empty() && (isSign(*code.begin()) || isDigit(*code.begin()));
-}
-
 bool Number::isEqual(const Expression* expression) const {
     try {
         return number() == expression->number();

@@ -18,12 +18,3 @@ ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, st
 ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostream& log) const {
     return ::apply(*this, input, log);
 }
-
-bool FunctionDictionary::startsWith(CodeRange code) {
-    if (!isKeyword(code, "in")) {
-        return false;
-    }
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
-    return ::startsWith(code, '{');
-}

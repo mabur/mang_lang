@@ -40,21 +40,6 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
     return environment()->lookup(name);
 }
 
-bool Expression::startsWith(CodeRange code) {
-    return
-        List::startsWith(code) ||
-        Dictionary::startsWith(code) ||
-        Number::startsWith(code) ||
-        Character::startsWith(code) ||
-        String::startsWith(code) ||
-        Conditional::startsWith(code) ||
-        FunctionDictionary::startsWith(code) ||
-        Function::startsWith(code) ||
-        LookupChild::startsWith(code) ||
-        LookupFunction::startsWith(code) ||
-        LookupSymbol::startsWith(code);
-}
-
 ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {
     throw std::runtime_error{"Expected evaluatable expression"};
 }

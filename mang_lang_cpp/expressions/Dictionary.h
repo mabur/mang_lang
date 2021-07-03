@@ -11,6 +11,5 @@ struct Dictionary : public Expression {
     ExpressionPointer lookup(const std::string& name) const final;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-    static bool startsWith(CodeRange code);
     bool boolean() const final;
 };

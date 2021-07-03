@@ -13,10 +13,6 @@ ExpressionPointer Character::evaluate(const Expression* environment, std::ostrea
     return ::evaluate(*this, environment, log);
 }
 
-bool Character::startsWith(CodeRange code) {
-    return ::startsWith(code, '\'');
-}
-
 bool Character::isEqual(const Expression* expression) const {
     try {
         return character() == expression->character();
