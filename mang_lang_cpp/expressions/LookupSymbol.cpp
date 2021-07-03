@@ -4,9 +4,10 @@
 #include "Name.h"
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string LookupSymbol::serialize() const {
-    return name->serialize();
+    return ::serialize(*this);
 }
 
 ExpressionPointer LookupSymbol::evaluate(const Expression* environment, std::ostream& log) const {

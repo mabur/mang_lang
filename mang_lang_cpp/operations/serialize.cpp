@@ -9,6 +9,7 @@
 #include "../expressions/List.h"
 #include "../expressions/LookupChild.h"
 #include "../expressions/LookupFunction.h"
+#include "../expressions/LookupSymbol.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -107,4 +108,8 @@ std::string serialize(const LookupChild& lookup_child) {
 
 std::string serialize(const LookupFunction& lookup_function) {
     return lookup_function.name->serialize() + "!" + lookup_function.child->serialize();
+}
+
+std::string serialize(const LookupSymbol& lookup_symbol) {
+    return lookup_symbol.name->serialize();
 }
