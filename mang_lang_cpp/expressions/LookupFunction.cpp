@@ -1,17 +1,14 @@
 #include "LookupFunction.h"
 #include <cassert>
 
+#include "../operations/evaluate.h"
+
 std::string LookupFunction::serialize() const {
     return name->serialize() + "!" + child->serialize();
 }
 
 ExpressionPointer LookupFunction::evaluate(const Expression* environment, std::ostream& log) const {
-    const auto function = environment->lookup(name->value);
-    const auto evaluated_child = child->evaluate(environment, log);
-    assert(evaluated_child);
-    auto result = function->apply(evaluated_child, log);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer LookupFunction::parse(CodeRange code) {

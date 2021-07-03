@@ -1,5 +1,7 @@
 #include "evaluate.h"
 
+#include <cassert>
+
 #include "../expressions/Character.h"
 #include "../expressions/Conditional.h"
 #include "../expressions/Dictionary.h"
@@ -8,6 +10,7 @@
 #include "../expressions/FunctionList.h"
 #include "../expressions/List.h"
 #include "../expressions/LookupChild.h"
+#include "../expressions/LookupFunction.h"
 
 ExpressionPointer evaluate(
     const Character& character, const Expression* environment, std::ostream& log
@@ -89,6 +92,17 @@ ExpressionPointer evaluate(
     const LookupChild& lookup_child, const Expression* environment, std::ostream& log
 ) {
     auto result = lookup_child.child->evaluate(environment, log)->lookup(lookup_child.name->value);
+    log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(
+    const LookupFunction& lookup_function, const Expression* environment, std::ostream& log
+) {
+    const auto function = environment->lookup(lookup_function.name->value);
+    const auto evaluated_child = lookup_function.child->evaluate(environment, log);
+    assert(evaluated_child);
+    auto result = function->apply(evaluated_child, log);
     log << result->serialize() << std::endl;
     return result;
 }
