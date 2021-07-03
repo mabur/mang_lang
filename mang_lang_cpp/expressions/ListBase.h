@@ -2,6 +2,7 @@
 #include "Expression.h"
 
 #include "../operations/boolean.h"
+#include "../operations/is_equal.h"
 #include "../operations/list.h"
 
 template<typename T>
@@ -27,14 +28,7 @@ struct ListBase : public Expression {
         return ::boolean(*this);
     }
     bool isEqual(const Expression* expression) const final {
-        auto left = list();
-        auto right = expression->list();
-        for (; left && right; left = left->rest, right = right->rest) {
-            if (!(left->first)->isEqual(right->first.get())) {
-                return false;
-            }
-        }
-        return !left && !right;
+        return ::isEqual(*this, expression);
     }
     ExpressionPointer empty() const final {
         return ::emptyListBase(*this);

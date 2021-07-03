@@ -24,6 +24,7 @@ add_library(shared
         operations/apply.cpp
         operations/boolean.cpp
         operations/evaluate.cpp
+        operations/is_equal.cpp
         operations/parse.cpp
         operations/serialize.cpp
         operations/starts_with.cpp

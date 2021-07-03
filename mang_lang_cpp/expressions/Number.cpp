@@ -2,6 +2,7 @@
 
 #include "../operations/boolean.h"
 #include "../operations/evaluate.h"
+#include "../operations/is_equal.h"
 #include "../operations/serialize.h"
 
 std::string Number::serialize() const {
@@ -13,11 +14,7 @@ ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& 
 }
 
 bool Number::isEqual(const Expression* expression) const {
-    try {
-        return number() == expression->number();
-    } catch (...) {
-        return false;
-    }
+    return ::isEqual(*this, expression);
 }
 
 double Number::number() const {

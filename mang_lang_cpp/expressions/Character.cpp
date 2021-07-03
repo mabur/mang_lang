@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "../operations/evaluate.h"
+#include "../operations/is_equal.h"
 #include "../operations/parse.h"
 #include "../operations/serialize.h"
 
@@ -14,11 +15,7 @@ ExpressionPointer Character::evaluate(const Expression* environment, std::ostrea
 }
 
 bool Character::isEqual(const Expression* expression) const {
-    try {
-        return character() == expression->character();
-    } catch (...) {
-        return false;
-    }
+    return ::isEqual(*this, expression);
 }
 
 char Character::character() const {
