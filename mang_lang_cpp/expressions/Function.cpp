@@ -4,6 +4,8 @@
 #include "Dictionary.h"
 #include "DictionaryElement.h"
 
+#include "../operations/apply.h"
+
 std::string Function::serialize() const {
     return std::string{"in "} + input_name->serialize() + " out " + body->serialize();
 }
@@ -15,10 +17,7 @@ ExpressionPointer Function::evaluate(const Expression* environment, std::ostream
 }
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
-    auto middle = Dictionary({}, environment());
-    middle.elements.push_back(std::make_shared<NamedElement>(range(), &middle, input_name, input, 0));
-    auto output = body->evaluate(&middle, log);
-    return output;
+    return ::apply(*this, input, log);
 }
 
 ExpressionPointer Function::parse(CodeRange code) {

@@ -21,6 +21,7 @@ add_library(shared
         expressions/Name.cpp
         expressions/Number.cpp
         expressions/String.cpp
+        operations/apply.cpp
         mang_lang.cpp
         parsing.cpp
         )
