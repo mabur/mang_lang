@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
@@ -19,18 +20,7 @@ ExpressionPointer Dictionary::lookup(const std::string& name) const {
 }
 
 std::string Dictionary::serialize() const {
-    auto result = std::string{};
-    result += '{';
-    for (const auto& element : elements) {
-        result += element->serialize();
-    }
-    if (elements.empty()) {
-        result += '}';
-    }
-    else {
-        result.back() = '}';
-    }
-    return result;
+    return ::serialize(*this);
 }
 
 ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {
