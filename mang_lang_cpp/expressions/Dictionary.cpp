@@ -4,6 +4,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "../operations/evaluate.h"
+
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
     for (const auto& element : elements) {
         if (element) {
@@ -32,16 +34,7 @@ std::string Dictionary::serialize() const {
 }
 
 ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {
-    const auto num_names = numNames(elements);
-    auto result = std::make_shared<Dictionary>(range(), environment);
-    result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
-    auto i = size_t{0};
-    while (i < elements.size()) {
-        elements[i]->mutate(result.get(), log, result->elements);
-        i += elements[i]->jump(result.get(), log);
-    }
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 bool Dictionary::boolean() const {
