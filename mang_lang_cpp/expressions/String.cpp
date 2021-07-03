@@ -4,15 +4,10 @@
 #include "Character.h"
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string String::serialize() const {
-    auto value = std::string{"\""};
-    auto node = list();
-    for (; node; node = node->rest) {
-        value += node->first->character();
-    }
-    value += "\"";
-    return value;
+    return ::serialize(*this);
 }
 
 ExpressionPointer String::evaluate(const Expression* environment, std::ostream& log) const {

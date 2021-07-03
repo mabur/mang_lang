@@ -12,6 +12,7 @@
 #include "../expressions/LookupSymbol.h"
 #include "../expressions/Name.h"
 #include "../expressions/Number.h"
+#include "../expressions/String.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -124,4 +125,14 @@ std::string serialize(const Number& number) {
     std::stringstream s;
     s << number.value;
     return s.str();
+}
+
+std::string serialize(const String& string) {
+    auto value = std::string{"\""};
+    auto node = string.list();
+    for (; node; node = node->rest) {
+        value += node->first->character();
+    }
+    value += "\"";
+    return value;
 }
