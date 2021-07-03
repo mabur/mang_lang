@@ -9,6 +9,7 @@ struct Function;
 struct FunctionDictionary;
 struct FunctionList;
 struct List;
+struct LookupChild;
 
 ExpressionPointer evaluate(const Character& character, const Expression* environment, std::ostream& log);
 ExpressionPointer evaluate(const Conditional& conditional, const Expression* environment, std::ostream& log);
@@ -17,3 +18,4 @@ ExpressionPointer evaluate(const Function& function, const Expression* environme
 ExpressionPointer evaluate(const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log);
 ExpressionPointer evaluate(const FunctionList& function_list, const Expression* environment, std::ostream& log);
 ExpressionPointer evaluate(const List& list, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluate(const LookupChild& lookup_child, const Expression* environment, std::ostream& log);

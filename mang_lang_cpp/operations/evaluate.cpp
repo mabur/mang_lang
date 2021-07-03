@@ -7,6 +7,7 @@
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
 #include "../expressions/List.h"
+#include "../expressions/LookupChild.h"
 
 ExpressionPointer evaluate(
     const Character& character, const Expression* environment, std::ostream& log
@@ -71,7 +72,8 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(const List& list, const Expression* environment, std::ostream& log
+ExpressionPointer evaluate(
+    const List& list, const Expression* environment, std::ostream& log
 ) {
     const auto operation = [&](const ExpressionPointer& expression) {
         return expression->evaluate(environment, log);
@@ -79,6 +81,14 @@ ExpressionPointer evaluate(const List& list, const Expression* environment, std:
     auto evaluated_elements = map(list.list(), operation);
     auto result = std::make_shared<List>(
         list.range(), environment, std::move(evaluated_elements));
+    log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(
+    const LookupChild& lookup_child, const Expression* environment, std::ostream& log
+) {
+    auto result = lookup_child.child->evaluate(environment, log)->lookup(lookup_child.name->value);
     log << result->serialize() << std::endl;
     return result;
 }

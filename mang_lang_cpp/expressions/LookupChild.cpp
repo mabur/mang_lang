@@ -1,13 +1,12 @@
 #include "LookupChild.h"
 
+#include "../operations/evaluate.h"
 std::string LookupChild::serialize() const {
     return name->serialize() + "@" + child->serialize();
 }
 
 ExpressionPointer LookupChild::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = child->evaluate(environment, log)->lookup(name->value);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer LookupChild::parse(CodeRange code) {
