@@ -6,6 +6,7 @@
 #include "../expressions/Function.h"
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
+#include "../expressions/List.h"
 
 ExpressionPointer evaluate(
     const Character& character, const Expression* environment, std::ostream& log
@@ -66,6 +67,18 @@ ExpressionPointer evaluate(
     auto result = std::make_shared<FunctionList>(
         function_list.range(), environment, function_list.input_names, function_list.body
     );
+    log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(const List& list, const Expression* environment, std::ostream& log
+) {
+    const auto operation = [&](const ExpressionPointer& expression) {
+        return expression->evaluate(environment, log);
+    };
+    auto evaluated_elements = map(list.list(), operation);
+    auto result = std::make_shared<List>(
+        list.range(), environment, std::move(evaluated_elements));
     log << result->serialize() << std::endl;
     return result;
 }

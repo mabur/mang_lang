@@ -1,5 +1,7 @@
 #include "List.h"
 
+#include "../operations/evaluate.h"
+
 std::string List::serialize() const {
     if (!list()) {
         return "()";
@@ -14,13 +16,7 @@ std::string List::serialize() const {
 }
 
 ExpressionPointer List::evaluate(const Expression* environment, std::ostream& log) const {
-    const auto operation = [&](const ExpressionPointer& expression) {
-        return expression->evaluate(environment, log);
-    };
-    auto evaluated_elements = map(list(), operation);
-    auto result = std::make_shared<List>(range(), environment, std::move(evaluated_elements));
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer List::parse(CodeRange code) {
