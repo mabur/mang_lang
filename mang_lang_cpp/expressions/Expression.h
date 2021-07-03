@@ -29,7 +29,6 @@ struct Expression {
     const Expression* environment() const;
 
     static bool startsWith(CodeRange code);
-    static ExpressionPointer parse(CodeRange code);
 
     virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const;

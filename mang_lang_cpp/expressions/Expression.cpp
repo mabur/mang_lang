@@ -40,26 +40,6 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
     return environment()->lookup(name);
 }
 
-ExpressionPointer Expression::parse(CodeRange code) {
-    code = parseWhiteSpace(code);
-    throwIfEmpty(code);
-    if (List::startsWith(code)) {return parseList(code);}
-    if (Dictionary::startsWith(code)) {return parseDictionary(code);}
-    if (Number::startsWith(code)) {return parseNumber(code);}
-    if (Character::startsWith(code)) {return parseCharacterExpression(code);}
-    if (String::startsWith(code)) {return parseString(code);}
-    if (String::startsWith(code)) {return parseString(code);}
-    if (Conditional::startsWith(code)) {return parseConditional(code);}
-    if (FunctionDictionary::startsWith(code)) {return parseFunctionDictionary(code);}
-    if (FunctionList::startsWith(code)) {return parseFunctionList(code);}
-    if (Function::startsWith(code)) {return parseFunction(code);}
-    if (LookupChild::startsWith(code)) {return parseLookupChild(code);}
-    if (LookupFunction::startsWith(code)) {return parseLookupFunction(code);}
-    if (LookupSymbol::startsWith(code)) {return parseLookupSymbol(code);}
-    throwParseException(code);
-    return {};
-}
-
 bool Expression::startsWith(CodeRange code) {
     return
         List::startsWith(code) ||

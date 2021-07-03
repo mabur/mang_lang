@@ -42,3 +42,5 @@ ExpressionPointer parseLookupSymbol(CodeRange code);
 NamePointer parseName(CodeRange code);
 ExpressionPointer parseNumber(CodeRange code);
 ExpressionPointer parseString(CodeRange code);
+
+ExpressionPointer parseExpression(CodeRange code);

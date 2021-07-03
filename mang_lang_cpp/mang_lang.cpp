@@ -4,6 +4,7 @@
 #include "expressions/Expression.h"
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
+#include "operations/parse.h"
 
 auto nullStream() {
     std::ofstream stream;
@@ -13,7 +14,7 @@ auto nullStream() {
 
 ExpressionPointer parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
-    return Expression::parse({result.data(), result.data() + result.size()});
+    return parseExpression({result.data(), result.data() + result.size()});
 }
 
 std::string reformat(std::string code) {
