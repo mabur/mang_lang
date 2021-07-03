@@ -4,6 +4,7 @@
 #include "../expressions/Conditional.h"
 #include "../expressions/Dictionary.h"
 #include "../expressions/Function.h"
+#include "../expressions/FunctionDictionary.h"
 
 ExpressionPointer evaluate(
     const Character& character, const Expression* environment, std::ostream& log
@@ -43,6 +44,16 @@ ExpressionPointer evaluate(
 ) {
     auto result = std::make_shared<Function>(
         function.range(), environment, function.input_name, function.body
+    );
+    log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(
+    const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log
+) {
+    auto result = std::make_shared<FunctionDictionary>(
+        function_dictionary.range(), environment, function_dictionary.input_names, function_dictionary.body
     );
     log << result->serialize() << std::endl;
     return result;

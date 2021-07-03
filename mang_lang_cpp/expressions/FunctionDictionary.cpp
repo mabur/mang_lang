@@ -4,6 +4,7 @@
 #include "Dictionary.h"
 
 #include "../operations/apply.h"
+#include "../operations/evaluate.h"
 
 std::string FunctionDictionary::serialize() const {
     auto result = std::string{};
@@ -24,9 +25,7 @@ std::string FunctionDictionary::serialize() const {
 }
 
 ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = std::make_shared<FunctionDictionary>(range(), environment, input_names, body);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostream& log) const {
