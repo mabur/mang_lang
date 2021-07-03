@@ -1,8 +1,12 @@
 #pragma once
 #include "Expression.h"
 
+#include "../operations/list.h"
+
 template<typename T>
 struct ListBase : public Expression {
+    using value_type = T;
+
     ListBase(CodeRange range, const Expression* environment, InternalList elements)
         : Expression{range, environment}, elements{std::move(elements)}
     {}
@@ -16,7 +20,7 @@ struct ListBase : public Expression {
         throw ParseException("List does not contain symbol " + name);
     }
     const InternalList& list() const final {
-        return elements;
+        return ::listListBase(*this);
     }
     bool boolean() const final {
         return !!list();
@@ -32,12 +36,11 @@ struct ListBase : public Expression {
         return !left && !right;
     }
     ExpressionPointer empty() const final {
-        return std::make_shared<T>(range(), nullptr, nullptr);
+        return ::emptyListBase(*this);
     }
     ExpressionPointer prepend(ExpressionPointer item) const final {
-        auto new_list = ::prepend(list(), item);
-        return std::make_shared<T>(range(), nullptr, new_list);
+        return ::prependListBase(*this, item);
     }
-private:
+
     InternalList elements;
 };
