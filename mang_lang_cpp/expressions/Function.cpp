@@ -5,15 +5,14 @@
 #include "DictionaryElement.h"
 
 #include "../operations/apply.h"
+#include "../operations/evaluate.h"
 
 std::string Function::serialize() const {
     return std::string{"in "} + input_name->serialize() + " out " + body->serialize();
 }
 
 ExpressionPointer Function::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = std::make_shared<Function>(range(), environment, input_name, body);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
