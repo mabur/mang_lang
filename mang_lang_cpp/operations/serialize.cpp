@@ -11,6 +11,7 @@
 #include "../expressions/LookupFunction.h"
 #include "../expressions/LookupSymbol.h"
 #include "../expressions/Name.h"
+#include "../expressions/Number.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -117,4 +118,10 @@ std::string serialize(const LookupSymbol& lookup_symbol) {
 
 std::string serialize(const Name& name) {
     return name.value;
+}
+
+std::string serialize(const Number& number) {
+    std::stringstream s;
+    s << number.value;
+    return s.str();
 }

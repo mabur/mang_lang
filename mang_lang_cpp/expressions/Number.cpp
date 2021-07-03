@@ -1,11 +1,10 @@
 #include "Number.h"
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string Number::serialize() const {
-    std::stringstream s;
-    s << value;
-    return s.str();
+    return ::serialize(*this);
 }
 
 ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& log) const {
