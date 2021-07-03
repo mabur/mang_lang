@@ -4,6 +4,8 @@
 #include "Dictionary.h"
 #include "DictionaryElement.h"
 
+#include "../operations/apply.h"
+
 std::string FunctionList::serialize() const {
     auto result = std::string{};
     result += "in ";
@@ -29,17 +31,7 @@ ExpressionPointer FunctionList::evaluate(const Expression* environment, std::ost
 }
 
 ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log) const {
-    auto middle = Dictionary(range(), environment());
-    auto i = 0;
-    for (auto list = input->list(); list; list = list->rest, ++i) {
-        middle.elements.push_back(
-            std::make_shared<NamedElement>(
-                range(), &middle, input_names[i], list->first, i
-            )
-        );
-    }
-    auto output = body->evaluate(&middle, log);
-    return output;
+    return ::apply(*this, input, log);
 }
 
 ExpressionPointer FunctionList::parse(CodeRange code) {
