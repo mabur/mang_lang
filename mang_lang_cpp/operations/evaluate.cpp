@@ -11,6 +11,8 @@
 #include "../expressions/List.h"
 #include "../expressions/LookupChild.h"
 #include "../expressions/LookupFunction.h"
+#include "../expressions/LookupSymbol.h"
+#include "../expressions/Number.h"
 
 ExpressionPointer evaluate(
     const Character& character, const Expression* environment, std::ostream& log
@@ -103,6 +105,22 @@ ExpressionPointer evaluate(
     const auto evaluated_child = lookup_function.child->evaluate(environment, log);
     assert(evaluated_child);
     auto result = function->apply(evaluated_child, log);
+    log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(
+    const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log
+) {
+    auto result = environment->lookup(lookup_symbol.name->value);
+    log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(
+    const Number& number, const Expression* environment, std::ostream& log
+) {
+    auto result = std::make_shared<Number>(number.range(), environment, number.value);
     log << result->serialize() << std::endl;
     return result;
 }

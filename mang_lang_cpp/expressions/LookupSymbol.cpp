@@ -3,14 +3,14 @@
 
 #include "Name.h"
 
+#include "../operations/evaluate.h"
+
 std::string LookupSymbol::serialize() const {
     return name->serialize();
 }
 
 ExpressionPointer LookupSymbol::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = environment->lookup(name->value);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer LookupSymbol::parse(CodeRange code) {

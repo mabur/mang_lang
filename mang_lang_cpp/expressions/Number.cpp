@@ -1,5 +1,7 @@
 #include "Number.h"
 
+#include "../operations/evaluate.h"
+
 std::string Number::serialize() const {
     std::stringstream s;
     s << value;
@@ -7,9 +9,7 @@ std::string Number::serialize() const {
 }
 
 ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = std::make_shared<Number>(range(), environment, value);
-    log << result->serialize() << std::endl;
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 ExpressionPointer Number::parse(CodeRange code) {

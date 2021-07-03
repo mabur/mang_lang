@@ -11,6 +11,8 @@ struct FunctionList;
 struct List;
 struct LookupChild;
 struct LookupFunction;
+struct LookupSymbol;
+struct Number;
 
 ExpressionPointer evaluate(const Character& character, const Expression* environment, std::ostream& log);
 ExpressionPointer evaluate(const Conditional& conditional, const Expression* environment, std::ostream& log);
@@ -21,3 +23,5 @@ ExpressionPointer evaluate(const FunctionList& function_list, const Expression* 
 ExpressionPointer evaluate(const List& list, const Expression* environment, std::ostream& log);
 ExpressionPointer evaluate(const LookupChild& lookup_child, const Expression* environment, std::ostream& log);
 ExpressionPointer evaluate(const LookupFunction& lookup_function, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluate(const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluate(const Number& number, const Expression* environment, std::ostream& log);
