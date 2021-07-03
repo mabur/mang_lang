@@ -6,23 +6,10 @@
 
 #include "../operations/apply.h"
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string FunctionList::serialize() const {
-    auto result = std::string{};
-    result += "in ";
-    result += "(";
-    for (const auto& name : input_names) {
-        result += name->serialize();
-        result += " ";
-    }
-    if (input_names.empty()) {
-        result += ')';
-    }
-    else {
-        result.back() = ')';
-    }
-    result += " out " + body->serialize();
-    return result;
+    return ::serialize(*this);
 }
 
 ExpressionPointer FunctionList::evaluate(const Expression* environment, std::ostream& log) const {

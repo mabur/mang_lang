@@ -5,6 +5,7 @@
 #include "../expressions/Dictionary.h"
 #include "../expressions/Function.h"
 #include "../expressions/FunctionDictionary.h"
+#include "../expressions/FunctionList.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -63,5 +64,23 @@ std::string serialize(const FunctionDictionary& function_dictionary) {
         result.back() = '}';
     }
     result += " out " + function_dictionary.body->serialize();
+    return result;
+}
+
+std::string serialize(const FunctionList& function_list) {
+    auto result = std::string{};
+    result += "in ";
+    result += "(";
+    for (const auto& name : function_list.input_names) {
+        result += name->serialize();
+        result += " ";
+    }
+    if (function_list.input_names.empty()) {
+        result += ')';
+    }
+    else {
+        result.back() = ')';
+    }
+    result += " out " + function_list.body->serialize();
     return result;
 }
