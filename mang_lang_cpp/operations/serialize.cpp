@@ -28,3 +28,15 @@ std::string serialize(const Dictionary& dictionary) {
     }
     return result;
 }
+
+std::string serialize(const NamedElement& element) {
+    return element.name->serialize() + '=' + element.expression->serialize() + ' ';
+}
+
+std::string serialize(const WhileElement& element) {
+    return "while " + element.expression->serialize() + ' ';
+}
+
+std::string serialize(const EndElement&) {
+    return "end ";
+}

@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include "../operations/serialize.h"
+
 DictionaryElement::DictionaryElement(
     CodeRange range,
     const Expression* environment,
@@ -35,15 +37,15 @@ EndElement::EndElement(CodeRange range, const Expression* environment)
 {}
 
 std::string NamedElement::serialize() const {
-    return name->serialize() + '=' + expression->serialize() + ' ';
+    return ::serialize(*this);
 }
 
 std::string WhileElement::serialize() const {
-    return "while " + expression->serialize() + ' ';
+    return ::serialize(*this);
 }
 
 std::string EndElement::serialize() const {
-    return "end ";
+    return ::serialize(*this);
 }
 
 ExpressionPointer NamedElement::lookup(const std::string& s) const {
