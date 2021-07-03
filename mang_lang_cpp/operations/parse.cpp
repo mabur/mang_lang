@@ -53,36 +53,12 @@ ExpressionPointer parseConditional(CodeRange code) {
     );
 }
 
-ExpressionPointer parseDictionary(CodeRange code) {
+NamePointer parseName(CodeRange code) {
     auto first = code.begin();
-    code = parseCharacter(code, '{');
-    code = parseWhiteSpace(code);
-    auto elements = std::vector<DictionaryElementPointer>{};
-    while (!::startsWith(code, '}')) {
-        throwIfEmpty(code);
-        auto element = parseDictionaryElement(code);
-        code.first = element->end();
-        elements.push_back(element);
-    }
-    code = parseCharacter(code, '}');
-    setContext(elements);
-    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
-    for (auto& element : elements) {
-        result->elements.push_back(std::move(element));
-    }
-    return result;
-}
-
-DictionaryElementPointer parseDictionaryElement(CodeRange code) {
-    code = parseWhiteSpace(code);
-    throwIfEmpty(code);
-    if (WhileElement::startsWith(code)) {
-        return parseWhileElement(code);
-    }
-    if (EndElement::startsWith(code)) {
-        return parseEndElement(code);
-    }
-    return parseNamedElement(code);
+    code = parseWhile(code, isNameCharacter);
+    return std::make_shared<Name>(
+        CodeRange{first, code.first}, nullptr, rawString({first, code.first})
+    );
 }
 
 DictionaryElementPointer parseNamedElement(CodeRange code) {
@@ -119,6 +95,38 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
     return std::make_shared<EndElement>(
         CodeRange{first, code.first}, nullptr
     );
+}
+
+DictionaryElementPointer parseDictionaryElement(CodeRange code) {
+    code = parseWhiteSpace(code);
+    throwIfEmpty(code);
+    if (WhileElement::startsWith(code)) {
+        return parseWhileElement(code);
+    }
+    if (EndElement::startsWith(code)) {
+        return parseEndElement(code);
+    }
+    return parseNamedElement(code);
+}
+
+ExpressionPointer parseDictionary(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '{');
+    code = parseWhiteSpace(code);
+    auto elements = std::vector<DictionaryElementPointer>{};
+    while (!::startsWith(code, '}')) {
+        throwIfEmpty(code);
+        auto element = parseDictionaryElement(code);
+        code.first = element->end();
+        elements.push_back(element);
+    }
+    code = parseCharacter(code, '}');
+    setContext(elements);
+    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
+    for (auto& element : elements) {
+        result->elements.push_back(std::move(element));
+    }
+    return result;
 }
 
 ExpressionPointer parseFunction(CodeRange code) {
@@ -234,14 +242,6 @@ ExpressionPointer parseLookupSymbol(CodeRange code) {
     auto name = parseName(code);
     return std::make_shared<LookupSymbol>(
         CodeRange{first, name->end()}, nullptr, name
-    );
-}
-
-NamePointer parseName(CodeRange code) {
-    auto first = code.begin();
-    code = parseWhile(code, isNameCharacter);
-    return std::make_shared<Name>(
-        CodeRange{first, code.first}, nullptr, rawString({first, code.first})
     );
 }
 
