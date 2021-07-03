@@ -2,11 +2,10 @@
 #include "../parsing.h"
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h."
 
 std::string Conditional::serialize() const {
-    return std::string{"if "} + expression_if->serialize()
-        + " then " + expression_then->serialize()
-        + " else " + expression_else->serialize();
+    return ::serialize(*this);
 }
 
 ExpressionPointer Conditional::evaluate(const Expression* environment, std::ostream& log) const {
