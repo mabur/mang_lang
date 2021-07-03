@@ -1,18 +1,10 @@
 #include "List.h"
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
 
 std::string List::serialize() const {
-    if (!list()) {
-        return "()";
-    }
-    const auto operation = [](const std::string& left, const ExpressionPointer& right) {
-        return left + right->serialize() + " ";
-    };
-    auto result = std::string{"("};
-    result = leftFold(list(), result, operation);
-    result.back() = ')';
-    return result;
+    return ::serialize(*this);
 }
 
 ExpressionPointer List::evaluate(const Expression* environment, std::ostream& log) const {

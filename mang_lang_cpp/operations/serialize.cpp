@@ -6,6 +6,7 @@
 #include "../expressions/Function.h"
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
+#include "../expressions/List.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -82,5 +83,18 @@ std::string serialize(const FunctionList& function_list) {
         result.back() = ')';
     }
     result += " out " + function_list.body->serialize();
+    return result;
+}
+
+std::string serialize(const List& list) {
+    if (!list.list()) {
+        return "()";
+    }
+    const auto operation = [](const std::string& left, const ExpressionPointer& right) {
+        return left + right->serialize() + " ";
+    };
+    auto result = std::string{"("};
+    result = leftFold(list.list(), result, operation);
+    result.back() = ')';
     return result;
 }
