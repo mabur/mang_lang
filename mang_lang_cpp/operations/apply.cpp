@@ -2,6 +2,7 @@
 
 #include "../expressions/Dictionary.h"
 #include "../expressions/Function.h"
+#include "../expressions/FunctionBuiltIn.h"
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
 
@@ -13,6 +14,12 @@ ExpressionPointer apply(
         function.range(), &middle, function.input_name, input, 0));
     auto output = function.body->evaluate(&middle, log);
     return output;
+}
+
+ExpressionPointer apply(
+    const FunctionBuiltIn& function_built_in, ExpressionPointer input, std::ostream&
+) {
+    return function_built_in.function(*input);
 }
 
 ExpressionPointer apply(

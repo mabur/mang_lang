@@ -1,8 +1,10 @@
 #include "FunctionBuiltIn.h"
 #include <cassert>
 
-ExpressionPointer FunctionBuiltIn::apply(ExpressionPointer input, std::ostream&) const {
-    return function(*input);
+#include "../operations/apply.h"
+
+ExpressionPointer FunctionBuiltIn::apply(ExpressionPointer input, std::ostream& log) const {
+    return ::apply(*this, input, log);
 }
 
 std::string FunctionBuiltIn::serialize() const {
