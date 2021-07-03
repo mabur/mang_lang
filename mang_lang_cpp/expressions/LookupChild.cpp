@@ -1,8 +1,10 @@
 #include "LookupChild.h"
 
 #include "../operations/evaluate.h"
+#include "../operations/serialize.h"
+
 std::string LookupChild::serialize() const {
-    return name->serialize() + "@" + child->serialize();
+    return ::serialize(*this);
 }
 
 ExpressionPointer LookupChild::evaluate(const Expression* environment, std::ostream& log) const {

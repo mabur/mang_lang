@@ -7,6 +7,7 @@
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
 #include "../expressions/List.h"
+#include "../expressions/LookupChild.h"
 
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
@@ -97,4 +98,8 @@ std::string serialize(const List& list) {
     result = leftFold(list.list(), result, operation);
     result.back() = ')';
     return result;
+}
+
+std::string serialize(const LookupChild& lookup_child) {
+    return lookup_child.name->serialize() + "@" + lookup_child.child->serialize();
 }
