@@ -3,6 +3,8 @@
 
 #include "Character.h"
 
+#include "../operations/evaluate.h"
+
 std::string String::serialize() const {
     auto value = std::string{"\""};
     auto node = list();
@@ -14,9 +16,7 @@ std::string String::serialize() const {
 }
 
 ExpressionPointer String::evaluate(const Expression* environment, std::ostream& log) const {
-    auto result = std::make_shared<String>(range(), environment, list());
-    log << result->serialize();
-    return result;
+    return ::evaluate(*this, environment, log);
 }
 
 bool isNotEndOfString(CodeCharacter c) {

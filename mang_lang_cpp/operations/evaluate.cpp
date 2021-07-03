@@ -13,6 +13,7 @@
 #include "../expressions/LookupFunction.h"
 #include "../expressions/LookupSymbol.h"
 #include "../expressions/Number.h"
+#include "../expressions/String.h"
 
 ExpressionPointer evaluate(
     const Character& character, const Expression* environment, std::ostream& log
@@ -122,5 +123,13 @@ ExpressionPointer evaluate(
 ) {
     auto result = std::make_shared<Number>(number.range(), environment, number.value);
     log << result->serialize() << std::endl;
+    return result;
+}
+
+ExpressionPointer evaluate(
+    const String& string, const Expression* environment, std::ostream& log
+) {
+    auto result = std::make_shared<String>(string.range(), environment, string.list());
+    log << result->serialize();
     return result;
 }
