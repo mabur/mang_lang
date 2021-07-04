@@ -4,6 +4,7 @@
 #include "../operations/boolean.h"
 #include "../operations/is_equal.h"
 #include "../operations/list.h"
+#include "../operations/lookup.h"
 
 template<typename T>
 struct ListBase : public Expression {
@@ -13,13 +14,7 @@ struct ListBase : public Expression {
         : Expression{range, environment}, elements{std::move(elements)}
     {}
     ExpressionPointer lookup(const std::string& name) const final {
-        if (name == "first") {
-            return list()->first;
-        }
-        if (name == "rest") {
-            return std::make_shared<T>(range(), nullptr, list()->rest);
-        }
-        throw ParseException("List does not contain symbol " + name);
+        return ::lookup(*this, name);
     }
     const InternalList& list() const final {
         return ::listListBase(*this);
