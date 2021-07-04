@@ -6,19 +6,11 @@
 
 #include "../operations/boolean.h"
 #include "../operations/evaluate.h"
+#include "../operations/lookup.h"
 #include "../operations/serialize.h"
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
-    for (const auto& element : elements) {
-        if (element) {
-            auto expression = element->lookup(name);
-            if (expression) {
-                return expression;
-            }
-        }
-    }
-
-    return Expression::lookup(name);
+    return ::lookup(*this, name);
 }
 
 std::string Dictionary::serialize() const {

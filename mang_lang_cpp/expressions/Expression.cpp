@@ -15,6 +15,7 @@
 #include "String.h"
 
 #include "../operations/parse.h"
+#include "../operations/lookup.h"
 
 const CodeCharacter* Expression::begin() const {
     return range_.begin();
@@ -33,11 +34,7 @@ const Expression* Expression::environment() const {
 }
 
 ExpressionPointer Expression::lookup(const std::string& name) const {
-    if (!environment()) {
-        // TODO: define evaluation exception.
-        throw ParseException("Cannot find symbol " + name);
-    }
-    return environment()->lookup(name);
+    return lookupExpression(*this, name);
 }
 
 ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {

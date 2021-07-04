@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "../operations/serialize.h"
+#include "../operations/lookup.h"
 
 DictionaryElement::DictionaryElement(
     CodeRange range,
@@ -49,10 +50,7 @@ std::string EndElement::serialize() const {
 }
 
 ExpressionPointer NamedElement::lookup(const std::string& s) const {
-    if (name->value == s) {
-        return expression;
-    }
-    return nullptr;
+    return ::lookup(*this, s);
 }
 
 void NamedElement::mutate(const Expression* environment, std::ostream& log,
