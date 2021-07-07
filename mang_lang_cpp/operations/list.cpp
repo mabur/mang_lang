@@ -21,12 +21,22 @@ const InternalList& list(const Expression* expression) {
     throw std::runtime_error{"Expected list"};
 }
 
-ExpressionPointer emptyListBase(const List& list) {
-    return std::make_shared<List>(list.range(), nullptr, nullptr);
+ExpressionPointer emptyList(const List* list) {
+    return std::make_shared<List>(list->range(), nullptr, nullptr);
 }
 
-ExpressionPointer emptyListBase(const String& list) {
-    return std::make_shared<String>(list.range(), nullptr, nullptr);
+ExpressionPointer emptyString(const String* string) {
+    return std::make_shared<String>(string->range(), nullptr, nullptr);
+}
+
+ExpressionPointer empty(const Expression* expression) {
+    if (expression->type_ == LIST) {
+        return emptyList(dynamic_cast<const List *>(expression));
+    }
+    if (expression->type_ == STRING) {
+        return emptyString(dynamic_cast<const String *>(expression));
+    }
+    throw std::runtime_error{"Expected list"};
 }
 
 ExpressionPointer prependListBase(const List& list, ExpressionPointer item) {

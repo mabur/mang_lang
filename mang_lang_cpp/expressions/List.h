@@ -28,7 +28,7 @@ struct List : public Expression {
         return ::isEqual(*this, expression);
     }
     ExpressionPointer empty() const final {
-        return ::emptyListBase(*this);
+        return ::empty(this);
     }
     ExpressionPointer prepend(ExpressionPointer item) const final {
         return ::prependListBase(*this, item);
