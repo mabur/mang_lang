@@ -5,8 +5,7 @@
 struct List;
 struct String;
 
-const InternalList& listListBase(const List& list);
-const InternalList& listListBase(const String& list);
+const InternalList& list(const Expression* expression);
 
 ExpressionPointer emptyListBase(const List& list);
 ExpressionPointer emptyListBase(const String& list);

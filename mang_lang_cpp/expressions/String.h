@@ -20,7 +20,7 @@ struct String : public Expression {
         return ::lookup(*this, name);
     }
     const InternalList& list() const final {
-        return ::listListBase(*this);
+        return ::list(this);
     }
     bool boolean() const final {
         return ::boolean(*this);
