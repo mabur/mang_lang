@@ -31,7 +31,7 @@ struct List : public Expression {
         return ::empty(this);
     }
     ExpressionPointer prepend(ExpressionPointer item) const final {
-        return ::prependListBase(*this, item);
+        return ::prepend(this, item);
     }
 
     InternalList elements;

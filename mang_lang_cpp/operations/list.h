@@ -9,5 +9,4 @@ const InternalList& list(const Expression* expression);
 
 ExpressionPointer empty(const Expression* expression);
 
-ExpressionPointer prependListBase(const List& list, ExpressionPointer item);
-ExpressionPointer prependListBase(const String& list, ExpressionPointer item);
+ExpressionPointer prepend(const Expression* expression, ExpressionPointer item);
