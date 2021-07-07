@@ -8,7 +8,7 @@ struct FunctionList : public Expression {
         const Expression* environment,
         std::vector<NamePointer> input_names,
         ExpressionPointer body
-    ) : Expression{range, environment},
+    ) : Expression{range, environment, FUNCTION_LIST},
         input_names{std::move(input_names)},
         body{std::move(body)}
     {}

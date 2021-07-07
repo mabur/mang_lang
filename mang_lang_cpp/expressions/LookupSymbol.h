@@ -7,7 +7,7 @@ struct LookupSymbol : public Expression {
         CodeRange range,
         const Expression* environment,
         NamePointer name
-    ) : Expression{range, environment}, name{std::move(name)} {}
+    ) : Expression{range, environment, LOOKUP_SYMBOL}, name{std::move(name)} {}
     NamePointer name;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;

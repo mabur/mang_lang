@@ -5,7 +5,7 @@
 
 struct Dictionary : public Expression {
     Dictionary(CodeRange range, const Expression* environment)
-        : Expression{range, environment}
+        : Expression{range, environment, DICTIONARY}
     {}
     std::vector<DictionaryElementPointer> elements;
     ExpressionPointer lookup(const std::string& name) const final;

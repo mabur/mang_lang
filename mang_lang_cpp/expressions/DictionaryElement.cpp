@@ -11,7 +11,7 @@ DictionaryElement::DictionaryElement(
     NamePointer name,
     ExpressionPointer expression,
     size_t dictionary_index
-) : Expression{range, environment},
+) : Expression{range, environment, DICTIONARY_ELEMENT},
     name{std::move(name)},
     expression{std::move(expression)},
     dictionary_index_{dictionary_index}

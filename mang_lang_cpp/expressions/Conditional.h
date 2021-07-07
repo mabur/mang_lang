@@ -9,7 +9,7 @@ struct Conditional : public Expression {
         ExpressionPointer expression_then,
         ExpressionPointer expression_else
     )
-        : Expression{range, environment},
+        : Expression{range, environment, CONDITIONAL},
         expression_if{std::move(expression_if)},
         expression_then{std::move(expression_then)},
         expression_else{std::move(expression_else)}

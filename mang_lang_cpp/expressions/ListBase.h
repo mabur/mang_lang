@@ -11,7 +11,7 @@ struct ListBase : public Expression {
     using value_type = T;
 
     ListBase(CodeRange range, const Expression* environment, InternalList elements)
-        : Expression{range, environment}, elements{std::move(elements)}
+        : Expression{range, environment, LIST_BASE}, elements{std::move(elements)}
     {}
     ExpressionPointer lookup(const std::string& name) const final {
         return ::lookup(*this, name);

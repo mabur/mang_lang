@@ -13,13 +13,33 @@ struct Expression;
 using ExpressionPointer = std::shared_ptr<const Expression>;
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
+enum ExpressionType {
+    CHARACTER,
+    CONDITIONAL,
+    DICTIONARY,
+    DICTIONARY_ELEMENT,
+    FUNCTION,
+    FUNCTION_BUILT_IN,
+    FUNCTION_DICTIONARY,
+    FUNCTION_LIST,
+    LIST,
+    LIST_BASE,
+    LOOKUP_CHILD,
+    LOOKUP_FUNCTION,
+    LOOKUP_SYMBOL,
+    NAME,
+    NUMBER,
+    STRING,
+};
+
 struct Expression {
-    Expression(CodeRange range, const Expression* environment)
-        : range_{range}, parent_{environment} {}
+    Expression(CodeRange range, const Expression* environment, ExpressionType type)
+        : range_{range}, parent_{environment}, type_{type} {}
     virtual ~Expression() = default;
 
     CodeRange range_;
     const Expression* parent_;
+    ExpressionType type_;
 
     CodeRange range() const;
     const CodeCharacter* begin() const;

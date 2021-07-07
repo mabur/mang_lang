@@ -3,7 +3,7 @@
 
 struct Character : public Expression {
     Character(CodeRange range, const Expression* environment, char value)
-        : Expression{range, environment}, value{value} {}
+        : Expression{range, environment, CHARACTER}, value{value} {}
     char value;
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;

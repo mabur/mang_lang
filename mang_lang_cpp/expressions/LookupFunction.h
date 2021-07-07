@@ -8,7 +8,7 @@ struct LookupFunction : public Expression {
         const Expression* environment,
         NamePointer name,
         ExpressionPointer child
-    ) : Expression{range, environment}, name{std::move(name)}, child{std::move(child)} {}
+    ) : Expression{range, environment, LOOKUP_FUNCTION}, name{std::move(name)}, child{std::move(child)} {}
     NamePointer name;
     ExpressionPointer child;
     std::string serialize() const final;
