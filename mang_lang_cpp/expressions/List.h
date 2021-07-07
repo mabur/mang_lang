@@ -1,10 +1,38 @@
 #pragma once
 #include "Expression.h"
-#include "ListBase.h"
 
-struct List : public ListBase<List> {
+#include "../operations/boolean.h"
+#include "../operations/is_equal.h"
+#include "../operations/list.h"
+#include "../operations/lookup.h"
+
+struct List : public Expression {
     List(CodeRange range, const Expression* environment, InternalList elements)
-        : ListBase<List>{range, environment, std::move(elements)}{}
+        : Expression{range, environment, LIST}, elements{std::move(elements)}
+    {}
+    using value_type = List;
+
     std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
+
+    ExpressionPointer lookup(const std::string& name) const final {
+        return ::lookup(*this, name);
+    }
+    const InternalList& list() const final {
+        return ::listListBase(*this);
+    }
+    bool boolean() const final {
+        return ::boolean(*this);
+    }
+    bool isEqual(const Expression* expression) const final {
+        return ::isEqual(*this, expression);
+    }
+    ExpressionPointer empty() const final {
+        return ::emptyListBase(*this);
+    }
+    ExpressionPointer prepend(ExpressionPointer item) const final {
+        return ::prependListBase(*this, item);
+    }
+
+    InternalList elements;
 };
