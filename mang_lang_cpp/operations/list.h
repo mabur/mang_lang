@@ -2,18 +2,14 @@
 
 #include "../expressions/Expression.h"
 
-template<typename List>
-auto& listListBase(const List& list) {
-    return list.elements;
-}
+struct List;
+struct String;
 
-template<typename List>
-ExpressionPointer emptyListBase(const List& list) {
-    return std::make_shared<typename List::value_type>(list.range(), nullptr, nullptr);
-}
+const InternalList& listListBase(const List& list);
+const InternalList& listListBase(const String& list);
 
-template<typename List>
-ExpressionPointer prependListBase(const List& list, ExpressionPointer item) {
-    auto new_list = ::prepend(list.list(), item);
-    return std::make_shared<typename List::value_type>(list.range(), nullptr, new_list);
-}
+ExpressionPointer emptyListBase(const List& list);
+ExpressionPointer emptyListBase(const String& list);
+
+ExpressionPointer prependListBase(const List& list, ExpressionPointer item);
+ExpressionPointer prependListBase(const String& list, ExpressionPointer item);
