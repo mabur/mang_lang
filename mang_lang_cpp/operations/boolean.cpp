@@ -5,34 +5,34 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
-bool booleanDictionary(const Dictionary& dictionary) {
-    return !dictionary.elements.empty();
+bool booleanDictionary(const Dictionary* dictionary) {
+    return !dictionary->elements.empty();
 }
 
-bool booleanNumber(const Number& number) {
-    return static_cast<bool>(number.value);
+bool booleanNumber(const Number* number) {
+    return static_cast<bool>(number->value);
 }
 
-bool booleanList(const List& list) {
-    return !!list.list();
+bool booleanList(const List* list) {
+    return !!list->list();
 }
 
-bool booleanString(const String& string) {
-    return !!string.list();
+bool booleanString(const String* string) {
+    return !!string->list();
 }
 
 bool boolean(const Expression* expression) {
     if (expression->type_ == DICTIONARY) {
-        return booleanDictionary(*dynamic_cast<const Dictionary *>(expression));
+        return booleanDictionary(dynamic_cast<const Dictionary *>(expression));
     }
     if (expression->type_ == NUMBER) {
-        return booleanNumber(*dynamic_cast<const Number *>(expression));
+        return booleanNumber(dynamic_cast<const Number *>(expression));
     }
     if (expression->type_ == LIST) {
-        return booleanList(*dynamic_cast<const List *>(expression));
+        return booleanList(dynamic_cast<const List *>(expression));
     }
     if (expression->type_ == STRING) {
-        return booleanString(*dynamic_cast<const String *>(expression));
+        return booleanString(dynamic_cast<const String *>(expression));
     }
     throw std::runtime_error{"Expected boolean"};
 }
