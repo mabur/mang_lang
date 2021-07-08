@@ -23,11 +23,13 @@ add_library(shared
         expressions/String.cpp
         operations/apply.cpp
         operations/boolean.cpp
+        operations/empty.cpp
         operations/evaluate.cpp
         operations/is_equal.cpp
         operations/list.cpp
         operations/lookup.cpp
         operations/parse.cpp
+        operations/prepend.cpp
         operations/serialize.cpp
         operations/starts_with.cpp
         mang_lang.cpp
