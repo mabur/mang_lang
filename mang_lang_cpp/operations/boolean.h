@@ -2,11 +2,10 @@
 
 struct Dictionary;
 struct Number;
+struct List;
+struct String;
 
 bool boolean(const Dictionary& dictionary);
 bool boolean(const Number& number);
-
-template <typename List>
-bool boolean(const List& list) {
-    return !!list.list();
-}
+bool boolean(const List& number);
+bool boolean(const String& number);
