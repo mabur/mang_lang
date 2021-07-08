@@ -17,5 +17,5 @@ ExpressionPointer Function::evaluate(const Expression* environment, std::ostream
 }
 
 ExpressionPointer Function::apply(ExpressionPointer input, std::ostream& log) const {
-    return ::applyFunction(*this, input, log);
+    return ::apply(this, input, log);
 }

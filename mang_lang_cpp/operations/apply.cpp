@@ -43,3 +43,19 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     auto output = function_list.body->evaluate(&middle, log);
     return output;
 }
+
+ExpressionPointer apply(const Expression* expression, ExpressionPointer input, std::ostream& log) {
+    if (expression->type_ == FUNCTION) {
+        return applyFunction(*dynamic_cast<const Function *>(expression), input, log);
+    }
+    if (expression->type_ == FUNCTION_BUILT_IN) {
+        return applyFunctionBuiltIn(*dynamic_cast<const FunctionBuiltIn *>(expression), input, log);
+    }
+    if (expression->type_ == FUNCTION_DICTIONARY) {
+        return applyFunctionDictionary(*dynamic_cast<const FunctionDictionary *>(expression), input, log);
+    }
+    if (expression->type_ == FUNCTION_LIST) {
+        return applyFunctionList(*dynamic_cast<const FunctionList *>(expression), input, log);
+    }
+    throw std::runtime_error{"Expected function"};
+}
