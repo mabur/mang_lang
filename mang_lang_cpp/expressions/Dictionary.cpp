@@ -22,5 +22,5 @@ ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostre
 }
 
 bool Dictionary::boolean() const {
-    return ::boolean(*this);
+    return ::booleanDictionary(*this);
 }

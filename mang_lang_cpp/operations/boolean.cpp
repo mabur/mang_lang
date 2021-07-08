@@ -5,18 +5,18 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
-bool boolean(const Dictionary& dictionary) {
+bool booleanDictionary(const Dictionary& dictionary) {
     return !dictionary.elements.empty();
 }
 
-bool boolean(const Number& number) {
+bool booleanNumber(const Number& number) {
     return static_cast<bool>(number.value);
 }
 
-bool boolean(const List& list) {
+bool booleanList(const List& list) {
     return !!list.list();
 }
 
-bool boolean(const String& string) {
+bool booleanString(const String& string) {
     return !!string.list();
 }

@@ -22,5 +22,5 @@ double Number::number() const {
 }
 
 bool Number::boolean() const {
-    return ::boolean(*this);
+    return ::booleanNumber(*this);
 }

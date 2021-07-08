@@ -5,7 +5,7 @@ struct Number;
 struct List;
 struct String;
 
-bool boolean(const Dictionary& dictionary);
-bool boolean(const Number& number);
-bool boolean(const List& number);
-bool boolean(const String& number);
+bool booleanDictionary(const Dictionary& dictionary);
+bool booleanNumber(const Number& number);
+bool booleanList(const List& list);
+bool booleanString(const String& string);
