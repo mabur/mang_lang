@@ -25,7 +25,7 @@ struct String : public Expression {
         return ::list(this);
     }
     bool boolean() const final {
-        return ::booleanString(*this);
+        return ::boolean(this);
     }
     bool isEqual(const Expression* expression) const final {
         return ::isEqual(*this, expression);

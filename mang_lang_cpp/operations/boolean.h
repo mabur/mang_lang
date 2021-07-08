@@ -1,11 +1,5 @@
 #pragma once
 
-struct Dictionary;
-struct Number;
-struct List;
-struct String;
+#include "../expressions/Expression.h"
 
-bool booleanDictionary(const Dictionary& dictionary);
-bool booleanNumber(const Number& number);
-bool booleanList(const List& list);
-bool booleanString(const String& string);
+bool boolean(const Expression* expression);

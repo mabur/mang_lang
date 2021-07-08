@@ -20,3 +20,19 @@ bool booleanList(const List& list) {
 bool booleanString(const String& string) {
     return !!string.list();
 }
+
+bool boolean(const Expression* expression) {
+    if (expression->type_ == DICTIONARY) {
+        return booleanDictionary(*dynamic_cast<const Dictionary *>(expression));
+    }
+    if (expression->type_ == NUMBER) {
+        return booleanNumber(*dynamic_cast<const Number *>(expression));
+    }
+    if (expression->type_ == LIST) {
+        return booleanList(*dynamic_cast<const List *>(expression));
+    }
+    if (expression->type_ == STRING) {
+        return booleanString(*dynamic_cast<const String *>(expression));
+    }
+    throw std::runtime_error{"Expected boolean"};
+}
