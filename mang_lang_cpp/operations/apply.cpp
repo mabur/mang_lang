@@ -6,7 +6,7 @@
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
 
-ExpressionPointer apply(
+ExpressionPointer applyFunction(
     const Function& function, ExpressionPointer input, std::ostream& log
 ) {
     auto middle = Dictionary({}, function.environment());
@@ -16,20 +16,20 @@ ExpressionPointer apply(
     return output;
 }
 
-ExpressionPointer apply(
+ExpressionPointer applyFunctionBuiltIn(
     const FunctionBuiltIn& function_built_in, ExpressionPointer input, std::ostream&
 ) {
     return function_built_in.function(*input);
 }
 
-ExpressionPointer apply(
+ExpressionPointer applyFunctionDictionary(
     const FunctionDictionary& function_dictionary, ExpressionPointer input, std::ostream& log
 ) {
     // TODO: pass along environment.
     return function_dictionary.body->evaluate(input.get(), log);
 }
 
-ExpressionPointer apply(const FunctionList& function_list, ExpressionPointer input, std::ostream& log
+ExpressionPointer applyFunctionList(const FunctionList& function_list, ExpressionPointer input, std::ostream& log
 ) {
     auto middle = Dictionary(function_list.range(), function_list.environment());
     auto i = 0;

@@ -16,5 +16,5 @@ ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, st
 }
 
 ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostream& log) const {
-    return ::apply(*this, input, log);
+    return ::applyFunctionDictionary(*this, input, log);
 }
