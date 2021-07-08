@@ -7,55 +7,55 @@
 #include "../expressions/FunctionList.h"
 
 ExpressionPointer applyFunction(
-    const Function& function, ExpressionPointer input, std::ostream& log
+    const Function* function, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = Dictionary({}, function.environment());
+    auto middle = Dictionary({}, function->environment());
     middle.elements.push_back(std::make_shared<NamedElement>(
-        function.range(), &middle, function.input_name, input, 0));
-    auto output = function.body->evaluate(&middle, log);
+        function->range(), &middle, function->input_name, input, 0));
+    auto output = function->body->evaluate(&middle, log);
     return output;
 }
 
 ExpressionPointer applyFunctionBuiltIn(
-    const FunctionBuiltIn& function_built_in, ExpressionPointer input, std::ostream&
+    const FunctionBuiltIn* function_built_in, ExpressionPointer input, std::ostream&
 ) {
-    return function_built_in.function(*input);
+    return function_built_in->function(*input);
 }
 
 ExpressionPointer applyFunctionDictionary(
-    const FunctionDictionary& function_dictionary, ExpressionPointer input, std::ostream& log
+    const FunctionDictionary* function_dictionary, ExpressionPointer input, std::ostream& log
 ) {
     // TODO: pass along environment.
-    return function_dictionary.body->evaluate(input.get(), log);
+    return function_dictionary->body->evaluate(input.get(), log);
 }
 
-ExpressionPointer applyFunctionList(const FunctionList& function_list, ExpressionPointer input, std::ostream& log
+ExpressionPointer applyFunctionList(const FunctionList* function_list, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = Dictionary(function_list.range(), function_list.environment());
+    auto middle = Dictionary(function_list->range(), function_list->environment());
     auto i = 0;
     for (auto list = input->list(); list; list = list->rest, ++i) {
         middle.elements.push_back(
             std::make_shared<NamedElement>(
-                function_list.range(), &middle, function_list.input_names[i], list->first, i
+                function_list->range(), &middle, function_list->input_names[i], list->first, i
             )
         );
     }
-    auto output = function_list.body->evaluate(&middle, log);
+    auto output = function_list->body->evaluate(&middle, log);
     return output;
 }
 
 ExpressionPointer apply(const Expression* expression, ExpressionPointer input, std::ostream& log) {
     if (expression->type_ == FUNCTION) {
-        return applyFunction(*dynamic_cast<const Function *>(expression), input, log);
+        return applyFunction(dynamic_cast<const Function *>(expression), input, log);
     }
     if (expression->type_ == FUNCTION_BUILT_IN) {
-        return applyFunctionBuiltIn(*dynamic_cast<const FunctionBuiltIn *>(expression), input, log);
+        return applyFunctionBuiltIn(dynamic_cast<const FunctionBuiltIn *>(expression), input, log);
     }
     if (expression->type_ == FUNCTION_DICTIONARY) {
-        return applyFunctionDictionary(*dynamic_cast<const FunctionDictionary *>(expression), input, log);
+        return applyFunctionDictionary(dynamic_cast<const FunctionDictionary *>(expression), input, log);
     }
     if (expression->type_ == FUNCTION_LIST) {
-        return applyFunctionList(*dynamic_cast<const FunctionList *>(expression), input, log);
+        return applyFunctionList(dynamic_cast<const FunctionList *>(expression), input, log);
     }
     throw std::runtime_error{"Expected function"};
 }
