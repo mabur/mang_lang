@@ -14,7 +14,7 @@ ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& 
 }
 
 bool Number::isEqual(const Expression* expression) const {
-    return ::isEqual(*this, expression);
+    return ::isEqual(this, expression);
 }
 
 double Number::number() const {

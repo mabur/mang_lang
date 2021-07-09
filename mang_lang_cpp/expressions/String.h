@@ -28,7 +28,7 @@ struct String : public Expression {
         return ::boolean(this);
     }
     bool isEqual(const Expression* expression) const final {
-        return ::isEqual(*this, expression);
+        return ::isEqual(this, expression);
     }
     ExpressionPointer empty() const final {
         return ::empty(this);
