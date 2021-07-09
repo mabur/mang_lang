@@ -2,7 +2,7 @@
 
 #include "../expressions/Dictionary.h"
 
-ExpressionPointer lookup(const Dictionary& dictionary, const std::string& name) {
+ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element) {
             auto expression = element->lookup(name);
@@ -15,7 +15,7 @@ ExpressionPointer lookup(const Dictionary& dictionary, const std::string& name) 
     return lookupExpression(dictionary, name);
 }
 
-ExpressionPointer lookup(const NamedElement& named_element, const std::string& name) {
+ExpressionPointer lookupNamedElement(const NamedElement& named_element, const std::string& name) {
     if (named_element.name->value == name) {
         return named_element.expression;
     }

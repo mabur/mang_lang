@@ -5,12 +5,12 @@
 struct Dictionary;
 struct NamedElement;
 
-ExpressionPointer lookup(const Dictionary& dictionary, const std::string& name);
-ExpressionPointer lookup(const NamedElement& named_element, const std::string& name);
+ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name);
+ExpressionPointer lookupNamedElement(const NamedElement& named_element, const std::string& name);
 ExpressionPointer lookupExpression(const Expression& expression, const std::string& name);
 
 template<typename List>
-ExpressionPointer lookup(const List& list, const std::string& name) {
+ExpressionPointer lookupList(const List& list, const std::string& name) {
     if (name == "first") {
         return list.list()->first;
     }
