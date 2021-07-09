@@ -34,7 +34,7 @@ const Expression* Expression::environment() const {
 }
 
 ExpressionPointer Expression::lookup(const std::string& name) const {
-    return lookupExpression(*this, name);
+    return ::lookup(this, name);
 }
 
 ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {

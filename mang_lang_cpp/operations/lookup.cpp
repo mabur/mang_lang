@@ -1,6 +1,16 @@
 #include "lookup.h"
 
 #include "../expressions/Dictionary.h"
+#include "../expressions/List.h"
+#include "../expressions/String.h"
+
+ExpressionPointer lookupExpression(const Expression& expression, const std::string& name) {
+    if (!expression.environment()) {
+        // TODO: define evaluation exception.
+        throw ParseException("Cannot find symbol " + name);
+    }
+    return expression.environment()->lookup(name);
+}
 
 ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
@@ -11,21 +21,48 @@ ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::stri
             }
         }
     }
-
     return lookupExpression(dictionary, name);
 }
 
-ExpressionPointer lookupNamedElement(const NamedElement& named_element, const std::string& name) {
-    if (named_element.name->value == name) {
-        return named_element.expression;
+ExpressionPointer lookupDictionaryElement(const DictionaryElement& element, const std::string& name) {
+    if (element.name->value == name) {
+        return element.expression;
     }
     return nullptr;
 }
 
-ExpressionPointer lookupExpression(const Expression& expression, const std::string& name) {
-    if (!expression.environment()) {
-        // TODO: define evaluation exception.
-        throw ParseException("Cannot find symbol " + name);
+ExpressionPointer lookupList(const List& list, const std::string& name) {
+    if (name == "first") {
+        return list.list()->first;
     }
-    return expression.environment()->lookup(name);
+    if (name == "rest") {
+        return std::make_shared<List>(list.range(), nullptr, list.list()->rest);
+    }
+    throw ParseException("List does not contain symbol " + name);
+}
+
+ExpressionPointer lookupString(const String& list, const std::string& name) {
+    if (name == "first") {
+        return list.list()->first;
+    }
+    if (name == "rest") {
+        return std::make_shared<String>(list.range(), nullptr, list.list()->rest);
+    }
+    throw ParseException("List does not contain symbol " + name);
+}
+
+ExpressionPointer lookup(const Expression* expression, const std::string& name) {
+    if (expression->type_ == DICTIONARY) {
+        return lookupDictionary(*dynamic_cast<const Dictionary *>(expression), name);
+    }
+    if (expression->type_ == DICTIONARY_ELEMENT) {
+        return lookupDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression), name);
+    }
+    if (expression->type_ == LIST) {
+        return lookupList(*dynamic_cast<const List *>(expression), name);
+    }
+    if (expression->type_ == STRING) {
+        return lookupString(*dynamic_cast<const String *>(expression), name);
+    }
+    return lookupExpression(*expression, name);
 }

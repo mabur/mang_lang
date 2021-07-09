@@ -18,7 +18,7 @@ struct List : public Expression {
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 
     ExpressionPointer lookup(const std::string& name) const final {
-        return ::lookupList(*this, name);
+        return ::lookup(this, name);
     }
     const InternalList& list() const final {
         return ::list(this);

@@ -10,7 +10,7 @@
 #include "../operations/serialize.h"
 
 ExpressionPointer Dictionary::lookup(const std::string& name) const {
-    return ::lookupDictionary(*this, name);
+    return ::lookup(this, name);
 }
 
 std::string Dictionary::serialize() const {

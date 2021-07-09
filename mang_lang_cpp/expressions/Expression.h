@@ -28,6 +28,7 @@ enum ExpressionType {
     LOOKUP_FUNCTION,
     LOOKUP_SYMBOL,
     NAME,
+    NAMED_ELEMENT,
     NUMBER,
     STRING,
 };

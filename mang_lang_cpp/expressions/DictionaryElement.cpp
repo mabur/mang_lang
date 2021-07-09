@@ -50,7 +50,7 @@ std::string EndElement::serialize() const {
 }
 
 ExpressionPointer NamedElement::lookup(const std::string& s) const {
-    return ::lookupNamedElement(*this, s);
+    return ::lookup(this, s);
 }
 
 void NamedElement::mutate(const Expression* environment, std::ostream& log,
