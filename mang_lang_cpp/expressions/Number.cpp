@@ -3,6 +3,7 @@
 #include "../operations/boolean.h"
 #include "../operations/evaluate.h"
 #include "../operations/is_equal.h"
+#include "../operations/number.h"
 #include "../operations/serialize.h"
 
 std::string Number::serialize() const {
@@ -18,7 +19,7 @@ bool Number::isEqual(const Expression* expression) const {
 }
 
 double Number::number() const {
-    return value;
+    return ::number(this);
 }
 
 bool Number::boolean() const {
