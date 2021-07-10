@@ -23,6 +23,7 @@ add_library(shared
         expressions/String.cpp
         operations/apply.cpp
         operations/boolean.cpp
+        operations/character.cpp
         operations/empty.cpp
         operations/evaluate.cpp
         operations/is_equal.cpp

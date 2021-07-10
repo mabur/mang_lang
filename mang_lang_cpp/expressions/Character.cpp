@@ -1,6 +1,7 @@
 #include "Character.h"
 #include <algorithm>
 
+#include "../operations/character.h"
 #include "../operations/evaluate.h"
 #include "../operations/is_equal.h"
 #include "../operations/parse.h"
@@ -19,5 +20,5 @@ bool Character::isEqual(const Expression* expression) const {
 }
 
 char Character::character() const {
-    return value;
+    return ::character(this);
 }
