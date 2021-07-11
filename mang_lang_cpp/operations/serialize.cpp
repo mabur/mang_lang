@@ -19,16 +19,16 @@ std::string serialize(const Character& character) {
 }
 
 std::string serialize(const Conditional& conditional) {
-    return "if " + conditional.expression_if->serialize() +
-        " then " + conditional.expression_then->serialize() +
-        " else " + conditional.expression_else->serialize();
+    return "if " + serialize(conditional.expression_if.get()) +
+        " then " + serialize(conditional.expression_then.get()) +
+        " else " + serialize(conditional.expression_else.get());
 }
 
 std::string serialize(const Dictionary& dictionary) {
     auto result = std::string{};
     result += '{';
     for (const auto& element : dictionary.elements) {
-        result += element->serialize();
+        result += serialize(element.get());
     }
     if (dictionary.elements.empty()) {
         result += '}';
@@ -40,11 +40,11 @@ std::string serialize(const Dictionary& dictionary) {
 }
 
 std::string serialize(const NamedElement& element) {
-    return element.name->serialize() + '=' + element.expression->serialize() + ' ';
+    return serialize(element.name.get()) + '=' + serialize(element.expression.get()) + ' ';
 }
 
 std::string serialize(const WhileElement& element) {
-    return "while " + element.expression->serialize() + ' ';
+    return "while " + serialize(element.expression.get()) + ' ';
 }
 
 std::string serialize(const EndElement&) {
@@ -52,8 +52,8 @@ std::string serialize(const EndElement&) {
 }
 
 std::string serialize(const Function& function) {
-    return "in " + function.input_name->serialize()
-        + " out " + function.body->serialize();
+    return "in " + serialize(function.input_name.get())
+        + " out " + serialize(function.body.get());
 }
 
 std::string serialize(const FunctionDictionary& function_dictionary) {
@@ -61,7 +61,7 @@ std::string serialize(const FunctionDictionary& function_dictionary) {
     result += "in ";
     result += "{";
     for (const auto& name : function_dictionary.input_names) {
-        result += name->serialize();
+        result += serialize(name.get());
         result += " ";
     }
     if (function_dictionary.input_names.empty()) {
@@ -70,7 +70,7 @@ std::string serialize(const FunctionDictionary& function_dictionary) {
     else {
         result.back() = '}';
     }
-    result += " out " + function_dictionary.body->serialize();
+    result += " out " + serialize(function_dictionary.body.get());
     return result;
 }
 
@@ -79,7 +79,7 @@ std::string serialize(const FunctionList& function_list) {
     result += "in ";
     result += "(";
     for (const auto& name : function_list.input_names) {
-        result += name->serialize();
+        result += serialize(name.get());
         result += " ";
     }
     if (function_list.input_names.empty()) {
@@ -88,7 +88,7 @@ std::string serialize(const FunctionList& function_list) {
     else {
         result.back() = ')';
     }
-    result += " out " + function_list.body->serialize();
+    result += " out " + serialize(function_list.body.get());
     return result;
 }
 
@@ -97,7 +97,7 @@ std::string serialize(const List& list) {
         return "()";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
-        return left + right->serialize() + " ";
+        return left + serialize(right.get()) + " ";
     };
     auto result = std::string{"("};
     result = leftFold(list.list(), result, operation);
@@ -106,15 +106,15 @@ std::string serialize(const List& list) {
 }
 
 std::string serialize(const LookupChild& lookup_child) {
-    return lookup_child.name->serialize() + "@" + lookup_child.child->serialize();
+    return serialize(lookup_child.name.get()) + "@" + serialize(lookup_child.child.get());
 }
 
 std::string serialize(const LookupFunction& lookup_function) {
-    return lookup_function.name->serialize() + "!" + lookup_function.child->serialize();
+    return serialize(lookup_function.name.get()) + "!" + serialize(lookup_function.child.get());
 }
 
 std::string serialize(const LookupSymbol& lookup_symbol) {
-    return lookup_symbol.name->serialize();
+    return serialize(lookup_symbol.name.get());
 }
 
 std::string serialize(const Name& name) {

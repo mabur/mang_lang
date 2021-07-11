@@ -14,7 +14,6 @@ struct Function : public Expression {
     {}
     NamePointer input_name;
     ExpressionPointer body;
-    std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
     ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const final;
 };

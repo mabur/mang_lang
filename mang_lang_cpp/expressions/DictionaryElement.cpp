@@ -38,18 +38,6 @@ EndElement::EndElement(CodeRange range, const Expression* environment)
     : DictionaryElement{range, environment, END_ELEMENT, nullptr, nullptr, 0}
 {}
 
-std::string NamedElement::serialize() const {
-    return ::serialize(this);
-}
-
-std::string WhileElement::serialize() const {
-    return ::serialize(this);
-}
-
-std::string EndElement::serialize() const {
-    return ::serialize(this);
-}
-
 ExpressionPointer NamedElement::lookup(const std::string& s) const {
     return ::lookup(this, s);
 }

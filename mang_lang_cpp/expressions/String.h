@@ -15,7 +15,6 @@ struct String : public Expression {
     {}
     using value_type = String;
 
-    std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 
     ExpressionPointer lookup(const std::string& name) const final {

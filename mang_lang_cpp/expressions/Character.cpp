@@ -7,10 +7,6 @@
 #include "../operations/parse.h"
 #include "../operations/serialize.h"
 
-std::string Character::serialize() const {
-    return ::serialize(this);
-}
-
 ExpressionPointer Character::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }

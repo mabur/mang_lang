@@ -15,11 +15,13 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "../operations/serialize.h"
+
 ExpressionPointer evaluateCharacter(
     const Character& character, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<Character>(character.range(), environment, character.value);
-    log << result->serialize();
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -29,7 +31,7 @@ ExpressionPointer evaluateConditional(
     auto result = conditional.expression_if->evaluate(environment, log)->boolean() ?
         conditional.expression_then->evaluate(environment, log) :
         conditional.expression_else->evaluate(environment, log);
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -44,7 +46,7 @@ ExpressionPointer evaluateDictionary(
         dictionary.elements[i]->mutate(result.get(), log, result->elements);
         i += dictionary.elements[i]->jump(result.get(), log);
     }
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -54,7 +56,7 @@ ExpressionPointer evaluateFunction(
     auto result = std::make_shared<Function>(
         function.range(), environment, function.input_name, function.body
     );
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -64,7 +66,7 @@ ExpressionPointer evaluateFunctionDictionary(
     auto result = std::make_shared<FunctionDictionary>(
         function_dictionary.range(), environment, function_dictionary.input_names, function_dictionary.body
     );
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -74,7 +76,7 @@ ExpressionPointer evaluateFunctionList(
     auto result = std::make_shared<FunctionList>(
         function_list.range(), environment, function_list.input_names, function_list.body
     );
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -87,7 +89,7 @@ ExpressionPointer evaluateList(
     auto evaluated_elements = map(list.list(), operation);
     auto result = std::make_shared<List>(
         list.range(), environment, std::move(evaluated_elements));
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -95,7 +97,7 @@ ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, const Expression* environment, std::ostream& log
 ) {
     auto result = lookup_child.child->evaluate(environment, log)->lookup(lookup_child.name->value);
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -106,7 +108,7 @@ ExpressionPointer evaluateLookupFunction(
     const auto evaluated_child = lookup_function.child->evaluate(environment, log);
     assert(evaluated_child);
     auto result = function->apply(evaluated_child, log);
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -114,7 +116,7 @@ ExpressionPointer evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log
 ) {
     auto result = environment->lookup(lookup_symbol.name->value);
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -122,7 +124,7 @@ ExpressionPointer evaluateNumber(
     const Number& number, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<Number>(number.range(), environment, number.value);
-    log << result->serialize() << std::endl;
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 
@@ -130,7 +132,7 @@ ExpressionPointer evaluateString(
     const String& string, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<String>(string.range(), environment, string.list());
-    log << result->serialize();
+    log << serialize(result.get()) << std::endl;
     return result;
 }
 

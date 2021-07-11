@@ -13,10 +13,6 @@ ExpressionPointer Dictionary::lookup(const std::string& name) const {
     return ::lookup(this, name);
 }
 
-std::string Dictionary::serialize() const {
-    return ::serialize(this);
-}
-
 ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }

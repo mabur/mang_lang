@@ -47,7 +47,6 @@ struct Expression {
     const CodeCharacter* end() const;
     const Expression* environment() const;
 
-    virtual std::string serialize() const = 0;
     virtual ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const;
     virtual ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const;
     virtual ExpressionPointer lookup(const std::string& name) const;

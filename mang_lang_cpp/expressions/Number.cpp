@@ -6,10 +6,6 @@
 #include "../operations/number.h"
 #include "../operations/serialize.h"
 
-std::string Number::serialize() const {
-    return ::serialize(this);
-}
-
 ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }

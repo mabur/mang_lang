@@ -11,6 +11,5 @@ struct LookupFunction : public Expression {
     ) : Expression{range, environment, LOOKUP_FUNCTION}, name{std::move(name)}, child{std::move(child)} {}
     NamePointer name;
     ExpressionPointer child;
-    std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 };

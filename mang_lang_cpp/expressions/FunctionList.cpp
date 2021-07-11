@@ -8,10 +8,6 @@
 #include "../operations/evaluate.h"
 #include "../operations/serialize.h"
 
-std::string FunctionList::serialize() const {
-    return ::serialize(this);
-}
-
 ExpressionPointer FunctionList::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }

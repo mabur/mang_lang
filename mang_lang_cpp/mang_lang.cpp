@@ -5,6 +5,7 @@
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
 #include "operations/parse.h"
+#include "operations/serialize.h"
 
 auto nullStream() {
     std::ofstream stream;
@@ -18,13 +19,13 @@ ExpressionPointer parse(const std::string& string) {
 }
 
 std::string reformat(std::string code) {
-    return parse(code)->serialize();
+    return serialize(parse(code).get());
 }
 
 std::string evaluate(std::string code) {
     auto log = nullStream();
     const auto built_ins = builtIns();
     const auto standard_library = parse(STANDARD_LIBRARY)->evaluate(built_ins.get(), log);
-    return parse(code)->evaluate(standard_library.get(), log)->serialize();
-    //return parse(code)->evaluate(nullptr, log)->serialize();
+    return serialize(parse(code)->evaluate(standard_library.get(), log).get());
+    //return serialize(parse(code)->evaluate(nullptr, log).get());
 }

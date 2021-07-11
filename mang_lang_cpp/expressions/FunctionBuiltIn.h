@@ -8,6 +8,5 @@ struct FunctionBuiltIn : public Expression {
         : Expression{{}, {}, FUNCTION_BUILT_IN}, function(std::move(f)) {}
     std::function<ExpressionPointer(const Expression&)> function;
     ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const final;
-    std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 };

@@ -17,6 +17,5 @@ struct Conditional : public Expression {
     ExpressionPointer expression_if;
     ExpressionPointer expression_then;
     ExpressionPointer expression_else;
-    std::string serialize() const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 };

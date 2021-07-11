@@ -7,10 +7,6 @@
 #include "../operations/evaluate.h"
 #include "../operations/serialize.h"
 
-std::string FunctionDictionary::serialize() const {
-    return ::serialize(this);
-}
-
 ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }
