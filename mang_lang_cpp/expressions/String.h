@@ -29,9 +29,6 @@ struct String : public Expression {
     bool isEqual(const Expression* expression) const final {
         return ::isEqual(this, expression);
     }
-    ExpressionPointer empty() const final {
-        return ::empty(this);
-    }
 
     InternalList elements;
 };

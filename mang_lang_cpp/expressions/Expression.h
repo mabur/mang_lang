@@ -55,6 +55,4 @@ struct Expression {
     virtual char character() const;
     virtual bool boolean() const;
     virtual const InternalList& list() const;
-
-    virtual ExpressionPointer empty() const;
 };

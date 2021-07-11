@@ -64,7 +64,3 @@ bool Expression::boolean() const {
 const InternalList& Expression::list() const {
     throw std::runtime_error{"Expected list"};
 }
-
-ExpressionPointer Expression::empty() const {
-    throw std::runtime_error{"Expected list"};
-}

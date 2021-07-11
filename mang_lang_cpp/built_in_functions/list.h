@@ -2,12 +2,13 @@
 
 #include "../expressions/Expression.h"
 #include "../expressions/List.h"
+#include "../operations/empty.h"
 #include "../operations/prepend.h"
 
 namespace list_functions {
 
 ExpressionPointer empty(const Expression& in) {
-    return in.empty();
+    return empty(&in);
 }
 
 ExpressionPointer prepend(const Expression& in) {
