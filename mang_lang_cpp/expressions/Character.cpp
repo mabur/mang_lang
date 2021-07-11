@@ -12,7 +12,7 @@ std::string Character::serialize() const {
 }
 
 ExpressionPointer Character::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluate(*this, environment, log);
+    return ::evaluateCharacter(*this, environment, log);
 }
 
 bool Character::isEqual(const Expression* expression) const {

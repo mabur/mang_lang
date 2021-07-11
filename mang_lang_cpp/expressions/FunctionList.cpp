@@ -13,7 +13,7 @@ std::string FunctionList::serialize() const {
 }
 
 ExpressionPointer FunctionList::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluate(*this, environment, log);
+    return ::evaluateFunctionList(*this, environment, log);
 }
 
 ExpressionPointer FunctionList::apply(ExpressionPointer input, std::ostream& log) const {

@@ -11,5 +11,5 @@ std::string String::serialize() const {
 }
 
 ExpressionPointer String::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluate(*this, environment, log);
+    return ::evaluateString(*this, environment, log);
 }

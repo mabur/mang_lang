@@ -15,7 +15,7 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateCharacter(
     const Character& character, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<Character>(character.range(), environment, character.value);
@@ -23,7 +23,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateConditional(
     const Conditional& conditional, const Expression* environment, std::ostream& log
 ) {
     auto result = conditional.expression_if->evaluate(environment, log)->boolean() ?
@@ -33,7 +33,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateDictionary(
     const Dictionary& dictionary, const Expression* environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
@@ -48,7 +48,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateFunction(
     const Function& function, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<Function>(
@@ -58,7 +58,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<FunctionDictionary>(
@@ -68,7 +68,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateFunctionList(
     const FunctionList& function_list, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<FunctionList>(
@@ -78,7 +78,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateList(
     const List& list, const Expression* environment, std::ostream& log
 ) {
     const auto operation = [&](const ExpressionPointer& expression) {
@@ -91,7 +91,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, const Expression* environment, std::ostream& log
 ) {
     auto result = lookup_child.child->evaluate(environment, log)->lookup(lookup_child.name->value);
@@ -99,7 +99,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateLookupFunction(
     const LookupFunction& lookup_function, const Expression* environment, std::ostream& log
 ) {
     const auto function = environment->lookup(lookup_function.name->value);
@@ -110,7 +110,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log
 ) {
     auto result = environment->lookup(lookup_symbol.name->value);
@@ -118,7 +118,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateNumber(
     const Number& number, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<Number>(number.range(), environment, number.value);
@@ -126,7 +126,7 @@ ExpressionPointer evaluate(
     return result;
 }
 
-ExpressionPointer evaluate(
+ExpressionPointer evaluateString(
     const String& string, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<String>(string.range(), environment, string.list());

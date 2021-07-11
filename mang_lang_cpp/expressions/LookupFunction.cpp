@@ -9,5 +9,5 @@ std::string LookupFunction::serialize() const {
 }
 
 ExpressionPointer LookupFunction::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluate(*this, environment, log);
+    return ::evaluateLookupFunction(*this, environment, log);
 }
