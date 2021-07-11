@@ -14,6 +14,7 @@ struct DictionaryElement : Expression {
     DictionaryElement(
         CodeRange range,
         const Expression* environment,
+        ExpressionType type,
         NamePointer name,
         ExpressionPointer expression,
         size_t dictionary_index

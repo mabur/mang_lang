@@ -8,10 +8,11 @@
 DictionaryElement::DictionaryElement(
     CodeRange range,
     const Expression* environment,
+    ExpressionType type,
     NamePointer name,
     ExpressionPointer expression,
     size_t dictionary_index
-) : Expression{range, environment, DICTIONARY_ELEMENT},
+) : Expression{range, environment, type},
     name{std::move(name)},
     expression{std::move(expression)},
     dictionary_index_{dictionary_index}
@@ -23,25 +24,19 @@ NamedElement::NamedElement(
     NamePointer name,
     ExpressionPointer expression,
     size_t dictionary_index
-) : DictionaryElement{range, environment, std::move(name), std::move(expression), dictionary_index}
-{
-    type_ = NAMED_ELEMENT;
-}
+) : DictionaryElement{range, environment, NAMED_ELEMENT, std::move(name), std::move(expression), dictionary_index}
+{}
 
 WhileElement::WhileElement(
     CodeRange range,
     const Expression* environment,
     ExpressionPointer expression
-) : DictionaryElement{range, environment, nullptr, std::move(expression), 0}
-{
-    type_ = WHILE_ELEMENT;
-}
+) : DictionaryElement{range, environment, WHILE_ELEMENT, nullptr, std::move(expression), 0}
+{}
 
 EndElement::EndElement(CodeRange range, const Expression* environment)
-    : DictionaryElement{range, environment, nullptr, nullptr, 0}
-{
-    type_ = END_ELEMENT;
-}
+    : DictionaryElement{range, environment, END_ELEMENT, nullptr, nullptr, 0}
+{}
 
 std::string NamedElement::serialize() const {
     return ::serialize(this);
