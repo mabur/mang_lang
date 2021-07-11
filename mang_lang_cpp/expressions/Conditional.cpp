@@ -10,5 +10,5 @@ std::string Conditional::serialize() const {
 }
 
 ExpressionPointer Conditional::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluateConditional(*this, environment, log);
+    return ::evaluate(this, environment, log);
 }

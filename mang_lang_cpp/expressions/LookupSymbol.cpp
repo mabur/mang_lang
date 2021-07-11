@@ -11,5 +11,5 @@ std::string LookupSymbol::serialize() const {
 }
 
 ExpressionPointer LookupSymbol::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluateLookupSymbol(*this, environment, log);
+    return ::evaluate(this, environment, log);
 }

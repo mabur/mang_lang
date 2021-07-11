@@ -11,7 +11,7 @@ std::string Number::serialize() const {
 }
 
 ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluateNumber(*this, environment, log);
+    return ::evaluate(this, environment, log);
 }
 
 bool Number::isEqual(const Expression* expression) const {

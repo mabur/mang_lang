@@ -15,6 +15,19 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+ExpressionPointer evaluateCharacter(const Character& character, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateConditional(const Conditional& conditional, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateDictionary(const Dictionary& dictionary, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateFunction(const Function& function, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateFunctionDictionary(const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateFunctionList(const FunctionList& function_list, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateList(const List& list, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateLookupChild(const LookupChild& lookup_child, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateLookupFunction(const LookupFunction& lookup_function, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateLookupSymbol(const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateNumber(const Number& number, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluateString(const String& string, const Expression* environment, std::ostream& log);
+
 ExpressionPointer evaluateCharacter(
     const Character& character, const Expression* environment, std::ostream& log
 ) {
@@ -132,4 +145,20 @@ ExpressionPointer evaluateString(
     auto result = std::make_shared<String>(string.range(), environment, string.list());
     log << result->serialize();
     return result;
+}
+
+ExpressionPointer evaluate(const Expression* expression, const Expression* environment, std::ostream& log) {
+    if (expression->type_ == CHARACTER) {return evaluateCharacter(*dynamic_cast<const Character*>(expression), environment, log);}
+    if (expression->type_ == CONDITIONAL) {return evaluateConditional(*dynamic_cast<const Conditional*>(expression), environment, log);}
+    if (expression->type_ == DICTIONARY) {return evaluateDictionary(*dynamic_cast<const Dictionary*>(expression), environment, log);}
+    if (expression->type_ == FUNCTION) {return evaluateFunction(*dynamic_cast<const Function*>(expression), environment, log);}
+    if (expression->type_ == FUNCTION_DICTIONARY) {return evaluateFunctionDictionary(*dynamic_cast<const FunctionDictionary*>(expression), environment, log);}
+    if (expression->type_ == FUNCTION_LIST) {return evaluateFunctionList(*dynamic_cast<const FunctionList*>(expression), environment, log);}
+    if (expression->type_ == LIST) {return evaluateList(*dynamic_cast<const List*>(expression), environment, log);}
+    if (expression->type_ == LOOKUP_CHILD) {return evaluateLookupChild(*dynamic_cast<const LookupChild*>(expression), environment, log);}
+    if (expression->type_ == LOOKUP_FUNCTION) {return evaluateLookupFunction(*dynamic_cast<const LookupFunction*>(expression), environment, log);}
+    if (expression->type_ == LOOKUP_SYMBOL) {return evaluateLookupSymbol(*dynamic_cast<const LookupSymbol*>(expression), environment, log);}
+    if (expression->type_ == NUMBER) {return evaluateNumber(*dynamic_cast<const Number*>(expression), environment, log);}
+    if (expression->type_ == STRING) {return evaluateString(*dynamic_cast<const String*>(expression), environment, log);}
+    throw std::runtime_error{"Did not recognize expression to evaluate"};
 }

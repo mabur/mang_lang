@@ -8,5 +8,5 @@ std::string List::serialize() const {
 }
 
 ExpressionPointer List::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluateList(*this, environment, log);
+    return ::evaluate(this, environment, log);
 }

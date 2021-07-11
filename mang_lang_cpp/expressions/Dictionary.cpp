@@ -18,7 +18,7 @@ std::string Dictionary::serialize() const {
 }
 
 ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluateDictionary(*this, environment, log);
+    return ::evaluate(this, environment, log);
 }
 
 bool Dictionary::boolean() const {

@@ -12,7 +12,7 @@ std::string FunctionDictionary::serialize() const {
 }
 
 ExpressionPointer FunctionDictionary::evaluate(const Expression* environment, std::ostream& log) const {
-    return ::evaluateFunctionDictionary(*this, environment, log);
+    return ::evaluate(this, environment, log);
 }
 
 ExpressionPointer FunctionDictionary::apply(ExpressionPointer input, std::ostream& log) const {
