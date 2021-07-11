@@ -55,7 +55,7 @@ ExpressionPointer lookup(const Expression* expression, const std::string& name) 
     if (expression->type_ == DICTIONARY) {
         return lookupDictionary(dynamic_cast<const Dictionary *>(expression), name);
     }
-    if (expression->type_ == DICTIONARY_ELEMENT) {
+    if (expression->type_ == NAMED_ELEMENT) {
         return lookupDictionaryElement(dynamic_cast<const DictionaryElement *>(expression), name);
     }
     if (expression->type_ == LIST) {

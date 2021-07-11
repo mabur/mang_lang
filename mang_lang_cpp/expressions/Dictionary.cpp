@@ -14,7 +14,7 @@ ExpressionPointer Dictionary::lookup(const std::string& name) const {
 }
 
 std::string Dictionary::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {

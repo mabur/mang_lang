@@ -136,3 +136,23 @@ std::string serialize(const String& string) {
     value += "\"";
     return value;
 }
+
+std::string serialize(const Expression* expression) {
+    if (expression->type_ == CHARACTER) {return serialize(*dynamic_cast<const Character*>(expression));}
+    if (expression->type_ == CONDITIONAL) {return serialize(*dynamic_cast<const Conditional*>(expression));}
+    if (expression->type_ == DICTIONARY) {return serialize(*dynamic_cast<const Dictionary*>(expression));}
+    if (expression->type_ == NAMED_ELEMENT) {return serialize(*dynamic_cast<const NamedElement*>(expression));}
+    if (expression->type_ == WHILE_ELEMENT) {return serialize(*dynamic_cast<const WhileElement*>(expression));}
+    if (expression->type_ == END_ELEMENT) {return serialize(*dynamic_cast<const EndElement*>(expression));}
+    if (expression->type_ == FUNCTION) {return serialize(*dynamic_cast<const Function*>(expression));}
+    if (expression->type_ == FUNCTION_DICTIONARY) {return serialize(*dynamic_cast<const FunctionDictionary*>(expression));}
+    if (expression->type_ == FUNCTION_LIST) {return serialize(*dynamic_cast<const FunctionList*>(expression));}
+    if (expression->type_ == LIST) {return serialize(*dynamic_cast<const List*>(expression));}
+    if (expression->type_ == LOOKUP_CHILD) {return serialize(*dynamic_cast<const LookupChild*>(expression));}
+    if (expression->type_ == LOOKUP_FUNCTION) {return serialize(*dynamic_cast<const LookupFunction*>(expression));}
+    if (expression->type_ == LOOKUP_SYMBOL) {return serialize(*dynamic_cast<const LookupSymbol*>(expression));}
+    if (expression->type_ == NAME) {return serialize(*dynamic_cast<const Name*>(expression));}
+    if (expression->type_ == NUMBER) {return serialize(*dynamic_cast<const Number*>(expression));}
+    if (expression->type_ == STRING) {return serialize(*dynamic_cast<const String*>(expression));}
+    throw std::runtime_error{"Did not recognize expression to serialize: " + std::to_string(expression->type_)};
+}

@@ -7,7 +7,7 @@
 #include "../operations/serialize.h"
 
 std::string LookupSymbol::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 ExpressionPointer LookupSymbol::evaluate(const Expression* environment, std::ostream& log) const {

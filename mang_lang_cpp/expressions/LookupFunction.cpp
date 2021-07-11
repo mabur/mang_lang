@@ -5,7 +5,7 @@
 #include "../operations/serialize.h"
 
 std::string LookupFunction::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 ExpressionPointer LookupFunction::evaluate(const Expression* environment, std::ostream& log) const {

@@ -4,5 +4,5 @@
 #include "../operations/serialize.h"
 
 std::string Name::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }

@@ -24,29 +24,35 @@ NamedElement::NamedElement(
     ExpressionPointer expression,
     size_t dictionary_index
 ) : DictionaryElement{range, environment, std::move(name), std::move(expression), dictionary_index}
-{}
+{
+    type_ = NAMED_ELEMENT;
+}
 
 WhileElement::WhileElement(
     CodeRange range,
     const Expression* environment,
     ExpressionPointer expression
 ) : DictionaryElement{range, environment, nullptr, std::move(expression), 0}
-{}
+{
+    type_ = WHILE_ELEMENT;
+}
 
 EndElement::EndElement(CodeRange range, const Expression* environment)
     : DictionaryElement{range, environment, nullptr, nullptr, 0}
-{}
+{
+    type_ = END_ELEMENT;
+}
 
 std::string NamedElement::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 std::string WhileElement::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 std::string EndElement::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 ExpressionPointer NamedElement::lookup(const std::string& s) const {

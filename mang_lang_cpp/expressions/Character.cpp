@@ -8,7 +8,7 @@
 #include "../operations/serialize.h"
 
 std::string Character::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 ExpressionPointer Character::evaluate(const Expression* environment, std::ostream& log) const {

@@ -6,7 +6,7 @@
 #include "../operations/serialize.h."
 
 std::string Conditional::serialize() const {
-    return ::serialize(*this);
+    return ::serialize(this);
 }
 
 ExpressionPointer Conditional::evaluate(const Expression* environment, std::ostream& log) const {
