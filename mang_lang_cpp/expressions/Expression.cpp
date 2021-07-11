@@ -68,7 +68,3 @@ const InternalList& Expression::list() const {
 ExpressionPointer Expression::empty() const {
     throw std::runtime_error{"Expected list"};
 }
-
-ExpressionPointer Expression::prepend(ExpressionPointer) const {
-    throw std::runtime_error{"Expected list"};
-}

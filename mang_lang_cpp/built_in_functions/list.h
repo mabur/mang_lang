@@ -2,6 +2,7 @@
 
 #include "../expressions/Expression.h"
 #include "../expressions/List.h"
+#include "../operations/prepend.h"
 
 namespace list_functions {
 
@@ -12,7 +13,7 @@ ExpressionPointer empty(const Expression& in) {
 ExpressionPointer prepend(const Expression& in) {
     auto item = in.list()->first;
     auto list = in.list()->rest->first;
-    return list->prepend(item);
+    return prepend(list.get(), item);
 }
 
 }

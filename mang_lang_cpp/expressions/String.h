@@ -32,9 +32,6 @@ struct String : public Expression {
     ExpressionPointer empty() const final {
         return ::empty(this);
     }
-    ExpressionPointer prepend(ExpressionPointer item) const final {
-        return ::prepend(this, item);
-    }
 
     InternalList elements;
 };

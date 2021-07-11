@@ -57,5 +57,4 @@ struct Expression {
     virtual const InternalList& list() const;
 
     virtual ExpressionPointer empty() const;
-    virtual ExpressionPointer prepend(ExpressionPointer item) const;
 };
