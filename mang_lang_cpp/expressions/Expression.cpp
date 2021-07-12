@@ -52,7 +52,3 @@ bool Expression::isEqual(const Expression*) const {
 double Expression::number() const {
     throw std::runtime_error{"Expected number"};
 }
-
-char Expression::character() const {
-    throw std::runtime_error{"Expected character"};
-}

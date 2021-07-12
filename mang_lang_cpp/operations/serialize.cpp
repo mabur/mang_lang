@@ -14,6 +14,7 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "character.h"
 #include "list.h"
 
 std::string serialize(const Character& character) {
@@ -133,7 +134,7 @@ std::string serialize(const String& string) {
     auto value = std::string{"\""};
     auto node = list(&string);
     for (; node; node = node->rest) {
-        value += node->first->character();
+        value += character(node->first.get());
     }
     value += "\"";
     return value;

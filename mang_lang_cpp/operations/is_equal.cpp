@@ -3,6 +3,7 @@
 #include "../expressions/Character.h"
 #include "../expressions/Number.h"
 
+#include "character.h"
 #include "list.h"
 
 bool isEqualNumber(const Number* number, const Expression* expression) {
@@ -15,7 +16,7 @@ bool isEqualNumber(const Number* number, const Expression* expression) {
 
 bool isEqualCharacter(const Character* character, const Expression* expression) {
     try {
-        return character->character() == expression->character();
+        return ::character(character) == ::character(expression);
     } catch (...) {
         return false;
     }

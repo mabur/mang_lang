@@ -52,5 +52,4 @@ struct Expression {
     virtual ExpressionPointer lookup(const std::string& name) const;
     virtual bool isEqual(const Expression* expression) const;
     virtual double number() const;
-    virtual char character() const;
 };

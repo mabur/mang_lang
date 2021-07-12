@@ -7,5 +7,4 @@ struct Character : public Expression {
     char value;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
     bool isEqual(const Expression* expression) const final;
-    char character() const final;
 };

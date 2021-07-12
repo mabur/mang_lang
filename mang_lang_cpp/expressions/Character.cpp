@@ -14,7 +14,3 @@ ExpressionPointer Character::evaluate(const Expression* environment, std::ostrea
 bool Character::isEqual(const Expression* expression) const {
     return ::isEqual(this, expression);
 }
-
-char Character::character() const {
-    return ::character(this);
-}
