@@ -10,6 +10,18 @@
 
 namespace arithmetic {
 
+namespace {
+
+const Expression* first(const Expression& in) {
+    return list(&in)->first.get();
+}
+
+const Expression* second(const Expression& in) {
+    return list(&in)->rest->first.get();
+}
+
+}
+
 ExpressionPointer makeNumber(const Expression& in, double x) {
     return std::make_shared<Number>(in.range(), nullptr, x);
 }
@@ -51,12 +63,12 @@ ExpressionPointer mul(const Expression& in) {
 }
 
 ExpressionPointer sub(const Expression& in) {
-    const auto result = number(list(&in)->first.get()) - number(list(&in)->rest->first.get());
+    const auto result = number(first(in)) - number(second(in));
     return makeNumber(in, result);
 }
 
 ExpressionPointer div(const Expression& in) {
-    const auto result = number(list(&in)->first.get()) / number(list(&in)->rest->first.get());
+    const auto result = number(first(in)) / number(second(in));
     return makeNumber(in, result);
 }
 
@@ -71,12 +83,12 @@ ExpressionPointer sqrt(const Expression& in) {
 }
 
 ExpressionPointer less(const Expression& in) {
-    const auto result = number(list(&in)->first.get()) < number(list(&in)->rest->first.get());
+    const auto result = number(first(in)) < number(second(in));
     return makeNumber(in, result);
 }
 
 ExpressionPointer less_or_equal(const Expression& in) {
-    const auto result = number(list(&in)->first.get()) <= number(list(&in)->rest->first.get());
+    const auto result = number(first(in)) <= number(second(in));
     return makeNumber(in, result);
 }
 
