@@ -9,8 +9,3 @@
 ExpressionPointer Number::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }
-
-bool Number::isEqual(const Expression* expression) const {
-    return ::isEqual(this, expression);
-}
-

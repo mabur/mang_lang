@@ -44,7 +44,3 @@ ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {
 ExpressionPointer Expression::apply(ExpressionPointer, std::ostream&) const {
     throw std::runtime_error{"Expected function"};
 }
-
-bool Expression::isEqual(const Expression*) const {
-    return false;
-}

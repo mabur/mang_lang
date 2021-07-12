@@ -6,6 +6,4 @@ struct Number : public Expression {
         : Expression{range, environment, NUMBER}, value{value} {}
     double value;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-
-    bool isEqual(const Expression* expression) const final;
 };

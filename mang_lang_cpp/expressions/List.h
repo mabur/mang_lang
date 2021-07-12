@@ -19,9 +19,6 @@ struct List : public Expression {
     ExpressionPointer lookup(const std::string& name) const final {
         return ::lookup(this, name);
     }
-    bool isEqual(const Expression* expression) const final {
-        return ::isEqual(this, expression);
-    }
 
     InternalList elements;
 };

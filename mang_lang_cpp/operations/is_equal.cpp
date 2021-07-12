@@ -4,6 +4,7 @@
 #include "../expressions/Number.h"
 
 #include "character.h"
+#include "is_equal.h"
 #include "list.h"
 #include "number.h"
 
@@ -27,7 +28,7 @@ bool isEqualList(const Expression* left_expression, const Expression* right_expr
     auto left = list(left_expression);
     auto right = list(right_expression);
     for (; left && right; left = left->rest, right = right->rest) {
-        if (!(left->first)->isEqual(right->first.get())) {
+        if (!isEqual(left->first.get(), right->first.get())) {
             return false;
         }
     }
