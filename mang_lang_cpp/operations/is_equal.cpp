@@ -5,10 +5,11 @@
 
 #include "character.h"
 #include "list.h"
+#include "number.h"
 
 bool isEqualNumber(const Number* number, const Expression* expression) {
     try {
-        return number->number() == expression->number();
+        return ::number(number) == ::number(expression);
     } catch (...) {
         return false;
     }

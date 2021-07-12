@@ -14,6 +14,3 @@ bool Number::isEqual(const Expression* expression) const {
     return ::isEqual(this, expression);
 }
 
-double Number::number() const {
-    return ::number(this);
-}

@@ -8,5 +8,4 @@ struct Number : public Expression {
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 
     bool isEqual(const Expression* expression) const final;
-    double number() const final;
 };

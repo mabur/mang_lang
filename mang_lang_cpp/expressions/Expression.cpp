@@ -48,7 +48,3 @@ ExpressionPointer Expression::apply(ExpressionPointer, std::ostream&) const {
 bool Expression::isEqual(const Expression*) const {
     return false;
 }
-
-double Expression::number() const {
-    throw std::runtime_error{"Expected number"};
-}
