@@ -40,7 +40,3 @@ ExpressionPointer Expression::lookup(const std::string& name) const {
 ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {
     throw std::runtime_error{"Expected evaluatable expression"};
 }
-
-ExpressionPointer Expression::apply(ExpressionPointer, std::ostream&) const {
-    throw std::runtime_error{"Expected function"};
-}

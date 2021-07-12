@@ -48,6 +48,5 @@ struct Expression {
     const Expression* environment() const;
 
     virtual ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const;
-    virtual ExpressionPointer apply(ExpressionPointer input, std::ostream& log) const;
     virtual ExpressionPointer lookup(const std::string& name) const;
 };

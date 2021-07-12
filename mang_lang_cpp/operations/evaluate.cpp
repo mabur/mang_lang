@@ -15,6 +15,7 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "apply.h"
 #include "list.h"
 #include "serialize.h"
 
@@ -108,7 +109,7 @@ ExpressionPointer evaluateLookupFunction(
     const auto function = environment->lookup(lookup_function.name->value);
     const auto evaluated_child = lookup_function.child->evaluate(environment, log);
     assert(evaluated_child);
-    auto result = function->apply(evaluated_child, log);
+    auto result = apply(function.get(), evaluated_child, log);
     log << serialize(result.get()) << std::endl;
     return result;
 }
