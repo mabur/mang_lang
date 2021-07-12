@@ -100,6 +100,24 @@ struct Conditional
       so that we can later refer to the function from another place,
       and bind it to another name.
 
+* Dynamic dictionaries
+  - file and directory handling.
+  - How to lookup a dynamic name in a dictionary?
+  - How to define a dynamin name in a dictionary?
+{
+  x = "a"
+  "x" = "a"
+  x = a
+  "x" = a
+  x = x@dict
+  x = x@@dict
+  x = x<<dict
+  x<= x<<dict
+  name = <magnus
+  name = "magnus"
+}
+
+
 * Fix bug about captured variables that happens e.g. when calling map inside another function like in replace:
   y@{f=in (x list) out map(in y out x list), y=f(2 (0 0))}
 
