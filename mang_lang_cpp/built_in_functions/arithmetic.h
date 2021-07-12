@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "../expressions/Number.h"
+#include "../operations/list.h"
 
 namespace arithmetic {
 
@@ -16,7 +17,7 @@ ExpressionPointer min(const Expression& in) {
         return std::min(left, right->number());
     };
     const auto init = std::numeric_limits<double>::infinity();
-    const auto result = leftFold(in.list(), init, operation);
+    const auto result = leftFold(list(&in), init, operation);
     return makeNumber(in, result);
 }
 
@@ -25,7 +26,7 @@ ExpressionPointer max(const Expression& in) {
         return std::max(left, right->number());
     };
     const auto init = -std::numeric_limits<double>::infinity();
-    const auto result = leftFold(in.list(), init, operation);
+    const auto result = leftFold(list(&in), init, operation);
     return makeNumber(in, result);
 }
 
@@ -34,7 +35,7 @@ ExpressionPointer add(const Expression& in) {
         return left + right->number();
     };
     const auto init = 0;
-    const auto result = leftFold(in.list(), init, operation);
+    const auto result = leftFold(list(&in), init, operation);
     return makeNumber(in, result);
 }
 
@@ -43,17 +44,17 @@ ExpressionPointer mul(const Expression& in) {
         return left * right->number();
     };
     const auto init = 1.0;
-    const auto result = leftFold(in.list(), init, operation);
+    const auto result = leftFold(list(&in), init, operation);
     return makeNumber(in, result);
 }
 
 ExpressionPointer sub(const Expression& in) {
-    const auto result = in.list()->first->number() - in.list()->rest->first->number();
+    const auto result = list(&in)->first->number() - list(&in)->rest->first->number();
     return makeNumber(in, result);
 }
 
 ExpressionPointer div(const Expression& in) {
-    const auto result = in.list()->first->number() / in.list()->rest->first->number();
+    const auto result = list(&in)->first->number() / list(&in)->rest->first->number();
     return makeNumber(in, result);
 }
 
@@ -68,12 +69,12 @@ ExpressionPointer sqrt(const Expression& in) {
 }
 
 ExpressionPointer less(const Expression& in) {
-    const auto result = in.list()->first->number() < in.list()->rest->first->number();
+    const auto result = list(&in)->first->number() < list(&in)->rest->first->number();
     return makeNumber(in, result);
 }
 
 ExpressionPointer less_or_equal(const Expression& in) {
-    const auto result = in.list()->first->number() <= in.list()->rest->first->number();
+    const auto result = list(&in)->first->number() <= list(&in)->rest->first->number();
     return makeNumber(in, result);
 }
 

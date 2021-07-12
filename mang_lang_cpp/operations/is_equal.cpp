@@ -3,6 +3,8 @@
 #include "../expressions/Character.h"
 #include "../expressions/Number.h"
 
+#include "list.h"
+
 bool isEqualNumber(const Number* number, const Expression* expression) {
     try {
         return number->number() == expression->number();
@@ -20,8 +22,8 @@ bool isEqualCharacter(const Character* character, const Expression* expression) 
 }
 
 bool isEqualList(const Expression* left_expression, const Expression* right_expression) {
-    auto left = left_expression->list();
-    auto right = right_expression->list();
+    auto left = list(left_expression);
+    auto right = list(right_expression);
     for (; left && right; left = left->rest, right = right->rest) {
         if (!(left->first)->isEqual(right->first.get())) {
             return false;

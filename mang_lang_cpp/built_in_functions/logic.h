@@ -2,6 +2,7 @@
 
 #include "../expressions/Expression.h"
 #include "../expressions/Number.h"
+#include "../operations/list.h"
 
 namespace logic {
 
@@ -26,17 +27,17 @@ ExpressionPointer logic_not(const Expression& in) {
 }
 
 ExpressionPointer all(const Expression& in) {
-    const auto result = !findIf(in.list(), isFalse);
+    const auto result = !findIf(list(&in), isFalse);
     return makeNumber(in, result);
 }
 
 ExpressionPointer any(const Expression& in) {
-    const auto result = !!findIf(in.list(), isTrue);
+    const auto result = !!findIf(list(&in), isTrue);
     return makeNumber(in, result);
 }
 
 ExpressionPointer none(const Expression& in) {
-    const auto result = !findIf(in.list(), isTrue);
+    const auto result = !findIf(list(&in), isTrue);
     return makeNumber(in, result);
 }
 

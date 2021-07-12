@@ -60,7 +60,3 @@ char Expression::character() const {
 bool Expression::boolean() const {
     throw std::runtime_error{"Expected boolean"};
 }
-
-const InternalList& Expression::list() const {
-    throw std::runtime_error{"Expected list"};
-}

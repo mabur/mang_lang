@@ -5,6 +5,7 @@
 #include "../expressions/FunctionBuiltIn.h"
 #include "../expressions/FunctionDictionary.h"
 #include "../expressions/FunctionList.h"
+#include "list.h"
 
 ExpressionPointer applyFunction(
     const Function* function, ExpressionPointer input, std::ostream& log
@@ -33,7 +34,7 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
 ) {
     auto middle = Dictionary(function_list->range(), function_list->environment());
     auto i = 0;
-    for (auto list = input->list(); list; list = list->rest, ++i) {
+    for (auto list = ::list(input.get()); list; list = list->rest, ++i) {
         middle.elements.push_back(
             std::make_shared<NamedElement>(
                 function_list->range(), &middle, function_list->input_names[i], list->first, i

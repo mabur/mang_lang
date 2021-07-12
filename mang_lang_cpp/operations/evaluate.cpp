@@ -15,7 +15,8 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
-#include "../operations/serialize.h"
+#include "list.h"
+#include "serialize.h"
 
 ExpressionPointer evaluateCharacter(
     const Character& character, const Expression* environment, std::ostream& log
@@ -86,7 +87,7 @@ ExpressionPointer evaluateList(
     const auto operation = [&](const ExpressionPointer& expression) {
         return expression->evaluate(environment, log);
     };
-    auto evaluated_elements = map(list.list(), operation);
+    auto evaluated_elements = map(::list(&list), operation);
     auto result = std::make_shared<List>(
         list.range(), environment, std::move(evaluated_elements));
     log << serialize(result.get()) << std::endl;
@@ -131,7 +132,7 @@ ExpressionPointer evaluateNumber(
 ExpressionPointer evaluateString(
     const String& string, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<String>(string.range(), environment, string.list());
+    auto result = std::make_shared<String>(string.range(), environment, list(&string));
     log << serialize(result.get()) << std::endl;
     return result;
 }

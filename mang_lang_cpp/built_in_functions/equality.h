@@ -2,6 +2,7 @@
 
 #include "../expressions/Expression.h"
 #include "../expressions/Number.h"
+#include "../operations/list.h"
 
 namespace equality {
 
@@ -10,7 +11,7 @@ ExpressionPointer makeNumber(const Expression &in, double x) {
 }
 
 ExpressionPointer equal(const Expression &in) {
-    const auto &elements = in.list();
+    const auto &elements = list(&in);
     const auto &left = elements->first;
     const auto &right = elements->rest->first;
     const auto value = left->isEqual(right.get());
@@ -18,7 +19,7 @@ ExpressionPointer equal(const Expression &in) {
 }
 
 ExpressionPointer unequal(const Expression &in) {
-    const auto &elements = in.list();
+    const auto &elements = list(&in);
     const auto &left = elements->first;
     const auto &right = elements->rest->first;
     const auto value = !left->isEqual(right.get());

@@ -4,6 +4,7 @@
 #include "../expressions/List.h"
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
+#include "list.h"
 
 bool booleanDictionary(const Dictionary* dictionary) {
     return !dictionary->elements.empty();
@@ -14,11 +15,11 @@ bool booleanNumber(const Number* number) {
 }
 
 bool booleanList(const List* list) {
-    return !!list->list();
+    return !!::list(list);
 }
 
 bool booleanString(const String* string) {
-    return !!string->list();
+    return !!list(string);
 }
 
 bool boolean(const Expression* expression) {

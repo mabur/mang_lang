@@ -4,6 +4,8 @@
 #include "../expressions/List.h"
 #include "../expressions/String.h"
 
+#include "list.h"
+
 ExpressionPointer lookupExpression(const Expression* expression, const std::string& name) {
     if (!expression->environment()) {
         // TODO: define evaluation exception.
@@ -33,20 +35,20 @@ ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, cons
 
 ExpressionPointer lookupList(const List* list, const std::string& name) {
     if (name == "first") {
-        return list->list()->first;
+        return ::list(list)->first;
     }
     if (name == "rest") {
-        return std::make_shared<List>(list->range(), nullptr, list->list()->rest);
+        return std::make_shared<List>(list->range(), nullptr, ::list(list)->rest);
     }
     throw ParseException("List does not contain symbol " + name);
 }
 
 ExpressionPointer lookupString(const String* list, const std::string& name) {
     if (name == "first") {
-        return list->list()->first;
+        return ::list(list)->first;
     }
     if (name == "rest") {
-        return std::make_shared<String>(list->range(), nullptr, list->list()->rest);
+        return std::make_shared<String>(list->range(), nullptr, ::list(list)->rest);
     }
     throw ParseException("List does not contain symbol " + name);
 }

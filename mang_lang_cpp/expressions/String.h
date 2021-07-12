@@ -20,9 +20,6 @@ struct String : public Expression {
     ExpressionPointer lookup(const std::string& name) const final {
         return ::lookup(this, name);
     }
-    const InternalList& list() const final {
-        return ::list(this);
-    }
     bool boolean() const final {
         return ::boolean(this);
     }

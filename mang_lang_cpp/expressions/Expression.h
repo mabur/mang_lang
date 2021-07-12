@@ -54,5 +54,4 @@ struct Expression {
     virtual double number() const;
     virtual char character() const;
     virtual bool boolean() const;
-    virtual const InternalList& list() const;
 };

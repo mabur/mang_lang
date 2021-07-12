@@ -14,6 +14,8 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "list.h"
+
 std::string serialize(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
 }
@@ -93,14 +95,14 @@ std::string serialize(const FunctionList& function_list) {
 }
 
 std::string serialize(const List& list) {
-    if (!list.list()) {
+    if (!::list(&list)) {
         return "()";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
         return left + serialize(right.get()) + " ";
     };
     auto result = std::string{"("};
-    result = leftFold(list.list(), result, operation);
+    result = leftFold(::list(&list), result, operation);
     result.back() = ')';
     return result;
 }
@@ -129,7 +131,7 @@ std::string serialize(const Number& number) {
 
 std::string serialize(const String& string) {
     auto value = std::string{"\""};
-    auto node = string.list();
+    auto node = list(&string);
     for (; node; node = node->rest) {
         value += node->first->character();
     }
