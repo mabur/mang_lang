@@ -17,7 +17,3 @@ bool Number::isEqual(const Expression* expression) const {
 double Number::number() const {
     return ::number(this);
 }
-
-bool Number::boolean() const {
-    return ::boolean(this);
-}

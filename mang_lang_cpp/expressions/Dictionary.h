@@ -10,5 +10,4 @@ struct Dictionary : public Expression {
     std::vector<DictionaryElementPointer> elements;
     ExpressionPointer lookup(const std::string& name) const final;
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-    bool boolean() const final;
 };

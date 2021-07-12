@@ -9,5 +9,4 @@ struct Number : public Expression {
 
     bool isEqual(const Expression* expression) const final;
     double number() const final;
-    bool boolean() const final;
 };

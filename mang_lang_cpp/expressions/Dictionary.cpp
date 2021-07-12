@@ -16,7 +16,3 @@ ExpressionPointer Dictionary::lookup(const std::string& name) const {
 ExpressionPointer Dictionary::evaluate(const Expression* environment, std::ostream& log) const {
     return ::evaluate(this, environment, log);
 }
-
-bool Dictionary::boolean() const {
-    return ::boolean(this);
-}

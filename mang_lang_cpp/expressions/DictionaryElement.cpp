@@ -2,8 +2,9 @@
 
 #include <cassert>
 
-#include "../operations/serialize.h"
+#include "../operations/boolean.h"
 #include "../operations/lookup.h"
+#include "../operations/serialize.h"
 
 DictionaryElement::DictionaryElement(
     CodeRange range,
@@ -66,7 +67,7 @@ size_t NamedElement::jump(const Expression*, std::ostream&) const {
 }
 
 size_t WhileElement::jump(const Expression* environment, std::ostream& log) const {
-    if (expression->evaluate(environment, log)->boolean()) {
+    if (boolean(expression->evaluate(environment, log).get())) {
         return jump_true;
     }
     return jump_false;

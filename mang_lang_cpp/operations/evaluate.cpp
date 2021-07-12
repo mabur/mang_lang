@@ -29,7 +29,7 @@ ExpressionPointer evaluateCharacter(
 ExpressionPointer evaluateConditional(
     const Conditional& conditional, const Expression* environment, std::ostream& log
 ) {
-    auto result = conditional.expression_if->evaluate(environment, log)->boolean() ?
+    auto result = boolean(conditional.expression_if->evaluate(environment, log).get()) ?
         conditional.expression_then->evaluate(environment, log) :
         conditional.expression_else->evaluate(environment, log);
     log << serialize(result.get()) << std::endl;

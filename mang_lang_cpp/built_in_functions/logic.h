@@ -2,16 +2,18 @@
 
 #include "../expressions/Expression.h"
 #include "../expressions/Number.h"
+
+#include "../operations/boolean.h"
 #include "../operations/list.h"
 
 namespace logic {
 
 bool isTrue(const ExpressionPointer& x) {
-    return x->boolean();
+    return boolean(x.get());
 }
 
 bool isFalse(const ExpressionPointer& x) {
-    return !x->boolean();
+    return !boolean(x.get());
 }
 
 ExpressionPointer makeNumber(const Expression& in, double x) {
@@ -19,11 +21,11 @@ ExpressionPointer makeNumber(const Expression& in, double x) {
 }
 
 ExpressionPointer boolean(const Expression& in) {
-    return makeNumber(in, in.boolean());
+    return makeNumber(in, boolean(&in));
 }
 
 ExpressionPointer logic_not(const Expression& in) {
-    return makeNumber(in, !in.boolean());
+    return makeNumber(in, !boolean(&in));
 }
 
 ExpressionPointer all(const Expression& in) {

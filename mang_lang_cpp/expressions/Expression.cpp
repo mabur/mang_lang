@@ -56,7 +56,3 @@ double Expression::number() const {
 char Expression::character() const {
     throw std::runtime_error{"Expected character"};
 }
-
-bool Expression::boolean() const {
-    throw std::runtime_error{"Expected boolean"};
-}

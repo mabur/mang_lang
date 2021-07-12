@@ -53,5 +53,4 @@ struct Expression {
     virtual bool isEqual(const Expression* expression) const;
     virtual double number() const;
     virtual char character() const;
-    virtual bool boolean() const;
 };
