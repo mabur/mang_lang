@@ -13,12 +13,6 @@ struct List : public Expression {
         : Expression{range, environment, LIST}, elements{std::move(elements)}
     {}
     using value_type = List;
-
     ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
-
-    ExpressionPointer lookup(const std::string& name) const final {
-        return ::lookup(this, name);
-    }
-
     InternalList elements;
 };

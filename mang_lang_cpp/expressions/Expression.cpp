@@ -33,10 +33,6 @@ const Expression* Expression::environment() const {
     return parent_;
 }
 
-ExpressionPointer Expression::lookup(const std::string& name) const {
-    return ::lookup(this, name);
-}
-
 ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {
     throw std::runtime_error{"Expected evaluatable expression"};
 }

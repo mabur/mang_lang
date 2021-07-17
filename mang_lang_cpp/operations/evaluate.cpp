@@ -98,7 +98,9 @@ ExpressionPointer evaluateList(
 ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, const Expression* environment, std::ostream& log
 ) {
-    auto result = lookup_child.child->evaluate(environment, log)->lookup(lookup_child.name->value);
+    auto result = lookup(
+        lookup_child.child->evaluate(environment, log).get(),
+        lookup_child.name->value);
     log << serialize(result.get()) << std::endl;
     return result;
 }
@@ -106,7 +108,7 @@ ExpressionPointer evaluateLookupChild(
 ExpressionPointer evaluateLookupFunction(
     const LookupFunction& lookup_function, const Expression* environment, std::ostream& log
 ) {
-    const auto function = environment->lookup(lookup_function.name->value);
+    const auto function = lookup(environment, lookup_function.name->value);
     const auto evaluated_child = lookup_function.child->evaluate(environment, log);
     assert(evaluated_child);
     auto result = apply(function.get(), evaluated_child, log);
@@ -117,7 +119,7 @@ ExpressionPointer evaluateLookupFunction(
 ExpressionPointer evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log
 ) {
-    auto result = environment->lookup(lookup_symbol.name->value);
+    auto result = lookup(environment, lookup_symbol.name->value);
     log << serialize(result.get()) << std::endl;
     return result;
 }

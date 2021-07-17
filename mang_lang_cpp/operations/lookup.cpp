@@ -11,13 +11,13 @@ ExpressionPointer lookupExpression(const Expression* expression, const std::stri
         // TODO: define evaluation exception.
         throw ParseException("Cannot find symbol " + name);
     }
-    return expression->environment()->lookup(name);
+    return lookup(expression->environment(), name);
 }
 
 ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {
     for (const auto& element : dictionary->elements) {
         if (element) {
-            auto expression = element->lookup(name);
+            auto expression = lookup(element.get(), name);
             if (expression) {
                 return expression;
             }
