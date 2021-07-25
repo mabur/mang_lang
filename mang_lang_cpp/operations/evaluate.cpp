@@ -30,9 +30,9 @@ ExpressionPointer evaluateCharacter(
 ExpressionPointer evaluateConditional(
     const Conditional& conditional, const Expression* environment, std::ostream& log
 ) {
-    auto result = boolean(conditional.expression_if->evaluate(environment, log).get()) ?
-        conditional.expression_then->evaluate(environment, log) :
-        conditional.expression_else->evaluate(environment, log);
+    auto result = boolean(evaluate(conditional.expression_if.get(), environment, log).get()) ?
+        evaluate(conditional.expression_then.get(), environment, log) :
+        evaluate(conditional.expression_else.get(), environment, log);
     log << serialize(result.get()) << std::endl;
     return result;
 }
@@ -86,7 +86,7 @@ ExpressionPointer evaluateList(
     const List& list, const Expression* environment, std::ostream& log
 ) {
     const auto operation = [&](const ExpressionPointer& expression) {
-        return expression->evaluate(environment, log);
+        return evaluate(expression.get(), environment, log);
     };
     auto evaluated_elements = map(::list(&list), operation);
     auto result = std::make_shared<List>(
@@ -99,7 +99,7 @@ ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, const Expression* environment, std::ostream& log
 ) {
     auto result = lookup(
-        lookup_child.child->evaluate(environment, log).get(),
+        evaluate(lookup_child.child.get(), environment, log).get(),
         lookup_child.name->value);
     log << serialize(result.get()) << std::endl;
     return result;
@@ -109,7 +109,7 @@ ExpressionPointer evaluateLookupFunction(
     const LookupFunction& lookup_function, const Expression* environment, std::ostream& log
 ) {
     const auto function = lookup(environment, lookup_function.name->value);
-    const auto evaluated_child = lookup_function.child->evaluate(environment, log);
+    const auto evaluated_child = evaluate(lookup_function.child.get(), environment, log);
     assert(evaluated_child);
     auto result = apply(function.get(), evaluated_child, log);
     log << serialize(result.get()) << std::endl;

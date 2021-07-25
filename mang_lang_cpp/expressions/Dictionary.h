@@ -8,5 +8,4 @@ struct Dictionary : public Expression {
         : Expression{range, environment, DICTIONARY}
     {}
     std::vector<DictionaryElementPointer> elements;
-    ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 };

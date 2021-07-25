@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "../operations/boolean.h"
+#include "../operations/evaluate.h"
 #include "../operations/lookup.h"
 #include "../operations/serialize.h"
 
@@ -45,7 +46,7 @@ void NamedElement::mutate(const Expression* environment, std::ostream& log,
         range(),
         environment,
         name,
-        expression->evaluate(environment, log),
+        evaluate(expression.get(), environment, log),
         dictionary_index_
     );
 }
@@ -63,7 +64,7 @@ size_t NamedElement::jump(const Expression*, std::ostream&) const {
 }
 
 size_t WhileElement::jump(const Expression* environment, std::ostream& log) const {
-    if (boolean(expression->evaluate(environment, log).get())) {
+    if (boolean(evaluate(expression.get(), environment, log).get())) {
         return jump_true;
     }
     return jump_false;

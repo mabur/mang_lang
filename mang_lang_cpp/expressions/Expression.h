@@ -46,6 +46,4 @@ struct Expression {
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
     const Expression* environment() const;
-
-    virtual ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const;
 };

@@ -4,6 +4,7 @@
 #include "expressions/Expression.h"
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
+#include "operations/evaluate.h"
 #include "operations/parse.h"
 #include "operations/serialize.h"
 
@@ -25,7 +26,7 @@ std::string reformat(std::string code) {
 std::string evaluate(std::string code) {
     auto log = nullStream();
     const auto built_ins = builtIns();
-    const auto standard_library = parse(STANDARD_LIBRARY)->evaluate(built_ins.get(), log);
-    return serialize(parse(code)->evaluate(standard_library.get(), log).get());
+    const auto standard_library = evaluate(parse(STANDARD_LIBRARY).get(), built_ins.get(), log);
+    return serialize(evaluate(parse(code).get(), standard_library.get(), log).get());
     //return serialize(parse(code)->evaluate(nullptr, log).get());
 }

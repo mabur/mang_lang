@@ -14,5 +14,4 @@ struct FunctionDictionary : public Expression {
     {}
     std::vector<NamePointer> input_names;
     ExpressionPointer body;
-    ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 };

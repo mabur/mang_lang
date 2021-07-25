@@ -32,7 +32,3 @@ CodeRange Expression::range() const {
 const Expression* Expression::environment() const {
     return environment_;
 }
-
-ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {
-    throw std::runtime_error{"Expected evaluatable expression"};
-}

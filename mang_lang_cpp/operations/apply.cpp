@@ -7,13 +7,15 @@
 #include "../expressions/FunctionList.h"
 #include "list.h"
 
+#include "../operations/evaluate.h"
+
 ExpressionPointer applyFunction(
     const Function* function, ExpressionPointer input, std::ostream& log
 ) {
     auto middle = Dictionary({}, function->environment());
     middle.elements.push_back(std::make_shared<NamedElement>(
         function->range(), &middle, function->input_name, input, 0));
-    auto output = function->body->evaluate(&middle, log);
+    auto output = evaluate(function->body.get(), &middle, log);
     return output;
 }
 
@@ -27,7 +29,7 @@ ExpressionPointer applyFunctionDictionary(
     const FunctionDictionary* function_dictionary, ExpressionPointer input, std::ostream& log
 ) {
     // TODO: pass along environment.
-    return function_dictionary->body->evaluate(input.get(), log);
+    return evaluate(function_dictionary->body.get(), input.get(), log);
 }
 
 ExpressionPointer applyFunctionList(const FunctionList* function_list, ExpressionPointer input, std::ostream& log
@@ -41,7 +43,7 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
             )
         );
     }
-    auto output = function_list->body->evaluate(&middle, log);
+    auto output = evaluate(function_list->body.get(), &middle, log);
     return output;
 }
 

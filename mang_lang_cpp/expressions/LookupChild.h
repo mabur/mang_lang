@@ -11,5 +11,4 @@ struct LookupChild : public Expression {
     ) : Expression{range, environment, LOOKUP_CHILD}, name{std::move(name)}, child{std::move(child)} {}
     NamePointer name;
     ExpressionPointer child;
-    ExpressionPointer evaluate(const Expression* environment, std::ostream& log) const final;
 };
