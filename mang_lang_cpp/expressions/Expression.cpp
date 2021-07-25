@@ -30,7 +30,7 @@ CodeRange Expression::range() const {
 }
 
 const Expression* Expression::environment() const {
-    return parent_;
+    return environment_;
 }
 
 ExpressionPointer Expression::evaluate(const Expression*, std::ostream&) const {
