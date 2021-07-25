@@ -22,7 +22,7 @@
 ExpressionPointer evaluateCharacter(
     const Character& character, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<Character>(character.range(), environment, character.value);
+    auto result = std::make_shared<Character>(character.range, environment, character.value);
     log << serialize(result.get()) << std::endl;
     return result;
 }
@@ -41,7 +41,7 @@ ExpressionPointer evaluateDictionary(
     const Dictionary& dictionary, const Expression* environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
-    auto result = std::make_shared<Dictionary>(dictionary.range(), environment);
+    auto result = std::make_shared<Dictionary>(dictionary.range, environment);
     result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
@@ -56,7 +56,7 @@ ExpressionPointer evaluateFunction(
     const Function& function, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<Function>(
-        function.range(), environment, function.input_name, function.body
+        function.range, environment, function.input_name, function.body
     );
     log << serialize(result.get()) << std::endl;
     return result;
@@ -66,7 +66,7 @@ ExpressionPointer evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<FunctionDictionary>(
-        function_dictionary.range(), environment, function_dictionary.input_names, function_dictionary.body
+        function_dictionary.range, environment, function_dictionary.input_names, function_dictionary.body
     );
     log << serialize(result.get()) << std::endl;
     return result;
@@ -76,7 +76,7 @@ ExpressionPointer evaluateFunctionList(
     const FunctionList& function_list, const Expression* environment, std::ostream& log
 ) {
     auto result = std::make_shared<FunctionList>(
-        function_list.range(), environment, function_list.input_names, function_list.body
+        function_list.range, environment, function_list.input_names, function_list.body
     );
     log << serialize(result.get()) << std::endl;
     return result;
@@ -90,7 +90,7 @@ ExpressionPointer evaluateList(
     };
     auto evaluated_elements = map(::list(&list), operation);
     auto result = std::make_shared<List>(
-        list.range(), environment, std::move(evaluated_elements));
+        list.range, environment, std::move(evaluated_elements));
     log << serialize(result.get()) << std::endl;
     return result;
 }
@@ -127,7 +127,7 @@ ExpressionPointer evaluateLookupSymbol(
 ExpressionPointer evaluateNumber(
     const Number& number, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<Number>(number.range(), environment, number.value);
+    auto result = std::make_shared<Number>(number.range, environment, number.value);
     log << serialize(result.get()) << std::endl;
     return result;
 }
@@ -135,7 +135,7 @@ ExpressionPointer evaluateNumber(
 ExpressionPointer evaluateString(
     const String& string, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<String>(string.range(), environment, list(&string));
+    auto result = std::make_shared<String>(string.range, environment, list(&string));
     log << serialize(result.get()) << std::endl;
     return result;
 }

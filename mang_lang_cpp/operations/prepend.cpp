@@ -7,12 +7,12 @@
 
 ExpressionPointer prependList(const List* list, ExpressionPointer item) {
     auto new_list = ::prepend(::list(list), item);
-    return std::make_shared<typename List::value_type>(list->range(), nullptr, new_list);
+    return std::make_shared<typename List::value_type>(list->range, nullptr, new_list);
 }
 
 ExpressionPointer prependString(const String* string, ExpressionPointer item) {
     auto new_list = ::prepend(list(string), item);
-    return std::make_shared<String>(string->range(), nullptr, new_list);
+    return std::make_shared<String>(string->range, nullptr, new_list);
 }
 
 ExpressionPointer prepend(const Expression* expression, ExpressionPointer item) {

@@ -43,7 +43,7 @@ EndElement::EndElement(CodeRange range, const Expression* environment)
 void NamedElement::mutate(const Expression* environment, std::ostream& log,
     std::vector<DictionaryElementPointer>& elements) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(
-        range(),
+        range,
         environment,
         name,
         evaluate(expression.get(), environment, log),

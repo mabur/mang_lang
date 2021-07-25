@@ -4,11 +4,11 @@
 #include "../expressions/String.h"
 
 ExpressionPointer emptyList(const List* list) {
-    return std::make_shared<List>(list->range(), nullptr, nullptr);
+    return std::make_shared<List>(list->range, nullptr, nullptr);
 }
 
 ExpressionPointer emptyString(const String* string) {
-    return std::make_shared<String>(string->range(), nullptr, nullptr);
+    return std::make_shared<String>(string->range, nullptr, nullptr);
 }
 
 ExpressionPointer empty(const Expression* expression) {

@@ -23,7 +23,7 @@ const Expression* second(const Expression& in) {
 }
 
 ExpressionPointer makeNumber(const Expression& in, double x) {
-    return std::make_shared<Number>(in.range(), nullptr, x);
+    return std::make_shared<Number>(in.range, nullptr, x);
 }
 
 ExpressionPointer min(const Expression& in) {
