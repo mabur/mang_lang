@@ -45,5 +45,4 @@ struct Expression {
     CodeRange range() const;
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;
-    const Expression* environment() const;
 };

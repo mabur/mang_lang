@@ -7,11 +7,11 @@
 #include "list.h"
 
 ExpressionPointer lookupExpression(const Expression* expression, const std::string& name) {
-    if (!expression->environment()) {
+    if (!expression->environment_) {
         // TODO: define evaluation exception.
         throw ParseException("Cannot find symbol " + name);
     }
-    return lookup(expression->environment(), name);
+    return lookup(expression->environment_, name);
 }
 
 ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {

@@ -12,7 +12,7 @@
 ExpressionPointer applyFunction(
     const Function* function, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = Dictionary({}, function->environment());
+    auto middle = Dictionary({}, function->environment_);
     middle.elements.push_back(std::make_shared<NamedElement>(
         function->range(), &middle, function->input_name, input, 0));
     auto output = evaluate(function->body.get(), &middle, log);
@@ -34,7 +34,8 @@ ExpressionPointer applyFunctionDictionary(
 
 ExpressionPointer applyFunctionList(const FunctionList* function_list, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = Dictionary(function_list->range(), function_list->environment());
+    auto middle = Dictionary(function_list->range(),
+        function_list->environment_);
     auto i = 0;
     for (auto list = ::list(input.get()); list; list = list->rest, ++i) {
         middle.elements.push_back(

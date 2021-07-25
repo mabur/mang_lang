@@ -29,6 +29,3 @@ CodeRange Expression::range() const {
     return range_;
 }
 
-const Expression* Expression::environment() const {
-    return environment_;
-}
