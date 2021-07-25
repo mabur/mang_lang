@@ -35,11 +35,11 @@ enum ExpressionType {
 
 struct Expression {
     Expression(CodeRange range, const Expression* environment, ExpressionType type)
-        : range_{range}, environment_{environment}, type_{type} {}
+        : range_{range}, environment{environment}, type_{type} {}
     virtual ~Expression() = default;
 
     CodeRange range_;
-    const Expression* environment_;
+    const Expression* environment;
     ExpressionType type_;
 
     CodeRange range() const;
