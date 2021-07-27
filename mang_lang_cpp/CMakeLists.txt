@@ -34,6 +34,7 @@ add_library(shared
         operations/prepend.cpp
         operations/serialize.cpp
         operations/starts_with.cpp
+        factory.cpp
         mang_lang.cpp
         parsing.cpp
         )

@@ -6,10 +6,12 @@
 #include "../operations/is_equal.h"
 #include "../operations/list.h"
 
+#include "../factory.h"
+
 namespace equality {
 
 ExpressionPointer makeNumber(const Expression &in, double x) {
-    return std::make_shared<Number>(in.range, nullptr, x);
+    return makeNumber(std::make_shared<Number>(in.range, nullptr, x));
 }
 
 ExpressionPointer equal(const Expression &in) {

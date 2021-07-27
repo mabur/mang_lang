@@ -13,6 +13,8 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "../factory.h"
+
 #include "starts_with.h"
 
 ExpressionPointer parseCharacterExpression(CodeRange code) {
@@ -255,7 +257,9 @@ ExpressionPointer parseNumber(CodeRange code) {
     code = parseOptionalCharacter(code, '.');
     code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString({first, code.first}));
-    return std::make_shared<Number>(CodeRange{first, code.first}, nullptr, value);
+    return makeNumber(
+        std::make_shared<Number>(CodeRange{first, code.first}, nullptr, value)
+    );
 }
 
 bool isNotEndOfString(CodeCharacter c) {

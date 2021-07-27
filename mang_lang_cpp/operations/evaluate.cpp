@@ -15,6 +15,8 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
+#include "../factory.h"
+
 #include "apply.h"
 #include "list.h"
 #include "serialize.h"
@@ -127,7 +129,9 @@ ExpressionPointer evaluateLookupSymbol(
 ExpressionPointer evaluateNumber(
     const Number& number, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<Number>(number.range, environment, number.value);
+    auto result = makeNumber(
+        std::make_shared<Number>(number.range, environment, number.value)
+    );
     log << serialize(result.get()) << std::endl;
     return result;
 }

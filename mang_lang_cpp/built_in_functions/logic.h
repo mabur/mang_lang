@@ -6,6 +6,8 @@
 #include "../operations/boolean.h"
 #include "../operations/list.h"
 
+#include "../factory.h"
+
 namespace logic {
 
 bool isTrue(const ExpressionPointer& x) {
@@ -17,7 +19,7 @@ bool isFalse(const ExpressionPointer& x) {
 }
 
 ExpressionPointer makeNumber(const Expression& in, double x) {
-    return std::make_shared<Number>(in.range, nullptr, x);
+    return makeNumber(std::make_shared<Number>(in.range, nullptr, x));
 }
 
 ExpressionPointer boolean(const Expression& in) {
