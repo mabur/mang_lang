@@ -24,7 +24,9 @@
 ExpressionPointer evaluateCharacter(
     const Character& character, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<Character>(character.range, environment, character.value);
+    auto result = makeCharacter(
+        std::make_shared<Character>(character.range, environment, character.value)
+    );
     log << serialize(result.get()) << std::endl;
     return result;
 }
