@@ -233,7 +233,7 @@ Vec2 = (x=Real y=Real)
 
 LEVELS
 1. Data
-  - Primitive
+  - Primitive / Atoms
       - numbers
       - characters
   - Aggregate
