@@ -12,6 +12,5 @@ struct List : public Expression {
     List(CodeRange range, const Expression* environment, InternalList elements)
         : Expression{range, environment, LIST}, elements{std::move(elements)}
     {}
-    using value_type = List;
     InternalList elements;
 };
