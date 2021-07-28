@@ -27,7 +27,7 @@ bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right
     }
     if (left->type_ == CHARACTER) {
         try {
-            return ::character(left) == ::character(right);
+            return ::character(left_smart) == ::character(right_smart);
         } catch (...) {
             return false;
         }

@@ -1,5 +1,5 @@
 #pragma once
 
-struct Expression;
+#include "../expressions/Expression.h"
 
-char character(const Expression* expression);
+char character(const ExpressionPointer& expression);

@@ -134,7 +134,7 @@ std::string serialize(const String& string) {
     auto value = std::string{"\""};
     auto node = list(&string);
     for (; node; node = node->rest) {
-        value += character(node->first.get());
+        value += character(node->first);
     }
     value += "\"";
     return value;
