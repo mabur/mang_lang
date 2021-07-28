@@ -15,11 +15,11 @@ namespace arithmetic {
 namespace {
 
 ExpressionPointer first(const ExpressionPointer& in) {
-    return list(in.get())->first;
+    return list(in)->first;
 }
 
 ExpressionPointer second(const ExpressionPointer& in) {
-    return list(in.get())->rest->first;
+    return list(in)->rest->first;
 }
 
 }
@@ -33,7 +33,7 @@ ExpressionPointer min(const ExpressionPointer& in) {
         return std::min(left, number(right));
     };
     const auto init = std::numeric_limits<double>::infinity();
-    const auto result = leftFold(list(in.get()), init, operation);
+    const auto result = leftFold(list(in), init, operation);
     return makeNumber(in, result);
 }
 
@@ -42,7 +42,7 @@ ExpressionPointer max(const ExpressionPointer& in) {
         return std::max(left, number(right));
     };
     const auto init = -std::numeric_limits<double>::infinity();
-    const auto result = leftFold(list(in.get()), init, operation);
+    const auto result = leftFold(list(in), init, operation);
     return makeNumber(in, result);
 }
 
@@ -51,7 +51,7 @@ ExpressionPointer add(const ExpressionPointer& in) {
         return left + number(right);
     };
     const auto init = 0;
-    const auto result = leftFold(list(in.get()), init, operation);
+    const auto result = leftFold(list(in), init, operation);
     return makeNumber(in, result);
 }
 
@@ -60,7 +60,7 @@ ExpressionPointer mul(const ExpressionPointer& in) {
         return left * number(right);
     };
     const auto init = 1.0;
-    const auto result = leftFold(list(in.get()), init, operation);
+    const auto result = leftFold(list(in), init, operation);
     return makeNumber(in, result);
 }
 

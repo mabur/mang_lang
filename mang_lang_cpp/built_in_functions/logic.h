@@ -31,17 +31,17 @@ ExpressionPointer logic_not(const ExpressionPointer& in) {
 }
 
 ExpressionPointer all(const ExpressionPointer& in) {
-    const auto result = !findIf(list(in.get()), isFalse);
+    const auto result = !findIf(list(in), isFalse);
     return makeNumber(in, result);
 }
 
 ExpressionPointer any(const ExpressionPointer& in) {
-    const auto result = !!findIf(list(in.get()), isTrue);
+    const auto result = !!findIf(list(in), isTrue);
     return makeNumber(in, result);
 }
 
 ExpressionPointer none(const ExpressionPointer& in) {
-    const auto result = !findIf(list(in.get()), isTrue);
+    const auto result = !findIf(list(in), isTrue);
     return makeNumber(in, result);
 }
 

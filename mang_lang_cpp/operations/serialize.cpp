@@ -95,15 +95,15 @@ std::string serialize(const FunctionList& function_list) {
     return result;
 }
 
-std::string serialize(const List& list) {
-    if (!::list(&list)) {
+std::string serialize_list(const ExpressionPointer& list) {
+    if (!::list(list)) {
         return "()";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
         return left + serialize(right) + " ";
     };
     auto result = std::string{"("};
-    result = leftFold(::list(&list), result, operation);
+    result = leftFold(::list(list), result, operation);
     result.back() = ')';
     return result;
 }
@@ -130,9 +130,9 @@ std::string serialize(const Number& number) {
     return s.str();
 }
 
-std::string serialize(const String& string) {
+std::string serialize_string(const ExpressionPointer& string) {
     auto value = std::string{"\""};
-    auto node = list(&string);
+    auto node = list(string);
     for (; node; node = node->rest) {
         value += character(node->first);
     }
@@ -151,12 +151,12 @@ std::string serialize(const ExpressionPointer& expression_smart) {
     if (expression->type_ == FUNCTION) {return serialize(*dynamic_cast<const Function*>(expression));}
     if (expression->type_ == FUNCTION_DICTIONARY) {return serialize(*dynamic_cast<const FunctionDictionary*>(expression));}
     if (expression->type_ == FUNCTION_LIST) {return serialize(*dynamic_cast<const FunctionList*>(expression));}
-    if (expression->type_ == LIST) {return serialize(*dynamic_cast<const List*>(expression));}
+    if (expression->type_ == LIST) {return serialize_list(expression_smart);}
     if (expression->type_ == LOOKUP_CHILD) {return serialize(*dynamic_cast<const LookupChild*>(expression));}
     if (expression->type_ == LOOKUP_FUNCTION) {return serialize(*dynamic_cast<const LookupFunction*>(expression));}
     if (expression->type_ == LOOKUP_SYMBOL) {return serialize(*dynamic_cast<const LookupSymbol*>(expression));}
     if (expression->type_ == NAME) {return serialize(*dynamic_cast<const Name*>(expression));}
     if (expression->type_ == NUMBER) {return serialize(*dynamic_cast<const Number*>(expression));}
-    if (expression->type_ == STRING) {return serialize(*dynamic_cast<const String*>(expression));}
+    if (expression->type_ == STRING) {return serialize_string(expression_smart);}
     throw std::runtime_error{"Did not recognize expression to serialize: " + std::to_string(expression->type_)};
 }

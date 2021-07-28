@@ -92,14 +92,14 @@ ExpressionPointer evaluateFunctionList(
 }
 
 ExpressionPointer evaluateList(
-    const List& list, const ExpressionPointer& environment, std::ostream& log
+    const ExpressionPointer& list, const ExpressionPointer& environment, std::ostream& log
 ) {
     const auto operation = [&](const ExpressionPointer& expression) {
         return evaluate(expression, environment, log);
     };
-    auto evaluated_elements = map(::list(&list), operation);
+    auto evaluated_elements = map(::list(list), operation);
     auto result = makeList(std::make_shared<List>(
-        list.range, environment, std::move(evaluated_elements)));
+        list->range, environment, std::move(evaluated_elements)));
     log << serialize(result) << std::endl;
     return result;
 }
@@ -144,10 +144,10 @@ ExpressionPointer evaluateNumber(
 }
 
 ExpressionPointer evaluateString(
-    const String& string, const ExpressionPointer& environment, std::ostream& log
+    const ExpressionPointer& string, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeString(
-        std::make_shared<String>(string.range, environment, list(&string))
+        std::make_shared<String>(string->range, environment, list(string))
     );
     log << serialize(result) << std::endl;
     return result;
@@ -165,11 +165,11 @@ ExpressionPointer evaluate(
     if (expression->type_ == FUNCTION) {return evaluateFunction(*dynamic_cast<const Function*>(expression), environment, log);}
     if (expression->type_ == FUNCTION_DICTIONARY) {return evaluateFunctionDictionary(*dynamic_cast<const FunctionDictionary*>(expression), environment, log);}
     if (expression->type_ == FUNCTION_LIST) {return evaluateFunctionList(*dynamic_cast<const FunctionList*>(expression), environment, log);}
-    if (expression->type_ == LIST) {return evaluateList(*dynamic_cast<const List*>(expression), environment, log);}
+    if (expression->type_ == LIST) {return evaluateList(expression_smart, environment, log);}
     if (expression->type_ == LOOKUP_CHILD) {return evaluateLookupChild(*dynamic_cast<const LookupChild*>(expression), environment, log);}
     if (expression->type_ == LOOKUP_FUNCTION) {return evaluateLookupFunction(*dynamic_cast<const LookupFunction*>(expression), environment, log);}
     if (expression->type_ == LOOKUP_SYMBOL) {return evaluateLookupSymbol(*dynamic_cast<const LookupSymbol*>(expression), environment, log);}
     if (expression->type_ == NUMBER) {return evaluateNumber(*dynamic_cast<const Number*>(expression), environment, log);}
-    if (expression->type_ == STRING) {return evaluateString(*dynamic_cast<const String*>(expression), environment, log);}
+    if (expression->type_ == STRING) {return evaluateString(expression_smart, environment, log);}
     throw std::runtime_error{"Did not recognize expression to evaluate"};
 }

@@ -7,12 +7,12 @@
 
 #include "list.h"
 
-ExpressionPointer prependList(const List* list, ExpressionPointer item) {
+ExpressionPointer prependList(const ExpressionPointer& list, ExpressionPointer item) {
     auto new_list = ::prepend(::list(list), item);
     return makeList(std::make_shared<List>(list->range, nullptr, new_list));
 }
 
-ExpressionPointer prependString(const String* string, ExpressionPointer item) {
+ExpressionPointer prependString(const ExpressionPointer& string, ExpressionPointer item) {
     auto new_list = ::prepend(list(string), item);
     return makeString(std::make_shared<String>(string->range, nullptr, new_list));
 }
@@ -20,10 +20,10 @@ ExpressionPointer prependString(const String* string, ExpressionPointer item) {
 ExpressionPointer prepend(const ExpressionPointer& expression_smart, ExpressionPointer item) {
     const auto expression = expression_smart.get();
     if (expression->type_ == LIST) {
-        return prependList(dynamic_cast<const List *>(expression), item);
+        return prependList(expression_smart, item);
     }
     if (expression->type_ == STRING) {
-        return prependString(dynamic_cast<const String *>(expression), item);
+        return prependString(expression_smart, item);
     }
     throw std::runtime_error{"Expected list"};
 }

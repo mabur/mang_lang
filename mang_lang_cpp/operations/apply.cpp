@@ -40,7 +40,7 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
         function_list->range, function_list->environment
     );
     auto i = 0;
-    for (auto list = ::list(input.get()); list; list = list->rest, ++i) {
+    for (auto list = ::list(input); list; list = list->rest, ++i) {
         middle->elements.push_back(
             std::make_shared<NamedElement>(
                 function_list->range, middle, function_list->input_names[i], list->first, i

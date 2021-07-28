@@ -35,7 +35,7 @@ ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, cons
     return nullptr;
 }
 
-ExpressionPointer lookupList(const List* list, const std::string& name) {
+ExpressionPointer lookupList(const ExpressionPointer& list, const std::string& name) {
     if (name == "first") {
         return ::list(list)->first;
     }
@@ -45,7 +45,7 @@ ExpressionPointer lookupList(const List* list, const std::string& name) {
     throw ParseException("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookupString(const String* list, const std::string& name) {
+ExpressionPointer lookupString(const ExpressionPointer& list, const std::string& name) {
     if (name == "first") {
         return ::list(list)->first;
     }
@@ -64,10 +64,10 @@ ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::s
         return lookupDictionaryElement(dynamic_cast<const DictionaryElement *>(expression), name);
     }
     if (expression->type_ == LIST) {
-        return lookupList(dynamic_cast<const List *>(expression), name);
+        return lookupList(expression_smart, name);
     }
     if (expression->type_ == STRING) {
-        return lookupString(dynamic_cast<const String *>(expression), name);
+        return lookupString(expression_smart, name);
     }
     return lookupExpression(expression, name);
 }

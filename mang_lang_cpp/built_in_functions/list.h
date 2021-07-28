@@ -13,8 +13,8 @@ ExpressionPointer empty(const ExpressionPointer& in) {
 }
 
 ExpressionPointer prepend(const ExpressionPointer& in) {
-    auto item = ::list(in.get())->first;
-    auto list = ::list(in.get())->rest->first;
+    auto item = ::list(in)->first;
+    auto list = ::list(in)->rest->first;
     return prepend(list, item);
 }
 

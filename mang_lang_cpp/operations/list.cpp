@@ -11,7 +11,8 @@ const InternalList& listString(const String* string) {
     return string->elements;
 }
 
-const InternalList& list(const Expression* expression) {
+const InternalList& list(const ExpressionPointer& expression_smart) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == LIST) {
         return listList(dynamic_cast<const List *>(expression));
     }

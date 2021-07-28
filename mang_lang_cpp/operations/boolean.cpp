@@ -14,14 +14,6 @@ bool booleanNumber(const Number* number) {
     return static_cast<bool>(number->value);
 }
 
-bool booleanList(const List* list) {
-    return !!::list(list);
-}
-
-bool booleanString(const String* string) {
-    return !!list(string);
-}
-
 bool boolean(const ExpressionPointer& expression_smart) {
     const auto expression = expression_smart.get();
     if (expression->type_ == DICTIONARY) {
@@ -31,10 +23,10 @@ bool boolean(const ExpressionPointer& expression_smart) {
         return booleanNumber(dynamic_cast<const Number *>(expression));
     }
     if (expression->type_ == LIST) {
-        return booleanList(dynamic_cast<const List *>(expression));
+        return !!::list(expression_smart);
     }
     if (expression->type_ == STRING) {
-        return booleanString(dynamic_cast<const String *>(expression));
+        return !!list(expression_smart);
     }
     throw std::runtime_error{"Expected boolean"};
 }

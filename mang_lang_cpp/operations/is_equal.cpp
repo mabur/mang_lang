@@ -5,8 +5,8 @@
 #include "number.h"
 
 bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
-    auto left = list(left_smart.get());
-    auto right = list(right_smart.get());
+    auto left = list(left_smart);
+    auto right = list(right_smart);
     for (; left && right; left = left->rest, right = right->rest) {
         if (!isEqual(left->first, right->first)) {
             return false;
