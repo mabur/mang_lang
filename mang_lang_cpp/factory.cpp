@@ -10,6 +10,7 @@ std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
 std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
 std::vector<std::shared_ptr<const FunctionList>> list_functions;
 std::vector<std::shared_ptr<const List>> lists;
+std::vector<std::shared_ptr<const LookupChild>> child_lookups;
 std::vector<std::shared_ptr<const Number>> numbers;
 
 std::shared_ptr<const Number> makeNumber(
@@ -73,4 +74,11 @@ std::shared_ptr<const List> makeList(
 ) {
     lists.push_back(expression);
     return lists.back();
+}
+
+std::shared_ptr<const LookupChild> makeLookupChild(
+    std::shared_ptr<const LookupChild> expression
+) {
+    child_lookups.push_back(expression);
+    return child_lookups.back();
 }

@@ -10,6 +10,7 @@ struct FunctionBuiltIn;
 struct FunctionDictionary;
 struct FunctionList;
 struct List;
+struct LookupChild;
 struct Number;
 
 std::shared_ptr<const Number> makeNumber(
@@ -38,3 +39,6 @@ std::shared_ptr<const FunctionList> makeFunctionList(
 
 std::shared_ptr<const List> makeList(
     std::shared_ptr<const List> expression);
+
+std::shared_ptr<const LookupChild> makeLookupChild(
+    std::shared_ptr<const LookupChild> expression);
