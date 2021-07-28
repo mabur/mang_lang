@@ -18,30 +18,30 @@ bool isFalse(const ExpressionPointer& x) {
     return !boolean(x.get());
 }
 
-ExpressionPointer makeNumber(const Expression& in, double x) {
-    return makeNumber(std::make_shared<Number>(in.range, nullptr, x));
+ExpressionPointer makeNumber(const ExpressionPointer& in, double x) {
+    return makeNumber(std::make_shared<Number>(in->range, nullptr, x));
 }
 
-ExpressionPointer boolean(const Expression& in) {
-    return makeNumber(in, boolean(&in));
+ExpressionPointer boolean(const ExpressionPointer& in) {
+    return makeNumber(in, boolean(in.get()));
 }
 
-ExpressionPointer logic_not(const Expression& in) {
-    return makeNumber(in, !boolean(&in));
+ExpressionPointer logic_not(const ExpressionPointer& in) {
+    return makeNumber(in, !boolean(in.get()));
 }
 
-ExpressionPointer all(const Expression& in) {
-    const auto result = !findIf(list(&in), isFalse);
+ExpressionPointer all(const ExpressionPointer& in) {
+    const auto result = !findIf(list(in.get()), isFalse);
     return makeNumber(in, result);
 }
 
-ExpressionPointer any(const Expression& in) {
-    const auto result = !!findIf(list(&in), isTrue);
+ExpressionPointer any(const ExpressionPointer& in) {
+    const auto result = !!findIf(list(in.get()), isTrue);
     return makeNumber(in, result);
 }
 
-ExpressionPointer none(const Expression& in) {
-    const auto result = !findIf(list(&in), isTrue);
+ExpressionPointer none(const ExpressionPointer& in) {
+    const auto result = !findIf(list(in.get()), isTrue);
     return makeNumber(in, result);
 }
 

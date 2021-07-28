@@ -8,13 +8,13 @@
 
 namespace list_functions {
 
-ExpressionPointer empty(const Expression& in) {
-    return empty(&in);
+ExpressionPointer empty(const ExpressionPointer& in) {
+    return empty(in.get());
 }
 
-ExpressionPointer prepend(const Expression& in) {
-    auto item = ::list(&in)->first;
-    auto list = ::list(&in)->rest->first;
+ExpressionPointer prepend(const ExpressionPointer& in) {
+    auto item = ::list(in.get())->first;
+    auto list = ::list(in.get())->rest->first;
     return prepend(list, item);
 }
 

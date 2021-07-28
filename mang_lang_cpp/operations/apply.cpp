@@ -22,7 +22,7 @@ ExpressionPointer applyFunction(
 ExpressionPointer applyFunctionBuiltIn(
     const FunctionBuiltIn* function_built_in, ExpressionPointer input, std::ostream&
 ) {
-    return function_built_in->function(*input);
+    return function_built_in->function(input);
 }
 
 ExpressionPointer applyFunctionDictionary(
