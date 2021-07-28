@@ -14,12 +14,12 @@ namespace arithmetic {
 
 namespace {
 
-const Expression* first(const ExpressionPointer& in) {
-    return list(in.get())->first.get();
+ExpressionPointer first(const ExpressionPointer& in) {
+    return list(in.get())->first;
 }
 
-const Expression* second(const ExpressionPointer& in) {
-    return list(in.get())->rest->first.get();
+ExpressionPointer second(const ExpressionPointer& in) {
+    return list(in.get())->rest->first;
 }
 
 }
@@ -30,7 +30,7 @@ ExpressionPointer makeNumber(const ExpressionPointer& in, double x) {
 
 ExpressionPointer min(const ExpressionPointer& in) {
     const auto operation = [](double left, const ExpressionPointer& right) -> double {
-        return std::min(left, number(right.get()));
+        return std::min(left, number(right));
     };
     const auto init = std::numeric_limits<double>::infinity();
     const auto result = leftFold(list(in.get()), init, operation);
@@ -39,7 +39,7 @@ ExpressionPointer min(const ExpressionPointer& in) {
 
 ExpressionPointer max(const ExpressionPointer& in) {
     const auto operation = [](double left, const ExpressionPointer& right) -> double {
-        return std::max(left, number(right.get()));
+        return std::max(left, number(right));
     };
     const auto init = -std::numeric_limits<double>::infinity();
     const auto result = leftFold(list(in.get()), init, operation);
@@ -48,7 +48,7 @@ ExpressionPointer max(const ExpressionPointer& in) {
 
 ExpressionPointer add(const ExpressionPointer& in) {
     const auto operation = [](double left, const ExpressionPointer& right) -> double {
-        return left + number(right.get());
+        return left + number(right);
     };
     const auto init = 0;
     const auto result = leftFold(list(in.get()), init, operation);
@@ -57,7 +57,7 @@ ExpressionPointer add(const ExpressionPointer& in) {
 
 ExpressionPointer mul(const ExpressionPointer& in) {
     const auto operation = [](double left, const ExpressionPointer& right) -> double {
-        return left * number(right.get());
+        return left * number(right);
     };
     const auto init = 1.0;
     const auto result = leftFold(list(in.get()), init, operation);
@@ -75,12 +75,12 @@ ExpressionPointer div(const ExpressionPointer& in) {
 }
 
 ExpressionPointer abs(const ExpressionPointer& in) {
-    const auto result = std::fabs(number(in.get()));
+    const auto result = std::fabs(number(in));
     return makeNumber(in, result);
 }
 
 ExpressionPointer sqrt(const ExpressionPointer& in) {
-    const auto result = std::sqrt(number(in.get()));
+    const auto result = std::sqrt(number(in));
     return makeNumber(in, result);
 }
 
@@ -95,15 +95,15 @@ ExpressionPointer less_or_equal(const ExpressionPointer& in) {
 }
 
 ExpressionPointer round(const ExpressionPointer& in) {
-    return makeNumber(in, std::round(number(in.get())));
+    return makeNumber(in, std::round(number(in)));
 }
 
 ExpressionPointer round_up(const ExpressionPointer& in) {
-    return makeNumber(in, std::ceil(number(in.get())));
+    return makeNumber(in, std::ceil(number(in)));
 }
 
 ExpressionPointer round_down(const ExpressionPointer& in) {
-    return makeNumber(in, std::floor(number(in.get())));
+    return makeNumber(in, std::floor(number(in)));
 }
 
 }

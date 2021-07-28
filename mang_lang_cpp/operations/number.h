@@ -1,5 +1,5 @@
 #pragma once
 
-struct Expression;
+#include "../expressions/Expression.h"
 
-double number(const Expression* expression);
+double number(const ExpressionPointer& expression);

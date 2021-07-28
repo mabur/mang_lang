@@ -17,10 +17,10 @@ bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& r
 
 bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
     const auto left = left_smart.get();
-    const auto right = right_smart.get();
+    //const auto right = right_smart.get();
     if (left->type_ == NUMBER) {
         try {
-            return ::number(left) == ::number(right);
+            return ::number(left_smart) == ::number(right_smart);
         } catch (...) {
             return false;
         }
