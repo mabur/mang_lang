@@ -3,8 +3,10 @@
 #include "../expressions/List.h"
 #include "../expressions/String.h"
 
+#include "../factory.h"
+
 ExpressionPointer emptyList(const List* list) {
-    return std::make_shared<List>(list->range, nullptr, nullptr);
+    return makeList(std::make_shared<List>(list->range, nullptr, nullptr));
 }
 
 ExpressionPointer emptyString(const String* string) {

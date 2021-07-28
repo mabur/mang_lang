@@ -98,8 +98,8 @@ ExpressionPointer evaluateList(
         return evaluate(expression.get(), environment, log);
     };
     auto evaluated_elements = map(::list(&list), operation);
-    auto result = std::make_shared<List>(
-        list.range, environment, std::move(evaluated_elements));
+    auto result = makeList(std::make_shared<List>(
+        list.range, environment, std::move(evaluated_elements)));
     log << serialize(result.get()) << std::endl;
     return result;
 }

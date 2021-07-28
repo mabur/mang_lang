@@ -9,6 +9,7 @@ struct Function;
 struct FunctionBuiltIn;
 struct FunctionDictionary;
 struct FunctionList;
+struct List;
 struct Number;
 
 std::shared_ptr<const Number> makeNumber(
@@ -34,3 +35,6 @@ std::shared_ptr<const FunctionDictionary> makeFunctionDictionary(
 
 std::shared_ptr<const FunctionList> makeFunctionList(
     std::shared_ptr<const FunctionList> expression);
+
+std::shared_ptr<const List> makeList(
+    std::shared_ptr<const List> expression);

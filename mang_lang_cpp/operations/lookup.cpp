@@ -4,6 +4,8 @@
 #include "../expressions/List.h"
 #include "../expressions/String.h"
 
+#include "../factory.h"
+
 #include "list.h"
 
 ExpressionPointer lookupExpression(const Expression* expression, const std::string& name) {
@@ -38,7 +40,7 @@ ExpressionPointer lookupList(const List* list, const std::string& name) {
         return ::list(list)->first;
     }
     if (name == "rest") {
-        return std::make_shared<List>(list->range, nullptr, ::list(list)->rest);
+        return makeList(std::make_shared<List>(list->range, nullptr, ::list(list)->rest));
     }
     throw ParseException("List does not contain symbol " + name);
 }
