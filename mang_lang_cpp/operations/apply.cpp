@@ -44,11 +44,12 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
     for (auto list = ::list(input); list; list = list->rest, ++i) {
         middle->elements.push_back(
             std::make_shared<NamedElement>(
-                function_list->range, middle, function_list->input_names[i], list->first, i
+                function_list->range, nullptr, function_list->input_names[i], list->first, i
             )
         );
     }
-    auto output = evaluate(function_list->body, middle, log);
+    const auto final_middle = makeDictionary(middle);
+    auto output = evaluate(function_list->body, final_middle, log);
     return output;
 }
 
