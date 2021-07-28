@@ -23,9 +23,9 @@ bool isEqualCharacter(const Character* character, const Expression* expression) 
     }
 }
 
-bool isEqualList(const Expression* left_expression, const Expression* right_expression) {
-    auto left = list(left_expression);
-    auto right = list(right_expression);
+bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
+    auto left = list(left_smart.get());
+    auto right = list(right_smart.get());
     for (; left && right; left = left->rest, right = right->rest) {
         if (!isEqual(left->first, right->first)) {
             return false;
@@ -44,10 +44,10 @@ bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right
         return isEqualCharacter(dynamic_cast<const Character *>(left), right);
     }
     if (left->type_ == LIST) {
-        return isEqualList(left, right);
+        return isEqualList(left_smart, right_smart);
     }
     if (left->type_ == STRING) {
-        return isEqualList(left, right);
+        return isEqualList(left_smart, right_smart);
     }
     return false;
 }
