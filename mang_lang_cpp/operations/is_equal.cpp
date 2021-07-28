@@ -1,19 +1,10 @@
 #include "is_equal.h"
 
 #include "../expressions/Character.h"
-#include "../expressions/Number.h"
 
 #include "character.h"
 #include "list.h"
 #include "number.h"
-
-bool isEqualNumber(const Number* number, const Expression* expression) {
-    try {
-        return ::number(number) == ::number(expression);
-    } catch (...) {
-        return false;
-    }
-}
 
 bool isEqualCharacter(const Character* character, const Expression* expression) {
     try {
@@ -38,7 +29,11 @@ bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right
     const auto left = left_smart.get();
     const auto right = right_smart.get();
     if (left->type_ == NUMBER) {
-        return isEqualNumber(dynamic_cast<const Number *>(left), right);
+        try {
+            return ::number(left) == ::number(right);
+        } catch (...) {
+            return false;
+        }
     }
     if (left->type_ == CHARACTER) {
         return isEqualCharacter(dynamic_cast<const Character *>(left), right);
