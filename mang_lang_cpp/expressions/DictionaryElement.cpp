@@ -46,7 +46,7 @@ void NamedElement::mutate(const Expression* environment, std::ostream& log,
         range,
         environment,
         name,
-        evaluate(expression.get(), environment, log),
+        evaluate(expression, environment, log),
         dictionary_index_
     );
 }
@@ -64,7 +64,7 @@ size_t NamedElement::jump(const Expression*, std::ostream&) const {
 }
 
 size_t WhileElement::jump(const Expression* environment, std::ostream& log) const {
-    if (boolean(evaluate(expression.get(), environment, log).get())) {
+    if (boolean(evaluate(expression, environment, log).get())) {
         return jump_true;
     }
     return jump_false;

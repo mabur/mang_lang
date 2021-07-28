@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-ExpressionPointer evaluate(const Expression* expression, const Expression* environment, std::ostream& log);
+ExpressionPointer evaluate(const ExpressionPointer& expression, const Expression* environment, std::ostream& log);

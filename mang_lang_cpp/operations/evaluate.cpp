@@ -34,9 +34,9 @@ ExpressionPointer evaluateCharacter(
 ExpressionPointer evaluateConditional(
     const Conditional& conditional, const Expression* environment, std::ostream& log
 ) {
-    auto result = boolean(evaluate(conditional.expression_if.get(), environment, log).get()) ?
-        evaluate(conditional.expression_then.get(), environment, log) :
-        evaluate(conditional.expression_else.get(), environment, log);
+    auto result = boolean(evaluate(conditional.expression_if, environment, log).get()) ?
+        evaluate(conditional.expression_then, environment, log) :
+        evaluate(conditional.expression_else, environment, log);
     log << serialize(result.get()) << std::endl;
     return result;
 }
@@ -95,7 +95,7 @@ ExpressionPointer evaluateList(
     const List& list, const Expression* environment, std::ostream& log
 ) {
     const auto operation = [&](const ExpressionPointer& expression) {
-        return evaluate(expression.get(), environment, log);
+        return evaluate(expression, environment, log);
     };
     auto evaluated_elements = map(::list(&list), operation);
     auto result = makeList(std::make_shared<List>(
@@ -108,7 +108,7 @@ ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, const Expression* environment, std::ostream& log
 ) {
     auto result = lookup(
-        evaluate(lookup_child.child.get(), environment, log).get(),
+        evaluate(lookup_child.child, environment, log).get(),
         lookup_child.name->value);
     log << serialize(result.get()) << std::endl;
     return result;
@@ -118,7 +118,7 @@ ExpressionPointer evaluateLookupFunction(
     const LookupFunction& lookup_function, const Expression* environment, std::ostream& log
 ) {
     const auto function = lookup(environment, lookup_function.name->value);
-    const auto evaluated_child = evaluate(lookup_function.child.get(), environment, log);
+    const auto evaluated_child = evaluate(lookup_function.child, environment, log);
     assert(evaluated_child);
     auto result = apply(function.get(), evaluated_child, log);
     log << serialize(result.get()) << std::endl;
@@ -153,7 +153,8 @@ ExpressionPointer evaluateString(
     return result;
 }
 
-ExpressionPointer evaluate(const Expression* expression, const Expression* environment, std::ostream& log) {
+ExpressionPointer evaluate(const ExpressionPointer& expression_smart, const Expression* environment, std::ostream& log) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == CHARACTER) {return evaluateCharacter(*dynamic_cast<const Character*>(expression), environment, log);}
     if (expression->type_ == CONDITIONAL) {return evaluateConditional(*dynamic_cast<const Conditional*>(expression), environment, log);}
     if (expression->type_ == DICTIONARY) {return evaluateDictionary(*dynamic_cast<const Dictionary*>(expression), environment, log);}
