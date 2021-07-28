@@ -16,26 +16,18 @@ bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& r
 }
 
 bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
-    const auto left = left_smart.get();
-    //const auto right = right_smart.get();
-    if (left->type_ == NUMBER) {
-        try {
-            return ::number(left_smart) == ::number(right_smart);
-        } catch (...) {
-            return false;
-        }
+    const auto left_type = left_smart.get()->type_;
+    const auto right_type = right_smart.get()->type_;
+    if (left_type == NUMBER && right_type == NUMBER) {
+        return ::number(left_smart) == ::number(right_smart);
     }
-    if (left->type_ == CHARACTER) {
-        try {
-            return ::character(left_smart) == ::character(right_smart);
-        } catch (...) {
-            return false;
-        }
+    if (left_type == CHARACTER && right_type == CHARACTER) {
+        return ::character(left_smart) == ::character(right_smart);
     }
-    if (left->type_ == LIST) {
+    if (left_type == LIST && right_type == LIST) {
         return isEqualList(left_smart, right_smart);
     }
-    if (left->type_ == STRING) {
+    if (left_type == STRING && right_type == STRING) {
         return isEqualList(left_smart, right_smart);
     }
     return false;
