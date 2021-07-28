@@ -9,15 +9,16 @@
 
 #include "../operations/evaluate.h"
 
+#include "../factory.h"
+
 ExpressionPointer applyFunction(
     const Function* function, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = std::make_shared<Dictionary>(
-        CodeRange{}, function->environment
-    );
+    auto middle = std::make_shared<Dictionary>(CodeRange{}, function->environment);
     middle->elements.push_back(std::make_shared<NamedElement>(
         function->range, middle, function->input_name, input, 0));
-    auto output = evaluate(function->body, middle, log);
+    const auto final_middle = makeDictionary(middle);
+    auto output = evaluate(function->body, final_middle, log);
     return output;
 }
 
