@@ -4,7 +4,7 @@
 struct Conditional : public Expression {
     Conditional(
         CodeRange range,
-        const Expression* environment,
+        ExpressionPointer environment,
         ExpressionPointer expression_if,
         ExpressionPointer expression_then,
         ExpressionPointer expression_else

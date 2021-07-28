@@ -5,7 +5,7 @@
 struct FunctionDictionary : public Expression {
     FunctionDictionary(
         CodeRange range,
-        const Expression* environment,
+        ExpressionPointer environment,
         std::vector<NamePointer> input_names,
         ExpressionPointer body
     ) : Expression{range, environment, FUNCTION_DICTIONARY},

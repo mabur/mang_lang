@@ -5,7 +5,7 @@
 struct LookupFunction : public Expression {
     LookupFunction(
         CodeRange range,
-        const Expression* environment,
+        ExpressionPointer environment,
         NamePointer name,
         ExpressionPointer child
     ) : Expression{range, environment, LOOKUP_FUNCTION}, name{std::move(name)}, child{std::move(child)} {}

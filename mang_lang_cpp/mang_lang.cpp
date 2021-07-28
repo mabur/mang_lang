@@ -26,7 +26,7 @@ std::string reformat(std::string code) {
 std::string evaluate(std::string code) {
     auto log = nullStream();
     const auto built_ins = builtIns();
-    const auto standard_library = evaluate(parse(STANDARD_LIBRARY), built_ins.get(), log);
-    return serialize(evaluate(parse(code), standard_library.get(), log));
+    const auto standard_library = evaluate(parse(STANDARD_LIBRARY), built_ins, log);
+    return serialize(evaluate(parse(code), standard_library, log));
     //return serialize(parse(code)->evaluate(nullptr, log).get());
 }

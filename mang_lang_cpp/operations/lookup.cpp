@@ -13,7 +13,7 @@ ExpressionPointer lookupExpression(const Expression* expression, const std::stri
         // TODO: define evaluation exception.
         throw ParseException("Cannot find symbol " + name);
     }
-    return lookup(expression->environment, name);
+    return lookup(expression->environment.get(), name);
 }
 
 ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {

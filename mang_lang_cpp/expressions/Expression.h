@@ -34,12 +34,12 @@ enum ExpressionType {
 };
 
 struct Expression {
-    Expression(CodeRange range, const Expression* environment, ExpressionType type)
+    Expression(CodeRange range, ExpressionPointer environment, ExpressionType type)
         : range{range}, environment{environment}, type_{type} {}
     virtual ~Expression() = default;
 
     CodeRange range;
-    const Expression* environment;
+    ExpressionPointer environment;
     ExpressionType type_;
 
     const CodeCharacter* begin() const;

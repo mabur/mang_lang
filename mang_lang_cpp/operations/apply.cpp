@@ -12,10 +12,12 @@
 ExpressionPointer applyFunction(
     const Function* function, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = Dictionary({}, function->environment);
-    middle.elements.push_back(std::make_shared<NamedElement>(
-        function->range, &middle, function->input_name, input, 0));
-    auto output = evaluate(function->body, &middle, log);
+    auto middle = std::make_shared<Dictionary>(
+        CodeRange{}, function->environment
+    );
+    middle->elements.push_back(std::make_shared<NamedElement>(
+        function->range, middle, function->input_name, input, 0));
+    auto output = evaluate(function->body, middle, log);
     return output;
 }
 
@@ -29,22 +31,23 @@ ExpressionPointer applyFunctionDictionary(
     const FunctionDictionary* function_dictionary, ExpressionPointer input, std::ostream& log
 ) {
     // TODO: pass along environment.
-    return evaluate(function_dictionary->body, input.get(), log);
+    return evaluate(function_dictionary->body, input, log);
 }
 
 ExpressionPointer applyFunctionList(const FunctionList* function_list, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = Dictionary(function_list->range,
-        function_list->environment);
+    auto middle = std::make_shared<Dictionary>(
+        function_list->range, function_list->environment
+    );
     auto i = 0;
     for (auto list = ::list(input.get()); list; list = list->rest, ++i) {
-        middle.elements.push_back(
+        middle->elements.push_back(
             std::make_shared<NamedElement>(
-                function_list->range, &middle, function_list->input_names[i], list->first, i
+                function_list->range, middle, function_list->input_names[i], list->first, i
             )
         );
     }
-    auto output = evaluate(function_list->body, &middle, log);
+    auto output = evaluate(function_list->body, middle, log);
     return output;
 }
 

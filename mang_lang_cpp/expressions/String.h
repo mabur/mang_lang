@@ -10,7 +10,7 @@
 #include "../operations/lookup.h"
 
 struct String : public Expression {
-    String(CodeRange range, const Expression* environment, InternalList elements)
+    String(CodeRange range, const ExpressionPointer environment, InternalList elements)
         : Expression{range, environment, STRING}, elements{std::move(elements)}
     {}
     using value_type = String;

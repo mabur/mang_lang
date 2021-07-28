@@ -5,7 +5,7 @@
 struct Function : public Expression {
     Function(
         CodeRange range,
-        const Expression* environment,
+        ExpressionPointer environment,
         NamePointer input_name,
         ExpressionPointer body
     ) : Expression{range, environment, FUNCTION},

@@ -5,7 +5,7 @@
 struct LookupSymbol : public Expression {
     LookupSymbol(
         CodeRange range,
-        const Expression* environment,
+        ExpressionPointer environment,
         NamePointer name
     ) : Expression{range, environment, LOOKUP_SYMBOL}, name{std::move(name)} {}
     NamePointer name;

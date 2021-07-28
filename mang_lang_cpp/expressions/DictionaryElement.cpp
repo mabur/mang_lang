@@ -9,7 +9,7 @@
 
 DictionaryElement::DictionaryElement(
     CodeRange range,
-    const Expression* environment,
+    ExpressionPointer environment,
     ExpressionType type,
     NamePointer name,
     ExpressionPointer expression,
@@ -22,7 +22,7 @@ DictionaryElement::DictionaryElement(
 
 NamedElement::NamedElement(
     CodeRange range,
-    const Expression* environment,
+    ExpressionPointer environment,
     NamePointer name,
     ExpressionPointer expression,
     size_t dictionary_index
@@ -31,16 +31,16 @@ NamedElement::NamedElement(
 
 WhileElement::WhileElement(
     CodeRange range,
-    const Expression* environment,
+    ExpressionPointer environment,
     ExpressionPointer expression
 ) : DictionaryElement{range, environment, WHILE_ELEMENT, nullptr, std::move(expression), 0}
 {}
 
-EndElement::EndElement(CodeRange range, const Expression* environment)
+EndElement::EndElement(CodeRange range, ExpressionPointer environment)
     : DictionaryElement{range, environment, END_ELEMENT, nullptr, nullptr, 0}
 {}
 
-void NamedElement::mutate(const Expression* environment, std::ostream& log,
+void NamedElement::mutate(const ExpressionPointer& environment, std::ostream& log,
     std::vector<DictionaryElementPointer>& elements) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(
         range,
@@ -51,26 +51,26 @@ void NamedElement::mutate(const Expression* environment, std::ostream& log,
     );
 }
 
-void WhileElement::mutate(const Expression*, std::ostream&,
+void WhileElement::mutate(const ExpressionPointer&, std::ostream&,
     std::vector<DictionaryElementPointer>&) const {
 }
 
-void EndElement::mutate(const Expression*, std::ostream&,
+void EndElement::mutate(const ExpressionPointer&, std::ostream&,
     std::vector<DictionaryElementPointer>&) const {
 }
 
-size_t NamedElement::jump(const Expression*, std::ostream&) const {
+size_t NamedElement::jump(const ExpressionPointer&, std::ostream&) const {
     return jump_true;
 }
 
-size_t WhileElement::jump(const Expression* environment, std::ostream& log) const {
+size_t WhileElement::jump(const ExpressionPointer& environment, std::ostream& log) const {
     if (boolean(evaluate(expression, environment, log).get())) {
         return jump_true;
     }
     return jump_false;
 }
 
-size_t EndElement::jump(const Expression*, std::ostream&) const {
+size_t EndElement::jump(const ExpressionPointer&, std::ostream&) const {
     return jump_true;
 }
 

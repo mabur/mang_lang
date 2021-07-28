@@ -9,7 +9,7 @@
 #include "../operations/lookup.h"
 
 struct List : public Expression {
-    List(CodeRange range, const Expression* environment, InternalList elements)
+    List(CodeRange range, ExpressionPointer environment, InternalList elements)
         : Expression{range, environment, LIST}, elements{std::move(elements)}
     {}
     InternalList elements;

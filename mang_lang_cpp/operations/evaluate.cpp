@@ -22,7 +22,7 @@
 #include "serialize.h"
 
 ExpressionPointer evaluateCharacter(
-    const Character& character, const Expression* environment, std::ostream& log
+    const Character& character, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeCharacter(
         std::make_shared<Character>(character.range, environment, character.value)
@@ -32,7 +32,7 @@ ExpressionPointer evaluateCharacter(
 }
 
 ExpressionPointer evaluateConditional(
-    const Conditional& conditional, const Expression* environment, std::ostream& log
+    const Conditional& conditional, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = boolean(evaluate(conditional.expression_if, environment, log).get()) ?
         evaluate(conditional.expression_then, environment, log) :
@@ -42,22 +42,22 @@ ExpressionPointer evaluateConditional(
 }
 
 ExpressionPointer evaluateDictionary(
-    const Dictionary& dictionary, const Expression* environment, std::ostream& log
+    const Dictionary& dictionary, const ExpressionPointer& environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
     auto result = std::make_shared<Dictionary>(dictionary.range, environment);
     result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        dictionary.elements[i]->mutate(result.get(), log, result->elements);
-        i += dictionary.elements[i]->jump(result.get(), log);
+        dictionary.elements[i]->mutate(result, log, result->elements);
+        i += dictionary.elements[i]->jump(result, log);
     }
     log << serialize(result) << std::endl;
     return makeDictionary(result);
 }
 
 ExpressionPointer evaluateFunction(
-    const Function& function, const Expression* environment, std::ostream& log
+    const Function& function, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeFunction(std::make_shared<Function>(
         function.range, environment, function.input_name, function.body
@@ -67,7 +67,7 @@ ExpressionPointer evaluateFunction(
 }
 
 ExpressionPointer evaluateFunctionDictionary(
-    const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log
+    const FunctionDictionary& function_dictionary, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeFunctionDictionary(
         std::make_shared<FunctionDictionary>(
@@ -82,7 +82,7 @@ ExpressionPointer evaluateFunctionDictionary(
 }
 
 ExpressionPointer evaluateFunctionList(
-    const FunctionList& function_list, const Expression* environment, std::ostream& log
+    const FunctionList& function_list, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeFunctionList(std::make_shared<FunctionList>(
         function_list.range, environment, function_list.input_names, function_list.body
@@ -92,7 +92,7 @@ ExpressionPointer evaluateFunctionList(
 }
 
 ExpressionPointer evaluateList(
-    const List& list, const Expression* environment, std::ostream& log
+    const List& list, const ExpressionPointer& environment, std::ostream& log
 ) {
     const auto operation = [&](const ExpressionPointer& expression) {
         return evaluate(expression, environment, log);
@@ -105,7 +105,7 @@ ExpressionPointer evaluateList(
 }
 
 ExpressionPointer evaluateLookupChild(
-    const LookupChild& lookup_child, const Expression* environment, std::ostream& log
+    const LookupChild& lookup_child, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = lookup(
         evaluate(lookup_child.child, environment, log).get(),
@@ -115,9 +115,9 @@ ExpressionPointer evaluateLookupChild(
 }
 
 ExpressionPointer evaluateLookupFunction(
-    const LookupFunction& lookup_function, const Expression* environment, std::ostream& log
+    const LookupFunction& lookup_function, const ExpressionPointer& environment, std::ostream& log
 ) {
-    const auto function = lookup(environment, lookup_function.name->value);
+    const auto function = lookup(environment.get(), lookup_function.name->value);
     const auto evaluated_child = evaluate(lookup_function.child, environment, log);
     assert(evaluated_child);
     auto result = apply(function, evaluated_child, log);
@@ -126,15 +126,15 @@ ExpressionPointer evaluateLookupFunction(
 }
 
 ExpressionPointer evaluateLookupSymbol(
-    const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log
+    const LookupSymbol& lookup_symbol, const ExpressionPointer& environment, std::ostream& log
 ) {
-    auto result = lookup(environment, lookup_symbol.name->value);
+    auto result = lookup(environment.get(), lookup_symbol.name->value);
     log << serialize(result) << std::endl;
     return result;
 }
 
 ExpressionPointer evaluateNumber(
-    const Number& number, const Expression* environment, std::ostream& log
+    const Number& number, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeNumber(
         std::make_shared<Number>(number.range, environment, number.value)
@@ -144,7 +144,7 @@ ExpressionPointer evaluateNumber(
 }
 
 ExpressionPointer evaluateString(
-    const String& string, const Expression* environment, std::ostream& log
+    const String& string, const ExpressionPointer& environment, std::ostream& log
 ) {
     auto result = makeString(
         std::make_shared<String>(string.range, environment, list(&string))
@@ -153,7 +153,11 @@ ExpressionPointer evaluateString(
     return result;
 }
 
-ExpressionPointer evaluate(const ExpressionPointer& expression_smart, const Expression* environment, std::ostream& log) {
+ExpressionPointer evaluate(
+    const ExpressionPointer& expression_smart,
+    const ExpressionPointer& environment,
+    std::ostream& log
+) {
     const auto expression = expression_smart.get();
     if (expression->type_ == CHARACTER) {return evaluateCharacter(*dynamic_cast<const Character*>(expression), environment, log);}
     if (expression->type_ == CONDITIONAL) {return evaluateConditional(*dynamic_cast<const Conditional*>(expression), environment, log);}

@@ -5,7 +5,7 @@
 struct FunctionList : public Expression {
     FunctionList(
         CodeRange range,
-        const Expression* environment,
+        ExpressionPointer environment,
         std::vector<NamePointer> input_names,
         ExpressionPointer body
     ) : Expression{range, environment, FUNCTION_LIST},
