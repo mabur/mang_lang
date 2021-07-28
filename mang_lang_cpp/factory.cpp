@@ -13,6 +13,7 @@ std::vector<std::shared_ptr<const List>> lists;
 std::vector<std::shared_ptr<const LookupChild>> child_lookups;
 std::vector<std::shared_ptr<const LookupFunction>> function_lookups;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
+std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
 
 std::shared_ptr<const Number> makeNumber(
@@ -97,4 +98,11 @@ std::shared_ptr<const LookupSymbol> makeLookupSymbol(
 ) {
     symbol_lookups.push_back(expression);
     return symbol_lookups.back();
+}
+
+std::shared_ptr<const Name> makeName(
+    std::shared_ptr<const Name> expression
+) {
+    names.push_back(expression);
+    return names.back();
 }
