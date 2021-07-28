@@ -8,8 +8,6 @@
 
 #include "../factory.h"
 
-#include "binary_operator.h"
-
 namespace equality {
 
 ExpressionPointer makeNumber(double x) {
