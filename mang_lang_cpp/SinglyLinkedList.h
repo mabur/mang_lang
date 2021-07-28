@@ -17,6 +17,16 @@ SinglyLinkedList<T> prepend(SinglyLinkedList<T> list, T value) {
     return std::shared_ptr<Node<T>>(new Node<T>{std::move(value), std::move(list)});
 }
 
+template<typename T>
+const T& first(const SinglyLinkedList<T>& list) {
+    return list->first;
+}
+
+template<typename T>
+const T& second(const SinglyLinkedList<T>& list) {
+    return list->rest->first;
+}
+
 template<typename T, typename Init, typename Operation>
 Init leftFold(SinglyLinkedList<T> list, Init value, Operation operation) {
     for (; list; list = list->rest) {

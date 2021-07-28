@@ -8,6 +8,8 @@
 
 #include "../factory.h"
 
+#include "binary_operator.h"
+
 namespace equality {
 
 ExpressionPointer makeNumber(double x) {
@@ -15,17 +17,17 @@ ExpressionPointer makeNumber(double x) {
 }
 
 ExpressionPointer equal(const ExpressionPointer& in) {
-    const auto &elements = list(in);
-    const auto &left = elements->first;
-    const auto &right = elements->rest->first;
+    const auto& elements = list(in);
+    const auto& left = first(elements);
+    const auto& right = second(elements);
     const auto value = isEqual(left, right);
     return makeNumber(value);
 }
 
 ExpressionPointer unequal(const ExpressionPointer& in) {
-    const auto &elements = list(in);
-    const auto &left = elements->first;
-    const auto &right = elements->rest->first;
+    const auto& elements = list(in);
+    const auto& left = first(elements);
+    const auto& right = second(elements);
     const auto value = !isEqual(left, right);
     return makeNumber(value);
 }

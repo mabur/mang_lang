@@ -13,8 +13,9 @@ ExpressionPointer empty(const ExpressionPointer& in) {
 }
 
 ExpressionPointer prepend(const ExpressionPointer& in) {
-    auto item = ::list(in)->first;
-    auto list = ::list(in)->rest->first;
+    const auto& elements = ::list(in);
+    const auto& item = first(elements);
+    const auto& list = second(elements);
     return prepend(list, item);
 }
 
