@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-bool boolean(const Expression* expression);
+bool boolean(const ExpressionPointer& expression);

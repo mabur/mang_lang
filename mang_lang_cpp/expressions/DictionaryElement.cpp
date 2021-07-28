@@ -64,7 +64,7 @@ size_t NamedElement::jump(const ExpressionPointer&, std::ostream&) const {
 }
 
 size_t WhileElement::jump(const ExpressionPointer& environment, std::ostream& log) const {
-    if (boolean(evaluate(expression, environment, log).get())) {
+    if (boolean(evaluate(expression, environment, log))) {
         return jump_true;
     }
     return jump_false;

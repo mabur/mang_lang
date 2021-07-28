@@ -22,7 +22,8 @@ bool booleanString(const String* string) {
     return !!list(string);
 }
 
-bool boolean(const Expression* expression) {
+bool boolean(const ExpressionPointer& expression_smart) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == DICTIONARY) {
         return booleanDictionary(dynamic_cast<const Dictionary *>(expression));
     }

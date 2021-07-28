@@ -11,11 +11,11 @@
 namespace logic {
 
 bool isTrue(const ExpressionPointer& x) {
-    return boolean(x.get());
+    return ::boolean(x);
 }
 
 bool isFalse(const ExpressionPointer& x) {
-    return !boolean(x.get());
+    return !::boolean(x);
 }
 
 ExpressionPointer makeNumber(const ExpressionPointer& in, double x) {
@@ -23,11 +23,11 @@ ExpressionPointer makeNumber(const ExpressionPointer& in, double x) {
 }
 
 ExpressionPointer boolean(const ExpressionPointer& in) {
-    return makeNumber(in, boolean(in.get()));
+    return makeNumber(in, ::boolean(in));
 }
 
 ExpressionPointer logic_not(const ExpressionPointer& in) {
-    return makeNumber(in, !boolean(in.get()));
+    return makeNumber(in, !::boolean(in));
 }
 
 ExpressionPointer all(const ExpressionPointer& in) {
