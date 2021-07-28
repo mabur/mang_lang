@@ -120,7 +120,7 @@ ExpressionPointer evaluateLookupFunction(
     const auto function = lookup(environment, lookup_function.name->value);
     const auto evaluated_child = evaluate(lookup_function.child, environment, log);
     assert(evaluated_child);
-    auto result = apply(function.get(), evaluated_child, log);
+    auto result = apply(function, evaluated_child, log);
     log << serialize(result.get()) << std::endl;
     return result;
 }

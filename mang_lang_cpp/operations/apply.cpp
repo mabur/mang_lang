@@ -48,7 +48,8 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
     return output;
 }
 
-ExpressionPointer apply(const Expression* expression, ExpressionPointer input, std::ostream& log) {
+ExpressionPointer apply(const ExpressionPointer& expression_smart, ExpressionPointer input, std::ostream& log) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == FUNCTION) {
         return applyFunction(dynamic_cast<const Function *>(expression), input, log);
     }
