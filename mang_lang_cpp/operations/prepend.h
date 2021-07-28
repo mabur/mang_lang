@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-ExpressionPointer prepend(const Expression* expression, ExpressionPointer item);
+ExpressionPointer prepend(const ExpressionPointer& expression, ExpressionPointer item);

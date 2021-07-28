@@ -17,7 +17,8 @@ ExpressionPointer prependString(const String* string, ExpressionPointer item) {
     return makeString(std::make_shared<String>(string->range, nullptr, new_list));
 }
 
-ExpressionPointer prepend(const Expression* expression, ExpressionPointer item) {
+ExpressionPointer prepend(const ExpressionPointer& expression_smart, ExpressionPointer item) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == LIST) {
         return prependList(dynamic_cast<const List *>(expression), item);
     }
