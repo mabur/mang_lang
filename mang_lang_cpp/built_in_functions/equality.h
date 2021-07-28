@@ -18,7 +18,7 @@ ExpressionPointer equal(const ExpressionPointer& in) {
     const auto &elements = list(in.get());
     const auto &left = elements->first;
     const auto &right = elements->rest->first;
-    const auto value = isEqual(left.get(), right.get());
+    const auto value = isEqual(left, right);
     return makeNumber(in, value);
 }
 
@@ -26,7 +26,7 @@ ExpressionPointer unequal(const ExpressionPointer& in) {
     const auto &elements = list(in.get());
     const auto &left = elements->first;
     const auto &right = elements->rest->first;
-    const auto value = !isEqual(left.get(), right.get());
+    const auto value = !isEqual(left, right);
     return makeNumber(in, value);
 }
 

@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-bool isEqual(const Expression* left, const Expression* right);
+bool isEqual(const ExpressionPointer& left, const ExpressionPointer& right);
