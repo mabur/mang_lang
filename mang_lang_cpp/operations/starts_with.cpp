@@ -89,18 +89,3 @@ bool startsWithNumber(CodeRange code) {
 bool startsWithString(CodeRange code) {
     return ::startsWith(code, '"');
 }
-
-bool startsWithExpression(CodeRange code) {
-    return
-        startsWithList(code) ||
-        startsWithDictionary(code) ||
-        startsWithNumber(code) ||
-        startsWithCharacter(code) ||
-        startsWithString(code) ||
-        startsWithConditional(code) ||
-        startsWithFunctionDictionary(code) ||
-        startsWithFunction(code) ||
-        startsWithLookupChild(code) ||
-        startsWithLookupFunction(code) ||
-        startsWithLookupSymbol(code);
-}

@@ -17,4 +17,3 @@ bool startsWithLookupSymbol(CodeRange code);
 bool startsWithName(CodeRange code);
 bool startsWithNumber(CodeRange code);
 bool startsWithString(CodeRange code);
-bool startsWithExpression(CodeRange code);
