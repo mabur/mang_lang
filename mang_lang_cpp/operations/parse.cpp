@@ -238,9 +238,9 @@ ExpressionPointer parseLookupFunction(CodeRange code) {
     code = parseCharacter(code, expected);
     auto child = parseExpression(code);
     code.first = child->end();
-    return std::make_shared<LookupFunction>(
+    return makeLookupFunction(std::make_shared<LookupFunction>(
         CodeRange{first, code.first}, nullptr, name, std::move(child)
-    );
+    ));
 }
 
 ExpressionPointer parseLookupSymbol(CodeRange code) {
