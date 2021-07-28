@@ -20,7 +20,8 @@ TODO:
   - Prettier homepage.
   - Syntax high-lighting.
   - Implement tool that takes a source file and outputs an html.
-* Skill tree visualization for manglang syntax and taxonomy.
+* Skill / level tree visualization for manglang syntax and taxonomy.
+  - 8 bit or 16 bit icons.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Implement everything needed to convert between json and manglang in manglang.
@@ -36,6 +37,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Importing source files.
+* Add boolean type.
+  - true, false or yes, no?
 * Describe ListBase as a "Concept".
 * Change if-then-else to normal function, and stop supporting recursion?
   - if?(condition then_expression else_expression)
