@@ -9,7 +9,7 @@
 namespace list_functions {
 
 ExpressionPointer empty(const ExpressionPointer& in) {
-    return empty(in.get());
+    return ::empty(in);
 }
 
 ExpressionPointer prepend(const ExpressionPointer& in) {

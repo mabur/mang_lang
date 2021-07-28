@@ -13,7 +13,8 @@ ExpressionPointer emptyString(const String* string) {
     return makeString(std::make_shared<String>(string->range, nullptr, nullptr));
 }
 
-ExpressionPointer empty(const Expression* expression) {
+ExpressionPointer empty(const ExpressionPointer& expression_smart) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == LIST) {
         return emptyList(dynamic_cast<const List *>(expression));
     }

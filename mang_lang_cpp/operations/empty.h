@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-ExpressionPointer empty(const Expression* expression);
+ExpressionPointer empty(const ExpressionPointer& expression);
