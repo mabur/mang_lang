@@ -21,7 +21,7 @@ DictionaryElementPointer makeDictionaryElement(
         CodeRange{},
         nullptr,
         std::make_shared<Name>(CodeRange{}, nullptr, name),
-        std::make_shared<FunctionBuiltIn>(function),
+        makeFunctionBuiltIn(std::make_shared<FunctionBuiltIn>(function)),
         0
     );
 }

@@ -6,6 +6,7 @@ struct Character;
 struct Conditional;
 struct Dictionary;
 struct Function;
+struct FunctionBuiltIn;
 struct Number;
 
 std::shared_ptr<const Number> makeNumber(
@@ -22,3 +23,6 @@ std::shared_ptr<const Dictionary> makeDictionary(
 
 std::shared_ptr<const Function> makeFunction(
     std::shared_ptr<const Function> expression);
+
+std::shared_ptr<const FunctionBuiltIn> makeFunctionBuiltIn(
+    std::shared_ptr<const FunctionBuiltIn> expression);
