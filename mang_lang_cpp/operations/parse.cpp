@@ -193,9 +193,9 @@ ExpressionPointer parseFunctionList(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = body->end();
-    return std::make_shared<FunctionList>(
+    return makeFunctionList(std::make_shared<FunctionList>(
         CodeRange{first, code.begin()}, nullptr, input_names, body
-    );
+    ));
 }
 
 ExpressionPointer parseList(CodeRange code) {

@@ -8,6 +8,7 @@ std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 std::vector<std::shared_ptr<const Function>> functions;
 std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
 std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
+std::vector<std::shared_ptr<const FunctionList>> list_functions;
 std::vector<std::shared_ptr<const Number>> numbers;
 
 std::shared_ptr<const Number> makeNumber(
@@ -57,4 +58,11 @@ std::shared_ptr<const FunctionDictionary> makeFunctionDictionary(
 ) {
     dictionary_functions.push_back(expression);
     return dictionary_functions.back();
+}
+
+std::shared_ptr<const FunctionList> makeFunctionList(
+    std::shared_ptr<const FunctionList> expression
+) {
+    list_functions.push_back(expression);
+    return list_functions.back();
 }
