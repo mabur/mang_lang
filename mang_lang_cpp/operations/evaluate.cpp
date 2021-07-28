@@ -27,7 +27,7 @@ ExpressionPointer evaluateCharacter(
     auto result = makeCharacter(
         std::make_shared<Character>(character.range, environment, character.value)
     );
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -37,7 +37,7 @@ ExpressionPointer evaluateConditional(
     auto result = boolean(evaluate(conditional.expression_if, environment, log).get()) ?
         evaluate(conditional.expression_then, environment, log) :
         evaluate(conditional.expression_else, environment, log);
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -52,7 +52,7 @@ ExpressionPointer evaluateDictionary(
         dictionary.elements[i]->mutate(result.get(), log, result->elements);
         i += dictionary.elements[i]->jump(result.get(), log);
     }
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return makeDictionary(result);
 }
 
@@ -62,7 +62,7 @@ ExpressionPointer evaluateFunction(
     auto result = makeFunction(std::make_shared<Function>(
         function.range, environment, function.input_name, function.body
     ));
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -77,7 +77,7 @@ ExpressionPointer evaluateFunctionDictionary(
             function_dictionary.body
         )
     );
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -87,7 +87,7 @@ ExpressionPointer evaluateFunctionList(
     auto result = makeFunctionList(std::make_shared<FunctionList>(
         function_list.range, environment, function_list.input_names, function_list.body
     ));
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -100,7 +100,7 @@ ExpressionPointer evaluateList(
     auto evaluated_elements = map(::list(&list), operation);
     auto result = makeList(std::make_shared<List>(
         list.range, environment, std::move(evaluated_elements)));
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -110,7 +110,7 @@ ExpressionPointer evaluateLookupChild(
     auto result = lookup(
         evaluate(lookup_child.child, environment, log).get(),
         lookup_child.name->value);
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -121,7 +121,7 @@ ExpressionPointer evaluateLookupFunction(
     const auto evaluated_child = evaluate(lookup_function.child, environment, log);
     assert(evaluated_child);
     auto result = apply(function, evaluated_child, log);
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -129,7 +129,7 @@ ExpressionPointer evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, const Expression* environment, std::ostream& log
 ) {
     auto result = lookup(environment, lookup_symbol.name->value);
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -139,7 +139,7 @@ ExpressionPointer evaluateNumber(
     auto result = makeNumber(
         std::make_shared<Number>(number.range, environment, number.value)
     );
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 
@@ -149,7 +149,7 @@ ExpressionPointer evaluateString(
     auto result = makeString(
         std::make_shared<String>(string.range, environment, list(&string))
     );
-    log << serialize(result.get()) << std::endl;
+    log << serialize(result) << std::endl;
     return result;
 }
 

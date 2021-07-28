@@ -22,16 +22,16 @@ std::string serialize(const Character& character) {
 }
 
 std::string serialize(const Conditional& conditional) {
-    return "if " + serialize(conditional.expression_if.get()) +
-        " then " + serialize(conditional.expression_then.get()) +
-        " else " + serialize(conditional.expression_else.get());
+    return "if " + serialize(conditional.expression_if) +
+        " then " + serialize(conditional.expression_then) +
+        " else " + serialize(conditional.expression_else);
 }
 
 std::string serialize(const Dictionary& dictionary) {
     auto result = std::string{};
     result += '{';
     for (const auto& element : dictionary.elements) {
-        result += serialize(element.get());
+        result += serialize(element);
     }
     if (dictionary.elements.empty()) {
         result += '}';
@@ -43,11 +43,11 @@ std::string serialize(const Dictionary& dictionary) {
 }
 
 std::string serialize(const NamedElement& element) {
-    return serialize(element.name.get()) + '=' + serialize(element.expression.get()) + ' ';
+    return serialize(element.name) + '=' + serialize(element.expression) + ' ';
 }
 
 std::string serialize(const WhileElement& element) {
-    return "while " + serialize(element.expression.get()) + ' ';
+    return "while " + serialize(element.expression) + ' ';
 }
 
 std::string serialize(const EndElement&) {
@@ -55,8 +55,8 @@ std::string serialize(const EndElement&) {
 }
 
 std::string serialize(const Function& function) {
-    return "in " + serialize(function.input_name.get())
-        + " out " + serialize(function.body.get());
+    return "in " + serialize(function.input_name)
+        + " out " + serialize(function.body);
 }
 
 std::string serialize(const FunctionDictionary& function_dictionary) {
@@ -64,7 +64,7 @@ std::string serialize(const FunctionDictionary& function_dictionary) {
     result += "in ";
     result += "{";
     for (const auto& name : function_dictionary.input_names) {
-        result += serialize(name.get());
+        result += serialize(name);
         result += " ";
     }
     if (function_dictionary.input_names.empty()) {
@@ -73,7 +73,7 @@ std::string serialize(const FunctionDictionary& function_dictionary) {
     else {
         result.back() = '}';
     }
-    result += " out " + serialize(function_dictionary.body.get());
+    result += " out " + serialize(function_dictionary.body);
     return result;
 }
 
@@ -82,7 +82,7 @@ std::string serialize(const FunctionList& function_list) {
     result += "in ";
     result += "(";
     for (const auto& name : function_list.input_names) {
-        result += serialize(name.get());
+        result += serialize(name);
         result += " ";
     }
     if (function_list.input_names.empty()) {
@@ -91,7 +91,7 @@ std::string serialize(const FunctionList& function_list) {
     else {
         result.back() = ')';
     }
-    result += " out " + serialize(function_list.body.get());
+    result += " out " + serialize(function_list.body);
     return result;
 }
 
@@ -100,7 +100,7 @@ std::string serialize(const List& list) {
         return "()";
     }
     const auto operation = [](const std::string& left, const ExpressionPointer& right) {
-        return left + serialize(right.get()) + " ";
+        return left + serialize(right) + " ";
     };
     auto result = std::string{"("};
     result = leftFold(::list(&list), result, operation);
@@ -109,15 +109,15 @@ std::string serialize(const List& list) {
 }
 
 std::string serialize(const LookupChild& lookup_child) {
-    return serialize(lookup_child.name.get()) + "@" + serialize(lookup_child.child.get());
+    return serialize(lookup_child.name) + "@" + serialize(lookup_child.child);
 }
 
 std::string serialize(const LookupFunction& lookup_function) {
-    return serialize(lookup_function.name.get()) + "!" + serialize(lookup_function.child.get());
+    return serialize(lookup_function.name) + "!" + serialize(lookup_function.child);
 }
 
 std::string serialize(const LookupSymbol& lookup_symbol) {
-    return serialize(lookup_symbol.name.get());
+    return serialize(lookup_symbol.name);
 }
 
 std::string serialize(const Name& name) {
@@ -140,7 +140,8 @@ std::string serialize(const String& string) {
     return value;
 }
 
-std::string serialize(const Expression* expression) {
+std::string serialize(const ExpressionPointer& expression_smart) {
+    const auto expression = expression_smart.get();
     if (expression->type_ == CHARACTER) {return serialize(*dynamic_cast<const Character*>(expression));}
     if (expression->type_ == CONDITIONAL) {return serialize(*dynamic_cast<const Conditional*>(expression));}
     if (expression->type_ == DICTIONARY) {return serialize(*dynamic_cast<const Dictionary*>(expression));}
