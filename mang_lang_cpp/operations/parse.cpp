@@ -62,9 +62,9 @@ ExpressionPointer parseConditional(CodeRange code) {
 NamePointer parseName(CodeRange code) {
     auto first = code.begin();
     code = parseWhile(code, isNameCharacter);
-    return makeName(std::make_shared<Name>(
+    return std::make_shared<Name>(
         CodeRange{first, code.first}, nullptr, rawString({first, code.first})
-    ));
+    );
 }
 
 DictionaryElementPointer parseNamedElement(CodeRange code) {
