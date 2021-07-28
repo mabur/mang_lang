@@ -6,7 +6,8 @@ std::vector<std::shared_ptr<const Character>> characters;
 std::vector<std::shared_ptr<const Conditional>> conditionals;
 std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 std::vector<std::shared_ptr<const Function>> functions;
-std::vector<std::shared_ptr<const FunctionBuiltIn>> functions_built_in;
+std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
+std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
 std::vector<std::shared_ptr<const Number>> numbers;
 
 std::shared_ptr<const Number> makeNumber(
@@ -47,6 +48,13 @@ std::shared_ptr<const Function> makeFunction(
 std::shared_ptr<const FunctionBuiltIn> makeFunctionBuiltIn(
     std::shared_ptr<const FunctionBuiltIn> expression
 ) {
-    functions_built_in.push_back(expression);
-    return functions_built_in.back();
+    built_in_functions.push_back(expression);
+    return built_in_functions.back();
+}
+
+std::shared_ptr<const FunctionDictionary> makeFunctionDictionary(
+    std::shared_ptr<const FunctionDictionary> expression
+) {
+    dictionary_functions.push_back(expression);
+    return dictionary_functions.back();
 }

@@ -69,8 +69,13 @@ ExpressionPointer evaluateFunction(
 ExpressionPointer evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<FunctionDictionary>(
-        function_dictionary.range, environment, function_dictionary.input_names, function_dictionary.body
+    auto result = makeFunctionDictionary(
+        std::make_shared<FunctionDictionary>(
+            function_dictionary.range,
+            environment,
+            function_dictionary.input_names,
+            function_dictionary.body
+        )
     );
     log << serialize(result.get()) << std::endl;
     return result;
