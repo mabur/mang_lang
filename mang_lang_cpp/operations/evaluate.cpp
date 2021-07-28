@@ -146,7 +146,9 @@ ExpressionPointer evaluateNumber(
 ExpressionPointer evaluateString(
     const String& string, const Expression* environment, std::ostream& log
 ) {
-    auto result = std::make_shared<String>(string.range, environment, list(&string));
+    auto result = makeString(
+        std::make_shared<String>(string.range, environment, list(&string))
+    );
     log << serialize(result.get()) << std::endl;
     return result;
 }

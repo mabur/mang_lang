@@ -50,7 +50,7 @@ ExpressionPointer lookupString(const String* list, const std::string& name) {
         return ::list(list)->first;
     }
     if (name == "rest") {
-        return std::make_shared<String>(list->range, nullptr, ::list(list)->rest);
+        return makeString(std::make_shared<String>(list->range, nullptr, ::list(list)->rest));
     }
     throw ParseException("List does not contain symbol " + name);
 }

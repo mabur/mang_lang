@@ -15,6 +15,7 @@ struct LookupFunction;
 struct LookupSymbol;
 struct Name;
 struct Number;
+struct String;
 
 std::shared_ptr<const Number> makeNumber(
     std::shared_ptr<const Number> expression);
@@ -54,3 +55,6 @@ std::shared_ptr<const LookupSymbol> makeLookupSymbol(
 
 std::shared_ptr<const Name> makeName(
     std::shared_ptr<const Name> expression);
+
+std::shared_ptr<const String> makeString(
+    std::shared_ptr<const String> expression);

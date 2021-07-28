@@ -3,6 +3,8 @@
 #include "../expressions/List.h"
 #include "../expressions/String.h"
 
+#include "../factory.h"
+
 #include "list.h"
 
 ExpressionPointer prependList(const List* list, ExpressionPointer item) {
@@ -12,7 +14,7 @@ ExpressionPointer prependList(const List* list, ExpressionPointer item) {
 
 ExpressionPointer prependString(const String* string, ExpressionPointer item) {
     auto new_list = ::prepend(list(string), item);
-    return std::make_shared<String>(string->range, nullptr, new_list);
+    return makeString(std::make_shared<String>(string->range, nullptr, new_list));
 }
 
 ExpressionPointer prepend(const Expression* expression, ExpressionPointer item) {

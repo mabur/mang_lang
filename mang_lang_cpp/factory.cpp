@@ -15,6 +15,7 @@ std::vector<std::shared_ptr<const LookupFunction>> function_lookups;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
 std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
+std::vector<std::shared_ptr<const String>> strings;
 
 std::shared_ptr<const Number> makeNumber(
     std::shared_ptr<const Number> expression
@@ -105,4 +106,11 @@ std::shared_ptr<const Name> makeName(
 ) {
     names.push_back(expression);
     return names.back();
+}
+
+std::shared_ptr<const String> makeString(
+    std::shared_ptr<const String> expression
+) {
+    strings.push_back(expression);
+    return strings.back();
 }

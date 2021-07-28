@@ -10,7 +10,7 @@ ExpressionPointer emptyList(const List* list) {
 }
 
 ExpressionPointer emptyString(const String* string) {
-    return std::make_shared<String>(string->range, nullptr, nullptr);
+    return makeString(std::make_shared<String>(string->range, nullptr, nullptr));
 }
 
 ExpressionPointer empty(const Expression* expression) {

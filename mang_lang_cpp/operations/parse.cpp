@@ -285,7 +285,7 @@ ExpressionPointer parseString(CodeRange code) {
         value = ::prepend<ExpressionPointer>(value, item);
     }
     value = ::reverse(value);
-    return std::make_shared<String>(CodeRange{first, code.begin()}, nullptr, value);
+    return makeString(std::make_shared<String>(CodeRange{first, code.begin()}, nullptr, value));
 }
 
 ExpressionPointer parseExpression(CodeRange code) {
