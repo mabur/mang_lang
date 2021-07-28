@@ -24,8 +24,8 @@ ExpressionPointer second(const ExpressionPointer& in) {
 
 }
 
-ExpressionPointer makeNumber(const ExpressionPointer& in, double x) {
-    return makeNumber(std::make_shared<Number>(in->range, nullptr, x));
+ExpressionPointer makeNumber(double x) {
+    return makeNumber(std::make_shared<Number>(CodeRange{}, nullptr, x));
 }
 
 ExpressionPointer min(const ExpressionPointer& in) {
@@ -34,7 +34,7 @@ ExpressionPointer min(const ExpressionPointer& in) {
     };
     const auto init = std::numeric_limits<double>::infinity();
     const auto result = leftFold(list(in), init, operation);
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer max(const ExpressionPointer& in) {
@@ -43,7 +43,7 @@ ExpressionPointer max(const ExpressionPointer& in) {
     };
     const auto init = -std::numeric_limits<double>::infinity();
     const auto result = leftFold(list(in), init, operation);
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer add(const ExpressionPointer& in) {
@@ -52,7 +52,7 @@ ExpressionPointer add(const ExpressionPointer& in) {
     };
     const auto init = 0;
     const auto result = leftFold(list(in), init, operation);
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer mul(const ExpressionPointer& in) {
@@ -61,49 +61,49 @@ ExpressionPointer mul(const ExpressionPointer& in) {
     };
     const auto init = 1.0;
     const auto result = leftFold(list(in), init, operation);
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer sub(const ExpressionPointer& in) {
     const auto result = number(first(in)) - number(second(in));
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer div(const ExpressionPointer& in) {
     const auto result = number(first(in)) / number(second(in));
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer abs(const ExpressionPointer& in) {
     const auto result = std::fabs(number(in));
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer sqrt(const ExpressionPointer& in) {
     const auto result = std::sqrt(number(in));
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer less(const ExpressionPointer& in) {
     const auto result = number(first(in)) < number(second(in));
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer less_or_equal(const ExpressionPointer& in) {
     const auto result = number(first(in)) <= number(second(in));
-    return makeNumber(in, result);
+    return makeNumber(result);
 }
 
 ExpressionPointer round(const ExpressionPointer& in) {
-    return makeNumber(in, std::round(number(in)));
+    return makeNumber(std::round(number(in)));
 }
 
 ExpressionPointer round_up(const ExpressionPointer& in) {
-    return makeNumber(in, std::ceil(number(in)));
+    return makeNumber(std::ceil(number(in)));
 }
 
 ExpressionPointer round_down(const ExpressionPointer& in) {
-    return makeNumber(in, std::floor(number(in)));
+    return makeNumber(std::floor(number(in)));
 }
 
 }

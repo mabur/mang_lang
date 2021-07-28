@@ -10,8 +10,8 @@
 
 namespace equality {
 
-ExpressionPointer makeNumber(const ExpressionPointer& in, double x) {
-    return makeNumber(std::make_shared<Number>(in->range, nullptr, x));
+ExpressionPointer makeNumber(double x) {
+    return makeNumber(std::make_shared<Number>(CodeRange{}, nullptr, x));
 }
 
 ExpressionPointer equal(const ExpressionPointer& in) {
@@ -19,7 +19,7 @@ ExpressionPointer equal(const ExpressionPointer& in) {
     const auto &left = elements->first;
     const auto &right = elements->rest->first;
     const auto value = isEqual(left, right);
-    return makeNumber(in, value);
+    return makeNumber(value);
 }
 
 ExpressionPointer unequal(const ExpressionPointer& in) {
@@ -27,7 +27,7 @@ ExpressionPointer unequal(const ExpressionPointer& in) {
     const auto &left = elements->first;
     const auto &right = elements->rest->first;
     const auto value = !isEqual(left, right);
-    return makeNumber(in, value);
+    return makeNumber(value);
 }
 
 }
