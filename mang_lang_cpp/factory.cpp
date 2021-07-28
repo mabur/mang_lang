@@ -3,6 +3,7 @@
 #include <vector>
 
 std::vector<std::shared_ptr<const Character>> characters;
+std::vector<std::shared_ptr<const Conditional>> conditionals;
 std::vector<std::shared_ptr<const Number>> numbers;
 
 std::shared_ptr<const Number> makeNumber(
@@ -17,4 +18,11 @@ std::shared_ptr<const Character> makeCharacter(
 ) {
     characters.push_back(expression);
     return characters.back();
+}
+
+std::shared_ptr<const Conditional> makeConditional(
+    std::shared_ptr<const Conditional> expression
+) {
+    conditionals.push_back(expression);
+    return conditionals.back();
 }

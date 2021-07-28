@@ -50,13 +50,13 @@ ExpressionPointer parseConditional(CodeRange code) {
     code.first = expression_else->end();
     code = parseWhiteSpace(code);
 
-    return std::make_shared<Conditional>(
+    return makeConditional(std::make_shared<Conditional>(
         CodeRange{first, code.begin()},
         nullptr,
         std::move(expression_if),
         std::move(expression_then),
         std::move(expression_else)
-    );
+    ));
 }
 
 NamePointer parseName(CodeRange code) {
