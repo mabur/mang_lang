@@ -4,6 +4,7 @@
 
 std::vector<std::shared_ptr<const Character>> characters;
 std::vector<std::shared_ptr<const Conditional>> conditionals;
+std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 std::vector<std::shared_ptr<const Number>> numbers;
 
 std::shared_ptr<const Number> makeNumber(
@@ -25,4 +26,11 @@ std::shared_ptr<const Conditional> makeConditional(
 ) {
     conditionals.push_back(expression);
     return conditionals.back();
+}
+
+std::shared_ptr<const Dictionary> makeDictionary(
+    std::shared_ptr<const Dictionary> expression
+) {
+    dictionaries.push_back(expression);
+    return dictionaries.back();
 }

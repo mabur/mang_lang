@@ -132,7 +132,7 @@ ExpressionPointer parseDictionary(CodeRange code) {
     for (auto& element : elements) {
         result->elements.push_back(std::move(element));
     }
-    return result;
+    return makeDictionary(result);
 }
 
 ExpressionPointer parseFunction(CodeRange code) {

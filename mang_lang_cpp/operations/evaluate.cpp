@@ -53,7 +53,7 @@ ExpressionPointer evaluateDictionary(
         i += dictionary.elements[i]->jump(result.get(), log);
     }
     log << serialize(result.get()) << std::endl;
-    return result;
+    return makeDictionary(result);
 }
 
 ExpressionPointer evaluateFunction(

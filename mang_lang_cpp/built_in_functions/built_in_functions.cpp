@@ -6,6 +6,8 @@
 #include "../expressions/DictionaryElement.h"
 #include "../expressions/FunctionBuiltIn.h"
 
+#include "../factory.h"
+
 #include "arithmetic.h"
 #include "equality.h"
 #include "list.h"
@@ -51,5 +53,5 @@ ExpressionPointer builtIns() {
     setContext(elements);
     auto environment = std::make_shared<Dictionary>(CodeRange{}, nullptr);
     environment->elements = elements;
-    return environment;
+    return makeDictionary(environment);
 }
