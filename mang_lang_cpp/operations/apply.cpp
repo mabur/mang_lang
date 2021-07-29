@@ -14,12 +14,16 @@
 ExpressionPointer applyFunction(
     const Function* function, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = std::make_shared<Dictionary>(CodeRange{}, function->environment);
-    middle->elements.push_back(std::make_shared<NamedElement>(
-        function->range, middle, function->input_name, input, 0));
-    const auto final_middle = makeDictionary(middle);
-    auto output = evaluate(function->body, final_middle, log);
-    return output;
+
+    const auto elements = DictionaryElements{
+        std::make_shared<NamedElement>(
+            function->range, ExpressionPointer{}, function->input_name, input, 0
+        )
+    };
+    const auto middle = makeDictionary(
+        std::make_shared<Dictionary>(CodeRange{}, function->environment, elements)
+    );
+    return evaluate(function->body, middle, log);
 }
 
 ExpressionPointer applyFunctionBuiltIn(
@@ -37,20 +41,21 @@ ExpressionPointer applyFunctionDictionary(
 
 ExpressionPointer applyFunctionList(const FunctionList* function_list, ExpressionPointer input, std::ostream& log
 ) {
-    auto middle = std::make_shared<Dictionary>(
-        function_list->range, function_list->environment
-    );
+    auto elements = DictionaryElements{};
     auto i = 0;
     for (auto list = ::list(input); list; list = list->rest, ++i) {
-        middle->elements.push_back(
+        elements.push_back(
             std::make_shared<NamedElement>(
                 function_list->range, ExpressionPointer{}, function_list->input_names[i], list->first, i
             )
         );
     }
-    const auto final_middle = makeDictionary(middle);
-    auto output = evaluate(function_list->body, final_middle, log);
-    return output;
+    const auto middle = makeDictionary(
+        std::make_shared<Dictionary>(
+            function_list->range, function_list->environment, elements
+        )
+    );
+    return evaluate(function_list->body, middle, log);
 }
 
 ExpressionPointer apply(const ExpressionPointer& expression_smart, ExpressionPointer input, std::ostream& log) {

@@ -128,13 +128,11 @@ ExpressionPointer parseDictionary(CodeRange code) {
     }
     code = parseCharacter(code, '}');
     setContext(elements);
-    auto result = std::make_shared<Dictionary>(
-        CodeRange{first, code.begin()}, ExpressionPointer{}
+    return makeDictionary(
+        std::make_shared<Dictionary>(
+            CodeRange{first, code.begin()}, ExpressionPointer{}, elements
+        )
     );
-    for (auto& element : elements) {
-        result->elements.push_back(std::move(element));
-    }
-    return makeDictionary(result);
 }
 
 ExpressionPointer parseFunction(CodeRange code) {
