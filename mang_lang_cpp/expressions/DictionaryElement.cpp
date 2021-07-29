@@ -40,8 +40,11 @@ EndElement::EndElement(CodeRange range, ExpressionPointer environment)
     : DictionaryElement{range, environment, END_ELEMENT, NamePointer{}, ExpressionPointer{}, 0}
 {}
 
-void NamedElement::mutate(const ExpressionPointer& environment, std::ostream& log,
-    std::vector<DictionaryElementPointer>& elements) const {
+void NamedElement::mutate(
+    const ExpressionPointer& environment,
+    std::ostream& log,
+    std::vector<DictionaryElementPointer>& elements
+) const {
     elements.at(dictionary_index_) = std::make_shared<NamedElement>(
         range,
         environment,
@@ -51,13 +54,17 @@ void NamedElement::mutate(const ExpressionPointer& environment, std::ostream& lo
     );
 }
 
-void WhileElement::mutate(const ExpressionPointer&, std::ostream&,
-    std::vector<DictionaryElementPointer>&) const {
-}
+void WhileElement::mutate(
+    const ExpressionPointer&,
+    std::ostream&,
+    std::vector<DictionaryElementPointer>&
+) const {}
 
-void EndElement::mutate(const ExpressionPointer&, std::ostream&,
-    std::vector<DictionaryElementPointer>&) const {
-}
+void EndElement::mutate(
+    const ExpressionPointer&,
+    std::ostream&,
+    std::vector<DictionaryElementPointer>&
+) const {}
 
 size_t NamedElement::jump(const ExpressionPointer&, std::ostream&) const {
     return jump_true;
@@ -125,7 +132,8 @@ void setContext(DictionaryElements& elements) {
 }
 
 bool compareDictionaryIndex(
-    const DictionaryElementPointer& a, const DictionaryElementPointer& b) {
+    const DictionaryElementPointer& a, const DictionaryElementPointer& b
+) {
     return a->dictionary_index_ < b->dictionary_index_;
 }
 
