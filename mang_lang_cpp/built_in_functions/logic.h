@@ -19,7 +19,7 @@ bool isFalse(const ExpressionPointer& x) {
 }
 
 ExpressionPointer makeNumber(double x) {
-    return makeNumber(std::make_shared<Number>(CodeRange{}, nullptr, x));
+    return makeNumber(std::make_shared<Number>(CodeRange{}, ExpressionPointer{}, x));
 }
 
 ExpressionPointer boolean(const ExpressionPointer& in) {

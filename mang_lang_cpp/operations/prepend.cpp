@@ -9,12 +9,12 @@
 
 ExpressionPointer prependList(const ExpressionPointer& list, ExpressionPointer item) {
     auto new_list = ::prepend(::list(list), item);
-    return makeList(std::make_shared<List>(list->range, nullptr, new_list));
+    return makeList(std::make_shared<List>(list->range, ExpressionPointer{}, new_list));
 }
 
 ExpressionPointer prependString(const ExpressionPointer& string, ExpressionPointer item) {
     auto new_list = ::prepend(list(string), item);
-    return makeString(std::make_shared<String>(string->range, nullptr, new_list));
+    return makeString(std::make_shared<String>(string->range, ExpressionPointer{}, new_list));
 }
 
 ExpressionPointer prepend(const ExpressionPointer& expression_smart, ExpressionPointer item) {

@@ -25,7 +25,7 @@ ExpressionPointer parseCharacterExpression(CodeRange code) {
     code = parseCharacter(code, '\'');
     const auto value = it->character;
     return makeCharacter(
-        std::make_shared<Character>(CodeRange{first, code.begin()}, nullptr, value)
+        std::make_shared<Character>(CodeRange{first, code.begin()}, ExpressionPointer{}, value)
     );
 }
 
@@ -52,7 +52,7 @@ ExpressionPointer parseConditional(CodeRange code) {
 
     return makeConditional(std::make_shared<Conditional>(
         CodeRange{first, code.begin()},
-        nullptr,
+        ExpressionPointer{},
         std::move(expression_if),
         std::move(expression_then),
         std::move(expression_else)
@@ -63,7 +63,7 @@ NamePointer parseName(CodeRange code) {
     auto first = code.begin();
     code = parseWhile(code, isNameCharacter);
     return std::make_shared<Name>(
-        CodeRange{first, code.first}, nullptr, rawString({first, code.first})
+        CodeRange{first, code.first}, ExpressionPointer{}, rawString({first, code.first})
     );
 }
 
@@ -78,7 +78,7 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
     code.first = expression->end();
     code = parseWhiteSpace(code);
     return std::make_shared<NamedElement>(
-        CodeRange{first, code.first}, nullptr, std::move(name), std::move(expression), 0
+        CodeRange{first, code.first}, ExpressionPointer{}, std::move(name), std::move(expression), 0
     );
 }
 
@@ -90,7 +90,7 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
     code.first = expression->end();
     code = parseWhiteSpace(code);
     return std::make_shared<WhileElement>(
-        CodeRange{first, code.first}, nullptr, std::move(expression)
+        CodeRange{first, code.first}, ExpressionPointer{}, std::move(expression)
     );
 }
 
@@ -99,7 +99,7 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
     return std::make_shared<EndElement>(
-        CodeRange{first, code.first}, nullptr
+        CodeRange{first, code.first}, ExpressionPointer{}
     );
 }
 
@@ -128,7 +128,9 @@ ExpressionPointer parseDictionary(CodeRange code) {
     }
     code = parseCharacter(code, '}');
     setContext(elements);
-    auto result = std::make_shared<Dictionary>(CodeRange{first, code.begin()}, nullptr);
+    auto result = std::make_shared<Dictionary>(
+        CodeRange{first, code.begin()}, ExpressionPointer{}
+    );
     for (auto& element : elements) {
         result->elements.push_back(std::move(element));
     }
@@ -146,7 +148,7 @@ ExpressionPointer parseFunction(CodeRange code) {
     auto body = parseExpression(code);
     code.first = body->end();
     return makeFunction(std::make_shared<Function>(
-        CodeRange{first, code.begin()}, nullptr, input_name, body
+        CodeRange{first, code.begin()}, ExpressionPointer{}, input_name, body
     ));
 }
 
@@ -170,7 +172,7 @@ ExpressionPointer parseFunctionDictionary(CodeRange code) {
     auto body = parseExpression(code);
     code.first = body->end();
     return makeFunctionDictionary(std::make_shared<FunctionDictionary>(
-        CodeRange{first, code.begin()}, nullptr, input_names, body
+        CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
     ));
 }
 
@@ -194,7 +196,7 @@ ExpressionPointer parseFunctionList(CodeRange code) {
     auto body = parseExpression(code);
     code.first = body->end();
     return makeFunctionList(std::make_shared<FunctionList>(
-        CodeRange{first, code.begin()}, nullptr, input_names, body
+        CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
     ));
 }
 
@@ -212,7 +214,7 @@ ExpressionPointer parseList(CodeRange code) {
     }
     code = parseCharacter(code, ')');
     return makeList(std::make_shared<List>(
-        CodeRange{first, code.first}, nullptr, ::reverse(expressions)
+        CodeRange{first, code.first}, ExpressionPointer{}, ::reverse(expressions)
     ));
 }
 
@@ -226,7 +228,7 @@ ExpressionPointer parseLookupChild(CodeRange code) {
     auto child = parseExpression(code);
     code.first = child->end();
     return makeLookupChild(std::make_shared<LookupChild>(
-        CodeRange{first, code.first}, nullptr, name, std::move(child)
+        CodeRange{first, code.first}, ExpressionPointer{}, name, std::move(child)
     ));
 }
 
@@ -239,7 +241,7 @@ ExpressionPointer parseLookupFunction(CodeRange code) {
     auto child = parseExpression(code);
     code.first = child->end();
     return makeLookupFunction(std::make_shared<LookupFunction>(
-        CodeRange{first, code.first}, nullptr, name, std::move(child)
+        CodeRange{first, code.first}, ExpressionPointer{}, name, std::move(child)
     ));
 }
 
@@ -247,7 +249,7 @@ ExpressionPointer parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     return makeLookupSymbol(std::make_shared<LookupSymbol>(
-        CodeRange{first, name->end()}, nullptr, name
+        CodeRange{first, name->end()}, ExpressionPointer{}, name
     ));
 }
 
@@ -260,7 +262,7 @@ ExpressionPointer parseNumber(CodeRange code) {
     code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString({first, code.first}));
     return makeNumber(
-        std::make_shared<Number>(CodeRange{first, code.first}, nullptr, value)
+        std::make_shared<Number>(CodeRange{first, code.first}, ExpressionPointer{}, value)
     );
 }
 
@@ -279,13 +281,13 @@ ExpressionPointer parseString(CodeRange code) {
     for (auto it = first_character; it != last_character; ++it) {
         auto item = makeCharacter(
             std::make_shared<Character>(
-                CodeRange{it, it + 1}, nullptr, it->character
+                CodeRange{it, it + 1}, ExpressionPointer{}, it->character
                 )
             );
         value = ::prepend<ExpressionPointer>(value, item);
     }
     value = ::reverse(value);
-    return makeString(std::make_shared<String>(CodeRange{first, code.begin()}, nullptr, value));
+    return makeString(std::make_shared<String>(CodeRange{first, code.begin()}, ExpressionPointer{}, value));
 }
 
 ExpressionPointer parseExpression(CodeRange code) {

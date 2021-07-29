@@ -13,7 +13,7 @@
 namespace arithmetic {
 
 ExpressionPointer makeNumber(double x) {
-    return makeNumber(std::make_shared<Number>(CodeRange{}, nullptr, x));
+    return makeNumber(std::make_shared<Number>(CodeRange{}, ExpressionPointer{}, x));
 }
 
 ExpressionPointer min(const ExpressionPointer& in) {

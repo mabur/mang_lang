@@ -11,7 +11,7 @@
 namespace equality {
 
 ExpressionPointer makeNumber(double x) {
-    return makeNumber(std::make_shared<Number>(CodeRange{}, nullptr, x));
+    return makeNumber(std::make_shared<Number>(CodeRange{}, ExpressionPointer{}, x));
 }
 
 ExpressionPointer equal(const ExpressionPointer& in) {

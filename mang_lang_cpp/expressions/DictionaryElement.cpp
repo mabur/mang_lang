@@ -33,11 +33,11 @@ WhileElement::WhileElement(
     CodeRange range,
     ExpressionPointer environment,
     ExpressionPointer expression
-) : DictionaryElement{range, environment, WHILE_ELEMENT, nullptr, std::move(expression), 0}
+) : DictionaryElement{range, environment, WHILE_ELEMENT, NamePointer{}, std::move(expression), 0}
 {}
 
 EndElement::EndElement(CodeRange range, ExpressionPointer environment)
-    : DictionaryElement{range, environment, END_ELEMENT, nullptr, nullptr, 0}
+    : DictionaryElement{range, environment, END_ELEMENT, NamePointer{}, ExpressionPointer{}, 0}
 {}
 
 void NamedElement::mutate(const ExpressionPointer& environment, std::ostream& log,

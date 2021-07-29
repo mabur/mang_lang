@@ -32,7 +32,7 @@ ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, cons
     if (element->name->value == name) {
         return element->expression;
     }
-    return nullptr;
+    return ExpressionPointer{};
 }
 
 ExpressionPointer lookupList(const ExpressionPointer& list, const std::string& name) {
@@ -40,7 +40,7 @@ ExpressionPointer lookupList(const ExpressionPointer& list, const std::string& n
         return ::list(list)->first;
     }
     if (name == "rest") {
-        return makeList(std::make_shared<List>(list->range, nullptr, ::list(list)->rest));
+        return makeList(std::make_shared<List>(list->range, ExpressionPointer{}, ::list(list)->rest));
     }
     throw ParseException("List does not contain symbol " + name);
 }
@@ -50,7 +50,7 @@ ExpressionPointer lookupString(const ExpressionPointer& list, const std::string&
         return ::list(list)->first;
     }
     if (name == "rest") {
-        return makeString(std::make_shared<String>(list->range, nullptr, ::list(list)->rest));
+        return makeString(std::make_shared<String>(list->range, ExpressionPointer{}, ::list(list)->rest));
     }
     throw ParseException("List does not contain symbol " + name);
 }
