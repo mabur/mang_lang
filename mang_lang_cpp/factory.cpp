@@ -5,6 +5,7 @@
 #include "expressions/Character.h"
 #include "expressions/Conditional.h"
 #include "expressions/Dictionary.h"
+#include "expressions/DictionaryElement.h"
 #include "expressions/Expression.h"
 #include "expressions/Function.h"
 #include "expressions/FunctionBuiltIn.h"
@@ -32,6 +33,8 @@ std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
 std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const String>> strings;
+
+std::vector<std::shared_ptr<DictionaryElement>> dictionary_elements;
 
 ExpressionPointer makeNumber(std::shared_ptr<const Number> expression) {
     numbers.push_back(expression);
@@ -101,4 +104,9 @@ ExpressionPointer makeName(std::shared_ptr<const Name> expression) {
 ExpressionPointer makeString(std::shared_ptr<const String> expression) {
     strings.push_back(expression);
     return ExpressionPointer{strings.back()};
+}
+
+ExpressionPointer makeDictionaryElement(std::shared_ptr<DictionaryElement> expression) {
+    dictionary_elements.push_back(expression);
+    return ExpressionPointer{dictionary_elements.back()};
 }

@@ -17,6 +17,8 @@
 #include "character.h"
 #include "list.h"
 
+#include "../factory.h"
+
 std::string serializeName(const Name& name) {
     return name.value;
 }
@@ -35,7 +37,7 @@ std::string serializeDictionary(const Dictionary& dictionary) {
     auto result = std::string{};
     result += '{';
     for (const auto& element : dictionary.elements) {
-        result += serialize(ExpressionPointer{element});
+        result += serialize(makeDictionaryElement(element));
     }
     if (dictionary.elements.empty()) {
         result += '}';

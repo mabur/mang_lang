@@ -7,6 +7,7 @@
 struct Character;
 struct Conditional;
 struct Dictionary;
+struct DictionaryElement;
 struct Expression;
 struct Function;
 struct FunctionBuiltIn;
@@ -34,3 +35,5 @@ ExpressionPointer makeLookupFunction(std::shared_ptr<const LookupFunction> expre
 ExpressionPointer makeLookupSymbol(std::shared_ptr<const LookupSymbol> expression);
 ExpressionPointer makeName(std::shared_ptr<const Name> expression);
 ExpressionPointer makeString(std::shared_ptr<const String> expression);
+
+ExpressionPointer makeDictionaryElement(std::shared_ptr<DictionaryElement> expression);
