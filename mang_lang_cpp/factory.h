@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "expressions/Expression.h"
+#include "expressions/ExpressionPointer.h"
 
 struct Character;
 struct Conditional;
