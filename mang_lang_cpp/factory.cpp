@@ -112,7 +112,7 @@ ExpressionPointer makeDictionaryElement(std::shared_ptr<const DictionaryElement>
 }
 
 ExpressionPointer::operator bool () const {
-    return bool(inner);
+    return bool(get());
 }
 
 const Expression* ExpressionPointer::get() const {
