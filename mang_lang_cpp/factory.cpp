@@ -34,7 +34,7 @@ std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const String>> strings;
 
-std::vector<std::shared_ptr<DictionaryElement>> dictionary_elements;
+std::vector<std::shared_ptr<const DictionaryElement>> dictionary_elements;
 
 ExpressionPointer makeNumber(std::shared_ptr<const Number> expression) {
     numbers.push_back(expression);
@@ -106,7 +106,7 @@ ExpressionPointer makeString(std::shared_ptr<const String> expression) {
     return ExpressionPointer{strings.back()};
 }
 
-ExpressionPointer makeDictionaryElement(std::shared_ptr<DictionaryElement> expression) {
+ExpressionPointer makeDictionaryElement(std::shared_ptr<const DictionaryElement> expression) {
     dictionary_elements.push_back(expression);
     return ExpressionPointer{dictionary_elements.back()};
 }
