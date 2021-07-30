@@ -35,70 +35,70 @@ std::vector<std::shared_ptr<const String>> strings;
 
 ExpressionPointer makeNumber(std::shared_ptr<const Number> expression) {
     numbers.push_back(expression);
-    return numbers.back();
+    return ExpressionPointer{numbers.back()};
 }
 
 ExpressionPointer makeCharacter(std::shared_ptr<const Character> expression) {
     characters.push_back(expression);
-    return characters.back();
+    return ExpressionPointer{characters.back()};
 }
 
 ExpressionPointer makeConditional(std::shared_ptr<const Conditional> expression) {
     conditionals.push_back(expression);
-    return conditionals.back();
+    return ExpressionPointer{conditionals.back()};
 }
 
 ExpressionPointer makeDictionary(std::shared_ptr<const Dictionary> expression) {
     dictionaries.push_back(expression);
-    return dictionaries.back();
+    return ExpressionPointer{dictionaries.back()};
 }
 
 ExpressionPointer makeFunction(std::shared_ptr<const Function> expression) {
     functions.push_back(expression);
-    return functions.back();
+    return ExpressionPointer{functions.back()};
 }
 
 ExpressionPointer makeFunctionBuiltIn(std::shared_ptr<const FunctionBuiltIn> expression) {
     built_in_functions.push_back(expression);
-    return built_in_functions.back();
+    return ExpressionPointer{built_in_functions.back()};
 }
 
 ExpressionPointer makeFunctionDictionary(std::shared_ptr<const FunctionDictionary> expression) {
     dictionary_functions.push_back(expression);
-    return dictionary_functions.back();
+    return ExpressionPointer{dictionary_functions.back()};
 }
 
 ExpressionPointer makeFunctionList(std::shared_ptr<const FunctionList> expression) {
     list_functions.push_back(expression);
-    return list_functions.back();
+    return ExpressionPointer{list_functions.back()};
 }
 
 ExpressionPointer makeList(std::shared_ptr<const List> expression) {
     lists.push_back(expression);
-    return lists.back();
+    return ExpressionPointer{lists.back()};
 }
 
 ExpressionPointer makeLookupChild(std::shared_ptr<const LookupChild> expression) {
     child_lookups.push_back(expression);
-    return child_lookups.back();
+    return ExpressionPointer{child_lookups.back()};
 }
 
 ExpressionPointer makeLookupFunction(std::shared_ptr<const LookupFunction> expression) {
     function_lookups.push_back(expression);
-    return function_lookups.back();
+    return ExpressionPointer{function_lookups.back()};
 }
 
 ExpressionPointer makeLookupSymbol(std::shared_ptr<const LookupSymbol> expression) {
     symbol_lookups.push_back(expression);
-    return symbol_lookups.back();
+    return ExpressionPointer{symbol_lookups.back()};
 }
 
 ExpressionPointer makeName(std::shared_ptr<const Name> expression) {
     names.push_back(expression);
-    return names.back();
+    return ExpressionPointer{names.back()};
 }
 
 ExpressionPointer makeString(std::shared_ptr<const String> expression) {
     strings.push_back(expression);
-    return strings.back();
+    return ExpressionPointer{strings.back()};
 }

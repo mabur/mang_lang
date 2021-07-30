@@ -35,7 +35,7 @@ std::string serializeDictionary(const Dictionary& dictionary) {
     auto result = std::string{};
     result += '{';
     for (const auto& element : dictionary.elements) {
-        result += serialize(element);
+        result += serialize(ExpressionPointer{element});
     }
     if (dictionary.elements.empty()) {
         result += '}';

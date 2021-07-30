@@ -9,6 +9,8 @@
 #include "../parsing.h"
 #include "../SinglyLinkedList.h"
 
+#include "ExpressionPointer.h"
+
 enum ExpressionType {
     CHARACTER,
     CONDITIONAL,
@@ -30,7 +32,7 @@ enum ExpressionType {
 };
 
 struct Expression;
-using ExpressionPointer = std::shared_ptr<const Expression>;
+//using ExpressionPointer = std::shared_ptr<const Expression>;
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
 struct Expression {

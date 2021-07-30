@@ -47,13 +47,14 @@ ExpressionPointer evaluateDictionary(
     const auto num_names = numNames(dictionary.elements);
     auto result = std::make_shared<Dictionary>(dictionary.range, environment, DictionaryElements{});
     result->elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
+    const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        dictionary.elements[i]->mutate(result, log, result->elements);
-        i += dictionary.elements[i]->jump(result, log);
+        dictionary.elements[i]->mutate(wrapped_result, log, result->elements);
+        i += dictionary.elements[i]->jump(wrapped_result, log);
     }
-    log << serialize(result) << std::endl;
-    return makeDictionary(result);
+    log << serialize(wrapped_result) << std::endl;
+    return wrapped_result;
 }
 
 ExpressionPointer evaluateFunction(
