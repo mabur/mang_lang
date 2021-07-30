@@ -17,6 +17,10 @@
 #include "character.h"
 #include "list.h"
 
+std::string serializeName(const Name& name) {
+    return name.value;
+}
+
 std::string serializeCharacter(const Character& character) {
     return "\'" + std::string{character.value} + "\'";
 }
@@ -43,7 +47,7 @@ std::string serializeDictionary(const Dictionary& dictionary) {
 }
 
 std::string serializeNamedElement(const NamedElement& element) {
-    return serialize(element.name) + '=' + serialize(element.expression) + ' ';
+    return serializeName(*element.name) + '=' + serialize(element.expression) + ' ';
 }
 
 std::string serializeWhileElement(const WhileElement& element) {
@@ -55,7 +59,7 @@ std::string serializeEndElement(const EndElement&) {
 }
 
 std::string serializeFunction(const Function& function) {
-    return "in " + serialize(function.input_name)
+    return "in " + serializeName(*function.input_name)
         + " out " + serialize(function.body);
 }
 
@@ -64,7 +68,7 @@ std::string serializeFunctionDictionary(const FunctionDictionary& function_dicti
     result += "in ";
     result += "{";
     for (const auto& name : function_dictionary.input_names) {
-        result += serialize(name);
+        result += serializeName(*name);
         result += " ";
     }
     if (function_dictionary.input_names.empty()) {
@@ -82,7 +86,7 @@ std::string serializeFunctionList(const FunctionList& function_list) {
     result += "in ";
     result += "(";
     for (const auto& name : function_list.input_names) {
-        result += serialize(name);
+        result += serializeName(*name);
         result += " ";
     }
     if (function_list.input_names.empty()) {
@@ -109,19 +113,15 @@ std::string serializeList(const ExpressionPointer& list) {
 }
 
 std::string serializeLookupChild(const LookupChild& lookup_child) {
-    return serialize(lookup_child.name) + "@" + serialize(lookup_child.child);
+    return serializeName(*lookup_child.name) + "@" + serialize(lookup_child.child);
 }
 
 std::string serializeLookupFunction(const LookupFunction& lookup_function) {
-    return serialize(lookup_function.name) + "!" + serialize(lookup_function.child);
+    return serializeName(*lookup_function.name) + "!" + serialize(lookup_function.child);
 }
 
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
-    return serialize(lookup_symbol.name);
-}
-
-std::string serializeName(const Name& name) {
-    return name.value;
+    return serializeName(*lookup_symbol.name);
 }
 
 std::string serializeNumber(const Number& number) {
