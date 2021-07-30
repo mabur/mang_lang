@@ -9,7 +9,7 @@
 #include "../parsing.h"
 #include "../SinglyLinkedList.h"
 
-#include "ExpressionPointer.h"
+#include "../factory.h"
 
 struct Expression;
 //using ExpressionPointer = std::shared_ptr<const Expression>;
