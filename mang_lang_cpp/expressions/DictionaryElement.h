@@ -25,8 +25,10 @@ struct DictionaryElement : Expression {
     size_t jump_false = 0;
     size_t dictionary_index_;
 
-    virtual void mutate(const ExpressionPointer& environment, std::ostream& log,
-        DictionaryElements& elements) const = 0;
+    virtual DictionaryElements mutate(
+        const ExpressionPointer& environment,
+        std::ostream& log,
+        const DictionaryElements& elements) const = 0;
     virtual size_t jump(const ExpressionPointer& environment, std::ostream& log) const = 0;
     virtual bool isWhile() const;
     virtual bool isEnd() const;
@@ -41,8 +43,10 @@ struct NamedElement : DictionaryElement {
         ExpressionPointer expression,
         size_t dictionary_index
     );
-    void mutate(const ExpressionPointer& environment, std::ostream& log,
-        DictionaryElements& elements) const final;
+    DictionaryElements mutate(
+        const ExpressionPointer& environment,
+        std::ostream& log,
+        const DictionaryElements& elements) const final;
     size_t jump(const ExpressionPointer& environment, std::ostream& log) const final;
 };
 
@@ -52,15 +56,19 @@ struct WhileElement : DictionaryElement {
         ExpressionPointer environment,
         ExpressionPointer expression
     );
-    void mutate(const ExpressionPointer& environment, std::ostream& log,
-        DictionaryElements& elements) const final;
+    DictionaryElements mutate(
+        const ExpressionPointer& environment,
+        std::ostream& log,
+        const DictionaryElements& elements) const final;
     size_t jump(const ExpressionPointer& environment, std::ostream& log) const final;
 };
 
 struct EndElement : DictionaryElement {
     EndElement(CodeRange range, ExpressionPointer environment);
-    void mutate(const ExpressionPointer& environment, std::ostream& log,
-        DictionaryElements& elements) const final;
+    DictionaryElements mutate(
+        const ExpressionPointer& environment,
+        std::ostream& log,
+        const DictionaryElements& elements) const final;
     size_t jump(const ExpressionPointer& environment, std::ostream& log) const final;
 };
 

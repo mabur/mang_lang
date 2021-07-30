@@ -40,31 +40,37 @@ EndElement::EndElement(CodeRange range, ExpressionPointer environment)
     : DictionaryElement{range, environment, END_ELEMENT, NamePointer{}, ExpressionPointer{}, 0}
 {}
 
-void NamedElement::mutate(
+std::vector<DictionaryElementPointer> NamedElement::mutate(
     const ExpressionPointer& environment,
     std::ostream& log,
-    std::vector<DictionaryElementPointer>& elements
+    const std::vector<DictionaryElementPointer>& elements
 ) const {
-    elements.at(dictionary_index_) = std::make_shared<NamedElement>(
+    auto new_elements = elements;
+    new_elements.at(dictionary_index_) = std::make_shared<NamedElement>(
         range,
         environment,
         name,
         evaluate(expression, environment, log),
         dictionary_index_
     );
+    return new_elements;
 }
 
-void WhileElement::mutate(
+DictionaryElements WhileElement::mutate(
     const ExpressionPointer&,
     std::ostream&,
-    std::vector<DictionaryElementPointer>&
-) const {}
+    const std::vector<DictionaryElementPointer>& elements
+) const {
+    return elements;
+}
 
-void EndElement::mutate(
+DictionaryElements EndElement::mutate(
     const ExpressionPointer&,
     std::ostream&,
-    std::vector<DictionaryElementPointer>&
-) const {}
+    const std::vector<DictionaryElementPointer>& elements
+) const {
+    return elements;
+}
 
 size_t NamedElement::jump(const ExpressionPointer&, std::ostream&) const {
     return jump_true;

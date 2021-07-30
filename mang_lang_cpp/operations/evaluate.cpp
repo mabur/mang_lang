@@ -50,7 +50,7 @@ ExpressionPointer evaluateDictionary(
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        dictionary.elements[i]->mutate(wrapped_result, log, result->elements);
+        result->elements = dictionary.elements[i]->mutate(wrapped_result, log, result->elements);
         i += dictionary.elements[i]->jump(wrapped_result, log);
     }
     log << serialize(wrapped_result) << std::endl;
