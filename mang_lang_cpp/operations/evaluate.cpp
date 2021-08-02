@@ -80,11 +80,11 @@ ExpressionPointer evaluateDictionary(
                 element->dictionary_index_
             );
             result->elements = new_elements;
-            i += element->jump_true_;
+            i += 1;
         }
         else if (element->type_ == WHILE_ELEMENT) {
             if (boolean(evaluate(element->expression, wrapped_result, log))) {
-                i += element->jump_true_;
+                i += 1;
             } else {
                 i += element->jump_false_;
             }

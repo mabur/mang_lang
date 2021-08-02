@@ -24,8 +24,12 @@ void setContext(DictionaryElements& elements) {
     auto while_positions = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
+        if (element->type_ == NAMED_ELEMENT) {
+            element->jump_true_ = 1; // dummy
+        }
         if (element->type_ == WHILE_ELEMENT) {
             while_positions.push_back(i);
+            element->jump_true_ = 1; // dummy
         }
         if (element->type_ == END_ELEMENT) {
             element->jump_true_ = while_positions.back() - i;
@@ -39,12 +43,16 @@ void setContext(DictionaryElements& elements) {
     auto end_positions = std::vector<size_t>{};
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
         auto& element = elements[i];
-        if (element->type_ == END_ELEMENT) {
-            end_positions.push_back(i);
+        if (element->type_ == NAMED_ELEMENT) {
+            element->jump_false_ = 0; // dummy
         }
         if (element->type_ == WHILE_ELEMENT) {
             element->jump_false_ = end_positions.back() - i + 1;
             end_positions.pop_back();
+        }
+        if (element->type_ == END_ELEMENT) {
+            element->jump_false_ = 0; // dummy
+            end_positions.push_back(i);
         }
     }
     if (!end_positions.empty()) {
@@ -61,6 +69,12 @@ void setContext(DictionaryElements& elements) {
             if (it == names.end()) {
                 names.push_back(name);
             }
+        }
+        if (element->type_ == WHILE_ELEMENT) {
+            element->dictionary_index_ = 0; // dummy
+        }
+        if (element->type_ == END_ELEMENT) {
+            element->dictionary_index_ = 0; // dummy
         }
     }
 }
