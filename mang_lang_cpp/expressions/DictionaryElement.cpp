@@ -91,13 +91,27 @@ std::vector<size_t> nameIndices(DictionaryElements& elements) {
     return name_indices;
 }
 
-void setContext(DictionaryElements& elements) {
+DictionaryElements setContext(DictionaryElements& elements) {
     const auto while_indices = whileIndices(elements);
     const auto end_indices = endIndices(elements);
     const auto name_indices = nameIndices(elements);
+
+    auto result = DictionaryElements{};
+
     for (size_t i = 0; i < elements.size(); ++i) {
-        elements[i]->name_index_ = name_indices[i];
-        elements[i]->while_index_ = while_indices[i];
-        elements[i]->end_index_ = end_indices[i];
+        const auto& element = elements[i];
+        result.push_back(
+            std::make_shared<DictionaryElement>(
+                element->range,
+                element->environment,
+                element->type_,
+                element->name,
+                element->expression,
+                while_indices[i],
+                end_indices[i],
+                name_indices[i]
+                )
+            );
     }
+    return result;
 }

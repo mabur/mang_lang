@@ -28,4 +28,4 @@ struct DictionaryElement : Expression {
     size_t name_index_;
 };
 
-void setContext(DictionaryElements& elements);
+DictionaryElements setContext(DictionaryElements& elements);
