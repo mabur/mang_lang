@@ -19,7 +19,7 @@ DictionaryElement::DictionaryElement(
     name_index_{name_index}
 {}
 
-std::vector<size_t> whileIndices(DictionaryElements& elements) {
+std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
     auto while_indices = std::vector<size_t>{};
@@ -43,7 +43,7 @@ std::vector<size_t> whileIndices(DictionaryElements& elements) {
     return while_indices;
 }
 
-std::vector<size_t> endIndices(DictionaryElements& elements) {
+std::vector<size_t> endIndices(const DictionaryElements& elements) {
     // Backward pass to set forward jumps:
     auto end_positions = std::vector<size_t>{};
     auto end_indices = std::vector<size_t>(elements.size());
@@ -67,7 +67,7 @@ std::vector<size_t> endIndices(DictionaryElements& elements) {
     return end_indices;
 }
 
-std::vector<size_t> nameIndices(DictionaryElements& elements) {
+std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     // Forward pass to set name_index_:
     auto names = std::vector<std::string>{};
     auto name_indices = std::vector<size_t>{};
@@ -91,7 +91,7 @@ std::vector<size_t> nameIndices(DictionaryElements& elements) {
     return name_indices;
 }
 
-DictionaryElements setContext(DictionaryElements& elements) {
+DictionaryElements setContext(const DictionaryElements& elements) {
     const auto while_indices = whileIndices(elements);
     const auto end_indices = endIndices(elements);
     const auto name_indices = nameIndices(elements);

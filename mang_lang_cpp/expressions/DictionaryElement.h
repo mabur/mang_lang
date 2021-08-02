@@ -7,7 +7,7 @@
 
 struct DictionaryElement;
 
-using DictionaryElementPointer = std::shared_ptr<DictionaryElement>;
+using DictionaryElementPointer = std::shared_ptr<const DictionaryElement>;
 using DictionaryElements = std::vector<DictionaryElementPointer>;
 
 struct DictionaryElement : Expression {
@@ -28,4 +28,4 @@ struct DictionaryElement : Expression {
     size_t name_index_;
 };
 
-DictionaryElements setContext(DictionaryElements& elements);
+DictionaryElements setContext(const DictionaryElements& elements);
