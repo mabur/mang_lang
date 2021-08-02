@@ -40,19 +40,15 @@ EndElement::EndElement(CodeRange range, ExpressionPointer environment)
     : DictionaryElement{range, environment, END_ELEMENT, NamePointer{}, ExpressionPointer{}, 0}
 {}
 
-bool DictionaryElement::isWhile() const {return !name && expression;}
-bool DictionaryElement::isEnd() const {return !name && !expression;}
-bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
-
 void setContext(DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
-        if (element->isWhile()) {
+        if (element->type_ == WHILE_ELEMENT) {
             while_positions.push_back(i);
         }
-        if (element->isEnd()) {
+        if (element->type_ == END_ELEMENT) {
             element->jump_true = while_positions.back() - i;
             while_positions.pop_back();
         }
@@ -64,10 +60,10 @@ void setContext(DictionaryElements& elements) {
     auto end_positions = std::vector<size_t>{};
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
         auto& element = elements[i];
-        if (element->isEnd()) {
+        if (element->type_ == END_ELEMENT) {
             end_positions.push_back(i);
         }
-        if (element->isWhile()) {
+        if (element->type_ == WHILE_ELEMENT) {
             element->jump_false = end_positions.back() - i + 1;
             end_positions.pop_back();
         }
@@ -79,7 +75,7 @@ void setContext(DictionaryElements& elements) {
     auto names = std::vector<std::string>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
-        if (element->isSymbolDefinition()) {
+        if (element->type_ == NAMED_ELEMENT) {
             const auto name = element->name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             element->dictionary_index_ = std::distance(names.begin(), it);

@@ -24,10 +24,6 @@ struct DictionaryElement : Expression {
     size_t jump_true = 1;
     size_t jump_false = 0;
     size_t dictionary_index_;
-
-    virtual bool isWhile() const;
-    virtual bool isEnd() const;
-    virtual bool isSymbolDefinition() const;
 };
 
 struct NamedElement : DictionaryElement {
