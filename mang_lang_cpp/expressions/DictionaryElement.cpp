@@ -24,7 +24,7 @@ void setContext(DictionaryElements& elements) {
             while_positions.push_back(i);
         }
         if (element->type_ == END_ELEMENT) {
-            element->jump_true = while_positions.back() - i;
+            element->jump_true_ = while_positions.back() - i;
             while_positions.pop_back();
         }
     }
@@ -39,7 +39,7 @@ void setContext(DictionaryElements& elements) {
             end_positions.push_back(i);
         }
         if (element->type_ == WHILE_ELEMENT) {
-            element->jump_false = end_positions.back() - i + 1;
+            element->jump_false_ = end_positions.back() - i + 1;
             end_positions.pop_back();
         }
     }

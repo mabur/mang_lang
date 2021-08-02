@@ -78,17 +78,17 @@ ExpressionPointer evaluateDictionary(
                 element->dictionary_index_
             );
             result->elements = new_elements;
-            i += element->jump_true;
+            i += element->jump_true_;
         }
         else if (element->type_ == WHILE_ELEMENT) {
             if (boolean(evaluate(element->expression, wrapped_result, log))) {
-                i += element->jump_true;
+                i += element->jump_true_;
             } else {
-                i += element->jump_false;
+                i += element->jump_false_;
             }
         }
         else if (element->type_ == END_ELEMENT) {
-            i += element->jump_true;
+            i += element->jump_true_;
         }
     }
     log << serialize(wrapped_result) << std::endl;
