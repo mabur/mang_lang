@@ -15,7 +15,7 @@ DictionaryElement::DictionaryElement(
     name{std::move(name)},
     expression{std::move(expression)},
     while_index_{jump_true},
-    jump_false_{jump_false},
+    end_index_{jump_false},
     dictionary_index_{dictionary_index}
 {}
 
@@ -44,14 +44,14 @@ void setContext(DictionaryElements& elements) {
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
         auto& element = elements[i];
         if (element->type_ == NAMED_ELEMENT) {
-            element->jump_false_ = 0; // dummy
+            element->end_index_ = 0; // dummy
         }
         if (element->type_ == WHILE_ELEMENT) {
-            element->jump_false_ = end_positions.back() + 1;
+            element->end_index_ = end_positions.back();
             end_positions.pop_back();
         }
         if (element->type_ == END_ELEMENT) {
-            element->jump_false_ = 0; // dummy
+            element->end_index_ = 0; // dummy
             end_positions.push_back(i);
         }
     }

@@ -86,7 +86,7 @@ ExpressionPointer evaluateDictionary(
             if (boolean(evaluate(element->expression, wrapped_result, log))) {
                 i += 1;
             } else {
-                i = element->jump_false_;
+                i = element->end_index_ + 1;
             }
         }
         else if (element->type_ == END_ELEMENT) {
