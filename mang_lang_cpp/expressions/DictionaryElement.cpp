@@ -8,15 +8,15 @@ DictionaryElement::DictionaryElement(
     ExpressionType type,
     NamePointer name,
     ExpressionPointer expression,
-    size_t jump_true,
-    size_t jump_false,
-    size_t dictionary_index
+    size_t while_index,
+    size_t end_index,
+    size_t name_index
 ) : Expression{range, environment, type},
     name{std::move(name)},
     expression{std::move(expression)},
-    while_index_{jump_true},
-    end_index_{jump_false},
-    name_index_{dictionary_index}
+    while_index_{while_index},
+    end_index_{end_index},
+    name_index_{name_index}
 {}
 
 void setContext(DictionaryElements& elements) {
