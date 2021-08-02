@@ -30,6 +30,7 @@ add_library(shared
         operations/jump.cpp
         operations/list.cpp
         operations/lookup.cpp
+        operations/mutate.cpp
         operations/number.cpp
         operations/parse.cpp
         operations/prepend.cpp
