@@ -72,21 +72,6 @@ DictionaryElements EndElement::mutate(
     return elements;
 }
 
-size_t NamedElement::jump(const ExpressionPointer&, std::ostream&) const {
-    return jump_true;
-}
-
-size_t WhileElement::jump(const ExpressionPointer& environment, std::ostream& log) const {
-    if (boolean(evaluate(expression, environment, log))) {
-        return jump_true;
-    }
-    return jump_false;
-}
-
-size_t EndElement::jump(const ExpressionPointer&, std::ostream&) const {
-    return jump_true;
-}
-
 bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
