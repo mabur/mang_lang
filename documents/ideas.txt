@@ -37,6 +37,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - arrays. Let empty(x) give an empty array with same capacity as x.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Importing source files.
+* Should setContext be run whenever we create a dict? Possible bug?
 * Describe ListBase as a "Concept".
 * Add boolean type.
   - true, false or yes, no?
