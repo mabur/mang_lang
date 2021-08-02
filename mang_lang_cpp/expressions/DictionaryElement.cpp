@@ -22,17 +22,18 @@ DictionaryElement::DictionaryElement(
 void setContext(DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
+    auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
         if (element->type_ == NAMED_ELEMENT) {
-            element->while_index_ = 1; // dummy
+            while_indices.push_back(1); // dummy
         }
         if (element->type_ == WHILE_ELEMENT) {
             while_positions.push_back(i);
-            element->while_index_ = 1; // dummy
+            while_indices.push_back(1); // dummy
         }
         if (element->type_ == END_ELEMENT) {
-            element->while_index_ = while_positions.back();
+            while_indices.push_back(while_positions.back());
             while_positions.pop_back();
         }
     }
@@ -41,17 +42,18 @@ void setContext(DictionaryElements& elements) {
     }
     // Backward pass to set forward jumps:
     auto end_positions = std::vector<size_t>{};
+    auto end_indices = std::vector<size_t>(elements.size());
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
         auto& element = elements[i];
         if (element->type_ == NAMED_ELEMENT) {
-            element->end_index_ = 0; // dummy
+            end_indices[i] = 0; // dummy
         }
         if (element->type_ == WHILE_ELEMENT) {
-            element->end_index_ = end_positions.back();
+            end_indices[i] = end_positions.back();
             end_positions.pop_back();
         }
         if (element->type_ == END_ELEMENT) {
-            element->end_index_ = 0; // dummy
+            end_indices[i] = 0; // dummy
             end_positions.push_back(i);
         }
     }
@@ -60,21 +62,28 @@ void setContext(DictionaryElements& elements) {
     }
     // Forward pass to set name_index_:
     auto names = std::vector<std::string>{};
+    auto name_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
         if (element->type_ == NAMED_ELEMENT) {
             const auto name = element->name->value;
             const auto it = std::find(names.begin(), names.end(), name);
-            element->name_index_ = std::distance(names.begin(), it);
+            name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
                 names.push_back(name);
             }
         }
         if (element->type_ == WHILE_ELEMENT) {
-            element->name_index_ = 0; // dummy
+            name_indices.push_back(0); // dummy
         }
         if (element->type_ == END_ELEMENT) {
-            element->name_index_ = 0; // dummy
+            name_indices.push_back(0); // dummy
         }
+    }
+
+    for (size_t i = 0; i < elements.size(); ++i) {
+        elements[i]->name_index_ = name_indices[i];
+        elements[i]->while_index_ = while_indices[i];
+        elements[i]->end_index_ = end_indices[i];
     }
 }
