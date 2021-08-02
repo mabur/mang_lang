@@ -90,7 +90,7 @@ ExpressionPointer evaluateDictionary(
             }
         }
         else if (element->type_ == END_ELEMENT) {
-            i = element->jump_true_;
+            i = element->while_index_;
         }
     }
     log << serialize(wrapped_result) << std::endl;

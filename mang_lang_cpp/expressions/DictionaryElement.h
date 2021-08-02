@@ -23,7 +23,7 @@ struct DictionaryElement : Expression {
     );
     NamePointer name;
     ExpressionPointer expression;
-    size_t jump_true_;
+    size_t while_index_;
     size_t jump_false_;
     size_t dictionary_index_;
 };

@@ -14,7 +14,7 @@ DictionaryElement::DictionaryElement(
 ) : Expression{range, environment, type},
     name{std::move(name)},
     expression{std::move(expression)},
-    jump_true_{jump_true},
+    while_index_{jump_true},
     jump_false_{jump_false},
     dictionary_index_{dictionary_index}
 {}
@@ -25,14 +25,14 @@ void setContext(DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
         if (element->type_ == NAMED_ELEMENT) {
-            element->jump_true_ = 1; // dummy
+            element->while_index_ = 1; // dummy
         }
         if (element->type_ == WHILE_ELEMENT) {
             while_positions.push_back(i);
-            element->jump_true_ = 1; // dummy
+            element->while_index_ = 1; // dummy
         }
         if (element->type_ == END_ELEMENT) {
-            element->jump_true_ = while_positions.back();
+            element->while_index_ = while_positions.back();
             while_positions.pop_back();
         }
     }
