@@ -48,7 +48,7 @@ std::string serializeDictionary(const Dictionary& dictionary) {
     return result;
 }
 
-std::string serializeNamedElement(const NamedElement& element) {
+std::string serializeNamedElement(const DictionaryElement& element) {
     return serializeName(*element.name) + '=' + serialize(element.expression) + ' ';
 }
 
@@ -147,7 +147,7 @@ std::string serialize(const ExpressionPointer& expression_smart) {
     if (expression->type_ == CHARACTER) {return serializeCharacter(*dynamic_cast<const Character *>(expression));}
     if (expression->type_ == CONDITIONAL) {return serializeConditional(*dynamic_cast<const Conditional *>(expression));}
     if (expression->type_ == DICTIONARY) {return serializeDictionary(*dynamic_cast<const Dictionary *>(expression));}
-    if (expression->type_ == NAMED_ELEMENT) {return serializeNamedElement(*dynamic_cast<const NamedElement *>(expression));}
+    if (expression->type_ == NAMED_ELEMENT) {return serializeNamedElement(*dynamic_cast<const DictionaryElement *>(expression));}
     if (expression->type_ == WHILE_ELEMENT) {return serializeWhileElement(*dynamic_cast<const DictionaryElement *>(expression));}
     if (expression->type_ == END_ELEMENT) {return serializeEndElement(*dynamic_cast<const DictionaryElement *>(expression));}
     if (expression->type_ == FUNCTION) {return serializeFunction(*dynamic_cast<const Function *>(expression));}

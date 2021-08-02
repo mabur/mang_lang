@@ -77,8 +77,13 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    return std::make_shared<NamedElement>(
-        CodeRange{first, code.first}, ExpressionPointer{}, std::move(name), std::move(expression), 0
+    return std::make_shared<DictionaryElement>(
+        CodeRange{first, code.first},
+        ExpressionPointer{},
+        NAMED_ELEMENT,
+        std::move(name),
+        std::move(expression),
+        0
     );
 }
 

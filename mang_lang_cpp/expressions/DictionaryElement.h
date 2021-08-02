@@ -26,16 +26,6 @@ struct DictionaryElement : Expression {
     size_t dictionary_index_;
 };
 
-struct NamedElement : DictionaryElement {
-    NamedElement(
-        CodeRange range,
-        ExpressionPointer environment,
-        NamePointer name,
-        ExpressionPointer expression,
-        size_t dictionary_index
-    );
-};
-
 void setContext(DictionaryElements& elements);
 
 size_t numNames(const DictionaryElements& elements);

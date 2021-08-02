@@ -2,11 +2,6 @@
 
 #include <cassert>
 
-#include "../operations/boolean.h"
-#include "../operations/evaluate.h"
-#include "../operations/lookup.h"
-#include "../operations/serialize.h"
-
 DictionaryElement::DictionaryElement(
     CodeRange range,
     ExpressionPointer environment,
@@ -18,15 +13,6 @@ DictionaryElement::DictionaryElement(
     name{std::move(name)},
     expression{std::move(expression)},
     dictionary_index_{dictionary_index}
-{}
-
-NamedElement::NamedElement(
-    CodeRange range,
-    ExpressionPointer environment,
-    NamePointer name,
-    ExpressionPointer expression,
-    size_t dictionary_index
-) : DictionaryElement{range, environment, NAMED_ELEMENT, std::move(name), std::move(expression), dictionary_index}
 {}
 
 void setContext(DictionaryElements& elements) {

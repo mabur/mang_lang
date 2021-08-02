@@ -9,9 +9,10 @@ DictionaryElements mutate(
     const DictionaryElements& elements) {
     if (dictionary_element->type_ == NAMED_ELEMENT) {
         auto new_elements = elements;
-        new_elements.at(dictionary_element->dictionary_index_) = std::make_shared<NamedElement>(
+        new_elements.at(dictionary_element->dictionary_index_) = std::make_shared<DictionaryElement>(
             dictionary_element->range,
             environment,
+            NAMED_ELEMENT,
             dictionary_element->name,
             evaluate(dictionary_element->expression, environment, log),
             dictionary_element->dictionary_index_
