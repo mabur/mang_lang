@@ -44,10 +44,6 @@ struct WhileElement : DictionaryElement {
     );
 };
 
-struct EndElement : DictionaryElement {
-    EndElement(CodeRange range, ExpressionPointer environment);
-};
-
 void setContext(DictionaryElements& elements);
 
 size_t numNames(const DictionaryElements& elements);

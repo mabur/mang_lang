@@ -98,8 +98,13 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return std::make_shared<EndElement>(
-        CodeRange{first, code.first}, ExpressionPointer{}
+    return std::make_shared<DictionaryElement>(
+        CodeRange{first, code.first},
+        ExpressionPointer{},
+        END_ELEMENT,
+        NamePointer{},
+        ExpressionPointer{},
+        0
     );
 }
 

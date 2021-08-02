@@ -36,10 +36,6 @@ WhileElement::WhileElement(
 ) : DictionaryElement{range, environment, WHILE_ELEMENT, NamePointer{}, std::move(expression), 0}
 {}
 
-EndElement::EndElement(CodeRange range, ExpressionPointer environment)
-    : DictionaryElement{range, environment, END_ELEMENT, NamePointer{}, ExpressionPointer{}, 0}
-{}
-
 void setContext(DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};

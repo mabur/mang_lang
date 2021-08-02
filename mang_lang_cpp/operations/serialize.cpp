@@ -56,7 +56,7 @@ std::string serializeWhileElement(const WhileElement& element) {
     return "while " + serialize(element.expression) + ' ';
 }
 
-std::string serializeEndElement(const EndElement&) {
+std::string serializeEndElement(const DictionaryElement&) {
     return "end ";
 }
 
@@ -149,7 +149,7 @@ std::string serialize(const ExpressionPointer& expression_smart) {
     if (expression->type_ == DICTIONARY) {return serializeDictionary(*dynamic_cast<const Dictionary *>(expression));}
     if (expression->type_ == NAMED_ELEMENT) {return serializeNamedElement(*dynamic_cast<const NamedElement *>(expression));}
     if (expression->type_ == WHILE_ELEMENT) {return serializeWhileElement(*dynamic_cast<const WhileElement *>(expression));}
-    if (expression->type_ == END_ELEMENT) {return serializeEndElement(*dynamic_cast<const EndElement *>(expression));}
+    if (expression->type_ == END_ELEMENT) {return serializeEndElement(*dynamic_cast<const DictionaryElement *>(expression));}
     if (expression->type_ == FUNCTION) {return serializeFunction(*dynamic_cast<const Function *>(expression));}
     if (expression->type_ == FUNCTION_DICTIONARY) {return serializeFunctionDictionary(*dynamic_cast<const FunctionDictionary *>(expression));}
     if (expression->type_ == FUNCTION_LIST) {return serializeFunctionList(*dynamic_cast<const FunctionList *>(expression));}
