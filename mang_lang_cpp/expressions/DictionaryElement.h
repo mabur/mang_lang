@@ -17,12 +17,14 @@ struct DictionaryElement : Expression {
         ExpressionType type,
         NamePointer name,
         ExpressionPointer expression,
+        size_t jump_true,
+        size_t jump_false,
         size_t dictionary_index
     );
     NamePointer name;
     ExpressionPointer expression;
-    size_t jump_true_ = 1;
-    size_t jump_false_ = 0;
+    size_t jump_true_;
+    size_t jump_false_;
     size_t dictionary_index_;
 };
 

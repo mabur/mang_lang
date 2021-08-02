@@ -8,10 +8,14 @@ DictionaryElement::DictionaryElement(
     ExpressionType type,
     NamePointer name,
     ExpressionPointer expression,
+    size_t jump_true,
+    size_t jump_false,
     size_t dictionary_index
 ) : Expression{range, environment, type},
     name{std::move(name)},
     expression{std::move(expression)},
+    jump_true_{jump_true},
+    jump_false_{jump_false},
     dictionary_index_{dictionary_index}
 {}
 

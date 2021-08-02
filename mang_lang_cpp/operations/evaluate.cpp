@@ -75,6 +75,8 @@ ExpressionPointer evaluateDictionary(
                 NAMED_ELEMENT,
                 element->name,
                 evaluate(element->expression, wrapped_result, log),
+                1,
+                0,
                 element->dictionary_index_
             );
             result->elements = new_elements;

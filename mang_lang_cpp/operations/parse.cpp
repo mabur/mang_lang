@@ -83,6 +83,8 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
         NAMED_ELEMENT,
         std::move(name),
         std::move(expression),
+        1,
+        0,
         0
     );
 }
@@ -100,6 +102,8 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
         WHILE_ELEMENT,
         NamePointer{},
         std::move(expression),
+        1,
+        0,
         0
     );
 }
@@ -114,6 +118,8 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
         END_ELEMENT,
         NamePointer{},
         ExpressionPointer{},
+        1,
+        0,
         0
     );
 }

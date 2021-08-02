@@ -22,6 +22,8 @@ ExpressionPointer applyFunction(
             NAMED_ELEMENT,
             function->input_name,
             input,
+            1,
+            0,
             0
         )
     };
@@ -56,6 +58,8 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
                 NAMED_ELEMENT,
                 function_list->input_names[i],
                 list->first,
+                1,
+                0,
                 i
             )
         );
