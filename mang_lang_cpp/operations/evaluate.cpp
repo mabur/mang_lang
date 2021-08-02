@@ -41,10 +41,10 @@ ExpressionPointer evaluateConditional(
     return result;
 }
 
-bool compareDictionaryIndex(
+bool compareNameIndex(
     const DictionaryElementPointer& a, const DictionaryElementPointer& b
 ) {
-    return a->dictionary_index_ < b->dictionary_index_;
+    return a->name_index_ < b->name_index_;
 }
 
 size_t numNames(const DictionaryElements& elements) {
@@ -52,9 +52,9 @@ size_t numNames(const DictionaryElements& elements) {
         return 0;
     }
     const auto max_element = std::max_element(
-        elements.begin(), elements.end(), compareDictionaryIndex
+        elements.begin(), elements.end(), compareNameIndex
     );
-    return 1 + max_element->get()->dictionary_index_;
+    return 1 + max_element->get()->name_index_;
 }
 
 ExpressionPointer evaluateDictionary(
@@ -69,7 +69,7 @@ ExpressionPointer evaluateDictionary(
         const auto& element = dictionary.elements[i];
         if (element->type_ == NAMED_ELEMENT) {
             auto new_elements = result->elements;
-            new_elements.at(element->dictionary_index_) = std::make_shared<DictionaryElement>(
+            new_elements.at(element->name_index_) = std::make_shared<DictionaryElement>(
                 element->range,
                 wrapped_result,
                 NAMED_ELEMENT,
@@ -77,7 +77,7 @@ ExpressionPointer evaluateDictionary(
                 evaluate(element->expression, wrapped_result, log),
                 1,
                 0,
-                element->dictionary_index_
+                element->name_index_
             );
             result->elements = new_elements;
             i += 1;

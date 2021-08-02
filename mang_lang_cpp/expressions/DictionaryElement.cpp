@@ -16,7 +16,7 @@ DictionaryElement::DictionaryElement(
     expression{std::move(expression)},
     while_index_{jump_true},
     end_index_{jump_false},
-    dictionary_index_{dictionary_index}
+    name_index_{dictionary_index}
 {}
 
 void setContext(DictionaryElements& elements) {
@@ -58,23 +58,23 @@ void setContext(DictionaryElements& elements) {
     if (!end_positions.empty()) {
         throw ParseException("Fewer while than end", elements.front()->begin());
     }
-    // Forward pass to set dictionary_index_:
+    // Forward pass to set name_index_:
     auto names = std::vector<std::string>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         auto& element = elements[i];
         if (element->type_ == NAMED_ELEMENT) {
             const auto name = element->name->value;
             const auto it = std::find(names.begin(), names.end(), name);
-            element->dictionary_index_ = std::distance(names.begin(), it);
+            element->name_index_ = std::distance(names.begin(), it);
             if (it == names.end()) {
                 names.push_back(name);
             }
         }
         if (element->type_ == WHILE_ELEMENT) {
-            element->dictionary_index_ = 0; // dummy
+            element->name_index_ = 0; // dummy
         }
         if (element->type_ == END_ELEMENT) {
-            element->dictionary_index_ = 0; // dummy
+            element->name_index_ = 0; // dummy
         }
     }
 }

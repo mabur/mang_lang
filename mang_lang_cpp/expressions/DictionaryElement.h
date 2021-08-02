@@ -25,7 +25,7 @@ struct DictionaryElement : Expression {
     ExpressionPointer expression;
     size_t while_index_;
     size_t end_index_;
-    size_t dictionary_index_;
+    size_t name_index_;
 };
 
 void setContext(DictionaryElements& elements);
