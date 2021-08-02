@@ -32,7 +32,7 @@ void setContext(DictionaryElements& elements) {
             element->jump_true_ = 1; // dummy
         }
         if (element->type_ == END_ELEMENT) {
-            element->jump_true_ = while_positions.back() - i;
+            element->jump_true_ = while_positions.back();
             while_positions.pop_back();
         }
     }
@@ -47,7 +47,7 @@ void setContext(DictionaryElements& elements) {
             element->jump_false_ = 0; // dummy
         }
         if (element->type_ == WHILE_ELEMENT) {
-            element->jump_false_ = end_positions.back() - i + 1;
+            element->jump_false_ = end_positions.back() + 1;
             end_positions.pop_back();
         }
         if (element->type_ == END_ELEMENT) {

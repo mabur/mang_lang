@@ -86,11 +86,11 @@ ExpressionPointer evaluateDictionary(
             if (boolean(evaluate(element->expression, wrapped_result, log))) {
                 i += 1;
             } else {
-                i += element->jump_false_;
+                i = element->jump_false_;
             }
         }
         else if (element->type_ == END_ELEMENT) {
-            i += element->jump_true_;
+            i = element->jump_true_;
         }
     }
     log << serialize(wrapped_result) << std::endl;
