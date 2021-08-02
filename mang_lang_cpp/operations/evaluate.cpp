@@ -61,7 +61,7 @@ ExpressionPointer evaluateDictionary(
     const Dictionary& dictionary, const ExpressionPointer& environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
-    auto elements = std::vector<DictionaryElementPointer>(num_names, nullptr);
+    auto elements = DictionaryElements(num_names, nullptr);
     auto result = std::make_shared<Dictionary>(dictionary.range, environment, elements);
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};

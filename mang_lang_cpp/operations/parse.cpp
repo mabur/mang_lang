@@ -140,7 +140,7 @@ ExpressionPointer parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto elements = std::vector<DictionaryElementPointer>{};
+    auto elements = DictionaryElements{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = parseDictionaryElement(code);

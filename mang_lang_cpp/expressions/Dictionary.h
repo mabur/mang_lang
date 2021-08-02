@@ -7,8 +7,8 @@ struct Dictionary : public Expression {
     Dictionary(
         CodeRange range,
         ExpressionPointer environment,
-        std::vector<DictionaryElementPointer> elements
+        DictionaryElements elements
     ) : Expression{range, environment, DICTIONARY}, elements{std::move(elements)}
     {}
-    std::vector<DictionaryElementPointer> elements;
+    DictionaryElements elements;
 };
