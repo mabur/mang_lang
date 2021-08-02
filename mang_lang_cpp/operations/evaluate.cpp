@@ -61,15 +61,17 @@ ExpressionPointer evaluateDictionary(
     const Dictionary& dictionary, const ExpressionPointer& environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
-    auto elements = DictionaryElements(num_names, nullptr);
-    auto result = std::make_shared<Dictionary>(dictionary.range, environment, elements);
+    const auto result = std::make_shared<Dictionary>(
+        dictionary.range,
+        environment,
+        DictionaryElements(num_names, nullptr)
+    );
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
         const auto& element = dictionary.elements[i];
         if (element->type_ == NAMED_ELEMENT) {
-            auto new_elements = result->elements;
-            new_elements.at(element->name_index_) = std::make_shared<DictionaryElement>(
+            result->elements.at(element->name_index_) = std::make_shared<DictionaryElement>(
                 element->range,
                 wrapped_result,
                 NAMED_ELEMENT,
@@ -79,7 +81,6 @@ ExpressionPointer evaluateDictionary(
                 0,
                 element->name_index_
             );
-            result->elements = new_elements;
             i += 1;
         }
         else if (element->type_ == WHILE_ELEMENT) {
