@@ -25,11 +25,6 @@ struct DictionaryElement : Expression {
     size_t jump_false = 0;
     size_t dictionary_index_;
 
-    virtual DictionaryElements mutate(
-        const ExpressionPointer& environment,
-        std::ostream& log,
-        const DictionaryElements& elements) const = 0;
-
     virtual bool isWhile() const;
     virtual bool isEnd() const;
     virtual bool isSymbolDefinition() const;
@@ -43,10 +38,6 @@ struct NamedElement : DictionaryElement {
         ExpressionPointer expression,
         size_t dictionary_index
     );
-    DictionaryElements mutate(
-        const ExpressionPointer& environment,
-        std::ostream& log,
-        const DictionaryElements& elements) const final;
 };
 
 struct WhileElement : DictionaryElement {
@@ -55,18 +46,10 @@ struct WhileElement : DictionaryElement {
         ExpressionPointer environment,
         ExpressionPointer expression
     );
-    DictionaryElements mutate(
-        const ExpressionPointer& environment,
-        std::ostream& log,
-        const DictionaryElements& elements) const final;
 };
 
 struct EndElement : DictionaryElement {
     EndElement(CodeRange range, ExpressionPointer environment);
-    DictionaryElements mutate(
-        const ExpressionPointer& environment,
-        std::ostream& log,
-        const DictionaryElements& elements) const final;
 };
 
 void setContext(DictionaryElements& elements);

@@ -40,38 +40,6 @@ EndElement::EndElement(CodeRange range, ExpressionPointer environment)
     : DictionaryElement{range, environment, END_ELEMENT, NamePointer{}, ExpressionPointer{}, 0}
 {}
 
-std::vector<DictionaryElementPointer> NamedElement::mutate(
-    const ExpressionPointer& environment,
-    std::ostream& log,
-    const std::vector<DictionaryElementPointer>& elements
-) const {
-    auto new_elements = elements;
-    new_elements.at(dictionary_index_) = std::make_shared<NamedElement>(
-        range,
-        environment,
-        name,
-        evaluate(expression, environment, log),
-        dictionary_index_
-    );
-    return new_elements;
-}
-
-DictionaryElements WhileElement::mutate(
-    const ExpressionPointer&,
-    std::ostream&,
-    const std::vector<DictionaryElementPointer>& elements
-) const {
-    return elements;
-}
-
-DictionaryElements EndElement::mutate(
-    const ExpressionPointer&,
-    std::ostream&,
-    const std::vector<DictionaryElementPointer>& elements
-) const {
-    return elements;
-}
-
 bool DictionaryElement::isWhile() const {return !name && expression;}
 bool DictionaryElement::isEnd() const {return !name && !expression;}
 bool DictionaryElement::isSymbolDefinition() const {return name && expression;}
