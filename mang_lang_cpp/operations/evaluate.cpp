@@ -18,9 +18,7 @@
 #include "../factory.h"
 
 #include "apply.h"
-#include "jump.h"
 #include "list.h"
-#include "mutate.h"
 #include "serialize.h"
 
 ExpressionPointer evaluateCharacter(
@@ -68,10 +66,31 @@ ExpressionPointer evaluateDictionary(
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        result->elements = mutate(
-            dictionary.elements[i], wrapped_result, log, result->elements
-        );
-        i += jump(dictionary.elements[i], wrapped_result, log);
+        const auto& dictionary_element = dictionary.elements[i];
+
+        if (dictionary_element->type_ == NAMED_ELEMENT) {
+            auto new_elements = result->elements;
+            new_elements.at(dictionary_element->dictionary_index_) = std::make_shared<DictionaryElement>(
+                dictionary_element->range,
+                wrapped_result,
+                NAMED_ELEMENT,
+                dictionary_element->name,
+                evaluate(dictionary_element->expression, wrapped_result, log),
+                dictionary_element->dictionary_index_
+            );
+            result->elements = new_elements;
+            i += dictionary_element->jump_true;
+        }
+        else if (dictionary_element->type_ == WHILE_ELEMENT) {
+            if (boolean(evaluate(dictionary_element->expression, wrapped_result, log))) {
+                i += dictionary_element->jump_true;
+            } else {
+                i += dictionary_element->jump_false;
+            }
+        }
+        else if (dictionary_element->type_ == END_ELEMENT) {
+            i += dictionary_element->jump_true;
+        }
     }
     log << serialize(wrapped_result) << std::endl;
     return wrapped_result;
