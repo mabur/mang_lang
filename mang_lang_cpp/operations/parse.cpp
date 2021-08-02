@@ -89,8 +89,13 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    return std::make_shared<WhileElement>(
-        CodeRange{first, code.first}, ExpressionPointer{}, std::move(expression)
+    return std::make_shared<DictionaryElement>(
+        CodeRange{first, code.first},
+        ExpressionPointer{},
+        WHILE_ELEMENT,
+        NamePointer{},
+        std::move(expression),
+        0
     );
 }
 

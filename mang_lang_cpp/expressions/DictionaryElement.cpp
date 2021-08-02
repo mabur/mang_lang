@@ -29,13 +29,6 @@ NamedElement::NamedElement(
 ) : DictionaryElement{range, environment, NAMED_ELEMENT, std::move(name), std::move(expression), dictionary_index}
 {}
 
-WhileElement::WhileElement(
-    CodeRange range,
-    ExpressionPointer environment,
-    ExpressionPointer expression
-) : DictionaryElement{range, environment, WHILE_ELEMENT, NamePointer{}, std::move(expression), 0}
-{}
-
 void setContext(DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
