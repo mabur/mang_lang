@@ -27,6 +27,7 @@ add_library(shared
         operations/empty.cpp
         operations/evaluate.cpp
         operations/is_equal.cpp
+        operations/jump.cpp
         operations/list.cpp
         operations/lookup.cpp
         operations/number.cpp

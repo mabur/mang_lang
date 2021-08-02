@@ -18,6 +18,7 @@
 #include "../factory.h"
 
 #include "apply.h"
+#include "jump.h"
 #include "list.h"
 #include "serialize.h"
 
@@ -51,7 +52,7 @@ ExpressionPointer evaluateDictionary(
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
         result->elements = dictionary.elements[i]->mutate(wrapped_result, log, result->elements);
-        i += dictionary.elements[i]->jump(wrapped_result, log);
+        i += jump(dictionary.elements[i], wrapped_result, log);
     }
     log << serialize(wrapped_result) << std::endl;
     return wrapped_result;
