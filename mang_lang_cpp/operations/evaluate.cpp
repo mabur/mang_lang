@@ -66,30 +66,29 @@ ExpressionPointer evaluateDictionary(
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        const auto& dictionary_element = dictionary.elements[i];
-
-        if (dictionary_element->type_ == NAMED_ELEMENT) {
+        const auto& element = dictionary.elements[i];
+        if (element->type_ == NAMED_ELEMENT) {
             auto new_elements = result->elements;
-            new_elements.at(dictionary_element->dictionary_index_) = std::make_shared<DictionaryElement>(
-                dictionary_element->range,
+            new_elements.at(element->dictionary_index_) = std::make_shared<DictionaryElement>(
+                element->range,
                 wrapped_result,
                 NAMED_ELEMENT,
-                dictionary_element->name,
-                evaluate(dictionary_element->expression, wrapped_result, log),
-                dictionary_element->dictionary_index_
+                element->name,
+                evaluate(element->expression, wrapped_result, log),
+                element->dictionary_index_
             );
             result->elements = new_elements;
-            i += dictionary_element->jump_true;
+            i += element->jump_true;
         }
-        else if (dictionary_element->type_ == WHILE_ELEMENT) {
-            if (boolean(evaluate(dictionary_element->expression, wrapped_result, log))) {
-                i += dictionary_element->jump_true;
+        else if (element->type_ == WHILE_ELEMENT) {
+            if (boolean(evaluate(element->expression, wrapped_result, log))) {
+                i += element->jump_true;
             } else {
-                i += dictionary_element->jump_false;
+                i += element->jump_false;
             }
         }
-        else if (dictionary_element->type_ == END_ELEMENT) {
-            i += dictionary_element->jump_true;
+        else if (element->type_ == END_ELEMENT) {
+            i += element->jump_true;
         }
     }
     log << serialize(wrapped_result) << std::endl;
