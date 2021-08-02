@@ -27,5 +27,3 @@ struct DictionaryElement : Expression {
 };
 
 void setContext(DictionaryElements& elements);
-
-size_t numNames(const DictionaryElements& elements);
