@@ -168,5 +168,5 @@ std::string serialize(const ExpressionPointer& expression_smart) {
     if (type == NAME) {return serializeName(*dynamic_cast<const Name *>(expression));}
     if (type == NUMBER) {return serializeNumber(*dynamic_cast<const Number *>(expression));}
     if (type == STRING) {return serializeString(expression_smart);}
-    throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression->type_)};
+    throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(type)};
 }

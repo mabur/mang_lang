@@ -69,8 +69,9 @@ ExpressionPointer evaluateDictionary(
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
+        const auto type = dictionary.elements[i].type;
         const auto element = dictionary.elements[i].get();
-        if (element->type_ == NAMED_ELEMENT) {
+        if (type == NAMED_ELEMENT) {
             result->elements.at(element->name_index_) = makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
                     element->range,
@@ -86,14 +87,14 @@ ExpressionPointer evaluateDictionary(
             );
             i += 1;
         }
-        else if (element->type_ == WHILE_ELEMENT) {
+        else if (type == WHILE_ELEMENT) {
             if (boolean(evaluate(element->expression, wrapped_result, log))) {
                 i += 1;
             } else {
                 i = element->end_index_ + 1;
             }
         }
-        else if (element->type_ == END_ELEMENT) {
+        else if (type == END_ELEMENT) {
             i = element->while_index_;
         }
     }
