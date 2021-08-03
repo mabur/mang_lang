@@ -77,7 +77,7 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    return DictionaryElementPointer{
+    return makeTypedDictionaryElement(
         std::make_shared<DictionaryElement>(
             CodeRange{first, code.first},
             ExpressionPointer{},
@@ -88,7 +88,7 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
             0,
             0
         )
-    };
+    );
 }
 
 DictionaryElementPointer parseWhileElement(CodeRange code) {
@@ -98,7 +98,7 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    return DictionaryElementPointer{
+    return makeTypedDictionaryElement(
         std::make_shared<DictionaryElement>(
             CodeRange{first, code.first},
             ExpressionPointer{},
@@ -109,14 +109,14 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
             0,
             0
         )
-    };
+    );
 }
 
 DictionaryElementPointer parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return DictionaryElementPointer{
+    return makeTypedDictionaryElement(
         std::make_shared<DictionaryElement>(
             CodeRange{first, code.first},
             ExpressionPointer{},
@@ -127,7 +127,7 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
             0,
             0
         )
-    };
+    );
 }
 
 DictionaryElementPointer parseDictionaryElement(CodeRange code) {

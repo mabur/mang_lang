@@ -101,7 +101,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto& element = elements[i].inner;
         result.push_back(
-            DictionaryElementPointer{
+            makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
                     element->range,
                     element->environment,
@@ -112,7 +112,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                     end_indices[i],
                     name_indices[i]
                 )
-            }
+            )
         );
     }
     return result;

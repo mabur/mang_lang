@@ -16,7 +16,7 @@ ExpressionPointer applyFunction(
 ) {
 
     const auto elements = DictionaryElements{
-        DictionaryElementPointer{
+        makeTypedDictionaryElement(
             std::make_shared<DictionaryElement>(
                 function->range,
                 ExpressionPointer{},
@@ -27,7 +27,7 @@ ExpressionPointer applyFunction(
                 0,
                 0
             )
-        }
+        )
     };
     const auto middle = makeDictionary(
         std::make_shared<Dictionary>(CodeRange{}, function->environment, elements)
@@ -54,7 +54,7 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
     auto i = 0;
     for (auto list = ::list(input); list; list = list->rest, ++i) {
         elements.push_back(
-            DictionaryElementPointer{
+            makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
                     function_list->range,
                     ExpressionPointer{},
@@ -65,7 +65,7 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
                     0,
                     i
                 )
-            }
+            )
         );
     }
     const auto middle = makeDictionary(

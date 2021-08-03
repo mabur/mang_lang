@@ -17,7 +17,7 @@ DictionaryElementPointer makeDictionaryElement(
     std::string name,
     std::function<ExpressionPointer(const ExpressionPointer&)> function
 ) {
-    return DictionaryElementPointer{
+    return makeTypedDictionaryElement(
         std::make_shared<DictionaryElement>(
             CodeRange{},
             ExpressionPointer{},
@@ -28,7 +28,7 @@ DictionaryElementPointer makeDictionaryElement(
             0,
             0
         )
-    };
+    );
 }
 
 ExpressionPointer builtIns() {
