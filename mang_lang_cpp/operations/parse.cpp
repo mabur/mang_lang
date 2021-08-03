@@ -150,7 +150,7 @@ ExpressionPointer parseDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = parseDictionaryElement(code);
-        code.first = element.inner->end();
+        code.first = element.get()->end();
         elements.push_back(element);
     }
     code = parseCharacter(code, '}');

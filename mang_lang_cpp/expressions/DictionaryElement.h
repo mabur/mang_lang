@@ -9,6 +9,7 @@ struct DictionaryElement;
 
 struct DictionaryElementPointer {
     std::shared_ptr<const DictionaryElement> inner;
+    const DictionaryElement* get() const {return inner.get();};
 };
 
 //using DictionaryElementPointer = std::shared_ptr<const DictionaryElement>;

@@ -24,7 +24,7 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     auto while_positions = std::vector<size_t>{};
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
-        auto& element = elements[i].inner;
+        const auto element = elements[i].get();
         if (element->type_ == NAMED_ELEMENT) {
             while_indices.push_back(1); // dummy
         }
@@ -38,7 +38,7 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
         }
     }
     if (!while_positions.empty()) {
-        throw ParseException("More while than end", elements.front().inner->begin());
+        throw ParseException("More while than end", elements.front().get()->begin());
     }
     return while_indices;
 }
@@ -48,7 +48,7 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
     auto end_positions = std::vector<size_t>{};
     auto end_indices = std::vector<size_t>(elements.size());
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
-        auto& element = elements[i].inner;
+        const auto element = elements[i].get();
         if (element->type_ == NAMED_ELEMENT) {
             end_indices[i] = 0; // dummy
         }
@@ -62,7 +62,7 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
         }
     }
     if (!end_positions.empty()) {
-        throw ParseException("Fewer while than end", elements.front().inner->begin());
+        throw ParseException("Fewer while than end", elements.front().get()->begin());
     }
     return end_indices;
 }
@@ -72,7 +72,7 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     auto names = std::vector<std::string>{};
     auto name_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
-        auto& element = elements[i].inner;
+        const auto element = elements[i].get();
         if (element->type_ == NAMED_ELEMENT) {
             const auto name = element->name->value;
             const auto it = std::find(names.begin(), names.end(), name);
@@ -99,7 +99,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     auto result = DictionaryElements{};
 
     for (size_t i = 0; i < elements.size(); ++i) {
-        const auto& element = elements[i].inner;
+        const auto element = elements[i].get();
         result.push_back(
             makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
