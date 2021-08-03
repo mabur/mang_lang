@@ -16,8 +16,8 @@ bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& r
 }
 
 bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
-    const auto left_type = left_smart.get()->type_;
-    const auto right_type = right_smart.get()->type_;
+    const auto left_type = left_smart.type;
+    const auto right_type = right_smart.type;
     if (left_type == NUMBER && right_type == NUMBER) {
         return ::number(left_smart) == ::number(right_smart);
     }

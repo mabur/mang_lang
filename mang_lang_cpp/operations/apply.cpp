@@ -77,17 +77,18 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
 }
 
 ExpressionPointer apply(const ExpressionPointer& expression_smart, ExpressionPointer input, std::ostream& log) {
+    const auto type = expression_smart.type;
     const auto expression = expression_smart.get();
-    if (expression->type_ == FUNCTION) {
+    if (type == FUNCTION) {
         return applyFunction(dynamic_cast<const Function *>(expression), input, log);
     }
-    if (expression->type_ == FUNCTION_BUILT_IN) {
+    if (type == FUNCTION_BUILT_IN) {
         return applyFunctionBuiltIn(dynamic_cast<const FunctionBuiltIn *>(expression), input, log);
     }
-    if (expression->type_ == FUNCTION_DICTIONARY) {
+    if (type == FUNCTION_DICTIONARY) {
         return applyFunctionDictionary(dynamic_cast<const FunctionDictionary *>(expression), input, log);
     }
-    if (expression->type_ == FUNCTION_LIST) {
+    if (type == FUNCTION_LIST) {
         return applyFunctionList(dynamic_cast<const FunctionList *>(expression), input, log);
     }
     throw std::runtime_error{"Expected function"};

@@ -4,8 +4,9 @@
 #include "../expressions/Number.h"
 
 double number(const ExpressionPointer& expression_smart) {
+    const auto type = expression_smart.type;
     const auto expression = expression_smart.get();
-    if (expression->type_ == NUMBER) {
+    if (type == NUMBER) {
         return dynamic_cast<const Number *>(expression)->value;
     }
     throw std::runtime_error{"Expected number"};

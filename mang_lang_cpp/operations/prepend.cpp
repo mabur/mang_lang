@@ -18,11 +18,11 @@ ExpressionPointer prependString(const ExpressionPointer& string, ExpressionPoint
 }
 
 ExpressionPointer prepend(const ExpressionPointer& expression_smart, ExpressionPointer item) {
-    const auto expression = expression_smart.get();
-    if (expression->type_ == LIST) {
+    const auto type = expression_smart.type;
+    if (type == LIST) {
         return prependList(expression_smart, item);
     }
-    if (expression->type_ == STRING) {
+    if (type == STRING) {
         return prependString(expression_smart, item);
     }
     throw std::runtime_error{"Expected list"};

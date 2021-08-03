@@ -24,15 +24,15 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     auto while_positions = std::vector<size_t>{};
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
-        const auto element = elements[i].get();
-        if (element->type_ == NAMED_ELEMENT) {
+        const auto type = elements[i].type;
+        if (type == NAMED_ELEMENT) {
             while_indices.push_back(1); // dummy
         }
-        if (element->type_ == WHILE_ELEMENT) {
+        if (type == WHILE_ELEMENT) {
             while_positions.push_back(i);
             while_indices.push_back(1); // dummy
         }
-        if (element->type_ == END_ELEMENT) {
+        if (type == END_ELEMENT) {
             while_indices.push_back(while_positions.back());
             while_positions.pop_back();
         }
@@ -48,15 +48,15 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
     auto end_positions = std::vector<size_t>{};
     auto end_indices = std::vector<size_t>(elements.size());
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
-        const auto element = elements[i].get();
-        if (element->type_ == NAMED_ELEMENT) {
+        const auto type = elements[i].type;
+        if (type == NAMED_ELEMENT) {
             end_indices[i] = 0; // dummy
         }
-        if (element->type_ == WHILE_ELEMENT) {
+        if (type == WHILE_ELEMENT) {
             end_indices[i] = end_positions.back();
             end_positions.pop_back();
         }
-        if (element->type_ == END_ELEMENT) {
+        if (type == END_ELEMENT) {
             end_indices[i] = 0; // dummy
             end_positions.push_back(i);
         }
@@ -72,19 +72,19 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     auto names = std::vector<std::string>{};
     auto name_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
-        const auto element = elements[i].get();
-        if (element->type_ == NAMED_ELEMENT) {
-            const auto name = element->name->value;
+        const auto type = elements[i].type;
+        if (type == NAMED_ELEMENT) {
+            const auto name = elements[i].get()->name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
                 names.push_back(name);
             }
         }
-        if (element->type_ == WHILE_ELEMENT) {
+        if (type == WHILE_ELEMENT) {
             name_indices.push_back(0); // dummy
         }
-        if (element->type_ == END_ELEMENT) {
+        if (type == END_ELEMENT) {
             name_indices.push_back(0); // dummy
         }
     }
@@ -99,13 +99,14 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     auto result = DictionaryElements{};
 
     for (size_t i = 0; i < elements.size(); ++i) {
+        const auto type = elements[i].type;
         const auto element = elements[i].get();
         result.push_back(
             makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
                     element->range,
                     element->environment,
-                    element->type_,
+                    type,
                     element->name,
                     element->expression,
                     while_indices[i],

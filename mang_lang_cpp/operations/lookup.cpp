@@ -56,17 +56,18 @@ ExpressionPointer lookupString(const ExpressionPointer& list, const std::string&
 }
 
 ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::string& name) {
+    const auto type = expression_smart.type;
     const auto expression = expression_smart.get();
-    if (expression->type_ == DICTIONARY) {
+    if (type == DICTIONARY) {
         return lookupDictionary(dynamic_cast<const Dictionary *>(expression), name);
     }
-    if (expression->type_ == NAMED_ELEMENT) {
+    if (type == NAMED_ELEMENT) {
         return lookupDictionaryElement(dynamic_cast<const DictionaryElement *>(expression), name);
     }
-    if (expression->type_ == LIST) {
+    if (type == LIST) {
         return lookupList(expression_smart, name);
     }
-    if (expression->type_ == STRING) {
+    if (type == STRING) {
         return lookupString(expression_smart, name);
     }
     return lookupExpression(expression, name);
