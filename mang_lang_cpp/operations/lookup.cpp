@@ -16,23 +16,23 @@ ExpressionPointer lookupExpression(const Expression* expression, const std::stri
     return lookup(expression->environment, name);
 }
 
+ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, const std::string& name) {
+    if (element->name->value == name) {
+        return element->expression;
+    }
+    return ExpressionPointer{};
+}
+
 ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {
     for (const auto& element : dictionary->elements) {
         if (element.get()) {
-            auto expression = lookup(makeDictionaryElement(element.inner), name);
+            auto expression = lookupDictionaryElement(element.get(), name);
             if (expression) {
                 return expression;
             }
         }
     }
     return lookupExpression(dictionary, name);
-}
-
-ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, const std::string& name) {
-    if (element->name->value == name) {
-        return element->expression;
-    }
-    return ExpressionPointer{};
 }
 
 ExpressionPointer lookupList(const ExpressionPointer& list, const std::string& name) {

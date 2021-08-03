@@ -33,21 +33,6 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
-std::string serializeDictionary(const Dictionary& dictionary) {
-    auto result = std::string{};
-    result += '{';
-    for (const auto& element : dictionary.elements) {
-        result += serialize(makeDictionaryElement(element.inner));
-    }
-    if (dictionary.elements.empty()) {
-        result += '}';
-    }
-    else {
-        result.back() = '}';
-    }
-    return result;
-}
-
 std::string serializeNamedElement(const DictionaryElement& element) {
     return serializeName(*element.name) + '=' + serialize(element.expression) + ' ';
 }
@@ -58,6 +43,28 @@ std::string serializeWhileElement(const DictionaryElement& element) {
 
 std::string serializeEndElement(const DictionaryElement&) {
     return "end ";
+}
+
+std::string serializeDictionaryElement(const DictionaryElement& expression) {
+    if (expression.type_ == NAMED_ELEMENT) {return serializeNamedElement(expression);}
+    if (expression.type_ == WHILE_ELEMENT) {return serializeWhileElement(expression);}
+    if (expression.type_ == END_ELEMENT) {return serializeEndElement(expression);}
+    throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression.type_)};
+}
+
+std::string serializeDictionary(const Dictionary& dictionary) {
+    auto result = std::string{};
+    result += '{';
+    for (const auto& element : dictionary.elements) {
+        result += serializeDictionaryElement(*element.get());
+    }
+    if (dictionary.elements.empty()) {
+        result += '}';
+    }
+    else {
+        result.back() = '}';
+    }
+    return result;
 }
 
 std::string serializeFunction(const Function& function) {
@@ -147,9 +154,9 @@ std::string serialize(const ExpressionPointer& expression_smart) {
     if (expression->type_ == CHARACTER) {return serializeCharacter(*dynamic_cast<const Character *>(expression));}
     if (expression->type_ == CONDITIONAL) {return serializeConditional(*dynamic_cast<const Conditional *>(expression));}
     if (expression->type_ == DICTIONARY) {return serializeDictionary(*dynamic_cast<const Dictionary *>(expression));}
-    if (expression->type_ == NAMED_ELEMENT) {return serializeNamedElement(*dynamic_cast<const DictionaryElement *>(expression));}
-    if (expression->type_ == WHILE_ELEMENT) {return serializeWhileElement(*dynamic_cast<const DictionaryElement *>(expression));}
-    if (expression->type_ == END_ELEMENT) {return serializeEndElement(*dynamic_cast<const DictionaryElement *>(expression));}
+    if (expression->type_ == NAMED_ELEMENT) {return serializeDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression));}
+    if (expression->type_ == WHILE_ELEMENT) {return serializeDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression));}
+    if (expression->type_ == END_ELEMENT) {return serializeDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression));}
     if (expression->type_ == FUNCTION) {return serializeFunction(*dynamic_cast<const Function *>(expression));}
     if (expression->type_ == FUNCTION_DICTIONARY) {return serializeFunctionDictionary(*dynamic_cast<const FunctionDictionary *>(expression));}
     if (expression->type_ == FUNCTION_LIST) {return serializeFunctionList(*dynamic_cast<const FunctionList *>(expression));}
