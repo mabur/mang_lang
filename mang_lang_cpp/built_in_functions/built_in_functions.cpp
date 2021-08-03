@@ -13,7 +13,7 @@
 #include "list.h"
 #include "logic.h"
 
-DictionaryElementPointer makeDictionaryElement(
+ExpressionPointer makeDictionaryElement(
     std::string name,
     std::function<ExpressionPointer(const ExpressionPointer&)> function
 ) {

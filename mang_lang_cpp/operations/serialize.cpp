@@ -33,21 +33,21 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
-std::string serializeNamedElement(const DictionaryElementPointer& element) {
+std::string serializeNamedElement(const ExpressionPointer& element) {
     return
-        serializeName(*element.get()->name) + '=' +
-        serialize(element.get()->expression) + ' ';
+        serializeName(*element.getDictionaryElement()->name) + '=' +
+        serialize(element.getDictionaryElement()->expression) + ' ';
 }
 
-std::string serializeWhileElement(const DictionaryElementPointer& element) {
-    return "while " + serialize(element.get()->expression) + ' ';
+std::string serializeWhileElement(const ExpressionPointer& element) {
+    return "while " + serialize(element.getDictionaryElement()->expression) + ' ';
 }
 
-std::string serializeEndElement(const DictionaryElementPointer&) {
+std::string serializeEndElement(const ExpressionPointer&) {
     return "end ";
 }
 
-std::string serializeDictionaryElement(const DictionaryElementPointer& expression) {
+std::string serializeDictionaryElement(const ExpressionPointer& expression) {
     if (expression.type == NAMED_ELEMENT) {return serializeNamedElement(expression);}
     if (expression.type == WHILE_ELEMENT) {return serializeWhileElement(expression);}
     if (expression.type == END_ELEMENT) {return serializeEndElement(expression);}
@@ -158,9 +158,9 @@ std::string serialize(const ExpressionPointer& expression_smart) {
     if (type == CHARACTER) {return serializeCharacter(*dynamic_cast<const Character *>(expression));}
     if (type == CONDITIONAL) {return serializeConditional(*dynamic_cast<const Conditional *>(expression));}
     if (type == DICTIONARY) {return serializeDictionary(*dynamic_cast<const Dictionary *>(expression));}
-    if (type == NAMED_ELEMENT) {return serializeDictionaryElement(DictionaryElementPointer{type, index});}
-    if (type == WHILE_ELEMENT) {return serializeDictionaryElement(DictionaryElementPointer{type, index});}
-    if (type == END_ELEMENT) {return serializeDictionaryElement(DictionaryElementPointer{type, index});}
+    if (type == NAMED_ELEMENT) {return serializeDictionaryElement(ExpressionPointer{type, index});}
+    if (type == WHILE_ELEMENT) {return serializeDictionaryElement(ExpressionPointer{type, index});}
+    if (type == END_ELEMENT) {return serializeDictionaryElement(ExpressionPointer{type, index});}
     if (type == FUNCTION) {return serializeFunction(*dynamic_cast<const Function *>(expression));}
     if (type == FUNCTION_DICTIONARY) {return serializeFunctionDictionary(*dynamic_cast<const FunctionDictionary *>(expression));}
     if (type == FUNCTION_LIST) {return serializeFunctionList(*dynamic_cast<const FunctionList *>(expression));}

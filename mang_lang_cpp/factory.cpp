@@ -1,5 +1,6 @@
 #include "factory.h"
 
+#include <cassert>
 #include <vector>
 
 #include "expressions/Character.h"
@@ -106,12 +107,12 @@ ExpressionPointer makeString(std::shared_ptr<const String> expression) {
     return ExpressionPointer{STRING, strings.size() - 1};
 }
 
-DictionaryElementPointer makeTypedDictionaryElement(
+ExpressionPointer makeTypedDictionaryElement(
     std::shared_ptr<const DictionaryElement> expression,
     ExpressionType type
 ) {
     dictionary_elements.push_back(expression);
-    return DictionaryElementPointer{type, dictionary_elements.size() - 1};
+    return ExpressionPointer{type, dictionary_elements.size() - 1};
 }
 
 ExpressionPointer::operator bool () const {
@@ -176,10 +177,11 @@ const Expression* ExpressionPointer::get() const {
     throw std::runtime_error{"Did not recognize expression to create" + std::to_string(type)};
 }
 
-const Expression* ExpressionPointer::operator -> () const {
-    return get();
+const DictionaryElement* ExpressionPointer::getDictionaryElement() const {
+    assert(type == NAMED_ELEMENT || type == WHILE_ELEMENT || type == END_ELEMENT);
+    return dictionary_elements.at(index).get();
 }
 
-const DictionaryElement* DictionaryElementPointer::get() const {
-    return dictionary_elements.at(index).get();
+const Expression* ExpressionPointer::operator -> () const {
+    return get();
 }

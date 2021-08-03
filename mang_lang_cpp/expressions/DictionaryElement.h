@@ -5,7 +5,7 @@
 #include "Expression.h"
 #include "Name.h"
 
-using DictionaryElements = std::vector<DictionaryElementPointer>;
+using DictionaryElements = std::vector<ExpressionPointer>;
 
 struct DictionaryElement : Expression {
     DictionaryElement(

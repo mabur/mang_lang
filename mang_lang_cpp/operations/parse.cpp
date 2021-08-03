@@ -67,7 +67,7 @@ NamePointer parseName(CodeRange code) {
     );
 }
 
-DictionaryElementPointer parseNamedElement(CodeRange code) {
+ExpressionPointer parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     code.first = name->end();
@@ -91,7 +91,7 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
     );
 }
 
-DictionaryElementPointer parseWhileElement(CodeRange code) {
+ExpressionPointer parseWhileElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
@@ -112,7 +112,7 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
     );
 }
 
-DictionaryElementPointer parseEndElement(CodeRange code) {
+ExpressionPointer parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
@@ -130,7 +130,7 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
     );
 }
 
-DictionaryElementPointer parseDictionaryElement(CodeRange code) {
+ExpressionPointer parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
     if (startsWithWhileElement(code)) {

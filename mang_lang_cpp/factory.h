@@ -48,12 +48,7 @@ struct ExpressionPointer {
     operator bool () const;
     const Expression* get() const;
     const Expression* operator -> () const;
-};
-
-struct DictionaryElementPointer {
-    ExpressionType type = EMPTY;
-    size_t index = 0;
-    const DictionaryElement* get() const;
+    const DictionaryElement* getDictionaryElement() const;
 };
 
 ExpressionPointer makeNumber(std::shared_ptr<const Number> expression);
@@ -71,7 +66,7 @@ ExpressionPointer makeLookupSymbol(std::shared_ptr<const LookupSymbol> expressio
 ExpressionPointer makeName(std::shared_ptr<const Name> expression);
 ExpressionPointer makeString(std::shared_ptr<const String> expression);
 
-DictionaryElementPointer makeTypedDictionaryElement(
+ExpressionPointer makeTypedDictionaryElement(
     std::shared_ptr<const DictionaryElement> expression,
     ExpressionType type
 );
