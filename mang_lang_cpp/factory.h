@@ -28,7 +28,6 @@ enum ExpressionType {
 struct Expression;
 
 struct ExpressionPointer {
-    std::shared_ptr<const Expression> inner;
     ExpressionType type = EMPTY;
     size_t index = 0;
     operator bool () const;
