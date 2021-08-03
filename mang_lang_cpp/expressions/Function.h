@@ -8,7 +8,7 @@ struct Function : public Expression {
         ExpressionPointer environment,
         NamePointer input_name,
         ExpressionPointer body
-    ) : Expression{range, environment, FUNCTION},
+    ) : Expression{range, environment},
         input_name{std::move(input_name)},
         body{std::move(body)}
     {}

@@ -5,6 +5,6 @@
 
 struct FunctionBuiltIn : public Expression {
     explicit FunctionBuiltIn(std::function<ExpressionPointer(const ExpressionPointer&)> f)
-        : Expression{{}, {}, FUNCTION_BUILT_IN}, function(std::move(f)) {}
+        : Expression{{}, {}}, function(std::move(f)) {}
     std::function<ExpressionPointer(const ExpressionPointer&)> function;
 };

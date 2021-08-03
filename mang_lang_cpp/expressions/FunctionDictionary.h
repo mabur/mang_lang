@@ -8,7 +8,7 @@ struct FunctionDictionary : public Expression {
         ExpressionPointer environment,
         std::vector<NamePointer> input_names,
         ExpressionPointer body
-    ) : Expression{range, environment, FUNCTION_DICTIONARY},
+    ) : Expression{range, environment},
         input_names{std::move(input_names)},
         body{std::move(body)}
     {}

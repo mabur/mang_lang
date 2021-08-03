@@ -10,7 +10,7 @@
 
 struct List : public Expression {
     List(CodeRange range, ExpressionPointer environment, InternalList elements)
-        : Expression{range, environment, LIST}, elements{std::move(elements)}
+        : Expression{range, environment}, elements{std::move(elements)}
     {}
     InternalList elements;
 };

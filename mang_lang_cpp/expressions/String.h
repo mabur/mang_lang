@@ -11,7 +11,7 @@
 
 struct String : public Expression {
     String(CodeRange range, const ExpressionPointer environment, InternalList elements)
-        : Expression{range, environment, STRING}, elements{std::move(elements)}
+        : Expression{range, environment}, elements{std::move(elements)}
     {}
     using value_type = String;
     InternalList elements;

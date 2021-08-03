@@ -20,7 +20,6 @@ ExpressionPointer applyFunction(
             std::make_shared<DictionaryElement>(
                 function->range,
                 ExpressionPointer{},
-                NAMED_ELEMENT,
                 function->input_name,
                 input,
                 1,
@@ -59,7 +58,6 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
                 std::make_shared<DictionaryElement>(
                     function_list->range,
                     ExpressionPointer{},
-                    NAMED_ELEMENT,
                     function_list->input_names[i],
                     list->first,
                     1,

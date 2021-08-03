@@ -81,7 +81,6 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
         std::make_shared<DictionaryElement>(
             CodeRange{first, code.first},
             ExpressionPointer{},
-            NAMED_ELEMENT,
             std::move(name),
             std::move(expression),
             1,
@@ -103,7 +102,6 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
         std::make_shared<DictionaryElement>(
             CodeRange{first, code.first},
             ExpressionPointer{},
-            WHILE_ELEMENT,
             NamePointer{},
             std::move(expression),
             1,
@@ -122,7 +120,6 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
         std::make_shared<DictionaryElement>(
             CodeRange{first, code.first},
             ExpressionPointer{},
-            END_ELEMENT,
             NamePointer{},
             ExpressionPointer{},
             1,

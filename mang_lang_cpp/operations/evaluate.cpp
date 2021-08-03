@@ -76,7 +76,6 @@ ExpressionPointer evaluateDictionary(
                 std::make_shared<DictionaryElement>(
                     element->range,
                     wrapped_result,
-                    NAMED_ELEMENT,
                     element->name,
                     evaluate(element->expression, wrapped_result, log),
                     1,

@@ -11,7 +11,6 @@ struct DictionaryElement : Expression {
     DictionaryElement(
         CodeRange range,
         ExpressionPointer environment,
-        ExpressionType type,
         NamePointer name,
         ExpressionPointer expression,
         size_t while_index,

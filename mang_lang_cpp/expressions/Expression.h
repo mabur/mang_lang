@@ -16,13 +16,12 @@ struct Expression;
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
 struct Expression {
-    Expression(CodeRange range, ExpressionPointer environment, ExpressionType type)
-        : range{range}, environment{environment}, type_{type} {}
+    Expression(CodeRange range, ExpressionPointer environment)
+        : range{range}, environment{environment} {}
     virtual ~Expression() = default;
 
     CodeRange range;
     ExpressionPointer environment;
-    ExpressionType type_;
 
     const CodeCharacter* begin() const;
     const CodeCharacter* end() const;

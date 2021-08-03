@@ -5,13 +5,12 @@
 DictionaryElement::DictionaryElement(
     CodeRange range,
     ExpressionPointer environment,
-    ExpressionType type,
     NamePointer name,
     ExpressionPointer expression,
     size_t while_index,
     size_t end_index,
     size_t name_index
-) : Expression{range, environment, type},
+) : Expression{range, environment},
     name{std::move(name)},
     expression{std::move(expression)},
     while_index_{while_index},
@@ -106,7 +105,6 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 std::make_shared<DictionaryElement>(
                     element->range,
                     element->environment,
-                    type,
                     element->name,
                     element->expression,
                     while_indices[i],
