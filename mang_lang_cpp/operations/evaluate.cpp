@@ -44,7 +44,7 @@ ExpressionPointer evaluateConditional(
 bool compareNameIndex(
     const DictionaryElementPointer& a, const DictionaryElementPointer& b
 ) {
-    return a->name_index_ < b->name_index_;
+    return a.inner->name_index_ < b.inner->name_index_;
 }
 
 size_t numNames(const DictionaryElements& elements) {
@@ -54,7 +54,7 @@ size_t numNames(const DictionaryElements& elements) {
     const auto max_element = std::max_element(
         elements.begin(), elements.end(), compareNameIndex
     );
-    return 1 + max_element->get()->name_index_;
+    return 1 + max_element->inner.get()->name_index_;
 }
 
 ExpressionPointer evaluateDictionary(
@@ -64,23 +64,25 @@ ExpressionPointer evaluateDictionary(
     const auto result = std::make_shared<Dictionary>(
         dictionary.range,
         environment,
-        DictionaryElements(num_names, nullptr)
+        DictionaryElements(num_names, DictionaryElementPointer{})
     );
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        const auto& element = dictionary.elements[i];
+        const auto& element = dictionary.elements[i].inner;
         if (element->type_ == NAMED_ELEMENT) {
-            result->elements.at(element->name_index_) = std::make_shared<DictionaryElement>(
-                element->range,
-                wrapped_result,
-                NAMED_ELEMENT,
-                element->name,
-                evaluate(element->expression, wrapped_result, log),
-                1,
-                0,
-                element->name_index_
-            );
+            result->elements.at(element->name_index_) = DictionaryElementPointer{
+                std::make_shared<DictionaryElement>(
+                    element->range,
+                    wrapped_result,
+                    NAMED_ELEMENT,
+                    element->name,
+                    evaluate(element->expression, wrapped_result, log),
+                    1,
+                    0,
+                    element->name_index_
+                )
+            };
             i += 1;
         }
         else if (element->type_ == WHILE_ELEMENT) {

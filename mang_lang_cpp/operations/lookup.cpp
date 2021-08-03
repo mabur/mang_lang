@@ -18,8 +18,8 @@ ExpressionPointer lookupExpression(const Expression* expression, const std::stri
 
 ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {
     for (const auto& element : dictionary->elements) {
-        if (element) {
-            auto expression = lookup(makeDictionaryElement(element), name);
+        if (element.inner) {
+            auto expression = lookup(makeDictionaryElement(element.inner), name);
             if (expression) {
                 return expression;
             }

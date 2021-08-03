@@ -7,7 +7,11 @@
 
 struct DictionaryElement;
 
-using DictionaryElementPointer = std::shared_ptr<const DictionaryElement>;
+struct DictionaryElementPointer {
+    std::shared_ptr<const DictionaryElement> inner;
+};
+
+//using DictionaryElementPointer = std::shared_ptr<const DictionaryElement>;
 using DictionaryElements = std::vector<DictionaryElementPointer>;
 
 struct DictionaryElement : Expression {

@@ -77,16 +77,18 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    return std::make_shared<DictionaryElement>(
-        CodeRange{first, code.first},
-        ExpressionPointer{},
-        NAMED_ELEMENT,
-        std::move(name),
-        std::move(expression),
-        1,
-        0,
-        0
-    );
+    return DictionaryElementPointer{
+        std::make_shared<DictionaryElement>(
+            CodeRange{first, code.first},
+            ExpressionPointer{},
+            NAMED_ELEMENT,
+            std::move(name),
+            std::move(expression),
+            1,
+            0,
+            0
+        )
+    };
 }
 
 DictionaryElementPointer parseWhileElement(CodeRange code) {
@@ -96,32 +98,36 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = expression->end();
     code = parseWhiteSpace(code);
-    return std::make_shared<DictionaryElement>(
-        CodeRange{first, code.first},
-        ExpressionPointer{},
-        WHILE_ELEMENT,
-        NamePointer{},
-        std::move(expression),
-        1,
-        0,
-        0
-    );
+    return DictionaryElementPointer{
+        std::make_shared<DictionaryElement>(
+            CodeRange{first, code.first},
+            ExpressionPointer{},
+            WHILE_ELEMENT,
+            NamePointer{},
+            std::move(expression),
+            1,
+            0,
+            0
+        )
+    };
 }
 
 DictionaryElementPointer parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return std::make_shared<DictionaryElement>(
-        CodeRange{first, code.first},
-        ExpressionPointer{},
-        END_ELEMENT,
-        NamePointer{},
-        ExpressionPointer{},
-        1,
-        0,
-        0
-    );
+    return DictionaryElementPointer{
+        std::make_shared<DictionaryElement>(
+            CodeRange{first, code.first},
+            ExpressionPointer{},
+            END_ELEMENT,
+            NamePointer{},
+            ExpressionPointer{},
+            1,
+            0,
+            0
+        )
+    };
 }
 
 DictionaryElementPointer parseDictionaryElement(CodeRange code) {
@@ -144,7 +150,7 @@ ExpressionPointer parseDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = parseDictionaryElement(code);
-        code.first = element->end();
+        code.first = element.inner->end();
         elements.push_back(element);
     }
     code = parseCharacter(code, '}');

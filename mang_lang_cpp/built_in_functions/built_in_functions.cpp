@@ -17,16 +17,18 @@ DictionaryElementPointer makeDictionaryElement(
     std::string name,
     std::function<ExpressionPointer(const ExpressionPointer&)> function
 ) {
-    return std::make_shared<DictionaryElement>(
-        CodeRange{},
-        ExpressionPointer{},
-        NAMED_ELEMENT,
-        std::make_shared<Name>(CodeRange{}, ExpressionPointer{}, name),
-        makeFunctionBuiltIn(std::make_shared<FunctionBuiltIn>(function)),
-        1,
-        0,
-        0
-    );
+    return DictionaryElementPointer{
+        std::make_shared<DictionaryElement>(
+            CodeRange{},
+            ExpressionPointer{},
+            NAMED_ELEMENT,
+            std::make_shared<Name>(CodeRange{}, ExpressionPointer{}, name),
+            makeFunctionBuiltIn(std::make_shared<FunctionBuiltIn>(function)),
+            1,
+            0,
+            0
+        )
+    };
 }
 
 ExpressionPointer builtIns() {
