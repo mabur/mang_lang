@@ -161,9 +161,9 @@ const Expression* ExpressionPointer::get() const {
     //if (type == WHILE) {
     //    return dictionary_elements.at(index).get();
     //}
-    //if (type == EMPTY) {
-    //    return empty_elements.at(index).get();
-    //}
+    if (type == EMPTY) {
+        return nullptr;
+    }
     return inner.get();
 }
 
