@@ -4,6 +4,23 @@
 
 #include <memory>
 
+struct Character;
+struct Conditional;
+struct Dictionary;
+struct DictionaryElement;
+struct Expression;
+struct Function;
+struct FunctionBuiltIn;
+struct FunctionDictionary;
+struct FunctionList;
+struct List;
+struct LookupChild;
+struct LookupFunction;
+struct LookupSymbol;
+struct Name;
+struct Number;
+struct String;
+
 enum ExpressionType {
     CHARACTER,
     CONDITIONAL,
@@ -25,8 +42,6 @@ enum ExpressionType {
     EMPTY,
 };
 
-struct Expression;
-
 struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
@@ -35,23 +50,11 @@ struct ExpressionPointer {
     const Expression* operator -> () const;
 };
 
-
-struct Character;
-struct Conditional;
-struct Dictionary;
-struct DictionaryElement;
-struct Expression;
-struct Function;
-struct FunctionBuiltIn;
-struct FunctionDictionary;
-struct FunctionList;
-struct List;
-struct LookupChild;
-struct LookupFunction;
-struct LookupSymbol;
-struct Name;
-struct Number;
-struct String;
+struct DictionaryElementPointer {
+    ExpressionType type = EMPTY;
+    size_t index = 0;
+    const DictionaryElement* get() const;
+};
 
 ExpressionPointer makeNumber(std::shared_ptr<const Number> expression);
 ExpressionPointer makeCharacter(std::shared_ptr<const Character> expression);
@@ -67,14 +70,6 @@ ExpressionPointer makeLookupFunction(std::shared_ptr<const LookupFunction> expre
 ExpressionPointer makeLookupSymbol(std::shared_ptr<const LookupSymbol> expression);
 ExpressionPointer makeName(std::shared_ptr<const Name> expression);
 ExpressionPointer makeString(std::shared_ptr<const String> expression);
-
-struct DictionaryElement;
-
-struct DictionaryElementPointer {
-    ExpressionType type = EMPTY;
-    size_t index = 0;
-    const DictionaryElement* get() const;
-};
 
 DictionaryElementPointer makeTypedDictionaryElement(
     std::shared_ptr<const DictionaryElement> expression,
