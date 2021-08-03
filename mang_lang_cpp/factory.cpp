@@ -157,15 +157,15 @@ const Expression* ExpressionPointer::get() const {
     if (type == NAME) {
         return names.at(index).get();
     }
-    //if (type == NAMED_ELEMENT) {
-    //    return dictionary_elements.at(index).get();
-    //}
-    //if (type == END_ELEMENT) {
-    //    return dictionary_elements.at(index).get();
-    //}
-    //if (type == WHILE) {
-    //    return dictionary_elements.at(index).get();
-    //}
+    if (type == NAMED_ELEMENT) {
+        return dictionary_elements.at(index).get();
+    }
+    if (type == END_ELEMENT) {
+        return dictionary_elements.at(index).get();
+    }
+    if (type == WHILE_ELEMENT) {
+        return dictionary_elements.at(index).get();
+    }
     if (type == EMPTY) {
         return nullptr;
     }
