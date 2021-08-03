@@ -142,8 +142,9 @@ const Expression* ExpressionPointer::get() const {
 }
 
 const DictionaryElement* ExpressionPointer::getDictionaryElement() const {
-    assert(type == NAMED_ELEMENT || type == WHILE_ELEMENT || type == END_ELEMENT);
-    return dictionary_elements.at(index).get();
+    if (type == NAMED_ELEMENT || type == WHILE_ELEMENT || type == END_ELEMENT)
+        return dictionary_elements.at(index).get();
+    return nullptr;
 }
 
 const Expression* ExpressionPointer::operator -> () const {
