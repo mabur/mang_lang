@@ -106,11 +106,6 @@ ExpressionPointer makeString(std::shared_ptr<const String> expression) {
     return ExpressionPointer{STRING, strings.size() - 1};
 }
 
-ExpressionPointer makeDictionaryElement(std::shared_ptr<const DictionaryElement> expression) {
-    dictionary_elements.push_back(expression);
-    return ExpressionPointer{expression->type_, dictionary_elements.size() - 1};
-}
-
 DictionaryElementPointer makeTypedDictionaryElement(std::shared_ptr<const DictionaryElement> expression) {
     dictionary_elements.push_back(expression);
     return DictionaryElementPointer{expression->type_, dictionary_elements.size() - 1};
