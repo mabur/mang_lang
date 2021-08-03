@@ -5,14 +5,6 @@
 #include "Expression.h"
 #include "Name.h"
 
-struct DictionaryElement;
-
-struct DictionaryElementPointer {
-    std::shared_ptr<const DictionaryElement> inner;
-    const DictionaryElement* get() const {return inner.get();};
-};
-
-//using DictionaryElementPointer = std::shared_ptr<const DictionaryElement>;
 using DictionaryElements = std::vector<DictionaryElementPointer>;
 
 struct DictionaryElement : Expression {

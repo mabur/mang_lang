@@ -108,12 +108,12 @@ ExpressionPointer makeString(std::shared_ptr<const String> expression) {
 
 ExpressionPointer makeDictionaryElement(std::shared_ptr<const DictionaryElement> expression) {
     dictionary_elements.push_back(expression);
-    return ExpressionPointer{dictionary_elements.back(), expression->type_, dictionary_elements.size()};
+    return ExpressionPointer{dictionary_elements.back(), expression->type_, dictionary_elements.size() - 1};
 }
 
 DictionaryElementPointer makeTypedDictionaryElement(std::shared_ptr<const DictionaryElement> expression) {
     dictionary_elements.push_back(expression);
-    return DictionaryElementPointer{dictionary_elements.back()};
+    return DictionaryElementPointer{expression->type_, dictionary_elements.size() - 1};
 }
 
 ExpressionPointer::operator bool () const {
@@ -174,4 +174,8 @@ const Expression* ExpressionPointer::get() const {
 
 const Expression* ExpressionPointer::operator -> () const {
     return get();
+}
+
+const DictionaryElement* DictionaryElementPointer::get() const {
+    return dictionary_elements.at(index).get();
 }

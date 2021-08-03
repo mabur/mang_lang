@@ -71,6 +71,12 @@ ExpressionPointer makeString(std::shared_ptr<const String> expression);
 
 ExpressionPointer makeDictionaryElement(std::shared_ptr<const DictionaryElement> expression);
 
-struct DictionaryElementPointer;
+struct DictionaryElement;
+
+struct DictionaryElementPointer {
+    ExpressionType type = EMPTY;
+    size_t index = 0;
+    const DictionaryElement* get() const;
+};
 
 DictionaryElementPointer makeTypedDictionaryElement(std::shared_ptr<const DictionaryElement> expression);
