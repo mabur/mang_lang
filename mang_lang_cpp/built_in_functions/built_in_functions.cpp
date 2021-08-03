@@ -27,7 +27,8 @@ DictionaryElementPointer makeDictionaryElement(
             1,
             0,
             0
-        )
+        ),
+        NAMED_ELEMENT
     );
 }
 

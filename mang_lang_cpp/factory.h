@@ -76,4 +76,7 @@ struct DictionaryElementPointer {
     const DictionaryElement* get() const;
 };
 
-DictionaryElementPointer makeTypedDictionaryElement(std::shared_ptr<const DictionaryElement> expression);
+DictionaryElementPointer makeTypedDictionaryElement(
+    std::shared_ptr<const DictionaryElement> expression,
+    ExpressionType type
+);

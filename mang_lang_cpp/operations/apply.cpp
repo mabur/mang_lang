@@ -26,7 +26,8 @@ ExpressionPointer applyFunction(
                 1,
                 0,
                 0
-            )
+            ),
+            NAMED_ELEMENT
         )
     };
     const auto middle = makeDictionary(
@@ -64,7 +65,8 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
                     1,
                     0,
                     i
-                )
+                ),
+                NAMED_ELEMENT
             )
         );
     }

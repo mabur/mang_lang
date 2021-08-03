@@ -112,7 +112,8 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                     while_indices[i],
                     end_indices[i],
                     name_indices[i]
-                )
+                ),
+                type
             )
         );
     }

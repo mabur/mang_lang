@@ -81,7 +81,8 @@ ExpressionPointer evaluateDictionary(
                     1,
                     0,
                     element->name_index_
-                )
+                ),
+                NAMED_ELEMENT
             );
             i += 1;
         }

@@ -87,7 +87,8 @@ DictionaryElementPointer parseNamedElement(CodeRange code) {
             1,
             0,
             0
-        )
+        ),
+        NAMED_ELEMENT
     );
 }
 
@@ -108,7 +109,8 @@ DictionaryElementPointer parseWhileElement(CodeRange code) {
             1,
             0,
             0
-        )
+        ),
+        WHILE_ELEMENT
     );
 }
 
@@ -126,7 +128,8 @@ DictionaryElementPointer parseEndElement(CodeRange code) {
             1,
             0,
             0
-        )
+        ),
+        END_ELEMENT
     );
 }
 
