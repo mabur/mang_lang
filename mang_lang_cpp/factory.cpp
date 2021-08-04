@@ -147,6 +147,78 @@ const DictionaryElement* ExpressionPointer::getDictionaryElement() const {
     return nullptr;
 }
 
+const Number* ExpressionPointer::number() const {
+    if (type == NUMBER)
+        return numbers.at(index).get();
+    return nullptr;
+}
+
+const Character* ExpressionPointer::character() const {
+    if (type == CHARACTER)
+        return characters.at(index).get();
+    return nullptr;
+}
+const Conditional* ExpressionPointer::conditional() const {
+    if (type == CONDITIONAL)
+        return conditionals.at(index).get();
+    return nullptr;
+}
+const Dictionary* ExpressionPointer::dictionary() const {
+    if (type == DICTIONARY)
+        return dictionaries.at(index).get();
+    return nullptr;
+}
+const Function* ExpressionPointer::function() const {
+    if (type == FUNCTION)
+        return functions.at(index).get();
+    return nullptr;
+}
+const FunctionBuiltIn* ExpressionPointer::functionBuiltIn() const {
+    if (type == FUNCTION_BUILT_IN)
+        return built_in_functions.at(index).get();
+    return nullptr;
+}
+const FunctionDictionary* ExpressionPointer::functionDictionary() const {
+    if (type == FUNCTION_DICTIONARY)
+        return dictionary_functions.at(index).get();
+    return nullptr;
+}
+const FunctionList* ExpressionPointer::functionList() const {
+    if (type == FUNCTION_LIST)
+        return list_functions.at(index).get();
+    return nullptr;
+}
+const List* ExpressionPointer::list() const {
+    if (type == LIST)
+        return lists.at(index).get();
+    return nullptr;
+}
+const LookupChild* ExpressionPointer::lookupChild() const {
+    if (type == LOOKUP_CHILD)
+        return child_lookups.at(index).get();
+    return nullptr;
+}
+const LookupFunction* ExpressionPointer::lookupFunction() const {
+    if (type == LOOKUP_FUNCTION)
+        return function_lookups.at(index).get();
+    return nullptr;
+}
+const LookupSymbol* ExpressionPointer::lookupSymbol() const {
+    if (type == LOOKUP_SYMBOL)
+        return symbol_lookups.at(index).get();
+    return nullptr;
+}
+const Name* ExpressionPointer::name() const {
+    if (type == NAME)
+        return names.at(index).get();
+    return nullptr;
+}
+const String* ExpressionPointer::string() const {
+    if (type == STRING)
+        return strings.at(index).get();
+    return nullptr;
+}
+
 const Expression* ExpressionPointer::operator -> () const {
     return get();
 }

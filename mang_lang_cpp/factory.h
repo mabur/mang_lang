@@ -49,6 +49,20 @@ struct ExpressionPointer {
     const Expression* get() const;
     const Expression* operator -> () const;
     const DictionaryElement* getDictionaryElement() const;
+    const Number* number() const;
+    const Character* character() const;
+    const Conditional* conditional() const;
+    const Dictionary* dictionary() const;
+    const Function* function() const;
+    const FunctionBuiltIn* functionBuiltIn() const;
+    const FunctionDictionary* functionDictionary() const;
+    const FunctionList* functionList() const;
+    const List* list() const;
+    const LookupChild* lookupChild() const;
+    const LookupFunction* lookupFunction() const;
+    const LookupSymbol* lookupSymbol() const;
+    const Name* name() const;
+    const String* string() const;
 };
 
 ExpressionPointer makeNumber(std::shared_ptr<const Number> expression);
