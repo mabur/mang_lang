@@ -26,7 +26,8 @@ ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, cons
 ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {
     for (const auto& element : dictionary->elements) {
         if (element.get()) {
-            auto expression = lookupDictionaryElement(element.getDictionaryElement(), name);
+            auto expression = lookupDictionaryElement(
+                element.dictionaryElement(), name);
             if (expression) {
                 return expression;
             }

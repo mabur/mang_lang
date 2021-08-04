@@ -141,7 +141,7 @@ const Expression* ExpressionPointer::get() const {
     throw std::runtime_error{"Did not recognize expression to create" + std::to_string(type)};
 }
 
-const DictionaryElement* ExpressionPointer::getDictionaryElement() const {
+const DictionaryElement* ExpressionPointer::dictionaryElement() const {
     if (type == NAMED_ELEMENT || type == WHILE_ELEMENT || type == END_ELEMENT)
         return dictionary_elements.at(index).get();
     return nullptr;

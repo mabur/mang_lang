@@ -48,7 +48,7 @@ struct ExpressionPointer {
     operator bool () const;
     const Expression* get() const;
     const Expression* operator -> () const;
-    const DictionaryElement* getDictionaryElement() const;
+    const DictionaryElement* dictionaryElement() const;
     const Number* number() const;
     const Character* character() const;
     const Conditional* conditional() const;
