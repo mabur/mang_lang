@@ -199,22 +199,22 @@ ExpressionPointer evaluateString(
 }
 
 ExpressionPointer evaluate(
-    const ExpressionPointer& expression_smart,
+    const ExpressionPointer& expression,
     const ExpressionPointer& environment,
     std::ostream& log
 ) {
-    const auto type = expression_smart.type;
-    if (type == CHARACTER) {return evaluateCharacter(*expression_smart.character(), environment, log);}
-    if (type == CONDITIONAL) {return evaluateConditional(*expression_smart.conditional(), environment, log);}
-    if (type == DICTIONARY) {return evaluateDictionary(*expression_smart.dictionary(), environment, log);}
-    if (type == FUNCTION) {return evaluateFunction(*expression_smart.function(), environment, log);}
-    if (type == FUNCTION_DICTIONARY) {return evaluateFunctionDictionary(*expression_smart.functionDictionary(), environment, log);}
-    if (type == FUNCTION_LIST) {return evaluateFunctionList(*expression_smart.functionList(), environment, log);}
-    if (type == LIST) {return evaluateList(expression_smart, environment, log);}
-    if (type == LOOKUP_CHILD) {return evaluateLookupChild(*expression_smart.lookupChild(), environment, log);}
-    if (type == LOOKUP_FUNCTION) {return evaluateLookupFunction(*expression_smart.lookupFunction(), environment, log);}
-    if (type == LOOKUP_SYMBOL) {return evaluateLookupSymbol(*expression_smart.lookupSymbol(), environment, log);}
-    if (type == NUMBER) {return evaluateNumber(*expression_smart.number(), environment, log);}
-    if (type == STRING) {return evaluateString(expression_smart, environment, log);}
+    const auto type = expression.type;
+    if (type == CHARACTER) return evaluateCharacter(*expression.character(), environment, log);
+    if (type == CONDITIONAL) return evaluateConditional(*expression.conditional(), environment, log);
+    if (type == DICTIONARY) return evaluateDictionary(*expression.dictionary(), environment, log);
+    if (type == FUNCTION) return evaluateFunction(*expression.function(), environment, log);
+    if (type == FUNCTION_DICTIONARY) return evaluateFunctionDictionary(*expression.functionDictionary(), environment, log);
+    if (type == FUNCTION_LIST) return evaluateFunctionList(*expression.functionList(), environment, log);
+    if (type == LIST) return evaluateList(expression, environment, log);
+    if (type == LOOKUP_CHILD) return evaluateLookupChild(*expression.lookupChild(), environment, log);
+    if (type == LOOKUP_FUNCTION) return evaluateLookupFunction(*expression.lookupFunction(), environment, log);
+    if (type == LOOKUP_SYMBOL) return evaluateLookupSymbol(*expression.lookupSymbol(), environment, log);
+    if (type == NUMBER) return evaluateNumber(*expression.number(), environment, log);
+    if (type == STRING) return evaluateString(expression, environment, log);
     throw std::runtime_error{"Did not recognize expression to evaluate"};
 }
