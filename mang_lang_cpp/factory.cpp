@@ -141,67 +141,79 @@ const Expression* ExpressionPointer::get() const {
     throw std::runtime_error{"Did not recognize expression to create" + std::to_string(type)};
 }
 
-const DictionaryElement* ExpressionPointer::dictionaryElement() const {
+DictionaryElement ExpressionPointer::dictionaryElement() const {
     assert(type == NAMED_ELEMENT || type == WHILE_ELEMENT || type == END_ELEMENT);
-    return dictionary_elements.at(index).get();
+    return *dictionary_elements.at(index).get();
 }
 
-const Number* ExpressionPointer::number() const {
+Number ExpressionPointer::number() const {
     assert(type == NUMBER);
-    return numbers.at(index).get();
+    return *numbers.at(index).get();
 }
 
-const Character* ExpressionPointer::character() const {
+Character ExpressionPointer::character() const {
     assert(type == CHARACTER);
-    return characters.at(index).get();
+    return *characters.at(index).get();
 }
-const Conditional* ExpressionPointer::conditional() const {
+
+Conditional ExpressionPointer::conditional() const {
     assert(type == CONDITIONAL);
-    return conditionals.at(index).get();
+    return *conditionals.at(index).get();
 }
-const Dictionary* ExpressionPointer::dictionary() const {
+
+Dictionary ExpressionPointer::dictionary() const {
     assert(type == DICTIONARY);
-    return dictionaries.at(index).get();
+    return *dictionaries.at(index).get();
 }
-const Function* ExpressionPointer::function() const {
+
+Function ExpressionPointer::function() const {
     assert(type == FUNCTION);
-    return functions.at(index).get();
+    return *functions.at(index).get();
 }
-const FunctionBuiltIn* ExpressionPointer::functionBuiltIn() const {
+
+FunctionBuiltIn ExpressionPointer::functionBuiltIn() const {
     assert(type == FUNCTION_BUILT_IN);
-    return built_in_functions.at(index).get();
+    return *built_in_functions.at(index).get();
 }
-const FunctionDictionary* ExpressionPointer::functionDictionary() const {
+
+FunctionDictionary ExpressionPointer::functionDictionary() const {
     assert(type == FUNCTION_DICTIONARY);
-    return dictionary_functions.at(index).get();
+    return *dictionary_functions.at(index).get();
 }
-const FunctionList* ExpressionPointer::functionList() const {
+
+FunctionList ExpressionPointer::functionList() const {
     assert(type == FUNCTION_LIST);
-    return list_functions.at(index).get();
+    return *list_functions.at(index).get();
 }
-const List* ExpressionPointer::list() const {
+
+List ExpressionPointer::list() const {
     assert(type == LIST);
-    return lists.at(index).get();
+    return *lists.at(index).get();
 }
-const LookupChild* ExpressionPointer::lookupChild() const {
+
+LookupChild ExpressionPointer::lookupChild() const {
     assert(type == LOOKUP_CHILD);
-    return child_lookups.at(index).get();
+    return *child_lookups.at(index).get();
 }
-const LookupFunction* ExpressionPointer::lookupFunction() const {
+
+LookupFunction ExpressionPointer::lookupFunction() const {
     assert(type == LOOKUP_FUNCTION);
-    return function_lookups.at(index).get();
+    return *function_lookups.at(index).get();
 }
-const LookupSymbol* ExpressionPointer::lookupSymbol() const {
+
+LookupSymbol ExpressionPointer::lookupSymbol() const {
     assert(type == LOOKUP_SYMBOL);
-    return symbol_lookups.at(index).get();
+    return *symbol_lookups.at(index).get();
 }
-const Name* ExpressionPointer::name() const {
+
+Name ExpressionPointer::name() const {
     assert(type == NAME);
-    return names.at(index).get();
+    return *names.at(index).get();
 }
-const String* ExpressionPointer::string() const {
+
+String ExpressionPointer::string() const {
     assert(type == STRING);
-    return strings.at(index).get();
+    return *strings.at(index).get();
 }
 
 const Expression* ExpressionPointer::operator -> () const {

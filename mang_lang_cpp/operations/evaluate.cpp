@@ -44,7 +44,7 @@ ExpressionPointer evaluateConditional(
 bool compareNameIndex(
     const ExpressionPointer& a, const ExpressionPointer& b
 ) {
-    return a.dictionaryElement()->name_index_ < b.dictionaryElement()->name_index_;
+    return a.dictionaryElement().name_index_ < b.dictionaryElement().name_index_;
 }
 
 size_t numNames(const DictionaryElements& elements) {
@@ -54,7 +54,7 @@ size_t numNames(const DictionaryElements& elements) {
     const auto max_element = std::max_element(
         elements.begin(), elements.end(), compareNameIndex
     );
-    return 1 + max_element->dictionaryElement()->name_index_;
+    return 1 + max_element->dictionaryElement().name_index_;
 }
 
 ExpressionPointer evaluateDictionary(
@@ -72,29 +72,29 @@ ExpressionPointer evaluateDictionary(
         const auto type = dictionary.elements[i].type;
         const auto element = dictionary.elements[i].dictionaryElement();
         if (type == NAMED_ELEMENT) {
-            result->elements.at(element->name_index_) = makeTypedDictionaryElement(
+            result->elements.at(element.name_index_) = makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
-                    element->range,
+                    element.range,
                     wrapped_result,
-                    element->name,
-                    evaluate(element->expression, wrapped_result, log),
+                    element.name,
+                    evaluate(element.expression, wrapped_result, log),
                     1,
                     0,
-                    element->name_index_
+                    element.name_index_
                 ),
                 NAMED_ELEMENT
             );
             i += 1;
         }
         else if (type == WHILE_ELEMENT) {
-            if (boolean(evaluate(element->expression, wrapped_result, log))) {
+            if (boolean(evaluate(element.expression, wrapped_result, log))) {
                 i += 1;
             } else {
-                i = element->end_index_ + 1;
+                i = element.end_index_ + 1;
             }
         }
         else if (type == END_ELEMENT) {
-            i = element->while_index_;
+            i = element.while_index_;
         }
     }
     log << serialize(wrapped_result) << std::endl;
@@ -205,17 +205,17 @@ ExpressionPointer evaluate(
 ) {
     const auto type = expression.type;
     switch (type) {
-        case CHARACTER: return evaluateCharacter(*expression.character(), environment, log);
-        case CONDITIONAL: return evaluateConditional(*expression.conditional(), environment, log);
-        case DICTIONARY: return evaluateDictionary(*expression.dictionary(), environment, log);
-        case FUNCTION: return evaluateFunction(*expression.function(), environment, log);
-        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(*expression.functionDictionary(), environment, log);
-        case FUNCTION_LIST: return evaluateFunctionList(*expression.functionList(), environment, log);
+        case CHARACTER: return evaluateCharacter(expression.character(), environment, log);
+        case CONDITIONAL: return evaluateConditional(expression.conditional(), environment, log);
+        case DICTIONARY: return evaluateDictionary(expression.dictionary(), environment, log);
+        case FUNCTION: return evaluateFunction(expression.function(), environment, log);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression.functionDictionary(), environment, log);
+        case FUNCTION_LIST: return evaluateFunctionList(expression.functionList(), environment, log);
         case LIST: return evaluateList(expression, environment, log);
-        case LOOKUP_CHILD: return evaluateLookupChild(*expression.lookupChild(), environment, log);
-        case LOOKUP_FUNCTION: return evaluateLookupFunction(*expression.lookupFunction(), environment, log);
-        case LOOKUP_SYMBOL: return evaluateLookupSymbol(*expression.lookupSymbol(), environment, log);
-        case NUMBER: return evaluateNumber(*expression.number(), environment, log);
+        case LOOKUP_CHILD: return evaluateLookupChild(expression.lookupChild(), environment, log);
+        case LOOKUP_FUNCTION: return evaluateLookupFunction(expression.lookupFunction(), environment, log);
+        case LOOKUP_SYMBOL: return evaluateLookupSymbol(expression.lookupSymbol(), environment, log);
+        case NUMBER: return evaluateNumber(expression.number(), environment, log);
         case STRING: return evaluateString(expression, environment, log);
         default: throw std::runtime_error{"Did not recognize expression to evaluate"};
     }

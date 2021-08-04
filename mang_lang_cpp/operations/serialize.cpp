@@ -35,12 +35,12 @@ std::string serializeConditional(const Conditional& conditional) {
 
 std::string serializeNamedElement(const ExpressionPointer& element) {
     return
-        serializeName(*element.dictionaryElement()->name) + '=' +
-        serialize(element.dictionaryElement()->expression) + ' ';
+        serializeName(*element.dictionaryElement().name) + '=' +
+        serialize(element.dictionaryElement().expression) + ' ';
 }
 
 std::string serializeWhileElement(const ExpressionPointer& element) {
-    return "while " + serialize(element.dictionaryElement()->expression) + ' ';
+    return "while " + serialize(element.dictionaryElement().expression) + ' ';
 }
 
 std::string serializeEndElement(const ExpressionPointer&) {

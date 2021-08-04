@@ -16,9 +16,9 @@ ExpressionPointer lookupExpression(const Expression* expression, const std::stri
     return lookup(expression->environment, name);
 }
 
-ExpressionPointer lookupDictionaryElement(const DictionaryElement* element, const std::string& name) {
-    if (element->name->value == name) {
-        return element->expression;
+ExpressionPointer lookupDictionaryElement(const DictionaryElement& element, const std::string& name) {
+    if (element.name->value == name) {
+        return element.expression;
     }
     return ExpressionPointer{};
 }
@@ -63,7 +63,7 @@ ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::s
         return lookupDictionary(dynamic_cast<const Dictionary *>(expression), name);
     }
     if (type == NAMED_ELEMENT) {
-        return lookupDictionaryElement(dynamic_cast<const DictionaryElement *>(expression), name);
+        return lookupDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression), name);
     }
     if (type == LIST) {
         return lookupList(expression_smart, name);

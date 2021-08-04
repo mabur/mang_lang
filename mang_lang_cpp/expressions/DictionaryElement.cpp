@@ -73,7 +73,7 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto name = elements[i].dictionaryElement()->name->value;
+            const auto name = elements[i].dictionaryElement().name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
@@ -103,10 +103,10 @@ DictionaryElements setContext(const DictionaryElements& elements) {
         result.push_back(
             makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
-                    element->range,
-                    element->environment,
-                    element->name,
-                    element->expression,
+                    element.range,
+                    element.environment,
+                    element.name,
+                    element.expression,
                     while_indices[i],
                     end_indices[i],
                     name_indices[i]
