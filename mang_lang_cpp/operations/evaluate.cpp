@@ -204,17 +204,19 @@ ExpressionPointer evaluate(
     std::ostream& log
 ) {
     const auto type = expression.type;
-    if (type == CHARACTER) return evaluateCharacter(*expression.character(), environment, log);
-    if (type == CONDITIONAL) return evaluateConditional(*expression.conditional(), environment, log);
-    if (type == DICTIONARY) return evaluateDictionary(*expression.dictionary(), environment, log);
-    if (type == FUNCTION) return evaluateFunction(*expression.function(), environment, log);
-    if (type == FUNCTION_DICTIONARY) return evaluateFunctionDictionary(*expression.functionDictionary(), environment, log);
-    if (type == FUNCTION_LIST) return evaluateFunctionList(*expression.functionList(), environment, log);
-    if (type == LIST) return evaluateList(expression, environment, log);
-    if (type == LOOKUP_CHILD) return evaluateLookupChild(*expression.lookupChild(), environment, log);
-    if (type == LOOKUP_FUNCTION) return evaluateLookupFunction(*expression.lookupFunction(), environment, log);
-    if (type == LOOKUP_SYMBOL) return evaluateLookupSymbol(*expression.lookupSymbol(), environment, log);
-    if (type == NUMBER) return evaluateNumber(*expression.number(), environment, log);
-    if (type == STRING) return evaluateString(expression, environment, log);
-    throw std::runtime_error{"Did not recognize expression to evaluate"};
+    switch (type) {
+        case CHARACTER: return evaluateCharacter(*expression.character(), environment, log);
+        case CONDITIONAL: return evaluateConditional(*expression.conditional(), environment, log);
+        case DICTIONARY: return evaluateDictionary(*expression.dictionary(), environment, log);
+        case FUNCTION: return evaluateFunction(*expression.function(), environment, log);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(*expression.functionDictionary(), environment, log);
+        case FUNCTION_LIST: return evaluateFunctionList(*expression.functionList(), environment, log);
+        case LIST: return evaluateList(expression, environment, log);
+        case LOOKUP_CHILD: return evaluateLookupChild(*expression.lookupChild(), environment, log);
+        case LOOKUP_FUNCTION: return evaluateLookupFunction(*expression.lookupFunction(), environment, log);
+        case LOOKUP_SYMBOL: return evaluateLookupSymbol(*expression.lookupSymbol(), environment, log);
+        case NUMBER: return evaluateNumber(*expression.number(), environment, log);
+        case STRING: return evaluateString(expression, environment, log);
+        default: throw std::runtime_error{"Did not recognize expression to evaluate"};
+    }
 }
