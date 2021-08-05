@@ -3,11 +3,9 @@
 #include "../expressions/Expression.h"
 #include "../expressions/Number.h"
 
-double number(const ExpressionPointer& expression_smart) {
-    const auto type = expression_smart.type;
-    const auto expression = expression_smart.get();
-    if (type == NUMBER) {
-        return dynamic_cast<const Number *>(expression)->value;
+double number(const ExpressionPointer& expression) {
+    switch (expression.type) {
+        case NUMBER: return expression.number().value;
+        default: throw std::runtime_error{"Expected number"};
     }
-    throw std::runtime_error{"Expected number"};
 }
