@@ -17,13 +17,10 @@ ExpressionPointer prependString(const ExpressionPointer& string, ExpressionPoint
     return makeString(std::make_shared<String>(string->range, ExpressionPointer{}, new_list));
 }
 
-ExpressionPointer prepend(const ExpressionPointer& expression_smart, ExpressionPointer item) {
-    const auto type = expression_smart.type;
-    if (type == LIST) {
-        return prependList(expression_smart, item);
+ExpressionPointer prepend(const ExpressionPointer& expression, ExpressionPointer item) {
+    switch (expression.type) {
+        case LIST: return prependList(expression, item);
+        case STRING: return prependString(expression, item);
+        default: throw std::runtime_error{"Expected list"};
     }
-    if (type == STRING) {
-        return prependString(expression_smart, item);
-    }
-    throw std::runtime_error{"Expected list"};
 }
