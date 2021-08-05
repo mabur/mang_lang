@@ -3,10 +3,9 @@
 #include "../expressions/Character.h"
 #include "../expressions/Expression.h"
 
-char character(const ExpressionPointer& expression_smart) {
-    const auto type = expression_smart.type;
-    switch (type) {
-        case CHARACTER: return expression_smart.character().value;
+char character(const ExpressionPointer& expression) {
+    switch (expression.type) {
+        case CHARACTER: return expression.character().value;
         default: throw std::runtime_error{"Expected character"};
     }
 }
