@@ -5,9 +5,8 @@
 
 char character(const ExpressionPointer& expression_smart) {
     const auto type = expression_smart.type;
-    const auto expression = expression_smart.get();
-    if (type == CHARACTER) {
-        return dynamic_cast<const Character *>(expression)->value;
+    switch (type) {
+        case CHARACTER: return expression_smart.character().value;
+        default: throw std::runtime_error{"Expected character"};
     }
-    throw std::runtime_error{"Expected character"};
 }
