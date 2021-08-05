@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-const InternalList& list(const ExpressionPointer& expression);
+InternalList list(const ExpressionPointer& expression);
