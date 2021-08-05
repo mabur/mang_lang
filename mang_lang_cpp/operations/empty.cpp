@@ -5,14 +5,10 @@
 
 #include "../factory.h"
 
-ExpressionPointer empty(const ExpressionPointer& expression_smart) {
-    const auto type = expression_smart.type;
-    const auto expression = expression_smart.get();
-    if (type == LIST) {
-        return makeList(std::make_shared<List>(expression->range, ExpressionPointer{}, InternalList{}));
+ExpressionPointer empty(const ExpressionPointer& expression) {
+    switch (expression.type) {
+        case LIST: return makeList(std::make_shared<List>(expression->range, ExpressionPointer{}, InternalList{}));
+        case STRING: return makeString(std::make_shared<String>(expression->range, ExpressionPointer{}, InternalList{}));
+        default: throw std::runtime_error{"Expected list"};
     }
-    if (type == STRING) {
-        return makeString(std::make_shared<String>(expression->range, ExpressionPointer{}, InternalList{}));
-    }
-    throw std::runtime_error{"Expected list"};
 }
