@@ -12,15 +12,15 @@
 #include "../factory.h"
 
 ExpressionPointer applyFunction(
-    const Function* function, ExpressionPointer input, std::ostream& log
+    const Function& function, ExpressionPointer input, std::ostream& log
 ) {
 
     const auto elements = DictionaryElements{
         makeTypedDictionaryElement(
             std::make_shared<DictionaryElement>(
-                function->range,
+                function.range,
                 ExpressionPointer{},
-                function->input_name,
+                function.input_name,
                 input,
                 1,
                 0,
@@ -30,25 +30,25 @@ ExpressionPointer applyFunction(
         )
     };
     const auto middle = makeDictionary(
-        std::make_shared<Dictionary>(CodeRange{}, function->environment, elements)
+        std::make_shared<Dictionary>(CodeRange{}, function.environment, elements)
     );
-    return evaluate(function->body, middle, log);
+    return evaluate(function.body, middle, log);
 }
 
 ExpressionPointer applyFunctionBuiltIn(
-    const FunctionBuiltIn* function_built_in, ExpressionPointer input, std::ostream&
+    const FunctionBuiltIn& function_built_in, ExpressionPointer input, std::ostream&
 ) {
-    return function_built_in->function(input);
+    return function_built_in.function(input);
 }
 
 ExpressionPointer applyFunctionDictionary(
-    const FunctionDictionary* function_dictionary, ExpressionPointer input, std::ostream& log
+    const FunctionDictionary& function_dictionary, ExpressionPointer input, std::ostream& log
 ) {
     // TODO: pass along environment.
-    return evaluate(function_dictionary->body, input, log);
+    return evaluate(function_dictionary.body, input, log);
 }
 
-ExpressionPointer applyFunctionList(const FunctionList* function_list, ExpressionPointer input, std::ostream& log
+ExpressionPointer applyFunctionList(const FunctionList& function_list, ExpressionPointer input, std::ostream& log
 ) {
     auto elements = DictionaryElements{};
     auto i = 0;
@@ -56,9 +56,9 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
         elements.push_back(
             makeTypedDictionaryElement(
                 std::make_shared<DictionaryElement>(
-                    function_list->range,
+                    function_list.range,
                     ExpressionPointer{},
-                    function_list->input_names[i],
+                    function_list.input_names[i],
                     list->first,
                     1,
                     0,
@@ -70,26 +70,25 @@ ExpressionPointer applyFunctionList(const FunctionList* function_list, Expressio
     }
     const auto middle = makeDictionary(
         std::make_shared<Dictionary>(
-            function_list->range, function_list->environment, elements
+            function_list.range, function_list.environment, elements
         )
     );
-    return evaluate(function_list->body, middle, log);
+    return evaluate(function_list.body, middle, log);
 }
 
 ExpressionPointer apply(const ExpressionPointer& expression_smart, ExpressionPointer input, std::ostream& log) {
     const auto type = expression_smart.type;
-    const auto expression = expression_smart.get();
     if (type == FUNCTION) {
-        return applyFunction(dynamic_cast<const Function *>(expression), input, log);
+        return applyFunction(expression_smart.function(), input, log);
     }
     if (type == FUNCTION_BUILT_IN) {
-        return applyFunctionBuiltIn(dynamic_cast<const FunctionBuiltIn *>(expression), input, log);
+        return applyFunctionBuiltIn(expression_smart.functionBuiltIn(), input, log);
     }
     if (type == FUNCTION_DICTIONARY) {
-        return applyFunctionDictionary(dynamic_cast<const FunctionDictionary *>(expression), input, log);
+        return applyFunctionDictionary(expression_smart.functionDictionary(), input, log);
     }
     if (type == FUNCTION_LIST) {
-        return applyFunctionList(dynamic_cast<const FunctionList *>(expression), input, log);
+        return applyFunctionList(expression_smart.functionList(), input, log);
     }
     throw std::runtime_error{"Expected function"};
 }
