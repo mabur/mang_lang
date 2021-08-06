@@ -77,18 +77,11 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
 }
 
 ExpressionPointer apply(const ExpressionPointer& expression_smart, ExpressionPointer input, std::ostream& log) {
-    const auto type = expression_smart.type;
-    if (type == FUNCTION) {
-        return applyFunction(expression_smart.function(), input, log);
+    switch (expression_smart.type) {
+        case FUNCTION: return applyFunction(expression_smart.function(), input, log);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(expression_smart.functionBuiltIn(), input, log);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(expression_smart.functionDictionary(), input, log);
+        case FUNCTION_LIST: return applyFunctionList(expression_smart.functionList(), input, log);
+        default: throw std::runtime_error{"Expected function"};
     }
-    if (type == FUNCTION_BUILT_IN) {
-        return applyFunctionBuiltIn(expression_smart.functionBuiltIn(), input, log);
-    }
-    if (type == FUNCTION_DICTIONARY) {
-        return applyFunctionDictionary(expression_smart.functionDictionary(), input, log);
-    }
-    if (type == FUNCTION_LIST) {
-        return applyFunctionList(expression_smart.functionList(), input, log);
-    }
-    throw std::runtime_error{"Expected function"};
 }
