@@ -4,10 +4,6 @@
 #include "../expressions/List.h"
 #include "../expressions/String.h"
 
-#include "../factory.h"
-
-#include "list.h"
-
 ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element) {
@@ -20,22 +16,22 @@ ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::stri
     return lookup(dictionary.environment, name);
 }
 
-ExpressionPointer lookupList(ExpressionPointer list, const std::string& name) {
+ExpressionPointer lookupList(const List& list, const std::string& name) {
     if (name == "first") {
-        return ::list(list)->first;
+        return list.elements->first;
     }
     if (name == "rest") {
-        return makeList(std::make_shared<List>(list->range, ExpressionPointer{}, ::list(list)->rest));
+        return makeList(std::make_shared<List>(list.range, ExpressionPointer{}, list.elements->rest));
     }
     throw ParseException("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookupString(ExpressionPointer list, const std::string& name) {
+ExpressionPointer lookupString(const String& string, const std::string& name) {
     if (name == "first") {
-        return ::list(list)->first;
+        return string.elements->first;
     }
     if (name == "rest") {
-        return makeString(std::make_shared<String>(list->range, ExpressionPointer{}, ::list(list)->rest));
+        return makeString(std::make_shared<String>(string.range, ExpressionPointer{}, string.elements->rest));
     }
     throw ParseException("List does not contain symbol " + name);
 }
@@ -43,8 +39,8 @@ ExpressionPointer lookupString(ExpressionPointer list, const std::string& name) 
 ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) {
     switch(expression.type) {
         case DICTIONARY: return lookupDictionary(expression.dictionary(), name);
-        case LIST: return lookupList(expression, name);
-        case STRING: return lookupString(expression, name);
+        case LIST: return lookupList(expression.list(), name);
+        case STRING: return lookupString(expression.string(), name);
         case EMPTY: throw ParseException("Cannot find symbol " + name);
         default: return lookup(expression->environment, name);
     }
