@@ -8,12 +8,12 @@
 
 #include "list.h"
 
-ExpressionPointer lookupExpression(const Expression* expression, const std::string& name) {
-    if (!expression->environment) {
+ExpressionPointer lookupExpression(const Expression& expression, const std::string& name) {
+    if (!expression.environment) {
         // TODO: define evaluation exception.
         throw ParseException("Cannot find symbol " + name);
     }
-    return lookup(expression->environment, name);
+    return lookup(expression.environment, name);
 }
 
 ExpressionPointer lookupDictionaryElement(const DictionaryElement& element, const std::string& name) {
@@ -23,8 +23,8 @@ ExpressionPointer lookupDictionaryElement(const DictionaryElement& element, cons
     return ExpressionPointer{};
 }
 
-ExpressionPointer lookupDictionary(const Dictionary* dictionary, const std::string& name) {
-    for (const auto& element : dictionary->elements) {
+ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
+    for (const auto& element : dictionary.elements) {
         if (element.get()) {
             auto expression = lookupDictionaryElement(
                 element.dictionaryElement(), name);
@@ -60,7 +60,7 @@ ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::s
     const auto type = expression_smart.type;
     const auto expression = expression_smart.get();
     if (type == DICTIONARY) {
-        return lookupDictionary(dynamic_cast<const Dictionary *>(expression), name);
+        return lookupDictionary(*dynamic_cast<const Dictionary *>(expression), name);
     }
     if (type == NAMED_ELEMENT) {
         return lookupDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression), name);
@@ -71,5 +71,5 @@ ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::s
     if (type == STRING) {
         return lookupString(expression_smart, name);
     }
-    return lookupExpression(expression, name);
+    return lookupExpression(*expression, name);
 }
