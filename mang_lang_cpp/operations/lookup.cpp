@@ -8,20 +8,12 @@
 
 #include "list.h"
 
-ExpressionPointer lookupDictionaryElement(const DictionaryElement& element, const std::string& name) {
-    if (element.name->value == name) {
-        return element.expression;
-    }
-    return ExpressionPointer{};
-}
-
 ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element.get()) {
-            auto expression = lookupDictionaryElement(
-                element.dictionaryElement(), name);
-            if (expression) {
-                return expression;
+            const auto dictionary_element = element.dictionaryElement();
+            if (dictionary_element.name->value == name) {
+                return dictionary_element.expression;
             }
         }
     }
