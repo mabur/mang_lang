@@ -10,7 +10,7 @@
 
 ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
-        if (element.get()) {
+        if (element) {
             const auto dictionary_element = element.dictionaryElement();
             if (dictionary_element.name->value == name) {
                 return dictionary_element.expression;
