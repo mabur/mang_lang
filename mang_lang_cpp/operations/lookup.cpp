@@ -51,7 +51,6 @@ ExpressionPointer lookupString(ExpressionPointer list, const std::string& name) 
 ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) {
     switch(expression.type) {
         case DICTIONARY: return lookupDictionary(expression.dictionary(), name);
-        case NAMED_ELEMENT: return lookupDictionaryElement(expression.dictionaryElement(), name);
         case LIST: return lookupList(expression, name);
         case STRING: return lookupString(expression, name);
         case EMPTY: throw ParseException("Cannot find symbol " + name);
