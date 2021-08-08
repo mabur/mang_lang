@@ -137,14 +137,14 @@ ExpressionPointer evaluateFunctionList(
 }
 
 ExpressionPointer evaluateList(
-    ExpressionPointer list, ExpressionPointer environment, std::ostream& log
+    const List& list, ExpressionPointer environment, std::ostream& log
 ) {
     const auto operation = [&](ExpressionPointer expression) {
         return evaluate(expression, environment, log);
     };
-    auto evaluated_elements = map(::list(list), operation);
+    auto evaluated_elements = map(list.elements, operation);
     auto result = makeList(std::make_shared<List>(
-        list->range, environment, std::move(evaluated_elements)));
+        list.range, environment, std::move(evaluated_elements)));
     log << serialize(result) << std::endl;
     return result;
 }
@@ -189,10 +189,10 @@ ExpressionPointer evaluateNumber(
 }
 
 ExpressionPointer evaluateString(
-    ExpressionPointer string, ExpressionPointer environment, std::ostream& log
+    const String& string, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeString(
-        std::make_shared<String>(string->range, environment, list(string))
+        std::make_shared<String>(string.range, environment, string.elements)
     );
     log << serialize(result) << std::endl;
     return result;
@@ -211,12 +211,12 @@ ExpressionPointer evaluate(
         case FUNCTION: return evaluateFunction(expression.function(), environment, log);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression.functionDictionary(), environment, log);
         case FUNCTION_LIST: return evaluateFunctionList(expression.functionList(), environment, log);
-        case LIST: return evaluateList(expression, environment, log);
+        case LIST: return evaluateList(expression.list(), environment, log);
         case LOOKUP_CHILD: return evaluateLookupChild(expression.lookupChild(), environment, log);
         case LOOKUP_FUNCTION: return evaluateLookupFunction(expression.lookupFunction(), environment, log);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(expression.lookupSymbol(), environment, log);
         case NUMBER: return evaluateNumber(expression.number(), environment, log);
-        case STRING: return evaluateString(expression, environment, log);
+        case STRING: return evaluateString(expression.string(), environment, log);
         default: throw std::runtime_error{"Did not recognize expression to evaluate"};
     }
 }
