@@ -14,7 +14,7 @@ ExpressionPointer makeNumber(double x) {
     return makeNumber(std::make_shared<Number>(CodeRange{}, ExpressionPointer{}, x));
 }
 
-ExpressionPointer equal(const ExpressionPointer& in) {
+ExpressionPointer equal(ExpressionPointer in) {
     const auto& elements = list(in);
     const auto& left = first(elements);
     const auto& right = second(elements);
@@ -22,7 +22,7 @@ ExpressionPointer equal(const ExpressionPointer& in) {
     return makeNumber(value);
 }
 
-ExpressionPointer unequal(const ExpressionPointer& in) {
+ExpressionPointer unequal(ExpressionPointer in) {
     const auto& elements = list(in);
     const auto& left = first(elements);
     const auto& right = second(elements);

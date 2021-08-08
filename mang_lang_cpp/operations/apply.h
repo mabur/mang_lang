@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-ExpressionPointer apply(const ExpressionPointer& expression, ExpressionPointer input, std::ostream& log);
+ExpressionPointer apply(ExpressionPointer expression, ExpressionPointer input, std::ostream& log);

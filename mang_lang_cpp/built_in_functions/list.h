@@ -8,11 +8,11 @@
 
 namespace list_functions {
 
-ExpressionPointer empty(const ExpressionPointer& in) {
+ExpressionPointer empty(ExpressionPointer in) {
     return ::empty(in);
 }
 
-ExpressionPointer prepend(const ExpressionPointer& in) {
+ExpressionPointer prepend(ExpressionPointer in) {
     const auto& elements = ::list(in);
     const auto& item = first(elements);
     const auto& list = second(elements);

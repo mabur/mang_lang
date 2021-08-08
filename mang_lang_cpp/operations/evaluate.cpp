@@ -22,7 +22,7 @@
 #include "serialize.h"
 
 ExpressionPointer evaluateCharacter(
-    const Character& character, const ExpressionPointer& environment, std::ostream& log
+    const Character& character, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeCharacter(
         std::make_shared<Character>(character.range, environment, character.value)
@@ -32,7 +32,7 @@ ExpressionPointer evaluateCharacter(
 }
 
 ExpressionPointer evaluateConditional(
-    const Conditional& conditional, const ExpressionPointer& environment, std::ostream& log
+    const Conditional& conditional, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = boolean(evaluate(conditional.expression_if, environment, log)) ?
         evaluate(conditional.expression_then, environment, log) :
@@ -42,7 +42,7 @@ ExpressionPointer evaluateConditional(
 }
 
 bool compareNameIndex(
-    const ExpressionPointer& a, const ExpressionPointer& b
+    ExpressionPointer a, ExpressionPointer b
 ) {
     return a.dictionaryElement().name_index_ < b.dictionaryElement().name_index_;
 }
@@ -58,7 +58,7 @@ size_t numNames(const DictionaryElements& elements) {
 }
 
 ExpressionPointer evaluateDictionary(
-    const Dictionary& dictionary, const ExpressionPointer& environment, std::ostream& log
+    const Dictionary& dictionary, ExpressionPointer environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
     const auto result = std::make_shared<Dictionary>(
@@ -102,7 +102,7 @@ ExpressionPointer evaluateDictionary(
 }
 
 ExpressionPointer evaluateFunction(
-    const Function& function, const ExpressionPointer& environment, std::ostream& log
+    const Function& function, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeFunction(std::make_shared<Function>(
         function.range, environment, function.input_name, function.body
@@ -112,7 +112,7 @@ ExpressionPointer evaluateFunction(
 }
 
 ExpressionPointer evaluateFunctionDictionary(
-    const FunctionDictionary& function_dictionary, const ExpressionPointer& environment, std::ostream& log
+    const FunctionDictionary& function_dictionary, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeFunctionDictionary(
         std::make_shared<FunctionDictionary>(
@@ -127,7 +127,7 @@ ExpressionPointer evaluateFunctionDictionary(
 }
 
 ExpressionPointer evaluateFunctionList(
-    const FunctionList& function_list, const ExpressionPointer& environment, std::ostream& log
+    const FunctionList& function_list, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeFunctionList(std::make_shared<FunctionList>(
         function_list.range, environment, function_list.input_names, function_list.body
@@ -137,9 +137,9 @@ ExpressionPointer evaluateFunctionList(
 }
 
 ExpressionPointer evaluateList(
-    const ExpressionPointer& list, const ExpressionPointer& environment, std::ostream& log
+    ExpressionPointer list, ExpressionPointer environment, std::ostream& log
 ) {
-    const auto operation = [&](const ExpressionPointer& expression) {
+    const auto operation = [&](ExpressionPointer expression) {
         return evaluate(expression, environment, log);
     };
     auto evaluated_elements = map(::list(list), operation);
@@ -150,7 +150,7 @@ ExpressionPointer evaluateList(
 }
 
 ExpressionPointer evaluateLookupChild(
-    const LookupChild& lookup_child, const ExpressionPointer& environment, std::ostream& log
+    const LookupChild& lookup_child, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = lookup(
         evaluate(lookup_child.child, environment, log),
@@ -160,7 +160,7 @@ ExpressionPointer evaluateLookupChild(
 }
 
 ExpressionPointer evaluateLookupFunction(
-    const LookupFunction& lookup_function, const ExpressionPointer& environment, std::ostream& log
+    const LookupFunction& lookup_function, ExpressionPointer environment, std::ostream& log
 ) {
     const auto function = lookup(environment, lookup_function.name->value);
     const auto evaluated_child = evaluate(lookup_function.child, environment, log);
@@ -171,7 +171,7 @@ ExpressionPointer evaluateLookupFunction(
 }
 
 ExpressionPointer evaluateLookupSymbol(
-    const LookupSymbol& lookup_symbol, const ExpressionPointer& environment, std::ostream& log
+    const LookupSymbol& lookup_symbol, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = lookup(environment, lookup_symbol.name->value);
     log << serialize(result) << std::endl;
@@ -179,7 +179,7 @@ ExpressionPointer evaluateLookupSymbol(
 }
 
 ExpressionPointer evaluateNumber(
-    const Number& number, const ExpressionPointer& environment, std::ostream& log
+    const Number& number, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeNumber(
         std::make_shared<Number>(number.range, environment, number.value)
@@ -189,7 +189,7 @@ ExpressionPointer evaluateNumber(
 }
 
 ExpressionPointer evaluateString(
-    const ExpressionPointer& string, const ExpressionPointer& environment, std::ostream& log
+    ExpressionPointer string, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeString(
         std::make_shared<String>(string->range, environment, list(string))
@@ -199,8 +199,8 @@ ExpressionPointer evaluateString(
 }
 
 ExpressionPointer evaluate(
-    const ExpressionPointer& expression,
-    const ExpressionPointer& environment,
+    ExpressionPointer expression,
+    ExpressionPointer environment,
     std::ostream& log
 ) {
     const auto type = expression.type;

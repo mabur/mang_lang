@@ -5,7 +5,7 @@
 #include "../expressions/Number.h"
 #include "../expressions/String.h"
 
-bool boolean(const ExpressionPointer& expression) {
+bool boolean(ExpressionPointer expression) {
     switch (expression.type) {
         case DICTIONARY: return !expression.dictionary().elements.empty();
         case NUMBER: return static_cast<bool>(expression.number().value);

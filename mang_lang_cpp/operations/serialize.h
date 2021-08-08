@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-std::string serialize(const ExpressionPointer& expression);
+std::string serialize(ExpressionPointer expression);

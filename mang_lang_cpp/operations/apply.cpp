@@ -76,7 +76,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     return evaluate(function_list.body, middle, log);
 }
 
-ExpressionPointer apply(const ExpressionPointer& expression_smart, ExpressionPointer input, std::ostream& log) {
+ExpressionPointer apply(ExpressionPointer expression_smart, ExpressionPointer input, std::ostream& log) {
     switch (expression_smart.type) {
         case FUNCTION: return applyFunction(expression_smart.function(), input, log);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(expression_smart.functionBuiltIn(), input, log);

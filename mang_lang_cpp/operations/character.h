@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-char character(const ExpressionPointer& expression);
+char character(ExpressionPointer expression);

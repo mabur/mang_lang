@@ -4,7 +4,7 @@
 #include "list.h"
 #include "number.h"
 
-bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
+bool isEqualList(ExpressionPointer left_smart, ExpressionPointer right_smart) {
     auto left = list(left_smart);
     auto right = list(right_smart);
     for (; left && right; left = left->rest, right = right->rest) {
@@ -15,7 +15,7 @@ bool isEqualList(const ExpressionPointer& left_smart, const ExpressionPointer& r
     return !left && !right;
 }
 
-bool isEqual(const ExpressionPointer& left_smart, const ExpressionPointer& right_smart) {
+bool isEqual(ExpressionPointer left_smart, ExpressionPointer right_smart) {
     const auto left_type = left_smart.type;
     const auto right_type = right_smart.type;
     if (left_type == NUMBER && right_type == NUMBER) {

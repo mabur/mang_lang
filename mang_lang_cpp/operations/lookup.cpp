@@ -36,7 +36,7 @@ ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::stri
     return lookupExpression(dictionary, name);
 }
 
-ExpressionPointer lookupList(const ExpressionPointer& list, const std::string& name) {
+ExpressionPointer lookupList(ExpressionPointer list, const std::string& name) {
     if (name == "first") {
         return ::list(list)->first;
     }
@@ -46,7 +46,7 @@ ExpressionPointer lookupList(const ExpressionPointer& list, const std::string& n
     throw ParseException("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookupString(const ExpressionPointer& list, const std::string& name) {
+ExpressionPointer lookupString(ExpressionPointer list, const std::string& name) {
     if (name == "first") {
         return ::list(list)->first;
     }
@@ -56,7 +56,7 @@ ExpressionPointer lookupString(const ExpressionPointer& list, const std::string&
     throw ParseException("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookup(const ExpressionPointer& expression, const std::string& name) {
+ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) {
     switch(expression.type) {
         case DICTIONARY: return lookupDictionary(expression.dictionary(), name);
         case NAMED_ELEMENT: return lookupDictionaryElement(expression.dictionaryElement(), name);

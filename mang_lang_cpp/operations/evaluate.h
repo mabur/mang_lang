@@ -3,7 +3,7 @@
 #include "../expressions/Expression.h"
 
 ExpressionPointer evaluate(
-    const ExpressionPointer& expression,
-    const ExpressionPointer& environment,
+    ExpressionPointer expression,
+    ExpressionPointer environment,
     std::ostream& log
 );

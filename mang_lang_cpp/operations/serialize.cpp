@@ -33,21 +33,21 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
-std::string serializeNamedElement(const ExpressionPointer& element) {
+std::string serializeNamedElement(ExpressionPointer element) {
     return
         serializeName(*element.dictionaryElement().name) + '=' +
         serialize(element.dictionaryElement().expression) + ' ';
 }
 
-std::string serializeWhileElement(const ExpressionPointer& element) {
+std::string serializeWhileElement(ExpressionPointer element) {
     return "while " + serialize(element.dictionaryElement().expression) + ' ';
 }
 
-std::string serializeEndElement(const ExpressionPointer&) {
+std::string serializeEndElement(ExpressionPointer) {
     return "end ";
 }
 
-std::string serializeDictionaryElement(const ExpressionPointer& expression) {
+std::string serializeDictionaryElement(ExpressionPointer expression) {
     if (expression.type == NAMED_ELEMENT) {return serializeNamedElement(expression);}
     if (expression.type == WHILE_ELEMENT) {return serializeWhileElement(expression);}
     if (expression.type == END_ELEMENT) {return serializeEndElement(expression);}
@@ -110,11 +110,11 @@ std::string serializeFunctionList(const FunctionList& function_list) {
     return result;
 }
 
-std::string serializeList(const ExpressionPointer& list) {
+std::string serializeList(ExpressionPointer list) {
     if (!::list(list)) {
         return "()";
     }
-    const auto operation = [](const std::string& left, const ExpressionPointer& right) {
+    const auto operation = [](const std::string& left, ExpressionPointer right) {
         return left + serialize(right) + " ";
     };
     auto result = std::string{"("};
@@ -141,7 +141,7 @@ std::string serializeNumber(const Number& number) {
     return s.str();
 }
 
-std::string serializeString(const ExpressionPointer& string) {
+std::string serializeString(ExpressionPointer string) {
     auto value = std::string{"\""};
     auto node = list(string);
     for (; node; node = node->rest) {
@@ -151,7 +151,7 @@ std::string serializeString(const ExpressionPointer& string) {
     return value;
 }
 
-std::string serialize(const ExpressionPointer& expression_smart) {
+std::string serialize(ExpressionPointer expression_smart) {
     const auto type = expression_smart.type;
     switch (type) {
         case CHARACTER: return serializeCharacter(expression_smart.character());

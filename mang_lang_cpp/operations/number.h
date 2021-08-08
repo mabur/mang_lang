@@ -2,4 +2,4 @@
 
 #include "../expressions/Expression.h"
 
-double number(const ExpressionPointer& expression);
+double number(ExpressionPointer expression);

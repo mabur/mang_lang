@@ -5,7 +5,7 @@
 
 #include "../factory.h"
 
-ExpressionPointer empty(const ExpressionPointer& expression) {
+ExpressionPointer empty(ExpressionPointer expression) {
     switch (expression.type) {
         case LIST: return makeList(std::make_shared<List>(expression->range, ExpressionPointer{}, InternalList{}));
         case STRING: return makeString(std::make_shared<String>(expression->range, ExpressionPointer{}, InternalList{}));
