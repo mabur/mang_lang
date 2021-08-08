@@ -56,12 +56,12 @@ ExpressionPointer lookupString(const ExpressionPointer& list, const std::string&
     throw ParseException("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::string& name) {
-    switch(expression_smart.type) {
-        case DICTIONARY: return lookupDictionary(expression_smart.dictionary(), name);
-        case NAMED_ELEMENT: return lookupDictionaryElement(expression_smart.dictionaryElement(), name);
-        case LIST: return lookupList(expression_smart, name);
-        case STRING: return lookupString(expression_smart, name);
-        default: return lookupExpression(*expression_smart.get(), name);
+ExpressionPointer lookup(const ExpressionPointer& expression, const std::string& name) {
+    switch(expression.type) {
+        case DICTIONARY: return lookupDictionary(expression.dictionary(), name);
+        case NAMED_ELEMENT: return lookupDictionaryElement(expression.dictionaryElement(), name);
+        case LIST: return lookupList(expression, name);
+        case STRING: return lookupString(expression, name);
+        default: return lookupExpression(*expression.get(), name);
     }
 }
