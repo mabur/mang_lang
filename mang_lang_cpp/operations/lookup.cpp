@@ -60,10 +60,10 @@ ExpressionPointer lookup(const ExpressionPointer& expression_smart, const std::s
     const auto type = expression_smart.type;
     const auto expression = expression_smart.get();
     if (type == DICTIONARY) {
-        return lookupDictionary(*dynamic_cast<const Dictionary *>(expression), name);
+        return lookupDictionary(expression_smart.dictionary(), name);
     }
     if (type == NAMED_ELEMENT) {
-        return lookupDictionaryElement(*dynamic_cast<const DictionaryElement *>(expression), name);
+        return lookupDictionaryElement(expression_smart.dictionaryElement(), name);
     }
     if (type == LIST) {
         return lookupList(expression_smart, name);
