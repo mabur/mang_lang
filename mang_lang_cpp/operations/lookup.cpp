@@ -8,14 +8,6 @@
 
 #include "list.h"
 
-ExpressionPointer lookupExpression(const Expression& expression, const std::string& name) {
-    if (!expression.environment) {
-        // TODO: define evaluation exception.
-        throw ParseException("Cannot find symbol " + name);
-    }
-    return lookup(expression.environment, name);
-}
-
 ExpressionPointer lookupDictionaryElement(const DictionaryElement& element, const std::string& name) {
     if (element.name->value == name) {
         return element.expression;
@@ -33,7 +25,7 @@ ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::stri
             }
         }
     }
-    return lookupExpression(dictionary, name);
+    return lookup(dictionary.environment, name);
 }
 
 ExpressionPointer lookupList(ExpressionPointer list, const std::string& name) {
@@ -62,6 +54,7 @@ ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) 
         case NAMED_ELEMENT: return lookupDictionaryElement(expression.dictionaryElement(), name);
         case LIST: return lookupList(expression, name);
         case STRING: return lookupString(expression, name);
-        default: return lookupExpression(*expression.get(), name);
+        case EMPTY: throw ParseException("Cannot find symbol " + name);
+        default: return lookup(expression->environment, name);
     }
 }
