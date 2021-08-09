@@ -15,6 +15,7 @@
 
 #include "../factory.h"
 
+#include "end.h"
 #include "starts_with.h"
 
 ExpressionPointer parseCharacterExpression(CodeRange code) {
@@ -35,19 +36,19 @@ ExpressionPointer parseConditional(CodeRange code) {
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
     auto expression_if = parseExpression(code);
-    code.first = expression_if->end();
+    code.first = end(expression_if);
     code = parseWhiteSpace(code);
 
     code = parseKeyword(code, "then");
     code = parseWhiteSpace(code);
     auto expression_then = parseExpression(code);
-    code.first = expression_then->end();
+    code.first = end(expression_then);
     code = parseWhiteSpace(code);
 
     code = parseKeyword(code, "else");
     code = parseWhiteSpace(code);
     auto expression_else = parseExpression(code);
-    code.first = expression_else->end();
+    code.first = end(expression_else);
     code = parseWhiteSpace(code);
 
     return makeConditional(std::make_shared<Conditional>(
@@ -70,12 +71,12 @@ NamePointer parseName(CodeRange code) {
 ExpressionPointer parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    code.first = name->end();
+    code.first = name->range.end();
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '=');
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
-    code.first = expression->end();
+    code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeTypedDictionaryElement(
         std::make_shared<DictionaryElement>(
@@ -96,7 +97,7 @@ ExpressionPointer parseWhileElement(CodeRange code) {
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
-    code.first = expression->end();
+    code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeTypedDictionaryElement(
         std::make_shared<DictionaryElement>(
@@ -150,7 +151,7 @@ ExpressionPointer parseDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         auto element = parseDictionaryElement(code);
-        code.first = element.get()->end();
+        code.first = end(element);
         elements.push_back(element);
     }
     code = parseCharacter(code, '}');
@@ -166,11 +167,11 @@ ExpressionPointer parseFunction(CodeRange code) {
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     auto input_name = parseName(code);
-    code.first = input_name->end();
+    code.first = input_name->range.end();
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
-    code.first = body->end();
+    code.first = end(body);
     return makeFunction(std::make_shared<Function>(
         CodeRange{first, code.begin()}, ExpressionPointer{}, input_name, body
     ));
@@ -186,7 +187,7 @@ ExpressionPointer parseFunctionDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         const auto name = parseName(code);
-        code.first = name->end();
+        code.first = name->range.end();
         input_names.push_back(name);
         code = parseWhiteSpace(code);
     }
@@ -194,7 +195,7 @@ ExpressionPointer parseFunctionDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
-    code.first = body->end();
+    code.first = end(body);
     return makeFunctionDictionary(std::make_shared<FunctionDictionary>(
         CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
     ));
@@ -210,7 +211,7 @@ ExpressionPointer parseFunctionList(CodeRange code) {
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = parseName(code);
-        code.first = name->end();
+        code.first = name->range.end();
         input_names.push_back(name);
         code = parseWhiteSpace(code);
     }
@@ -218,7 +219,7 @@ ExpressionPointer parseFunctionList(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
-    code.first = body->end();
+    code.first = end(body);
     return makeFunctionList(std::make_shared<FunctionList>(
         CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
     ));
@@ -232,7 +233,7 @@ ExpressionPointer parseList(CodeRange code) {
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
-        code.first = expression->end();
+        code.first = end(expression);
         expressions = ::prepend(expressions, std::move(expression));
         code = parseWhiteSpace(code);
     }
@@ -245,12 +246,12 @@ ExpressionPointer parseList(CodeRange code) {
 ExpressionPointer parseLookupChild(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    code.first = name->end();
+    code.first = name->range.end();
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '@');
     code = parseWhiteSpace(code);
     auto child = parseExpression(code);
-    code.first = child->end();
+    code.first = end(child);
     return makeLookupChild(std::make_shared<LookupChild>(
         CodeRange{first, code.first}, ExpressionPointer{}, name, std::move(child)
     ));
@@ -259,11 +260,11 @@ ExpressionPointer parseLookupChild(CodeRange code) {
 ExpressionPointer parseLookupFunction(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    code.first = name->end();
+    code.first = name->range.end();
     const auto expected = ::startsWith(code, '!') ? '!' : '?';
     code = parseCharacter(code, expected);
     auto child = parseExpression(code);
-    code.first = child->end();
+    code.first = end(child);
     return makeLookupFunction(std::make_shared<LookupFunction>(
         CodeRange{first, code.first}, ExpressionPointer{}, name, std::move(child)
     ));
@@ -273,7 +274,7 @@ ExpressionPointer parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     return makeLookupSymbol(std::make_shared<LookupSymbol>(
-        CodeRange{first, name->end()}, ExpressionPointer{}, name
+        CodeRange{first, name->range.end()}, ExpressionPointer{}, name
     ));
 }
 

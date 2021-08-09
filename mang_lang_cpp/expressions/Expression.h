@@ -22,7 +22,4 @@ struct Expression {
 
     CodeRange range;
     ExpressionPointer environment;
-
-    const CodeCharacter* begin() const;
-    const CodeCharacter* end() const;
 };

@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include "../operations/begin.h"
+
 DictionaryElement::DictionaryElement(
     CodeRange range,
     ExpressionPointer environment,
@@ -37,7 +39,7 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
         }
     }
     if (!while_positions.empty()) {
-        throw ParseException("More while than end", elements.front().get()->begin());
+        throw ParseException("More while than end", begin(elements.front()));
     }
     return while_indices;
 }
@@ -61,7 +63,7 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
         }
     }
     if (!end_positions.empty()) {
-        throw ParseException("Fewer while than end", elements.front().get()->begin());
+        throw ParseException("Fewer while than end", begin(elements.front()));
     }
     return end_indices;
 }
