@@ -63,7 +63,7 @@ ExpressionPointer evaluateDictionary(
         const auto element = dictionary.elements[i].dictionaryElement();
         if (type == NAMED_ELEMENT) {
             result->elements.at(element.name_index_) = makeTypedDictionaryElement(
-                std::make_shared<DictionaryElement>(DictionaryElement{
+                new DictionaryElement{
                     element.range,
                     wrapped_result,
                     element.name,
@@ -71,7 +71,7 @@ ExpressionPointer evaluateDictionary(
                     1,
                     0,
                     element.name_index_
-                }),
+                },
                 NAMED_ELEMENT
             );
             i += 1;

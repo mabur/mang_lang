@@ -88,15 +88,15 @@ DictionaryElements setContext(const DictionaryElements& elements) {
         const auto element = elements[i].dictionaryElement();
         result.push_back(
             makeTypedDictionaryElement(
-                std::make_shared<DictionaryElement>(DictionaryElement{
+                new DictionaryElement{
                     element.range,
                     element.environment,
                     element.name,
                     element.expression,
                     while_indices[i],
                     end_indices[i],
-                    name_indices[i]}
-                ),
+                    name_indices[i]
+                },
                 type
             )
         );

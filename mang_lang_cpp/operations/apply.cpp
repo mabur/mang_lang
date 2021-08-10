@@ -17,7 +17,7 @@ ExpressionPointer applyFunction(
 
     const auto elements = DictionaryElements{
         makeTypedDictionaryElement(
-            std::make_shared<DictionaryElement>(DictionaryElement{
+            new DictionaryElement{
                 function.range,
                 ExpressionPointer{},
                 function.input_name,
@@ -25,7 +25,7 @@ ExpressionPointer applyFunction(
                 1,
                 0,
                 0
-            }),
+            },
             NAMED_ELEMENT
         )
     };
@@ -55,7 +55,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     for (auto list = ::list(input); list; list = list->rest, ++i) {
         elements.push_back(
             makeTypedDictionaryElement(
-                std::make_shared<DictionaryElement>(DictionaryElement{
+                new DictionaryElement{
                     function_list.range,
                     ExpressionPointer{},
                     function_list.input_names[i],
@@ -63,7 +63,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
                     1,
                     0,
                     i
-                }),
+                },
                 NAMED_ELEMENT
             )
         );

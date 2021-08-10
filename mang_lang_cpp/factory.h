@@ -79,6 +79,5 @@ ExpressionPointer makeName(const Name* expression);
 ExpressionPointer makeString(const String* expression);
 
 ExpressionPointer makeTypedDictionaryElement(
-    std::shared_ptr<const DictionaryElement> expression,
-    ExpressionType type
+    const DictionaryElement* expression, ExpressionType type
 );
