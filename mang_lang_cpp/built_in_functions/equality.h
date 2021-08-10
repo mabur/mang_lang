@@ -11,7 +11,7 @@
 namespace equality {
 
 ExpressionPointer makeNumber(double x) {
-    return makeNumber(new Number(Number{CodeRange{}, ExpressionPointer{}, x}));
+    return makeNumber(new Number(Number{CodeRange{}, x}));
 }
 
 ExpressionPointer equal(ExpressionPointer in) {

@@ -3,6 +3,5 @@
 
 struct Number {
     CodeRange range;
-    ExpressionPointer environment;
     double value;
 };

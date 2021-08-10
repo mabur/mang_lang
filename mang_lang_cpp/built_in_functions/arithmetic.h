@@ -13,7 +13,7 @@
 namespace arithmetic {
 
 ExpressionPointer makeNumber(double x) {
-    return makeNumber(new Number(Number{CodeRange{}, ExpressionPointer{}, x}));
+    return makeNumber(new Number(Number{CodeRange{}, x}));
 }
 
 ExpressionPointer min(ExpressionPointer in) {
