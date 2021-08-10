@@ -23,7 +23,7 @@ ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::stri
             }
         }
     }
-    return lookup(dictionary.environment, name);
+    throw std::runtime_error("Dictionary does not contain symbol " + name);
 }
 
 ExpressionPointer lookupList(const List& list, const std::string& name) {
@@ -33,7 +33,7 @@ ExpressionPointer lookupList(const List& list, const std::string& name) {
     if (name == "rest") {
         return makeList(std::make_shared<List>(list.range, ExpressionPointer{}, list.elements->rest));
     }
-    throw ParseException("List does not contain symbol " + name);
+    throw std::runtime_error("List does not contain symbol " + name);
 }
 
 ExpressionPointer lookupString(const String& string, const std::string& name) {
@@ -43,7 +43,7 @@ ExpressionPointer lookupString(const String& string, const std::string& name) {
     if (name == "rest") {
         return makeString(std::make_shared<String>(string.range, ExpressionPointer{}, string.elements->rest));
     }
-    throw ParseException("List does not contain symbol " + name);
+    throw std::runtime_error("String does not contain symbol " + name);
 }
 
 ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) {
@@ -51,7 +51,6 @@ ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) 
         case DICTIONARY: return lookupDictionary(expression.dictionary(), name);
         case LIST: return lookupList(expression.list(), name);
         case STRING: return lookupString(expression.string(), name);
-        case EMPTY: throw std::runtime_error("Cannot find symbol " + name);
         default: throw std::runtime_error{"Cannot lookup expression of type " + std::to_string(expression.type)};
     }
 }
