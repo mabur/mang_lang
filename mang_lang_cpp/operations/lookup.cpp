@@ -41,7 +41,7 @@ ExpressionPointer lookupString(const String& string, const std::string& name) {
         return string.elements->first;
     }
     if (name == "rest") {
-        return makeString(std::make_shared<String>(String{string.range, ExpressionPointer{}, string.elements->rest}));
+        return makeString(new String{string.range, ExpressionPointer{}, string.elements->rest});
     }
     throw std::runtime_error("String does not contain symbol " + name);
 }

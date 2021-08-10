@@ -102,8 +102,8 @@ ExpressionPointer makeName(const Name* expression) {
     return ExpressionPointer{NAME, names.size() - 1};
 }
 
-ExpressionPointer makeString(std::shared_ptr<const String> expression) {
-    strings.push_back(expression);
+ExpressionPointer makeString(const String* expression) {
+    strings.emplace_back(expression);
     return ExpressionPointer{STRING, strings.size() - 1};
 }
 
