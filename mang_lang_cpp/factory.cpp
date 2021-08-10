@@ -62,8 +62,8 @@ ExpressionPointer makeFunction(const Function* expression) {
     return ExpressionPointer{FUNCTION, functions.size() - 1};
 }
 
-ExpressionPointer makeFunctionBuiltIn(std::shared_ptr<const FunctionBuiltIn> expression) {
-    built_in_functions.push_back(expression);
+ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
+    built_in_functions.emplace_back(expression);
     return ExpressionPointer{FUNCTION_BUILT_IN, built_in_functions.size() - 1};
 }
 
