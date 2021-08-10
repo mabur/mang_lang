@@ -8,9 +8,8 @@
 #include "../operations/prepend.h"
 #include "../operations/lookup.h"
 
-struct List : public Expression {
-    List(CodeRange range, ExpressionPointer environment, InternalList elements)
-        : Expression{range, environment}, elements{std::move(elements)}
-    {}
+struct List {
+    CodeRange range;
+    ExpressionPointer environment;
     InternalList elements;
 };

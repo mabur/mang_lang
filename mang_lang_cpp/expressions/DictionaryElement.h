@@ -7,16 +7,9 @@
 
 using DictionaryElements = std::vector<ExpressionPointer>;
 
-struct DictionaryElement : Expression {
-    DictionaryElement(
-        CodeRange range,
-        ExpressionPointer environment,
-        NamePointer name,
-        ExpressionPointer expression,
-        size_t while_index,
-        size_t end_index,
-        size_t name_index
-    );
+struct DictionaryElement {
+    CodeRange range;
+    ExpressionPointer environment;
     NamePointer name;
     ExpressionPointer expression;
     size_t while_index_;

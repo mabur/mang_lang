@@ -116,29 +116,7 @@ ExpressionPointer makeTypedDictionaryElement(
 }
 
 ExpressionPointer::operator bool () const {
-    return bool(get());
-}
-
-const Expression* ExpressionPointer::get() const {
-    if (type == NUMBER) return numbers.at(index).get();
-    if (type == STRING) return strings.at(index).get();
-    if (type == CHARACTER) return characters.at(index).get();
-    if (type == CONDITIONAL) return conditionals.at(index).get();
-    if (type == DICTIONARY) return dictionaries.at(index).get();
-    if (type == FUNCTION) return functions.at(index).get();
-    if (type == FUNCTION_LIST) return list_functions.at(index).get();
-    if (type == FUNCTION_DICTIONARY) return dictionary_functions.at(index).get();
-    if (type == FUNCTION_BUILT_IN) return built_in_functions.at(index).get();
-    if (type == LIST) return lists.at(index).get();
-    if (type == LOOKUP_SYMBOL) return symbol_lookups.at(index).get();
-    if (type == LOOKUP_CHILD) return child_lookups.at(index).get();
-    if (type == LOOKUP_FUNCTION) return function_lookups.at(index).get();
-    if (type == NAME) return names.at(index).get();
-    if (type == NAMED_ELEMENT) return dictionary_elements.at(index).get();
-    if (type == END_ELEMENT) return dictionary_elements.at(index).get();
-    if (type == WHILE_ELEMENT) return dictionary_elements.at(index).get();
-    if (type == EMPTY) return nullptr;
-    throw std::runtime_error{"Did not recognize expression to create" + std::to_string(type)};
+    return type != EMPTY;
 }
 
 DictionaryElement ExpressionPointer::dictionaryElement() const {
@@ -214,8 +192,4 @@ Name ExpressionPointer::name() const {
 String ExpressionPointer::string() const {
     assert(type == STRING);
     return *strings.at(index).get();
-}
-
-const Expression* ExpressionPointer::operator -> () const {
-    return get();
 }

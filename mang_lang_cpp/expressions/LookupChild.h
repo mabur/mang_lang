@@ -2,13 +2,9 @@
 #include "Expression.h"
 #include "Name.h"
 
-struct LookupChild : public Expression {
-    LookupChild(
-        CodeRange range,
-        ExpressionPointer environment,
-        NamePointer name,
-        ExpressionPointer child
-    ) : Expression{range, environment}, name{std::move(name)}, child{std::move(child)} {}
+struct LookupChild {
+    CodeRange range;
+    ExpressionPointer environment;
     NamePointer name;
     ExpressionPointer child;
 };

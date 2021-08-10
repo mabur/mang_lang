@@ -51,11 +51,11 @@ ExpressionPointer evaluateDictionary(
     const Dictionary& dictionary, ExpressionPointer environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
-    const auto result = std::make_shared<Dictionary>(
+    const auto result = std::make_shared<Dictionary>(Dictionary{
         dictionary.range,
         environment,
         DictionaryElements(num_names, ExpressionPointer{})
-    );
+    });
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
@@ -63,7 +63,7 @@ ExpressionPointer evaluateDictionary(
         const auto element = dictionary.elements[i].dictionaryElement();
         if (type == NAMED_ELEMENT) {
             result->elements.at(element.name_index_) = makeTypedDictionaryElement(
-                std::make_shared<DictionaryElement>(
+                std::make_shared<DictionaryElement>(DictionaryElement{
                     element.range,
                     wrapped_result,
                     element.name,
@@ -71,7 +71,7 @@ ExpressionPointer evaluateDictionary(
                     1,
                     0,
                     element.name_index_
-                ),
+                }),
                 NAMED_ELEMENT
             );
             i += 1;
@@ -94,9 +94,9 @@ ExpressionPointer evaluateDictionary(
 ExpressionPointer evaluateFunction(
     const Function& function, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = makeFunction(std::make_shared<Function>(
+    auto result = makeFunction(std::make_shared<Function>(Function{
         function.range, environment, function.input_name, function.body
-    ));
+    }));
     log << serialize(result) << std::endl;
     return result;
 }
@@ -105,12 +105,12 @@ ExpressionPointer evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, ExpressionPointer environment, std::ostream& log
 ) {
     auto result = makeFunctionDictionary(
-        std::make_shared<FunctionDictionary>(
+        std::make_shared<FunctionDictionary>(FunctionDictionary{
             function_dictionary.range,
             environment,
             function_dictionary.input_names,
             function_dictionary.body
-        )
+        })
     );
     log << serialize(result) << std::endl;
     return result;
@@ -119,9 +119,9 @@ ExpressionPointer evaluateFunctionDictionary(
 ExpressionPointer evaluateFunctionList(
     const FunctionList& function_list, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = makeFunctionList(std::make_shared<FunctionList>(
+    auto result = makeFunctionList(std::make_shared<FunctionList>(FunctionList{
         function_list.range, environment, function_list.input_names, function_list.body
-    ));
+    }));
     log << serialize(result) << std::endl;
     return result;
 }
@@ -133,8 +133,8 @@ ExpressionPointer evaluateList(
         return evaluate(expression, environment, log);
     };
     auto evaluated_elements = map(list.elements, operation);
-    auto result = makeList(std::make_shared<List>(
-        list.range, environment, std::move(evaluated_elements)));
+    auto result = makeList(std::make_shared<List>(List{
+        list.range, environment, std::move(evaluated_elements)}));
     log << serialize(result) << std::endl;
     return result;
 }

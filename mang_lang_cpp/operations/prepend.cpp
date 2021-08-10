@@ -5,12 +5,12 @@
 
 ExpressionPointer prependList(const List& list, ExpressionPointer item) {
     auto new_list = ::prepend(list.elements, item);
-    return makeList(std::make_shared<List>(list.range, ExpressionPointer{}, new_list));
+    return makeList(std::make_shared<List>(List{list.range, ExpressionPointer{}, new_list}));
 }
 
 ExpressionPointer prependString(const String& string, ExpressionPointer item) {
     auto new_list = ::prepend(string.elements, item);
-    return makeString(std::make_shared<String>(string.range, ExpressionPointer{}, new_list));
+    return makeString(std::make_shared<String>(String{string.range, ExpressionPointer{}, new_list}));
 }
 
 ExpressionPointer prepend(ExpressionPointer expression, ExpressionPointer item) {

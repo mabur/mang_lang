@@ -4,22 +4,6 @@
 
 #include "../operations/begin.h"
 
-DictionaryElement::DictionaryElement(
-    CodeRange range,
-    ExpressionPointer environment,
-    NamePointer name,
-    ExpressionPointer expression,
-    size_t while_index,
-    size_t end_index,
-    size_t name_index
-) : Expression{range, environment},
-    name{std::move(name)},
-    expression{std::move(expression)},
-    while_index_{while_index},
-    end_index_{end_index},
-    name_index_{name_index}
-{}
-
 std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
@@ -104,14 +88,14 @@ DictionaryElements setContext(const DictionaryElements& elements) {
         const auto element = elements[i].dictionaryElement();
         result.push_back(
             makeTypedDictionaryElement(
-                std::make_shared<DictionaryElement>(
+                std::make_shared<DictionaryElement>(DictionaryElement{
                     element.range,
                     element.environment,
                     element.name,
                     element.expression,
                     while_indices[i],
                     end_indices[i],
-                    name_indices[i]
+                    name_indices[i]}
                 ),
                 type
             )

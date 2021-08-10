@@ -12,12 +12,3 @@
 #include "../factory.h"
 
 using InternalList = SinglyLinkedList<ExpressionPointer>;
-
-struct Expression {
-    Expression(CodeRange range, ExpressionPointer environment)
-        : range{range}, environment{environment} {}
-    virtual ~Expression() = default;
-
-    CodeRange range;
-    ExpressionPointer environment;
-};

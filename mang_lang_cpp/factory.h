@@ -46,8 +46,6 @@ struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
     operator bool () const;
-    const Expression* get() const;
-    const Expression* operator -> () const;
     DictionaryElement dictionaryElement() const;
     Number number() const;
     Character character() const;

@@ -31,7 +31,7 @@ ExpressionPointer lookupList(const List& list, const std::string& name) {
         return list.elements->first;
     }
     if (name == "rest") {
-        return makeList(std::make_shared<List>(list.range, ExpressionPointer{}, list.elements->rest));
+        return makeList(std::make_shared<List>(List{list.range, ExpressionPointer{}, list.elements->rest}));
     }
     throw std::runtime_error("List does not contain symbol " + name);
 }
@@ -41,7 +41,7 @@ ExpressionPointer lookupString(const String& string, const std::string& name) {
         return string.elements->first;
     }
     if (name == "rest") {
-        return makeString(std::make_shared<String>(string.range, ExpressionPointer{}, string.elements->rest));
+        return makeString(std::make_shared<String>(String{string.range, ExpressionPointer{}, string.elements->rest}));
     }
     throw std::runtime_error("String does not contain symbol " + name);
 }

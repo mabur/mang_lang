@@ -18,15 +18,16 @@ ExpressionPointer makeDictionaryElement(
     std::function<ExpressionPointer(ExpressionPointer)> function
 ) {
     return makeTypedDictionaryElement(
-        std::make_shared<DictionaryElement>(
+        std::make_shared<DictionaryElement>(DictionaryElement{
             CodeRange{},
             ExpressionPointer{},
-            std::make_shared<Name>(CodeRange{}, ExpressionPointer{}, name),
-            makeFunctionBuiltIn(std::make_shared<FunctionBuiltIn>(function)),
+            std::make_shared<Name>(Name{CodeRange{}, ExpressionPointer{}, name}),
+            makeFunctionBuiltIn(std::make_shared<FunctionBuiltIn>(
+                FunctionBuiltIn{{}, {}, function})),
             1,
             0,
             0
-        ),
+        }),
         NAMED_ELEMENT
     );
 }
@@ -56,6 +57,6 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
     return makeDictionary(
-        std::make_shared<Dictionary>(CodeRange{}, ExpressionPointer{}, setContext(elements))
+        std::make_shared<Dictionary>(Dictionary{CodeRange{}, ExpressionPointer{}, setContext(elements)})
     );
 }

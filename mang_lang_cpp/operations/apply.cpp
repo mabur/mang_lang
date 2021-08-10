@@ -17,7 +17,7 @@ ExpressionPointer applyFunction(
 
     const auto elements = DictionaryElements{
         makeTypedDictionaryElement(
-            std::make_shared<DictionaryElement>(
+            std::make_shared<DictionaryElement>(DictionaryElement{
                 function.range,
                 ExpressionPointer{},
                 function.input_name,
@@ -25,12 +25,12 @@ ExpressionPointer applyFunction(
                 1,
                 0,
                 0
-            ),
+            }),
             NAMED_ELEMENT
         )
     };
     const auto middle = makeDictionary(
-        std::make_shared<Dictionary>(CodeRange{}, function.environment, elements)
+        std::make_shared<Dictionary>(Dictionary{CodeRange{}, function.environment, elements})
     );
     return evaluate(function.body, middle, log);
 }
@@ -51,11 +51,11 @@ ExpressionPointer applyFunctionDictionary(
 ExpressionPointer applyFunctionList(const FunctionList& function_list, ExpressionPointer input, std::ostream& log
 ) {
     auto elements = DictionaryElements{};
-    auto i = 0;
+    auto i = size_t{0};
     for (auto list = ::list(input); list; list = list->rest, ++i) {
         elements.push_back(
             makeTypedDictionaryElement(
-                std::make_shared<DictionaryElement>(
+                std::make_shared<DictionaryElement>(DictionaryElement{
                     function_list.range,
                     ExpressionPointer{},
                     function_list.input_names[i],
@@ -63,15 +63,15 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
                     1,
                     0,
                     i
-                ),
+                }),
                 NAMED_ELEMENT
             )
         );
     }
     const auto middle = makeDictionary(
-        std::make_shared<Dictionary>(
+        std::make_shared<Dictionary>(Dictionary{
             function_list.range, function_list.environment, elements
-        )
+        })
     );
     return evaluate(function_list.body, middle, log);
 }

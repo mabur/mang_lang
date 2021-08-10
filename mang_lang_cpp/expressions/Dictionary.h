@@ -3,12 +3,8 @@
 #include "Expression.h"
 #include "Name.h"
 
-struct Dictionary : public Expression {
-    Dictionary(
-        CodeRange range,
-        ExpressionPointer environment,
-        DictionaryElements elements
-    ) : Expression{range, environment}, elements{std::move(elements)}
-    {}
+struct Dictionary {
+    CodeRange range;
+    ExpressionPointer environment;
     DictionaryElements elements;
 };
