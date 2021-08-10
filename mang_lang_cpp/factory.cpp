@@ -37,8 +37,8 @@ std::vector<std::shared_ptr<const String>> strings;
 
 std::vector<std::shared_ptr<const DictionaryElement>> dictionary_elements;
 
-ExpressionPointer makeNumber(std::shared_ptr<const Number> expression) {
-    numbers.push_back(expression);
+ExpressionPointer makeNumber(const Number* expression) {
+    numbers.emplace_back(expression);
     return ExpressionPointer{NUMBER, numbers.size() - 1};
 }
 

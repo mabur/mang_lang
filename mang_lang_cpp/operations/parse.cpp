@@ -293,7 +293,7 @@ ExpressionPointer parseNumber(CodeRange code) {
     code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString({first, code.first}));
     return makeNumber(
-        std::make_shared<Number>(Number{CodeRange{first, code.first}, ExpressionPointer{}, value})
+        new Number(Number{CodeRange{first, code.first}, ExpressionPointer{}, value})
     );
 }
 
