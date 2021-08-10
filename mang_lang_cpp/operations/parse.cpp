@@ -53,7 +53,6 @@ ExpressionPointer parseConditional(CodeRange code) {
 
     return makeConditional(new Conditional{
         CodeRange{first, code.begin()},
-        ExpressionPointer{},
         std::move(expression_if),
         std::move(expression_then),
         std::move(expression_else)
