@@ -69,7 +69,7 @@ ExpressionPointer makeConditional(const Conditional* expression);
 ExpressionPointer makeDictionary(const Dictionary* expression);
 ExpressionPointer makeFunction(const Function* expression);
 ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression);
-ExpressionPointer makeFunctionDictionary(std::shared_ptr<const FunctionDictionary> expression);
+ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression);
 ExpressionPointer makeFunctionList(std::shared_ptr<const FunctionList> expression);
 ExpressionPointer makeList(std::shared_ptr<const List> expression);
 ExpressionPointer makeLookupChild(std::shared_ptr<const LookupChild> expression);

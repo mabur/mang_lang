@@ -200,9 +200,9 @@ ExpressionPointer parseFunctionDictionary(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunctionDictionary(std::make_shared<FunctionDictionary>(FunctionDictionary{
+    return makeFunctionDictionary(new FunctionDictionary{
         CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
-    }));
+    });
 }
 
 ExpressionPointer parseFunctionList(CodeRange code) {

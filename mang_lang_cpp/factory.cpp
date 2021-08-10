@@ -67,8 +67,8 @@ ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
     return ExpressionPointer{FUNCTION_BUILT_IN, built_in_functions.size() - 1};
 }
 
-ExpressionPointer makeFunctionDictionary(std::shared_ptr<const FunctionDictionary> expression) {
-    dictionary_functions.push_back(expression);
+ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression) {
+    dictionary_functions.emplace_back(expression);
     return ExpressionPointer{FUNCTION_DICTIONARY, dictionary_functions.size() - 1};
 }
 
