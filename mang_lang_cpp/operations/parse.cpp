@@ -279,9 +279,9 @@ ExpressionPointer parseLookupFunction(CodeRange code) {
 ExpressionPointer parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    return makeLookupSymbol(std::make_shared<LookupSymbol>(LookupSymbol{
+    return makeLookupSymbol(new LookupSymbol{
         CodeRange{first, name->range.end()}, ExpressionPointer{}, name
-    }));
+    });
 }
 
 ExpressionPointer parseNumber(CodeRange code) {

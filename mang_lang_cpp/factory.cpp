@@ -92,8 +92,8 @@ ExpressionPointer makeLookupFunction(const LookupFunction* expression) {
     return ExpressionPointer{LOOKUP_FUNCTION, function_lookups.size() - 1};
 }
 
-ExpressionPointer makeLookupSymbol(std::shared_ptr<const LookupSymbol> expression) {
-    symbol_lookups.push_back(expression);
+ExpressionPointer makeLookupSymbol(const LookupSymbol* expression) {
+    symbol_lookups.emplace_back(expression);
     return ExpressionPointer{LOOKUP_SYMBOL, symbol_lookups.size() - 1};
 }
 
