@@ -42,8 +42,8 @@ ExpressionPointer makeNumber(const Number* expression) {
     return ExpressionPointer{NUMBER, numbers.size() - 1};
 }
 
-ExpressionPointer makeCharacter(std::shared_ptr<const Character> expression) {
-    characters.push_back(expression);
+ExpressionPointer makeCharacter(const Character* expression) {
+    characters.emplace_back(expression);
     return ExpressionPointer{CHARACTER, characters.size() - 1};
 }
 

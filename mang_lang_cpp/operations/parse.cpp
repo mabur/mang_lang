@@ -26,7 +26,7 @@ ExpressionPointer parseCharacterExpression(CodeRange code) {
     code = parseCharacter(code, '\'');
     const auto value = it->character;
     return makeCharacter(
-        std::make_shared<Character>(Character{CodeRange{first, code.begin()}, ExpressionPointer{}, value})
+        new Character{CodeRange{first, code.begin()}, ExpressionPointer{}, value}
     );
 }
 
@@ -311,10 +311,8 @@ ExpressionPointer parseString(CodeRange code) {
     auto value = InternalList{};
     for (auto it = first_character; it != last_character; ++it) {
         auto item = makeCharacter(
-            std::make_shared<Character>(Character{
-                CodeRange{it, it + 1}, ExpressionPointer{}, it->character
-            })
-            );
+            new Character{CodeRange{it, it + 1}, ExpressionPointer{}, it->character}
+        );
         value = ::prepend<ExpressionPointer>(value, item);
     }
     value = ::reverse(value);
