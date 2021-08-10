@@ -47,8 +47,8 @@ ExpressionPointer makeCharacter(const Character* expression) {
     return ExpressionPointer{CHARACTER, characters.size() - 1};
 }
 
-ExpressionPointer makeConditional(std::shared_ptr<const Conditional> expression) {
-    conditionals.push_back(expression);
+ExpressionPointer makeConditional(const Conditional* expression) {
+    conditionals.emplace_back(expression);
     return ExpressionPointer{CONDITIONAL, conditionals.size() - 1};
 }
 

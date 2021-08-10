@@ -65,7 +65,7 @@ struct ExpressionPointer {
 
 ExpressionPointer makeNumber(const Number* expression);
 ExpressionPointer makeCharacter(const Character* expression);
-ExpressionPointer makeConditional(std::shared_ptr<const Conditional> expression);
+ExpressionPointer makeConditional(const Conditional* expression);
 ExpressionPointer makeDictionary(std::shared_ptr<const Dictionary> expression);
 ExpressionPointer makeFunction(std::shared_ptr<const Function> expression);
 ExpressionPointer makeFunctionBuiltIn(std::shared_ptr<const FunctionBuiltIn> expression);
