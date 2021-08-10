@@ -67,7 +67,7 @@ ExpressionPointer makeNumber(const Number* expression);
 ExpressionPointer makeCharacter(const Character* expression);
 ExpressionPointer makeConditional(const Conditional* expression);
 ExpressionPointer makeDictionary(const Dictionary* expression);
-ExpressionPointer makeFunction(std::shared_ptr<const Function> expression);
+ExpressionPointer makeFunction(const Function* expression);
 ExpressionPointer makeFunctionBuiltIn(std::shared_ptr<const FunctionBuiltIn> expression);
 ExpressionPointer makeFunctionDictionary(std::shared_ptr<const FunctionDictionary> expression);
 ExpressionPointer makeFunctionList(std::shared_ptr<const FunctionList> expression);

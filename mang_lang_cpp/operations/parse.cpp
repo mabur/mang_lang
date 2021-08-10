@@ -176,9 +176,9 @@ ExpressionPointer parseFunction(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunction(std::make_shared<Function>(Function{
+    return makeFunction(new Function{
         CodeRange{first, code.begin()}, ExpressionPointer{}, input_name, body
-    }));
+    });
 }
 
 ExpressionPointer parseFunctionDictionary(CodeRange code) {
