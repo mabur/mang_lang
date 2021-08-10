@@ -31,7 +31,7 @@ ExpressionPointer lookupList(const List& list, const std::string& name) {
         return list.elements->first;
     }
     if (name == "rest") {
-        return makeList(new List{list.range, ExpressionPointer{}, list.elements->rest});
+        return makeList(new List{list.range, list.elements->rest});
     }
     throw std::runtime_error("List does not contain symbol " + name);
 }

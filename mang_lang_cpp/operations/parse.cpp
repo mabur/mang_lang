@@ -243,7 +243,6 @@ ExpressionPointer parseList(CodeRange code) {
     code = parseCharacter(code, ')');
     return makeList(new List{
         CodeRange{first, code.first},
-        ExpressionPointer{},
         ::reverse(expressions)
     });
 }

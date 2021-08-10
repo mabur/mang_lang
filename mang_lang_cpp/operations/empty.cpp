@@ -7,7 +7,7 @@
 
 ExpressionPointer empty(ExpressionPointer expression) {
     switch (expression.type) {
-        case LIST: return makeList(new List{CodeRange{}, ExpressionPointer{}, InternalList{}});
+        case LIST: return makeList(new List{CodeRange{}, InternalList{}});
         case STRING: return makeString(new String{CodeRange{}, ExpressionPointer{}, InternalList{}});
         default: throw std::runtime_error{"Expected list"};
     }

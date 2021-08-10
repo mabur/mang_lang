@@ -134,7 +134,7 @@ ExpressionPointer evaluateList(
     };
     auto evaluated_elements = map(list.elements, operation);
     auto result = makeList(new List{
-        list.range, environment, std::move(evaluated_elements)
+        list.range, std::move(evaluated_elements)
     });
     log << serialize(result) << std::endl;
     return result;
