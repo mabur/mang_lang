@@ -5,6 +5,5 @@
 
 struct FunctionBuiltIn {
     CodeRange range;
-    ExpressionPointer environment;
     std::function<ExpressionPointer(ExpressionPointer)> function;
 };
