@@ -3,6 +3,5 @@
 
 struct Character {
     CodeRange range;
-    ExpressionPointer environment;
     char value;
 };

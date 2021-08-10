@@ -26,7 +26,7 @@ ExpressionPointer parseCharacterExpression(CodeRange code) {
     code = parseCharacter(code, '\'');
     const auto value = it->character;
     return makeCharacter(
-        new Character{CodeRange{first, code.begin()}, ExpressionPointer{}, value}
+        new Character{CodeRange{first, code.begin()}, value}
     );
 }
 
@@ -311,7 +311,7 @@ ExpressionPointer parseString(CodeRange code) {
     auto value = InternalList{};
     for (auto it = first_character; it != last_character; ++it) {
         auto item = makeCharacter(
-            new Character{CodeRange{it, it + 1}, ExpressionPointer{}, it->character}
+            new Character{CodeRange{it, it + 1}, it->character}
         );
         value = ::prepend<ExpressionPointer>(value, item);
     }
