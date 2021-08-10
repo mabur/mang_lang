@@ -139,6 +139,22 @@ ExpressionPointer evaluateList(
     return result;
 }
 
+ExpressionPointer lookupDictionary(const ExpressionPointer& expression, const std::string& name) {
+    if (expression.type != DICTIONARY) {
+        throw std::runtime_error("Cannot find symbol " + name);
+    }
+    const auto dictionary = expression.dictionary();
+    for (const auto& element : dictionary.elements) {
+        if (element) {
+            const auto dictionary_element = element.dictionaryElement();
+            if (dictionary_element.name->value == name) {
+                return dictionary_element.expression;
+            }
+        }
+    }
+    return lookupDictionary(dictionary.environment, name);
+}
+
 ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, ExpressionPointer environment, std::ostream& log
 ) {
@@ -152,7 +168,7 @@ ExpressionPointer evaluateLookupChild(
 ExpressionPointer evaluateLookupFunction(
     const LookupFunction& lookup_function, ExpressionPointer environment, std::ostream& log
 ) {
-    const auto function = lookup(environment, lookup_function.name->value);
+    const auto function = lookupDictionary(environment, lookup_function.name->value);
     const auto evaluated_child = evaluate(lookup_function.child, environment, log);
     assert(evaluated_child);
     auto result = apply(function, evaluated_child, log);
@@ -163,7 +179,7 @@ ExpressionPointer evaluateLookupFunction(
 ExpressionPointer evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = lookup(environment, lookup_symbol.name->value);
+    auto result = lookupDictionary(environment, lookup_symbol.name->value);
     log << serialize(result) << std::endl;
     return result;
 }
