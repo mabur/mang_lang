@@ -11,6 +11,5 @@
 
 struct String {
     CodeRange range;
-    ExpressionPointer environment;
     InternalList elements;
 };

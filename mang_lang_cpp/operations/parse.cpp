@@ -313,7 +313,7 @@ ExpressionPointer parseString(CodeRange code) {
         value = ::prepend<ExpressionPointer>(value, item);
     }
     value = ::reverse(value);
-    return makeString(new String{CodeRange{first, code.begin()}, ExpressionPointer{}, value});
+    return makeString(new String{CodeRange{first, code.begin()}, value});
 }
 
 ExpressionPointer parseExpression(CodeRange code) {
