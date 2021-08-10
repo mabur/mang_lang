@@ -77,8 +77,8 @@ ExpressionPointer makeFunctionList(const FunctionList* expression) {
     return ExpressionPointer{FUNCTION_LIST, list_functions.size() - 1};
 }
 
-ExpressionPointer makeList(std::shared_ptr<const List> expression) {
-    lists.push_back(expression);
+ExpressionPointer makeList(const List* expression) {
+    lists.emplace_back(expression);
     return ExpressionPointer{LIST, lists.size() - 1};
 }
 

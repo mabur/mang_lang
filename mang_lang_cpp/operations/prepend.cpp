@@ -5,7 +5,7 @@
 
 ExpressionPointer prependList(const List& list, ExpressionPointer item) {
     auto new_list = ::prepend(list.elements, item);
-    return makeList(std::make_shared<List>(List{list.range, ExpressionPointer{}, new_list}));
+    return makeList(new List{list.range, ExpressionPointer{}, new_list});
 }
 
 ExpressionPointer prependString(const String& string, ExpressionPointer item) {

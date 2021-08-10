@@ -242,11 +242,11 @@ ExpressionPointer parseList(CodeRange code) {
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
-    return makeList(std::make_shared<List>(List{
+    return makeList(new List{
         CodeRange{first, code.first},
         ExpressionPointer{},
         ::reverse(expressions)
-    }));
+    });
 }
 
 ExpressionPointer parseLookupChild(CodeRange code) {
