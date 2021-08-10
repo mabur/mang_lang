@@ -72,8 +72,8 @@ ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression) {
     return ExpressionPointer{FUNCTION_DICTIONARY, dictionary_functions.size() - 1};
 }
 
-ExpressionPointer makeFunctionList(std::shared_ptr<const FunctionList> expression) {
-    list_functions.push_back(expression);
+ExpressionPointer makeFunctionList(const FunctionList* expression) {
+    list_functions.emplace_back(expression);
     return ExpressionPointer{FUNCTION_LIST, list_functions.size() - 1};
 }
 

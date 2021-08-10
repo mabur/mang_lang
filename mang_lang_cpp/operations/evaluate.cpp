@@ -119,9 +119,9 @@ ExpressionPointer evaluateFunctionDictionary(
 ExpressionPointer evaluateFunctionList(
     const FunctionList& function_list, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = makeFunctionList(std::make_shared<FunctionList>(FunctionList{
+    auto result = makeFunctionList(new FunctionList{
         function_list.range, environment, function_list.input_names, function_list.body
-    }));
+    });
     log << serialize(result) << std::endl;
     return result;
 }
