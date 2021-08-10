@@ -4,7 +4,6 @@
 
 struct LookupFunction {
     CodeRange range;
-    ExpressionPointer environment;
     NamePointer name;
     ExpressionPointer child;
 };
