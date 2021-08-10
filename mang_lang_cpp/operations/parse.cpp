@@ -278,7 +278,7 @@ ExpressionPointer parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     return makeLookupSymbol(new LookupSymbol{
-        CodeRange{first, name->range.end()}, ExpressionPointer{}, name
+        CodeRange{first, name->range.end()}, name
     });
 }
 

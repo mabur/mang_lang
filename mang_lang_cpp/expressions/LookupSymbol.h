@@ -4,6 +4,5 @@
 
 struct LookupSymbol {
     CodeRange range;
-    ExpressionPointer environment;
     NamePointer name;
 };
