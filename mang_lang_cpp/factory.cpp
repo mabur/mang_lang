@@ -82,8 +82,8 @@ ExpressionPointer makeList(const List* expression) {
     return ExpressionPointer{LIST, lists.size() - 1};
 }
 
-ExpressionPointer makeLookupChild(std::shared_ptr<const LookupChild> expression) {
-    child_lookups.push_back(expression);
+ExpressionPointer makeLookupChild(const LookupChild* expression) {
+    child_lookups.emplace_back(expression);
     return ExpressionPointer{LOOKUP_CHILD, child_lookups.size() - 1};
 }
 

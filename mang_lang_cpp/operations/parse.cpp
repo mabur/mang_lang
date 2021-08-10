@@ -258,9 +258,9 @@ ExpressionPointer parseLookupChild(CodeRange code) {
     code = parseWhiteSpace(code);
     auto child = parseExpression(code);
     code.first = end(child);
-    return makeLookupChild(std::make_shared<LookupChild>(LookupChild{
+    return makeLookupChild(new LookupChild{
         CodeRange{first, code.first}, ExpressionPointer{}, name, std::move(child)
-    }));
+    });
 }
 
 ExpressionPointer parseLookupFunction(CodeRange code) {

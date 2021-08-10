@@ -72,7 +72,7 @@ ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression);
 ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression);
 ExpressionPointer makeFunctionList(const FunctionList* expression);
 ExpressionPointer makeList(const List* expression);
-ExpressionPointer makeLookupChild(std::shared_ptr<const LookupChild> expression);
+ExpressionPointer makeLookupChild(const LookupChild* expression);
 ExpressionPointer makeLookupFunction(std::shared_ptr<const LookupFunction> expression);
 ExpressionPointer makeLookupSymbol(std::shared_ptr<const LookupSymbol> expression);
 ExpressionPointer makeName(std::shared_ptr<const Name> expression);
