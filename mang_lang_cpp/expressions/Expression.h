@@ -11,8 +11,6 @@
 
 #include "../factory.h"
 
-struct Expression;
-//using ExpressionPointer = std::shared_ptr<const Expression>;
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
 struct Expression {
