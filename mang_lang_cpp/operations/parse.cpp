@@ -64,7 +64,6 @@ NamePointer parseName(CodeRange code) {
     code = parseWhile(code, isNameCharacter);
     return std::make_shared<Name>(Name{
         CodeRange{first, code.first},
-        ExpressionPointer{},
         rawString({first, code.first})
     });
 }
