@@ -57,6 +57,6 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
     return makeDictionary(
-        std::make_shared<Dictionary>(Dictionary{CodeRange{}, ExpressionPointer{}, setContext(elements)})
+        new Dictionary{CodeRange{}, ExpressionPointer{}, setContext(elements)}
     );
 }

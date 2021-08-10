@@ -30,7 +30,7 @@ ExpressionPointer applyFunction(
         )
     };
     const auto middle = makeDictionary(
-        std::make_shared<Dictionary>(Dictionary{CodeRange{}, function.environment, elements})
+        new Dictionary{CodeRange{}, function.environment, elements}
     );
     return evaluate(function.body, middle, log);
 }
@@ -69,9 +69,9 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
         );
     }
     const auto middle = makeDictionary(
-        std::make_shared<Dictionary>(Dictionary{
+        new Dictionary{
             function_list.range, function_list.environment, elements
-        })
+        }
     );
     return evaluate(function_list.body, middle, log);
 }

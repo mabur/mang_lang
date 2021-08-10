@@ -52,8 +52,8 @@ ExpressionPointer makeConditional(const Conditional* expression) {
     return ExpressionPointer{CONDITIONAL, conditionals.size() - 1};
 }
 
-ExpressionPointer makeDictionary(std::shared_ptr<const Dictionary> expression) {
-    dictionaries.push_back(expression);
+ExpressionPointer makeDictionary(const Dictionary* expression) {
+    dictionaries.emplace_back(expression);
     return ExpressionPointer{DICTIONARY, dictionaries.size() - 1};
 }
 
