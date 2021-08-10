@@ -87,8 +87,8 @@ ExpressionPointer makeLookupChild(const LookupChild* expression) {
     return ExpressionPointer{LOOKUP_CHILD, child_lookups.size() - 1};
 }
 
-ExpressionPointer makeLookupFunction(std::shared_ptr<const LookupFunction> expression) {
-    function_lookups.push_back(expression);
+ExpressionPointer makeLookupFunction(const LookupFunction* expression) {
+    function_lookups.emplace_back(expression);
     return ExpressionPointer{LOOKUP_FUNCTION, function_lookups.size() - 1};
 }
 
