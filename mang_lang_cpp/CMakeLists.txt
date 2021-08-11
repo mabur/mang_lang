@@ -4,23 +4,24 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
+        operations/apply.cpp
+        operations/begin.cpp
+        operations/boolean.cpp
+        operations/character.cpp
+        operations/empty.cpp
+        operations/end.cpp
+        operations/evaluate.cpp
+        operations/is_equal.cpp
+        operations/list.cpp
+        operations/lookup.cpp
+        operations/number.cpp
+        operations/parse.cpp
+        operations/prepend.cpp
+        operations/serialize.cpp
+        operations/starts_with.cpp
         built_in_functions/built_in_functions.cpp
-        expressions/Character.cpp
-        expressions/Conditional.cpp
-        expressions/Dictionary.cpp
-        expressions/DictionaryElement.cpp
-        expressions/Expression.cpp
-        expressions/Function.cpp
-        expressions/FunctionBuiltIn.cpp
-        expressions/FunctionDictionary.cpp
-        expressions/FunctionList.cpp
-        expressions/List.cpp
-        expressions/LookupChild.cpp
-        expressions/LookupFunction.cpp
-        expressions/LookupSymbol.cpp
-        expressions/Name.cpp
-        expressions/Number.cpp
-        expressions/String.cpp
+        Expression.cpp
+        factory.cpp
         mang_lang.cpp
         parsing.cpp
         )

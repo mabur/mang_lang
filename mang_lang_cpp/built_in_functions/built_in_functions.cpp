@@ -2,30 +2,33 @@
 
 #include <memory>
 
-#include "../expressions/Dictionary.h"
-#include "../expressions/DictionaryElement.h"
-#include "../expressions/FunctionBuiltIn.h"
+#include "../factory.h"
 
 #include "arithmetic.h"
 #include "equality.h"
 #include "list.h"
 #include "logic.h"
 
-DictionaryElementPointer makeDictionaryElement(
+ExpressionPointer makeDictionaryElement(
     std::string name,
-    std::function<ExpressionPointer(const Expression&)> function
+    std::function<ExpressionPointer(ExpressionPointer)> function
 ) {
-    return std::make_shared<NamedElement>(
-        CodeRange{},
-        nullptr,
-        std::make_shared<Name>(CodeRange{}, nullptr, name),
-        std::make_shared<FunctionBuiltIn>(function),
-        0
+    return makeTypedDictionaryElement(
+        new DictionaryElement{
+            CodeRange{},
+            ExpressionPointer{},
+            std::make_shared<Name>(Name{CodeRange{}, name}),
+            makeFunctionBuiltIn(new FunctionBuiltIn{{}, function}),
+            1,
+            0,
+            0
+        },
+        NAMED_ELEMENT
     );
 }
 
 ExpressionPointer builtIns() {
-    auto elements = std::vector<DictionaryElementPointer>{};
+    auto elements = DictionaryElements{};
     elements.push_back(makeDictionaryElement("min", arithmetic::min));
     elements.push_back(makeDictionaryElement("max", arithmetic::max));
     elements.push_back(makeDictionaryElement("add", arithmetic::add));
@@ -48,8 +51,7 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("unequal", equality::unequal));
     elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
-    setContext(elements);
-    auto environment = std::make_shared<Dictionary>(CodeRange{}, nullptr);
-    environment->elements = elements;
-    return environment;
+    return makeDictionary(
+        new Dictionary{CodeRange{}, ExpressionPointer{}, setContext(elements)}
+    );
 }

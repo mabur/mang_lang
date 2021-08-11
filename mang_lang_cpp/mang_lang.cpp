@@ -1,9 +1,12 @@
 #include <fstream>
 
 #include "mang_lang.h"
-#include "expressions/Expression.h"
+#include "Expression.h"
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
+#include "operations/evaluate.h"
+#include "operations/parse.h"
+#include "operations/serialize.h"
 
 auto nullStream() {
     std::ofstream stream;
@@ -13,17 +16,16 @@ auto nullStream() {
 
 ExpressionPointer parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
-    return Expression::parse({result.data(), result.data() + result.size()});
+    return parseExpression({result.data(), result.data() + result.size()});
 }
 
 std::string reformat(std::string code) {
-    return parse(code)->serialize();
+    return serialize(parse(code));
 }
 
 std::string evaluate(std::string code) {
     auto log = nullStream();
     const auto built_ins = builtIns();
-    const auto standard_library = parse(STANDARD_LIBRARY)->evaluate(built_ins.get(), log);
-    return parse(code)->evaluate(standard_library.get(), log)->serialize();
-    //return parse(code)->evaluate(nullptr, log)->serialize();
+    const auto standard_library = evaluate(parse(STANDARD_LIBRARY), built_ins, log);
+    return serialize(evaluate(parse(code), standard_library, log));
 }
