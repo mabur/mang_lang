@@ -4,8 +4,6 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
-        built_in_functions/built_in_functions.cpp
-        expressions/Expression.cpp
         operations/apply.cpp
         operations/begin.cpp
         operations/boolean.cpp
@@ -21,6 +19,8 @@ add_library(shared
         operations/prepend.cpp
         operations/serialize.cpp
         operations/starts_with.cpp
+        built_in_functions/built_in_functions.cpp
+        Expression.cpp
         factory.cpp
         mang_lang.cpp
         parsing.cpp

@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 bool boolean(ExpressionPointer expression);

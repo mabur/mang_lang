@@ -6,10 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "../parsing.h"
-#include "../SinglyLinkedList.h"
-
-#include "../factory.h"
+#include "factory.h"
+#include "parsing.h"
+#include "SinglyLinkedList.h"
 
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 

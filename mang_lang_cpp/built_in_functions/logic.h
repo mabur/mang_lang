@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 #include "../operations/boolean.h"
 #include "../operations/list.h"

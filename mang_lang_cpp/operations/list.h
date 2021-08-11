@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 InternalList list(ExpressionPointer expression);

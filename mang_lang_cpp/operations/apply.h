@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 ExpressionPointer apply(ExpressionPointer expression, ExpressionPointer input, std::ostream& log);

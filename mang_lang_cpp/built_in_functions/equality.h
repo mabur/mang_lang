@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 #include "../operations/is_equal.h"
 #include "../operations/list.h"

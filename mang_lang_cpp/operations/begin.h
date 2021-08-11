@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 const CodeCharacter* begin(ExpressionPointer expression);

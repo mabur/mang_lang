@@ -1,6 +1,6 @@
 #include "character.h"
 
-#include "../expressions/Expression.h"
+#include "../Expression.h"
 
 char character(ExpressionPointer expression) {
     switch (expression.type) {

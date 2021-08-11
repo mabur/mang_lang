@@ -3,7 +3,7 @@
 #include <cassert>
 #include <vector>
 
-#include "expressions/Expression.h"
+#include "Expression.h"
 
 std::vector<std::shared_ptr<const Character>> characters;
 std::vector<std::shared_ptr<const Conditional>> conditionals;

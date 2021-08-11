@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "../operations/begin.h"
+#include "operations/begin.h"
 
 std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     // Forward pass to set backward jumps:
