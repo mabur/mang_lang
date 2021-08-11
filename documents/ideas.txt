@@ -60,6 +60,35 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   {a = expression}        add a into dictionary
   {(a b) = expression}    Unpack tuple into current dictionary as a and b
   {{a b} = expression}    Unpack dictionary into current dictionary as a and b
+* Oding keyword "using" for unpacking dictionary into dictionary.
+{
+  size = {width=320 height=240}
+  point = {x=10 y=20}
+  rect = {using size using point}
+
+  using std
+
+  max_element = in list out {value = ... index = ...}
+  result = max_element!(3 7 6)
+  value = value@result
+  index = index@result
+  // Alternative
+  using max_element!(3 7 6)
+}
+{
+  size = {width=320 height=240}
+  point = {x=10 y=20}
+  rect = {unpack size unpack point}
+  
+  unpack std
+
+  max_element = in list out {value = ... index = ...}
+  result = max_element!(3 7 6)
+  value = value@result
+  index = index@result
+  // Alternative
+  unpack max_element!(3 7 6)
+}
 
 * Change if-then-else to normal function, and stop supporting recursion?
   - if?(condition then_expression else_expression)
