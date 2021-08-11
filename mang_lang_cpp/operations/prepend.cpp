@@ -1,12 +1,12 @@
 #include "prepend.h"
 
 ExpressionPointer prependList(const List& list, ExpressionPointer item) {
-    auto new_list = ::prepend(list.elements, item);
+    auto new_list = prepend(list.elements, item);
     return makeList(new List{list.range, new_list});
 }
 
 ExpressionPointer prependString(const String& string, ExpressionPointer item) {
-    auto new_list = ::prepend(string.elements, item);
+    auto new_list = prepend(string.elements, item);
     return makeString(new String{string.range, new_list});
 }
 

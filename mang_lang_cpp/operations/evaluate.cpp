@@ -2,11 +2,8 @@
 
 #include <cassert>
 
-#include "../factory.h"
-
 #include "apply.h"
 #include "boolean.h"
-#include "list.h"
 #include "lookup.h"
 #include "serialize.h"
 
@@ -118,13 +115,11 @@ ExpressionPointer evaluateFunctionList(
 ExpressionPointer evaluateList(
     const List& list, ExpressionPointer environment, std::ostream& log
 ) {
-    const auto operation = [&](ExpressionPointer expression) {
+    const auto operation = [&](ExpressionPointer expression) -> ExpressionPointer {
         return evaluate(expression, environment, log);
     };
     auto evaluated_elements = map(list.elements, operation);
-    auto result = makeList(new List{
-        list.range, std::move(evaluated_elements)
-    });
+    auto result = makeList(new List{list.range, std::move(evaluated_elements)});
     log << serialize(result) << std::endl;
     return result;
 }
@@ -150,7 +145,8 @@ ExpressionPointer evaluateLookupChild(
 ) {
     auto result = lookup(
         evaluate(lookup_child.child, environment, log),
-        lookup_child.name->value);
+        lookup_child.name->value
+    );
     log << serialize(result) << std::endl;
     return result;
 }
@@ -186,8 +182,7 @@ ExpressionPointer evaluate(
     ExpressionPointer environment,
     std::ostream& log
 ) {
-    const auto type = expression.type;
-    switch (type) {
+    switch (expression.type) {
         case CHARACTER: return evaluateAtom(expression, environment, log);
         case CONDITIONAL: return evaluateConditional(expression.conditional(), environment, log);
         case DICTIONARY: return evaluateDictionary(expression.dictionary(), environment, log);
