@@ -1,7 +1,5 @@
 #include "number.h"
 
-#include "../Expression.h"
-
 double number(ExpressionPointer expression) {
     switch (expression.type) {
         case NUMBER: return expression.number().value;

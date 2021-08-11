@@ -1,7 +1,5 @@
 #include "character.h"
 
-#include "../Expression.h"
-
 char character(ExpressionPointer expression) {
     switch (expression.type) {
         case CHARACTER: return expression.character().value;
