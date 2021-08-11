@@ -91,8 +91,6 @@ struct String {
     InternalList elements;
 };
 
-using DictionaryElements = std::vector<ExpressionPointer>;
-
 struct DictionaryElement {
     CodeRange range;
     ExpressionPointer environment;
@@ -101,6 +99,14 @@ struct DictionaryElement {
     size_t while_index_;
     size_t end_index_;
     size_t name_index_;
+};
+
+using DictionaryElements = std::vector<ExpressionPointer>;
+
+struct Dictionary {
+    CodeRange range;
+    ExpressionPointer environment;
+    DictionaryElements elements;
 };
 
 DictionaryElements setContext(const DictionaryElements& elements);

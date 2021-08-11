@@ -1,7 +1,5 @@
 #include "lookup.h"
 
-#include "../expressions/Dictionary.h"
-
 ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element) {

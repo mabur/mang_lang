@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include "../expressions/Dictionary.h"
-
 #include "../factory.h"
 
 #include "arithmetic.h"

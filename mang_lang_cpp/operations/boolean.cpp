@@ -1,6 +1,5 @@
 #include "boolean.h"
 
-#include "../expressions/Dictionary.h"
 #include "list.h"
 
 bool boolean(ExpressionPointer expression) {

@@ -1,7 +1,5 @@
 #include "begin.h"
 
-#include "../expressions/Dictionary.h"
-
 const CodeCharacter* begin(ExpressionPointer expression) {
     switch (expression.type) {
         case CHARACTER: return expression.character().range.first;

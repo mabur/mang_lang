@@ -1,6 +1,5 @@
 #include "apply.h"
 
-#include "../expressions/Dictionary.h"
 #include "list.h"
 
 #include "../operations/evaluate.h"

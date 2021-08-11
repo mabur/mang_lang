@@ -3,7 +3,6 @@
 #include <cassert>
 #include <vector>
 
-#include "expressions/Dictionary.h"
 #include "expressions/Expression.h"
 
 std::vector<std::shared_ptr<const Character>> characters;

@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
         built_in_functions/built_in_functions.cpp
-        expressions/Dictionary.cpp
         expressions/Expression.cpp
         operations/apply.cpp
         operations/begin.cpp

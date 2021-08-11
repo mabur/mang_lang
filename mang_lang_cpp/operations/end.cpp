@@ -1,7 +1,5 @@
 #include "end.h"
 
-#include "../expressions/Dictionary.h"
-
 const CodeCharacter* end(ExpressionPointer expression) {
     switch (expression.type) {
         case CHARACTER: return expression.character().range.last;

@@ -2,8 +2,6 @@
 
 #include <cassert>
 
-#include "../expressions/Dictionary.h"
-
 #include "../factory.h"
 
 #include "apply.h"
