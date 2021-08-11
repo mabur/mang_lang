@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../expressions/Expression.h"
-#include "../expressions/List.h"
 #include "../operations/empty.h"
 #include "../operations/list.h"
 #include "../operations/prepend.h"

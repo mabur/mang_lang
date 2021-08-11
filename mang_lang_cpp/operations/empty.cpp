@@ -1,8 +1,5 @@
 #include "empty.h"
 
-#include "../expressions/List.h"
-#include "../expressions/String.h"
-
 #include "../factory.h"
 
 ExpressionPointer empty(ExpressionPointer expression) {

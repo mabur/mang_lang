@@ -1,6 +1,5 @@
 #include "character.h"
 
-#include "../expressions/Character.h"
 #include "../expressions/Expression.h"
 
 char character(ExpressionPointer expression) {

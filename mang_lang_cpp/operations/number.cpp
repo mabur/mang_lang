@@ -1,7 +1,6 @@
 #include "number.h"
 
 #include "../expressions/Expression.h"
-#include "../expressions/Number.h"
 
 double number(ExpressionPointer expression) {
     switch (expression.type) {

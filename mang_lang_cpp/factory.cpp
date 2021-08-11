@@ -3,22 +3,9 @@
 #include <cassert>
 #include <vector>
 
-#include "expressions/Character.h"
-#include "expressions/Conditional.h"
 #include "expressions/Dictionary.h"
 #include "expressions/DictionaryElement.h"
 #include "expressions/Expression.h"
-#include "expressions/Function.h"
-#include "expressions/FunctionBuiltIn.h"
-#include "expressions/FunctionDictionary.h"
-#include "expressions/FunctionList.h"
-#include "expressions/List.h"
-#include "expressions/LookupChild.h"
-#include "expressions/LookupFunction.h"
-#include "expressions/LookupSymbol.h"
-#include "expressions/Name.h"
-#include "expressions/Number.h"
-#include "expressions/String.h"
 
 std::vector<std::shared_ptr<const Character>> characters;
 std::vector<std::shared_ptr<const Conditional>> conditionals;

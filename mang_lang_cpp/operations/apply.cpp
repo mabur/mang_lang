@@ -1,10 +1,6 @@
 #include "apply.h"
 
 #include "../expressions/Dictionary.h"
-#include "../expressions/Function.h"
-#include "../expressions/FunctionBuiltIn.h"
-#include "../expressions/FunctionDictionary.h"
-#include "../expressions/FunctionList.h"
 #include "list.h"
 
 #include "../operations/evaluate.h"

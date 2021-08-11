@@ -3,7 +3,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../expressions/Number.h"
+#include "../expressions/Expression.h"
 
 #include "../operations/list.h"
 #include "../operations/number.h"

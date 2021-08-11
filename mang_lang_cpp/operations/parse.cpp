@@ -1,17 +1,6 @@
 #include "parse.h"
 
-#include "../expressions/Character.h"
-#include "../expressions/Conditional.h"
 #include "../expressions/Dictionary.h"
-#include "../expressions/Function.h"
-#include "../expressions/FunctionDictionary.h"
-#include "../expressions/FunctionList.h"
-#include "../expressions/List.h"
-#include "../expressions/LookupChild.h"
-#include "../expressions/LookupFunction.h"
-#include "../expressions/LookupSymbol.h"
-#include "../expressions/Number.h"
-#include "../expressions/String.h"
 
 #include "../factory.h"
 

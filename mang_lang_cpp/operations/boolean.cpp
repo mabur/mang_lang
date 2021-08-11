@@ -1,9 +1,7 @@
 #include "boolean.h"
 
 #include "../expressions/Dictionary.h"
-#include "../expressions/List.h"
-#include "../expressions/Number.h"
-#include "../expressions/String.h"
+#include "list.h"
 
 bool boolean(ExpressionPointer expression) {
     switch (expression.type) {

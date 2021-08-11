@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 #include "Expression.h"
-#include "Name.h"
 
 using DictionaryElements = std::vector<ExpressionPointer>;
 
