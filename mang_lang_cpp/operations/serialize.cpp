@@ -3,8 +3,6 @@
 #include "character.h"
 #include "list.h"
 
-#include "../factory.h"
-
 std::string serializeName(const Name& name) {
     return name.value;
 }
@@ -137,25 +135,24 @@ std::string serializeString(ExpressionPointer string) {
     return value;
 }
 
-std::string serialize(ExpressionPointer expression_smart) {
-    const auto type = expression_smart.type;
-    switch (type) {
-        case CHARACTER: return serializeCharacter(expression_smart.character());
-        case CONDITIONAL: return serializeConditional(expression_smart.conditional());
-        case DICTIONARY: return serializeDictionary(expression_smart.dictionary());
-        case NAMED_ELEMENT: return serializeDictionaryElement(expression_smart);
-        case WHILE_ELEMENT: return serializeDictionaryElement(expression_smart);
-        case END_ELEMENT: return serializeDictionaryElement(expression_smart);
-        case FUNCTION: return serializeFunction(expression_smart.function());
-        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(expression_smart.functionDictionary());
-        case FUNCTION_LIST: return serializeFunctionList(expression_smart.functionList());
-        case LIST: return serializeList(expression_smart);
-        case LOOKUP_CHILD: return serializeLookupChild(expression_smart.lookupChild());
-        case LOOKUP_FUNCTION: return serializeLookupFunction(expression_smart.lookupFunction());
-        case LOOKUP_SYMBOL: return serializeLookupSymbol(expression_smart.lookupSymbol());
-        case NAME: return serializeName(expression_smart.name());
-        case NUMBER: return serializeNumber(expression_smart.number());
-        case STRING: return serializeString(expression_smart);
-        default: throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(type)};
+std::string serialize(ExpressionPointer expression) {
+    switch (expression.type) {
+        case CHARACTER: return serializeCharacter(expression.character());
+        case CONDITIONAL: return serializeConditional(expression.conditional());
+        case DICTIONARY: return serializeDictionary(expression.dictionary());
+        case NAMED_ELEMENT: return serializeDictionaryElement(expression);
+        case WHILE_ELEMENT: return serializeDictionaryElement(expression);
+        case END_ELEMENT: return serializeDictionaryElement(expression);
+        case FUNCTION: return serializeFunction(expression.function());
+        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(expression.functionDictionary());
+        case FUNCTION_LIST: return serializeFunctionList(expression.functionList());
+        case LIST: return serializeList(expression);
+        case LOOKUP_CHILD: return serializeLookupChild(expression.lookupChild());
+        case LOOKUP_FUNCTION: return serializeLookupFunction(expression.lookupFunction());
+        case LOOKUP_SYMBOL: return serializeLookupSymbol(expression.lookupSymbol());
+        case NAME: return serializeName(expression.name());
+        case NUMBER: return serializeNumber(expression.number());
+        case STRING: return serializeString(expression);
+        default: throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression.type)};
     }
 }
