@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "expressions/Dictionary.h"
-#include "expressions/DictionaryElement.h"
 #include "expressions/Expression.h"
 
 std::vector<std::shared_ptr<const Character>> characters;
