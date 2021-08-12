@@ -11,7 +11,7 @@ ExpressionPointer applyFunction(
 ) {
 
     const auto elements = DictionaryElements{
-        makeTypedDictionaryElement(
+        makeNamedElement(
             new DictionaryElement{
                 function.range,
                 ExpressionPointer{},
@@ -20,8 +20,7 @@ ExpressionPointer applyFunction(
                 1,
                 0,
                 0
-            },
-            NAMED_ELEMENT
+            }
         )
     };
     const auto middle = makeDictionary(
@@ -49,7 +48,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     auto i = size_t{0};
     for (auto list = ::list(input); list; list = list->rest, ++i) {
         elements.push_back(
-            makeTypedDictionaryElement(
+            makeNamedElement(
                 new DictionaryElement{
                     function_list.range,
                     ExpressionPointer{},
@@ -58,8 +57,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
                     1,
                     0,
                     i
-                },
-                NAMED_ELEMENT
+                }
             )
         );
     }

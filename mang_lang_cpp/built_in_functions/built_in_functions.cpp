@@ -13,7 +13,7 @@ ExpressionPointer makeDictionaryElement(
     std::string name,
     std::function<ExpressionPointer(ExpressionPointer)> function
 ) {
-    return makeTypedDictionaryElement(
+    return makeNamedElement(
         new DictionaryElement{
             CodeRange{},
             ExpressionPointer{},
@@ -22,8 +22,7 @@ ExpressionPointer makeDictionaryElement(
             1,
             0,
             0
-        },
-        NAMED_ELEMENT
+        }
     );
 }
 

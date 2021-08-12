@@ -92,11 +92,19 @@ ExpressionPointer makeString(const String* expression) {
     return ExpressionPointer{STRING, strings.size() - 1};
 }
 
-ExpressionPointer makeTypedDictionaryElement(
-    const DictionaryElement* expression, ExpressionType type
-) {
+ExpressionPointer makeNamedElement(const DictionaryElement* expression) {
     dictionary_elements.emplace_back(expression);
-    return ExpressionPointer{type, dictionary_elements.size() - 1};
+    return ExpressionPointer{NAMED_ELEMENT, dictionary_elements.size() - 1};
+}
+
+ExpressionPointer makeWhileElement(const DictionaryElement* expression) {
+    dictionary_elements.emplace_back(expression);
+    return ExpressionPointer{WHILE_ELEMENT, dictionary_elements.size() - 1};
+}
+
+ExpressionPointer makeEndElement(const DictionaryElement* expression) {
+    dictionary_elements.emplace_back(expression);
+    return ExpressionPointer{END_ELEMENT, dictionary_elements.size() - 1};
 }
 
 ExpressionPointer::operator bool () const {

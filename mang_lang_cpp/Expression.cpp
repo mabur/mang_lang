@@ -86,20 +86,39 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         const auto element = elements[i].dictionaryElement();
-        result.push_back(
-            makeTypedDictionaryElement(
-                new DictionaryElement{
-                    element.range,
-                    element.environment,
-                    element.name,
-                    element.expression,
-                    while_indices[i],
-                    end_indices[i],
-                    name_indices[i]
-                },
-                type
-            )
-        );
+        if (type == NAMED_ELEMENT) {
+            result.push_back(makeNamedElement(new DictionaryElement{
+                element.range,
+                element.environment,
+                element.name,
+                element.expression,
+                while_indices[i],
+                end_indices[i],
+                name_indices[i]
+            }));
+        } else if (type == WHILE_ELEMENT) {
+            result.push_back(makeWhileElement(new DictionaryElement{
+                element.range,
+                element.environment,
+                element.name,
+                element.expression,
+                while_indices[i],
+                end_indices[i],
+                name_indices[i]
+            }));
+        } else if (type == END_ELEMENT) {
+            result.push_back(makeEndElement(new DictionaryElement{
+                element.range,
+                element.environment,
+                element.name,
+                element.expression,
+                while_indices[i],
+                end_indices[i],
+                name_indices[i]
+            }));
+        } else {
+            assert("Unexpected type");
+        }
     }
     return result;
 }

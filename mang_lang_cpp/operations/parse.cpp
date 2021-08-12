@@ -63,7 +63,7 @@ ExpressionPointer parseNamedElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    return makeTypedDictionaryElement(
+    return makeNamedElement(
         new DictionaryElement{
             CodeRange{first, code.first},
             ExpressionPointer{},
@@ -72,8 +72,7 @@ ExpressionPointer parseNamedElement(CodeRange code) {
             1,
             0,
             0
-        },
-        NAMED_ELEMENT
+        }
     );
 }
 
@@ -84,7 +83,7 @@ ExpressionPointer parseWhileElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    return makeTypedDictionaryElement(
+    return makeWhileElement(
         new DictionaryElement{
             CodeRange{first, code.first},
             ExpressionPointer{},
@@ -93,8 +92,7 @@ ExpressionPointer parseWhileElement(CodeRange code) {
             1,
             0,
             0
-        },
-        WHILE_ELEMENT
+        }
     );
 }
 
@@ -102,7 +100,7 @@ ExpressionPointer parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeTypedDictionaryElement(
+    return makeEndElement(
         new DictionaryElement{
             CodeRange{first, code.first},
             ExpressionPointer{},
@@ -111,8 +109,7 @@ ExpressionPointer parseEndElement(CodeRange code) {
             1,
             0,
             0
-        },
-        END_ELEMENT
+        }
     );
 }
 

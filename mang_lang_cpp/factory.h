@@ -78,6 +78,6 @@ ExpressionPointer makeLookupSymbol(const LookupSymbol* expression);
 ExpressionPointer makeName(const Name* expression);
 ExpressionPointer makeString(const String* expression);
 
-ExpressionPointer makeTypedDictionaryElement(
-    const DictionaryElement* expression, ExpressionType type
-);
+ExpressionPointer makeNamedElement(const DictionaryElement* expression);
+ExpressionPointer makeWhileElement(const DictionaryElement* expression);
+ExpressionPointer makeEndElement(const DictionaryElement* expression);

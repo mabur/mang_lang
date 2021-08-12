@@ -48,7 +48,7 @@ ExpressionPointer evaluateDictionary(
         const auto type = dictionary.elements[i].type;
         const auto element = dictionary.elements[i].dictionaryElement();
         if (type == NAMED_ELEMENT) {
-            result->elements.at(element.name_index_) = makeTypedDictionaryElement(
+            result->elements.at(element.name_index_) = makeNamedElement(
                 new DictionaryElement{
                     element.range,
                     wrapped_result,
@@ -57,8 +57,7 @@ ExpressionPointer evaluateDictionary(
                     1,
                     0,
                     element.name_index_
-                },
-                NAMED_ELEMENT
+                }
             );
             i += 1;
         }
