@@ -92,8 +92,6 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 element.environment,
                 element.name,
                 element.expression,
-                while_indices[i],
-                end_indices[i],
                 name_indices[i]
             }));
         } else if (type == WHILE_ELEMENT) {

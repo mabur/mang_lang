@@ -51,8 +51,6 @@ ExpressionPointer evaluateDictionary(
                     wrapped_result,
                     element.name,
                     evaluate(element.expression, wrapped_result, log),
-                    1,
-                    0,
                     element.name_index_
                 }
             );

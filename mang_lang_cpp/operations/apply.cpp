@@ -17,8 +17,6 @@ ExpressionPointer applyFunction(
                 ExpressionPointer{},
                 function.input_name,
                 input,
-                1,
-                0,
                 0
             }
         )
@@ -54,8 +52,6 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
                     ExpressionPointer{},
                     function_list.input_names[i],
                     list->first,
-                    1,
-                    0,
                     i
                 }
             )

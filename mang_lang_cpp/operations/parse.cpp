@@ -69,8 +69,6 @@ ExpressionPointer parseNamedElement(CodeRange code) {
             ExpressionPointer{},
             std::move(name),
             expression,
-            1,
-            0,
             0
         }
     );

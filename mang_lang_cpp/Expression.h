@@ -95,8 +95,6 @@ struct DictionaryElement {
     ExpressionPointer environment;
     NamePointer name;
     ExpressionPointer expression;
-    size_t while_index_;
-    size_t end_index_;
     size_t name_index_;
 };
 
