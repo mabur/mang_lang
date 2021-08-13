@@ -8,7 +8,6 @@ add_library(shared
         operations/begin.cpp
         operations/boolean.cpp
         operations/character.cpp
-        operations/empty.cpp
         operations/end.cpp
         operations/evaluate.cpp
         operations/is_equal.cpp

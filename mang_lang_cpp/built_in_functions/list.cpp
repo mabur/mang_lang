@@ -1,10 +1,17 @@
 #include "list.h"
 
 #include "../Expression.h"
-#include "../operations/empty.h"
 #include "../operations/list.h"
 
 namespace list_functions {
+
+ExpressionPointer empty(ExpressionPointer in) {
+    switch (in.type) {
+        case LIST: return makeList(new List{});
+        case STRING: return makeString(new String{});
+        default: throw std::runtime_error{"Expected list"};
+    }
+}
 
 ExpressionPointer prependList(const List& list, ExpressionPointer item) {
     return makeList(new List{list.range, prepend(list.elements, item)});
@@ -23,10 +30,6 @@ ExpressionPointer prepend(ExpressionPointer in) {
         case STRING: return prependString(collection.string(), item);
         default: throw std::runtime_error{"Expected list"};
     }
-}
-
-ExpressionPointer empty(ExpressionPointer in) {
-    return ::empty(in);
 }
 
 }
