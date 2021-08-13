@@ -1,4 +1,5 @@
 #pragma once
-#include "../Expression.h"
+
+struct ExpressionPointer;
 
 ExpressionPointer builtIns();
