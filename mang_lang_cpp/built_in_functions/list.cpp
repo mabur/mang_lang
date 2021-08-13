@@ -1,7 +1,6 @@
 #include "list.h"
 
 #include "../Expression.h"
-#include "../operations/list.h"
 
 namespace list_functions {
 
@@ -22,7 +21,7 @@ ExpressionPointer prependString(const String& string, ExpressionPointer item) {
 }
 
 ExpressionPointer prepend(ExpressionPointer in) {
-    const auto& elements = ::list(in);
+    const auto& elements = in.list().elements;
     const auto& item = first(elements);
     const auto& collection = second(elements);
     switch (collection.type) {
