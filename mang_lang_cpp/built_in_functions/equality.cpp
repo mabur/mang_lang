@@ -2,7 +2,6 @@
 
 #include "../Expression.h"
 #include "../factory.h"
-#include "../operations/character.h"
 #include "../operations/list.h"
 #include "../operations/number.h"
 
@@ -28,7 +27,7 @@ bool isEqual(ExpressionPointer left_smart, ExpressionPointer right_smart) {
         return ::number(left_smart) == ::number(right_smart);
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
-        return ::character(left_smart) == ::character(right_smart);
+        return left_smart.character().value == right_smart.character().value;
     }
     if (left_type == LIST && right_type == LIST) {
         return isEqualList(left_smart, right_smart);

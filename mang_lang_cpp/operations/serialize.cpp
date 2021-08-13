@@ -1,7 +1,5 @@
 #include "serialize.h"
 
-#include "character.h"
-
 std::string serializeName(const Name& name) {
     return name.value;
 }
@@ -122,7 +120,7 @@ std::string serializeString(ExpressionPointer string) {
     auto value = std::string{"\""};
     auto node = string.string().elements;
     for (; node; node = node->rest) {
-        value += character(node->first);
+        value += node->first.character().value;
     }
     value += "\"";
     return value;

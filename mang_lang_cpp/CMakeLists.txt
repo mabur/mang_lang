@@ -7,7 +7,6 @@ add_library(shared
         operations/apply.cpp
         operations/begin.cpp
         operations/boolean.cpp
-        operations/character.cpp
         operations/end.cpp
         operations/evaluate.cpp
         operations/list.cpp
