@@ -109,14 +109,8 @@ DictionaryElements setContext(const DictionaryElements& elements) {
             }));
         } else if (type == END_ELEMENT) {
             const auto element = elements[i].endElement();
-            result.push_back(makeEndElement(new DictionaryElement{
-                element.range,
-                element.environment,
-                element.name,
-                element.expression,
-                while_indices[i],
-                end_indices[i],
-                name_indices[i]
+            result.push_back(makeEndElement(new EndElement{
+                element.range, while_indices[i]
             }));
         } else {
             assert("Unexpected type");

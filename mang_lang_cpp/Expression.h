@@ -100,6 +100,11 @@ struct DictionaryElement {
     size_t name_index_;
 };
 
+struct EndElement {
+    CodeRange range;
+    size_t while_index_;
+};
+
 using DictionaryElements = std::vector<ExpressionPointer>;
 
 struct Dictionary {

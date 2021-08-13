@@ -100,17 +100,7 @@ ExpressionPointer parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeEndElement(
-        new DictionaryElement{
-            CodeRange{first, code.first},
-            ExpressionPointer{},
-            NamePointer{},
-            ExpressionPointer{},
-            1,
-            0,
-            0
-        }
-    );
+    return makeEndElement(new EndElement{CodeRange{first, code.first}, 1});
 }
 
 ExpressionPointer parseDictionaryElement(CodeRange code) {

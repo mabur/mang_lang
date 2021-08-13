@@ -27,7 +27,7 @@ std::string serializeWhileElement(const DictionaryElement& element) {
     return "while " + serialize(element.expression) + ' ';
 }
 
-std::string serializeEndElement(const DictionaryElement&) {
+std::string serializeEndElement(const EndElement&) {
     return "end ";
 }
 
