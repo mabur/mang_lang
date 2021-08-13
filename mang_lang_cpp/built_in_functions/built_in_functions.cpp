@@ -5,7 +5,6 @@
 #include "../factory.h"
 
 #include "arithmetic.h"
-#include "equality.h"
 #include "list.h"
 #include "logic.h"
 
@@ -43,8 +42,8 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("and", logic::all));
     elements.push_back(makeDictionaryElement("or", logic::any));
     elements.push_back(makeDictionaryElement("none", logic::none));
-    elements.push_back(makeDictionaryElement("equal", equality::equal));
-    elements.push_back(makeDictionaryElement("unequal", equality::unequal));
+    elements.push_back(makeDictionaryElement("equal", logic::equal));
+    elements.push_back(makeDictionaryElement("unequal", logic::unequal));
     elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
     return makeDictionary(
