@@ -92,7 +92,6 @@ struct String {
 
 struct NamedElement {
     CodeRange range;
-    ExpressionPointer environment;
     NamePointer name;
     ExpressionPointer expression;
     size_t name_index_;

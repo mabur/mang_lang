@@ -66,7 +66,6 @@ ExpressionPointer parseNamedElement(CodeRange code) {
     return makeNamedElement(
         new NamedElement{
             CodeRange{first, code.first},
-            ExpressionPointer{},
             std::move(name),
             expression,
             0

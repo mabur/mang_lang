@@ -48,7 +48,6 @@ ExpressionPointer evaluateDictionary(
             result->elements.at(element.name_index_) = makeNamedElement(
                 new NamedElement{
                     element.range,
-                    wrapped_result,
                     element.name,
                     evaluate(element.expression, wrapped_result, log),
                     element.name_index_

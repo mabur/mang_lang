@@ -14,7 +14,6 @@ ExpressionPointer applyFunction(
         makeNamedElement(
             new NamedElement{
                 function.range,
-                ExpressionPointer{},
                 function.input_name,
                 input,
                 0
@@ -49,7 +48,6 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
             makeNamedElement(
                 new NamedElement{
                     function_list.range,
-                    ExpressionPointer{},
                     function_list.input_names[i],
                     list->first,
                     i

@@ -89,7 +89,6 @@ DictionaryElements setContext(const DictionaryElements& elements) {
             const auto element = elements[i].namedElement();
             result.push_back(makeNamedElement(new NamedElement{
                 element.range,
-                element.environment,
                 element.name,
                 element.expression,
                 name_indices[i]
