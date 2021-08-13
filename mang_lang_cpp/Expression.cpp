@@ -98,7 +98,6 @@ DictionaryElements setContext(const DictionaryElements& elements) {
             const auto element = elements[i].whileElement();
             result.push_back(makeWhileElement(new WhileElement{
                 element.range,
-                element.environment,
                 element.expression,
                 end_indices[i],
             }));

@@ -84,7 +84,6 @@ ExpressionPointer parseWhileElement(CodeRange code) {
     return makeWhileElement(
         new WhileElement{
             CodeRange{first, code.first},
-            ExpressionPointer{},
             expression,
             0,
         }

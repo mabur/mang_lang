@@ -100,7 +100,6 @@ struct NamedElement {
 
 struct WhileElement {
     CodeRange range;
-    ExpressionPointer environment;
     ExpressionPointer expression;
     size_t end_index_;
 };
