@@ -18,6 +18,7 @@ add_library(shared
         operations/serialize.cpp
         operations/starts_with.cpp
         built_in_functions/built_in_functions.cpp
+        built_in_functions/equality.cpp
         built_in_functions/list.cpp
         Expression.cpp
         factory.cpp
