@@ -20,6 +20,7 @@ std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const String>> strings;
 
+std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const DictionaryElement>> dictionary_elements;
 
@@ -98,9 +99,9 @@ ExpressionPointer makeNamedElement(const DictionaryElement* expression) {
     return ExpressionPointer{NAMED_ELEMENT, dictionary_elements.size() - 1};
 }
 
-ExpressionPointer makeWhileElement(const DictionaryElement* expression) {
-    dictionary_elements.emplace_back(expression);
-    return ExpressionPointer{WHILE_ELEMENT, dictionary_elements.size() - 1};
+ExpressionPointer makeWhileElement(const WhileElement* expression) {
+    while_elements.emplace_back(expression);
+    return ExpressionPointer{WHILE_ELEMENT, while_elements.size() - 1};
 }
 
 ExpressionPointer makeEndElement(const EndElement* expression) {
@@ -113,9 +114,9 @@ DictionaryElement ExpressionPointer::namedElement() const {
     return *dictionary_elements.at(index).get();
 }
 
-DictionaryElement ExpressionPointer::whileElement() const {
+WhileElement ExpressionPointer::whileElement() const {
     assert(type == WHILE_ELEMENT);
-    return *dictionary_elements.at(index).get();
+    return *while_elements.at(index).get();
 }
 
 EndElement ExpressionPointer::endElement() const {

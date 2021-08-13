@@ -20,6 +20,7 @@ struct LookupSymbol;
 struct Name;
 struct Number;
 struct String;
+struct WhileElement;
 struct EndElement;
 
 enum ExpressionType {
@@ -48,7 +49,7 @@ struct ExpressionPointer {
     size_t index = 0;
 
     DictionaryElement namedElement() const;
-    DictionaryElement whileElement() const;
+    WhileElement whileElement() const;
     EndElement endElement() const;
     Number number() const;
     Character character() const;
@@ -82,5 +83,5 @@ ExpressionPointer makeName(const Name* expression);
 ExpressionPointer makeString(const String* expression);
 
 ExpressionPointer makeNamedElement(const DictionaryElement* expression);
-ExpressionPointer makeWhileElement(const DictionaryElement* expression);
+ExpressionPointer makeWhileElement(const WhileElement* expression);
 ExpressionPointer makeEndElement(const EndElement* expression);

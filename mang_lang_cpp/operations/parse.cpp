@@ -84,14 +84,11 @@ ExpressionPointer parseWhileElement(CodeRange code) {
     code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeWhileElement(
-        new DictionaryElement{
+        new WhileElement{
             CodeRange{first, code.first},
             ExpressionPointer{},
-            NamePointer{},
             expression,
-            1,
             0,
-            0
         }
     );
 }

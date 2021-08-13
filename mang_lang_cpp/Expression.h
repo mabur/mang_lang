@@ -100,6 +100,13 @@ struct DictionaryElement {
     size_t name_index_;
 };
 
+struct WhileElement {
+    CodeRange range;
+    ExpressionPointer environment;
+    ExpressionPointer expression;
+    size_t end_index_;
+};
+
 struct EndElement {
     CodeRange range;
     size_t while_index_;
