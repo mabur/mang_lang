@@ -15,7 +15,7 @@ struct FunctionDictionary;
 struct FunctionList;
 struct List;
 struct LookupChild;
-struct LookupFunction;
+struct FunctionApplication;
 struct LookupSymbol;
 struct Name;
 struct Number;
@@ -33,7 +33,7 @@ enum ExpressionType {
     FUNCTION_LIST,
     LIST,
     LOOKUP_CHILD,
-    LOOKUP_FUNCTION,
+    FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
     NAME,
     NAMED_ELEMENT,
@@ -61,7 +61,7 @@ struct ExpressionPointer {
     FunctionList functionList() const;
     List list() const;
     LookupChild lookupChild() const;
-    LookupFunction lookupFunction() const;
+    FunctionApplication functionApplication() const;
     LookupSymbol lookupSymbol() const;
     Name name() const;
     String string() const;
@@ -77,7 +77,7 @@ ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression);
 ExpressionPointer makeFunctionList(const FunctionList* expression);
 ExpressionPointer makeList(const List* expression);
 ExpressionPointer makeLookupChild(const LookupChild* expression);
-ExpressionPointer makeLookupFunction(const LookupFunction* expression);
+ExpressionPointer makeFunctionApplication(const FunctionApplication* expression);
 ExpressionPointer makeLookupSymbol(const LookupSymbol* expression);
 ExpressionPointer makeName(const Name* expression);
 ExpressionPointer makeString(const String* expression);

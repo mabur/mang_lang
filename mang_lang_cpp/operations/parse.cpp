@@ -228,7 +228,7 @@ ExpressionPointer parseLookupFunction(CodeRange code) {
     code = parseCharacter(code, expected);
     auto child = parseExpression(code);
     code.first = end(child);
-    return makeLookupFunction(new LookupFunction{
+    return makeFunctionApplication(new FunctionApplication{
         CodeRange{first, code.first}, name, child
     });
 }

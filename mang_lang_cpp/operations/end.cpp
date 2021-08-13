@@ -13,7 +13,7 @@ const CodeCharacter* end(ExpressionPointer expression) {
         case FUNCTION_LIST: return expression.functionList().range.last;
         case LIST: return expression.list().range.last;
         case LOOKUP_CHILD: return expression.lookupChild().range.last;
-        case LOOKUP_FUNCTION: return expression.lookupFunction().range.last;
+        case FUNCTION_APPLICATION: return expression.functionApplication().range.last;
         case LOOKUP_SYMBOL: return expression.lookupSymbol().range.last;
         case NAME: return expression.name().range.last;
         case NUMBER: return expression.number().range.last;

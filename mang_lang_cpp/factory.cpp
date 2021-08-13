@@ -14,7 +14,7 @@ std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
 std::vector<std::shared_ptr<const FunctionList>> list_functions;
 std::vector<std::shared_ptr<const List>> lists;
 std::vector<std::shared_ptr<const LookupChild>> child_lookups;
-std::vector<std::shared_ptr<const LookupFunction>> function_lookups;
+std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
 std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
@@ -73,9 +73,9 @@ ExpressionPointer makeLookupChild(const LookupChild* expression) {
     return ExpressionPointer{LOOKUP_CHILD, child_lookups.size() - 1};
 }
 
-ExpressionPointer makeLookupFunction(const LookupFunction* expression) {
-    function_lookups.emplace_back(expression);
-    return ExpressionPointer{LOOKUP_FUNCTION, function_lookups.size() - 1};
+ExpressionPointer makeFunctionApplication(const FunctionApplication* expression) {
+    function_applications.emplace_back(expression);
+    return ExpressionPointer{FUNCTION_APPLICATION, function_applications.size() - 1};
 }
 
 ExpressionPointer makeLookupSymbol(const LookupSymbol* expression) {
@@ -173,9 +173,9 @@ LookupChild ExpressionPointer::lookupChild() const {
     return *child_lookups.at(index).get();
 }
 
-LookupFunction ExpressionPointer::lookupFunction() const {
-    assert(type == LOOKUP_FUNCTION);
-    return *function_lookups.at(index).get();
+FunctionApplication ExpressionPointer::functionApplication() const {
+    assert(type == FUNCTION_APPLICATION);
+    return *function_applications.at(index).get();
 }
 
 LookupSymbol ExpressionPointer::lookupSymbol() const {

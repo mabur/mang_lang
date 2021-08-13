@@ -187,10 +187,10 @@ ExpressionPointer evaluateLookupChild(
 }
 
 ExpressionPointer evaluateLookupFunction(
-    const LookupFunction& lookup_function, ExpressionPointer environment, std::ostream& log
+    const FunctionApplication& function_application, ExpressionPointer environment, std::ostream& log
 ) {
-    const auto function = lookupDictionary(environment, lookup_function.name->value);
-    const auto evaluated_child = evaluate(lookup_function.child, environment, log);
+    const auto function = lookupDictionary(environment, function_application.name->value);
+    const auto evaluated_child = evaluate(function_application.child, environment, log);
     auto result = apply(function, evaluated_child, log);
     log << serialize(result) << std::endl;
     return result;
@@ -225,7 +225,7 @@ ExpressionPointer evaluate(
         case FUNCTION_LIST: return evaluateFunctionList(expression.functionList(), environment, log);
         case LIST: return evaluateList(expression.list(), environment, log);
         case LOOKUP_CHILD: return evaluateLookupChild(expression.lookupChild(), environment, log);
-        case LOOKUP_FUNCTION: return evaluateLookupFunction(expression.lookupFunction(), environment, log);
+        case FUNCTION_APPLICATION: return evaluateLookupFunction(expression.functionApplication(), environment, log);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(expression.lookupSymbol(), environment, log);
         case NUMBER: return evaluateAtom(expression, environment, log);
         case STRING: return evaluateAtom(expression, environment, log);

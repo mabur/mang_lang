@@ -69,7 +69,7 @@ struct LookupChild {
     ExpressionPointer child;
 };
 
-struct LookupFunction {
+struct FunctionApplication {
     CodeRange range;
     NamePointer name;
     ExpressionPointer child;

@@ -102,8 +102,9 @@ std::string serializeLookupChild(const LookupChild& lookup_child) {
     return serializeName(*lookup_child.name) + "@" + serialize(lookup_child.child);
 }
 
-std::string serializeLookupFunction(const LookupFunction& lookup_function) {
-    return serializeName(*lookup_function.name) + "!" + serialize(lookup_function.child);
+std::string serializeFunctionApplication(const FunctionApplication& function_application) {
+    return serializeName(*function_application.name) + "!" +
+        serialize(function_application.child);
 }
 
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
@@ -139,7 +140,7 @@ std::string serialize(ExpressionPointer expression) {
         case FUNCTION_LIST: return serializeFunctionList(expression.functionList());
         case LIST: return serializeList(expression);
         case LOOKUP_CHILD: return serializeLookupChild(expression.lookupChild());
-        case LOOKUP_FUNCTION: return serializeLookupFunction(expression.lookupFunction());
+        case FUNCTION_APPLICATION: return serializeFunctionApplication(expression.functionApplication());
         case LOOKUP_SYMBOL: return serializeLookupSymbol(expression.lookupSymbol());
         case NAME: return serializeName(expression.name());
         case NUMBER: return serializeNumber(expression.number());
