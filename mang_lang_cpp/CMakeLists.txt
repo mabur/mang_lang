@@ -9,7 +9,6 @@ add_library(shared
         operations/boolean.cpp
         operations/end.cpp
         operations/evaluate.cpp
-        operations/list.cpp
         operations/lookup.cpp
         operations/parse.cpp
         operations/serialize.cpp

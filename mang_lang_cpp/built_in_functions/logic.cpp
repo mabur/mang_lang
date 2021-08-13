@@ -3,9 +3,16 @@
 #include "../Expression.h"
 #include "../factory.h"
 #include "../operations/boolean.h"
-#include "../operations/list.h"
 
 namespace logic {
+
+InternalList list(ExpressionPointer expression) {
+    switch (expression.type) {
+        case LIST: return expression.list().elements;
+        case STRING: return expression.string().elements;
+        default: throw std::runtime_error{"Expected list"};
+    }
+}
 
 bool isTrue(ExpressionPointer x) {
     return ::boolean(x);
