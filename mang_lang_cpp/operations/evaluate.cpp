@@ -8,7 +8,8 @@
 ExpressionPointer evaluateConditional(
     const Conditional& conditional, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = boolean(evaluate(conditional.expression_if, environment, log)) ?
+    const auto result =
+        boolean(evaluate(conditional.expression_if, environment, log)) ?
         evaluate(conditional.expression_then, environment, log) :
         evaluate(conditional.expression_else, environment, log);
     log << serialize(result) << std::endl;
@@ -73,7 +74,7 @@ ExpressionPointer evaluateDictionary(
 ExpressionPointer evaluateFunction(
     const Function& function, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = makeFunction(new Function{
+    const auto result = makeFunction(new Function{
         function.range, environment, function.input_name, function.body
     });
     log << serialize(result) << std::endl;
@@ -83,7 +84,7 @@ ExpressionPointer evaluateFunction(
 ExpressionPointer evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = makeFunctionDictionary(
+    const auto result = makeFunctionDictionary(
         new FunctionDictionary{
             function_dictionary.range,
             environment,
@@ -98,7 +99,7 @@ ExpressionPointer evaluateFunctionDictionary(
 ExpressionPointer evaluateFunctionList(
     const FunctionList& function_list, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = makeFunctionList(new FunctionList{
+    const auto result = makeFunctionList(new FunctionList{
         function_list.range, environment, function_list.input_names, function_list.body
     });
     log << serialize(result) << std::endl;
@@ -112,7 +113,7 @@ ExpressionPointer evaluateList(
         return evaluate(expression, environment, log);
     };
     auto evaluated_elements = map(list.elements, operation);
-    auto result = makeList(new List{list.range, std::move(evaluated_elements)});
+    const auto result = makeList(new List{list.range, std::move(evaluated_elements)});
     log << serialize(result) << std::endl;
     return result;
 }
@@ -177,10 +178,8 @@ ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& n
 ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = lookupChild(
-        evaluate(lookup_child.child, environment, log),
-        lookup_child.name->value
-    );
+    const auto child = evaluate(lookup_child.child, environment, log);
+    const auto result = lookupChild(child, lookup_child.name->value);
     log << serialize(result) << std::endl;
     return result;
 }
@@ -235,9 +234,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
         );
     }
     const auto middle = makeDictionary(
-        new Dictionary{
-            function_list.range, function_list.environment, elements
-        }
+        new Dictionary{function_list.range, function_list.environment, elements}
     );
     return evaluate(function_list.body, middle, log);
 }
@@ -257,7 +254,7 @@ ExpressionPointer evaluateFunctionApplication(
 ) {
     const auto function = lookupDictionary(environment, function_application.name->value);
     const auto evaluated_child = evaluate(function_application.child, environment, log);
-    auto result = apply(function, evaluated_child, log);
+    const auto result = apply(function, evaluated_child, log);
     log << serialize(result) << std::endl;
     return result;
 }
@@ -265,7 +262,7 @@ ExpressionPointer evaluateFunctionApplication(
 ExpressionPointer evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = lookupDictionary(environment, lookup_symbol.name->value);
+    const auto result = lookupDictionary(environment, lookup_symbol.name->value);
     log << serialize(result) << std::endl;
     return result;
 }
