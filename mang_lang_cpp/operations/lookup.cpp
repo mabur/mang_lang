@@ -1,6 +1,6 @@
 #include "lookup.h"
 
-ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::string& name) {
+ExpressionPointer lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element.type == NAMED_ELEMENT) {
             const auto dictionary_element = element.namedElement();
@@ -12,7 +12,7 @@ ExpressionPointer lookupDictionary(const Dictionary& dictionary, const std::stri
     throw std::runtime_error("Dictionary does not contain symbol " + name);
 }
 
-ExpressionPointer lookupList(const List& list, const std::string& name) {
+ExpressionPointer lookupChildInList(const List& list, const std::string& name) {
     if (name == "first") {
         return list.elements->first;
     }
@@ -22,7 +22,7 @@ ExpressionPointer lookupList(const List& list, const std::string& name) {
     throw std::runtime_error("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookupString(const String& string, const std::string& name) {
+ExpressionPointer lookupChildInString(const String& string, const std::string& name) {
     if (name == "first") {
         return string.elements->first;
     }
@@ -32,11 +32,11 @@ ExpressionPointer lookupString(const String& string, const std::string& name) {
     throw std::runtime_error("String does not contain symbol " + name);
 }
 
-ExpressionPointer lookup(ExpressionPointer expression, const std::string& name) {
+ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& name) {
     switch(expression.type) {
-        case DICTIONARY: return lookupDictionary(expression.dictionary(), name);
-        case LIST: return lookupList(expression.list(), name);
-        case STRING: return lookupString(expression.string(), name);
-        default: throw std::runtime_error{"Cannot lookup expression of type " + std::to_string(expression.type)};
+        case DICTIONARY: return lookupChildInDictionary(expression.dictionary(), name);
+        case LIST: return lookupChildInList(expression.list(), name);
+        case STRING: return lookupChildInString(expression.string(), name);
+        default: throw std::runtime_error{"Cannot lookupChild expression of type " + std::to_string(expression.type)};
     }
 }

@@ -2,4 +2,4 @@
 
 #include "../Expression.h"
 
-ExpressionPointer lookup(ExpressionPointer expression, const std::string& name);
+ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& name);

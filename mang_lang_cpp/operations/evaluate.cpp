@@ -138,7 +138,7 @@ ExpressionPointer lookupDictionary(const ExpressionPointer& expression, const st
 ExpressionPointer evaluateLookupChild(
     const LookupChild& lookup_child, ExpressionPointer environment, std::ostream& log
 ) {
-    auto result = lookup(
+    auto result = lookupChild(
         evaluate(lookup_child.child, environment, log),
         lookup_child.name->value
     );
