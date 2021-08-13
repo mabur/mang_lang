@@ -3,7 +3,6 @@
 #include "../Expression.h"
 #include "../factory.h"
 #include "../operations/list.h"
-#include "../operations/number.h"
 
 namespace equality {
 
@@ -24,7 +23,7 @@ bool isEqual(ExpressionPointer left, ExpressionPointer right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
-        return ::number(left) == ::number(right);
+        return left.number().value == right.number().value;
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return left.character().value == right.character().value;

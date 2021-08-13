@@ -4,12 +4,13 @@
 #include <limits>
 
 #include "../Expression.h"
-
-#include "../operations/number.h"
-
 #include "../factory.h"
 
 namespace arithmetic {
+
+double number(ExpressionPointer expression) {
+    return expression.number().value;
+}
 
 ExpressionPointer makeNumber(double x) {
     return makeNumber(new Number(Number{CodeRange{}, x}));
