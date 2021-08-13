@@ -46,7 +46,11 @@ struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
     operator bool () const;
+    // TODO: lägg till getters namngivna som namedElerment, whileElement, endElement,
     DictionaryElement dictionaryElement() const;
+    DictionaryElement namedElement() const;
+    DictionaryElement whileElement() const;
+    DictionaryElement endElement() const;
     Number number() const;
     Character character() const;
     Conditional conditional() const;

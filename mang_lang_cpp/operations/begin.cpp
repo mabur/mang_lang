@@ -5,9 +5,9 @@ const CodeCharacter* begin(ExpressionPointer expression) {
         case CHARACTER: return expression.character().range.first;
         case CONDITIONAL: return expression.conditional().range.first;
         case DICTIONARY: return expression.dictionary().range.first;
-        case NAMED_ELEMENT: return expression.dictionaryElement().range.first;
-        case WHILE_ELEMENT: return expression.dictionaryElement().range.first;
-        case END_ELEMENT: return expression.dictionaryElement().range.first;
+        case NAMED_ELEMENT: return expression.namedElement().range.first;
+        case WHILE_ELEMENT: return expression.whileElement().range.first;
+        case END_ELEMENT: return expression.endElement().range.first;
         case FUNCTION: return expression.function().range.first;
         case FUNCTION_DICTIONARY: return expression.functionDictionary().range.first;
         case FUNCTION_LIST: return expression.functionList().range.first;

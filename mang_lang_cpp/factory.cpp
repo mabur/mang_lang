@@ -116,6 +116,21 @@ DictionaryElement ExpressionPointer::dictionaryElement() const {
     return *dictionary_elements.at(index).get();
 }
 
+DictionaryElement ExpressionPointer::namedElement() const {
+    assert(type == NAMED_ELEMENT);
+    return *dictionary_elements.at(index).get();
+}
+
+DictionaryElement ExpressionPointer::whileElement() const {
+    assert(type == WHILE_ELEMENT);
+    return *dictionary_elements.at(index).get();
+}
+
+DictionaryElement ExpressionPointer::endElement() const {
+    assert(type == END_ELEMENT);
+    return *dictionary_elements.at(index).get();
+}
+
 Number ExpressionPointer::number() const {
     assert(type == NUMBER);
     return *numbers.at(index).get();

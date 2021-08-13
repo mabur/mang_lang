@@ -17,32 +17,25 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
-std::string serializeNamedElement(ExpressionPointer element) {
+std::string serializeNamedElement(const DictionaryElement& element) {
     return
-        serializeName(*element.dictionaryElement().name) + '=' +
-        serialize(element.dictionaryElement().expression) + ' ';
+        serializeName(*element.name) + '=' +
+        serialize(element.expression) + ' ';
 }
 
-std::string serializeWhileElement(ExpressionPointer element) {
-    return "while " + serialize(element.dictionaryElement().expression) + ' ';
+std::string serializeWhileElement(const DictionaryElement& element) {
+    return "while " + serialize(element.expression) + ' ';
 }
 
-std::string serializeEndElement(ExpressionPointer) {
+std::string serializeEndElement(const DictionaryElement&) {
     return "end ";
-}
-
-std::string serializeDictionaryElement(ExpressionPointer expression) {
-    if (expression.type == NAMED_ELEMENT) {return serializeNamedElement(expression);}
-    if (expression.type == WHILE_ELEMENT) {return serializeWhileElement(expression);}
-    if (expression.type == END_ELEMENT) {return serializeEndElement(expression);}
-    throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression.type)};
 }
 
 std::string serializeDictionary(const Dictionary& dictionary) {
     auto result = std::string{};
     result += '{';
     for (const auto& element : dictionary.elements) {
-        result += serializeDictionaryElement(element);
+        result += serialize(element);
     }
     if (dictionary.elements.empty()) {
         result += '}';
@@ -140,9 +133,9 @@ std::string serialize(ExpressionPointer expression) {
         case CHARACTER: return serializeCharacter(expression.character());
         case CONDITIONAL: return serializeConditional(expression.conditional());
         case DICTIONARY: return serializeDictionary(expression.dictionary());
-        case NAMED_ELEMENT: return serializeDictionaryElement(expression);
-        case WHILE_ELEMENT: return serializeDictionaryElement(expression);
-        case END_ELEMENT: return serializeDictionaryElement(expression);
+        case NAMED_ELEMENT: return serializeNamedElement(expression.namedElement());
+        case WHILE_ELEMENT: return serializeWhileElement(expression.whileElement());
+        case END_ELEMENT: return serializeEndElement(expression.endElement());
         case FUNCTION: return serializeFunction(expression.function());
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(expression.functionDictionary());
         case FUNCTION_LIST: return serializeFunctionList(expression.functionList());

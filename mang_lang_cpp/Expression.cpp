@@ -59,7 +59,7 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto name = elements[i].dictionaryElement().name->value;
+            const auto name = elements[i].namedElement().name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
@@ -86,7 +86,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto element = elements[i].dictionaryElement();
+            const auto element = elements[i].namedElement();
             result.push_back(makeNamedElement(new DictionaryElement{
                 element.range,
                 element.environment,
@@ -97,7 +97,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 name_indices[i]
             }));
         } else if (type == WHILE_ELEMENT) {
-            const auto element = elements[i].dictionaryElement();
+            const auto element = elements[i].whileElement();
             result.push_back(makeWhileElement(new DictionaryElement{
                 element.range,
                 element.environment,
@@ -108,7 +108,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 name_indices[i]
             }));
         } else if (type == END_ELEMENT) {
-            const auto element = elements[i].dictionaryElement();
+            const auto element = elements[i].endElement();
             result.push_back(makeEndElement(new DictionaryElement{
                 element.range,
                 element.environment,
