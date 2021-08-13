@@ -10,7 +10,6 @@ add_library(shared
         operations/character.cpp
         operations/end.cpp
         operations/evaluate.cpp
-        operations/is_equal.cpp
         operations/list.cpp
         operations/lookup.cpp
         operations/number.cpp
