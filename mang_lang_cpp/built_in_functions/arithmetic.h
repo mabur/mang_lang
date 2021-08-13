@@ -5,7 +5,6 @@
 
 #include "../Expression.h"
 
-#include "../operations/list.h"
 #include "../operations/number.h"
 
 #include "../factory.h"
@@ -21,7 +20,7 @@ ExpressionPointer min(ExpressionPointer in) {
         return std::min(left, number(right));
     };
     const auto init = std::numeric_limits<double>::infinity();
-    const auto result = leftFold(list(in), init, operation);
+    const auto result = leftFold(in.list().elements, init, operation);
     return makeNumber(result);
 }
 
@@ -30,7 +29,7 @@ ExpressionPointer max(ExpressionPointer in) {
         return std::max(left, number(right));
     };
     const auto init = -std::numeric_limits<double>::infinity();
-    const auto result = leftFold(list(in), init, operation);
+    const auto result = leftFold(in.list().elements, init, operation);
     return makeNumber(result);
 }
 
@@ -39,7 +38,7 @@ ExpressionPointer add(ExpressionPointer in) {
         return left + number(right);
     };
     const auto init = 0;
-    const auto result = leftFold(list(in), init, operation);
+    const auto result = leftFold(in.list().elements, init, operation);
     return makeNumber(result);
 }
 
@@ -48,12 +47,12 @@ ExpressionPointer mul(ExpressionPointer in) {
         return left * number(right);
     };
     const auto init = 1.0;
-    const auto result = leftFold(list(in), init, operation);
+    const auto result = leftFold(in.list().elements, init, operation);
     return makeNumber(result);
 }
 
 ExpressionPointer sub(ExpressionPointer in) {
-    const auto& elements = list(in);
+    const auto& elements = in.list().elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
     const auto result = number(left) - number(right);
@@ -61,7 +60,7 @@ ExpressionPointer sub(ExpressionPointer in) {
 }
 
 ExpressionPointer div(ExpressionPointer in) {
-    const auto& elements = list(in);
+    const auto& elements = in.list().elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
     const auto result = number(left) / number(right);
@@ -79,7 +78,7 @@ ExpressionPointer sqrt(ExpressionPointer in) {
 }
 
 ExpressionPointer less(ExpressionPointer in) {
-    const auto& elements = list(in);
+    const auto& elements = in.list().elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
     const auto result = number(left) < number(right);
@@ -87,7 +86,7 @@ ExpressionPointer less(ExpressionPointer in) {
 }
 
 ExpressionPointer less_or_equal(ExpressionPointer in) {
-    const auto& elements = list(in);
+    const auto& elements = in.list().elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
     const auto result = number(left) <= number(right);
