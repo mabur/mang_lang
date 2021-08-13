@@ -90,7 +90,7 @@ struct String {
     InternalList elements;
 };
 
-struct DictionaryElement {
+struct NamedElement {
     CodeRange range;
     ExpressionPointer environment;
     NamePointer name;

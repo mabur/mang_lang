@@ -7,7 +7,7 @@
 struct Character;
 struct Conditional;
 struct Dictionary;
-struct DictionaryElement;
+struct NamedElement;
 struct Expression;
 struct Function;
 struct FunctionBuiltIn;
@@ -48,7 +48,7 @@ struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
 
-    DictionaryElement namedElement() const;
+    NamedElement namedElement() const;
     WhileElement whileElement() const;
     EndElement endElement() const;
     Number number() const;
@@ -82,6 +82,6 @@ ExpressionPointer makeLookupSymbol(const LookupSymbol* expression);
 ExpressionPointer makeName(const Name* expression);
 ExpressionPointer makeString(const String* expression);
 
-ExpressionPointer makeNamedElement(const DictionaryElement* expression);
+ExpressionPointer makeNamedElement(const NamedElement* expression);
 ExpressionPointer makeWhileElement(const WhileElement* expression);
 ExpressionPointer makeEndElement(const EndElement* expression);

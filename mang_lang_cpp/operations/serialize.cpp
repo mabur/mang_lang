@@ -17,7 +17,7 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
-std::string serializeNamedElement(const DictionaryElement& element) {
+std::string serializeNamedElement(const NamedElement& element) {
     return
         serializeName(*element.name) + '=' +
         serialize(element.expression) + ' ';

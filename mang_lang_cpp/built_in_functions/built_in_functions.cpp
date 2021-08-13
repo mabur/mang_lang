@@ -14,7 +14,7 @@ ExpressionPointer makeDictionaryElement(
     std::function<ExpressionPointer(ExpressionPointer)> function
 ) {
     return makeNamedElement(
-        new DictionaryElement{
+        new NamedElement{
             CodeRange{},
             ExpressionPointer{},
             std::make_shared<Name>(Name{CodeRange{}, name}),

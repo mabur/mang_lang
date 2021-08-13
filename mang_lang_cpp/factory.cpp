@@ -22,7 +22,7 @@ std::vector<std::shared_ptr<const String>> strings;
 
 std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
-std::vector<std::shared_ptr<const DictionaryElement>> dictionary_elements;
+std::vector<std::shared_ptr<const NamedElement>> dictionary_elements;
 
 ExpressionPointer makeNumber(const Number* expression) {
     numbers.emplace_back(expression);
@@ -94,7 +94,7 @@ ExpressionPointer makeString(const String* expression) {
     return ExpressionPointer{STRING, strings.size() - 1};
 }
 
-ExpressionPointer makeNamedElement(const DictionaryElement* expression) {
+ExpressionPointer makeNamedElement(const NamedElement* expression) {
     dictionary_elements.emplace_back(expression);
     return ExpressionPointer{NAMED_ELEMENT, dictionary_elements.size() - 1};
 }
@@ -109,7 +109,7 @@ ExpressionPointer makeEndElement(const EndElement* expression) {
     return ExpressionPointer{END_ELEMENT, end_elements.size() - 1};
 }
 
-DictionaryElement ExpressionPointer::namedElement() const {
+NamedElement ExpressionPointer::namedElement() const {
     assert(type == NAMED_ELEMENT);
     return *dictionary_elements.at(index).get();
 }

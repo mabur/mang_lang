@@ -64,7 +64,7 @@ ExpressionPointer parseNamedElement(CodeRange code) {
     code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeNamedElement(
-        new DictionaryElement{
+        new NamedElement{
             CodeRange{first, code.first},
             ExpressionPointer{},
             std::move(name),

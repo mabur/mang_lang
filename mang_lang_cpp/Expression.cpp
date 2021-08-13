@@ -87,7 +87,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
             const auto element = elements[i].namedElement();
-            result.push_back(makeNamedElement(new DictionaryElement{
+            result.push_back(makeNamedElement(new NamedElement{
                 element.range,
                 element.environment,
                 element.name,

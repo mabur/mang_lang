@@ -12,7 +12,7 @@ ExpressionPointer applyFunction(
 
     const auto elements = DictionaryElements{
         makeNamedElement(
-            new DictionaryElement{
+            new NamedElement{
                 function.range,
                 ExpressionPointer{},
                 function.input_name,
@@ -47,7 +47,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     for (auto list = ::list(input); list; list = list->rest, ++i) {
         elements.push_back(
             makeNamedElement(
-                new DictionaryElement{
+                new NamedElement{
                     function_list.range,
                     ExpressionPointer{},
                     function_list.input_names[i],
