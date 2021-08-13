@@ -107,10 +107,6 @@ ExpressionPointer makeEndElement(const DictionaryElement* expression) {
     return ExpressionPointer{END_ELEMENT, dictionary_elements.size() - 1};
 }
 
-ExpressionPointer::operator bool () const {
-    return type != EMPTY;
-}
-
 DictionaryElement ExpressionPointer::namedElement() const {
     assert(type == NAMED_ELEMENT);
     return *dictionary_elements.at(index).get();

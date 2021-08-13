@@ -45,7 +45,7 @@ enum ExpressionType {
 struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
-    operator bool () const;
+
     DictionaryElement namedElement() const;
     DictionaryElement whileElement() const;
     DictionaryElement endElement() const;

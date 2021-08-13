@@ -154,7 +154,7 @@ ExpressionPointer evaluateLookupFunction(
 ) {
     const auto function = lookupDictionary(environment, lookup_function.name->value);
     const auto evaluated_child = evaluate(lookup_function.child, environment, log);
-    assert(evaluated_child);
+    assert(evaluated_child.type != EMPTY);
     auto result = apply(function, evaluated_child, log);
     log << serialize(result) << std::endl;
     return result;
