@@ -111,11 +111,6 @@ ExpressionPointer::operator bool () const {
     return type != EMPTY;
 }
 
-DictionaryElement ExpressionPointer::dictionaryElement() const {
-    assert(type == NAMED_ELEMENT || type == WHILE_ELEMENT || type == END_ELEMENT);
-    return *dictionary_elements.at(index).get();
-}
-
 DictionaryElement ExpressionPointer::namedElement() const {
     assert(type == NAMED_ELEMENT);
     return *dictionary_elements.at(index).get();
