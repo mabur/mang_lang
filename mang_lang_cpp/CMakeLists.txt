@@ -16,7 +16,6 @@ add_library(shared
         operations/lookup.cpp
         operations/number.cpp
         operations/parse.cpp
-        operations/prepend.cpp
         operations/serialize.cpp
         operations/starts_with.cpp
         built_in_functions/built_in_functions.cpp
