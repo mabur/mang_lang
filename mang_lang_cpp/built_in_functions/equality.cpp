@@ -7,7 +7,7 @@
 
 namespace equality {
 
-bool isEqual(ExpressionPointer left_smart, ExpressionPointer right_smart);
+bool isEqual(ExpressionPointer left, ExpressionPointer right);
 
 bool isEqualList(ExpressionPointer left_smart, ExpressionPointer right_smart) {
     auto left = list(left_smart);
@@ -20,20 +20,20 @@ bool isEqualList(ExpressionPointer left_smart, ExpressionPointer right_smart) {
     return !left && !right;
 }
 
-bool isEqual(ExpressionPointer left_smart, ExpressionPointer right_smart) {
-    const auto left_type = left_smart.type;
-    const auto right_type = right_smart.type;
+bool isEqual(ExpressionPointer left, ExpressionPointer right) {
+    const auto left_type = left.type;
+    const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
-        return ::number(left_smart) == ::number(right_smart);
+        return ::number(left) == ::number(right);
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
-        return left_smart.character().value == right_smart.character().value;
+        return left.character().value == right.character().value;
     }
     if (left_type == LIST && right_type == LIST) {
-        return isEqualList(left_smart, right_smart);
+        return isEqualList(left, right);
     }
     if (left_type == STRING && right_type == STRING) {
-        return isEqualList(left_smart, right_smart);
+        return isEqualList(left, right);
     }
     return false;
 }
