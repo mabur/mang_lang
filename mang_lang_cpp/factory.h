@@ -81,7 +81,6 @@ ExpressionPointer makeLookupFunction(const LookupFunction* expression);
 ExpressionPointer makeLookupSymbol(const LookupSymbol* expression);
 ExpressionPointer makeName(const Name* expression);
 ExpressionPointer makeString(const String* expression);
-
 ExpressionPointer makeNamedElement(const NamedElement* expression);
 ExpressionPointer makeWhileElement(const WhileElement* expression);
 ExpressionPointer makeEndElement(const EndElement* expression);

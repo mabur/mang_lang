@@ -19,10 +19,9 @@ std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
 std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const String>> strings;
-
 std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
-std::vector<std::shared_ptr<const NamedElement>> dictionary_elements;
+std::vector<std::shared_ptr<const NamedElement>> named_elements;
 
 ExpressionPointer makeNumber(const Number* expression) {
     numbers.emplace_back(expression);
@@ -95,8 +94,8 @@ ExpressionPointer makeString(const String* expression) {
 }
 
 ExpressionPointer makeNamedElement(const NamedElement* expression) {
-    dictionary_elements.emplace_back(expression);
-    return ExpressionPointer{NAMED_ELEMENT, dictionary_elements.size() - 1};
+    named_elements.emplace_back(expression);
+    return ExpressionPointer{NAMED_ELEMENT, named_elements.size() - 1};
 }
 
 ExpressionPointer makeWhileElement(const WhileElement* expression) {
@@ -111,7 +110,7 @@ ExpressionPointer makeEndElement(const EndElement* expression) {
 
 NamedElement ExpressionPointer::namedElement() const {
     assert(type == NAMED_ELEMENT);
-    return *dictionary_elements.at(index).get();
+    return *named_elements.at(index).get();
 }
 
 WhileElement ExpressionPointer::whileElement() const {
