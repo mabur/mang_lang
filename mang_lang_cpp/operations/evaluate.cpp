@@ -17,20 +17,17 @@ ExpressionPointer evaluateConditional(
     return result;
 }
 
-bool compareNameIndex(
-    ExpressionPointer a, ExpressionPointer b
-) {
-    return a.dictionaryElement().name_index_ < b.dictionaryElement().name_index_;
-}
-
 size_t numNames(const DictionaryElements& elements) {
     if (elements.empty()) {
         return 0;
     }
-    const auto max_element = std::max_element(
-        elements.begin(), elements.end(), compareNameIndex
-    );
-    return 1 + max_element->dictionaryElement().name_index_;
+    auto max_index = size_t{0};
+    for (const auto& element : elements) {
+        if (element.type == NAMED_ELEMENT) {
+            max_index = std::max(max_index, element.namedElement().name_index_);
+        }
+    }
+    return max_index + 1;
 }
 
 ExpressionPointer evaluateDictionary(
