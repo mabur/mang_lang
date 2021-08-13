@@ -4,7 +4,6 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
-        operations/apply.cpp
         operations/begin.cpp
         operations/boolean.cpp
         operations/end.cpp

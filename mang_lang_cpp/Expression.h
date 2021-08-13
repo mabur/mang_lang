@@ -46,7 +46,7 @@ struct FunctionBuiltIn {
 
 struct FunctionDictionary {
     CodeRange range;
-    ExpressionPointer environment;
+    ExpressionPointer environment; // TODO: use this.
     std::vector<NamePointer> input_names;
     ExpressionPointer body;
 };
