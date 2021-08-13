@@ -7,15 +7,15 @@
 
 namespace list_functions {
 
-    ExpressionPointer empty(ExpressionPointer in) {
-        return ::empty(in);
-    }
+ExpressionPointer empty(ExpressionPointer in) {
+    return ::empty(in);
+}
 
-    ExpressionPointer prepend(ExpressionPointer in) {
-        const auto& elements = ::list(in);
-        const auto& item = first(elements);
-        const auto& list = second(elements);
-        return prepend(list, item);
-    }
+ExpressionPointer prepend(ExpressionPointer in) {
+    const auto& elements = ::list(in);
+    const auto& item = first(elements);
+    const auto& list = second(elements);
+    return prepend(list, item);
+}
 
 }
