@@ -1,7 +1,6 @@
 #include "serialize.h"
 
 #include "character.h"
-#include "list.h"
 
 std::string serializeName(const Name& name) {
     return name.value;
@@ -88,14 +87,15 @@ std::string serializeFunctionList(const FunctionList& function_list) {
 }
 
 std::string serializeList(ExpressionPointer list) {
-    if (!::list(list)) {
+    const auto elements = list.list().elements;
+    if (!elements) {
         return "()";
     }
     const auto operation = [](const std::string& left, ExpressionPointer right) {
         return left + serialize(right) + " ";
     };
     auto result = std::string{"("};
-    result = leftFold(::list(list), result, operation);
+    result = leftFold(elements, result, operation);
     result.back() = ')';
     return result;
 }
@@ -120,7 +120,7 @@ std::string serializeNumber(const Number& number) {
 
 std::string serializeString(ExpressionPointer string) {
     auto value = std::string{"\""};
-    auto node = list(string);
+    auto node = string.string().elements;
     for (; node; node = node->rest) {
         value += character(node->first);
     }

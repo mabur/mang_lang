@@ -1,7 +1,5 @@
 #include "apply.h"
 
-#include "list.h"
-
 #include "../operations/evaluate.h"
 
 #include "../factory.h"
@@ -43,7 +41,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
 ) {
     auto elements = DictionaryElements{};
     auto i = size_t{0};
-    for (auto list = ::list(input); list; list = list->rest, ++i) {
+    for (auto list = input.list().elements; list; list = list->rest, ++i) {
         elements.push_back(
             makeNamedElement(
                 new NamedElement{
