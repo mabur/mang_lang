@@ -41,9 +41,10 @@ ExpressionPointer evaluateDictionary(
     const auto wrapped_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
-        const auto type = dictionary.elements[i].type;
+        const auto dictionary_element = dictionary.elements[i];
+        const auto type = dictionary_element.type;
         if (type == NAMED_ELEMENT) {
-            const auto element = dictionary.elements[i].namedElement();
+            const auto element = dictionary_element.namedElement();
             result->elements.at(element.name_index_) = makeNamedElement(
                 new NamedElement{
                     element.range,
@@ -55,7 +56,7 @@ ExpressionPointer evaluateDictionary(
             i += 1;
         }
         else if (type == WHILE_ELEMENT) {
-            const auto element = dictionary.elements[i].whileElement();
+            const auto element = dictionary_element.whileElement();
             if (boolean(evaluate(element.expression, wrapped_result, log))) {
                 i += 1;
             } else {
@@ -63,7 +64,7 @@ ExpressionPointer evaluateDictionary(
             }
         }
         else if (type == END_ELEMENT) {
-            const auto element = dictionary.elements[i].endElement();
+            const auto element = dictionary_element.endElement();
             i = element.while_index_;
         }
     }
