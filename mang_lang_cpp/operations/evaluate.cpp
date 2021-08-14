@@ -38,7 +38,7 @@ ExpressionPointer evaluateDictionary(
         environment,
         DictionaryElements(num_names, ExpressionPointer{})
     };
-    const auto wrapped_result = makeDictionary(result);
+
     auto i = size_t{0};
     while (i < dictionary.elements.size()) {
         const auto dictionary_element = dictionary.elements[i];
@@ -49,7 +49,7 @@ ExpressionPointer evaluateDictionary(
                 new NamedElement{
                     element.range,
                     element.name,
-                    evaluate(element.expression, wrapped_result, log),
+                    evaluate(element.expression, makeDictionary(result), log),
                     element.name_index_
                 }
             );
@@ -57,7 +57,7 @@ ExpressionPointer evaluateDictionary(
         }
         else if (type == WHILE_ELEMENT) {
             const auto element = dictionary_element.whileElement();
-            if (boolean(evaluate(element.expression, wrapped_result, log))) {
+            if (boolean(evaluate(element.expression, makeDictionary(result), log))) {
                 i += 1;
             } else {
                 i = element.end_index_ + 1;
@@ -68,6 +68,7 @@ ExpressionPointer evaluateDictionary(
             i = element.while_index_;
         }
     }
+    const auto wrapped_result = makeDictionary(result);
     log << serialize(wrapped_result) << std::endl;
     return wrapped_result;
 }
