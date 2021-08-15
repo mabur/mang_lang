@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "../Expression.h"
-#include "../factory.h"
 #include "arithmetic.h"
 #include "list.h"
 #include "logic.h"

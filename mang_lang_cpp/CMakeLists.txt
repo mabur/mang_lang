@@ -16,7 +16,6 @@ add_library(shared
         built_in_functions/list.cpp
         built_in_functions/logic.cpp
         Expression.cpp
-        factory.cpp
         mang_lang.cpp
         parsing.cpp
         )

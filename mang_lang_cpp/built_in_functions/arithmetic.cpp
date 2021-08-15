@@ -4,7 +4,6 @@
 #include <limits>
 
 #include "../Expression.h"
-#include "../factory.h"
 
 namespace arithmetic {
 
