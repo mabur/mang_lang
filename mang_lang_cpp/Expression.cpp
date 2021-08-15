@@ -60,7 +60,7 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto name = namedElement(elements[i]).name->value;
+            const auto name = getNamedElement(elements[i]).name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
@@ -87,7 +87,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto element = namedElement(elements[i]);
+            const auto element = getNamedElement(elements[i]);
             result.push_back(makeNamedElement(new NamedElement{
                 element.range,
                 element.name,
@@ -95,14 +95,14 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 name_indices[i]
             }));
         } else if (type == WHILE_ELEMENT) {
-            const auto element = whileElement(elements[i]);
+            const auto element = getWileElement(elements[i]);
             result.push_back(makeWhileElement(new WhileElement{
                 element.range,
                 element.expression,
                 end_indices[i],
             }));
         } else if (type == END_ELEMENT) {
-            const auto element = endElement(elements[i]);
+            const auto element = getEndElement(elements[i]);
             result.push_back(makeEndElement(new EndElement{
                 element.range, while_indices[i]
             }));
@@ -218,87 +218,87 @@ ExpressionPointer makeEndElement(const EndElement* expression) {
 
 // FREE GETTERS
 
-NamedElement namedElement(ExpressionPointer expression) {
+NamedElement getNamedElement(ExpressionPointer expression) {
     assert(expression.type == NAMED_ELEMENT);
     return *named_elements.at(expression.index).get();
 }
 
-WhileElement whileElement(ExpressionPointer expression) {
+WhileElement getWileElement(ExpressionPointer expression) {
     assert(expression.type == WHILE_ELEMENT);
     return *while_elements.at(expression.index).get();
 }
 
-EndElement endElement(ExpressionPointer expression) {
+EndElement getEndElement(ExpressionPointer expression) {
     assert(expression.type == END_ELEMENT);
     return *end_elements.at(expression.index).get();
 }
 
-Number number2(ExpressionPointer expression) {
+Number getNumber(ExpressionPointer expression) {
     assert(expression.type == NUMBER);
     return *numbers.at(expression.index).get();
 }
 
-Character character(ExpressionPointer expression) {
+Character getCharacter(ExpressionPointer expression) {
     assert(expression.type == CHARACTER);
     return *characters.at(expression.index).get();
 }
 
-Conditional conditional(ExpressionPointer expression) {
+Conditional getConditional(ExpressionPointer expression) {
     assert(expression.type == CONDITIONAL);
     return *conditionals.at(expression.index).get();
 }
 
-Dictionary dictionary(ExpressionPointer expression) {
+Dictionary getDictionary(ExpressionPointer expression) {
     assert(expression.type == DICTIONARY);
     return *dictionaries.at(expression.index).get();
 }
 
-Function function(ExpressionPointer expression) {
+Function getFunction(ExpressionPointer expression) {
     assert(expression.type == FUNCTION);
     return *functions.at(expression.index).get();
 }
 
-FunctionBuiltIn functionBuiltIn(ExpressionPointer expression) {
+FunctionBuiltIn getFunctionBuiltIn(ExpressionPointer expression) {
     assert(expression.type == FUNCTION_BUILT_IN);
     return *built_in_functions.at(expression.index).get();
 }
 
-FunctionDictionary functionDictionary(ExpressionPointer expression) {
+FunctionDictionary getFunctionDictionary(ExpressionPointer expression) {
     assert(expression.type == FUNCTION_DICTIONARY);
     return *dictionary_functions.at(expression.index).get();
 }
 
-FunctionList functionList(ExpressionPointer expression) {
+FunctionList getFunctionList(ExpressionPointer expression) {
     assert(expression.type == FUNCTION_LIST);
     return *list_functions.at(expression.index).get();
 }
 
-List list2(ExpressionPointer expression) {
+List getList(ExpressionPointer expression) {
     assert(expression.type == LIST);
     return *lists.at(expression.index).get();
 }
 
-LookupChild lookupChild(ExpressionPointer expression) {
+LookupChild getLokupChild(ExpressionPointer expression) {
     assert(expression.type == LOOKUP_CHILD);
     return *child_lookups.at(expression.index).get();
 }
 
-FunctionApplication functionApplication(ExpressionPointer expression) {
+FunctionApplication getFunctionApplication(ExpressionPointer expression) {
     assert(expression.type == FUNCTION_APPLICATION);
     return *function_applications.at(expression.index).get();
 }
 
-LookupSymbol lookupSymbol(ExpressionPointer expression) {
+LookupSymbol getLookupSymbol(ExpressionPointer expression) {
     assert(expression.type == LOOKUP_SYMBOL);
     return *symbol_lookups.at(expression.index).get();
 }
 
-Name name(ExpressionPointer expression) {
+Name getName(ExpressionPointer expression) {
     assert(expression.type == NAME);
     return *names.at(expression.index).get();
 }
 
-String string(ExpressionPointer expression) {
+String getString(ExpressionPointer expression) {
     assert(expression.type == STRING);
     return *strings.at(expression.index).get();
 }

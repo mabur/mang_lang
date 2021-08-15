@@ -141,23 +141,23 @@ struct Dictionary {
 
 DictionaryElements setContext(const DictionaryElements& elements);
 
-NamedElement namedElement(ExpressionPointer expression);
-WhileElement whileElement(ExpressionPointer expression);
-EndElement endElement(ExpressionPointer expression);
-Number number2(ExpressionPointer expression);
-Character character(ExpressionPointer expression);
-Conditional conditional(ExpressionPointer expression);
-Dictionary dictionary(ExpressionPointer expression);
-Function function(ExpressionPointer expression);
-FunctionBuiltIn functionBuiltIn(ExpressionPointer expression);
-FunctionDictionary functionDictionary(ExpressionPointer expression);
-FunctionList functionList(ExpressionPointer expression);
-List list2(ExpressionPointer expression);
-LookupChild lookupChild(ExpressionPointer expression);
-FunctionApplication functionApplication(ExpressionPointer expression);
-LookupSymbol lookupSymbol(ExpressionPointer expression);
-Name name(ExpressionPointer expression);
-String string(ExpressionPointer expression);
+NamedElement getNamedElement(ExpressionPointer expression);
+WhileElement getWileElement(ExpressionPointer expression);
+EndElement getEndElement(ExpressionPointer expression);
+Number getNumber(ExpressionPointer expression);
+Character getCharacter(ExpressionPointer expression);
+Conditional getConditional(ExpressionPointer expression);
+Dictionary getDictionary(ExpressionPointer expression);
+Function getFunction(ExpressionPointer expression);
+FunctionBuiltIn getFunctionBuiltIn(ExpressionPointer expression);
+FunctionDictionary getFunctionDictionary(ExpressionPointer expression);
+FunctionList getFunctionList(ExpressionPointer expression);
+List getList(ExpressionPointer expression);
+LookupChild getLokupChild(ExpressionPointer expression);
+FunctionApplication getFunctionApplication(ExpressionPointer expression);
+LookupSymbol getLookupSymbol(ExpressionPointer expression);
+Name getName(ExpressionPointer expression);
+String getString(ExpressionPointer expression);
 
 ExpressionPointer makeNumber(const Number* expression);
 ExpressionPointer makeCharacter(const Character* expression);

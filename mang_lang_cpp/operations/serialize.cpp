@@ -89,7 +89,7 @@ std::string serializeFunctionList(const FunctionList& function_list) {
 }
 
 std::string serializeList(ExpressionPointer list) {
-    const auto elements = list2(list).elements;
+    const auto elements = getList(list).elements;
     if (!elements) {
         return "()";
     }
@@ -123,9 +123,9 @@ std::string serializeNumber(const Number& number) {
 
 std::string serializeString(ExpressionPointer s) {
     auto value = std::string{"\""};
-    auto node = string(s).elements;
+    auto node = getString(s).elements;
     for (; node; node = node->rest) {
-        value += character(node->first).value;
+        value += getCharacter(node->first).value;
     }
     value += "\"";
     return value;
@@ -133,21 +133,21 @@ std::string serializeString(ExpressionPointer s) {
 
 std::string serialize(ExpressionPointer expression) {
     switch (expression.type) {
-        case CHARACTER: return serializeCharacter(character(expression));
-        case CONDITIONAL: return serializeConditional(conditional(expression));
-        case DICTIONARY: return serializeDictionary(dictionary(expression));
-        case NAMED_ELEMENT: return serializeNamedElement(namedElement(expression));
-        case WHILE_ELEMENT: return serializeWhileElement(whileElement(expression));
-        case END_ELEMENT: return serializeEndElement(endElement(expression));
-        case FUNCTION: return serializeFunction(function(expression));
-        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(functionDictionary(expression));
-        case FUNCTION_LIST: return serializeFunctionList(functionList(expression));
+        case CHARACTER: return serializeCharacter(getCharacter(expression));
+        case CONDITIONAL: return serializeConditional(getConditional(expression));
+        case DICTIONARY: return serializeDictionary(getDictionary(expression));
+        case NAMED_ELEMENT: return serializeNamedElement(getNamedElement(expression));
+        case WHILE_ELEMENT: return serializeWhileElement(getWileElement(expression));
+        case END_ELEMENT: return serializeEndElement(getEndElement(expression));
+        case FUNCTION: return serializeFunction(getFunction(expression));
+        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
+        case FUNCTION_LIST: return serializeFunctionList(getFunctionList(expression));
         case LIST: return serializeList(expression);
-        case LOOKUP_CHILD: return serializeLookupChild(lookupChild(expression));
-        case FUNCTION_APPLICATION: return serializeFunctionApplication(functionApplication(expression));
-        case LOOKUP_SYMBOL: return serializeLookupSymbol(lookupSymbol(expression));
-        case NAME: return serializeName(name(expression));
-        case NUMBER: return serializeNumber(number2(expression));
+        case LOOKUP_CHILD: return serializeLookupChild(getLokupChild(expression));
+        case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
+        case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
+        case NAME: return serializeName(getName(expression));
+        case NUMBER: return serializeNumber(getNumber(expression));
         case STRING: return serializeString(expression);
         default: throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression.type)};
     }
