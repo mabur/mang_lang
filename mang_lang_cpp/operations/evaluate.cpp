@@ -24,7 +24,7 @@ size_t numNames(const DictionaryElements& elements) {
     auto max_index = size_t{0};
     for (const auto& element : elements) {
         if (element.type == NAMED_ELEMENT) {
-            max_index = std::max(max_index, element.namedElement().name_index_);
+            max_index = std::max(max_index, namedElement(element).name_index_);
         }
     }
     return max_index + 1;
@@ -45,7 +45,7 @@ ExpressionPointer evaluateDictionary(
         const auto dictionary_element = dictionary.elements[i];
         const auto type = dictionary_element.type;
         if (type == NAMED_ELEMENT) {
-            const auto element = dictionary_element.namedElement();
+            const auto element = namedElement(dictionary_element);
             result->elements.at(element.name_index_) = makeNamedElement(
                 new NamedElement{
                     element.range,
@@ -57,7 +57,7 @@ ExpressionPointer evaluateDictionary(
             i += 1;
         }
         else if (type == WHILE_ELEMENT) {
-            const auto element = dictionary_element.whileElement();
+            const auto element = whileElement(dictionary_element);
             if (boolean(evaluate(element.expression, makeDictionary(result), log))) {
                 i += 1;
             } else {
@@ -65,7 +65,7 @@ ExpressionPointer evaluateDictionary(
             }
         }
         else if (type == END_ELEMENT) {
-            const auto element = dictionary_element.endElement();
+            const auto element = endElement(dictionary_element);
             i = element.while_index_;
         }
     }
@@ -125,22 +125,22 @@ ExpressionPointer lookupDictionary(const ExpressionPointer& expression, const st
     if (expression.type != DICTIONARY) {
         throw std::runtime_error("Cannot find symbol " + name);
     }
-    const auto dictionary = expression.dictionary();
-    for (const auto& element : dictionary.elements) {
+    const auto d = dictionary(expression);
+    for (const auto& element : d.elements) {
         if (element.type == NAMED_ELEMENT) {
-            const auto dictionary_element = element.namedElement();
+            const auto dictionary_element = namedElement(element);
             if (dictionary_element.name->value == name) {
                 return dictionary_element.expression;
             }
         }
     }
-    return lookupDictionary(dictionary.environment, name);
+    return lookupDictionary(d.environment, name);
 }
 
 ExpressionPointer lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element.type == NAMED_ELEMENT) {
-            const auto dictionary_element = element.namedElement();
+            const auto dictionary_element = namedElement(element);
             if (dictionary_element.name->value == name) {
                 return dictionary_element.expression;
             }
@@ -171,9 +171,9 @@ ExpressionPointer lookupChildInString(const String& string, const std::string& n
 
 ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& name) {
     switch(expression.type) {
-        case DICTIONARY: return lookupChildInDictionary(expression.dictionary(), name);
-        case LIST: return lookupChildInList(expression.list(), name);
-        case STRING: return lookupChildInString(expression.string(), name);
+        case DICTIONARY: return lookupChildInDictionary(dictionary(expression), name);
+        case LIST: return lookupChildInList(list2(expression), name);
+        case STRING: return lookupChildInString(string(expression), name);
         default: throw std::runtime_error{"Cannot lookupChild expression of type " + std::to_string(expression.type)};
     }
 }
@@ -224,7 +224,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
 ) {
     auto elements = DictionaryElements{};
     auto i = size_t{0};
-    for (auto list = input.list().elements; list; list = list->rest, ++i) {
+    for (auto list = list2(input).elements; list; list = list->rest, ++i) {
         elements.push_back(
             makeNamedElement(
                 new NamedElement{
@@ -242,12 +242,12 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     return evaluate(function_list.body, middle, log);
 }
 
-ExpressionPointer apply(ExpressionPointer expression_smart, ExpressionPointer input, std::ostream& log) {
-    switch (expression_smart.type) {
-        case FUNCTION: return applyFunction(expression_smart.function(), input, log);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(expression_smart.functionBuiltIn(), input, log);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(expression_smart.functionDictionary(), input, log);
-        case FUNCTION_LIST: return applyFunctionList(expression_smart.functionList(), input, log);
+ExpressionPointer apply(ExpressionPointer expression, ExpressionPointer input, std::ostream& log) {
+    switch (expression.type) {
+        case FUNCTION: return applyFunction(function(expression), input, log);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(functionBuiltIn(expression), input, log);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(functionDictionary(expression), input, log);
+        case FUNCTION_LIST: return applyFunctionList(functionList(expression), input, log);
         default: throw std::runtime_error{"Expected function"};
     }
 }
@@ -284,15 +284,15 @@ ExpressionPointer evaluate(
 ) {
     switch (expression.type) {
         case CHARACTER: return evaluateAtom(expression, environment, log);
-        case CONDITIONAL: return evaluateConditional(expression.conditional(), environment, log);
-        case DICTIONARY: return evaluateDictionary(expression.dictionary(), environment, log);
-        case FUNCTION: return evaluateFunction(expression.function(), environment, log);
-        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression.functionDictionary(), environment, log);
-        case FUNCTION_LIST: return evaluateFunctionList(expression.functionList(), environment, log);
-        case LIST: return evaluateList(expression.list(), environment, log);
-        case LOOKUP_CHILD: return evaluateLookupChild(expression.lookupChild(), environment, log);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression.functionApplication(), environment, log);
-        case LOOKUP_SYMBOL: return evaluateLookupSymbol(expression.lookupSymbol(), environment, log);
+        case CONDITIONAL: return evaluateConditional(conditional(expression), environment, log);
+        case DICTIONARY: return evaluateDictionary(dictionary(expression), environment, log);
+        case FUNCTION: return evaluateFunction(function(expression), environment, log);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(functionDictionary(expression), environment, log);
+        case FUNCTION_LIST: return evaluateFunctionList(functionList(expression), environment, log);
+        case LIST: return evaluateList(list2(expression), environment, log);
+        case LOOKUP_CHILD: return evaluateLookupChild(lookupChild(expression), environment, log);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplication(functionApplication(expression), environment, log);
+        case LOOKUP_SYMBOL: return evaluateLookupSymbol(lookupSymbol(expression), environment, log);
         case NUMBER: return evaluateAtom(expression, environment, log);
         case STRING: return evaluateAtom(expression, environment, log);
         default: throw std::runtime_error{"Did not recognize expression to evaluate"};

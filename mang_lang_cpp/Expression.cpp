@@ -60,7 +60,7 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto name = elements[i].namedElement().name->value;
+            const auto name = namedElement(elements[i]).name->value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
@@ -87,7 +87,7 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
         if (type == NAMED_ELEMENT) {
-            const auto element = elements[i].namedElement();
+            const auto element = namedElement(elements[i]);
             result.push_back(makeNamedElement(new NamedElement{
                 element.range,
                 element.name,
@@ -95,14 +95,14 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 name_indices[i]
             }));
         } else if (type == WHILE_ELEMENT) {
-            const auto element = elements[i].whileElement();
+            const auto element = whileElement(elements[i]);
             result.push_back(makeWhileElement(new WhileElement{
                 element.range,
                 element.expression,
                 end_indices[i],
             }));
         } else if (type == END_ELEMENT) {
-            const auto element = elements[i].endElement();
+            const auto element = endElement(elements[i]);
             result.push_back(makeEndElement(new EndElement{
                 element.range, while_indices[i]
             }));
@@ -214,91 +214,6 @@ ExpressionPointer makeWhileElement(const WhileElement* expression) {
 ExpressionPointer makeEndElement(const EndElement* expression) {
     end_elements.emplace_back(expression);
     return ExpressionPointer{END_ELEMENT, end_elements.size() - 1};
-}
-
-NamedElement ExpressionPointer::namedElement() const {
-    assert(type == NAMED_ELEMENT);
-    return *named_elements.at(index).get();
-}
-
-WhileElement ExpressionPointer::whileElement() const {
-    assert(type == WHILE_ELEMENT);
-    return *while_elements.at(index).get();
-}
-
-EndElement ExpressionPointer::endElement() const {
-    assert(type == END_ELEMENT);
-    return *end_elements.at(index).get();
-}
-
-Number ExpressionPointer::number() const {
-    assert(type == NUMBER);
-    return *numbers.at(index).get();
-}
-
-Character ExpressionPointer::character() const {
-    assert(type == CHARACTER);
-    return *characters.at(index).get();
-}
-
-Conditional ExpressionPointer::conditional() const {
-    assert(type == CONDITIONAL);
-    return *conditionals.at(index).get();
-}
-
-Dictionary ExpressionPointer::dictionary() const {
-    assert(type == DICTIONARY);
-    return *dictionaries.at(index).get();
-}
-
-Function ExpressionPointer::function() const {
-    assert(type == FUNCTION);
-    return *functions.at(index).get();
-}
-
-FunctionBuiltIn ExpressionPointer::functionBuiltIn() const {
-    assert(type == FUNCTION_BUILT_IN);
-    return *built_in_functions.at(index).get();
-}
-
-FunctionDictionary ExpressionPointer::functionDictionary() const {
-    assert(type == FUNCTION_DICTIONARY);
-    return *dictionary_functions.at(index).get();
-}
-
-FunctionList ExpressionPointer::functionList() const {
-    assert(type == FUNCTION_LIST);
-    return *list_functions.at(index).get();
-}
-
-List ExpressionPointer::list() const {
-    assert(type == LIST);
-    return *lists.at(index).get();
-}
-
-LookupChild ExpressionPointer::lookupChild() const {
-    assert(type == LOOKUP_CHILD);
-    return *child_lookups.at(index).get();
-}
-
-FunctionApplication ExpressionPointer::functionApplication() const {
-    assert(type == FUNCTION_APPLICATION);
-    return *function_applications.at(index).get();
-}
-
-LookupSymbol ExpressionPointer::lookupSymbol() const {
-    assert(type == LOOKUP_SYMBOL);
-    return *symbol_lookups.at(index).get();
-}
-
-Name ExpressionPointer::name() const {
-    assert(type == NAME);
-    return *names.at(index).get();
-}
-
-String ExpressionPointer::string() const {
-    assert(type == STRING);
-    return *strings.at(index).get();
 }
 
 // FREE GETTERS

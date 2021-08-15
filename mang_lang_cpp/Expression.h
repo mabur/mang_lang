@@ -52,24 +52,6 @@ struct EndElement;
 struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
-
-    NamedElement namedElement() const;
-    WhileElement whileElement() const;
-    EndElement endElement() const;
-    Number number() const;
-    Character character() const;
-    Conditional conditional() const;
-    Dictionary dictionary() const;
-    Function function() const;
-    FunctionBuiltIn functionBuiltIn() const;
-    FunctionDictionary functionDictionary() const;
-    FunctionList functionList() const;
-    List list() const;
-    LookupChild lookupChild() const;
-    FunctionApplication functionApplication() const;
-    LookupSymbol lookupSymbol() const;
-    Name name() const;
-    String string() const;
 };
 
 NamedElement namedElement(ExpressionPointer expression);

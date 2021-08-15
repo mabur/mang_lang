@@ -7,8 +7,8 @@ namespace logic {
 
 InternalList list(ExpressionPointer expression) {
     switch (expression.type) {
-        case LIST: return expression.list().elements;
-        case STRING: return expression.string().elements;
+        case LIST: return list2(expression).elements;
+        case STRING: return string(expression).elements;
         default: throw std::runtime_error{"Expected list"};
     }
 }
@@ -65,10 +65,10 @@ bool isEqual(ExpressionPointer left, ExpressionPointer right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
-        return left.number().value == right.number().value;
+        return number2(left).value == number2(right).value;
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
-        return left.character().value == right.character().value;
+        return character(left).value == character(right).value;
     }
     if (left_type == LIST && right_type == LIST) {
         return isEqualList(left, right);

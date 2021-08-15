@@ -21,12 +21,12 @@ ExpressionPointer prependString(const String& string, ExpressionPointer item) {
 }
 
 ExpressionPointer prepend(ExpressionPointer in) {
-    const auto& elements = in.list().elements;
+    const auto& elements = list2(in).elements;
     const auto& item = first(elements);
     const auto& collection = second(elements);
     switch (collection.type) {
-        case LIST: return prependList(collection.list(), item);
-        case STRING: return prependString(collection.string(), item);
+        case LIST: return prependList(list2(collection), item);
+        case STRING: return prependString(string(collection), item);
         default: throw std::runtime_error{"Expected list"};
     }
 }

@@ -4,22 +4,22 @@
 
 const CodeCharacter* begin(ExpressionPointer expression) {
     switch (expression.type) {
-        case CHARACTER: return expression.character().range.first;
-        case CONDITIONAL: return expression.conditional().range.first;
-        case DICTIONARY: return expression.dictionary().range.first;
-        case NAMED_ELEMENT: return expression.namedElement().range.first;
-        case WHILE_ELEMENT: return expression.whileElement().range.first;
-        case END_ELEMENT: return expression.endElement().range.first;
-        case FUNCTION: return expression.function().range.first;
-        case FUNCTION_DICTIONARY: return expression.functionDictionary().range.first;
-        case FUNCTION_LIST: return expression.functionList().range.first;
-        case LIST: return expression.list().range.first;
-        case LOOKUP_CHILD: return expression.lookupChild().range.first;
-        case FUNCTION_APPLICATION: return expression.functionApplication().range.first;
-        case LOOKUP_SYMBOL: return expression.lookupSymbol().range.first;
-        case NAME: return expression.name().range.first;
-        case NUMBER: return expression.number().range.first;
-        case STRING: return expression.string().range.first;
+        case CHARACTER: return character(expression).range.first;
+        case CONDITIONAL: return conditional(expression).range.first;
+        case DICTIONARY: return dictionary(expression).range.first;
+        case NAMED_ELEMENT: return namedElement(expression).range.first;
+        case WHILE_ELEMENT: return whileElement(expression).range.first;
+        case END_ELEMENT: return endElement(expression).range.first;
+        case FUNCTION: return function(expression).range.first;
+        case FUNCTION_DICTIONARY: return functionDictionary(expression).range.first;
+        case FUNCTION_LIST: return functionList(expression).range.first;
+        case LIST: return list2(expression).range.first;
+        case LOOKUP_CHILD: return lookupChild(expression).range.first;
+        case FUNCTION_APPLICATION: return functionApplication(expression).range.first;
+        case LOOKUP_SYMBOL: return lookupSymbol(expression).range.first;
+        case NAME: return name(expression).range.first;
+        case NUMBER: return number2(expression).range.first;
+        case STRING: return string(expression).range.first;
         default: throw std::runtime_error{"Missing begin operation for : " + std::to_string(expression.type)};
     }
 }
