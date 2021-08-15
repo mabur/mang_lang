@@ -72,6 +72,24 @@ struct ExpressionPointer {
     String string() const;
 };
 
+NamedElement namedElement(ExpressionPointer expression);
+WhileElement whileElement(ExpressionPointer expression);
+EndElement endElement(ExpressionPointer expression);
+Number number2(ExpressionPointer expression);
+Character character(ExpressionPointer expression);
+Conditional conditional(ExpressionPointer expression);
+Dictionary dictionary(ExpressionPointer expression);
+Function function(ExpressionPointer expression);
+FunctionBuiltIn functionBuiltIn(ExpressionPointer expression);
+FunctionDictionary functionDictionary(ExpressionPointer expression);
+FunctionList functionList(ExpressionPointer expression);
+List list2(ExpressionPointer expression);
+LookupChild lookupChild(ExpressionPointer expression);
+FunctionApplication functionApplication(ExpressionPointer expression);
+LookupSymbol lookupSymbol(ExpressionPointer expression);
+Name name(ExpressionPointer expression);
+String string(ExpressionPointer expression);
+
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
 struct Name;
