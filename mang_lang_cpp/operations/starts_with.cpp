@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "../parsing.h"
+
 const auto KEYWORDS = std::vector<std::string>{"if", "then", "else", "from", "to"};
 
 bool startsWithCharacter(CodeRange code) {

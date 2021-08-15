@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../Expression.h"
+struct ExpressionPointer;
 
 bool boolean(ExpressionPointer expression);

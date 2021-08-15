@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "../Expression.h"
 #include "boolean.h"
 #include "serialize.h"
 

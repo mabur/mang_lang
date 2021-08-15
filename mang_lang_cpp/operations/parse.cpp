@@ -1,5 +1,6 @@
 #include "parse.h"
 
+#include "../Expression.h"
 #include "end.h"
 #include "starts_with.h"
 

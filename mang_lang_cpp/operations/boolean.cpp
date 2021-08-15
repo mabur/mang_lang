@@ -1,5 +1,7 @@
 #include "boolean.h"
 
+#include "../Expression.h"
+
 bool boolean(ExpressionPointer expression) {
     switch (expression.type) {
         case DICTIONARY: return !expression.dictionary().elements.empty();

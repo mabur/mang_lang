@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Expression.h"
+#include <ostream>
+
+struct ExpressionPointer;
 
 ExpressionPointer evaluate(
-    ExpressionPointer expression,
-    ExpressionPointer environment,
-    std::ostream& log
+    ExpressionPointer expression, ExpressionPointer environment, std::ostream& log
 );

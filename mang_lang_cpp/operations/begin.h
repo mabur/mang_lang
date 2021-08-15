@@ -1,5 +1,6 @@
 #pragma once
 
-#include "../Expression.h"
+struct CodeCharacter;
+struct ExpressionPointer;
 
 const CodeCharacter* begin(ExpressionPointer expression);

@@ -1,5 +1,7 @@
 #include "serialize.h"
 
+#include "../Expression.h"
+
 std::string serializeName(const Name& name) {
     return name.value;
 }

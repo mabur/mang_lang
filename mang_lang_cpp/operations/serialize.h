@@ -1,5 +1,7 @@
 #pragma once
 
-#include "../Expression.h"
+#include <string>
+
+struct ExpressionPointer;
 
 std::string serialize(ExpressionPointer expression);

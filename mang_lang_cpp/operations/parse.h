@@ -1,5 +1,6 @@
 #pragma once
 
-#include "../Expression.h"
+struct CodeRange;
+struct ExpressionPointer;
 
 ExpressionPointer parseExpression(CodeRange code);

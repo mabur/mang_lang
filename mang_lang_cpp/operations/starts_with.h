@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../parsing.h"
+struct CodeRange;
 
 bool startsWithCharacter(CodeRange code);
 bool startsWithConditional(CodeRange code);
