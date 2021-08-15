@@ -30,47 +30,10 @@ enum ExpressionType {
     EMPTY,
 };
 
-struct Character;
-struct Conditional;
-struct Dictionary;
-struct NamedElement;
-struct Expression;
-struct Function;
-struct FunctionBuiltIn;
-struct FunctionDictionary;
-struct FunctionList;
-struct List;
-struct LookupChild;
-struct FunctionApplication;
-struct LookupSymbol;
-struct Name;
-struct Number;
-struct String;
-struct WhileElement;
-struct EndElement;
-
 struct ExpressionPointer {
     ExpressionType type = EMPTY;
     size_t index = 0;
 };
-
-NamedElement namedElement(ExpressionPointer expression);
-WhileElement whileElement(ExpressionPointer expression);
-EndElement endElement(ExpressionPointer expression);
-Number number2(ExpressionPointer expression);
-Character character(ExpressionPointer expression);
-Conditional conditional(ExpressionPointer expression);
-Dictionary dictionary(ExpressionPointer expression);
-Function function(ExpressionPointer expression);
-FunctionBuiltIn functionBuiltIn(ExpressionPointer expression);
-FunctionDictionary functionDictionary(ExpressionPointer expression);
-FunctionList functionList(ExpressionPointer expression);
-List list2(ExpressionPointer expression);
-LookupChild lookupChild(ExpressionPointer expression);
-FunctionApplication functionApplication(ExpressionPointer expression);
-LookupSymbol lookupSymbol(ExpressionPointer expression);
-Name name(ExpressionPointer expression);
-String string(ExpressionPointer expression);
 
 using InternalList = SinglyLinkedList<ExpressionPointer>;
 
@@ -179,6 +142,24 @@ struct Dictionary {
 };
 
 DictionaryElements setContext(const DictionaryElements& elements);
+
+NamedElement namedElement(ExpressionPointer expression);
+WhileElement whileElement(ExpressionPointer expression);
+EndElement endElement(ExpressionPointer expression);
+Number number2(ExpressionPointer expression);
+Character character(ExpressionPointer expression);
+Conditional conditional(ExpressionPointer expression);
+Dictionary dictionary(ExpressionPointer expression);
+Function function(ExpressionPointer expression);
+FunctionBuiltIn functionBuiltIn(ExpressionPointer expression);
+FunctionDictionary functionDictionary(ExpressionPointer expression);
+FunctionList functionList(ExpressionPointer expression);
+List list2(ExpressionPointer expression);
+LookupChild lookupChild(ExpressionPointer expression);
+FunctionApplication functionApplication(ExpressionPointer expression);
+LookupSymbol lookupSymbol(ExpressionPointer expression);
+Name name(ExpressionPointer expression);
+String string(ExpressionPointer expression);
 
 ExpressionPointer makeNumber(const Number* expression);
 ExpressionPointer makeCharacter(const Character* expression);
