@@ -271,7 +271,7 @@ ExpressionPointer evaluateLookupSymbol(
 }
 
 ExpressionPointer evaluateAtom(
-    ExpressionPointer atom, ExpressionPointer, std::ostream& log
+    ExpressionPointer atom, std::ostream& log
 ) {
     log << serialize(atom) << std::endl;
     return atom;
@@ -283,7 +283,9 @@ ExpressionPointer evaluate(
     std::ostream& log
 ) {
     switch (expression.type) {
-        case CHARACTER: return evaluateAtom(expression, environment, log);
+        case NUMBER: return evaluateAtom(expression, log);
+        case CHARACTER: return evaluateAtom(expression, log);
+        case STRING: return evaluateAtom(expression, log);
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment, log);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment, log);
         case FUNCTION: return evaluateFunction(getFunction(expression), environment, log);
@@ -293,8 +295,6 @@ ExpressionPointer evaluate(
         case LOOKUP_CHILD: return evaluateLookupChild(getLokupChild(expression), environment, log);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment, log);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment, log);
-        case NUMBER: return evaluateAtom(expression, environment, log);
-        case STRING: return evaluateAtom(expression, environment, log);
         default: throw std::runtime_error{"Did not recognize expression to evaluate"};
     }
 }
