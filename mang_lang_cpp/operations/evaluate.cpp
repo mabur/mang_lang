@@ -286,11 +286,13 @@ ExpressionPointer evaluate(
         case NUMBER: return evaluateAtom(expression, log);
         case CHARACTER: return evaluateAtom(expression, log);
         case STRING: return evaluateAtom(expression, log);
+
+        case FUNCTION: return evaluateFunction(getFunction(expression), environment, log);
+        case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment, log);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment, log);
+
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment, log);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment, log);
-        case FUNCTION: return evaluateFunction(getFunction(expression), environment, log);
-        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment, log);
-        case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment, log);
         case LIST: return evaluateList(getList(expression), environment, log);
         case LOOKUP_CHILD: return evaluateLookupChild(getLokupChild(expression), environment, log);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment, log);
