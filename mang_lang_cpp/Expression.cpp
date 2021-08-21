@@ -234,87 +234,80 @@ ExpressionPointer makeEndElement(const EndElement* expression) {
 
 // FREE GETTERS
 
+template<typename ArrayType>
+typename ArrayType::value_type::element_type getExpression(
+    ExpressionPointer expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    assert(expression.type == type);
+    return *array.at(expression.index).get();
+}
+
 NamedElement getNamedElement(ExpressionPointer expression) {
-    assert(expression.type == NAMED_ELEMENT);
-    return *named_elements.at(expression.index).get();
+    return getExpression(expression, NAMED_ELEMENT, named_elements);
 }
 
 WhileElement getWileElement(ExpressionPointer expression) {
-    assert(expression.type == WHILE_ELEMENT);
-    return *while_elements.at(expression.index).get();
+    return getExpression(expression, WHILE_ELEMENT, while_elements);
 }
 
 EndElement getEndElement(ExpressionPointer expression) {
-    assert(expression.type == END_ELEMENT);
-    return *end_elements.at(expression.index).get();
+    return getExpression(expression, END_ELEMENT, end_elements);
 }
 
 Number getNumber(ExpressionPointer expression) {
-    assert(expression.type == NUMBER);
-    return *numbers.at(expression.index).get();
+    return getExpression(expression, NUMBER, numbers);
 }
 
 Character getCharacter(ExpressionPointer expression) {
-    assert(expression.type == CHARACTER);
-    return *characters.at(expression.index).get();
+    return getExpression(expression, CHARACTER, characters);
 }
 
 Conditional getConditional(ExpressionPointer expression) {
-    assert(expression.type == CONDITIONAL);
-    return *conditionals.at(expression.index).get();
+    return getExpression(expression, CONDITIONAL, conditionals);
 }
 
 Dictionary getDictionary(ExpressionPointer expression) {
-    assert(expression.type == DICTIONARY);
-    return *dictionaries.at(expression.index).get();
+    return getExpression(expression, DICTIONARY, dictionaries);
 }
 
 Function getFunction(ExpressionPointer expression) {
-    assert(expression.type == FUNCTION);
-    return *functions.at(expression.index).get();
+    return getExpression(expression, FUNCTION, functions);
 }
 
 FunctionBuiltIn getFunctionBuiltIn(ExpressionPointer expression) {
-    assert(expression.type == FUNCTION_BUILT_IN);
-    return *built_in_functions.at(expression.index).get();
+    return getExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
 FunctionDictionary getFunctionDictionary(ExpressionPointer expression) {
-    assert(expression.type == FUNCTION_DICTIONARY);
-    return *dictionary_functions.at(expression.index).get();
+    return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
 FunctionList getFunctionList(ExpressionPointer expression) {
-    assert(expression.type == FUNCTION_LIST);
-    return *list_functions.at(expression.index).get();
+    return getExpression(expression, FUNCTION_LIST, list_functions);
 }
 
 List getList(ExpressionPointer expression) {
-    assert(expression.type == LIST);
-    return *lists.at(expression.index).get();
+    return getExpression(expression, LIST, lists);
 }
 
 LookupChild getLokupChild(ExpressionPointer expression) {
-    assert(expression.type == LOOKUP_CHILD);
-    return *child_lookups.at(expression.index).get();
+    return getExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 
 FunctionApplication getFunctionApplication(ExpressionPointer expression) {
-    assert(expression.type == FUNCTION_APPLICATION);
-    return *function_applications.at(expression.index).get();
+    return getExpression(expression, FUNCTION_APPLICATION, function_applications);
 }
 
 LookupSymbol getLookupSymbol(ExpressionPointer expression) {
-    assert(expression.type == LOOKUP_SYMBOL);
-    return *symbol_lookups.at(expression.index).get();
+    return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
 Name getName(ExpressionPointer expression) {
-    assert(expression.type == NAME);
-    return *names.at(expression.index).get();
+    return getExpression(expression, NAME, names);
 }
 
 String getString(ExpressionPointer expression) {
-    assert(expression.type == STRING);
-    return *strings.at(expression.index).get();
+    return getExpression(expression, STRING, strings);
 }
