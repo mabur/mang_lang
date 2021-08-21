@@ -22,6 +22,7 @@ std::vector<std::shared_ptr<const String>> strings;
 std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const NamedElement>> named_elements;
+std::vector<ExpressionPointer> expressions;
 
 void clearMemory() {
     characters.clear();
@@ -41,6 +42,7 @@ void clearMemory() {
     while_elements.clear();
     end_elements.clear();
     named_elements.clear();
+    expressions.clear();
 }
 
 std::vector<size_t> whileIndices(const DictionaryElements& elements) {
@@ -153,87 +155,104 @@ DictionaryElements setContext(const DictionaryElements& elements) {
 
 ExpressionPointer makeNumber(const Number* expression) {
     numbers.emplace_back(expression);
-    return ExpressionPointer{NUMBER, numbers.size() - 1};
+    expressions.push_back(ExpressionPointer{NUMBER, numbers.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeCharacter(const Character* expression) {
     characters.emplace_back(expression);
-    return ExpressionPointer{CHARACTER, characters.size() - 1};
+    expressions.push_back(ExpressionPointer{CHARACTER, characters.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeConditional(const Conditional* expression) {
     conditionals.emplace_back(expression);
-    return ExpressionPointer{CONDITIONAL, conditionals.size() - 1};
+    expressions.push_back(ExpressionPointer{CONDITIONAL, conditionals.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeDictionary(const Dictionary* expression) {
     dictionaries.emplace_back(expression);
-    return ExpressionPointer{DICTIONARY, dictionaries.size() - 1};
+    expressions.push_back(ExpressionPointer{DICTIONARY, dictionaries.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeFunction(const Function* expression) {
     functions.emplace_back(expression);
-    return ExpressionPointer{FUNCTION, functions.size() - 1};
+    expressions.push_back(ExpressionPointer{FUNCTION, functions.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
     built_in_functions.emplace_back(expression);
-    return ExpressionPointer{FUNCTION_BUILT_IN, built_in_functions.size() - 1};
+    expressions.push_back(ExpressionPointer{FUNCTION_BUILT_IN, built_in_functions.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression) {
     dictionary_functions.emplace_back(expression);
-    return ExpressionPointer{FUNCTION_DICTIONARY, dictionary_functions.size() - 1};
+    expressions.push_back(ExpressionPointer{FUNCTION_DICTIONARY, dictionary_functions.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeFunctionList(const FunctionList* expression) {
     list_functions.emplace_back(expression);
-    return ExpressionPointer{FUNCTION_LIST, list_functions.size() - 1};
+    expressions.push_back(ExpressionPointer{FUNCTION_LIST, list_functions.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeList(const List* expression) {
     lists.emplace_back(expression);
-    return ExpressionPointer{LIST, lists.size() - 1};
+    expressions.push_back(ExpressionPointer{LIST, lists.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeLookupChild(const LookupChild* expression) {
     child_lookups.emplace_back(expression);
-    return ExpressionPointer{LOOKUP_CHILD, child_lookups.size() - 1};
+    expressions.push_back(ExpressionPointer{LOOKUP_CHILD, child_lookups.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeFunctionApplication(const FunctionApplication* expression) {
     function_applications.emplace_back(expression);
-    return ExpressionPointer{FUNCTION_APPLICATION, function_applications.size() - 1};
+    expressions.push_back(ExpressionPointer{FUNCTION_APPLICATION, function_applications.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeLookupSymbol(const LookupSymbol* expression) {
     symbol_lookups.emplace_back(expression);
-    return ExpressionPointer{LOOKUP_SYMBOL, symbol_lookups.size() - 1};
+    expressions.push_back(ExpressionPointer{LOOKUP_SYMBOL, symbol_lookups.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeName(const Name* expression) {
     names.emplace_back(expression);
-    return ExpressionPointer{NAME, names.size() - 1};
+    expressions.push_back(ExpressionPointer{NAME, names.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeString(const String* expression) {
     strings.emplace_back(expression);
-    return ExpressionPointer{STRING, strings.size() - 1};
+    expressions.push_back(ExpressionPointer{STRING, strings.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeNamedElement(const NamedElement* expression) {
     named_elements.emplace_back(expression);
-    return ExpressionPointer{NAMED_ELEMENT, named_elements.size() - 1};
+    expressions.push_back(ExpressionPointer{NAMED_ELEMENT, named_elements.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeWhileElement(const WhileElement* expression) {
     while_elements.emplace_back(expression);
-    return ExpressionPointer{WHILE_ELEMENT, while_elements.size() - 1};
+    expressions.push_back(ExpressionPointer{WHILE_ELEMENT, while_elements.size() - 1});
+    return expressions.back();
 }
 
 ExpressionPointer makeEndElement(const EndElement* expression) {
     end_elements.emplace_back(expression);
-    return ExpressionPointer{END_ELEMENT, end_elements.size() - 1};
+    expressions.push_back(ExpressionPointer{END_ELEMENT, end_elements.size() - 1});
+    return expressions.back();
 }
 
 // FREE GETTERS
