@@ -1,6 +1,6 @@
 #include "logic.h"
 
-#include "../Expression.h"
+#include "../factory.h"
 #include "../operations/boolean.h"
 
 namespace logic {

@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "../Expression.h"
+#include "../factory.h"
 #include "boolean.h"
 #include "serialize.h"
 

@@ -1,6 +1,6 @@
 #include "end.h"
 
-#include "../Expression.h"
+#include "../factory.h"
 
 const CodeCharacter* end(ExpressionPointer expression) {
     switch (expression.type) {

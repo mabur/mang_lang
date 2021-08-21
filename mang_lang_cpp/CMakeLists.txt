@@ -4,6 +4,10 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
+        built_in_functions/arithmetic.cpp
+        built_in_functions/built_in_functions.cpp
+        built_in_functions/list.cpp
+        built_in_functions/logic.cpp
         operations/begin.cpp
         operations/boolean.cpp
         operations/end.cpp
@@ -11,11 +15,8 @@ add_library(shared
         operations/parse.cpp
         operations/serialize.cpp
         operations/starts_with.cpp
-        built_in_functions/arithmetic.cpp
-        built_in_functions/built_in_functions.cpp
-        built_in_functions/list.cpp
-        built_in_functions/logic.cpp
         Expression.cpp
+        factory.cpp
         mang_lang.cpp
         parsing.cpp
         )

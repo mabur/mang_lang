@@ -1,6 +1,6 @@
 #include "begin.h"
 
-#include "../Expression.h"
+#include "../factory.h"
 
 const CodeCharacter* begin(ExpressionPointer expression) {
     switch (expression.type) {

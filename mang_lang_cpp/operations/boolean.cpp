@@ -1,6 +1,6 @@
 #include "boolean.h"
 
-#include "../Expression.h"
+#include "../factory.h"
 
 bool boolean(ExpressionPointer expression) {
     switch (expression.type) {
