@@ -41,6 +41,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Describe ListBase as a "Concept".
 * Add boolean type.
   - true, false or yes, no?
+* parse and evaluate at the same time. One-pass / single pass.
 
 * Unify concept of ! ? @ operators / function-application.
 * Unify concept of pairs of names and expressions:
