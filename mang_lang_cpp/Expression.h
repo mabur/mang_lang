@@ -141,6 +141,8 @@ struct Dictionary {
 
 DictionaryElements setContext(const DictionaryElements& elements);
 
+void clearMemory();
+
 NamedElement getNamedElement(ExpressionPointer expression);
 WhileElement getWileElement(ExpressionPointer expression);
 EndElement getEndElement(ExpressionPointer expression);

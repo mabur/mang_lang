@@ -5,6 +5,44 @@
 
 #include "operations/begin.h"
 
+std::vector<std::shared_ptr<const Character>> characters;
+std::vector<std::shared_ptr<const Conditional>> conditionals;
+std::vector<std::shared_ptr<const Dictionary>> dictionaries;
+std::vector<std::shared_ptr<const Function>> functions;
+std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
+std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
+std::vector<std::shared_ptr<const FunctionList>> list_functions;
+std::vector<std::shared_ptr<const List>> lists;
+std::vector<std::shared_ptr<const LookupChild>> child_lookups;
+std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
+std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
+std::vector<std::shared_ptr<const Name>> names;
+std::vector<std::shared_ptr<const Number>> numbers;
+std::vector<std::shared_ptr<const String>> strings;
+std::vector<std::shared_ptr<const WhileElement>> while_elements;
+std::vector<std::shared_ptr<const EndElement>> end_elements;
+std::vector<std::shared_ptr<const NamedElement>> named_elements;
+
+void clearMemory() {
+    characters.clear();
+    conditionals.clear();
+    dictionaries.clear();
+    functions.clear();
+    built_in_functions.clear();
+    dictionary_functions.clear();
+    list_functions.clear();
+    lists.clear();
+    child_lookups.clear();
+    function_applications.clear();
+    symbol_lookups.clear();
+    names.clear();
+    numbers.clear();
+    strings.clear();
+    while_elements.clear();
+    end_elements.clear();
+    named_elements.clear();
+}
+
 std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
@@ -112,24 +150,6 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     }
     return result;
 }
-
-std::vector<std::shared_ptr<const Character>> characters;
-std::vector<std::shared_ptr<const Conditional>> conditionals;
-std::vector<std::shared_ptr<const Dictionary>> dictionaries;
-std::vector<std::shared_ptr<const Function>> functions;
-std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
-std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
-std::vector<std::shared_ptr<const FunctionList>> list_functions;
-std::vector<std::shared_ptr<const List>> lists;
-std::vector<std::shared_ptr<const LookupChild>> child_lookups;
-std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
-std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
-std::vector<std::shared_ptr<const Name>> names;
-std::vector<std::shared_ptr<const Number>> numbers;
-std::vector<std::shared_ptr<const String>> strings;
-std::vector<std::shared_ptr<const WhileElement>> while_elements;
-std::vector<std::shared_ptr<const EndElement>> end_elements;
-std::vector<std::shared_ptr<const NamedElement>> named_elements;
 
 ExpressionPointer makeNumber(const Number* expression) {
     numbers.emplace_back(expression);
