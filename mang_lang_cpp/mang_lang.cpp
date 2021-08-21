@@ -20,7 +20,9 @@ ExpressionPointer parse(const std::string& string) {
 }
 
 std::string reformat(std::string code) {
-    return serialize(parse(code));
+    const auto result = serialize(parse(code));
+    clearMemory();
+    return result;
 }
 
 std::string evaluate(std::string code) {
