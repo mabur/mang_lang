@@ -153,106 +153,83 @@ DictionaryElements setContext(const DictionaryElements& elements) {
     return result;
 }
 
-ExpressionPointer makeNumber(const Number* expression) {
-    numbers.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{NUMBER, numbers.size() - 1});
+template<typename ElementType, typename ArrayType>
+ExpressionPointer makeExpression(
+    const ElementType* expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    array.emplace_back(expression);
+    expressions.push_back(ExpressionPointer{type, array.size() - 1});
     return expressions.back();
+}
+
+ExpressionPointer makeNumber(const Number* expression) {
+    return makeExpression(expression, NUMBER, numbers);
 }
 
 ExpressionPointer makeCharacter(const Character* expression) {
-    characters.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{CHARACTER, characters.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, CHARACTER, characters);
 }
 
 ExpressionPointer makeConditional(const Conditional* expression) {
-    conditionals.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{CONDITIONAL, conditionals.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, CONDITIONAL, conditionals);
 }
 
 ExpressionPointer makeDictionary(const Dictionary* expression) {
-    dictionaries.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{DICTIONARY, dictionaries.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, DICTIONARY, dictionaries);
 }
 
 ExpressionPointer makeFunction(const Function* expression) {
-    functions.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{FUNCTION, functions.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, FUNCTION, functions);
 }
 
 ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
-    built_in_functions.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{FUNCTION_BUILT_IN, built_in_functions.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
 ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression) {
-    dictionary_functions.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{FUNCTION_DICTIONARY, dictionary_functions.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
 ExpressionPointer makeFunctionList(const FunctionList* expression) {
-    list_functions.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{FUNCTION_LIST, list_functions.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, FUNCTION_LIST, list_functions);
 }
 
 ExpressionPointer makeList(const List* expression) {
-    lists.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{LIST, lists.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, LIST, lists);
 }
 
 ExpressionPointer makeLookupChild(const LookupChild* expression) {
-    child_lookups.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{LOOKUP_CHILD, child_lookups.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 
 ExpressionPointer makeFunctionApplication(const FunctionApplication* expression) {
-    function_applications.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{FUNCTION_APPLICATION, function_applications.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, FUNCTION_APPLICATION, function_applications);
 }
 
 ExpressionPointer makeLookupSymbol(const LookupSymbol* expression) {
-    symbol_lookups.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{LOOKUP_SYMBOL, symbol_lookups.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
 ExpressionPointer makeName(const Name* expression) {
-    names.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{NAME, names.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, NAME, names);
 }
 
 ExpressionPointer makeString(const String* expression) {
-    strings.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{STRING, strings.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, STRING, strings);
 }
 
 ExpressionPointer makeNamedElement(const NamedElement* expression) {
-    named_elements.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{NAMED_ELEMENT, named_elements.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, NAMED_ELEMENT, named_elements);
 }
 
 ExpressionPointer makeWhileElement(const WhileElement* expression) {
-    while_elements.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{WHILE_ELEMENT, while_elements.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, WHILE_ELEMENT, while_elements);
 }
 
 ExpressionPointer makeEndElement(const EndElement* expression) {
-    end_elements.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{END_ELEMENT, end_elements.size() - 1});
-    return expressions.back();
+    return makeExpression(expression, END_ELEMENT, end_elements);
 }
 
 // FREE GETTERS
