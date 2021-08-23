@@ -42,6 +42,10 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Add boolean type.
   - true, false or yes, no?
 * parse and evaluate at the same time. One-pass / single pass.
+  - Not good for reportring syntax errors and later on type errors.
+* Remove shared_ptr from linked list implementation.
+* Implement interpretor executable and write all computed expressions to file for tracability and debugging.
+
 
 * Unify concept of ! ? @ operators / function-application.
 * Unify concept of pairs of names and expressions:
