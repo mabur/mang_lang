@@ -109,7 +109,7 @@ struct Number {
     double value;
 };
 
-struct NewString {
+struct String {
     CodeRange range;
     Expression first;
     Expression rest;

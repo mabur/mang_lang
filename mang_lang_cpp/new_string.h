@@ -16,7 +16,7 @@ inline Expression prepend(Expression rest, Expression first) {
     const auto first_character = std::min(begin(rest), begin(first));
     const auto last_character = std::max(end(rest), end(first));
     const auto code = CodeRange{first_character, last_character};
-    return makeNewString(new NewString{code, first, rest});
+    return makeNewString(new String{code, first, rest});
 }
 
 template<typename Predicate>

@@ -159,7 +159,7 @@ Expression lookupChildInList(const List& list, const std::string& name) {
     throw std::runtime_error("List does not contain symbol " + name);
 }
 
-Expression lookupChildInNewString(const NewString& string, const std::string& name) {
+Expression lookupChildInNewString(const String& string, const std::string& name) {
     if (name == "first") {
         return string.first;
     }

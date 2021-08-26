@@ -21,7 +21,7 @@ std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const NamedElement>> named_elements;
-std::vector<std::shared_ptr<const NewString>> new_strings;
+std::vector<std::shared_ptr<const String>> new_strings;
 std::vector<std::shared_ptr<const NewEmptyString>> new_empty_strings;
 std::vector<Expression> expressions;
 
@@ -229,7 +229,7 @@ Expression makeEndElement(const EndElement* expression) {
     return makeExpression(expression, END_ELEMENT, end_elements);
 }
 
-Expression makeNewString(const NewString* expression) {
+Expression makeNewString(const String* expression) {
     return makeExpression(expression, NEW_STRING, new_strings);
 }
 
@@ -313,7 +313,7 @@ Name getName(Expression expression) {
     return getExpression(expression, NAME, names);
 }
 
-NewString getNewString(Expression expression) {
+String getNewString(Expression expression) {
     return getExpression(expression, NEW_STRING, new_strings);
 }
 
