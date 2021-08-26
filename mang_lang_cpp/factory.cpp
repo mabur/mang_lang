@@ -22,7 +22,7 @@ std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const NamedElement>> named_elements;
 std::vector<std::shared_ptr<const String>> new_strings;
-std::vector<std::shared_ptr<const NewEmptyString>> new_empty_strings;
+std::vector<std::shared_ptr<const EmptyString>> new_empty_strings;
 std::vector<Expression> expressions;
 
 void clearMemory() {
@@ -233,7 +233,7 @@ Expression makeNewString(const String* expression) {
     return makeExpression(expression, NEW_STRING, new_strings);
 }
 
-Expression makeNewEmptyString(const NewEmptyString* expression) {
+Expression makeNewEmptyString(const EmptyString* expression) {
     return makeExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
 }
 
@@ -317,6 +317,6 @@ String getNewString(Expression expression) {
     return getExpression(expression, NEW_STRING, new_strings);
 }
 
-NewEmptyString getNewEmptyString(Expression expression) {
+EmptyString getNewEmptyString(Expression expression) {
     return getExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
 }

@@ -259,7 +259,7 @@ Expression parseNumber(CodeRange code) {
 Expression parseNewString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
-    auto value = makeNewEmptyString(new NewEmptyString{first, first + 1});
+    auto value = makeNewEmptyString(new EmptyString{first, first + 1});
     for (; code.first->character != '"'; ++code.first) {
         auto item = makeCharacter(new Character{
             CodeRange{code.first, code.first + 1}, code.first->character

@@ -8,8 +8,8 @@ namespace list_functions {
 Expression empty(Expression in) {
     switch (in.type) {
         case LIST: return makeList(new List{});
-        case NEW_STRING: return makeNewEmptyString(new NewEmptyString{});
-        case NEW_EMPTY_STRING: return makeNewEmptyString(new NewEmptyString{});
+        case NEW_STRING: return makeNewEmptyString(new EmptyString{});
+        case NEW_EMPTY_STRING: return makeNewEmptyString(new EmptyString{});
         default: throw std::runtime_error{"Expected list"};
     }
 }

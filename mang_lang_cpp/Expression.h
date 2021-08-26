@@ -115,7 +115,7 @@ struct String {
     Expression rest;
 };
 
-struct NewEmptyString {
+struct EmptyString {
     CodeRange range;
 };
 

@@ -35,7 +35,7 @@ T leftFold(T value, Expression list, Operation operation) {
 }
 
 inline Expression reverse(CodeRange code, Expression list) {
-    return leftFold(makeNewEmptyString(new NewEmptyString{code}), list, prepend);
+    return leftFold(makeNewEmptyString(new EmptyString{code}), list, prepend);
 }
 
 template<typename Function>
@@ -44,7 +44,7 @@ Expression map(Expression list, Function f) {
         return prepend(new_list, f(x));
     };
     const auto code = CodeRange{};
-    const auto output = leftFold(makeNewEmptyString(new NewEmptyString{}), list, op);
+    const auto output = leftFold(makeNewEmptyString(new EmptyString{}), list, op);
     return reverse(code, output);
 }
 

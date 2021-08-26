@@ -23,7 +23,7 @@ FunctionApplication getFunctionApplication(Expression expression);
 LookupSymbol getLookupSymbol(Expression expression);
 Name getName(Expression expression);
 String getNewString(Expression expression);
-NewEmptyString getNewEmptyString(Expression expression);
+EmptyString getNewEmptyString(Expression expression);
 
 Expression makeNumber(const Number* expression);
 Expression makeCharacter(const Character* expression);
@@ -42,4 +42,4 @@ Expression makeNamedElement(const NamedElement* expression);
 Expression makeWhileElement(const WhileElement* expression);
 Expression makeEndElement(const EndElement* expression);
 Expression makeNewString(const String* expression);
-Expression makeNewEmptyString(const NewEmptyString* expression);
+Expression makeNewEmptyString(const EmptyString* expression);
