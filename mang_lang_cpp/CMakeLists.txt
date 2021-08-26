@@ -18,6 +18,7 @@ add_library(shared
         Expression.cpp
         factory.cpp
         mang_lang.cpp
+        new_string.cpp
         parsing.cpp
         )
 

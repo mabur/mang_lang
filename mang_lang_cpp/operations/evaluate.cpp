@@ -159,12 +159,12 @@ ExpressionPointer lookupChildInList(const List& list, const std::string& name) {
     throw std::runtime_error("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookupChildInString(const String& string, const std::string& name) {
+ExpressionPointer lookupChildInNewString(const NewString& string, const std::string& name) {
     if (name == "first") {
-        return string.elements->first;
+        return string.first;
     }
     if (name == "rest") {
-        return makeString(new String{string.range, string.elements->rest});
+        return string.rest;
     }
     throw std::runtime_error("String does not contain symbol " + name);
 }
@@ -173,7 +173,7 @@ ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& n
     switch(expression.type) {
         case DICTIONARY: return lookupChildInDictionary(getDictionary(expression), name);
         case LIST: return lookupChildInList(getList(expression), name);
-        case STRING: return lookupChildInString(getString(expression), name);
+        case NEW_STRING: return lookupChildInNewString(getNewString(expression), name);
         default: throw std::runtime_error{"Cannot getLokupChild expression of type " + std::to_string(expression.type)};
     }
 }
@@ -285,7 +285,8 @@ ExpressionPointer evaluate(
     switch (expression.type) {
         case NUMBER: return evaluateAtom(expression, log);
         case CHARACTER: return evaluateAtom(expression, log);
-        case STRING: return evaluateAtom(expression, log);
+        case NEW_EMPTY_STRING: return evaluateAtom(expression, log);
+        case NEW_STRING: return evaluateAtom(expression, log);
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment, log);
         case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment, log);

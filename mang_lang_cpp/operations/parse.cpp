@@ -1,6 +1,7 @@
 #include "parse.h"
 
 #include "../factory.h"
+#include "../new_string.h"
 #include "end.h"
 #include "starts_with.h"
 
@@ -255,26 +256,19 @@ ExpressionPointer parseNumber(CodeRange code) {
     );
 }
 
-bool isNotEndOfString(CodeCharacter c) {
-    return c.character != '"';
-}
-
-ExpressionPointer parseString(CodeRange code) {
+ExpressionPointer parseNewString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
-    const auto first_character = code.begin();
-    code = parseWhile(code, isNotEndOfString);
-    const auto last_character = code.begin();
-    code = parseCharacter(code, '"');
-    auto value = InternalList{};
-    for (auto it = first_character; it != last_character; ++it) {
-        auto item = makeCharacter(
-            new Character{CodeRange{it, it + 1}, it->character}
-        );
-        value = ::prepend<ExpressionPointer>(value, item);
+    auto value = makeNewEmptyString(new NewEmptyString{first, first + 1});
+    for (; code.first->character != '"'; ++code.first) {
+        auto item = makeCharacter(new Character{
+            CodeRange{code.first, code.first + 1}, code.first->character
+        });
+        value = new_string::prepend(value, item);
     }
-    value = ::reverse(value);
-    return makeString(new String{CodeRange{first, code.begin()}, value});
+    code = parseCharacter(code, '"');
+    const auto last = code.begin();
+    return new_string::reverse(CodeRange{first, last}, value);
 }
 
 ExpressionPointer parseExpression(CodeRange code) {
@@ -284,8 +278,7 @@ ExpressionPointer parseExpression(CodeRange code) {
     if (startsWithDictionary(code)) {return parseDictionary(code);}
     if (startsWithNumber(code)) {return parseNumber(code);}
     if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
-    if (startsWithString(code)) {return parseString(code);}
-    if (startsWithString(code)) {return parseString(code);}
+    if (startsWithString(code)) {return parseNewString(code);}
     if (startsWithConditional(code)) {return parseConditional(code);}
     if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
     if (startsWithFunctionList(code)) {return parseFunctionList(code);}

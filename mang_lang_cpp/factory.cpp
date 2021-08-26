@@ -18,10 +18,11 @@ std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
 std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
-std::vector<std::shared_ptr<const String>> strings;
 std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const NamedElement>> named_elements;
+std::vector<std::shared_ptr<const NewString>> new_strings;
+std::vector<std::shared_ptr<const NewEmptyString>> new_empty_strings;
 std::vector<ExpressionPointer> expressions;
 
 void clearMemory() {
@@ -38,10 +39,10 @@ void clearMemory() {
     symbol_lookups.clear();
     names.clear();
     numbers.clear();
-    strings.clear();
     while_elements.clear();
     end_elements.clear();
     named_elements.clear();
+    new_strings.clear();
     expressions.clear();
 }
 
@@ -216,10 +217,6 @@ ExpressionPointer makeName(const Name* expression) {
     return makeExpression(expression, NAME, names);
 }
 
-ExpressionPointer makeString(const String* expression) {
-    return makeExpression(expression, STRING, strings);
-}
-
 ExpressionPointer makeNamedElement(const NamedElement* expression) {
     return makeExpression(expression, NAMED_ELEMENT, named_elements);
 }
@@ -230,6 +227,14 @@ ExpressionPointer makeWhileElement(const WhileElement* expression) {
 
 ExpressionPointer makeEndElement(const EndElement* expression) {
     return makeExpression(expression, END_ELEMENT, end_elements);
+}
+
+ExpressionPointer makeNewString(const NewString* expression) {
+    return makeExpression(expression, NEW_STRING, new_strings);
+}
+
+ExpressionPointer makeNewEmptyString(const NewEmptyString* expression) {
+    return makeExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
 }
 
 // FREE GETTERS
@@ -308,6 +313,10 @@ Name getName(ExpressionPointer expression) {
     return getExpression(expression, NAME, names);
 }
 
-String getString(ExpressionPointer expression) {
-    return getExpression(expression, STRING, strings);
+NewString getNewString(ExpressionPointer expression) {
+    return getExpression(expression, NEW_STRING, new_strings);
+}
+
+NewEmptyString getNewEmptyString(ExpressionPointer expression) {
+    return getExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
 }

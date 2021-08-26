@@ -3,6 +3,8 @@
 #include <sstream>
 
 #include "../factory.h"
+#include "boolean.h"
+#include "../new_string.h"
 
 std::string serializeName(const Name& name) {
     return name.value;
@@ -121,14 +123,13 @@ std::string serializeNumber(const Number& number) {
     return s.str();
 }
 
-std::string serializeString(ExpressionPointer s) {
-    auto value = std::string{"\""};
-    auto node = getString(s).elements;
-    for (; node; node = node->rest) {
-        value += getCharacter(node->first).value;
-    }
-    value += "\"";
-    return value;
+std::string appendCharacter(const std::string& s, ExpressionPointer character) {
+    return s + getCharacter(character).value;
+}
+
+std::string serializeNewString(ExpressionPointer string) {
+    const auto delimiter = std::string{"\""};
+    return new_string::leftFold(delimiter, string, appendCharacter) + delimiter;
 }
 
 std::string serialize(ExpressionPointer expression) {
@@ -148,7 +149,8 @@ std::string serialize(ExpressionPointer expression) {
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(getName(expression));
         case NUMBER: return serializeNumber(getNumber(expression));
-        case STRING: return serializeString(expression);
+        case NEW_EMPTY_STRING: return serializeNewString(expression);
+        case NEW_STRING: return serializeNewString(expression);
         default: throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression.type)};
     }
 }

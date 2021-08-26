@@ -19,7 +19,8 @@ const CodeCharacter* begin(ExpressionPointer expression) {
         case LOOKUP_SYMBOL: return getLookupSymbol(expression).range.first;
         case NAME: return getName(expression).range.first;
         case NUMBER: return getNumber(expression).range.first;
-        case STRING: return getString(expression).range.first;
+        case NEW_STRING: return getNewString(expression).range.first;
+        case NEW_EMPTY_STRING: return getNewEmptyString(expression).range.first;
         default: throw std::runtime_error{"Missing begin operation for : " + std::to_string(expression.type)};
     }
 }

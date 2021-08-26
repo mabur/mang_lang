@@ -2,13 +2,13 @@
 
 #include "../factory.h"
 #include "../operations/boolean.h"
+#include "../new_string.h"
 
 namespace logic {
 
 InternalList list(ExpressionPointer expression) {
     switch (expression.type) {
         case LIST: return getList(expression).elements;
-        case STRING: return getString(expression).elements;
         default: throw std::runtime_error{"Expected list"};
     }
 }
@@ -61,6 +61,15 @@ bool isEqualList(ExpressionPointer left_smart, ExpressionPointer right_smart) {
     return !left && !right;
 }
 
+bool isEqualNewString(ExpressionPointer left, ExpressionPointer right) {
+    for (; ::boolean(left) && ::boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
+        if (!isEqual(new_string::first(left), new_string::first(right))) {
+            return false;
+        }
+    }
+    return !::boolean(left) && !::boolean(right);
+}
+
 bool isEqual(ExpressionPointer left, ExpressionPointer right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
@@ -73,8 +82,11 @@ bool isEqual(ExpressionPointer left, ExpressionPointer right) {
     if (left_type == LIST && right_type == LIST) {
         return isEqualList(left, right);
     }
-    if (left_type == STRING && right_type == STRING) {
-        return isEqualList(left, right);
+    if (left_type == NEW_EMPTY_STRING && right_type == NEW_EMPTY_STRING) {
+        return true;
+    }
+    if (left_type == NEW_STRING && right_type == NEW_STRING) {
+        return isEqualNewString(left, right);
     }
     return false;
 }

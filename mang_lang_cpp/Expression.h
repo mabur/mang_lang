@@ -24,7 +24,8 @@ enum ExpressionType {
     WHILE_ELEMENT,
     END_ELEMENT,
     NUMBER,
-    STRING,
+    NEW_STRING,
+    NEW_EMPTY_STRING,
     EMPTY,
 };
 
@@ -111,6 +112,16 @@ struct Number {
 struct String {
     CodeRange range;
     InternalList elements;
+};
+
+struct NewString {
+    CodeRange range;
+    ExpressionPointer first;
+    ExpressionPointer rest;
+};
+
+struct NewEmptyString {
+    CodeRange range;
 };
 
 struct NamedElement {
