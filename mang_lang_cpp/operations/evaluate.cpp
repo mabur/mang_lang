@@ -129,7 +129,7 @@ Expression lookupDictionary(const Expression& expression, const std::string& nam
     for (const auto& element : d.elements) {
         if (element.type == NAMED_ELEMENT) {
             const auto dictionary_element = getNamedElement(element);
-            if (dictionary_element.name->value == name) {
+            if (getName(dictionary_element.name).value == name) {
                 return dictionary_element.expression;
             }
         }
@@ -141,7 +141,7 @@ Expression lookupChildInDictionary(const Dictionary& dictionary, const std::stri
     for (const auto& element : dictionary.elements) {
         if (element.type == NAMED_ELEMENT) {
             const auto dictionary_element = getNamedElement(element);
-            if (dictionary_element.name->value == name) {
+            if (getName(dictionary_element.name).value == name) {
                 return dictionary_element.expression;
             }
         }
@@ -182,7 +182,7 @@ Expression evaluateLookupChild(
     const LookupChild& lookup_child, Expression environment, std::ostream& log
 ) {
     const auto child = evaluate(lookup_child.child, environment, log);
-    const auto result = lookupChild(child, lookup_child.name->value);
+    const auto result = lookupChild(child, getName(lookup_child.name).value);
     log << serialize(result) << std::endl;
     return result;
 }
@@ -255,7 +255,7 @@ Expression apply(Expression expression, Expression input, std::ostream& log) {
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment, std::ostream& log
 ) {
-    const auto function = lookupDictionary(environment, function_application.name->value);
+    const auto function = lookupDictionary(environment, getName(function_application.name).value);
     const auto evaluated_child = evaluate(function_application.child, environment, log);
     const auto result = apply(function, evaluated_child, log);
     log << serialize(result) << std::endl;
@@ -265,7 +265,7 @@ Expression evaluateFunctionApplication(
 Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment, std::ostream& log
 ) {
-    const auto result = lookupDictionary(environment, lookup_symbol.name->value);
+    const auto result = lookupDictionary(environment, getName(lookup_symbol.name).value);
     log << serialize(result) << std::endl;
     return result;
 }

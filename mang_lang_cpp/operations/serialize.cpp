@@ -6,8 +6,8 @@
 #include "boolean.h"
 #include "../new_string.h"
 
-std::string serializeName(const Name& name) {
-    return name.value;
+std::string serializeName(Expression name) {
+    return getName(name).value;
 }
 
 std::string serializeCharacter(const Character& character) {
@@ -22,7 +22,7 @@ std::string serializeConditional(const Conditional& conditional) {
 
 std::string serializeNamedElement(const NamedElement& element) {
     return
-        serializeName(*element.name) + '=' +
+        serializeName(element.name) + '=' +
         serialize(element.expression) + ' ';
 }
 
@@ -50,7 +50,7 @@ std::string serializeDictionary(const Dictionary& dictionary) {
 }
 
 std::string serializeFunction(const Function& function) {
-    return "in " + serializeName(*function.input_name)
+    return "in " + serializeName(function.input_name)
         + " out " + serialize(function.body);
 }
 
@@ -59,7 +59,7 @@ std::string serializeFunctionDictionary(const FunctionDictionary& function_dicti
     result += "in ";
     result += "{";
     for (const auto& name : function_dictionary.input_names) {
-        result += serializeName(*name);
+        result += serializeName(name);
         result += " ";
     }
     if (function_dictionary.input_names.empty()) {
@@ -77,7 +77,7 @@ std::string serializeFunctionList(const FunctionList& function_list) {
     result += "in ";
     result += "(";
     for (const auto& name : function_list.input_names) {
-        result += serializeName(*name);
+        result += serializeName(name);
         result += " ";
     }
     if (function_list.input_names.empty()) {
@@ -105,16 +105,16 @@ std::string serializeList(Expression list) {
 }
 
 std::string serializeLookupChild(const LookupChild& lookup_child) {
-    return serializeName(*lookup_child.name) + "@" + serialize(lookup_child.child);
+    return serializeName(lookup_child.name) + "@" + serialize(lookup_child.child);
 }
 
 std::string serializeFunctionApplication(const FunctionApplication& function_application) {
-    return serializeName(*function_application.name) + "!" +
+    return serializeName(function_application.name) + "!" +
         serialize(function_application.child);
 }
 
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
-    return serializeName(*lookup_symbol.name);
+    return serializeName(lookup_symbol.name);
 }
 
 std::string serializeNumber(const Number& number) {
@@ -147,7 +147,7 @@ std::string serialize(Expression expression) {
         case LOOKUP_CHILD: return serializeLookupChild(getLokupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
-        case NAME: return serializeName(getName(expression));
+        case NAME: return serializeName(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
         case NEW_EMPTY_STRING: return serializeNewString(expression);
         case NEW_STRING: return serializeNewString(expression);

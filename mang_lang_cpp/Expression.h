@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -36,9 +35,6 @@ struct Expression {
 
 using InternalList = SinglyLinkedList<Expression>;
 
-struct Name;
-using NamePointer = std::shared_ptr<const Name>;
-
 struct Name {
     CodeRange range;
     std::string value;
@@ -59,7 +55,7 @@ struct Conditional {
 struct Function {
     CodeRange range;
     Expression environment;
-    NamePointer input_name;
+    Expression input_name;
     Expression body;
 };
 
@@ -71,14 +67,14 @@ struct FunctionBuiltIn {
 struct FunctionDictionary {
     CodeRange range;
     Expression environment; // TODO: use this.
-    std::vector<NamePointer> input_names;
+    std::vector<Expression> input_names;
     Expression body;
 };
 
 struct FunctionList {
     CodeRange range;
     Expression environment;
-    std::vector<NamePointer> input_names;
+    std::vector<Expression> input_names;
     Expression body;
 };
 
@@ -89,19 +85,19 @@ struct List {
 
 struct LookupChild {
     CodeRange range;
-    NamePointer name;
+    Expression name;
     Expression child;
 };
 
 struct FunctionApplication {
     CodeRange range;
-    NamePointer name;
+    Expression name;
     Expression child;
 };
 
 struct LookupSymbol {
     CodeRange range;
-    NamePointer name;
+    Expression name;
 };
 
 struct Number {
@@ -121,7 +117,7 @@ struct EmptyString {
 
 struct NamedElement {
     CodeRange range;
-    NamePointer name;
+    Expression name;
     Expression expression;
     size_t name_index_;
 };

@@ -46,19 +46,18 @@ Expression parseConditional(CodeRange code) {
     });
 }
 
-NamePointer parseName(CodeRange code) {
+Expression parseName(CodeRange code) {
     auto first = code.begin();
     code = parseWhile(code, isNameCharacter);
-    return std::make_shared<Name>(Name{
-        CodeRange{first, code.first},
-        rawString({first, code.first})
+    return makeName(new Name{
+        CodeRange{first, code.first}, rawString({first, code.first})
     });
 }
 
 Expression parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    code.first = name->range.end();
+    code.first = end(name);
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '=');
     code = parseWhiteSpace(code);
@@ -136,7 +135,7 @@ Expression parseFunction(CodeRange code) {
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     auto input_name = parseName(code);
-    code.first = input_name->range.end();
+    code.first = end(input_name);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
@@ -152,11 +151,11 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto input_names = std::vector<NamePointer>{};
+    auto input_names = std::vector<Expression>{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         const auto name = parseName(code);
-        code.first = name->range.end();
+        code.first = end(name);
         input_names.push_back(name);
         code = parseWhiteSpace(code);
     }
@@ -176,11 +175,11 @@ Expression parseFunctionList(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto input_names = std::vector<NamePointer>{};
+    auto input_names = std::vector<Expression>{};
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = parseName(code);
-        code.first = name->range.end();
+        code.first = end(name);
         input_names.push_back(name);
         code = parseWhiteSpace(code);
     }
@@ -213,7 +212,7 @@ Expression parseList(CodeRange code) {
 Expression parseLookupChild(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    code.first = name->range.end();
+    code.first = end(name);
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '@');
     code = parseWhiteSpace(code);
@@ -225,7 +224,7 @@ Expression parseLookupChild(CodeRange code) {
 Expression parseLookupFunction(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    code.first = name->range.end();
+    code.first = end(name);
     const auto expected = ::startsWith(code, '!') ? '!' : '?';
     code = parseCharacter(code, expected);
     auto child = parseExpression(code);
@@ -239,7 +238,7 @@ Expression parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     return makeLookupSymbol(new LookupSymbol{
-        CodeRange{first, name->range.end()}, name
+        CodeRange{first, end(name)}, name
     });
 }
 

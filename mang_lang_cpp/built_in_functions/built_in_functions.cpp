@@ -14,7 +14,7 @@ Expression makeDictionaryElement(
     return makeNamedElement(
         new NamedElement{
             CodeRange{},
-            std::make_shared<Name>(Name{CodeRange{}, name}),
+            makeName(new Name{CodeRange{}, name}),
             makeFunctionBuiltIn(new FunctionBuiltIn{{}, function}),
             0
         }
