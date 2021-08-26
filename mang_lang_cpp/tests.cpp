@@ -7,8 +7,6 @@
 #include <vector>
 
 #include "SinglyLinkedList.h"
-#include "new_string.h"
-#include "operations/serialize.h"
 
 struct Test {
     Test() = default;
@@ -755,29 +753,6 @@ int main() {
         list = prepend(list, 0);
         auto actual = findIf(list, [](auto x){return x != 0;});
         test.assertEqual(1, actual->first);
-    }
-
-    {
-        auto x = makeNewEmptyString(new NewEmptyString{});
-        test.assertEqual<std::string>(serialize(x), R"("")");
-    }
-    {
-        auto x = makeNewEmptyString(new NewEmptyString{});
-        x = new_string::prepend(x, makeCharacter(new Character{CodeRange{}, 'a'}));
-        test.assertEqual<std::string>(serialize(x), R"("a")");
-    }
-    {
-        auto x = makeNewEmptyString(new NewEmptyString{});
-        x = new_string::prepend(x, makeCharacter(new Character{CodeRange{}, 'a'}));
-        x = new_string::prepend(x, makeCharacter(new Character{CodeRange{}, 'b'}));
-        test.assertEqual<std::string>(serialize(x), R"("ba")");
-    }
-    {
-        auto x = makeNewEmptyString(new NewEmptyString{});
-        x = new_string::prepend(x, makeCharacter(new Character{CodeRange{}, 'a'}));
-        x = new_string::prepend(x, makeCharacter(new Character{CodeRange{}, 'b'}));
-        x = new_string::reverse({}, x);
-        test.assertEqual<std::string>(serialize(x), R"("ab")");
     }
 
     return test.exitCode();
