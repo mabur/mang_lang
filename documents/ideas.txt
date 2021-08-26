@@ -43,8 +43,10 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - true, false or yes, no?
 * parse and evaluate at the same time. One-pass / single pass.
   - Not good for reportring syntax errors and later on type errors.
-* Remove shared_ptr from linked list implementation.
 * Implement interpretor executable and write all computed expressions to file for tracability and debugging.
+* Remove shared_ptr from linked list implementation.
+  - Add new Expression types: NewList, EmptyList, NewString, EmptyString
+  - Make CodeRange part of ExpressionPointer instead of expression.
 
 
 * Unify concept of ! ? @ operators / function-application.
