@@ -109,11 +109,6 @@ struct Number {
     double value;
 };
 
-struct String {
-    CodeRange range;
-    InternalList elements;
-};
-
 struct NewString {
     CodeRange range;
     Expression first;
