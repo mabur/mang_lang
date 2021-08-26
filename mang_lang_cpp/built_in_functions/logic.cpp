@@ -21,31 +21,31 @@ bool isFalse(Expression x) {
     return !::boolean(x);
 }
 
-Expression makeNumber(double x) {
-    return makeNumber(new Number(Number{CodeRange{}, x}));
+Expression makeBoolean(double x) {
+    return makeNumber(new Number{CodeRange{}, x});
 }
 
 Expression boolean(Expression in) {
-    return makeNumber(::boolean(in));
+    return makeBoolean(::boolean(in));
 }
 
 Expression logic_not(Expression in) {
-    return makeNumber(!::boolean(in));
+    return makeBoolean(!::boolean(in));
 }
 
 Expression all(Expression in) {
     const auto result = !findIf(list(in), isFalse);
-    return makeNumber(result);
+    return makeBoolean(result);
 }
 
 Expression any(Expression in) {
     const auto result = !!findIf(list(in), isTrue);
-    return makeNumber(result);
+    return makeBoolean(result);
 }
 
 Expression none(Expression in) {
     const auto result = !findIf(list(in), isTrue);
-    return makeNumber(result);
+    return makeBoolean(result);
 }
 
 bool isEqual(Expression left, Expression right);
@@ -96,7 +96,7 @@ Expression equal(Expression in) {
     const auto& left = first(elements);
     const auto& right = second(elements);
     const auto value = isEqual(left, right);
-    return makeNumber(value);
+    return makeBoolean(value);
 }
 
 Expression unequal(Expression in) {
@@ -104,7 +104,7 @@ Expression unequal(Expression in) {
     const auto& left = first(elements);
     const auto& right = second(elements);
     const auto value = !isEqual(left, right);
-    return makeNumber(value);
+    return makeBoolean(value);
 }
 
 }
