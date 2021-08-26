@@ -90,12 +90,12 @@ std::string serializeFunctionList(const FunctionList& function_list) {
     return result;
 }
 
-std::string serializeList(ExpressionPointer list) {
+std::string serializeList(Expression list) {
     const auto elements = getList(list).elements;
     if (!elements) {
         return "()";
     }
-    const auto operation = [](const std::string& left, ExpressionPointer right) {
+    const auto operation = [](const std::string& left, Expression right) {
         return left + serialize(right) + " ";
     };
     auto result = std::string{"("};
@@ -123,16 +123,16 @@ std::string serializeNumber(const Number& number) {
     return s.str();
 }
 
-std::string appendCharacter(const std::string& s, ExpressionPointer character) {
+std::string appendCharacter(const std::string& s, Expression character) {
     return s + getCharacter(character).value;
 }
 
-std::string serializeNewString(ExpressionPointer string) {
+std::string serializeNewString(Expression string) {
     const auto delimiter = std::string{"\""};
     return new_string::leftFold(delimiter, string, appendCharacter) + delimiter;
 }
 
-std::string serialize(ExpressionPointer expression) {
+std::string serialize(Expression expression) {
     switch (expression.type) {
         case CHARACTER: return serializeCharacter(getCharacter(expression));
         case CONDITIONAL: return serializeConditional(getConditional(expression));

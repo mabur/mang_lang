@@ -1,6 +1,6 @@
 #pragma once
 
 struct CodeCharacter;
-struct ExpressionPointer;
+struct Expression;
 
-const CodeCharacter* end(ExpressionPointer expression);
+const CodeCharacter* end(Expression expression);

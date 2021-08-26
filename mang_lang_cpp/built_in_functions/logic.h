@@ -1,15 +1,15 @@
 #pragma once
 
-struct ExpressionPointer;
+struct Expression;
 
 namespace logic {
 
-ExpressionPointer boolean(ExpressionPointer in);
-ExpressionPointer logic_not(ExpressionPointer in) ;
-ExpressionPointer all(ExpressionPointer in) ;
-ExpressionPointer any(ExpressionPointer in);
-ExpressionPointer none(ExpressionPointer in);
-ExpressionPointer equal(ExpressionPointer in);
-ExpressionPointer unequal(ExpressionPointer in);
+Expression boolean(Expression in);
+Expression logic_not(Expression in) ;
+Expression all(Expression in) ;
+Expression any(Expression in);
+Expression none(Expression in);
+Expression equal(Expression in);
+Expression unequal(Expression in);
 
 }

@@ -5,7 +5,7 @@
 
 namespace list_functions {
 
-ExpressionPointer empty(ExpressionPointer in) {
+Expression empty(Expression in) {
     switch (in.type) {
         case LIST: return makeList(new List{});
         case NEW_STRING: return makeNewEmptyString(new NewEmptyString{});
@@ -14,11 +14,11 @@ ExpressionPointer empty(ExpressionPointer in) {
     }
 }
 
-ExpressionPointer prependList(const List& list, ExpressionPointer item) {
+Expression prependList(const List& list, Expression item) {
     return makeList(new List{list.range, prepend(list.elements, item)});
 }
 
-ExpressionPointer prepend(ExpressionPointer in) {
+Expression prepend(Expression in) {
     const auto& elements = getList(in).elements;
     const auto& item = first(elements);
     const auto& collection = second(elements);

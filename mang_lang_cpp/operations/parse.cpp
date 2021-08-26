@@ -5,7 +5,7 @@
 #include "end.h"
 #include "starts_with.h"
 
-ExpressionPointer parseCharacterExpression(CodeRange code) {
+Expression parseCharacterExpression(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '\'');
     const auto it = code.begin();
@@ -17,7 +17,7 @@ ExpressionPointer parseCharacterExpression(CodeRange code) {
     );
 }
 
-ExpressionPointer parseConditional(CodeRange code) {
+Expression parseConditional(CodeRange code) {
     auto first = code.begin();
 
     code = parseKeyword(code, "if");
@@ -55,7 +55,7 @@ NamePointer parseName(CodeRange code) {
     });
 }
 
-ExpressionPointer parseNamedElement(CodeRange code) {
+Expression parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     code.first = name->range.end();
@@ -75,7 +75,7 @@ ExpressionPointer parseNamedElement(CodeRange code) {
     );
 }
 
-ExpressionPointer parseWhileElement(CodeRange code) {
+Expression parseWhileElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
@@ -91,14 +91,14 @@ ExpressionPointer parseWhileElement(CodeRange code) {
     );
 }
 
-ExpressionPointer parseEndElement(CodeRange code) {
+Expression parseEndElement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
     return makeEndElement(new EndElement{CodeRange{first, code.first}, 1});
 }
 
-ExpressionPointer parseDictionaryElement(CodeRange code) {
+Expression parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
     if (startsWithWhileElement(code)) {
@@ -110,7 +110,7 @@ ExpressionPointer parseDictionaryElement(CodeRange code) {
     return parseNamedElement(code);
 }
 
-ExpressionPointer parseDictionary(CodeRange code) {
+Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
@@ -125,13 +125,13 @@ ExpressionPointer parseDictionary(CodeRange code) {
     return makeDictionary(
         new Dictionary{
             CodeRange{first, code.begin()},
-            ExpressionPointer{},
+            Expression{},
             setContext(elements)
         }
     );
 }
 
-ExpressionPointer parseFunction(CodeRange code) {
+Expression parseFunction(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
@@ -142,11 +142,11 @@ ExpressionPointer parseFunction(CodeRange code) {
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunction(new Function{
-        CodeRange{first, code.begin()}, ExpressionPointer{}, input_name, body
+        CodeRange{first, code.begin()}, Expression{}, input_name, body
     });
 }
 
-ExpressionPointer parseFunctionDictionary(CodeRange code) {
+Expression parseFunctionDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
@@ -166,11 +166,11 @@ ExpressionPointer parseFunctionDictionary(CodeRange code) {
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunctionDictionary(new FunctionDictionary{
-        CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
+        CodeRange{first, code.begin()}, Expression{}, input_names, body
     });
 }
 
-ExpressionPointer parseFunctionList(CodeRange code) {
+Expression parseFunctionList(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
@@ -190,11 +190,11 @@ ExpressionPointer parseFunctionList(CodeRange code) {
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunctionList(new FunctionList{
-        CodeRange{first, code.begin()}, ExpressionPointer{}, input_names, body
+        CodeRange{first, code.begin()}, Expression{}, input_names, body
     });
 }
 
-ExpressionPointer parseList(CodeRange code) {
+Expression parseList(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
@@ -210,7 +210,7 @@ ExpressionPointer parseList(CodeRange code) {
     return makeList(new List{CodeRange{first, code.first}, reverse(expressions)});
 }
 
-ExpressionPointer parseLookupChild(CodeRange code) {
+Expression parseLookupChild(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     code.first = name->range.end();
@@ -222,7 +222,7 @@ ExpressionPointer parseLookupChild(CodeRange code) {
     return makeLookupChild(new LookupChild{CodeRange{first, code.first}, name, child});
 }
 
-ExpressionPointer parseLookupFunction(CodeRange code) {
+Expression parseLookupFunction(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     code.first = name->range.end();
@@ -235,7 +235,7 @@ ExpressionPointer parseLookupFunction(CodeRange code) {
     });
 }
 
-ExpressionPointer parseLookupSymbol(CodeRange code) {
+Expression parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     return makeLookupSymbol(new LookupSymbol{
@@ -243,7 +243,7 @@ ExpressionPointer parseLookupSymbol(CodeRange code) {
     });
 }
 
-ExpressionPointer parseNumber(CodeRange code) {
+Expression parseNumber(CodeRange code) {
     auto first = code.begin();
     code = parseOptionalCharacter(code, isSign);
     code = parseCharacter(code, isDigit);
@@ -256,7 +256,7 @@ ExpressionPointer parseNumber(CodeRange code) {
     );
 }
 
-ExpressionPointer parseNewString(CodeRange code) {
+Expression parseNewString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
     auto value = makeNewEmptyString(new NewEmptyString{first, first + 1});
@@ -271,7 +271,7 @@ ExpressionPointer parseNewString(CodeRange code) {
     return new_string::reverse(CodeRange{first, last}, value);
 }
 
-ExpressionPointer parseExpression(CodeRange code) {
+Expression parseExpression(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
     if (startsWithList(code)) {return parseList(code);}

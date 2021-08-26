@@ -1,5 +1,5 @@
 #pragma once
 
-struct ExpressionPointer;
+struct Expression;
 
-bool boolean(ExpressionPointer expression);
+bool boolean(Expression expression);

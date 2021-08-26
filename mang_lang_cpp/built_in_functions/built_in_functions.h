@@ -1,5 +1,5 @@
 #pragma once
 
-struct ExpressionPointer;
+struct Expression;
 
-ExpressionPointer builtIns();
+Expression builtIns();

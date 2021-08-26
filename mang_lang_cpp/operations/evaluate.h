@@ -2,8 +2,8 @@
 
 #include <ostream>
 
-struct ExpressionPointer;
+struct Expression;
 
-ExpressionPointer evaluate(
-    ExpressionPointer expression, ExpressionPointer environment, std::ostream& log
+Expression evaluate(
+    Expression expression, Expression environment, std::ostream& log
 );

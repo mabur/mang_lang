@@ -14,7 +14,7 @@ auto nullStream() {
     return stream;
 }
 
-ExpressionPointer parse(const std::string& string) {
+Expression parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
     return parseExpression({result.data(), result.data() + result.size()});
 }

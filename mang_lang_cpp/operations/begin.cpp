@@ -2,7 +2,7 @@
 
 #include "../factory.h"
 
-const CodeCharacter* begin(ExpressionPointer expression) {
+const CodeCharacter* begin(Expression expression) {
     switch (expression.type) {
         case CHARACTER: return getCharacter(expression).range.first;
         case CONDITIONAL: return getConditional(expression).range.first;

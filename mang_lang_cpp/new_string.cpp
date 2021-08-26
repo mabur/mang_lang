@@ -4,15 +4,15 @@
 
 namespace new_string {
 
-ExpressionPointer first(ExpressionPointer list) {
+Expression first(Expression list) {
     return getNewString(list).first;
 }
 
-ExpressionPointer rest(ExpressionPointer expression) {
+Expression rest(Expression expression) {
     return getNewString(expression).rest;
 }
 
-ExpressionPointer second(ExpressionPointer list) {
+Expression second(Expression list) {
     return first(rest(list));
 }
 

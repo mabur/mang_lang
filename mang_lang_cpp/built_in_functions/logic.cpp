@@ -6,51 +6,51 @@
 
 namespace logic {
 
-InternalList list(ExpressionPointer expression) {
+InternalList list(Expression expression) {
     switch (expression.type) {
         case LIST: return getList(expression).elements;
         default: throw std::runtime_error{"Expected list"};
     }
 }
 
-bool isTrue(ExpressionPointer x) {
+bool isTrue(Expression x) {
     return ::boolean(x);
 }
 
-bool isFalse(ExpressionPointer x) {
+bool isFalse(Expression x) {
     return !::boolean(x);
 }
 
-ExpressionPointer makeNumber(double x) {
+Expression makeNumber(double x) {
     return makeNumber(new Number(Number{CodeRange{}, x}));
 }
 
-ExpressionPointer boolean(ExpressionPointer in) {
+Expression boolean(Expression in) {
     return makeNumber(::boolean(in));
 }
 
-ExpressionPointer logic_not(ExpressionPointer in) {
+Expression logic_not(Expression in) {
     return makeNumber(!::boolean(in));
 }
 
-ExpressionPointer all(ExpressionPointer in) {
+Expression all(Expression in) {
     const auto result = !findIf(list(in), isFalse);
     return makeNumber(result);
 }
 
-ExpressionPointer any(ExpressionPointer in) {
+Expression any(Expression in) {
     const auto result = !!findIf(list(in), isTrue);
     return makeNumber(result);
 }
 
-ExpressionPointer none(ExpressionPointer in) {
+Expression none(Expression in) {
     const auto result = !findIf(list(in), isTrue);
     return makeNumber(result);
 }
 
-bool isEqual(ExpressionPointer left, ExpressionPointer right);
+bool isEqual(Expression left, Expression right);
 
-bool isEqualList(ExpressionPointer left_smart, ExpressionPointer right_smart) {
+bool isEqualList(Expression left_smart, Expression right_smart) {
     auto left = list(left_smart);
     auto right = list(right_smart);
     for (; left && right; left = left->rest, right = right->rest) {
@@ -61,7 +61,7 @@ bool isEqualList(ExpressionPointer left_smart, ExpressionPointer right_smart) {
     return !left && !right;
 }
 
-bool isEqualNewString(ExpressionPointer left, ExpressionPointer right) {
+bool isEqualNewString(Expression left, Expression right) {
     for (; ::boolean(left) && ::boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
         if (!isEqual(new_string::first(left), new_string::first(right))) {
             return false;
@@ -70,7 +70,7 @@ bool isEqualNewString(ExpressionPointer left, ExpressionPointer right) {
     return !::boolean(left) && !::boolean(right);
 }
 
-bool isEqual(ExpressionPointer left, ExpressionPointer right) {
+bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
@@ -91,7 +91,7 @@ bool isEqual(ExpressionPointer left, ExpressionPointer right) {
     return false;
 }
 
-ExpressionPointer equal(ExpressionPointer in) {
+Expression equal(Expression in) {
     const auto& elements = list(in);
     const auto& left = first(elements);
     const auto& right = second(elements);
@@ -99,7 +99,7 @@ ExpressionPointer equal(ExpressionPointer in) {
     return makeNumber(value);
 }
 
-ExpressionPointer unequal(ExpressionPointer in) {
+Expression unequal(Expression in) {
     const auto& elements = list(in);
     const auto& left = first(elements);
     const auto& right = second(elements);

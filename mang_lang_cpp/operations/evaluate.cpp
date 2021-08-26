@@ -6,8 +6,8 @@
 #include "boolean.h"
 #include "serialize.h"
 
-ExpressionPointer evaluateConditional(
-    const Conditional& conditional, ExpressionPointer environment, std::ostream& log
+Expression evaluateConditional(
+    const Conditional& conditional, Expression environment, std::ostream& log
 ) {
     const auto result =
         boolean(evaluate(conditional.expression_if, environment, log)) ?
@@ -30,14 +30,14 @@ size_t numNames(const DictionaryElements& elements) {
     return max_index + 1;
 }
 
-ExpressionPointer evaluateDictionary(
-    const Dictionary& dictionary, ExpressionPointer environment, std::ostream& log
+Expression evaluateDictionary(
+    const Dictionary& dictionary, Expression environment, std::ostream& log
 ) {
     const auto num_names = numNames(dictionary.elements);
     const auto result = new Dictionary{
         dictionary.range,
         environment,
-        DictionaryElements(num_names, ExpressionPointer{})
+        DictionaryElements(num_names, Expression{})
     };
 
     auto i = size_t{0};
@@ -74,8 +74,8 @@ ExpressionPointer evaluateDictionary(
     return wrapped_result;
 }
 
-ExpressionPointer evaluateFunction(
-    const Function& function, ExpressionPointer environment, std::ostream& log
+Expression evaluateFunction(
+    const Function& function, Expression environment, std::ostream& log
 ) {
     const auto result = makeFunction(new Function{
         function.range, environment, function.input_name, function.body
@@ -84,8 +84,8 @@ ExpressionPointer evaluateFunction(
     return result;
 }
 
-ExpressionPointer evaluateFunctionDictionary(
-    const FunctionDictionary& function_dictionary, ExpressionPointer environment, std::ostream& log
+Expression evaluateFunctionDictionary(
+    const FunctionDictionary& function_dictionary, Expression environment, std::ostream& log
 ) {
     const auto result = makeFunctionDictionary(
         new FunctionDictionary{
@@ -99,8 +99,8 @@ ExpressionPointer evaluateFunctionDictionary(
     return result;
 }
 
-ExpressionPointer evaluateFunctionList(
-    const FunctionList& function_list, ExpressionPointer environment, std::ostream& log
+Expression evaluateFunctionList(
+    const FunctionList& function_list, Expression environment, std::ostream& log
 ) {
     const auto result = makeFunctionList(new FunctionList{
         function_list.range, environment, function_list.input_names, function_list.body
@@ -109,10 +109,10 @@ ExpressionPointer evaluateFunctionList(
     return result;
 }
 
-ExpressionPointer evaluateList(
-    const List& list, ExpressionPointer environment, std::ostream& log
+Expression evaluateList(
+    const List& list, Expression environment, std::ostream& log
 ) {
-    const auto operation = [&](ExpressionPointer expression) -> ExpressionPointer {
+    const auto operation = [&](Expression expression) -> Expression {
         return evaluate(expression, environment, log);
     };
     auto evaluated_elements = map(list.elements, operation);
@@ -121,7 +121,7 @@ ExpressionPointer evaluateList(
     return result;
 }
 
-ExpressionPointer lookupDictionary(const ExpressionPointer& expression, const std::string& name) {
+Expression lookupDictionary(const Expression& expression, const std::string& name) {
     if (expression.type != DICTIONARY) {
         throw std::runtime_error("Cannot find symbol " + name);
     }
@@ -137,7 +137,7 @@ ExpressionPointer lookupDictionary(const ExpressionPointer& expression, const st
     return lookupDictionary(d.environment, name);
 }
 
-ExpressionPointer lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
+Expression lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element.type == NAMED_ELEMENT) {
             const auto dictionary_element = getNamedElement(element);
@@ -149,7 +149,7 @@ ExpressionPointer lookupChildInDictionary(const Dictionary& dictionary, const st
     throw std::runtime_error("Dictionary does not contain symbol " + name);
 }
 
-ExpressionPointer lookupChildInList(const List& list, const std::string& name) {
+Expression lookupChildInList(const List& list, const std::string& name) {
     if (name == "first") {
         return list.elements->first;
     }
@@ -159,7 +159,7 @@ ExpressionPointer lookupChildInList(const List& list, const std::string& name) {
     throw std::runtime_error("List does not contain symbol " + name);
 }
 
-ExpressionPointer lookupChildInNewString(const NewString& string, const std::string& name) {
+Expression lookupChildInNewString(const NewString& string, const std::string& name) {
     if (name == "first") {
         return string.first;
     }
@@ -169,7 +169,7 @@ ExpressionPointer lookupChildInNewString(const NewString& string, const std::str
     throw std::runtime_error("String does not contain symbol " + name);
 }
 
-ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& name) {
+Expression lookupChild(Expression expression, const std::string& name) {
     switch(expression.type) {
         case DICTIONARY: return lookupChildInDictionary(getDictionary(expression), name);
         case LIST: return lookupChildInList(getList(expression), name);
@@ -178,8 +178,8 @@ ExpressionPointer lookupChild(ExpressionPointer expression, const std::string& n
     }
 }
 
-ExpressionPointer evaluateLookupChild(
-    const LookupChild& lookup_child, ExpressionPointer environment, std::ostream& log
+Expression evaluateLookupChild(
+    const LookupChild& lookup_child, Expression environment, std::ostream& log
 ) {
     const auto child = evaluate(lookup_child.child, environment, log);
     const auto result = lookupChild(child, lookup_child.name->value);
@@ -187,8 +187,8 @@ ExpressionPointer evaluateLookupChild(
     return result;
 }
 
-ExpressionPointer applyFunction(
-    const Function& function, ExpressionPointer input, std::ostream& log
+Expression applyFunction(
+    const Function& function, Expression input, std::ostream& log
 ) {
 
     const auto elements = DictionaryElements{
@@ -207,20 +207,20 @@ ExpressionPointer applyFunction(
     return evaluate(function.body, middle, log);
 }
 
-ExpressionPointer applyFunctionBuiltIn(
-    const FunctionBuiltIn& function_built_in, ExpressionPointer input, std::ostream&
+Expression applyFunctionBuiltIn(
+    const FunctionBuiltIn& function_built_in, Expression input, std::ostream&
 ) {
     return function_built_in.function(input);
 }
 
-ExpressionPointer applyFunctionDictionary(
-    const FunctionDictionary& function_dictionary, ExpressionPointer input, std::ostream& log
+Expression applyFunctionDictionary(
+    const FunctionDictionary& function_dictionary, Expression input, std::ostream& log
 ) {
     // TODO: pass along environment.
     return evaluate(function_dictionary.body, input, log);
 }
 
-ExpressionPointer applyFunctionList(const FunctionList& function_list, ExpressionPointer input, std::ostream& log
+Expression applyFunctionList(const FunctionList& function_list, Expression input, std::ostream& log
 ) {
     auto elements = DictionaryElements{};
     auto i = size_t{0};
@@ -242,7 +242,7 @@ ExpressionPointer applyFunctionList(const FunctionList& function_list, Expressio
     return evaluate(function_list.body, middle, log);
 }
 
-ExpressionPointer apply(ExpressionPointer expression, ExpressionPointer input, std::ostream& log) {
+Expression apply(Expression expression, Expression input, std::ostream& log) {
     switch (expression.type) {
         case FUNCTION: return applyFunction(getFunction(expression), input, log);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(expression), input, log);
@@ -252,8 +252,8 @@ ExpressionPointer apply(ExpressionPointer expression, ExpressionPointer input, s
     }
 }
 
-ExpressionPointer evaluateFunctionApplication(
-    const FunctionApplication& function_application, ExpressionPointer environment, std::ostream& log
+Expression evaluateFunctionApplication(
+    const FunctionApplication& function_application, Expression environment, std::ostream& log
 ) {
     const auto function = lookupDictionary(environment, function_application.name->value);
     const auto evaluated_child = evaluate(function_application.child, environment, log);
@@ -262,24 +262,24 @@ ExpressionPointer evaluateFunctionApplication(
     return result;
 }
 
-ExpressionPointer evaluateLookupSymbol(
-    const LookupSymbol& lookup_symbol, ExpressionPointer environment, std::ostream& log
+Expression evaluateLookupSymbol(
+    const LookupSymbol& lookup_symbol, Expression environment, std::ostream& log
 ) {
     const auto result = lookupDictionary(environment, lookup_symbol.name->value);
     log << serialize(result) << std::endl;
     return result;
 }
 
-ExpressionPointer evaluateAtom(
-    ExpressionPointer atom, std::ostream& log
+Expression evaluateAtom(
+    Expression atom, std::ostream& log
 ) {
     log << serialize(atom) << std::endl;
     return atom;
 }
 
-ExpressionPointer evaluate(
-    ExpressionPointer expression,
-    ExpressionPointer environment,
+Expression evaluate(
+    Expression expression,
+    Expression environment,
     std::ostream& log
 ) {
     switch (expression.type) {

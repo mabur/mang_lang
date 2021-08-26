@@ -1,10 +1,10 @@
 #pragma once
 
-struct ExpressionPointer;
+struct Expression;
 
 namespace list_functions {
 
-ExpressionPointer empty(ExpressionPointer in);
-ExpressionPointer prepend(ExpressionPointer in);
+Expression empty(Expression in);
+Expression prepend(Expression in);
 
 }

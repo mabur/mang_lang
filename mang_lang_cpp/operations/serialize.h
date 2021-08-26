@@ -2,6 +2,6 @@
 
 #include <string>
 
-struct ExpressionPointer;
+struct Expression;
 
-std::string serialize(ExpressionPointer expression);
+std::string serialize(Expression expression);

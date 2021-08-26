@@ -29,12 +29,12 @@ enum ExpressionType {
     EMPTY,
 };
 
-struct ExpressionPointer {
+struct Expression {
     ExpressionType type = EMPTY;
     size_t index = 0;
 };
 
-using InternalList = SinglyLinkedList<ExpressionPointer>;
+using InternalList = SinglyLinkedList<Expression>;
 
 struct Name;
 using NamePointer = std::shared_ptr<const Name>;
@@ -51,35 +51,35 @@ struct Character {
 
 struct Conditional {
     CodeRange range;
-    ExpressionPointer expression_if;
-    ExpressionPointer expression_then;
-    ExpressionPointer expression_else;
+    Expression expression_if;
+    Expression expression_then;
+    Expression expression_else;
 };
 
 struct Function {
     CodeRange range;
-    ExpressionPointer environment;
+    Expression environment;
     NamePointer input_name;
-    ExpressionPointer body;
+    Expression body;
 };
 
 struct FunctionBuiltIn {
     CodeRange range;
-    std::function<ExpressionPointer(ExpressionPointer)> function;
+    std::function<Expression(Expression)> function;
 };
 
 struct FunctionDictionary {
     CodeRange range;
-    ExpressionPointer environment; // TODO: use this.
+    Expression environment; // TODO: use this.
     std::vector<NamePointer> input_names;
-    ExpressionPointer body;
+    Expression body;
 };
 
 struct FunctionList {
     CodeRange range;
-    ExpressionPointer environment;
+    Expression environment;
     std::vector<NamePointer> input_names;
-    ExpressionPointer body;
+    Expression body;
 };
 
 struct List {
@@ -90,13 +90,13 @@ struct List {
 struct LookupChild {
     CodeRange range;
     NamePointer name;
-    ExpressionPointer child;
+    Expression child;
 };
 
 struct FunctionApplication {
     CodeRange range;
     NamePointer name;
-    ExpressionPointer child;
+    Expression child;
 };
 
 struct LookupSymbol {
@@ -116,8 +116,8 @@ struct String {
 
 struct NewString {
     CodeRange range;
-    ExpressionPointer first;
-    ExpressionPointer rest;
+    Expression first;
+    Expression rest;
 };
 
 struct NewEmptyString {
@@ -127,13 +127,13 @@ struct NewEmptyString {
 struct NamedElement {
     CodeRange range;
     NamePointer name;
-    ExpressionPointer expression;
+    Expression expression;
     size_t name_index_;
 };
 
 struct WhileElement {
     CodeRange range;
-    ExpressionPointer expression;
+    Expression expression;
     size_t end_index_;
 };
 
@@ -142,10 +142,10 @@ struct EndElement {
     size_t while_index_;
 };
 
-using DictionaryElements = std::vector<ExpressionPointer>;
+using DictionaryElements = std::vector<Expression>;
 
 struct Dictionary {
     CodeRange range;
-    ExpressionPointer environment;
+    Expression environment;
     DictionaryElements elements;
 };

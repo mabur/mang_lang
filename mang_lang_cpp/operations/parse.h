@@ -1,6 +1,6 @@
 #pragma once
 
 struct CodeRange;
-struct ExpressionPointer;
+struct Expression;
 
-ExpressionPointer parseExpression(CodeRange code);
+Expression parseExpression(CodeRange code);

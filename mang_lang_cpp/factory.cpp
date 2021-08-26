@@ -23,7 +23,7 @@ std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const NamedElement>> named_elements;
 std::vector<std::shared_ptr<const NewString>> new_strings;
 std::vector<std::shared_ptr<const NewEmptyString>> new_empty_strings;
-std::vector<ExpressionPointer> expressions;
+std::vector<Expression> expressions;
 
 void clearMemory() {
     characters.clear();
@@ -155,85 +155,85 @@ DictionaryElements setContext(const DictionaryElements& elements) {
 }
 
 template<typename ElementType, typename ArrayType>
-ExpressionPointer makeExpression(
+Expression makeExpression(
     const ElementType* expression,
     ExpressionType type,
     ArrayType& array
 ) {
     array.emplace_back(expression);
-    expressions.push_back(ExpressionPointer{type, array.size() - 1});
+    expressions.push_back(Expression{type, array.size() - 1});
     return expressions.back();
 }
 
-ExpressionPointer makeNumber(const Number* expression) {
+Expression makeNumber(const Number* expression) {
     return makeExpression(expression, NUMBER, numbers);
 }
 
-ExpressionPointer makeCharacter(const Character* expression) {
+Expression makeCharacter(const Character* expression) {
     return makeExpression(expression, CHARACTER, characters);
 }
 
-ExpressionPointer makeConditional(const Conditional* expression) {
+Expression makeConditional(const Conditional* expression) {
     return makeExpression(expression, CONDITIONAL, conditionals);
 }
 
-ExpressionPointer makeDictionary(const Dictionary* expression) {
+Expression makeDictionary(const Dictionary* expression) {
     return makeExpression(expression, DICTIONARY, dictionaries);
 }
 
-ExpressionPointer makeFunction(const Function* expression) {
+Expression makeFunction(const Function* expression) {
     return makeExpression(expression, FUNCTION, functions);
 }
 
-ExpressionPointer makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
+Expression makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
     return makeExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
-ExpressionPointer makeFunctionDictionary(const FunctionDictionary* expression) {
+Expression makeFunctionDictionary(const FunctionDictionary* expression) {
     return makeExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-ExpressionPointer makeFunctionList(const FunctionList* expression) {
+Expression makeFunctionList(const FunctionList* expression) {
     return makeExpression(expression, FUNCTION_LIST, list_functions);
 }
 
-ExpressionPointer makeList(const List* expression) {
+Expression makeList(const List* expression) {
     return makeExpression(expression, LIST, lists);
 }
 
-ExpressionPointer makeLookupChild(const LookupChild* expression) {
+Expression makeLookupChild(const LookupChild* expression) {
     return makeExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 
-ExpressionPointer makeFunctionApplication(const FunctionApplication* expression) {
+Expression makeFunctionApplication(const FunctionApplication* expression) {
     return makeExpression(expression, FUNCTION_APPLICATION, function_applications);
 }
 
-ExpressionPointer makeLookupSymbol(const LookupSymbol* expression) {
+Expression makeLookupSymbol(const LookupSymbol* expression) {
     return makeExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-ExpressionPointer makeName(const Name* expression) {
+Expression makeName(const Name* expression) {
     return makeExpression(expression, NAME, names);
 }
 
-ExpressionPointer makeNamedElement(const NamedElement* expression) {
+Expression makeNamedElement(const NamedElement* expression) {
     return makeExpression(expression, NAMED_ELEMENT, named_elements);
 }
 
-ExpressionPointer makeWhileElement(const WhileElement* expression) {
+Expression makeWhileElement(const WhileElement* expression) {
     return makeExpression(expression, WHILE_ELEMENT, while_elements);
 }
 
-ExpressionPointer makeEndElement(const EndElement* expression) {
+Expression makeEndElement(const EndElement* expression) {
     return makeExpression(expression, END_ELEMENT, end_elements);
 }
 
-ExpressionPointer makeNewString(const NewString* expression) {
+Expression makeNewString(const NewString* expression) {
     return makeExpression(expression, NEW_STRING, new_strings);
 }
 
-ExpressionPointer makeNewEmptyString(const NewEmptyString* expression) {
+Expression makeNewEmptyString(const NewEmptyString* expression) {
     return makeExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
 }
 
@@ -241,7 +241,7 @@ ExpressionPointer makeNewEmptyString(const NewEmptyString* expression) {
 
 template<typename ArrayType>
 typename ArrayType::value_type::element_type getExpression(
-    ExpressionPointer expression,
+    Expression expression,
     ExpressionType type,
     ArrayType& array
 ) {
@@ -249,74 +249,74 @@ typename ArrayType::value_type::element_type getExpression(
     return *array.at(expression.index).get();
 }
 
-NamedElement getNamedElement(ExpressionPointer expression) {
+NamedElement getNamedElement(Expression expression) {
     return getExpression(expression, NAMED_ELEMENT, named_elements);
 }
 
-WhileElement getWileElement(ExpressionPointer expression) {
+WhileElement getWileElement(Expression expression) {
     return getExpression(expression, WHILE_ELEMENT, while_elements);
 }
 
-EndElement getEndElement(ExpressionPointer expression) {
+EndElement getEndElement(Expression expression) {
     return getExpression(expression, END_ELEMENT, end_elements);
 }
 
-Number getNumber(ExpressionPointer expression) {
+Number getNumber(Expression expression) {
     return getExpression(expression, NUMBER, numbers);
 }
 
-Character getCharacter(ExpressionPointer expression) {
+Character getCharacter(Expression expression) {
     return getExpression(expression, CHARACTER, characters);
 }
 
-Conditional getConditional(ExpressionPointer expression) {
+Conditional getConditional(Expression expression) {
     return getExpression(expression, CONDITIONAL, conditionals);
 }
 
-Dictionary getDictionary(ExpressionPointer expression) {
+Dictionary getDictionary(Expression expression) {
     return getExpression(expression, DICTIONARY, dictionaries);
 }
 
-Function getFunction(ExpressionPointer expression) {
+Function getFunction(Expression expression) {
     return getExpression(expression, FUNCTION, functions);
 }
 
-FunctionBuiltIn getFunctionBuiltIn(ExpressionPointer expression) {
+FunctionBuiltIn getFunctionBuiltIn(Expression expression) {
     return getExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
-FunctionDictionary getFunctionDictionary(ExpressionPointer expression) {
+FunctionDictionary getFunctionDictionary(Expression expression) {
     return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-FunctionList getFunctionList(ExpressionPointer expression) {
+FunctionList getFunctionList(Expression expression) {
     return getExpression(expression, FUNCTION_LIST, list_functions);
 }
 
-List getList(ExpressionPointer expression) {
+List getList(Expression expression) {
     return getExpression(expression, LIST, lists);
 }
 
-LookupChild getLokupChild(ExpressionPointer expression) {
+LookupChild getLokupChild(Expression expression) {
     return getExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 
-FunctionApplication getFunctionApplication(ExpressionPointer expression) {
+FunctionApplication getFunctionApplication(Expression expression) {
     return getExpression(expression, FUNCTION_APPLICATION, function_applications);
 }
 
-LookupSymbol getLookupSymbol(ExpressionPointer expression) {
+LookupSymbol getLookupSymbol(Expression expression) {
     return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-Name getName(ExpressionPointer expression) {
+Name getName(Expression expression) {
     return getExpression(expression, NAME, names);
 }
 
-NewString getNewString(ExpressionPointer expression) {
+NewString getNewString(Expression expression) {
     return getExpression(expression, NEW_STRING, new_strings);
 }
 
-NewEmptyString getNewEmptyString(ExpressionPointer expression) {
+NewEmptyString getNewEmptyString(Expression expression) {
     return getExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
 }

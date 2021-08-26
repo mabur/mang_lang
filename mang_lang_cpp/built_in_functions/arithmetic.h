@@ -1,21 +1,21 @@
 #pragma once
 
-struct ExpressionPointer;
+struct Expression;
 
 namespace arithmetic {
 
-ExpressionPointer min(ExpressionPointer in);
-ExpressionPointer max(ExpressionPointer in);
-ExpressionPointer add(ExpressionPointer in);
-ExpressionPointer mul(ExpressionPointer in);
-ExpressionPointer sub(ExpressionPointer in);
-ExpressionPointer div(ExpressionPointer in);
-ExpressionPointer abs(ExpressionPointer in);
-ExpressionPointer sqrt(ExpressionPointer in);
-ExpressionPointer less(ExpressionPointer in);
-ExpressionPointer less_or_equal(ExpressionPointer in);
-ExpressionPointer round(ExpressionPointer in);
-ExpressionPointer round_up(ExpressionPointer in);
-ExpressionPointer round_down(ExpressionPointer in);
+Expression min(Expression in);
+Expression max(Expression in);
+Expression add(Expression in);
+Expression mul(Expression in);
+Expression sub(Expression in);
+Expression div(Expression in);
+Expression abs(Expression in);
+Expression sqrt(Expression in);
+Expression less(Expression in);
+Expression less_or_equal(Expression in);
+Expression round(Expression in);
+Expression round_up(Expression in);
+Expression round_down(Expression in);
 
 }

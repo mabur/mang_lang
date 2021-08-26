@@ -8,11 +8,11 @@
 
 namespace new_string {
 
-ExpressionPointer first(ExpressionPointer list);
-ExpressionPointer rest(ExpressionPointer list);
-ExpressionPointer second(ExpressionPointer list);
+Expression first(Expression list);
+Expression rest(Expression list);
+Expression second(Expression list);
 
-inline ExpressionPointer prepend(ExpressionPointer rest, ExpressionPointer first) {
+inline Expression prepend(Expression rest, Expression first) {
     const auto first_character = std::min(begin(rest), begin(first));
     const auto last_character = std::max(end(rest), end(first));
     const auto code = CodeRange{first_character, last_character};
@@ -20,27 +20,27 @@ inline ExpressionPointer prepend(ExpressionPointer rest, ExpressionPointer first
 }
 
 template<typename Predicate>
-ExpressionPointer findIf(ExpressionPointer list, Predicate predicate) {
+Expression findIf(Expression list, Predicate predicate) {
     for (; boolean(list) && !predicate(first(list)); list = rest(list)) {
     }
     return list;
 }
 
 template<typename T, typename Operation>
-T leftFold(T value, ExpressionPointer list, Operation operation) {
+T leftFold(T value, Expression list, Operation operation) {
     for (; boolean(list); list = rest(list)) {
         value = operation(value, first(list));
     }
     return value;
 }
 
-inline ExpressionPointer reverse(CodeRange code, ExpressionPointer list) {
+inline Expression reverse(CodeRange code, Expression list) {
     return leftFold(makeNewEmptyString(new NewEmptyString{code}), list, prepend);
 }
 
 template<typename Function>
-ExpressionPointer map(ExpressionPointer list, Function f) {
-    const auto op = [&](ExpressionPointer new_list, ExpressionPointer x) -> ExpressionPointer {
+Expression map(Expression list, Function f) {
+    const auto op = [&](Expression new_list, Expression x) -> Expression {
         return prepend(new_list, f(x));
     };
     const auto code = CodeRange{};

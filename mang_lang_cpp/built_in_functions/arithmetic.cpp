@@ -7,16 +7,16 @@
 
 namespace arithmetic {
 
-double number(ExpressionPointer expression) {
+double number(Expression expression) {
     return getNumber(expression).value;
 }
 
-ExpressionPointer makeNumber(double x) {
+Expression makeNumber(double x) {
     return makeNumber(new Number(Number{CodeRange{}, x}));
 }
 
-ExpressionPointer min(ExpressionPointer in) {
-    const auto operation = [](double left, ExpressionPointer right) -> double {
+Expression min(Expression in) {
+    const auto operation = [](double left, Expression right) -> double {
         return std::min(left, number(right));
     };
     const auto init = std::numeric_limits<double>::infinity();
@@ -24,8 +24,8 @@ ExpressionPointer min(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer max(ExpressionPointer in) {
-    const auto operation = [](double left, ExpressionPointer right) -> double {
+Expression max(Expression in) {
+    const auto operation = [](double left, Expression right) -> double {
         return std::max(left, number(right));
     };
     const auto init = -std::numeric_limits<double>::infinity();
@@ -33,8 +33,8 @@ ExpressionPointer max(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer add(ExpressionPointer in) {
-    const auto operation = [](double left, ExpressionPointer right) -> double {
+Expression add(Expression in) {
+    const auto operation = [](double left, Expression right) -> double {
         return left + number(right);
     };
     const auto init = 0;
@@ -42,8 +42,8 @@ ExpressionPointer add(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer mul(ExpressionPointer in) {
-    const auto operation = [](double left, ExpressionPointer right) -> double {
+Expression mul(Expression in) {
+    const auto operation = [](double left, Expression right) -> double {
         return left * number(right);
     };
     const auto init = 1.0;
@@ -51,7 +51,7 @@ ExpressionPointer mul(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer sub(ExpressionPointer in) {
+Expression sub(Expression in) {
     const auto& elements = getList(in).elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
@@ -59,7 +59,7 @@ ExpressionPointer sub(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer div(ExpressionPointer in) {
+Expression div(Expression in) {
     const auto& elements = getList(in).elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
@@ -67,17 +67,17 @@ ExpressionPointer div(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer abs(ExpressionPointer in) {
+Expression abs(Expression in) {
     const auto result = std::fabs(number(in));
     return makeNumber(result);
 }
 
-ExpressionPointer sqrt(ExpressionPointer in) {
+Expression sqrt(Expression in) {
     const auto result = std::sqrt(number(in));
     return makeNumber(result);
 }
 
-ExpressionPointer less(ExpressionPointer in) {
+Expression less(Expression in) {
     const auto& elements = getList(in).elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
@@ -85,7 +85,7 @@ ExpressionPointer less(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer less_or_equal(ExpressionPointer in) {
+Expression less_or_equal(Expression in) {
     const auto& elements = getList(in).elements;
     const auto& left = first(elements);
     const auto& right = second(elements);
@@ -93,15 +93,15 @@ ExpressionPointer less_or_equal(ExpressionPointer in) {
     return makeNumber(result);
 }
 
-ExpressionPointer round(ExpressionPointer in) {
+Expression round(Expression in) {
     return makeNumber(std::round(number(in)));
 }
 
-ExpressionPointer round_up(ExpressionPointer in) {
+Expression round_up(Expression in) {
     return makeNumber(std::ceil(number(in)));
 }
 
-ExpressionPointer round_down(ExpressionPointer in) {
+Expression round_down(Expression in) {
     return makeNumber(std::floor(number(in)));
 }
 

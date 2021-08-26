@@ -7,9 +7,9 @@
 #include "list.h"
 #include "logic.h"
 
-ExpressionPointer makeDictionaryElement(
+Expression makeDictionaryElement(
     std::string name,
-    std::function<ExpressionPointer(ExpressionPointer)> function
+    std::function<Expression(Expression)> function
 ) {
     return makeNamedElement(
         new NamedElement{
@@ -21,7 +21,7 @@ ExpressionPointer makeDictionaryElement(
     );
 }
 
-ExpressionPointer builtIns() {
+Expression builtIns() {
     auto elements = DictionaryElements{};
     elements.push_back(makeDictionaryElement("min", arithmetic::min));
     elements.push_back(makeDictionaryElement("max", arithmetic::max));
@@ -46,6 +46,6 @@ ExpressionPointer builtIns() {
     elements.push_back(makeDictionaryElement("empty", list_functions::empty));
     elements.push_back(makeDictionaryElement("prepend", list_functions::prepend));
     return makeDictionary(
-        new Dictionary{CodeRange{}, ExpressionPointer{}, setContext(elements)}
+        new Dictionary{CodeRange{}, Expression{}, setContext(elements)}
     );
 }
