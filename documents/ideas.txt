@@ -304,11 +304,11 @@ LEVELS
 2. References
   - reference (substitution)
   - child reference (substitution)
-3. Calculation (not turing complete)
-  - function application (substitution)
-4. Control flow (turing complete)
+3. Control flow (turing complete)
   - Conditional if (substitution)
   - Iterative dictionary, while in dictionaries and updating of symbols (substitution)
+4. Calculation
+  - function application (substitution)
 5. Function Definition
   - Function
   - Function of list
@@ -324,10 +324,10 @@ and then the result file can import them and evaluate its result to level 1.
 SUB LANGUAGES
 * Json-like: level 1
 * Yaml-like: level 2
-* Non-turing complete calculator: level 3
-* Turing complete: level 4
+* Turing complete: level 3
+* Non-turing complete calculator: level 1,2,4
 * Full: level 5
-* Minimal computation: numbers & dictionaries & References & Computation
+* Minimal computation: numbers & dictionaries & References & Control flow
 
 
         PRIMITIVE DATA
