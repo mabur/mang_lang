@@ -20,7 +20,7 @@ enum ExpressionType {
     LOOKUP_SYMBOL,
     NAME,
     DEFINITION,
-    WHILE_ELEMENT,
+    WHILE_STATEMENT,
     END_ELEMENT,
     NUMBER,
     NEW_STRING,
@@ -122,7 +122,7 @@ struct Definition {
     size_t name_index_;
 };
 
-struct WhileElement {
+struct WhileStatement {
     CodeRange range;
     Expression expression;
     size_t end_index_;

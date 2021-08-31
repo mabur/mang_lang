@@ -56,8 +56,8 @@ Expression evaluateDictionary(
             );
             i += 1;
         }
-        else if (type == WHILE_ELEMENT) {
-            const auto element = getWileElement(dictionary_element);
+        else if (type == WHILE_STATEMENT) {
+            const auto element = getWileStatement(dictionary_element);
             if (boolean(evaluate(element.expression, makeDictionary(result), log))) {
                 i += 1;
             } else {

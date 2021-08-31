@@ -18,7 +18,7 @@ std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
 std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
-std::vector<std::shared_ptr<const WhileElement>> while_elements;
+std::vector<std::shared_ptr<const WhileStatement>> while_statements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
 std::vector<std::shared_ptr<const Definition>> definitions;
 std::vector<std::shared_ptr<const String>> new_strings;
@@ -39,7 +39,7 @@ void clearMemory() {
     symbol_lookups.clear();
     names.clear();
     numbers.clear();
-    while_elements.clear();
+    while_statements.clear();
     end_elements.clear();
     definitions.clear();
     new_strings.clear();
@@ -55,7 +55,7 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
         if (type == DEFINITION) {
             while_indices.push_back(1); // dummy
         }
-        if (type == WHILE_ELEMENT) {
+        if (type == WHILE_STATEMENT) {
             while_positions.push_back(i);
             while_indices.push_back(1); // dummy
         }
@@ -79,7 +79,7 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
         if (type == DEFINITION) {
             end_indices[i] = 0; // dummy
         }
-        if (type == WHILE_ELEMENT) {
+        if (type == WHILE_STATEMENT) {
             end_indices[i] = end_positions.back();
             end_positions.pop_back();
         }
@@ -108,7 +108,7 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
                 names.push_back(name);
             }
         }
-        if (type == WHILE_ELEMENT) {
+        if (type == WHILE_STATEMENT) {
             name_indices.push_back(0); // dummy
         }
         if (type == END_ELEMENT) {
@@ -135,9 +135,9 @@ DictionaryElements setContext(const DictionaryElements& elements) {
                 element.expression,
                 name_indices[i]
             }));
-        } else if (type == WHILE_ELEMENT) {
-            const auto element = getWileElement(elements[i]);
-            result.push_back(makeWhileElement(new WhileElement{
+        } else if (type == WHILE_STATEMENT) {
+            const auto element = getWileStatement(elements[i]);
+            result.push_back(makeWhileStatement(new WhileStatement{
                 element.range,
                 element.expression,
                 end_indices[i],
@@ -221,8 +221,8 @@ Expression makeDefinition(const Definition* expression) {
     return makeExpression(expression, DEFINITION, definitions);
 }
 
-Expression makeWhileElement(const WhileElement* expression) {
-    return makeExpression(expression, WHILE_ELEMENT, while_elements);
+Expression makeWhileStatement(const WhileStatement* expression) {
+    return makeExpression(expression, WHILE_STATEMENT, while_statements);
 }
 
 Expression makeEndElement(const EndElement* expression) {
@@ -253,8 +253,8 @@ Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
 }
 
-WhileElement getWileElement(Expression expression) {
-    return getExpression(expression, WHILE_ELEMENT, while_elements);
+WhileStatement getWileStatement(Expression expression) {
+    return getExpression(expression, WHILE_STATEMENT, while_statements);
 }
 
 EndElement getEndElement(Expression expression) {

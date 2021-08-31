@@ -74,15 +74,15 @@ Expression parseNamedElement(CodeRange code) {
     );
 }
 
-Expression parseWhileElement(CodeRange code) {
+Expression parseWhileStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    return makeWhileElement(
-        new WhileElement{
+    return makeWhileStatement(
+        new WhileStatement{
             CodeRange{first, code.first},
             expression,
             0,
@@ -101,7 +101,7 @@ Expression parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
     if (startsWithWhileElement(code)) {
-        return parseWhileElement(code);
+        return parseWhileStatement(code);
     }
     if (startsWithEndElement(code)) {
         return parseEndElement(code);
