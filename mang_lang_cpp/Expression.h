@@ -21,7 +21,7 @@ enum ExpressionType {
     NAME,
     DEFINITION,
     WHILE_STATEMENT,
-    END_ELEMENT,
+    END_STATEMENT,
     NUMBER,
     NEW_STRING,
     NEW_EMPTY_STRING,
@@ -128,7 +128,7 @@ struct WhileStatement {
     size_t end_index_;
 };
 
-struct EndElement {
+struct EndStatement {
     CodeRange range;
     size_t while_index_;
 };

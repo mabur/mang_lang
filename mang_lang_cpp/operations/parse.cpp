@@ -90,11 +90,11 @@ Expression parseWhileStatement(CodeRange code) {
     );
 }
 
-Expression parseEndElement(CodeRange code) {
+Expression parseEndStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeEndElement(new EndElement{CodeRange{first, code.first}, 1});
+    return makeEndStatement(new EndStatement{CodeRange{first, code.first}, 1});
 }
 
 Expression parseDictionaryElement(CodeRange code) {
@@ -104,7 +104,7 @@ Expression parseDictionaryElement(CodeRange code) {
         return parseWhileStatement(code);
     }
     if (startsWithEndElement(code)) {
-        return parseEndElement(code);
+        return parseEndStatement(code);
     }
     return parseNamedElement(code);
 }

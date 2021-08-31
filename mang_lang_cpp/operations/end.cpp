@@ -9,7 +9,7 @@ const CodeCharacter* end(Expression expression) {
         case DICTIONARY: return getDictionary(expression).range.last;
         case DEFINITION: return getDefinition(expression).range.last;
         case WHILE_STATEMENT: return getWileStatement(expression).range.last;
-        case END_ELEMENT: return getEndElement(expression).range.last;
+        case END_STATEMENT: return getEndStatement(expression).range.last;
         case FUNCTION: return getFunction(expression).range.last;
         case FUNCTION_DICTIONARY: return getFunctionDictionary(expression).range.last;
         case FUNCTION_LIST: return getFunctionList(expression).range.last;

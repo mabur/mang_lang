@@ -64,8 +64,8 @@ Expression evaluateDictionary(
                 i = element.end_index_ + 1;
             }
         }
-        else if (type == END_ELEMENT) {
-            const auto element = getEndElement(dictionary_element);
+        else if (type == END_STATEMENT) {
+            const auto element = getEndStatement(dictionary_element);
             i = element.while_index_;
         }
     }
