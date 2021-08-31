@@ -121,23 +121,7 @@ Expression evaluateList(
     return result;
 }
 
-Expression lookupDictionary(const Expression& expression, const std::string& name) {
-    if (expression.type != DICTIONARY) {
-        throw std::runtime_error("Cannot find symbol " + name);
-    }
-    const auto d = getDictionary(expression);
-    for (const auto& element : d.elements) {
-        if (element.type == DEFINITION) {
-            const auto definition = getDefinition(element);
-            if (getName(definition.name).value == name) {
-                return definition.expression;
-            }
-        }
-    }
-    return lookupDictionary(d.environment, name);
-}
-
-Expression lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
+Expression lookupCurrentDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
         if (element.type == DEFINITION) {
             const auto definition = getDefinition(element);
@@ -146,6 +130,22 @@ Expression lookupChildInDictionary(const Dictionary& dictionary, const std::stri
             }
         }
     }
+    return Expression{};
+}
+
+Expression lookupDictionary(const Expression& expression, const std::string& name) {
+    if (expression.type != DICTIONARY) {
+        throw std::runtime_error("Cannot find symbol " + name);
+    }
+    const auto d = getDictionary(expression);
+    const auto result = lookupCurrentDictionary(d, name);
+    if (result.type != EMPTY) return result;
+    return lookupDictionary(d.environment, name);
+}
+
+Expression lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
+    const auto result = lookupCurrentDictionary(dictionary, name);
+    if (result.type != EMPTY) return result;
     throw std::runtime_error("Dictionary does not contain symbol " + name);
 }
 
