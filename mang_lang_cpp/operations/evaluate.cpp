@@ -17,14 +17,14 @@ Expression evaluateConditional(
     return result;
 }
 
-size_t numNames(const DictionaryElements& elements) {
-    if (elements.empty()) {
+size_t numNames(const Statements& statements) {
+    if (statements.empty()) {
         return 0;
     }
     auto max_index = size_t{0};
-    for (const auto& element : elements) {
-        if (element.type == DEFINITION) {
-            max_index = std::max(max_index, getDefinition(element).name_index_);
+    for (const auto& statement : statements) {
+        if (statement.type == DEFINITION) {
+            max_index = std::max(max_index, getDefinition(statement).name_index_);
         }
     }
     return max_index + 1;
@@ -33,40 +33,40 @@ size_t numNames(const DictionaryElements& elements) {
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment, std::ostream& log
 ) {
-    const auto num_names = numNames(dictionary.elements);
+    const auto num_names = numNames(dictionary.statements);
     const auto result = new Dictionary{
         dictionary.range,
         environment,
-        DictionaryElements(num_names, Expression{})
+        Statements(num_names, Expression{})
     };
 
     auto i = size_t{0};
-    while (i < dictionary.elements.size()) {
-        const auto dictionary_element = dictionary.elements[i];
-        const auto type = dictionary_element.type;
+    while (i < dictionary.statements.size()) {
+        const auto statement = dictionary.statements[i];
+        const auto type = statement.type;
         if (type == DEFINITION) {
-            const auto element = getDefinition(dictionary_element);
-            result->elements.at(element.name_index_) = makeDefinition(
+            const auto definition = getDefinition(statement);
+            result->statements.at(definition.name_index_) = makeDefinition(
                 new Definition{
-                    element.range,
-                    element.name,
-                    evaluate(element.expression, makeDictionary(result), log),
-                    element.name_index_
+                    definition.range,
+                    definition.name,
+                    evaluate(definition.expression, makeDictionary(result), log),
+                    definition.name_index_
                 }
             );
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
-            const auto element = getWileStatement(dictionary_element);
-            if (boolean(evaluate(element.expression, makeDictionary(result), log))) {
+            const auto while_statement = getWileStatement(statement);
+            if (boolean(evaluate(while_statement.expression, makeDictionary(result), log))) {
                 i += 1;
             } else {
-                i = element.end_index_ + 1;
+                i = while_statement.end_index_ + 1;
             }
         }
         else if (type == END_STATEMENT) {
-            const auto element = getEndStatement(dictionary_element);
-            i = element.while_index_;
+            const auto end_statement = getEndStatement(statement);
+            i = end_statement.while_index_;
         }
     }
     const auto wrapped_result = makeDictionary(result);
@@ -122,9 +122,9 @@ Expression evaluateList(
 }
 
 Expression lookupCurrentDictionary(const Dictionary& dictionary, const std::string& name) {
-    for (const auto& element : dictionary.elements) {
-        if (element.type == DEFINITION) {
-            const auto definition = getDefinition(element);
+    for (const auto& statement : dictionary.statements) {
+        if (statement.type == DEFINITION) {
+            const auto definition = getDefinition(statement);
             if (getName(definition.name).value == name) {
                 return definition.expression;
             }
@@ -195,18 +195,11 @@ Expression applyFunction(
     const Function& function, Expression input, std::ostream& log
 ) {
 
-    const auto elements = DictionaryElements{
-        makeDefinition(
-            new Definition{
-                function.range,
-                function.input_name,
-                input,
-                0
-            }
-        )
+    const auto statements = Statements{
+        makeDefinition(new Definition{function.range, function.input_name, input, 0})
     };
     const auto middle = makeDictionary(
-        new Dictionary{CodeRange{}, function.environment, elements}
+        new Dictionary{CodeRange{}, function.environment, statements}
     );
     return evaluate(function.body, middle, log);
 }
@@ -226,10 +219,10 @@ Expression applyFunctionDictionary(
 
 Expression applyFunctionList(const FunctionList& function_list, Expression input, std::ostream& log
 ) {
-    auto elements = DictionaryElements{};
+    auto statements = Statements{};
     auto i = size_t{0};
     for (auto list = getList(input).elements; list; list = list->rest, ++i) {
-        elements.push_back(
+        statements.push_back(
             makeDefinition(
                 new Definition{
                     function_list.range,
@@ -241,7 +234,7 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
         );
     }
     const auto middle = makeDictionary(
-        new Dictionary{function_list.range, function_list.environment, elements}
+        new Dictionary{function_list.range, function_list.environment, statements}
     );
     return evaluate(function_list.body, middle, log);
 }

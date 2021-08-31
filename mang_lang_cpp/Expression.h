@@ -133,10 +133,10 @@ struct EndStatement {
     size_t while_index_;
 };
 
-using DictionaryElements = std::vector<Expression>;
+using Statements = std::vector<Expression>;
 
 struct Dictionary {
     CodeRange range;
     Expression environment;
-    DictionaryElements elements;
+    Statements statements;
 };

@@ -35,10 +35,10 @@ std::string serializeEndStatement(const EndStatement&) {
 std::string serializeDictionary(const Dictionary& dictionary) {
     auto result = std::string{};
     result += '{';
-    for (const auto& element : dictionary.elements) {
-        result += serialize(element);
+    for (const auto& statement : dictionary.statements) {
+        result += serialize(statement);
     }
-    if (dictionary.elements.empty()) {
+    if (dictionary.statements.empty()) {
         result += '}';
     }
     else {

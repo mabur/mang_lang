@@ -2,7 +2,7 @@
 
 #include "Expression.h"
 
-DictionaryElements setContext(const DictionaryElements& elements);
+Statements setContext(const Statements& statements);
 
 void clearMemory();
 

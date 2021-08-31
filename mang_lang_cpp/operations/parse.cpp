@@ -113,19 +113,19 @@ Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto elements = DictionaryElements{};
+    auto statements = Statements{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
-        auto element = parseDictionaryElement(code);
-        code.first = end(element);
-        elements.push_back(element);
+        auto statement = parseDictionaryElement(code);
+        code.first = end(statement);
+        statements.push_back(statement);
     }
     code = parseCharacter(code, '}');
     return makeDictionary(
         new Dictionary{
             CodeRange{first, code.begin()},
             Expression{},
-            setContext(elements)
+            setContext(statements)
         }
     );
 }

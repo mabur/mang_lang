@@ -4,7 +4,7 @@
 
 bool boolean(Expression expression) {
     switch (expression.type) {
-        case DICTIONARY: return !getDictionary(expression).elements.empty();
+        case DICTIONARY: return !getDictionary(expression).statements.empty();
         case NUMBER: return static_cast<bool>(getNumber(expression).value);
         case LIST: return static_cast<bool>(getList(expression).elements);
         case NEW_STRING: return true;

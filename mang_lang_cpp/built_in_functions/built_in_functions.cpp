@@ -19,7 +19,7 @@ Expression define(std::string name, std::function<Expression(Expression)> functi
 }
 
 Expression builtIns() {
-    auto definitions = DictionaryElements{};
+    auto definitions = Statements{};
     definitions.push_back(define("min", arithmetic::min));
     definitions.push_back(define("max", arithmetic::max));
     definitions.push_back(define("add", arithmetic::add));

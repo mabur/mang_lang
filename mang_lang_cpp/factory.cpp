@@ -46,12 +46,12 @@ void clearMemory() {
     expressions.clear();
 }
 
-std::vector<size_t> whileIndices(const DictionaryElements& elements) {
+std::vector<size_t> whileIndices(const Statements& statements) {
     // Forward pass to set backward jumps:
     auto while_positions = std::vector<size_t>{};
     auto while_indices = std::vector<size_t>{};
-    for (size_t i = 0; i < elements.size(); ++i) {
-        const auto type = elements[i].type;
+    for (size_t i = 0; i < statements.size(); ++i) {
+        const auto type = statements[i].type;
         if (type == DEFINITION) {
             while_indices.push_back(1); // dummy
         }
@@ -65,17 +65,17 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
         }
     }
     if (!while_positions.empty()) {
-        throw ParseException("More while than end", begin(elements.front()));
+        throw ParseException("More while than end", begin(statements.front()));
     }
     return while_indices;
 }
 
-std::vector<size_t> endIndices(const DictionaryElements& elements) {
+std::vector<size_t> endIndices(const Statements& statements) {
     // Backward pass to set forward jumps:
     auto end_positions = std::vector<size_t>{};
-    auto end_indices = std::vector<size_t>(elements.size());
-    for (size_t i = elements.size() - 1; i < elements.size(); --i) {
-        const auto type = elements[i].type;
+    auto end_indices = std::vector<size_t>(statements.size());
+    for (size_t i = statements.size() - 1; i < statements.size(); --i) {
+        const auto type = statements[i].type;
         if (type == DEFINITION) {
             end_indices[i] = 0; // dummy
         }
@@ -89,19 +89,19 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
         }
     }
     if (!end_positions.empty()) {
-        throw ParseException("Fewer while than end", begin(elements.front()));
+        throw ParseException("Fewer while than end", begin(statements.front()));
     }
     return end_indices;
 }
 
-std::vector<size_t> nameIndices(const DictionaryElements& elements) {
+std::vector<size_t> nameIndices(const Statements& statements) {
     // Forward pass to set name_index_:
     auto names = std::vector<std::string>{};
     auto name_indices = std::vector<size_t>{};
-    for (size_t i = 0; i < elements.size(); ++i) {
-        const auto type = elements[i].type;
+    for (size_t i = 0; i < statements.size(); ++i) {
+        const auto type = statements[i].type;
         if (type == DEFINITION) {
-            const auto name = getName(getDefinition(elements[i]).name).value;
+            const auto name = getName(getDefinition(statements[i]).name).value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
@@ -118,34 +118,34 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     return name_indices;
 }
 
-DictionaryElements setContext(const DictionaryElements& elements) {
-    const auto while_indices = whileIndices(elements);
-    const auto end_indices = endIndices(elements);
-    const auto name_indices = nameIndices(elements);
+Statements setContext(const Statements& statements) {
+    const auto while_indices = whileIndices(statements);
+    const auto end_indices = endIndices(statements);
+    const auto name_indices = nameIndices(statements);
 
-    auto result = DictionaryElements{};
+    auto result = Statements{};
 
-    for (size_t i = 0; i < elements.size(); ++i) {
-        const auto type = elements[i].type;
+    for (size_t i = 0; i < statements.size(); ++i) {
+        const auto type = statements[i].type;
         if (type == DEFINITION) {
-            const auto element = getDefinition(elements[i]);
+            const auto statement = getDefinition(statements[i]);
             result.push_back(makeDefinition(new Definition{
-                element.range,
-                element.name,
-                element.expression,
+                statement.range,
+                statement.name,
+                statement.expression,
                 name_indices[i]
             }));
         } else if (type == WHILE_STATEMENT) {
-            const auto element = getWileStatement(elements[i]);
+            const auto statement = getWileStatement(statements[i]);
             result.push_back(makeWhileStatement(new WhileStatement{
-                element.range,
-                element.expression,
+                statement.range,
+                statement.expression,
                 end_indices[i],
             }));
         } else if (type == END_STATEMENT) {
-            const auto element = getEndStatement(elements[i]);
+            const auto statement = getEndStatement(statements[i]);
             result.push_back(makeEndStatement(new EndStatement{
-                element.range, while_indices[i]
+                statement.range, while_indices[i]
             }));
         } else {
             assert("Unexpected type");
