@@ -18,11 +18,11 @@ bool startsWithDictionary(CodeRange code) {
     return ::startsWith(code, '{');
 }
 
-bool startsWithWhileElement(CodeRange code) {
+bool startsWithWhileStatement(CodeRange code) {
     return isKeyword(code, "while");
 }
 
-bool startsWithEndElement(CodeRange code) {
+bool startsWithEndStatement(CodeRange code) {
     return isKeyword(code, "end");
 }
 

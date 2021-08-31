@@ -100,10 +100,10 @@ Expression parseEndStatement(CodeRange code) {
 Expression parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (startsWithWhileElement(code)) {
+    if (startsWithWhileStatement(code)) {
         return parseWhileStatement(code);
     }
-    if (startsWithEndElement(code)) {
+    if (startsWithEndStatement(code)) {
         return parseEndStatement(code);
     }
     return parseNamedElement(code);
