@@ -20,10 +20,8 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
-std::string serializeNamedElement(const NamedElement& element) {
-    return
-        serializeName(element.name) + '=' +
-        serialize(element.expression) + ' ';
+std::string serializeDefinition(const Definition& element) {
+    return serializeName(element.name) + '=' + serialize(element.expression) + ' ';
 }
 
 std::string serializeWhileElement(const WhileElement& element) {
@@ -137,7 +135,7 @@ std::string serialize(Expression expression) {
         case CHARACTER: return serializeCharacter(getCharacter(expression));
         case CONDITIONAL: return serializeConditional(getConditional(expression));
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
-        case NAMED_ELEMENT: return serializeNamedElement(getNamedElement(expression));
+        case DEFINITION: return serializeDefinition(getDefinition(expression));
         case WHILE_ELEMENT: return serializeWhileElement(getWileElement(expression));
         case END_ELEMENT: return serializeEndElement(getEndElement(expression));
         case FUNCTION: return serializeFunction(getFunction(expression));

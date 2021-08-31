@@ -23,8 +23,8 @@ size_t numNames(const DictionaryElements& elements) {
     }
     auto max_index = size_t{0};
     for (const auto& element : elements) {
-        if (element.type == NAMED_ELEMENT) {
-            max_index = std::max(max_index, getNamedElement(element).name_index_);
+        if (element.type == DEFINITION) {
+            max_index = std::max(max_index, getDefinition(element).name_index_);
         }
     }
     return max_index + 1;
@@ -44,10 +44,10 @@ Expression evaluateDictionary(
     while (i < dictionary.elements.size()) {
         const auto dictionary_element = dictionary.elements[i];
         const auto type = dictionary_element.type;
-        if (type == NAMED_ELEMENT) {
-            const auto element = getNamedElement(dictionary_element);
-            result->elements.at(element.name_index_) = makeNamedElement(
-                new NamedElement{
+        if (type == DEFINITION) {
+            const auto element = getDefinition(dictionary_element);
+            result->elements.at(element.name_index_) = makeDefinition(
+                new Definition{
                     element.range,
                     element.name,
                     evaluate(element.expression, makeDictionary(result), log),
@@ -127,10 +127,10 @@ Expression lookupDictionary(const Expression& expression, const std::string& nam
     }
     const auto d = getDictionary(expression);
     for (const auto& element : d.elements) {
-        if (element.type == NAMED_ELEMENT) {
-            const auto dictionary_element = getNamedElement(element);
-            if (getName(dictionary_element.name).value == name) {
-                return dictionary_element.expression;
+        if (element.type == DEFINITION) {
+            const auto definition = getDefinition(element);
+            if (getName(definition.name).value == name) {
+                return definition.expression;
             }
         }
     }
@@ -139,10 +139,10 @@ Expression lookupDictionary(const Expression& expression, const std::string& nam
 
 Expression lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
     for (const auto& element : dictionary.elements) {
-        if (element.type == NAMED_ELEMENT) {
-            const auto dictionary_element = getNamedElement(element);
-            if (getName(dictionary_element.name).value == name) {
-                return dictionary_element.expression;
+        if (element.type == DEFINITION) {
+            const auto definition = getDefinition(element);
+            if (getName(definition.name).value == name) {
+                return definition.expression;
             }
         }
     }
@@ -192,8 +192,8 @@ Expression applyFunction(
 ) {
 
     const auto elements = DictionaryElements{
-        makeNamedElement(
-            new NamedElement{
+        makeDefinition(
+            new Definition{
                 function.range,
                 function.input_name,
                 input,
@@ -226,8 +226,8 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     auto i = size_t{0};
     for (auto list = getList(input).elements; list; list = list->rest, ++i) {
         elements.push_back(
-            makeNamedElement(
-                new NamedElement{
+            makeDefinition(
+                new Definition{
                     function_list.range,
                     function_list.input_names[i],
                     list->first,

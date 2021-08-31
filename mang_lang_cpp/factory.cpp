@@ -20,7 +20,7 @@ std::vector<std::shared_ptr<const Name>> names;
 std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const WhileElement>> while_elements;
 std::vector<std::shared_ptr<const EndElement>> end_elements;
-std::vector<std::shared_ptr<const NamedElement>> named_elements;
+std::vector<std::shared_ptr<const Definition>> definitions;
 std::vector<std::shared_ptr<const String>> new_strings;
 std::vector<std::shared_ptr<const EmptyString>> new_empty_strings;
 std::vector<Expression> expressions;
@@ -41,7 +41,7 @@ void clearMemory() {
     numbers.clear();
     while_elements.clear();
     end_elements.clear();
-    named_elements.clear();
+    definitions.clear();
     new_strings.clear();
     expressions.clear();
 }
@@ -52,7 +52,7 @@ std::vector<size_t> whileIndices(const DictionaryElements& elements) {
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
-        if (type == NAMED_ELEMENT) {
+        if (type == DEFINITION) {
             while_indices.push_back(1); // dummy
         }
         if (type == WHILE_ELEMENT) {
@@ -76,7 +76,7 @@ std::vector<size_t> endIndices(const DictionaryElements& elements) {
     auto end_indices = std::vector<size_t>(elements.size());
     for (size_t i = elements.size() - 1; i < elements.size(); --i) {
         const auto type = elements[i].type;
-        if (type == NAMED_ELEMENT) {
+        if (type == DEFINITION) {
             end_indices[i] = 0; // dummy
         }
         if (type == WHILE_ELEMENT) {
@@ -100,8 +100,8 @@ std::vector<size_t> nameIndices(const DictionaryElements& elements) {
     auto name_indices = std::vector<size_t>{};
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
-        if (type == NAMED_ELEMENT) {
-            const auto name = getName(getNamedElement(elements[i]).name).value;
+        if (type == DEFINITION) {
+            const auto name = getName(getDefinition(elements[i]).name).value;
             const auto it = std::find(names.begin(), names.end(), name);
             name_indices.push_back(std::distance(names.begin(), it));
             if (it == names.end()) {
@@ -127,9 +127,9 @@ DictionaryElements setContext(const DictionaryElements& elements) {
 
     for (size_t i = 0; i < elements.size(); ++i) {
         const auto type = elements[i].type;
-        if (type == NAMED_ELEMENT) {
-            const auto element = getNamedElement(elements[i]);
-            result.push_back(makeNamedElement(new NamedElement{
+        if (type == DEFINITION) {
+            const auto element = getDefinition(elements[i]);
+            result.push_back(makeDefinition(new Definition{
                 element.range,
                 element.name,
                 element.expression,
@@ -217,8 +217,8 @@ Expression makeName(const Name* expression) {
     return makeExpression(expression, NAME, names);
 }
 
-Expression makeNamedElement(const NamedElement* expression) {
-    return makeExpression(expression, NAMED_ELEMENT, named_elements);
+Expression makeDefinition(const Definition* expression) {
+    return makeExpression(expression, DEFINITION, definitions);
 }
 
 Expression makeWhileElement(const WhileElement* expression) {
@@ -249,8 +249,8 @@ typename ArrayType::value_type::element_type getExpression(
     return *array.at(expression.index).get();
 }
 
-NamedElement getNamedElement(Expression expression) {
-    return getExpression(expression, NAMED_ELEMENT, named_elements);
+Definition getDefinition(Expression expression) {
+    return getExpression(expression, DEFINITION, definitions);
 }
 
 WhileElement getWileElement(Expression expression) {

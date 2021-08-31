@@ -64,8 +64,8 @@ Expression parseNamedElement(CodeRange code) {
     auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    return makeNamedElement(
-        new NamedElement{
+    return makeDefinition(
+        new Definition{
             CodeRange{first, code.first},
             std::move(name),
             expression,

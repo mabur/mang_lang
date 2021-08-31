@@ -7,7 +7,7 @@ const CodeCharacter* begin(Expression expression) {
         case CHARACTER: return getCharacter(expression).range.first;
         case CONDITIONAL: return getConditional(expression).range.first;
         case DICTIONARY: return getDictionary(expression).range.first;
-        case NAMED_ELEMENT: return getNamedElement(expression).range.first;
+        case DEFINITION: return getDefinition(expression).range.first;
         case WHILE_ELEMENT: return getWileElement(expression).range.first;
         case END_ELEMENT: return getEndElement(expression).range.first;
         case FUNCTION: return getFunction(expression).range.first;

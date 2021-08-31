@@ -19,7 +19,7 @@ enum ExpressionType {
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
     NAME,
-    NAMED_ELEMENT,
+    DEFINITION,
     WHILE_ELEMENT,
     END_ELEMENT,
     NUMBER,
@@ -115,7 +115,7 @@ struct EmptyString {
     CodeRange range;
 };
 
-struct NamedElement {
+struct Definition {
     CodeRange range;
     Expression name;
     Expression expression;

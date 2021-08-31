@@ -6,7 +6,7 @@ DictionaryElements setContext(const DictionaryElements& elements);
 
 void clearMemory();
 
-NamedElement getNamedElement(Expression expression);
+Definition getDefinition(Expression expression);
 WhileElement getWileElement(Expression expression);
 EndElement getEndElement(Expression expression);
 Number getNumber(Expression expression);
@@ -38,7 +38,7 @@ Expression makeLookupChild(const LookupChild* expression);
 Expression makeFunctionApplication(const FunctionApplication* expression);
 Expression makeLookupSymbol(const LookupSymbol* expression);
 Expression makeName(const Name* expression);
-Expression makeNamedElement(const NamedElement* expression);
+Expression makeDefinition(const Definition* expression);
 Expression makeWhileElement(const WhileElement* expression);
 Expression makeEndElement(const EndElement* expression);
 Expression makeNewString(const String* expression);
