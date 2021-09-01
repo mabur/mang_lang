@@ -179,12 +179,6 @@ struct Conditional
 }
 
 
-* Fix bug about captured variables that happens e.g. when calling map inside another function like in replace:
-  y@{f=in (x list) out map(in y out x list), y=f(2 (0 0))}
-
-  replace = in (old_item  new_item list) out
-        map(in item out if equal(item old_item) then new_item else item list)
-
 EVALUATION EXAMPLES
 {a = 0 b = a} -> {a = 0 b = 0}
 a@{a = 0} -> 0
