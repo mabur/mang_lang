@@ -623,10 +623,10 @@ int main() {
         {"replace!(1 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
     test.evaluate("replace_if list", {
-        {"replace!(in x out equal?(x 1) 2 ())", "()"},
-        //{"replace!(in x out equal?(x 1) 2 (1))", "(2)"},
-        {"replace!(in x out equal?(x 1) 2 (2))", "(2)"},
-        //{"replace!(in x out equal?(x 1) 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
+        {"replace_if!(in x out equal?(x 1) 2 ())", "()"},
+        {"replace_if!(in x out equal?(x 1) 2 (1))", "(2)"},
+        {"replace_if!(in x out equal?(x 1) 2 (2))", "(2)"},
+        {"replace_if!(in x out equal?(x 1) 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
     test.evaluate("enumerate list", {
         {"enumerate!()", "()"},
