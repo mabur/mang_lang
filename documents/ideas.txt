@@ -1,4 +1,5 @@
 TODO:
+* Rename to Mangelang?
 * Functions:
   - Math: trigonometry
   - Character: character_from_number, number_from_character, string_from_number, number_from_string, then to_upper, to_lower, is_alpha, is_digit.
@@ -288,21 +289,20 @@ Vec2 = (x=Real y=Real)
 
 LEVELS
 1. Data
-  - Primitive / Atoms
+  - Atoms
       - numbers
       - characters
-  - Aggregate
+  - Containers
     - strings
     - lists
     - dictionaries
-2. References
+2. Data References
   - reference (substitution)
   - child reference (substitution)
 3. Control flow (turing complete)
   - Conditional if (substitution)
   - Iterative dictionary, while in dictionaries and updating of symbols (substitution)
-4. Calculation
-  - function application (substitution)
+4. Function application (substitution)
 5. Function Definition
   - Function
   - Function of list
