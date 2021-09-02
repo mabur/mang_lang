@@ -15,14 +15,6 @@ TODO:
 * Tools:
   - Command line interface for reading source from file and piping it to interpretor
   - Reformat to html with syntax high-lighting.
-* Homepage
-  - Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
-  - Improve home-page.
-  - Prettier homepage.
-  - Syntax high-lighting.
-  - Implement tool that takes a source file and outputs an html.
-* Skill / level tree visualization for manglang syntax and taxonomy.
-  - 8 bit or 16 bit icons.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Implement everything needed to convert between json and manglang in manglang.
@@ -48,7 +40,18 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Remove shared_ptr from linked list implementation.
   - Add new Expression types: NewList, EmptyList, NewString, EmptyString
   - Make CodeRange part of ExpressionPointer instead of expression.
-
+* Homepage
+  - Make logo: double lambda: https://docs.google.com/document/d/1QNm45cydqxuvMwjXDq3DtXoxuaiTAexnQ8VEtgLwjpM/edit
+  - Improve home-page.
+  - Prettier homepage.
+  - Syntax high-lighting.
+  - Implement tool that takes a source file and outputs an html.
+  * Skill / level tree visualization for manglang syntax and taxonomy.
+    - 8 bit or 16 bit icons.
+  - Write custom markup language for homepage that converts to html.
+    Can contain manglang code which then gets syntax highlighted.
+    Support images.
+    Alternatively do everything in javascript?
 
 * Unify concept of ! ? @ operators / function-application.
 * Unify concept of pairs of names and expressions:
