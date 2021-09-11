@@ -22,7 +22,6 @@ h1 {
   font-family: 'Fira Sans';
   font-weight: normal;
   color: #E3322F;
-  color: #4BBF8E;
   color: #3FAF7E;
   margin: 40px 0px 20px 0px;
 }
@@ -52,7 +51,8 @@ li {
 img {
   image-rendering: crisp-edges;
   vertical-align: middle;
-  padding: 0px 16px 0px 16px;
+  padding: 0px 16px 12px 16px;
+  background-color: #fff;
 }
 a {
   color: #6B6FFF;
@@ -69,14 +69,11 @@ a {
 
 <h1>Manglang</h1>
 <p>
-Manglang is a programming language that is:
+Manglang is an experimental programming language that is:
 <ul>
-<li>Simple</li>
-<li>Functional</li>
-<li>Experimental</li>
+<li><b>Simple</b> and <b>minimal</b>, instead of feature rich. It is easy to understand, both for humans and computers.</li>
+<li><b>Functional</b>, instead of imperative or object oriented. It is suitable for describing <b>data</b> and <b>calculations</b>, rather than interactive programs with side effects.</li>
 </ul>
-It designed to be both a data format and to describe calculations.
-Manglang is NOT designed for interactive programs with side effects.
 
 <h1>Code Evaluation</h1>
 <p>
@@ -128,15 +125,17 @@ For more code examples continue reading below, or look inside the
 </p>
 
 <h1>Building Blocks</h1>
-
-Manglang consists of these basic building blocks.
-
+<p>
+Manglang consists of the following basic building blocks:
+</p>
 <p><img src="atom.png" width=48 height=48><a href="#atoms">Atoms</a> like <a href="#numbers">numbers</a> and <a href="#characters">characters</a>.</p>
-<p><img src="container2.png" width=48 height=48><a href="#containers">Containers</a> holding data like <a href="#lists">lists</a> and <a href="#strings">strings</a> and <a href="#dictionaries">dictionaries</a>.</p>
+<p><img src="container.png" width=48 height=48><a href="#containers">Containers</a> holding data like <a href="#lists">lists</a> and <a href="#strings">strings</a> and <a href="#dictionaries">dictionaries</a>.</p>
 <p><img src="reference.png" width=48 height=48><a href="#references">References</a> to data inside containers.</p>
 <p><img src="control_flow.png" width=48 height=48><a href="#control_flow">Control flow</a> like <a href="#if">if</a> and <a href="#while">while</a>.</p>
-<p><img src="function.png" width=48 height=48><a href="#functions">Functions</a> and <a href="#function_application">function application</a> which transform data.</p>
-
+<p><img src="function.png" width=48 height=48><a href="#function_definition">Function definitions</a> and <a href="#function_application">function applications</a> which transform data.</p>
+<p>
+Below you will find descriptions and examples of each of these language constructs.
+</p>
 
 <h1 id="atoms">1. Atoms<img src="atom.png" width=48 height=48></h1>
 <p>
@@ -159,7 +158,7 @@ A single ascii character is written as:
 'a'
 </pre>
 
-<h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
+<h1 id="containers">2. Containers<img src="container.png" width=48 height=48></h1>
 <p>
 Manglang has three different kinds of containers which can store collections of data.
 </p>
@@ -260,8 +259,8 @@ So Manglang uses dictionaries to represent both:
 This is a beautiful generalization and simplification.
 </p>
 
-<h1 id="references">References <img src="reference.png" width=48 height=48></h1>
-<h2 id="reference">Reference</h2>
+<h1 id="references">3. References <img src="reference.png" width=48 height=48></h1>
+<h2 id="reference">3.a. Reference to Current Dictionary</h2>
 <p>
 A name defined in a dictionary can be referenced after it is defined:
 </p>
@@ -280,8 +279,9 @@ The input above is evaluated to the output below:
     b = 1
 }
 </pre>
+<h2 id="reference">3.b. Reference to Outer Dictionaries</h2>
 <p>
-Dictionaries can be nested. You can refer to names in the current dictionary or in parent dictionaries in this way:
+Dictionaries can be nested. You can also refer to a name in an outer dictionary:
 </p>
 <pre>
 {
@@ -298,11 +298,14 @@ The input above is evaluated to the output below:
     b = {c = 2 d = 1}
 }
 </pre>
-
-<h2 id="child_reference">Reference to Child</h2>
 <p>
-In the previous section we looked at how to refer to names defined in the current dictionary, or in a parent dictionary.
-You can also refer to names in a child dictionary like this:
+When refering to a name the current dictionary is first checked and then the next outer dictionary and so on.
+</p>
+
+<h2 id="child_reference">3.c. Reference to Inner Dictionary</h2>
+<p>
+In the previous section we looked at how to refer to names defined in the current dictionary, or in an outer dictionary.
+You can also refer to names in an inner dictionary like this:
 </p>
 <pre>
 {
@@ -326,9 +329,9 @@ However, having it like this simplifies the syntax of Manglang and makes it easi
 It also makes both function application and dictionary lookup follow the same order and pattern. 
 </p>
 
-<h1 id="control_flow">Control Flow <img src="control_flow.png" width=48 height=48></h1>
+<h1 id="control_flow">4. Control Flow <img src="control_flow.png" width=48 height=48></h1>
 
-<h2 id="if">If</h2>
+<h2 id="if">4.a. If</h2>
 <p>
 A conditional is written as <code>if a then b else c</code> and this expression is evaluated to b or c depending of if a is true or false.
 Manglang has no explicit type for boolean values but interprets other values as true or false.
@@ -345,9 +348,7 @@ The following values are interpreted as false:
     All other values are interpreted as true.
 </li>
 </ul>
-
 Consider this example:
-
 </p>
 <pre>
 {
@@ -371,12 +372,12 @@ This program is evaluated to:
 </pre>
 
 
-<h2 id="while">While</h2>
+<h2 id="while">4.b. While</h2>
 TODO: add description.
 
-<h1 id="functions">Functions <img src="function.png" width=48 height=48></h1>
+<h1 id="functions">5. Functions <img src="function.png" width=48 height=48></h1>
 
-<h2 id="function_application">Function Application</h2>
+<h2 id="function_application">5.a. Function Application</h2>
 <p>
 We have already seen some examples of calling functions in Manglang.
 A function is called using <code>!</code> like <code>function_name!input</code>.
@@ -420,7 +421,7 @@ Function calls are right associative.
 Manglang does not support currying.
 </p>
 
-<h2 id="function_definition">Function Definition</h2>
+<h2 id="function_definition">5.b. Function Definition</h2>
 <p>
 Functions are defined using they keywords <code>in</code> and <code>out</code> like this:
 </p>
@@ -484,7 +485,7 @@ Function definitions and computations can be broken up into smaller parts by usi
 }
 </pre>
 
-<h2 id="function_list_definition">Function of List Definition</h2>
+<h2 id="function_list_definition">5.c. Function of List Definition</h2>
 <p>
 Manglang provides syntactic sugar for defining functions that take multiple input,
 in the form of a list.
@@ -509,7 +510,7 @@ by unpacking the elements of the input list.
 </p>
 
 
-<h2 id="function_dictionary_definition">Function of Dictionary Definition</h2>
+<h2 id="function_dictionary_definition">5.d. Function of Dictionary Definition</h2>
 
 <p>
 Manglang provides syntactic sugar for defining functions that take multiple input,
