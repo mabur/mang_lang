@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
@@ -16,7 +17,9 @@ body {
   margin: 40px;
 }
 h1 {
+  font-family: 'Fira Mono';
   font-family: 'Roboto Slab';
+  font-family: 'Fira Sans';
   font-weight: normal;
   color: #E3322F;
   color: #4BBF8E;
@@ -24,7 +27,9 @@ h1 {
   margin: 40px 0px 20px 0px;
 }
 h2 {
+  font-family: 'Fira Mono';
   font-family: 'Roboto Slab';
+  font-family: 'Fira Sans';
   font-weight: normal;
   color: #3FAF7E;
   margin: 40px 0px 20px 0px;
@@ -34,7 +39,12 @@ pre {
   color: #000000;
   background-color: #FFFFDD;
   padding: 25px;
-  margin: 25px;
+  margin: 25px 25px 25px 0px;
+}
+code {
+  background-color: #FFFFDD;
+  font-family: 'Fira Mono';
+  padding: 0px 5px 0px 5px;
 }
 li {
   padding: 8px;   
@@ -43,6 +53,10 @@ img {
   image-rendering: crisp-edges;
   vertical-align: middle;
   padding: 0px 16px 0px 16px;
+}
+a {
+  color: #6B6FFF;
+  color: #417ED1;
 }
 
 
@@ -61,6 +75,8 @@ Manglang is a programming language that is:
 <li>Functional</li>
 <li>Experimental</li>
 </ul>
+It designed to be both a data format and to describe calculations.
+Manglang is NOT designed for interactive programs with side effects.
 
 <h1>Code Evaluation</h1>
 <p>
@@ -113,28 +129,416 @@ For more code examples continue reading below, or look inside the
 
 <h1>Building Blocks</h1>
 
-Manglang only consists of these basic building blocks.
+Manglang consists of these basic building blocks.
 
-<p><img src="atom.png" width=48 height=48>Atomic data like <b>numbers</b> and <b>characters</b>.</p>
-<p><img src="container2.png" width=48 height=48>Containers holding data like <b>lists</b> and <b>strings</b> and <b>dictionaries</b>.</p>
-<p><img src="reference.png" width=48 height=48><b>References</b> to data inside containers.</p>
-<p><img src="control_flow.png" width=48 height=48>Control flow like <b>if</b> and <b>while</b>.</p>
-<p><img src="function.png" width=48 height=48><b>Functions</b> and <b>function application</b> which transform data.</p>
+<p><img src="atom.png" width=48 height=48><a href="#atoms">Atoms</a> like <a href="#numbers">numbers</a> and <a href="#characters">characters</a>.</p>
+<p><img src="container2.png" width=48 height=48><a href="#containers">Containers</a> holding data like <a href="#lists">lists</a> and <a href="#strings">strings</a> and <a href="#dictionaries">dictionaries</a>.</p>
+<p><img src="reference.png" width=48 height=48><a href="#references">References</a> to data inside containers.</p>
+<p><img src="control_flow.png" width=48 height=48><a href="#control_flow">Control flow</a> like <a href="#if">if</a> and <a href="#while">while</a>.</p>
+<p><img src="function.png" width=48 height=48><a href="#functions">Functions</a> and <a href="#function_application">function application</a> which transform data.</p>
 
-<h1>Philosophy of Manglang</h1>
 
-<h2>Design Trade-offs</h1>
+<h1 id="atoms">1. Atoms<img src="atom.png" width=48 height=48></h1>
 <p>
-Mang lang has the following <b>design trade-offs</b>:
+Manglang has two kinds of atomic or primitive data: numbers and characters.
 </p>
+
+<h2 id="numbers">1.a. Numbers</h2>
+<p>
+Manglang has a single number type which is a 64 bit float:
+</p>
+<pre>
+12.34
+</pre>
+
+<h2 id="characters">1.b. Characters</h2>
+<p>
+A single ascii character is written as:
+</p>
+<pre>
+'a'
+</pre>
+
+<h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
+<p>
+Manglang has three different kinds of containers which can store collections of data.
+</p>
+
+<h2 id="strings">2.a. Strings</h2>
+<p>
+Strings are written as:
+</p>
+<pre>
+"Manglang"
+</pre>
+<p>
+They can be seen as lists of characters. Example of a program using functions on strings:
+</p>
+<pre>
+{
+    a = "Manglang"
+    b = first!a
+    c = rest!a
+    d = reverse!a
+    e = prepend!('E' a)
+}
+</pre>
+The input above is evaluated to the output below:
+<pre>
+{
+    a = "Manglang"
+    b = 'M'
+    c = "anglang"
+    d = "gnalgnaM"
+    d = "EManglang"
+}
+</pre>
+
+
+<h2 id="lists">2.b. Lists</h2>
+<p>Lists of values are written as:</p>
+<pre>
+(3 6 4)
+</pre>
+<p>Example program using functions on lists:</p>
+<pre>
+{
+    a = (3 6 4)
+    b = first!a
+    c = rest!a
+    d = reverse!a
+    e = prepend!(9 a) 
+}
+</pre>
+<p>The input above is evaluated to the output below:</p>
+<pre>
+{
+    a = (3 6 4)
+    b = 3
+    c = (6 4)
+    d = (4 6 3)
+    e = (9 4 6 3)
+}
+</pre>
+
+
+<h2 id="dictionaries">2.c. Dictionaries</h2>
+<p>
+Dictionaries are used to associate names / symbols with expressions:
+</p>
+<pre>
+{a=1 b='A' c="abc"}
+</pre>
+<p>
+Manglang doesn't care about extra whitespace so the program above can also be written as:
+</p>
+<pre>
+{
+    a = 1
+    b = 'A'
+    c = "abc"
+}
+</pre>
+<p>
+Dictionaries can be nested:
+</p>
+<pre>
+{
+    rectangle = {width = 4 height = 5}
+    circle = {radius = 5}
+}
+</pre>
+<p>
+In Manglang dictionaries are the only way to associate names / symbols with expressions.
+So Manglang uses dictionaries to represent both:
 <ul>
-<li><b>Minimalistic</b>, instead of feature-rich. </li>
-<li><b>Principled</b>, instead of pragmatic.</li>
-<li><b>Functional</b>, instead of imperative or object oriented.</li>
-<li><b>Eager evaluation</b>, instead of lazy evaluation.
-<li><b>Dynamically typed and interpreted</b>, instead of statically typed and compiled.</li>
-<li><b>Code as Data and Data as Code</b>. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!</li>
+<li>Variables</li>
+<li>Objects</li>
+<li>Function input</li>
+<li>Function output</li>
 </ul>
+This is a beautiful generalization and simplification.
+</p>
+
+<h1 id="references">References <img src="reference.png" width=48 height=48></h1>
+<h2 id="reference">Reference</h2>
+<p>
+A name defined in a dictionary can be referenced after it is defined:
+</p>
+<pre>
+{
+    a = 1
+    b = a
+}
+</pre>
+<p>
+The input above is evaluated to the output below:
+</p>
+<pre>
+{
+    a = 1
+    b = 1
+}
+</pre>
+<p>
+Dictionaries can be nested. You can refer to names in the current dictionary or in parent dictionaries in this way:
+</p>
+<pre>
+{
+    a = 1
+    b = {c = 2 d = a}
+}
+</pre>
+<p>
+The input above is evaluated to the output below:
+</p>
+<pre>
+{
+    a = 1
+    b = {c = 2 d = 1}
+}
+</pre>
+
+<h2 id="child_reference">Reference to Child</h2>
+<p>
+In the previous section we looked at how to refer to names defined in the current dictionary, or in a parent dictionary.
+You can also refer to names in a child dictionary like this:
+</p>
+<pre>
+{
+    a = {b=2 c=3}
+    d = b@a
+}
+</pre>
+<p>
+The input above is evaluated to the output below:
+</p>
+<pre>
+{
+    a = {b=2 c=3}
+    d = 2
+}
+</pre>
+<p>
+The syntax <code>name@dictionary</code> is used to get the value corresponding to the name/key inside the dictionary.
+This syntax is reversed compared to most languages that instead write this as <code>dictionary.name</code>.
+However, having it like this simplifies the syntax of Manglang and makes it easier to parse.
+It also makes both function application and dictionary lookup follow the same order and pattern. 
+</p>
+
+<h1 id="control_flow">Control Flow <img src="control_flow.png" width=48 height=48></h1>
+
+<h2 id="if">If</h2>
+<p>
+A conditional is written as <code>if a then b else c</code> and this expression is evaluated to b or c depending of if a is true or false.
+Manglang has no explicit type for boolean values but interprets other values as true or false.
+<ul>
+<li>
+The following values are interpreted as false:
+    <ul>
+        <li>number zero <code>0</code></li>
+        <li>empty list <code>()</code></li>
+        <li>empty string <code>""</code> </li>
+    </ul>
+</li>
+<li>
+    All other values are interpreted as true.
+</li>
+</ul>
+
+Consider this example:
+
+</p>
+<pre>
+{
+    a = (0 1)
+    b = if a then
+            first!a
+        else
+            2
+    c = if b then "hello" else "world"
+}
+</pre>
+<p>
+This program is evaluated to:
+</p>
+<pre>
+{
+    a = (0 1)
+    b = 0
+    c = "world"
+}
+</pre>
+
+
+<h2 id="while">While</h2>
+TODO: add description.
+
+<h1 id="functions">Functions <img src="function.png" width=48 height=48></h1>
+
+<h2 id="function_application">Function Application</h2>
+<p>
+We have already seen some examples of calling functions in Manglang.
+A function is called using <code>!</code> like <code>function_name!input</code>.
+Functions take a single value as input.
+However, this single value can be a list or a dictionary, that has multiple values inside.
+</p>
+<pre>
+{
+    list = (4 2 1)
+    sum0 = add!list
+    head0 = first!list
+    sum1 = add!(4 2 1)
+    head1 = first!(4 2 1)
+    list2 = prepend!(3 list)
+}
+</pre>
+<p>
+This program is evaluated to:
+</p>
+<pre>
+{
+    list = (4 2 1)
+    sum0 = 7
+    head0 = 4
+    sum1 = 7
+    head1 = 4
+    list2 = (3 4 2 1)
+}
+</pre>
+<p>
+Manglang does not have any special operators for arithmetics, boolean, list operations etc.
+Instead functions are used for all computations.
+Function calls can be nested like this:
+</p>
+<pre>
+mul!(add!(1 2) sub!(7 2))
+</pre>
+<p>
+This program is evaluated to <code>(1+2)*(7-2) = 3*5 = 15</code>.
+Function calls are right associative.
+Manglang does not support currying.
+</p>
+
+<h2 id="function_definition">Function Definition</h2>
+<p>
+Functions are defined using they keywords <code>in</code> and <code>out</code> like this:
+</p>
+<pre>
+{
+    square = in x out mul!(x x)
+    result = square!3
+}
+</pre>
+<p>
+A function definition is on the form <code>in x out expression</code>
+where x is the name of the input and expression is the output.
+Functions are first class values and can be given a name by putting them inside a dictionary.
+Here are some examples of defining and calling functions:
+</p>
+<pre>
+{
+    square = in x out mul!(x x)
+    inc = in x out add!(x 1)
+    dec = in x out sub!(x 1)
+    count = in list out if list then inc!count!rest!list else 0
+    a = square 3
+    b = inc 3
+    c = dec 3
+    d = count!(3 7 3 8 2)
+    e = count!"apple"        
+}
+</pre>
+<p>
+This program is evaluated to:
+</p>
+<pre>
+{
+    square = in x out mul!(x x)
+    inc = in x out add!(x 1)
+    dec = in x out sub!(x 1)
+    count = in list out if list then inc!count!rest!list else 0
+    a = 9
+    b = 4
+    c = 2
+    d = 5
+    e = 5        
+}
+</pre>
+<p>
+The if-then-else operator is used to choose what value to return based on a condition.
+Functions can be recursive like the <code>count</code> example above.
+Function definitions and computations can be broken up into smaller parts by using dictionaries:
+</p>
+<pre>
+{
+    square = in x out mul!(x x)
+    square_norm = in vec3 out result@{
+        x = first@vec3
+        y = second!vec3
+        z = third!vec3
+        result = add!(square!x square!y square!z)
+    }
+    vector = (3 4 5)
+    result = square_norm!vector
+}
+</pre>
+
+<h2 id="function_list_definition">Function of List Definition</h2>
+<p>
+Manglang provides syntactic sugar for defining functions that take multiple input,
+in the form of a list.
+Here are some examples of equivalent ways of defining and calling functions: 
+</p>
+<pre>
+{
+    area1 = in rectangle out mul!(first@rectangle second!rectangle)
+    area2 = in (width height) out mul!(width height)
+    rectangle = (5 4)
+    a = area1!rectangle,
+    b = area2!rectangle,
+    c = area1!(5 4)
+    d = area2!(5 4)
+}
+</pre>
+<p>
+The functions <code>area1</code> and <code>area2</code> are equivalent.
+They expect the same input and return the same result.
+<code>area2</code> just uses syntactic sugar to make its implementation more concise,
+by unpacking the elements of the input list.
+</p>
+
+
+<h2 id="function_dictionary_definition">Function of Dictionary Definition</h2>
+
+<p>
+Manglang provides syntactic sugar for defining functions that take multiple input,
+in the form of a dictionary with named entries.
+Here are some examples of equivalent ways of defining and calling functions: 
+</p>
+<pre>
+{
+    area1 = in rectangle out mul!(width@rectangle height@rectangle)
+    area2 = in {width height} out mul!(width height)
+    rectangle = {width = 5 height = 4}
+    a = area1!rectangle
+    b = area2!rectangle
+    c = area1!{width = 5 height = 4}
+    d = area2!{width = 5 height = 4}
+}
+</pre>
+<p>
+The functions <code>area1</code> and <code>area2</code> are equivalent.
+They expect the same input and return the same result.
+<code>area2</code> just uses syntactic sugar to make it its implementation more concise,
+by unpacking the elements of the input dictionary.
+</p>
+
+<h1>More Code Examples</h1>
+<p>
+For more code examples look inside the
+<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
+</p>
 
 </body>
 </html>
