@@ -52,6 +52,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
     Can contain manglang code which then gets syntax highlighted.
     Support images.
     Alternatively do everything in javascript?
+* Add second@, third@, fourth@, ... members for lists and strings. _1st@string
+_1st, _2nd, _3rd, _4th, _5th, _6th, _7nth, _8th, _9th
 
 * Unify concept of ! ? @ operators / function-application.
 * Unify concept of pairs of names and expressions:
