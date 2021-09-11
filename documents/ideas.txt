@@ -211,6 +211,7 @@ https://www.passerine.io/
 https://nim-lang.org/
 https://github.com/tuqqu/oxide-lang
 https://www.pyret.org/
+https://docs.scala-lang.org/tour/tour-of-scala.html
 
 Languages supported by Github:
 https://github.com/github/linguist/blob/master/lib/linguist/languages.yml

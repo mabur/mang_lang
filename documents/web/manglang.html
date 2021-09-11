@@ -7,14 +7,26 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab">
 
 <style>
 
 body {
   font-family: 'Montserrat';
+  margin: 40px;
 }
 h1 {
-  font-family: 'Montserrat';
+  font-family: 'Roboto Slab';
+  font-weight: normal;
+  color: #E3322F;
+  color: #4BBF8E;
+  color: #3FAF7E;
+  margin: 40px 0px 20px 0px;
+}
+h2 {
+  font-family: 'Roboto Slab';
+  font-weight: normal;
+  color: #3FAF7E;
   margin: 40px 0px 20px 0px;
 }
 pre {
@@ -43,20 +55,18 @@ img {
 
 <h1>Manglang</h1>
 <p>
-Mang Lang is an experimental minimalistic programming language.
-Its primary goal is to be a simple and minimal language that is easy to implement and interpret.
-Mang lang is similar to the <a href="https://www.json.org/">Json</a> data format,
-but with a minimal set of programming primitives added:
+Manglang is a programming language that is:
 <ul>
-<li>References to entries in dictionaries</li>
-<li>Control flow using if and while</li>
-<li>First class functions</li>
+<li>Simple</li>
+<li>Functional</li>
+<li>Experimental</li>
 </ul>
-</p>
 
+<h1>Code Evaluation</h1>
 <p>
-Mang lang is a purely functional and interpreted language.
-It takes source code written in Mang lang and evaluates it:  
+Manglang is a purely functional and interpreted language.
+It takes source code written in Manglang and evaluates it.
+Consider the following input program:
 </p>
 <pre>
 {
@@ -75,7 +85,7 @@ It takes source code written in Mang lang and evaluates it:
 </pre>
 
 <p>
-When we evaluate the source code above we get the result below:  
+When we evaluate the input above we get the output below:
 </p>
 <pre>
 {
@@ -93,25 +103,13 @@ When we evaluate the source code above we get the result below:
 }
 </pre>
 <p>
-Note that both the input and output of the mang lang interpreter is given as mang lang source code!
+Note that both the input and output of the Manglang interpreter is given as Manglang code!
+The Manglang format can be used to both write programs and express pure data.
 </p>
 <p>
 For more code examples continue reading below, or look inside the
 <a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
 </p>
-
-<h1>Design Trade-offs</h1>
-<p>
-Mang lang has the following <b>design trade-offs</b>:
-</p>
-<ul>
-<li><b>Minimalistic</b>, instead of feature-rich. </li>
-<li><b>Principled</b>, instead of pragmatic.</li>
-<li><b>Functional</b>, instead of imperative or object oriented.</li>
-<li><b>Eager evaluation</b>, instead of lazy evaluation.
-<li><b>Dynamically typed and interpreted</b>, instead of statically typed and compiled.</li>
-<li><b>Code as Data and Data as Code</b>. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!</li>
-</ul>
 
 <h1>Building Blocks</h1>
 
@@ -124,6 +122,19 @@ Manglang only consists of these basic building blocks.
 <p><img src="function.png" width=48 height=48><b>Functions</b> and <b>function application</b> which transform data.</p>
 
 <h1>Philosophy of Manglang</h1>
+
+<h2>Design Trade-offs</h1>
+<p>
+Mang lang has the following <b>design trade-offs</b>:
+</p>
+<ul>
+<li><b>Minimalistic</b>, instead of feature-rich. </li>
+<li><b>Principled</b>, instead of pragmatic.</li>
+<li><b>Functional</b>, instead of imperative or object oriented.</li>
+<li><b>Eager evaluation</b>, instead of lazy evaluation.
+<li><b>Dynamically typed and interpreted</b>, instead of statically typed and compiled.</li>
+<li><b>Code as Data and Data as Code</b>. The built-in data structures (lists and dictionaries) are also used to structure the code itself into multiple expressions, lines and variables. Furthermore, both the input data and output data of the Mang Lang interpretor is expressed in Mang Lang itself!</li>
+</ul>
 
 </body>
 </html>
