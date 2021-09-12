@@ -403,8 +403,9 @@ Once it has been constructed it is immutable and cannot be updated.
 
 <h2 id="function_application">5.a. Function Application</h2>
 <p>
-We have already seen some examples of calling functions in Manglang.
+We have already seen some examples of calling / applying functions in Manglang.
 A function is called using <code>!</code> like <code>function_name!input</code>.
+We see function application as a command and hence use the symbol <code>!</code> after the verb that names the functions.
 Functions take a single value as input.
 However, this single value can be a list or a dictionary, that has multiple values inside.
 </p>
@@ -412,9 +413,7 @@ However, this single value can be a list or a dictionary, that has multiple valu
 {
     list = (4 2 1)
     sum0 = add!list
-    head0 = first!list
     sum1 = add!(4 2 1)
-    head1 = first!(4 2 1)
     list2 = prepend!(3 list)
 }
 </pre>
@@ -425,9 +424,7 @@ This program is evaluated to:
 {
     list = (4 2 1)
     sum0 = 7
-    head0 = 4
     sum1 = 7
-    head1 = 4
     list2 = (3 4 2 1)
 }
 </pre>
