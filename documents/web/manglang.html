@@ -373,7 +373,31 @@ This program is evaluated to:
 
 
 <h2 id="while">4.b. While</h2>
-TODO: add description.
+<p>
+In Manglang you can loop while constructing a dictionary:
+</p>
+<pre>
+{
+    x = 10
+    sum = 0
+    while x
+        sum = add!(sum x)
+        x = dec!x
+    end
+}
+</pre>
+The input above is evaluated to the output below:
+<pre>
+{
+    x = 0
+    sum = 55
+}
+</pre>
+<p>
+The loop decrements x until it is zero and then finishes.
+Definitions in a dictionary can only be updated / mutated while the dictionary is constructed.
+Once it has been constructed it is immutable and cannot be updated.
+</p>
 
 <h1 id="functions">5. Functions <img src="function.png" width=48 height=48></h1>
 
