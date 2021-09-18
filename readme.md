@@ -1,5 +1,3 @@
-# Manglang
-
 Manglang is an experimental programming language that is:
 
 - **Simple** and **minimal**, instead of feature rich. It is easy to understand, both for humans and computers.
