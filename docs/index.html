@@ -242,8 +242,7 @@ When refering to a name the current dictionary is first checked and then the nex
 
 <h3 id="child_reference">Reference to Inner Dictionary</h2>
 <p>
-In the previous section we looked at how to refer to names defined in the current dictionary, or in an outer dictionary.
-You can also refer to names in an inner dictionary like this:
+You can refer to names in an inner dictionary like this:
 </p>
 <pre>
 {
@@ -290,24 +289,6 @@ We will see that both of them can be seen as syntactic sugar sprinkled on dictio
 <pre>
 (3 6 4)
 </pre>
-<p>Example program using functions on lists:</p>
-<pre>
-{
-    a = (3 6 4)
-    b = first@a
-    c = rest@a
-    d = prepend!(b c) 
-}
-</pre>
-<p>The input above is evaluated to the output below:</p>
-<pre>
-{
-    a = (3 6 4)
-    b = 3
-    c = (6 4)
-    d = (3 6 4)
-}
-</pre>
 A list can be seen as a dictionary containing two things <code>first</code> and <code>rest</code>.
 Consider this example:
 <pre>
@@ -328,6 +309,24 @@ prepend!(7 (4 5 2))
 The input above is evaluated to the output below:
 <pre>
 (7 4 5 2)
+</pre>
+<p>Here is another example program with some list operations:</p>
+<pre>
+{
+    a = (3 6 4)
+    b = first@a
+    c = rest@a
+    d = prepend!(b c) 
+}
+</pre>
+<p>The input above is evaluated to the output below:</p>
+<pre>
+{
+    a = (3 6 4)
+    b = 3
+    c = (6 4)
+    d = (3 6 4)
+}
 </pre>
 In summary, we interact with lists by accessing the members <code>first</code> and <code>rest</code> and via the function <code>prepend</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
 
@@ -365,7 +364,7 @@ The input above is evaluated to the output below:
 
 <h2 id="if">4.a. If</h2>
 <p>
-A conditional is written as <code>if a then b else c</code> and this expression is evaluated to b or c depending of if a is true or false.
+The expression <code>if a then b else c</code> is evaluated to b or c depending of if a is true or false.
 Manglang has no explicit type for boolean values but interprets other values as true or false.
 <ul>
 <li>
@@ -377,7 +376,7 @@ The following values are interpreted as false:
     </ul>
 </li>
 <li>
-    All other values are interpreted as true.
+All other values are interpreted as true.
 </li>
 </ul>
 Consider this example:
@@ -402,7 +401,6 @@ This program is evaluated to:
     c = "world"
 }
 </pre>
-
 
 <h2 id="while">4.b. While</h2>
 <p>
