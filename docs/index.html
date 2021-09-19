@@ -33,6 +33,14 @@ h2 {
   color: #3FAF7E;
   margin: 40px 0px 20px 0px;
 }
+h3 {
+  font-family: 'Fira Mono';
+  font-family: 'Roboto Slab';
+  font-family: 'Fira Sans';
+  font-weight: normal;
+  color: #3FAF7E;
+  margin: 40px 0px 20px 0px;
+}
 pre {
   font-family: 'Fira Mono';
   color: #000000;
@@ -131,8 +139,7 @@ For more code examples continue reading below, or look inside the
 Manglang consists of the following basic building blocks:
 </p>
 <p><img src="atom.png" width=48 height=48><a href="#atoms">Atoms</a> like <a href="#numbers">numbers</a> and <a href="#characters">characters</a>.</p>
-<p><img src="container.png" width=48 height=48><a href="#containers">Containers</a> holding data like <a href="#lists">lists</a> and <a href="#strings">strings</a> and <a href="#dictionaries">dictionaries</a>.</p>
-<p><img src="reference.png" width=48 height=48><a href="#references">References</a> to data inside containers.</p>
+<p><img src="container2.png" width=48 height=48><a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#lists">lists</a> and <a href="#strings">strings</a>.</p>
 <p><img src="control_flow.png" width=48 height=48><a href="#control_flow">Control flow</a> like <a href="#if">if</a> and <a href="#while">while</a>.</p>
 <p><img src="function.png" width=48 height=48><a href="#function_definition">Function definitions</a> and <a href="#function_application">function applications</a> which transform data.</p>
 <p>
@@ -160,12 +167,171 @@ A single ascii character is written as:
 'a'
 </pre>
 
-<h1 id="containers">2. Containers<img src="container.png" width=48 height=48></h1>
+<h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
 <p>
-Manglang has three different kinds of containers which can store collections of data.
+Manglang has three different kinds of containers which can store other data inside them: dictionaries, lists and strings.
 </p>
 
-<h2 id="strings">2.a. Strings</h2>
+<h2 id="dictionaries">2.a. Dictionaries</h2>
+<p>
+Dictionaries are used to associate names / symbols with expressions:
+</p>
+<pre>
+{pi=3.14 first_letter='A'}
+</pre>
+<p>
+Manglang doesn't care about extra whitespace so the program above can also be written as:
+</p>
+<pre>
+{
+    pi = 1
+    first_letter = 'A'
+}
+</pre>
+<p>
+Dictionaries can be nested:
+</p>
+<pre>
+{
+    rectangle = {width = 4 height = 5}
+    circle = {radius = 5}
+}
+</pre>
+
+<h3 id="reference">Reference to Current Dictionary</h2>
+<p>
+A name defined in a dictionary can be referenced after it is defined:
+</p>
+<pre>
+{
+    a = 1
+    b = a
+}
+</pre>
+<p>
+The input above is evaluated to the output below:
+</p>
+<pre>
+{
+    a = 1
+    b = 1
+}
+</pre>
+<h3 id="reference">Reference to Outer Dictionaries</h2>
+<p>
+Dictionaries can be nested. You can also refer to a name in an outer dictionary:
+</p>
+<pre>
+{
+    a = 1
+    b = {c = 2 d = a}
+}
+</pre>
+<p>
+The input above is evaluated to the output below:
+</p>
+<pre>
+{
+    a = 1
+    b = {c = 2 d = 1}
+}
+</pre>
+<p>
+When refering to a name the current dictionary is first checked and then the next outer dictionary and so on.
+</p>
+
+<h3 id="child_reference">Reference to Inner Dictionary</h2>
+<p>
+In the previous section we looked at how to refer to names defined in the current dictionary, or in an outer dictionary.
+You can also refer to names in an inner dictionary like this:
+</p>
+<pre>
+{
+    a = {b=2 c=3}
+    d = b@a
+}
+</pre>
+<p>
+The input above is evaluated to the output below:
+</p>
+<pre>
+{
+    a = {b=2 c=3}
+    d = 2
+}
+</pre>
+<p>
+The syntax <code>name@dictionary</code> is used to get the value corresponding to the name/key inside the dictionary.
+This syntax is reversed compared to most languages that instead write this as <code>dictionary.name</code>.
+However, having it like this simplifies the syntax of Manglang and makes it easier to parse.
+It also makes both function application and dictionary lookup follow the same order and pattern. 
+</p>
+
+<h3>Dictionaries everywhere</h3>
+<p>
+In Manglang dictionaries are the only way to associate names / symbols with expressions.
+So Manglang uses dictionaries to represent both:
+<ul>
+<li>Variables</li>
+<li>Objects</li>
+<li>Function input</li>
+<li>Function output</li>
+</ul>
+In the next sections we will look at the remaining two containers in Manglang:
+<ul>
+<li>Lists</li>
+<li>Strings</li>
+</ul>
+We will see that both of them can be seen as syntactic sugar sprinkled on dictionaries.
+</p>
+
+<h2 id="lists">2.b. Lists</h2>
+<p>Lists of values are written as:</p>
+<pre>
+(3 6 4)
+</pre>
+<p>Example program using functions on lists:</p>
+<pre>
+{
+    a = (3 6 4)
+    b = first@a
+    c = rest@a
+    d = prepend!(b c) 
+}
+</pre>
+<p>The input above is evaluated to the output below:</p>
+<pre>
+{
+    a = (3 6 4)
+    b = 3
+    c = (6 4)
+    d = (3 6 4)
+}
+</pre>
+A list can be seen as a dictionary containing two things <code>first</code> and <code>rest</code>.
+Consider this example:
+<pre>
+{
+    list = (3 6 4)
+    dictionary = {first=3 rest={first=6 rest={first=4 rest={}}}}
+}
+</pre>
+These are two different ways of storing the same data.
+Lists in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
+Conceptually we can think of a list as a dictionary having the members <code>first</code> and <code>rest</code>,
+and we access the data in the list as if it was such a dictionary via <code>first@list</code> and <code>rest@list</code>.
+
+The function <code>prepend</code> is used to construct a new list by adding an element at the beginning of a list:
+<pre>
+prepend!(7 (4 5 2))
+</pre>
+The input above is evaluated to the output below:
+<pre>
+(7 4 5 2)
+</pre>
+In summary, we interact with lists by accessing the members <code>first</code> and <code>rest</code> and via the function <code>prepend</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
+
+<h2 id="strings">2.c. Strings</h2>
 <p>
 Strings are written as:
 </p>
@@ -194,142 +360,6 @@ The input above is evaluated to the output below:
     d = "EManglang"
 }
 </pre>
-
-
-<h2 id="lists">2.b. Lists</h2>
-<p>Lists of values are written as:</p>
-<pre>
-(3 6 4)
-</pre>
-<p>Example program using functions on lists:</p>
-<pre>
-{
-    a = (3 6 4)
-    b = first@a
-    c = rest@a
-    d = reverse!a
-    e = prepend!(9 a) 
-}
-</pre>
-<p>The input above is evaluated to the output below:</p>
-<pre>
-{
-    a = (3 6 4)
-    b = 3
-    c = (6 4)
-    d = (4 6 3)
-    e = (9 4 6 3)
-}
-</pre>
-
-
-<h2 id="dictionaries">2.c. Dictionaries</h2>
-<p>
-Dictionaries are used to associate names / symbols with expressions:
-</p>
-<pre>
-{a=1 b='A' c="abc"}
-</pre>
-<p>
-Manglang doesn't care about extra whitespace so the program above can also be written as:
-</p>
-<pre>
-{
-    a = 1
-    b = 'A'
-    c = "abc"
-}
-</pre>
-<p>
-Dictionaries can be nested:
-</p>
-<pre>
-{
-    rectangle = {width = 4 height = 5}
-    circle = {radius = 5}
-}
-</pre>
-<p>
-In Manglang dictionaries are the only way to associate names / symbols with expressions.
-So Manglang uses dictionaries to represent both:
-<ul>
-<li>Variables</li>
-<li>Objects</li>
-<li>Function input</li>
-<li>Function output</li>
-</ul>
-This is a beautiful generalization and simplification.
-</p>
-
-<h1 id="references">3. References <img src="reference.png" width=48 height=48></h1>
-<h2 id="reference">3.a. Reference to Current Dictionary</h2>
-<p>
-A name defined in a dictionary can be referenced after it is defined:
-</p>
-<pre>
-{
-    a = 1
-    b = a
-}
-</pre>
-<p>
-The input above is evaluated to the output below:
-</p>
-<pre>
-{
-    a = 1
-    b = 1
-}
-</pre>
-<h2 id="reference">3.b. Reference to Outer Dictionaries</h2>
-<p>
-Dictionaries can be nested. You can also refer to a name in an outer dictionary:
-</p>
-<pre>
-{
-    a = 1
-    b = {c = 2 d = a}
-}
-</pre>
-<p>
-The input above is evaluated to the output below:
-</p>
-<pre>
-{
-    a = 1
-    b = {c = 2 d = 1}
-}
-</pre>
-<p>
-When refering to a name the current dictionary is first checked and then the next outer dictionary and so on.
-</p>
-
-<h2 id="child_reference">3.c. Reference to Inner Dictionary</h2>
-<p>
-In the previous section we looked at how to refer to names defined in the current dictionary, or in an outer dictionary.
-You can also refer to names in an inner dictionary like this:
-</p>
-<pre>
-{
-    a = {b=2 c=3}
-    d = b@a
-}
-</pre>
-<p>
-The input above is evaluated to the output below:
-</p>
-<pre>
-{
-    a = {b=2 c=3}
-    d = 2
-}
-</pre>
-<p>
-The syntax <code>name@dictionary</code> is used to get the value corresponding to the name/key inside the dictionary.
-This syntax is reversed compared to most languages that instead write this as <code>dictionary.name</code>.
-However, having it like this simplifies the syntax of Manglang and makes it easier to parse.
-It also makes both function application and dictionary lookup follow the same order and pattern. 
-</p>
 
 <h1 id="control_flow">4. Control Flow <img src="control_flow.png" width=48 height=48></h1>
 
