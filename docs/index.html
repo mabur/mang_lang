@@ -84,6 +84,11 @@ Manglang is an experimental programming language that is:
 <li><b>Functional</b>, instead of imperative or object oriented. It is suitable for describing <b>data</b> and <b>calculations</b>, rather than interactive programs with side effects.</li>
 </ul>
 
+<h1>Setup</h1>
+
+Manglang is implemented in C++. It is built from source using <code>mang_lang_cpp/CMakeLists.txt</code>, which produces the executable <code>interpreter</code>. 
+You can then evaluate a program with the command <code>interpreter input_file_path output_file_path</code>, which takes the source code in <code>input_file_path</code> and evaluates it and writes the result to <code>output_file_path</code>. Manglang can also be embedded in another C++ program by including <code>mang_lang_cpp/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
+
 <h1>Code Evaluation</h1>
 <p>
 Manglang is a purely functional and interpreted language.
