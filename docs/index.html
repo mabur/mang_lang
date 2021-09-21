@@ -86,13 +86,8 @@ a {
 Manglang is an experimental programming language that is:
 <ul>
 <li><b>Simple and minimal</b>, instead of feature rich. It is easy to understand, both for humans and computers.</li>
-<li><b>Functional and immutable</b>, instead of mutable and object oriented. It is suitable for describing <b>data</b> and <b>calculations</b>, rather than interactive programs with side effects.</li>
+<li><b>Functional and immutable</b>, instead of mutable and object oriented. It is suitable for describing data and calculations, rather than interactive programs with side effects.</li>
 </ul>
-
-<h1>Setup</h1>
-
-Manglang is implemented in C++. It is built from source using <code>mang_lang_cpp/CMakeLists.txt</code>, which produces the executable <code>interpreter</code>. 
-You can then evaluate a program with the command <code>interpreter input_file_path output_file_path</code>, which takes the source code in <code>input_file_path</code> and evaluates it and writes the result to <code>output_file_path</code>. Manglang can also be embedded in another C++ program by including <code>mang_lang_cpp/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
 
 <h1>Code Evaluation</h1>
 <p>
@@ -631,6 +626,12 @@ by unpacking the elements of the input dictionary.
 For more code examples look inside the
 <a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
 </p>
+
+<h1>Setup</h1>
+
+Manglang is implemented in C++. It is built from source using <code>mang_lang_cpp/CMakeLists.txt</code>, which produces the executable <code>interpreter</code>. 
+You can then evaluate a program with the command <code>interpreter input_file_path output_file_path</code>, which takes the source code in <code>input_file_path</code> and evaluates it and writes the result to <code>output_file_path</code>. Manglang can also be embedded in another C++ program by including <code>mang_lang_cpp/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
+
 
 </body>
 </html>
