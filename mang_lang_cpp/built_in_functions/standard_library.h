@@ -12,6 +12,12 @@ const std::string STANDARD_LIBRARY = R"(
     is_lower = in c out less_or_equal?(97 ascii_number!c 122)
     is_letter = in c out or?(is_upper?c is_lower?c)
 
+    to_upper = in c out
+        if is_lower?c then
+            ascii_character!sub!(ascii_number!c 32)
+        else
+            c
+
     range = in x out list@{
         list = ()
         x = x

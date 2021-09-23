@@ -604,6 +604,14 @@ int main() {
         {"is_letter?'0'", "0"},
         {"is_letter?'9'", "0"},
     });
+    test.evaluate("to_upper", {
+        {"to_upper!'A'", "'A'"},
+        {"to_upper!'Z'", "'Z'"},
+        {"to_upper!'a'", "'A'"},
+        {"to_upper!'z'", "'Z'"},
+        {"to_upper!'0'", "'0'"},
+        {"to_upper!'9'", "'9'"},
+    });
     test.evaluate("range", {
         {"range!0", "()"},
         {"range!1", "(0)"},
