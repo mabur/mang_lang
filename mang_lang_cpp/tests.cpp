@@ -565,20 +565,36 @@ int main() {
         {"dec!0", "-1"},
     });
     test.evaluate("is_digit", {
-        {"is_digit!'0'", "1"},
-        {"is_digit!'1'", "1"},
-        {"is_digit!'2'", "1"},
-        {"is_digit!'3'", "1"},
-        {"is_digit!'4'", "1"},
-        {"is_digit!'5'", "1"},
-        {"is_digit!'6'", "1"},
-        {"is_digit!'7'", "1"},
-        {"is_digit!'8'", "1"},
-        {"is_digit!'9'", "1"},
-        {"is_digit!'a'", "0"},
-        {"is_digit!'z'", "0"},
-        {"is_digit!'A'", "0"},
-        {"is_digit!'Z'", "0"},
+        {"is_digit?'A'", "0"},
+        {"is_digit?'Z'", "0"},
+        {"is_digit?'a'", "0"},
+        {"is_digit?'z'", "0"},
+        {"is_digit?'0'", "1"},
+        {"is_digit?'9'", "1"},
+    });
+    test.evaluate("is_upper", {
+        {"is_upper?'A'", "1"},
+        {"is_upper?'Z'", "1"},
+        {"is_upper?'a'", "0"},
+        {"is_upper?'z'", "0"},
+        {"is_upper?'0'", "0"},
+        {"is_upper?'9'", "0"},
+    });
+    test.evaluate("is_lower", {
+        {"is_lower?'A'", "0"},
+        {"is_lower?'Z'", "0"},
+        {"is_lower?'a'", "1"},
+        {"is_lower?'z'", "1"},
+        {"is_lower?'0'", "0"},
+        {"is_lower?'9'", "0"},
+    });
+    test.evaluate("is_letter", {
+        {"is_letter?'A'", "1"},
+        {"is_letter?'Z'", "1"},
+        {"is_letter?'a'", "1"},
+        {"is_letter?'z'", "1"},
+        {"is_letter?'0'", "0"},
+        {"is_letter?'9'", "0"},
     });
     test.evaluate("range", {
         {"range!0", "()"},
