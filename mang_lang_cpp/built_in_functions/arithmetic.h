@@ -17,5 +17,6 @@ Expression less_or_equal(Expression in);
 Expression round(Expression in);
 Expression round_up(Expression in);
 Expression round_down(Expression in);
+Expression ascii(Expression in);
 
 }

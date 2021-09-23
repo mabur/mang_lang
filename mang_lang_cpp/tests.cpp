@@ -320,6 +320,14 @@ int main() {
         {"sqrt!1", "1"},
         {"sqrt!4", "2"},
     });
+    test.evaluate("ascii", {
+        {"ascii!'0'", "48"},
+        {"ascii!'9'", "57"},
+        {"ascii!'A'", "65"},
+        {"ascii!'Z'", "90"},
+        {"ascii!'a'", "97"},
+        {"ascii!'z'", "122"},
+    });
     test.evaluate("boolean", {
         {"boolean!-2", "1"},
         {"boolean!-1", "1"},
