@@ -78,11 +78,14 @@ Expression sqrt(Expression in) {
 }
 
 Expression less(Expression in) {
-    const auto& elements = getList(in).elements;
-    const auto& left = first(elements);
-    const auto& right = second(elements);
-    const auto result = number(left) < number(right);
-    return makeNumber(result);
+    for (auto list = getList(in).elements; list && list->rest; list = list->rest) {
+        const auto& left = first(list);
+        const auto& right = second(list);
+        if (number(left) >= number(right)) {
+            return makeNumber(false);
+        }
+    }
+    return makeNumber(true);
 }
 
 Expression less_or_equal(Expression in) {

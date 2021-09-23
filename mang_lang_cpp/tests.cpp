@@ -267,6 +267,10 @@ int main() {
         {"less!(0 -1)", "0"},
         {"less!(1 1)", "0"},
         {"less!(-1 -1)", "0"},
+        {"less!()", "1"},
+        {"less!(0)", "1"},
+        {"less!(0 1 2)", "1"},
+        {"less!(0 1 2 3)", "1"},
     });
     test.evaluate("less_or_equal", {
         {"less_or_equal!(0 0)", "1"},
