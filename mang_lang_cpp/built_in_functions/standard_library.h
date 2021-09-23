@@ -8,6 +8,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     dec = in x out sub!(x 1)
 
+    is_digit = in c out less_or_equal!(48 ascii!c 57)
+
     range = in x out list@{
         list = ()
         x = x

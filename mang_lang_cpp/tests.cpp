@@ -564,6 +564,22 @@ int main() {
     test.evaluate("dec", {
         {"dec!0", "-1"},
     });
+    test.evaluate("is_digit", {
+        {"is_digit!'0'", "1"},
+        {"is_digit!'1'", "1"},
+        {"is_digit!'2'", "1"},
+        {"is_digit!'3'", "1"},
+        {"is_digit!'4'", "1"},
+        {"is_digit!'5'", "1"},
+        {"is_digit!'6'", "1"},
+        {"is_digit!'7'", "1"},
+        {"is_digit!'8'", "1"},
+        {"is_digit!'9'", "1"},
+        {"is_digit!'a'", "0"},
+        {"is_digit!'z'", "0"},
+        {"is_digit!'A'", "0"},
+        {"is_digit!'Z'", "0"},
+    });
     test.evaluate("range", {
         {"range!0", "()"},
         {"range!1", "(0)"},
