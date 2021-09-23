@@ -2,7 +2,7 @@ TODO:
 * Rename to Mangelang?
 * Functions:
   - Math: trigonometry
-  - Character: character_from_number, number_from_character, string_from_number, number_from_string, then to_upper, to_lower, is_alpha, is_digit.
+  - Character: string_from_number, number_from_string
   - child@ as function that can be sent to map
   - Implement equal for dictionary
   - Naming of count_*, range, reverse_range, enumerate.
