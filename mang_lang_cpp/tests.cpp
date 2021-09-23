@@ -330,13 +330,13 @@ int main() {
         {"sqrt!1", "1"},
         {"sqrt!4", "2"},
     });
-    test.evaluate("ascii", {
-        {"ascii!'0'", "48"},
-        {"ascii!'9'", "57"},
-        {"ascii!'A'", "65"},
-        {"ascii!'Z'", "90"},
-        {"ascii!'a'", "97"},
-        {"ascii!'z'", "122"},
+    test.evaluate("ascii_number", {
+        {"ascii_number!'0'", "48"},
+        {"ascii_number!'9'", "57"},
+        {"ascii_number!'A'", "65"},
+        {"ascii_number!'Z'", "90"},
+        {"ascii_number!'a'", "97"},
+        {"ascii_number!'z'", "122"},
     });
     test.evaluate("boolean", {
         {"boolean!-2", "1"},

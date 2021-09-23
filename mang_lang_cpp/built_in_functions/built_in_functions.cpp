@@ -33,7 +33,7 @@ Expression builtIns() {
     definitions.push_back(define("round_down", arithmetic::round_down));
     definitions.push_back(define("abs", arithmetic::abs));
     definitions.push_back(define("sqrt", arithmetic::sqrt));
-    definitions.push_back(define("ascii", arithmetic::ascii));
+    definitions.push_back(define("ascii_number", arithmetic::ascii_number));
     definitions.push_back(define("boolean", logic::boolean));
     definitions.push_back(define("not", logic::logic_not));
     definitions.push_back(define("and", logic::all));

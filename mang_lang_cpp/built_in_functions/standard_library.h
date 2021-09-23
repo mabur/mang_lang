@@ -7,9 +7,9 @@ const std::string STANDARD_LIBRARY = R"(
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
 
-    is_digit = in c out less_or_equal?(48 ascii!c 57)
-    is_upper = in c out less_or_equal?(65 ascii!c 90)
-    is_lower = in c out less_or_equal?(97 ascii!c 122)
+    is_digit = in c out less_or_equal?(48 ascii_number!c 57)
+    is_upper = in c out less_or_equal?(65 ascii_number!c 90)
+    is_lower = in c out less_or_equal?(97 ascii_number!c 122)
     is_letter = in c out or?(is_upper?c is_lower?c)
 
     range = in x out list@{

@@ -111,7 +111,7 @@ Expression round_down(Expression in) {
     return makeNumber(std::floor(number(in)));
 }
 
-Expression ascii(Expression in) {
+Expression ascii_number(Expression in) {
     return makeNumber(getCharacter(in).value);
 }
 
