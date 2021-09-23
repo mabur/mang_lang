@@ -7,20 +7,20 @@ const std::string STANDARD_LIBRARY = R"(
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
 
-    is_digit = in c out less_or_equal?(48 ascii_number!c 57)
-    is_upper = in c out less_or_equal?(65 ascii_number!c 90)
-    is_lower = in c out less_or_equal?(97 ascii_number!c 122)
+    is_digit = in c out less_or_equal?(48 number!c 57)
+    is_upper = in c out less_or_equal?(65 number!c 90)
+    is_lower = in c out less_or_equal?(97 number!c 122)
     is_letter = in c out or?(is_upper?c is_lower?c)
 
     to_upper = in c out
         if is_lower?c then
-            ascii_character!sub!(ascii_number!c 32)
+            character!sub!(number!c 32)
         else
             c
 
     to_lower = in c out
         if is_upper?c then
-            ascii_character!add!(ascii_number!c 32)
+            character!add!(number!c 32)
         else
             c
 

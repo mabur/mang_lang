@@ -330,21 +330,21 @@ int main() {
         {"sqrt!1", "1"},
         {"sqrt!4", "2"},
     });
-    test.evaluate("ascii_number", {
-        {"ascii_number!'0'", "48"},
-        {"ascii_number!'9'", "57"},
-        {"ascii_number!'A'", "65"},
-        {"ascii_number!'Z'", "90"},
-        {"ascii_number!'a'", "97"},
-        {"ascii_number!'z'", "122"},
+    test.evaluate("number", {
+        {"number!'0'", "48"},
+        {"number!'9'", "57"},
+        {"number!'A'", "65"},
+        {"number!'Z'", "90"},
+        {"number!'a'", "97"},
+        {"number!'z'", "122"},
     });
-    test.evaluate("ascii_character", {
-        {"ascii_character!48", "'0'"},
-        {"ascii_character!57", "'9'"},
-        {"ascii_character!65", "'A'"},
-        {"ascii_character!90", "'Z'"},
-        {"ascii_character!97", "'a'"},
-        {"ascii_character!122", "'z'"},
+    test.evaluate("character", {
+        {"character!48", "'0'"},
+        {"character!57", "'9'"},
+        {"character!65", "'A'"},
+        {"character!90", "'Z'"},
+        {"character!97", "'a'"},
+        {"character!122", "'z'"},
     });
     test.evaluate("boolean", {
         {"boolean!-2", "1"},
