@@ -4,7 +4,7 @@
 
 #include "../parsing.h"
 
-const auto KEYWORDS = std::vector<std::string>{"if", "then", "else", "from", "to"};
+const auto KEYWORDS = std::vector<std::string>{"in", "out", "if", "then", "else", "while", "end"};
 
 bool startsWithCharacter(CodeRange code) {
     return ::startsWith(code, '\'');
