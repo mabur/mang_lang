@@ -18,6 +18,12 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
+    to_lower = in c out
+        if is_upper?c then
+            ascii_character!add!(ascii_number!c 32)
+        else
+            c
+
     range = in x out list@{
         list = ()
         x = x

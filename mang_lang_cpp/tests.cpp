@@ -612,6 +612,14 @@ int main() {
         {"to_upper!'0'", "'0'"},
         {"to_upper!'9'", "'9'"},
     });
+    test.evaluate("to_lower", {
+        {"to_lower!'A'", "'a'"},
+        {"to_lower!'Z'", "'z'"},
+        {"to_lower!'a'", "'a'"},
+        {"to_lower!'z'", "'z'"},
+        {"to_lower!'0'", "'0'"},
+        {"to_lower!'9'", "'9'"},
+    });
     test.evaluate("range", {
         {"range!0", "()"},
         {"range!1", "(0)"},
