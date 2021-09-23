@@ -18,5 +18,6 @@ Expression round(Expression in);
 Expression round_up(Expression in);
 Expression round_down(Expression in);
 Expression ascii_number(Expression in);
+Expression ascii_character(Expression in);
 
 }

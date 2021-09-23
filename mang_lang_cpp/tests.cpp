@@ -338,6 +338,14 @@ int main() {
         {"ascii_number!'a'", "97"},
         {"ascii_number!'z'", "122"},
     });
+    test.evaluate("ascii_character", {
+        {"ascii_character!48", "'0'"},
+        {"ascii_character!57", "'9'"},
+        {"ascii_character!65", "'A'"},
+        {"ascii_character!90", "'Z'"},
+        {"ascii_character!97", "'a'"},
+        {"ascii_character!122", "'z'"},
+    });
     test.evaluate("boolean", {
         {"boolean!-2", "1"},
         {"boolean!-1", "1"},

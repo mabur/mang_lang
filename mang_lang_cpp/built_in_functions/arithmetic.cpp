@@ -115,4 +115,8 @@ Expression ascii_number(Expression in) {
     return makeNumber(getCharacter(in).value);
 }
 
+Expression ascii_character(Expression in) {
+    return makeCharacter(new Character{CodeRange{}, static_cast<char>(getNumber(in).value)});
+}
+
 }
