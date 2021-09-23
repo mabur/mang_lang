@@ -271,6 +271,7 @@ int main() {
         {"less!(0)", "1"},
         {"less!(0 1 2)", "1"},
         {"less!(0 1 2 3)", "1"},
+        {"less!(0 1 2 3 3)", "0"},
     });
     test.evaluate("less_or_equal", {
         {"less_or_equal!(0 0)", "1"},
@@ -280,6 +281,11 @@ int main() {
         {"less_or_equal!(0 -1)", "0"},
         {"less_or_equal!(1 1)", "1"},
         {"less_or_equal!(-1 -1)", "1"},
+        {"less_or_equal!()", "1"},
+        {"less_or_equal!(0)", "1"},
+        {"less_or_equal!(0 1 2)", "1"},
+        {"less_or_equal!(0 1 2 3)", "1"},
+        {"less_or_equal!(0 1 2 3 3)", "1"},
     });
     test.evaluate("round", {
         {"round!-0.9", "-1"},
