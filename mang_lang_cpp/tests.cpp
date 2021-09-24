@@ -675,6 +675,10 @@ int main() {
         {"map!(in x out 2 (0 0))", "(2 2)"},
         {"a@{b=2 f=in x out b a=map!(f (0 0))}", "(2 2)"},
     });
+    test.evaluate("map_string", {
+        {R"(map_string!(to_upper ""))", R"("")"},
+        {R"(map_string!(to_upper "abc"))", R"("ABC")"},
+    });
     test.evaluate("filter list", {
         {"filter!(in x out 1 ())", "()"},
         {"filter!(in x out 1 (()))", "(())"},

@@ -90,7 +90,17 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     map = in (f list) out result@{
-        reversed_result = empty!list
+        reversed_result = ()
+        list = list
+        while list
+            reversed_result = prepend!(f!first@list reversed_result)
+            list = rest@list
+        end
+        result = reverse!reversed_result
+    }
+
+    map_string = in (f list) out result@{
+        reversed_result = ""
         list = list
         while list
             reversed_result = prepend!(f!first@list reversed_result)
