@@ -24,12 +24,12 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    range = in x out list@{
+    range = in n out list@{
         list = ()
-        x = x
-        while x
-            list = prepend!(dec!x list)
-            x = dec!x
+        i = n
+        while i
+            i = dec!i
+            list = prepend!(i list)
         end
     }
 
