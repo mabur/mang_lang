@@ -1,14 +1,15 @@
 TODO:
 * Generic programming
-  * How to specify starting point for generic functions () and ""?
+  - How to specify starting point for generic functions () and ""?
    - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
-  * Generic container interface
+  - Generic container interface
     - Let empty!x give an empty collection of same type as x
-    - Alternative syntax end@x or last@x or sentinel@x
+    - Alternative syntax end@x or last@x or sentinel@x. Compare end-keyword in while-loop.
     - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
-  * Add second@, third@, fourth@, ... members for lists and strings. _1st@string
+  - Add second@, third@, fourth@, ... members for lists and strings. _1st@string
     _1st, _2nd, _3rd, _4th, _5th, _6th, _7nth, _8th, _9th
-  * Describe ListBase as a "Concept".
+  - Describe ListBase as a "Concept".
+  - Naming of count_*, range, reverse_range, enumerate.
 * Remove shared_ptr from linked list implementation.
   - Add new Expression types: NewList, EmptyList, NewString, EmptyString
   - Make CodeRange part of ExpressionPointer instead of expression.
@@ -20,7 +21,6 @@ TODO:
   - Character: string_from_number, number_from_string
   - child@ as function that can be sent to map
   - Implement equal for dictionary
-  - Naming of count_*, range, reverse_range, enumerate.
 * Error handling:
   - Make "1 2" throw a parse error
   - c++ add systematic error messages when parsing fails
