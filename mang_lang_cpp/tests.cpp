@@ -712,6 +712,12 @@ int main() {
         {"replace_if!(in x out equal?(x 1) 2 (2))", "(2)"},
         {"replace_if!(in x out equal?(x 1) 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
+    test.evaluate("replace_if string", {
+        {R"(replace_if!(in x out equal?(x 'a') 'b' ""))", R"("")"},
+        {R"(replace_if!(in x out equal?(x 'a') 'b' "a"))", R"("b")"},
+        {R"(replace_if!(in x out equal?(x 'a') 'b' "c"))", R"("c")"},
+        {R"(replace_if!(in x out equal?(x 'a') 'b' "ab_ba"))", R"("bb_bb")"},
+    });
     test.evaluate("enumerate list", {
         {"enumerate!()", "()"},
         {"enumerate!(4)", "({index=0 item=4})"},
