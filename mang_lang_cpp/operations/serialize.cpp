@@ -137,8 +137,7 @@ std::string serialize(Expression expression) {
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
-        case END_STATEMENT: return serializeEndStatement(
-                getEndStatement(expression));
+        case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_LIST: return serializeFunctionList(getFunctionList(expression));
@@ -150,6 +149,7 @@ std::string serialize(Expression expression) {
         case NUMBER: return serializeNumber(getNumber(expression));
         case NEW_EMPTY_STRING: return serializeNewString(expression);
         case NEW_STRING: return serializeNewString(expression);
-        default: throw std::runtime_error{"Did not recognize expression to serializeCharacter: " + std::to_string(expression.type)};
+        case EMPTY: return "DUMMY_VALUE";
+        default: throw std::runtime_error{"Did not recognize expression to serialize: " + std::to_string(expression.type)};
     }
 }
