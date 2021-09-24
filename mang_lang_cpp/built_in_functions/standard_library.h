@@ -126,8 +126,17 @@ const std::string STANDARD_LIBRARY = R"(
     replace_if = in (predicate new_item list) out
         map!(in item out if predicate?item then new_item else item list)
 
-    replace = in (old_item new_item list) out
-        map!(in item out if equal?(item old_item) then new_item else item list)
+    replace = in (old_item new_item list) out result@{
+        reversed_result = empty!list
+        list = list
+        while list
+            current_item = first@list
+            item = if equal?(current_item old_item) then new_item else current_item
+            reversed_result = prepend!(item reversed_result)
+            list = rest@list
+        end
+        result = reverse!reversed_result
+    }
 
     count = in list out result@{
         result = 0
