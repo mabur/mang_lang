@@ -10,7 +10,7 @@ const std::string STANDARD_LIBRARY = R"(
     is_digit = in c out less_or_equal?(48 number!c 57)
     is_upper = in c out less_or_equal?(65 number!c 90)
     is_lower = in c out less_or_equal?(97 number!c 122)
-    is_letter = in c out or?(is_upper?c is_lower?c)
+    is_letter = in c out any?(is_upper?c is_lower?c)
 
     to_upper = in c out
         if is_lower?c then

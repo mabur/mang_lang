@@ -37,8 +37,8 @@ Expression builtIns() {
     definitions.push_back(define("character", arithmetic::ascii_character));
     definitions.push_back(define("boolean", logic::boolean));
     definitions.push_back(define("not", logic::logic_not));
-    definitions.push_back(define("and", logic::all));
-    definitions.push_back(define("or", logic::any));
+    definitions.push_back(define("all", logic::all));
+    definitions.push_back(define("any", logic::any));
     definitions.push_back(define("none", logic::none));
     definitions.push_back(define("equal", logic::equal));
     definitions.push_back(define("unequal", logic::unequal));
