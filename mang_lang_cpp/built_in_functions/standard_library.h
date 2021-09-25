@@ -43,7 +43,7 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     take = in (num_elements list) out short_list@{
-        reversed_result = empty!list
+        reversed_result = new!list
         i = 0
         list = list
         while less?(i num_elements)
@@ -57,7 +57,7 @@ const std::string STANDARD_LIBRARY = R"(
     get_index = in (index list) out first@drop!(index list)
 
     reverse = in list out reversed_list@{
-        reversed_list = empty!list
+        reversed_list = new!list
         list = list
         while list
             reversed_list = prepend!(first@list reversed_list)
@@ -110,7 +110,7 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     filter = in (predicate list) out result@{
-        reversed_result = empty!list
+        reversed_result = new!list
         list = list
         while list
             reversed_result =
@@ -124,7 +124,7 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     replace_if = in (predicate new_item list) out result@{
-        reversed_result = empty!list
+        reversed_result = new!list
         list = list
         while list
             current_item = first@list
