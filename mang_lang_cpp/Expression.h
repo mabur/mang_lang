@@ -23,8 +23,8 @@ enum ExpressionType {
     WHILE_STATEMENT,
     END_STATEMENT,
     NUMBER,
-    NEW_STRING,
-    NEW_EMPTY_STRING,
+    STRING,
+    EMPTY_STRING,
     EMPTY,
 };
 

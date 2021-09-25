@@ -82,10 +82,10 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == LIST && right_type == LIST) {
         return isEqualList(left, right);
     }
-    if (left_type == NEW_EMPTY_STRING && right_type == NEW_EMPTY_STRING) {
+    if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
     }
-    if (left_type == NEW_STRING && right_type == NEW_STRING) {
+    if (left_type == STRING && right_type == STRING) {
         return isEqualNewString(left, right);
     }
     return false;

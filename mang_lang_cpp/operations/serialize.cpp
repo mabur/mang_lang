@@ -147,8 +147,8 @@ std::string serialize(Expression expression) {
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
-        case NEW_EMPTY_STRING: return serializeNewString(expression);
-        case NEW_STRING: return serializeNewString(expression);
+        case EMPTY_STRING: return serializeNewString(expression);
+        case STRING: return serializeNewString(expression);
         case EMPTY: return "DUMMY_VALUE";
         default: throw std::runtime_error{"Did not recognize expression to serialize: " + std::to_string(expression.type)};
     }

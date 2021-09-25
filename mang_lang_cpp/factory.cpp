@@ -21,8 +21,8 @@ std::vector<std::shared_ptr<const Number>> numbers;
 std::vector<std::shared_ptr<const WhileStatement>> while_statements;
 std::vector<std::shared_ptr<const EndStatement>> end_statements;
 std::vector<std::shared_ptr<const Definition>> definitions;
-std::vector<std::shared_ptr<const String>> new_strings;
-std::vector<std::shared_ptr<const EmptyString>> new_empty_strings;
+std::vector<std::shared_ptr<const String>> strings;
+std::vector<std::shared_ptr<const EmptyString>> empty_strings;
 std::vector<Expression> expressions;
 
 void clearMemory() {
@@ -42,7 +42,7 @@ void clearMemory() {
     while_statements.clear();
     end_statements.clear();
     definitions.clear();
-    new_strings.clear();
+    strings.clear();
     expressions.clear();
 }
 
@@ -229,12 +229,12 @@ Expression makeEndStatement(const EndStatement* expression) {
     return makeExpression(expression, END_STATEMENT, end_statements);
 }
 
-Expression makeNewString(const String* expression) {
-    return makeExpression(expression, NEW_STRING, new_strings);
+Expression makeString(const String* expression) {
+    return makeExpression(expression, STRING, strings);
 }
 
-Expression makeNewEmptyString(const EmptyString* expression) {
-    return makeExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
+Expression makeEmptyString(const EmptyString* expression) {
+    return makeExpression(expression, EMPTY_STRING, empty_strings);
 }
 
 // FREE GETTERS
@@ -313,10 +313,10 @@ Name getName(Expression expression) {
     return getExpression(expression, NAME, names);
 }
 
-String getNewString(Expression expression) {
-    return getExpression(expression, NEW_STRING, new_strings);
+String getString(Expression expression) {
+    return getExpression(expression, STRING, strings);
 }
 
-EmptyString getNewEmptyString(Expression expression) {
-    return getExpression(expression, NEW_EMPTY_STRING, new_empty_strings);
+EmptyString getEmptyString(Expression expression) {
+    return getExpression(expression, EMPTY_STRING, empty_strings);
 }

@@ -5,11 +5,11 @@
 namespace new_string {
 
 Expression first(Expression list) {
-    return getNewString(list).first;
+    return getString(list).first;
 }
 
 Expression rest(Expression expression) {
-    return getNewString(expression).rest;
+    return getString(expression).rest;
 }
 
 Expression second(Expression list) {

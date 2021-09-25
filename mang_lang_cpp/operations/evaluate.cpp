@@ -177,7 +177,7 @@ Expression lookupChild(Expression expression, const std::string& name) {
     switch(expression.type) {
         case DICTIONARY: return lookupChildInDictionary(getDictionary(expression), name);
         case LIST: return lookupChildInList(getList(expression), name);
-        case NEW_STRING: return lookupChildInNewString(getNewString(expression), name);
+        case STRING: return lookupChildInNewString(getString(expression), name);
         default: throw std::runtime_error{"Cannot getLokupChild expression of type " + std::to_string(expression.type)};
     }
 }
@@ -282,8 +282,8 @@ Expression evaluate(
     switch (expression.type) {
         case NUMBER: return evaluateAtom(expression, log);
         case CHARACTER: return evaluateAtom(expression, log);
-        case NEW_EMPTY_STRING: return evaluateAtom(expression, log);
-        case NEW_STRING: return evaluateAtom(expression, log);
+        case EMPTY_STRING: return evaluateAtom(expression, log);
+        case STRING: return evaluateAtom(expression, log);
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment, log);
         case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment, log);
