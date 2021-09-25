@@ -33,11 +33,11 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    drop = in (num_elements list) out short_list@{
-        i = 0
+    drop = in (n list) out short_list@{
+        i = n
         short_list = list
-        while less?(i num_elements)
-            i = inc!i
+        while i
+            i = dec!i
             short_list = rest@short_list
         end
     }
