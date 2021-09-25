@@ -34,8 +34,8 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     drop = in (n list) out short_list@{
-        i = n
         short_list = list
+        i = n
         while i
             i = dec!i
             short_list = rest@short_list
@@ -44,11 +44,11 @@ const std::string STANDARD_LIBRARY = R"(
 
     take = in (n list) out short_list@{
         reversed_result = new!list
-        i = n
         list = list
+        i = n
         while i
-            reversed_result = prepend!(first@list reversed_result)
             i = dec!i
+            reversed_result = prepend!(first@list reversed_result)
             list = rest@list
         end
         short_list = reverse!reversed_result
