@@ -42,13 +42,13 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take = in (num_elements list) out short_list@{
+    take = in (n list) out short_list@{
         reversed_result = new!list
-        i = 0
+        i = n
         list = list
-        while less?(i num_elements)
+        while i
             reversed_result = prepend!(first@list reversed_result)
-            i = inc!i
+            i = dec!i
             list = rest@list
         end
         short_list = reverse!reversed_result
