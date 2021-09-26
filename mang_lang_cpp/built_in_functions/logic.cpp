@@ -49,21 +49,29 @@ Expression none(Expression list) {
 bool isEqual(Expression left, Expression right);
 
 bool isEqualString(Expression left, Expression right) {
-    for (; boolean(left) && boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
-        if (!isEqual(new_string::first(left), new_string::first(right))) {
+    while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
+        const auto left_string = getString(left);
+        const auto right_string = getString(right);
+        if (!isEqual(left_string.first, right_string.first)) {
             return false;
         }
+        left = left_string.rest;
+        right = right_string.rest;
     }
-    return !boolean(left) && !boolean(right);
+    return left.type == EMPTY_STRING && right.type == EMPTY_STRING;
 }
 
 bool isEqualList(Expression left, Expression right) {
-    for (; boolean(left) && boolean(right); left = new_list::rest(left), right = new_list::rest(right)) {
-        if (!isEqual(new_list::first(left), new_list::first(right))) {
+    while (left.type != EMPTY_LIST && right.type != EMPTY_LIST) {
+        const auto left_list = getList(left);
+        const auto right_list = getList(right);
+        if (!isEqual(left_list.first, right_list.first)) {
             return false;
         }
+        left = left_list.rest;
+        right = right_list.rest;
     }
-    return !boolean(left) && !boolean(right);
+    return left.type == EMPTY_LIST && right.type == EMPTY_LIST;
 }
 
 bool isEqual(Expression left, Expression right) {
