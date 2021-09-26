@@ -7,11 +7,11 @@
 namespace logic {
 
 bool isTrue(Expression x) {
-    return ::boolean(x);
+    return boolean(x);
 }
 
 bool isFalse(Expression x) {
-    return !::boolean(x);
+    return !boolean(x);
 }
 
 Expression makeBoolean(double x) {
@@ -19,11 +19,11 @@ Expression makeBoolean(double x) {
 }
 
 Expression booleanExpression(Expression in) {
-    return makeBoolean(::boolean(in));
+    return makeBoolean(boolean(in));
 }
 
 Expression logic_not(Expression in) {
-    return makeBoolean(!::boolean(in));
+    return makeBoolean(!boolean(in));
 }
 
 Expression all(Expression in) {
@@ -44,21 +44,21 @@ Expression none(Expression in) {
 bool isEqual(Expression left, Expression right);
 
 bool isEqualString(Expression left, Expression right) {
-    for (; ::boolean(left) && ::boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
+    for (; boolean(left) && boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
         if (!isEqual(new_string::first(left), new_string::first(right))) {
             return false;
         }
     }
-    return !::boolean(left) && !::boolean(right);
+    return !boolean(left) && !boolean(right);
 }
 
 bool isEqualList(Expression left, Expression right) {
-    for (; ::boolean(left) && ::boolean(right); left = new_list::rest(left), right = new_list::rest(right)) {
+    for (; boolean(left) && boolean(right); left = new_list::rest(left), right = new_list::rest(right)) {
         if (!isEqual(new_list::first(left), new_list::first(right))) {
             return false;
         }
     }
-    return !::boolean(left) && !::boolean(right);
+    return !boolean(left) && !boolean(right);
 }
 
 bool isEqual(Expression left, Expression right) {
