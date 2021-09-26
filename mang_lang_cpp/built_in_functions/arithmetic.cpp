@@ -16,39 +16,46 @@ Expression makeNumber(double x) {
     return makeNumber(new Number(Number{CodeRange{}, x}));
 }
 
+double minExpression(double left, Expression right) {
+    return std::min(left, number(right));
+}
+
+double maxExpression(double left, Expression right) {
+    return std::max(left, number(right));
+}
+
+double addExpression(double left, Expression right) {
+    return left + number(right);
+}
+
+double mulExpression(double left, Expression right) {
+    return left * number(right);
+}
+
 Expression min(Expression in) {
-    const auto operation = [](double left, Expression right) -> double {
-        return std::min(left, number(right));
-    };
+
     const auto init = std::numeric_limits<double>::infinity();
-    const auto result = new_list::leftFold(init, in, operation);
+    const auto result = new_list::leftFold(init, in, minExpression);
     return makeNumber(result);
 }
 
 Expression max(Expression in) {
-    const auto operation = [](double left, Expression right) -> double {
-        return std::max(left, number(right));
-    };
     const auto init = -std::numeric_limits<double>::infinity();
-    const auto result = new_list::leftFold(init, in, operation);
+    const auto result = new_list::leftFold(init, in, maxExpression);
     return makeNumber(result);
 }
 
 Expression add(Expression in) {
-    const auto operation = [](double left, Expression right) -> double {
-        return left + number(right);
-    };
+
     const auto init = 0;
-    const auto result = new_list::leftFold(init, in, operation);
+    const auto result = new_list::leftFold(init, in, addExpression);
     return makeNumber(result);
 }
 
 Expression mul(Expression in) {
-    const auto operation = [](double left, Expression right) -> double {
-        return left * number(right);
-    };
+
     const auto init = 1.0;
-    const auto result = new_list::leftFold(init, in, operation);
+    const auto result = new_list::leftFold(init, in, mulExpression);
     return makeNumber(result);
 }
 
