@@ -73,16 +73,6 @@ Expression div(Expression in) {
     return makeNumber(result);
 }
 
-Expression abs(Expression in) {
-    const auto result = std::fabs(number(in));
-    return makeNumber(result);
-}
-
-Expression sqrt(Expression in) {
-    const auto result = std::sqrt(number(in));
-    return makeNumber(result);
-}
-
 Expression less(Expression in) {
     for (auto list = in; boolean(list) && boolean(new_list::rest(list)); list = new_list::rest(list)) {
         const auto left = new_list::first(list);
@@ -103,6 +93,14 @@ Expression less_or_equal(Expression in) {
         }
     }
     return makeNumber(true);
+}
+
+Expression abs(Expression in) {
+    return makeNumber(std::fabs(number(in)));
+}
+
+Expression sqrt(Expression in) {
+    return makeNumber(std::sqrt(number(in)));
 }
 
 Expression round(Expression in) {
