@@ -47,7 +47,7 @@ Expression max(Expression in) {
 
 Expression add(Expression in) {
 
-    const auto init = 0;
+    const auto init = 0.0;
     const auto result = new_list::leftFold(init, in, addExpression);
     return makeNumber(result);
 }
