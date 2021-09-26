@@ -35,7 +35,7 @@ Expression builtIns() {
     definitions.push_back(define("sqrt", arithmetic::sqrt));
     definitions.push_back(define("number", arithmetic::ascii_number));
     definitions.push_back(define("character", arithmetic::ascii_character));
-    definitions.push_back(define("boolean", logic::boolean));
+    definitions.push_back(define("boolean", logic::booleanExpression));
     definitions.push_back(define("not", logic::logic_not));
     definitions.push_back(define("all", logic::all));
     definitions.push_back(define("any", logic::any));

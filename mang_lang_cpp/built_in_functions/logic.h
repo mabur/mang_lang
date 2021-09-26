@@ -4,7 +4,7 @@ struct Expression;
 
 namespace logic {
 
-Expression boolean(Expression in);
+Expression booleanExpression(Expression in);
 Expression logic_not(Expression in) ;
 Expression all(Expression in) ;
 Expression any(Expression in);

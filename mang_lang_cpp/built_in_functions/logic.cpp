@@ -18,7 +18,7 @@ Expression makeBoolean(double x) {
     return makeNumber(new Number{CodeRange{}, x});
 }
 
-Expression boolean(Expression in) {
+Expression booleanExpression(Expression in) {
     return makeBoolean(::boolean(in));
 }
 
