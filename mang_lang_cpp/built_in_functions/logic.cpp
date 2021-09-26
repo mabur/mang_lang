@@ -6,10 +6,6 @@
 
 namespace logic {
 
-bool isTrue(Expression x) {
-    return boolean(x);
-}
-
 bool isFalse(Expression x) {
     return !boolean(x);
 }
@@ -26,31 +22,28 @@ Expression logic_not(Expression in) {
     return makeBoolean(!boolean(in));
 }
 
-Expression all(Expression list) {
-    for (; boolean(list); list = new_list::rest(list)) {
-        if (!boolean(new_list::first(list))) {
-            return makeBoolean(false);
+template<typename Predicate>
+bool anyOf(Expression expression, Predicate predicate) {
+    while (expression.type != EMPTY_LIST) {
+        const auto list = getList(expression);
+        if (predicate(list.first)) {
+            return true;
         }
+        expression = list.rest;
     }
-    return makeBoolean(true);
+    return false;
+}
+
+Expression all(Expression list) {
+    return makeBoolean(!anyOf(list, isFalse));
 }
 
 Expression any(Expression list) {
-    for (; boolean(list); list = new_list::rest(list)) {
-        if (boolean(new_list::first(list))) {
-            return makeBoolean(true);
-        }
-    }
-    return makeBoolean(false);
+    return makeBoolean(anyOf(list, boolean));
 }
 
 Expression none(Expression list) {
-    for (; boolean(list); list = new_list::rest(list)) {
-        if (boolean(new_list::first(list))) {
-            return makeBoolean(false);
-        }
-    }
-    return makeBoolean(true);
+    return makeBoolean(!anyOf(list, boolean));
 }
 
 bool isEqual(Expression left, Expression right);
