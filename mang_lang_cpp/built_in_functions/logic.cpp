@@ -27,23 +27,23 @@ Expression logic_not(Expression in) {
 }
 
 Expression all(Expression in) {
-    const auto result = new_list::findIf(in, isFalse).type == NEW_EMPTY_LIST;
+    const auto result = new_list::findIf(in, isFalse).type == EMPTY_LIST;
     return makeBoolean(result);
 }
 
 Expression any(Expression in) {
-    const auto result = new_list::findIf(in, isTrue).type == NEW_LIST;
+    const auto result = new_list::findIf(in, isTrue).type == LIST;
     return makeBoolean(result);
 }
 
 Expression none(Expression in) {
-    const auto result = new_list::findIf(in, isTrue).type == NEW_EMPTY_LIST;
+    const auto result = new_list::findIf(in, isTrue).type == EMPTY_LIST;
     return makeBoolean(result);
 }
 
 bool isEqual(Expression left, Expression right);
 
-bool isEqualNewString(Expression left, Expression right) {
+bool isEqualString(Expression left, Expression right) {
     for (; ::boolean(left) && ::boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
         if (!isEqual(new_string::first(left), new_string::first(right))) {
             return false;
@@ -52,7 +52,7 @@ bool isEqualNewString(Expression left, Expression right) {
     return !::boolean(left) && !::boolean(right);
 }
 
-bool isEqualNewList(Expression left, Expression right) {
+bool isEqualList(Expression left, Expression right) {
     for (; ::boolean(left) && ::boolean(right); left = new_list::rest(left), right = new_list::rest(right)) {
         if (!isEqual(new_list::first(left), new_list::first(right))) {
             return false;
@@ -70,17 +70,17 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return getCharacter(left).value == getCharacter(right).value;
     }
-    if (left_type == NEW_EMPTY_LIST && right_type == NEW_EMPTY_LIST) {
+    if (left_type == EMPTY_LIST && right_type == EMPTY_LIST) {
         return true;
     }
-    if (left_type == NEW_LIST && right_type == NEW_LIST) {
-        return isEqualNewList(left, right);
+    if (left_type == LIST && right_type == LIST) {
+        return isEqualList(left, right);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
     }
     if (left_type == STRING && right_type == STRING) {
-        return isEqualNewString(left, right);
+        return isEqualString(left, right);
     }
     return false;
 }

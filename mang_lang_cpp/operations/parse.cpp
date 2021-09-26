@@ -195,11 +195,11 @@ Expression parseFunctionList(CodeRange code) {
     });
 }
 
-Expression parseNewList(CodeRange code) {
+Expression parseList(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto list = makeNewEmptyList(new NewEmptyList{});
+    auto list = makeEmptyList(new EmptyList{});
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
@@ -257,7 +257,7 @@ Expression parseNumber(CodeRange code) {
     );
 }
 
-Expression parseNewString(CodeRange code) {
+Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
     auto value = makeEmptyString(new EmptyString{first, first + 1});
@@ -276,12 +276,11 @@ Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        //if (startsWithList(code)) {return parseList(code);}
-        if (startsWithList(code)) {return parseNewList(code);}
+        if (startsWithList(code)) {return parseList(code);}
         if (startsWithDictionary(code)) {return parseDictionary(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
-        if (startsWithString(code)) {return parseNewString(code);}
+        if (startsWithString(code)) {return parseString(code);}
         if (startsWithConditional(code)) {return parseConditional(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
         if (startsWithFunctionList(code)) {return parseFunctionList(code);}

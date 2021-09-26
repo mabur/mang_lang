@@ -14,8 +14,8 @@ enum ExpressionType {
     FUNCTION_BUILT_IN,
     FUNCTION_DICTIONARY,
     FUNCTION_LIST,
-    NEW_LIST,
-    NEW_EMPTY_LIST,
+    LIST,
+    EMPTY_LIST,
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
@@ -109,13 +109,13 @@ struct EmptyString {
     CodeRange range;
 };
 
-struct NewList {
+struct List {
     CodeRange range;
     Expression first;
     Expression rest;
 };
 
-struct NewEmptyList {
+struct EmptyList {
     CodeRange range;
 };
 

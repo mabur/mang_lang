@@ -92,7 +92,7 @@ std::string appendElement(const std::string& s, Expression element) {
     return s + serialize(element) + ' ';
 }
 
-std::string serializeNewList(Expression s) {
+std::string serializeList(Expression s) {
     auto result = new_list::leftFold(std::string{"("}, s, appendElement);
     result.back() = ')';
     return result;
@@ -121,7 +121,7 @@ std::string appendCharacter(const std::string& s, Expression character) {
     return s + getCharacter(character).value;
 }
 
-std::string serializeNewString(Expression string) {
+std::string serializeString(Expression string) {
     const auto delimiter = std::string{"\""};
     return new_string::leftFold(delimiter, string, appendCharacter) + delimiter;
 }
@@ -137,15 +137,15 @@ std::string serialize(Expression expression) {
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_LIST: return serializeFunctionList(getFunctionList(expression));
-        case NEW_LIST: return serializeNewList(expression);
-        case NEW_EMPTY_LIST: return "()";
-        case LOOKUP_CHILD: return serializeLookupChild(getLokupChild(expression));
+        case LIST: return serializeList(expression);
+        case EMPTY_LIST: return "()";
+        case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
-        case EMPTY_STRING: return serializeNewString(expression);
-        case STRING: return serializeNewString(expression);
+        case EMPTY_STRING: return serializeString(expression);
+        case STRING: return serializeString(expression);
         case EMPTY: return "DUMMY_VALUE";
         default: throw std::runtime_error{"Did not recognize expression to serialize: " + std::to_string(expression.type)};
     }

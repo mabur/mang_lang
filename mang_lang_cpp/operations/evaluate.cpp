@@ -110,7 +110,7 @@ Expression evaluateFunctionList(
     return result;
 }
 
-Expression evaluateNewList(
+Expression evaluateList(
     Expression list, Expression environment, std::ostream& log
 ) {
     const auto operation = [&](Expression expression) -> Expression {
@@ -153,7 +153,7 @@ Expression lookupChildInDictionary(const Dictionary& dictionary, const std::stri
     throw std::runtime_error("Dictionary does not contain symbol " + name);
 }
 
-Expression lookupChildInNewString(const String& string, const std::string& name) {
+Expression lookupChildInString(const String& string, const std::string& name) {
     if (name == "first") {
         return string.first;
     }
@@ -163,22 +163,22 @@ Expression lookupChildInNewString(const String& string, const std::string& name)
     throw std::runtime_error("String does not contain symbol " + name);
 }
 
-Expression lookupChildInNewList(const NewList& list, const std::string& name) {
+Expression lookupChildInList(const List& list, const std::string& name) {
     if (name == "first") {
         return list.first;
     }
     if (name == "rest") {
         return list.rest;
     }
-    throw std::runtime_error("String does not contain symbol " + name);
+    throw std::runtime_error("List does not contain symbol " + name);
 }
 
 Expression lookupChild(Expression expression, const std::string& name) {
     switch(expression.type) {
         case DICTIONARY: return lookupChildInDictionary(getDictionary(expression), name);
-        case NEW_LIST: return lookupChildInNewList(getNewList(expression), name);
-        case STRING: return lookupChildInNewString(getString(expression), name);
-        default: throw std::runtime_error{"Cannot getLokupChild expression of type " + std::to_string(expression.type)};
+        case LIST: return lookupChildInList(getList(expression), name);
+        case STRING: return lookupChildInString(getString(expression), name);
+        default: throw std::runtime_error{"Cannot getLookupChild expression of type " + std::to_string(expression.type)};
     }
 }
 
@@ -284,7 +284,7 @@ Expression evaluate(
         case CHARACTER: return evaluateAtom(expression, log);
         case EMPTY_STRING: return evaluateAtom(expression, log);
         case STRING: return evaluateAtom(expression, log);
-        case NEW_EMPTY_LIST: return evaluateAtom(expression, log);
+        case EMPTY_LIST: return evaluateAtom(expression, log);
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment, log);
         case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment, log);
@@ -292,8 +292,8 @@ Expression evaluate(
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment, log);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment, log);
-        case NEW_LIST: return evaluateNewList(expression, environment, log);
-        case LOOKUP_CHILD: return evaluateLookupChild(getLokupChild(expression), environment, log);
+        case LIST: return evaluateList(expression, environment, log);
+        case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment, log);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment, log);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment, log);
         default: throw std::runtime_error{"Did not recognize expression to evaluate"};

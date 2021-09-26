@@ -13,9 +13,9 @@ const CodeCharacter* end(Expression expression) {
         case FUNCTION: return getFunction(expression).range.last;
         case FUNCTION_DICTIONARY: return getFunctionDictionary(expression).range.last;
         case FUNCTION_LIST: return getFunctionList(expression).range.last;
-        case NEW_LIST: return getNewList(expression).range.last;
-        case NEW_EMPTY_LIST: return getNewEmptyList(expression).range.last;
-        case LOOKUP_CHILD: return getLokupChild(expression).range.last;
+        case LIST: return getList(expression).range.last;
+        case EMPTY_LIST: return getEmptyList(expression).range.last;
+        case LOOKUP_CHILD: return getLookupChild(expression).range.last;
         case FUNCTION_APPLICATION: return getFunctionApplication(expression).range.last;
         case LOOKUP_SYMBOL: return getLookupSymbol(expression).range.last;
         case NAME: return getName(expression).range.last;

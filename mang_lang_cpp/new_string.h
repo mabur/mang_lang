@@ -60,7 +60,7 @@ inline Expression prepend(Expression rest, Expression first) {
     const auto first_character = std::min(begin(rest), begin(first));
     const auto last_character = std::max(end(rest), end(first));
     const auto code = CodeRange{first_character, last_character};
-    return makeNewList(new NewList{code, first, rest});
+    return makeList(new List{code, first, rest});
 }
 
 template<typename Predicate>
@@ -79,7 +79,7 @@ T leftFold(T value, Expression list, Operation operation) {
 }
 
 inline Expression reverse(CodeRange code, Expression list) {
-    return leftFold(makeNewEmptyList(new NewEmptyList{code}), list, prepend);
+    return leftFold(makeEmptyList(new EmptyList{code}), list, prepend);
 }
 
 template<typename Function>
@@ -88,7 +88,7 @@ Expression map(Expression list, Function f) {
         return prepend(new_list, f(x));
     };
     const auto code = CodeRange{};
-    const auto output = leftFold(makeNewEmptyList(new NewEmptyList{}), list, op);
+    const auto output = leftFold(makeEmptyList(new EmptyList{}), list, op);
     return reverse(code, output);
 }
 

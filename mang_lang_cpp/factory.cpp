@@ -14,8 +14,8 @@ std::vector<std::shared_ptr<const Function>> functions;
 std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
 std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
 std::vector<std::shared_ptr<const FunctionList>> list_functions;
-std::vector<std::shared_ptr<const NewList>> new_lists;
-std::vector<std::shared_ptr<const NewEmptyList>> new_empty_lists;
+std::vector<std::shared_ptr<const List>> lists;
+std::vector<std::shared_ptr<const EmptyList>> empty_lists;
 std::vector<std::shared_ptr<const LookupChild>> child_lookups;
 std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
@@ -199,12 +199,12 @@ Expression makeFunctionList(const FunctionList* expression) {
     return makeExpression(expression, FUNCTION_LIST, list_functions);
 }
 
-Expression makeNewList(const NewList* expression) {
-    return makeExpression(expression, NEW_LIST, new_lists);
+Expression makeList(const List* expression) {
+    return makeExpression(expression, LIST, lists);
 }
 
-Expression makeNewEmptyList(const NewEmptyList* expression) {
-    return makeExpression(expression, NEW_EMPTY_LIST, new_empty_lists);
+Expression makeEmptyList(const EmptyList* expression) {
+    return makeExpression(expression, EMPTY_LIST, empty_lists);
 }
 
 Expression makeLookupChild(const LookupChild* expression) {
@@ -304,15 +304,15 @@ FunctionList getFunctionList(Expression expression) {
     return getExpression(expression, FUNCTION_LIST, list_functions);
 }
 
-NewList getNewList(Expression expression) {
-    return getExpression(expression, NEW_LIST, new_lists);
+List getList(Expression expression) {
+    return getExpression(expression, LIST, lists);
 }
 
-NewEmptyList getNewEmptyList(Expression expression) {
-    return getExpression(expression, NEW_EMPTY_LIST, new_empty_lists);
+EmptyList getEmptyList(Expression expression) {
+    return getExpression(expression, EMPTY_LIST, empty_lists);
 }
 
-LookupChild getLokupChild(Expression expression) {
+LookupChild getLookupChild(Expression expression) {
     return getExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 

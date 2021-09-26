@@ -21,11 +21,11 @@ Expression second(Expression list) {
 namespace new_list {
 
 Expression first(Expression list) {
-    return getNewList(list).first;
+    return getList(list).first;
 }
 
 Expression rest(Expression expression) {
-    return getNewList(expression).rest;
+    return getList(expression).rest;
 }
 
 Expression second(Expression list) {
