@@ -26,19 +26,31 @@ Expression logic_not(Expression in) {
     return makeBoolean(!boolean(in));
 }
 
-Expression all(Expression in) {
-    const auto result = new_list::findIf(in, isFalse).type == EMPTY_LIST;
-    return makeBoolean(result);
+Expression all(Expression list) {
+    for (; boolean(list); list = new_list::rest(list)) {
+        if (!boolean(new_list::first(list))) {
+            return makeBoolean(false);
+        }
+    }
+    return makeBoolean(true);
 }
 
-Expression any(Expression in) {
-    const auto result = new_list::findIf(in, isTrue).type == LIST;
-    return makeBoolean(result);
+Expression any(Expression list) {
+    for (; boolean(list); list = new_list::rest(list)) {
+        if (boolean(new_list::first(list))) {
+            return makeBoolean(true);
+        }
+    }
+    return makeBoolean(false);
 }
 
-Expression none(Expression in) {
-    const auto result = new_list::findIf(in, isTrue).type == EMPTY_LIST;
-    return makeBoolean(result);
+Expression none(Expression list) {
+    for (; boolean(list); list = new_list::rest(list)) {
+        if (boolean(new_list::first(list))) {
+            return makeBoolean(false);
+        }
+    }
+    return makeBoolean(true);
 }
 
 bool isEqual(Expression left, Expression right);

@@ -19,13 +19,6 @@ inline Expression prepend(Expression rest, Expression first) {
     return makeString(new String{code, first, rest});
 }
 
-template<typename Predicate>
-Expression findIf(Expression list, Predicate predicate) {
-    for (; boolean(list) && !predicate(first(list)); list = rest(list)) {
-    }
-    return list;
-}
-
 template<typename T, typename Operation>
 T leftFold(T value, Expression list, Operation operation) {
     for (; boolean(list); list = rest(list)) {
@@ -61,13 +54,6 @@ inline Expression prepend(Expression rest, Expression first) {
     const auto last_character = std::max(end(rest), end(first));
     const auto code = CodeRange{first_character, last_character};
     return makeList(new List{code, first, rest});
-}
-
-template<typename Predicate>
-Expression findIf(Expression list, Predicate predicate) {
-    for (; boolean(list) && !predicate(first(list)); list = rest(list)) {
-    }
-    return list;
 }
 
 template<typename T, typename Operation>
