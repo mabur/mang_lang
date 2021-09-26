@@ -1,4 +1,10 @@
 TODO:
+* Simplifications with new list:
+  - extract helper function for all built in "n-ary" functions: add, sum, any, etc.
+  - extract helper function for all built in binary functions: arithmetic, logic, prepend, etc.
+  - Merge new list and new string?
+  - Extract for_each for new lists and strings
+  - remove shared_ptr from vector of expressions in factory
 * Generic programming
   - How to specify starting point for generic functions () and ""?
    - Have two versions of map? map_list and map_string, or list and string, or to_list and to_string
