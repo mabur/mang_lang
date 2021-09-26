@@ -13,7 +13,8 @@ const CodeCharacter* begin(Expression expression) {
         case FUNCTION: return getFunction(expression).range.first;
         case FUNCTION_DICTIONARY: return getFunctionDictionary(expression).range.first;
         case FUNCTION_LIST: return getFunctionList(expression).range.first;
-        case LIST: return getList(expression).range.first;
+        case NEW_LIST: return getNewList(expression).range.first;
+        case NEW_EMPTY_LIST: return getNewEmptyList(expression).range.first;
         case LOOKUP_CHILD: return getLokupChild(expression).range.first;
         case FUNCTION_APPLICATION: return getFunctionApplication(expression).range.first;
         case LOOKUP_SYMBOL: return getLookupSymbol(expression).range.first;

@@ -7,23 +7,20 @@ namespace list_functions {
 
 Expression empty(Expression in) {
     switch (in.type) {
-        case LIST: return makeList(new List{});
+        case NEW_LIST: return makeNewEmptyList(new NewEmptyList{});
+        case NEW_EMPTY_LIST: return makeNewEmptyList(new NewEmptyList{});
         case STRING: return makeEmptyString(new EmptyString{});
         case EMPTY_STRING: return makeEmptyString(new EmptyString{});
         default: throw std::runtime_error{"Expected list"};
     }
 }
 
-Expression prependList(const List& list, Expression item) {
-    return makeList(new List{list.range, prepend(list.elements, item)});
-}
-
 Expression prepend(Expression in) {
-    const auto& elements = getList(in).elements;
-    const auto& item = first(elements);
-    const auto& collection = second(elements);
+    const auto& item = new_list::first(in);
+    const auto& collection = new_list::second(in);
     switch (collection.type) {
-        case LIST: return prependList(getList(collection), item);
+        case NEW_LIST: return new_list::prepend(collection, item);
+        case NEW_EMPTY_LIST: return new_list::prepend(collection, item);
         case STRING: return new_string::prepend(collection, item);
         case EMPTY_STRING: return new_string::prepend(collection, item);
         default: throw std::runtime_error{"Expected list"};

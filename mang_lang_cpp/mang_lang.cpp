@@ -29,6 +29,7 @@ std::string evaluate(std::string code) {
     auto log = nullStream();
     const auto built_ins = builtIns();
     const auto standard_library = evaluate(parse(STANDARD_LIBRARY), built_ins, log);
+    //const auto standard_library = Expression{};
     const auto result = serialize(evaluate(parse(code), standard_library, log));
     //clearMemory();
     return result;

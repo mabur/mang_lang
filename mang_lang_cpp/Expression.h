@@ -1,10 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <vector>
 
 #include "parsing.h"
-#include "SinglyLinkedList.h"
 
 enum ExpressionType {
     CHARACTER,
@@ -14,7 +14,8 @@ enum ExpressionType {
     FUNCTION_BUILT_IN,
     FUNCTION_DICTIONARY,
     FUNCTION_LIST,
-    LIST,
+    NEW_LIST,
+    NEW_EMPTY_LIST,
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
@@ -32,8 +33,6 @@ struct Expression {
     ExpressionType type = EMPTY;
     size_t index = 0;
 };
-
-using InternalList = SinglyLinkedList<Expression>;
 
 struct Name {
     CodeRange range;
@@ -78,11 +77,6 @@ struct FunctionList {
     Expression body;
 };
 
-struct List {
-    CodeRange range;
-    InternalList elements;
-};
-
 struct LookupChild {
     CodeRange range;
     Expression name;
@@ -112,6 +106,16 @@ struct String {
 };
 
 struct EmptyString {
+    CodeRange range;
+};
+
+struct NewList {
+    CodeRange range;
+    Expression first;
+    Expression rest;
+};
+
+struct NewEmptyList {
     CodeRange range;
 };
 

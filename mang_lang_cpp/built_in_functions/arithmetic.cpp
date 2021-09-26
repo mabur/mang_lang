@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "../factory.h"
+#include "../new_string.h"
 
 namespace arithmetic {
 
@@ -20,7 +21,7 @@ Expression min(Expression in) {
         return std::min(left, number(right));
     };
     const auto init = std::numeric_limits<double>::infinity();
-    const auto result = leftFold(getList(in).elements, init, operation);
+    const auto result = new_list::leftFold(init, in, operation);
     return makeNumber(result);
 }
 
@@ -29,7 +30,7 @@ Expression max(Expression in) {
         return std::max(left, number(right));
     };
     const auto init = -std::numeric_limits<double>::infinity();
-    const auto result = leftFold(getList(in).elements, init, operation);
+    const auto result = new_list::leftFold(init, in, operation);
     return makeNumber(result);
 }
 
@@ -38,7 +39,7 @@ Expression add(Expression in) {
         return left + number(right);
     };
     const auto init = 0;
-    const auto result = leftFold(getList(in).elements, init, operation);
+    const auto result = new_list::leftFold(init, in, operation);
     return makeNumber(result);
 }
 
@@ -47,22 +48,20 @@ Expression mul(Expression in) {
         return left * number(right);
     };
     const auto init = 1.0;
-    const auto result = leftFold(getList(in).elements, init, operation);
+    const auto result = new_list::leftFold(init, in, operation);
     return makeNumber(result);
 }
 
 Expression sub(Expression in) {
-    const auto& elements = getList(in).elements;
-    const auto& left = first(elements);
-    const auto& right = second(elements);
+    const auto left = new_list::first(in);
+    const auto right = new_list::second(in);
     const auto result = number(left) - number(right);
     return makeNumber(result);
 }
 
 Expression div(Expression in) {
-    const auto& elements = getList(in).elements;
-    const auto& left = first(elements);
-    const auto& right = second(elements);
+    const auto left = new_list::first(in);
+    const auto right = new_list::second(in);
     const auto result = number(left) / number(right);
     return makeNumber(result);
 }
@@ -78,9 +77,9 @@ Expression sqrt(Expression in) {
 }
 
 Expression less(Expression in) {
-    for (auto list = getList(in).elements; list && list->rest; list = list->rest) {
-        const auto& left = first(list);
-        const auto& right = second(list);
+    for (auto list = in; boolean(list) && boolean(new_list::rest(list)); list = new_list::rest(list)) {
+        const auto left = new_list::first(list);
+        const auto right = new_list::second(list);
         if (number(left) >= number(right)) {
             return makeNumber(false);
         }
@@ -89,9 +88,9 @@ Expression less(Expression in) {
 }
 
 Expression less_or_equal(Expression in) {
-    for (auto list = getList(in).elements; list && list->rest; list = list->rest) {
-        const auto& left = first(list);
-        const auto& right = second(list);
+    for (auto list = in; boolean(list) && boolean(new_list::rest(list)); list = new_list::rest(list)) {
+        const auto left = new_list::first(list);
+        const auto right = new_list::second(list);
         if (number(left) > number(right)) {
             return makeNumber(false);
         }

@@ -6,13 +6,6 @@
 
 namespace logic {
 
-InternalList list(Expression expression) {
-    switch (expression.type) {
-        case LIST: return getList(expression).elements;
-        default: throw std::runtime_error{"Expected list"};
-    }
-}
-
 bool isTrue(Expression x) {
     return ::boolean(x);
 }
@@ -34,36 +27,34 @@ Expression logic_not(Expression in) {
 }
 
 Expression all(Expression in) {
-    const auto result = !findIf(list(in), isFalse);
+    const auto result = new_list::findIf(in, isFalse).type == NEW_EMPTY_LIST;
     return makeBoolean(result);
 }
 
 Expression any(Expression in) {
-    const auto result = !!findIf(list(in), isTrue);
+    const auto result = new_list::findIf(in, isTrue).type == NEW_LIST;
     return makeBoolean(result);
 }
 
 Expression none(Expression in) {
-    const auto result = !findIf(list(in), isTrue);
+    const auto result = new_list::findIf(in, isTrue).type == NEW_EMPTY_LIST;
     return makeBoolean(result);
 }
 
 bool isEqual(Expression left, Expression right);
 
-bool isEqualList(Expression left_smart, Expression right_smart) {
-    auto left = list(left_smart);
-    auto right = list(right_smart);
-    for (; left && right; left = left->rest, right = right->rest) {
-        if (!isEqual(left->first, right->first)) {
-            return false;
-        }
-    }
-    return !left && !right;
-}
-
 bool isEqualNewString(Expression left, Expression right) {
     for (; ::boolean(left) && ::boolean(right); left = new_string::rest(left), right = new_string::rest(right)) {
         if (!isEqual(new_string::first(left), new_string::first(right))) {
+            return false;
+        }
+    }
+    return !::boolean(left) && !::boolean(right);
+}
+
+bool isEqualNewList(Expression left, Expression right) {
+    for (; ::boolean(left) && ::boolean(right); left = new_list::rest(left), right = new_list::rest(right)) {
+        if (!isEqual(new_list::first(left), new_list::first(right))) {
             return false;
         }
     }
@@ -79,8 +70,11 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return getCharacter(left).value == getCharacter(right).value;
     }
-    if (left_type == LIST && right_type == LIST) {
-        return isEqualList(left, right);
+    if (left_type == NEW_EMPTY_LIST && right_type == NEW_EMPTY_LIST) {
+        return true;
+    }
+    if (left_type == NEW_LIST && right_type == NEW_LIST) {
+        return isEqualNewList(left, right);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
@@ -92,17 +86,15 @@ bool isEqual(Expression left, Expression right) {
 }
 
 Expression equal(Expression in) {
-    const auto& elements = list(in);
-    const auto& left = first(elements);
-    const auto& right = second(elements);
+    const auto left = new_list::first(in);
+    const auto right = new_list::second(in);
     const auto value = isEqual(left, right);
     return makeBoolean(value);
 }
 
 Expression unequal(Expression in) {
-    const auto& elements = list(in);
-    const auto& left = first(elements);
-    const auto& right = second(elements);
+    const auto left = new_list::first(in);
+    const auto right = new_list::second(in);
     const auto value = !isEqual(left, right);
     return makeBoolean(value);
 }

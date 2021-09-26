@@ -88,16 +88,12 @@ std::string serializeFunctionList(const FunctionList& function_list) {
     return result;
 }
 
-std::string serializeList(Expression list) {
-    const auto elements = getList(list).elements;
-    if (!elements) {
-        return "()";
-    }
-    const auto operation = [](const std::string& left, Expression right) {
-        return left + serialize(right) + " ";
-    };
-    auto result = std::string{"("};
-    result = leftFold(elements, result, operation);
+std::string appendElement(const std::string& s, Expression element) {
+    return s + serialize(element) + ' ';
+}
+
+std::string serializeNewList(Expression s) {
+    auto result = new_list::leftFold(std::string{"("}, s, appendElement);
     result.back() = ')';
     return result;
 }
@@ -141,7 +137,8 @@ std::string serialize(Expression expression) {
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_LIST: return serializeFunctionList(getFunctionList(expression));
-        case LIST: return serializeList(expression);
+        case NEW_LIST: return serializeNewList(expression);
+        case NEW_EMPTY_LIST: return "()";
         case LOOKUP_CHILD: return serializeLookupChild(getLokupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));

@@ -1,6 +1,8 @@
 #include "factory.h"
 
 #include <cassert>
+#include <sstream>
+#include <memory>
 #include <vector>
 
 #include "operations/begin.h"
@@ -12,7 +14,8 @@ std::vector<std::shared_ptr<const Function>> functions;
 std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
 std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
 std::vector<std::shared_ptr<const FunctionList>> list_functions;
-std::vector<std::shared_ptr<const List>> lists;
+std::vector<std::shared_ptr<const NewList>> new_lists;
+std::vector<std::shared_ptr<const NewEmptyList>> new_empty_lists;
 std::vector<std::shared_ptr<const LookupChild>> child_lookups;
 std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
 std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
@@ -33,7 +36,6 @@ void clearMemory() {
     built_in_functions.clear();
     dictionary_functions.clear();
     list_functions.clear();
-    lists.clear();
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
@@ -197,8 +199,12 @@ Expression makeFunctionList(const FunctionList* expression) {
     return makeExpression(expression, FUNCTION_LIST, list_functions);
 }
 
-Expression makeList(const List* expression) {
-    return makeExpression(expression, LIST, lists);
+Expression makeNewList(const NewList* expression) {
+    return makeExpression(expression, NEW_LIST, new_lists);
+}
+
+Expression makeNewEmptyList(const NewEmptyList* expression) {
+    return makeExpression(expression, NEW_EMPTY_LIST, new_empty_lists);
 }
 
 Expression makeLookupChild(const LookupChild* expression) {
@@ -245,6 +251,11 @@ typename ArrayType::value_type::element_type getExpression(
     ExpressionType type,
     ArrayType& array
 ) {
+    if (expression.type != type) {
+        std::stringstream s;
+        s << "getExpression expected " << type << " got " << expression.type;
+        throw std::runtime_error{s.str()};
+    }
     assert(expression.type == type);
     return *array.at(expression.index).get();
 }
@@ -293,8 +304,12 @@ FunctionList getFunctionList(Expression expression) {
     return getExpression(expression, FUNCTION_LIST, list_functions);
 }
 
-List getList(Expression expression) {
-    return getExpression(expression, LIST, lists);
+NewList getNewList(Expression expression) {
+    return getExpression(expression, NEW_LIST, new_lists);
+}
+
+NewEmptyList getNewEmptyList(Expression expression) {
+    return getExpression(expression, NEW_EMPTY_LIST, new_empty_lists);
 }
 
 LookupChild getLokupChild(Expression expression) {

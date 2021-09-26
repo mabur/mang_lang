@@ -1,5 +1,7 @@
 #include "parse.h"
 
+#include <iostream>
+
 #include "../factory.h"
 #include "../new_string.h"
 #include "end.h"
@@ -193,20 +195,20 @@ Expression parseFunctionList(CodeRange code) {
     });
 }
 
-Expression parseList(CodeRange code) {
+Expression parseNewList(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto expressions = InternalList{};
+    auto list = makeNewEmptyList(new NewEmptyList{});
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
         code.first = end(expression);
-        expressions = ::prepend(expressions, expression);
+        list = new_list::prepend(list, expression);
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
-    return makeList(new List{CodeRange{first, code.first}, reverse(expressions)});
+    return new_list::reverse(CodeRange{first, code.first}, list);
 }
 
 Expression parseLookupChild(CodeRange code) {
@@ -271,20 +273,26 @@ Expression parseNewString(CodeRange code) {
 }
 
 Expression parseExpression(CodeRange code) {
-    code = parseWhiteSpace(code);
-    throwIfEmpty(code);
-    if (startsWithList(code)) {return parseList(code);}
-    if (startsWithDictionary(code)) {return parseDictionary(code);}
-    if (startsWithNumber(code)) {return parseNumber(code);}
-    if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
-    if (startsWithString(code)) {return parseNewString(code);}
-    if (startsWithConditional(code)) {return parseConditional(code);}
-    if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
-    if (startsWithFunctionList(code)) {return parseFunctionList(code);}
-    if (startsWithFunction(code)) {return parseFunction(code);}
-    if (startsWithLookupChild(code)) {return parseLookupChild(code);}
-    if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
-    if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}
-    throwParseException(code);
-    return {};
+    try {
+        code = parseWhiteSpace(code);
+        throwIfEmpty(code);
+        //if (startsWithList(code)) {return parseList(code);}
+        if (startsWithList(code)) {return parseNewList(code);}
+        if (startsWithDictionary(code)) {return parseDictionary(code);}
+        if (startsWithNumber(code)) {return parseNumber(code);}
+        if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
+        if (startsWithString(code)) {return parseNewString(code);}
+        if (startsWithConditional(code)) {return parseConditional(code);}
+        if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
+        if (startsWithFunctionList(code)) {return parseFunctionList(code);}
+        if (startsWithFunction(code)) {return parseFunction(code);}
+        if (startsWithLookupChild(code)) {return parseLookupChild(code);}
+        if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
+        if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}
+        throwParseException(code);
+        return {};
+    } catch (std::runtime_error e) {
+        std::cout << "Exception while parsing: " << e.what();
+        throw e;
+    }
 }
