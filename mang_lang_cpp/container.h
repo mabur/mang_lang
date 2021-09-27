@@ -122,4 +122,24 @@ bool allOfPairs(Expression left, Expression right, Predicate predicate) {
     return left.type == EMPTY_LIST && right.type == EMPTY_LIST;
 }
 
+template<typename Predicate>
+bool allOfNeighbours(Expression in, Predicate predicate) {
+    if (in.type == EMPTY_LIST) {
+        return true;
+    }
+    auto current_list = getList(in);
+    auto next = current_list.rest;
+    while (next.type != EMPTY_LIST) {
+        const auto left = current_list.first;
+        const auto next_list = getList(next);
+        const auto right = next_list.first;
+        if (!predicate(left, right)) {
+            return false;
+        }
+        current_list = next_list;
+        next = next_list.rest;
+    }
+    return true;
+}
+
 } // namespace new_list

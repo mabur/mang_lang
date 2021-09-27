@@ -73,26 +73,6 @@ Expression div(Expression in) {
     return makeNumber(result);
 }
 
-template<typename Predicate>
-Expression allOfNeighbours(Expression in, Predicate predicate) {
-    if (in.type == EMPTY_LIST) {
-        return makeNumber(true);
-    }
-    auto current_list = getList(in);
-    auto next = current_list.rest;
-    while (next.type != EMPTY_LIST) {
-        const auto left = current_list.first;
-        const auto next_list = getList(next);
-        const auto right = next_list.first;
-        if (!predicate(left, right)) {
-            return makeNumber(false);
-        }
-        current_list = next_list;
-        next = next_list.rest;
-    }
-    return makeNumber(true);
-}
-
 bool isLess(Expression left, Expression right) {
     return number(left) < number(right);
 }
@@ -102,11 +82,11 @@ bool isLeq(Expression left, Expression right) {
 }
 
 Expression less(Expression in) {
-    return allOfNeighbours(in, isLess);
+    return makeNumber(new_list::allOfNeighbours(in, isLess));
 }
 
 Expression less_or_equal(Expression in) {
-    return allOfNeighbours(in, isLeq);
+    return makeNumber(new_list::allOfNeighbours(in, isLeq));
 }
 
 Expression abs(Expression in) {
