@@ -75,12 +75,14 @@ Expression div(Expression in) {
 
 template<typename Predicate>
 Expression allOfNeighbours(Expression in, Predicate predicate) {
-    for (auto list = in; boolean(list) && boolean(new_list::rest(list)); list = new_list::rest(list)) {
+    auto list = in;
+    while (list.type != EMPTY_LIST && new_list::rest(list).type != EMPTY_LIST) {
         const auto left = new_list::first(list);
         const auto right = new_list::second(list);
         if (!predicate(left, right)) {
             return makeNumber(false);
         }
+        list = new_list::rest(list);
     }
     return makeNumber(true);
 }
