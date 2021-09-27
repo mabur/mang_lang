@@ -16,7 +16,7 @@ add_library(shared
         operations/serialize.cpp
         operations/starts_with.cpp
         container.cpp
-        Expression.cpp
+        expression.cpp
         factory.cpp
         mang_lang.cpp
         parsing.cpp
