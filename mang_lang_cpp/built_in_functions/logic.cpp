@@ -59,17 +59,11 @@ bool isEqual(Expression left, Expression right) {
 }
 
 Expression equal(Expression in) {
-    const auto left = new_list::first(in);
-    const auto right = new_list::second(in);
-    const auto value = isEqual(left, right);
-    return makeBoolean(value);
+    return makeBoolean(isEqual(new_list::first(in), new_list::second(in)));
 }
 
 Expression unequal(Expression in) {
-    const auto left = new_list::first(in);
-    const auto right = new_list::second(in);
-    const auto value = !isEqual(left, right);
-    return makeBoolean(value);
+    return makeBoolean(!isEqual(new_list::first(in), new_list::second(in)));
 }
 
 }
