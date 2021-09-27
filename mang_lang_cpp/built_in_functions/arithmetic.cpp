@@ -73,26 +73,32 @@ Expression div(Expression in) {
     return makeNumber(result);
 }
 
-Expression less(Expression in) {
+template<typename Predicate>
+Expression allOfNeighbours(Expression in, Predicate predicate) {
     for (auto list = in; boolean(list) && boolean(new_list::rest(list)); list = new_list::rest(list)) {
         const auto left = new_list::first(list);
         const auto right = new_list::second(list);
-        if (number(left) >= number(right)) {
+        if (!predicate(left, right)) {
             return makeNumber(false);
         }
     }
     return makeNumber(true);
 }
 
+bool isLess(Expression left, Expression right) {
+    return number(left) < number(right);
+}
+
+bool isLeq(Expression left, Expression right) {
+    return number(left) <= number(right);
+}
+
+Expression less(Expression in) {
+    return allOfNeighbours(in, isLess);
+}
+
 Expression less_or_equal(Expression in) {
-    for (auto list = in; boolean(list) && boolean(new_list::rest(list)); list = new_list::rest(list)) {
-        const auto left = new_list::first(list);
-        const auto right = new_list::second(list);
-        if (number(left) > number(right)) {
-            return makeNumber(false);
-        }
-    }
-    return makeNumber(true);
+    return allOfNeighbours(in, isLeq);
 }
 
 Expression abs(Expression in) {
