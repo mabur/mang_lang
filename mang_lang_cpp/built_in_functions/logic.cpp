@@ -46,34 +46,6 @@ Expression none(Expression list) {
     return makeBoolean(!anyOf(list, boolean));
 }
 
-bool isEqual(Expression left, Expression right);
-
-bool isEqualString(Expression left, Expression right) {
-    while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
-        const auto left_string = getString(left);
-        const auto right_string = getString(right);
-        if (!isEqual(left_string.first, right_string.first)) {
-            return false;
-        }
-        left = left_string.rest;
-        right = right_string.rest;
-    }
-    return left.type == EMPTY_STRING && right.type == EMPTY_STRING;
-}
-
-bool isEqualList(Expression left, Expression right) {
-    while (left.type != EMPTY_LIST && right.type != EMPTY_LIST) {
-        const auto left_list = getList(left);
-        const auto right_list = getList(right);
-        if (!isEqual(left_list.first, right_list.first)) {
-            return false;
-        }
-        left = left_list.rest;
-        right = right_list.rest;
-    }
-    return left.type == EMPTY_LIST && right.type == EMPTY_LIST;
-}
-
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
@@ -87,13 +59,13 @@ bool isEqual(Expression left, Expression right) {
         return true;
     }
     if (left_type == LIST && right_type == LIST) {
-        return isEqualList(left, right);
+        return new_list::allOfPairs(left, right, isEqual);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
     }
     if (left_type == STRING && right_type == STRING) {
-        return isEqualString(left, right);
+        return new_string::allOfPairs(left, right, isEqual);
     }
     return false;
 }
