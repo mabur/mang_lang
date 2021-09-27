@@ -20,9 +20,11 @@ inline Expression prepend(Expression rest, Expression first) {
 }
 
 template<typename T, typename Operation>
-T leftFold(T value, Expression list, Operation operation) {
-    for (; boolean(list); list = rest(list)) {
-        value = operation(value, first(list));
+T leftFold(T value, Expression expression, Operation operation) {
+    while (expression.type != EMPTY_STRING) {
+        const auto string = getString(expression);
+        value = operation(value, string.first);
+        expression = string.rest;
     }
     return value;
 }
