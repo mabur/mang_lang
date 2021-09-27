@@ -2,7 +2,7 @@
 
 #include "../factory.h"
 #include "../operations/boolean.h"
-#include "../new_string.h"
+#include "../container.h"
 
 namespace logic {
 

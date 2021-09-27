@@ -5,7 +5,7 @@
 #include "../factory.h"
 #include "boolean.h"
 #include "serialize.h"
-#include "../new_string.h"
+#include "../container.h"
 
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment, std::ostream& log

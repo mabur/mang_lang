@@ -4,7 +4,7 @@
 
 #include "../factory.h"
 #include "boolean.h"
-#include "../new_string.h"
+#include "../container.h"
 
 std::string serializeName(Expression name) {
     return getName(name).value;

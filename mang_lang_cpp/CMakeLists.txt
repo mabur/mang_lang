@@ -15,10 +15,10 @@ add_library(shared
         operations/parse.cpp
         operations/serialize.cpp
         operations/starts_with.cpp
+        container.cpp
         Expression.cpp
         factory.cpp
         mang_lang.cpp
-        new_string.cpp
         parsing.cpp
         )
 

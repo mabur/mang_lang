@@ -4,7 +4,7 @@
 #include <limits>
 
 #include "../factory.h"
-#include "../new_string.h"
+#include "../container.h"
 
 namespace arithmetic {
 
