@@ -22,28 +22,16 @@ Expression logic_not(Expression in) {
     return makeBoolean(!boolean(in));
 }
 
-template<typename Predicate>
-bool anyOf(Expression expression, Predicate predicate) {
-    while (expression.type != EMPTY_LIST) {
-        const auto list = getList(expression);
-        if (predicate(list.first)) {
-            return true;
-        }
-        expression = list.rest;
-    }
-    return false;
-}
-
 Expression all(Expression list) {
-    return makeBoolean(!anyOf(list, isFalse));
+    return makeBoolean(new_list::allOf(list, boolean));
 }
 
 Expression any(Expression list) {
-    return makeBoolean(anyOf(list, boolean));
+    return makeBoolean(!new_list::allOf(list, isFalse));
 }
 
 Expression none(Expression list) {
-    return makeBoolean(!anyOf(list, boolean));
+    return makeBoolean(new_list::allOf(list, isFalse));
 }
 
 bool isEqual(Expression left, Expression right) {

@@ -93,6 +93,18 @@ Expression map(Expression list, Function f) {
 }
 
 template<typename Predicate>
+bool allOf(Expression expression, Predicate predicate) {
+    while (expression.type != EMPTY_LIST) {
+        const auto list = getList(expression);
+        if (!predicate(list.first)) {
+            return false;
+        }
+        expression = list.rest;
+    }
+    return true;
+}
+
+template<typename Predicate>
 bool allOfPairs(Expression left, Expression right, Predicate predicate) {
     while (left.type != EMPTY_LIST && right.type != EMPTY_LIST) {
         const auto left_string = getList(left);
