@@ -73,20 +73,20 @@ Expression div(Expression in) {
     return makeNumber(result);
 }
 
-bool isLess(Expression left, Expression right) {
+bool less(Expression left, Expression right) {
     return number(left) < number(right);
 }
 
-bool isLeq(Expression left, Expression right) {
+bool lessOrEqual(Expression left, Expression right) {
     return number(left) <= number(right);
 }
 
-Expression less(Expression in) {
-    return makeNumber(new_list::allOfNeighbours(in, isLess));
+Expression are_all_less(Expression in) {
+    return makeNumber(new_list::allOfNeighbours(in, less));
 }
 
-Expression less_or_equal(Expression in) {
-    return makeNumber(new_list::allOfNeighbours(in, isLeq));
+Expression are_all_less_or_equal(Expression in) {
+    return makeNumber(new_list::allOfNeighbours(in, lessOrEqual));
 }
 
 Expression abs(Expression in) {

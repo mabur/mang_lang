@@ -26,8 +26,8 @@ Expression builtIns() {
     definitions.push_back(define("mul", arithmetic::mul));
     definitions.push_back(define("sub", arithmetic::sub));
     definitions.push_back(define("div", arithmetic::div));
-    definitions.push_back(define("less", arithmetic::less));
-    definitions.push_back(define("less_or_equal", arithmetic::less_or_equal));
+    definitions.push_back(define("less", arithmetic::are_all_less));
+    definitions.push_back(define("less_or_equal", arithmetic::are_all_less_or_equal));
     definitions.push_back(define("round", arithmetic::round));
     definitions.push_back(define("round_up", arithmetic::round_up));
     definitions.push_back(define("round_down", arithmetic::round_down));
