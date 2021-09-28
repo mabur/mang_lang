@@ -220,18 +220,20 @@ Expression applyFunctionDictionary(
 Expression applyFunctionList(const FunctionList& function_list, Expression input, std::ostream& log
 ) {
     auto statements = Statements{};
-    auto i = size_t{0};
-    for (auto list = input; boolean(list); list = new_list::rest(list), ++i) {
+    auto expression = input;
+    for (size_t i = 0; i < function_list.input_names.size(); ++i) {
+        const auto list = getList(expression);
         statements.push_back(
             makeDefinition(
                 new Definition{
                     function_list.range,
                     function_list.input_names[i],
-                    new_list::first(list),
+                    list.first,
                     i
                 }
             )
         );
+        expression = list.rest;
     }
     const auto middle = makeDictionary(
         new Dictionary{function_list.range, function_list.environment, statements}
