@@ -8,10 +8,6 @@
 
 namespace new_string {
 
-Expression first(Expression list);
-Expression rest(Expression list);
-Expression second(Expression list);
-
 inline Expression prepend(Expression rest, Expression first) {
     const auto first_character = std::min(begin(rest), begin(first));
     const auto last_character = std::max(end(rest), end(first));
