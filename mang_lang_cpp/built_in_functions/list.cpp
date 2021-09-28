@@ -16,8 +16,8 @@ Expression empty(Expression in) {
 }
 
 Expression prepend(Expression in) {
-    const auto& item = new_list::first(in);
-    const auto& collection = new_list::second(in);
+    const auto item = new_list::first(in);
+    const auto collection = new_list::second(in);
     switch (collection.type) {
         case LIST: return new_list::prepend(collection, item);
         case EMPTY_LIST: return new_list::prepend(collection, item);
