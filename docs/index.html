@@ -52,6 +52,7 @@ h3 {
 }
 pre {
   font-family: 'Fira Mono';
+  font-size: 90%;
   color: #000000;
   background-color: #FFFFDD;
   padding: 5px;
@@ -110,7 +111,8 @@ Consider the following input program:
     {width = 3 height = 6}
     {width = 8 height = 4}
   )
-  get_area = in {width height} out mul!(width height)
+  get_area = in {width height}
+    out mul!(width height)
   areas = map!(get_area rectangles)
   total_area = add!areas
   num_rectangles = count!rectangles
@@ -129,7 +131,8 @@ When we evaluate the input above we get the output below:
     {width = 3 height = 6}
     {width = 8 height = 4}
   )
-  get_area = in {width height} out mul!(width height)
+  get_area = in {width height}
+    out mul!(width height)
   areas = (3 12 18 32)
   total_area = 65
   num_rectangles = 4
