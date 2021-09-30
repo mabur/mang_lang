@@ -538,7 +538,12 @@ Here are some examples of defining and calling functions:
     square = in x out mul!(x x)
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
-    count = in list out if list then inc!count!rest@list else 0
+    count = in list
+        out
+            if list then
+                inc!count!rest@list
+            else
+                0
     a = square 3
     b = inc 3
     c = dec 3
@@ -554,7 +559,12 @@ This program is evaluated to:
     square = in x out mul!(x x)
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
-    count = in list out if list then inc!count!rest@list else 0
+    count = in list
+        out
+            if list then
+                inc!count!rest@list
+            else
+                0
     a = 9
     b = 4
     c = 2
