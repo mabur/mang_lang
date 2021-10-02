@@ -5,6 +5,7 @@ TODO:
   - extract helper function for all built in binary functions: arithmetic, logic, prepend, etc.
   - Merge new list and new string?
   - Extract for_each for new lists and strings
+  - resolve mutable pointer in iterative dictionary evaluation
   - remove shared_ptr from vector of expressions in factory
 * Generic programming
   - Generic container interface
@@ -18,7 +19,7 @@ TODO:
       - last@list
       - sentinel@list
       - root@list
-  - Add second@, third@, fourth@, ... members for lists and strings. _1st@string
+  - Add second@, third@, fourth@, last@ ... members for lists and strings. _1st@string
     _1st, _2nd, _3rd, _4th, _5th, _6th, _7nth, _8th, _9th
   - Describe ListBase as a "Concept".
   - Naming of count_*, range, reverse_range, enumerate.
