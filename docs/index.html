@@ -294,8 +294,8 @@ Manglang doesn't care about extra whitespace so the program above can also be wr
 </p>
 <pre>
 {
-    pi = 1
-    first_letter = 'A'
+  pi = 1
+  first_letter = 'A'
 }
 </pre>
 <p>
@@ -303,8 +303,8 @@ Dictionaries can be nested:
 </p>
 <pre>
 {
-    rectangle = {width = 4 height = 5}
-    circle = {radius = 5}
+  rectangle = {width = 4 height = 5}
+  circle = {radius = 5}
 }
 </pre>
 
@@ -314,8 +314,8 @@ A name defined in a dictionary can be referenced after it is defined:
 </p>
 <pre>
 {
-    a = 1
-    b = a
+  a = 1
+  b = a
 }
 </pre>
 <p>
@@ -323,8 +323,8 @@ The input above is evaluated to the output below:
 </p>
 <pre>
 {
-    a = 1
-    b = 1
+  a = 1
+  b = 1
 }
 </pre>
 <h3 id="reference">Reference to Outer Dictionaries</h2>
@@ -333,8 +333,8 @@ Dictionaries can be nested. You can also refer to a name in an outer dictionary:
 </p>
 <pre>
 {
-    a = 1
-    b = {c = 2 d = a}
+  a = 1
+  b = {c = 2 d = a}
 }
 </pre>
 <p>
@@ -342,8 +342,8 @@ The input above is evaluated to the output below:
 </p>
 <pre>
 {
-    a = 1
-    b = {c = 2 d = 1}
+  a = 1
+  b = {c = 2 d = 1}
 }
 </pre>
 <p>
@@ -356,8 +356,8 @@ You can refer to names in an inner dictionary like this:
 </p>
 <pre>
 {
-    a = {b=2 c=3}
-    d = b@a
+  a = {b=2 c=3}
+  d = b@a
 }
 </pre>
 <p>
@@ -365,8 +365,8 @@ The input above is evaluated to the output below:
 </p>
 <pre>
 {
-    a = {b=2 c=3}
-    d = 2
+  a = {b=2 c=3}
+  d = 2
 }
 </pre>
 <p>
@@ -403,8 +403,8 @@ A list can be seen as a dictionary containing two things <code>first</code> and 
 Consider this example:
 <pre>
 {
-    list = (3 6 4)
-    dictionary = {first=3 rest={first=6 rest={first=4 rest={}}}}
+  list = (3 6 4)
+  dictionary = {first=3 rest={first=6 rest={first=4 rest={}}}}
 }
 </pre>
 These are two different ways of storing the same data.
@@ -423,19 +423,19 @@ The input above is evaluated to the output below:
 <p>Here is another example program with some list operations:</p>
 <pre>
 {
-    a = (3 6 4)
-    b = first@a
-    c = rest@a
-    d = prepend!(b c) 
+  a = (3 6 4)
+  b = first@a
+  c = rest@a
+  d = prepend!(b c) 
 }
 </pre>
 <p>The input above is evaluated to the output below:</p>
 <pre>
 {
-    a = (3 6 4)
-    b = 3
-    c = (6 4)
-    d = (3 6 4)
+  a = (3 6 4)
+  b = 3
+  c = (6 4)
+  d = (3 6 4)
 }
 </pre>
 In summary, we interact with lists by accessing the members <code>first</code> and <code>rest</code> and via the function <code>prepend</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
@@ -452,21 +452,21 @@ They can be seen as lists of characters. Example of a program using functions on
 </p>
 <pre>
 {
-    a = "Manglang"
-    b = first@a
-    c = rest@a
-    d = reverse!a
-    e = prepend!('E' a)
+  a = "Manglang"
+  b = first@a
+  c = rest@a
+  d = reverse!a
+  e = prepend!('E' a)
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
-    a = "Manglang"
-    b = 'M'
-    c = "anglang"
-    d = "gnalgnaM"
-    d = "EManglang"
+  a = "Manglang"
+  b = 'M'
+  c = "anglang"
+  d = "gnalgnaM"
+  e = "EManglang"
 }
 </pre>
 
@@ -493,12 +493,12 @@ Consider this example:
 </p>
 <pre>
 {
-    a = (0 1)
-    b = if a then
-            first@a
-        else
-            2
-    c = if b then "hello" else "world"
+  a = (0 1)
+  b = if a then
+      first@a
+    else
+      2
+  c = if b then "hello" else "world"
 }
 </pre>
 <p>
@@ -506,9 +506,9 @@ This program is evaluated to:
 </p>
 <pre>
 {
-    a = (0 1)
-    b = 0
-    c = "world"
+  a = (0 1)
+  b = 0
+  c = "world"
 }
 </pre>
 
@@ -518,19 +518,19 @@ In Manglang you can loop while constructing a dictionary:
 </p>
 <pre>
 {
-    x = 10
-    sum = 0
-    while x
-        sum = add!(sum x)
-        x = dec!x
-    end
+  x = 10
+  sum = 0
+  while x
+    sum = add!(sum x)
+    x = dec!x
+  end
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
-    x = 0
-    sum = 55
+  x = 0
+  sum = 55
 }
 </pre>
 <p>
@@ -551,10 +551,10 @@ However, this single value can be a list or a dictionary, that has multiple valu
 </p>
 <pre>
 {
-    list = (4 2 1)
-    sum0 = add!list
-    sum1 = add!(4 2 1)
-    list2 = prepend!(3 list)
+  list = (4 2 1)
+  sum0 = add!list
+  sum1 = add!(4 2 1)
+  list2 = prepend!(3 list)
 }
 </pre>
 <p>
@@ -562,10 +562,10 @@ This program is evaluated to:
 </p>
 <pre>
 {
-    list = (4 2 1)
-    sum0 = 7
-    sum1 = 7
-    list2 = (3 4 2 1)
+  list = (4 2 1)
+  sum0 = 7
+  sum1 = 7
+  list2 = (3 4 2 1)
 }
 </pre>
 <p>
@@ -588,8 +588,8 @@ Functions are defined using they keywords <code>in</code> and <code>out</code> l
 </p>
 <pre>
 {
-    square = in x out mul!(x x)
-    result = square!3
+  square = in x out mul!(x x)
+  result = square!3
 }
 </pre>
 <p>
@@ -600,20 +600,20 @@ Here are some examples of defining and calling functions:
 </p>
 <pre>
 {
-    square = in x out mul!(x x)
-    inc = in x out add!(x 1)
-    dec = in x out sub!(x 1)
-    count = in list
-        out
-            if list then
-                inc!count!rest@list
-            else
-                0
-    a = square!3
-    b = inc!3
-    c = dec!3
-    d = count!(3 7 3 8 2)
-    e = count!"apple"        
+  square = in x out mul!(x x)
+  inc = in x out add!(x 1)
+  dec = in x out sub!(x 1)
+  count = in list
+    out
+      if list then
+        inc!count!rest@list
+      else
+        0
+  a = square!3
+  b = inc!3
+  c = dec!3
+  d = count!(3 7 3 8 2)
+  e = count!"apple"        
 }
 </pre>
 <p>
@@ -621,20 +621,20 @@ This program is evaluated to:
 </p>
 <pre>
 {
-    square = in x out mul!(x x)
-    inc = in x out add!(x 1)
-    dec = in x out sub!(x 1)
-    count = in list
-        out
-            if list then
-                inc!count!rest@list
-            else
-                0
-    a = 9
-    b = 4
-    c = 2
-    d = 5
-    e = 5        
+  square = in x out mul!(x x)
+  inc = in x out add!(x 1)
+  dec = in x out sub!(x 1)
+  count = in list
+    out
+      if list then
+        inc!count!rest@list
+      else
+        0
+  a = 9
+  b = 4
+  c = 2
+  d = 5
+  e = 5        
 }
 </pre>
 <p>
@@ -644,15 +644,15 @@ Function definitions and computations can be broken up into smaller parts by usi
 </p>
 <pre>
 {
-    square = in x out mul!(x x)
-    square_norm = in vec3 out result@{
-        x = first@vec3
-        y = second!vec3
-        z = third!vec3
-        result = add!(square!x square!y square!z)
-    }
-    vector = (3 4 5)
-    result = square_norm!vector
+  square = in x out mul!(x x)
+  square_norm = in vec3 out result@{
+    x = first@vec3
+    y = second!vec3
+    z = third!vec3
+    result = add!(square!x square!y square!z)
+  }
+  vector = (3 4 5)
+  result = square_norm!vector
 }
 </pre>
 
@@ -664,13 +664,13 @@ Here are some examples of equivalent ways of defining and calling functions:
 </p>
 <pre>
 {
-    area1 = in rectangle out mul!(first@rectangle second!rectangle)
-    area2 = in (width height) out mul!(width height)
-    rectangle = (5 4)
-    a = area1!rectangle,
-    b = area2!rectangle,
-    c = area1!(5 4)
-    d = area2!(5 4)
+  area1 = in rectangle out mul!(first@rectangle second!rectangle)
+  area2 = in (width height) out mul!(width height)
+  rectangle = (5 4)
+  a = area1!rectangle,
+  b = area2!rectangle,
+  c = area1!(5 4)
+  d = area2!(5 4)
 }
 </pre>
 <p>
@@ -690,13 +690,13 @@ Here are some examples of equivalent ways of defining and calling functions:
 </p>
 <pre>
 {
-    area1 = in rectangle out mul!(width@rectangle height@rectangle)
-    area2 = in {width height} out mul!(width height)
-    rectangle = {width = 5 height = 4}
-    a = area1!rectangle
-    b = area2!rectangle
-    c = area1!{width = 5 height = 4}
-    d = area2!{width = 5 height = 4}
+  area1 = in rectangle out mul!(width@rectangle height@rectangle)
+  area2 = in {width height} out mul!(width height)
+  rectangle = {width = 5 height = 4}
+  a = area1!rectangle
+  b = area2!rectangle
+  c = area1!{width = 5 height = 4}
+  d = area2!{width = 5 height = 4}
 }
 </pre>
 <p>
