@@ -580,6 +580,25 @@ mul!(add!(1 2) sub!(7 2))
 This program is evaluated to <code>(1+2)*(7-2) = 3*5 = 15</code>.
 Function calls are right associative.
 Manglang does not support currying.
+
+<h3>Applying Predicates</h2>
+Manglang encourages using <code>?</code> instead of <code>!</code> for applying functions that return a boolean value, a.k.a. predicates. Applying such a function is like asking a question. As an example consider the following functions from the standard library that operate on ascii characters:
+<pre>
+{
+  is_upper = in c out less_or_equal?(65 number!c 90)
+  is_lower = in c out less_or_equal?(97 number!c 122)
+  to_upper = in c out
+      if is_lower?c then
+          character!sub!(number!c 32)
+      else
+          c
+  to_lower = in c out
+      if is_upper?c then
+          character!add!(number!c 32)
+      else
+          c
+}
+</pre>
 </p>
 
 <h2 id="function_definition">5.b. Function Definition</h2>
