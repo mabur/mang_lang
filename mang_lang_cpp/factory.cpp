@@ -26,6 +26,7 @@ std::vector<std::shared_ptr<const EndStatement>> end_statements;
 std::vector<std::shared_ptr<const Definition>> definitions;
 std::vector<std::shared_ptr<const String>> strings;
 std::vector<std::shared_ptr<const EmptyString>> empty_strings;
+std::vector<std::shared_ptr<const Boolean>> booleans;
 std::vector<Expression> expressions;
 
 void clearMemory() {
@@ -45,6 +46,7 @@ void clearMemory() {
     end_statements.clear();
     definitions.clear();
     strings.clear();
+    booleans.clear();
     expressions.clear();
 }
 
@@ -243,6 +245,10 @@ Expression makeEmptyString(const EmptyString* expression) {
     return makeExpression(expression, EMPTY_STRING, empty_strings);
 }
 
+Expression makeBoolean(const Boolean* expression) {
+    return makeExpression(expression, BOOLEAN, booleans);
+}
+
 // FREE GETTERS
 
 template<typename ArrayType>
@@ -334,4 +340,8 @@ String getString(Expression expression) {
 
 EmptyString getEmptyString(Expression expression) {
     return getExpression(expression, EMPTY_STRING, empty_strings);
+}
+
+Boolean getBoolean(Expression expression) {
+    return getExpression(expression, BOOLEAN, booleans);
 }

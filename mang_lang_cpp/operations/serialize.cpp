@@ -117,6 +117,10 @@ std::string serializeNumber(const Number& number) {
     return s.str();
 }
 
+std::string serializeBoolean(const Boolean& boolean) {
+    return boolean.value ? "yes" : "no";
+}
+
 std::string appendCharacter(const std::string& s, Expression character) {
     return s + getCharacter(character).value;
 }
@@ -144,6 +148,7 @@ std::string serialize(Expression expression) {
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
+        case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
         case EMPTY: return "DUMMY_VALUE";

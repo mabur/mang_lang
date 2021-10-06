@@ -102,6 +102,10 @@ int main() {
         {R"('{')", R"('{')"},
         {R"('}')", R"('}')"},
     });
+    test.evaluate("boolean", {
+        {"yes", "yes"},
+        {"no", "no"},
+    });
     test.evaluate("string", {
         {R"("")", R"("")"},
         {R"("a")", R"("a")"},

@@ -1,5 +1,6 @@
 #include "parse.h"
 
+#include <cassert>
 #include <iostream>
 
 #include "../factory.h"
@@ -257,6 +258,20 @@ Expression parseNumber(CodeRange code) {
     );
 }
 
+Expression parseBoolean(CodeRange code) {
+    auto first = code.begin();
+    if (startsWith(code, 'y')) {
+        code = parseKeyword(code, "yes");
+        return makeBoolean(new Boolean{CodeRange{first, code.first}, true});
+    }
+    if (startsWith(code, 'n')) {
+        code = parseKeyword(code, "no");
+        return makeBoolean(new Boolean{CodeRange{first, code.first}, false});
+    }
+    assert(false);
+    return {};
+}
+
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
@@ -280,6 +295,7 @@ Expression parseExpression(CodeRange code) {
         if (startsWithDictionary(code)) {return parseDictionary(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
+        if (startsWithBoolean(code)) {return parseBoolean(code);}
         if (startsWithString(code)) {return parseString(code);}
         if (startsWithConditional(code)) {return parseConditional(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}

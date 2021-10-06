@@ -60,6 +60,21 @@ bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
 }
 
+bool isLiteral(CodeRange code, const std::string& literal) {
+    const auto w = makeCodeCharacters(literal);
+    if (code.size() < w.size()) {
+        return false;
+    }
+    if (!std::equal(w.begin(), w.end(), code.begin(), haveSameCharacters)) {
+        return false;
+    }
+    const auto after = code.begin() + w.size();
+    if (after == code.end()) {
+        return true;
+    }
+    return !isLetter(*after);
+}
+
 bool isKeyword(CodeRange code, const std::string& keyword) {
     const auto w = makeCodeCharacters(keyword);
     if (code.size() <= w.size()) {

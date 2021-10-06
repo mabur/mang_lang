@@ -20,6 +20,7 @@ const CodeCharacter* begin(Expression expression) {
         case LOOKUP_SYMBOL: return getLookupSymbol(expression).range.first;
         case NAME: return getName(expression).range.first;
         case NUMBER: return getNumber(expression).range.first;
+        case BOOLEAN: return getBoolean(expression).range.first;
         case STRING: return getString(expression).range.first;
         case EMPTY_STRING: return getEmptyString(expression).range.first;
         default: throw std::runtime_error{"Missing begin operation for : " + std::to_string(expression.type)};

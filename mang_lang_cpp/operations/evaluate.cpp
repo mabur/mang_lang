@@ -284,6 +284,7 @@ Expression evaluate(
     switch (expression.type) {
         case NUMBER: return evaluateAtom(expression, log);
         case CHARACTER: return evaluateAtom(expression, log);
+        case BOOLEAN: return evaluateAtom(expression, log);
         case EMPTY_STRING: return evaluateAtom(expression, log);
         case STRING: return evaluateAtom(expression, log);
         case EMPTY_LIST: return evaluateAtom(expression, log);

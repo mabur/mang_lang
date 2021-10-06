@@ -47,6 +47,8 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
+bool isLiteral(CodeRange code, const std::string& literal);
+
 bool isKeyword(CodeRange code, const std::string& keyword);
 
 bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords);

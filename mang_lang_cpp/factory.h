@@ -25,6 +25,7 @@ LookupSymbol getLookupSymbol(Expression expression);
 Name getName(Expression expression);
 String getString(Expression expression);
 EmptyString getEmptyString(Expression expression);
+Boolean getBoolean(Expression expression);
 
 Expression makeNumber(const Number* expression);
 Expression makeCharacter(const Character* expression);
@@ -45,3 +46,4 @@ Expression makeWhileStatement(const WhileStatement* expression);
 Expression makeEndStatement(const EndStatement* expression);
 Expression makeString(const String* expression);
 Expression makeEmptyString(const EmptyString* expression);
+Expression makeBoolean(const Boolean* expression);

@@ -26,6 +26,7 @@ enum ExpressionType {
     NUMBER,
     STRING,
     EMPTY_STRING,
+    BOOLEAN,
     EMPTY,
 };
 
@@ -135,6 +136,11 @@ struct WhileStatement {
 struct EndStatement {
     CodeRange range;
     size_t while_index_;
+};
+
+struct Boolean {
+    CodeRange range;
+    bool value;
 };
 
 using Statements = std::vector<Expression>;
