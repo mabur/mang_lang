@@ -126,7 +126,7 @@ a {
 </tr>
 <tr>
     <td align=right>
-        <q>Easy to understand, for humans &amp; computers</q>
+        <q>Easy to understand, for both humans &amp; computers</q>
     </td>
     <td>
         <img class="character" src="c2.png">
@@ -224,7 +224,7 @@ Manglang consists of the following basic building blocks:
 <img src="atom.png" width=48 height=48>
 </td>
 <td>
-<a href="#atoms">Atoms</a> like <a href="#numbers">numbers</a> and <a href="#characters">characters</a>.
+<a href="#atoms">Atoms</a> like <a href="#numbers">numbers</a> and <a href="#characters">characters</a> and <a href="#booleans">booleans</a>.
 </td>
 </tr>
 <tr>
@@ -276,6 +276,19 @@ A single ascii character is written as:
 <pre>
 'a'
 </pre>
+
+<h2 id="booleans">1.c. Booleans</h2>
+<p>
+A boolean is either:
+<pre>
+yes
+</pre>
+or
+<pre>
+no
+</pre>
+</p>
+In Manglang we see booleans as answers to questions and therefore write them as <code>yes</code> and <code>no</code> instead of <code>true</code> and <code>false</code>. This is closer to natural language and also shorter.
 
 <h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
 <p>
@@ -474,19 +487,19 @@ The input above is evaluated to the output below:
 
 <h2 id="if">4.a. If</h2>
 <p>
-The expression <code>if a then b else c</code> is evaluated to b or c depending of if a is true or false.
-Manglang has no explicit type for boolean values but interprets other values as true or false.
+The expression <code>if a then b else c</code> is evaluated to b or c depending on if the answer to the question a is yes or no.
 <ul>
 <li>
-The following values are interpreted as false:
+The following values are interpreted as <code>no</code> or falsey:
     <ul>
+        <li>boolean <code>no</code></li>
         <li>number zero <code>0</code></li>
         <li>empty list <code>()</code></li>
         <li>empty string <code>""</code> </li>
     </ul>
 </li>
 <li>
-All other values are interpreted as true.
+All other values are interpreted as <code>yes</code> or truthy.
 </li>
 </ul>
 Consider this example:
