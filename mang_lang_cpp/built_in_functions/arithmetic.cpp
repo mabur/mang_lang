@@ -16,6 +16,10 @@ Expression makeNumber(double x) {
     return makeNumber(new Number(Number{CodeRange{}, x}));
 }
 
+Expression makeBoolean(bool x) {
+    return makeBoolean(new Boolean{CodeRange{}, x});
+}
+
 double minExpression(double left, Expression right) {
     return std::min(left, number(right));
 }
@@ -82,11 +86,11 @@ bool lessOrEqual(Expression left, Expression right) {
 }
 
 Expression are_all_less(Expression in) {
-    return makeNumber(new_list::allOfNeighbours(in, less));
+    return makeBoolean(new_list::allOfNeighbours(in, less));
 }
 
 Expression are_all_less_or_equal(Expression in) {
-    return makeNumber(new_list::allOfNeighbours(in, lessOrEqual));
+    return makeBoolean(new_list::allOfNeighbours(in, lessOrEqual));
 }
 
 Expression abs(Expression in) {

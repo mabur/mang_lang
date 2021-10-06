@@ -10,8 +10,8 @@ bool isFalse(Expression x) {
     return !boolean(x);
 }
 
-Expression makeBoolean(double x) {
-    return makeNumber(new Number{CodeRange{}, x});
+Expression makeBoolean(bool x) {
+    return makeBoolean(new Boolean{CodeRange{}, x});
 }
 
 Expression booleanExpression(Expression in) {
