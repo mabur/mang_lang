@@ -1,4 +1,5 @@
 TODO:
+* Fix FunctionDictionary closure
 * Simplifications with new list:
   - replace boolean(x) with .type == EMPTY_
   - extract helper function for all built in "n-ary" functions: add, sum, any, etc.
