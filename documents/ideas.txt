@@ -1,4 +1,5 @@
 TODO:
+* Document built in functions and functions in standard library
 * Fix FunctionDictionary closure
 * Simplifications with new list:
   - replace boolean(x) with .type == EMPTY_
