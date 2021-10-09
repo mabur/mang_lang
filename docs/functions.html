@@ -16,7 +16,7 @@ which means that their implementations are not written in Manglang.
 
 <h2>List Functions</h2>
 <dl>
-<dt>new</dt><dd>Takes either a list or a string and returns an empty collection of the same type.</dd>
+<dt>new</dt><dd>Takes either a list or a string and returns an empty container of the same type.</dd>
 <dt>prepend</dt><dd><code>prepend!(item list)</code> returns a list with item added to the beginning of the list.</dd>
 </dl>
 
@@ -79,24 +79,24 @@ which means that their implementation are written in Manglang.
 <dt>to_lower</dt><dd>Takes a character and converts it to lower case. Only has an effect it the character is an upper case letter.</dd>
 </dl>
 
-<h2>Generic Collection Functions</h2>
+<h2>Generic Container Functions</h2>
 These functions work on lists and strings.
 <dl>
 <dt>range</dt><dd><code>range!n</code> returns a list with n elements.</dd>
-<dt>drop</dt><dd><code>drop!(n collection)</code> returns a collection with the first n elements removed.</dd>
-<dt>take</dt><dd><code>take!(n collection)</code> returns a collections with the first n elements.</dd>
-<dt>get_index</dt><dd><code>get_index!(n collection)</code> returns the nth element from the collection.</dd>
-<dt>reverse</dt><dd><code>reverse!collection</code> returns a collection with the elements in the reverse order.</dd>
-<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two collections.</dd>
-<dt>enumerate</dt><dd><code>enumerate!collections</code> returns a list like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
-<dt>map</dt><dd><code>map!(f collection)</code> returns a list with the function f applied to each element in the collection.</dd>
-<dt>map_string</dt><dd><code>map_string!(f collection)</code> returns a string with the function f applied to each element in the collection.</dd>
-<dt>filter</dt><dd><code>filter!(predicate collection)</code> returns a collection of all elements for which the predicate says <code>yes</code>.</dd>
-<dt>replace_if</dt><dd><code>replace_if!(predicate new_item collection)</code> returns a collection where each element is replaced if the predicate says <code>yes</code>.</dd>
-<dt>replace</dt><dd><code>replace!(old_item new_item collection)</code> returns a collection with occurances of old_item replaced with new_item.</dd>
-<dt>count</dt><dd><code>count!collection</code> returns the number of elements in the collection.</dd>
-<dt>count_if</dt><dd><code>count_if!(predicate collection)</code> counts the number of elements for which the predicate says <code>yes</code>.</dd>
-<dt>count_item</dt><dd><code>count!(item collection)</code> counts the number of occurances of an item in the collection.</dd>
+<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the first n elements removed.</dd>
+<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the first n elements.</dd>
+<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth element from the container.</dd>
+<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
+<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
+<dt>enumerate</dt><dd><code>enumerate!containers</code> returns a list like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
+<dt>map</dt><dd><code>map!(f container)</code> returns a list with the function f applied to each element in the container.</dd>
+<dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each element in the container.</dd>
+<dt>filter</dt><dd><code>filter!(predicate container)</code> returns a container of all elements for which the predicate says <code>yes</code>.</dd>
+<dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each element is replaced if the predicate says <code>yes</code>.</dd>
+<dt>replace</dt><dd><code>replace!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item.</dd>
+<dt>count</dt><dd><code>count!container</code> returns the number of elements in the container.</dd>
+<dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of elements for which the predicate says <code>yes</code>.</dd>
+<dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container.</dd>
 </dl>
 
 </body>
