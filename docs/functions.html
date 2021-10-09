@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mali">
+<link rel="stylesheet" href="styles.css">
+<title>Manglang Functions</title>
+</head>
+<body>
+
+<h1>Built-in Functions</h1>
+The following functions are built-in,
+which means that their implementations are not written in Manglang.
+
+<h2>List Functions</h2>
+<dl>
+<dt>new</dt><dd>Takes either a list or a string and returns an empty collection of the same type.</dd>
+<dt>prepend</dt><dd><code>prepend!(item list)</code> returns a list with item added to the beginning of the list.</dd>
+</dl>
+
+<h2>Boolean Functions</h2>
+<dl>
+<dt>boolean</dt><dd>Convert a value to a boolean. All values are converted to <code>yes</code>, except empty list <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>no</code>.</dd>
+<dt>not</dt><dd>Convert a value to a boolean. All values are converted to <code>no</code>, except empty list <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>yes</code>.</dd>
+<dt>all</dt><dd>Takes a list of booleans and returns <code>yes</code> if all elements are <code>yes</code> and otherwise <code>no</code>.</dd>
+<dt>any</dt><dd>Takes a list of booleans and returns <code>yes</code> if any element is <code>yes</code> and otherwise <code>no</code>.</dd>
+<dt>none</dt><dd>Takes a list of booleans and returns <code>yes</code> if all element are <code>no</code> and otherwise <code>yes</code>.</dd>
+<dt>equal</dt><dd>Takes two values and returns <code>yes</code> if they are equal and otherwise <code>no</code>.</dd>
+<dt>unequal</dt><dd>Takes two values and returns <code>no</code> if they are equal and otherwise <code>yes</code>.</dd>
+</dl>
+
+<h2>Functions on List of Numbers</h2>
+<dl>
+<dt>add</dt><dd>Add a list of numbers.</dd>
+<dt>mul</dt><dd>Multiply a list of numbers.</dd>
+<dt>sub</dt><dd>Subtract two numbers.</dd>
+<dt>div</dt><dd>Divide two numbers.</dd>
+<dt>min</dt><dd>Minimum of a list of numbers.</dd>
+<dt>max</dt><dd>Maximum of a list of numbers</dd>
+<dt>less</dt><dd>Takes a list of numbers and returns <code>yes</code> if they are strictly increasing, and otherwise <code>no</code></dd>
+<dt>less_or_equal</dt><dd>Takes a list of numbers and returns <code>yes</code> if they are increasing, and otherwise <code>no</code>.</dd>
+</dl>
+
+<h2>Functions on Number</h2>
+<dl>
+<dt>round</dt><dd>Round a number to closest integer.</dd>
+<dt>round_up</dt><dd>Round a number up to closest integer.</dd>
+<dt>round_down</dt><dd>Round a number down to closest integer.</dd>
+<dt>abs</dt><dd>Absolute value of a number.</dd>
+<dt>sqrt</dt><dd>Square root of a number.</dd>
+</dl>
+
+<h2>Character Functions</h2>
+<dl>
+<dt>number</dt><dd>Takes a character and returns its ascii number.</dd>
+<dt>character</dt><dd>Takes a number and returns the character with that ascii number.</dd>
+</dl>
+
+<h1>Functions in Standard Library</h1>
+The following functions are implemented in the
+<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>,
+which means that their implementation are written in Manglang.
+
+<h2>Number functions</h2>
+<dl>
+<dt>inc</dt><dd>Add 1 to a number.</dd>
+<dt>dec</dt><dd>Subtract 1 from a number.</dd>
+</dl>
+
+<h2>Character Functions</h2>
+<dl>
+<dt>is_digit</dt><dd>Is a character a digit? Returns <code>yes</code> or <code>no</code>.</dd>
+<dt>is_letter</dt><dd>Is a character a letter? Returns <code>yes</code> or <code>no</code>.</dd>
+<dt>is_upper</dt><dd>Is a character upper case? Returns <code>yes</code> or <code>no</code>.</dd>
+<dt>is_lower</dt><dd>Is a character lower case? Returns <code>yes</code> or <code>no</code>.</dd>
+<dt>to_upper</dt><dd>Takes a character and converts it to upper case. Only has an effect it the character is a lower case letter.</dd>
+<dt>to_lower</dt><dd>Takes a character and converts it to lower case. Only has an effect it the character is an upper case letter.</dd>
+</dl>
+
+<h2>Generic Collection Functions</h2>
+These functions work on lists and strings.
+<dl>
+<dt>range</dt><dd><code>range!n</code> returns a list with n elements.</dd>
+<dt>drop</dt><dd><code>drop!(n collection)</code> returns a collection with the first n elements removed.</dd>
+<dt>take</dt><dd><code>take!(n collection)</code> returns a collections with the first n elements.</dd>
+<dt>get_index</dt><dd><code>get_index!(n collection)</code> returns the nth element from the collection.</dd>
+<dt>reverse</dt><dd><code>reverse!collection</code> returns a collection with the elements in the reverse order.</dd>
+<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two collections.</dd>
+<dt>enumerate</dt><dd><code>enumerate!collections</code> returns a list like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
+<dt>map</dt><dd><code>map!(f collection)</code> returns a list with the function f applied to each element in the collection.</dd>
+<dt>map_string</dt><dd><code>map_string!(f collection)</code> returns a string with the function f applied to each element in the collection.</dd>
+<dt>filter</dt><dd><code>filter!(predicate collection)</code> returns a collection of all elements for which the predicate says <code>yes</code>.</dd>
+<dt>replace_if</dt><dd><code>replace_if!(predicate new_item collection)</code> returns a collection where each element is replaced if the predicate says <code>yes</code>.</dd>
+<dt>replace</dt><dd><code>replace!(old_item new_item collection)</code> returns a collection with occurances of old_item replaced with new_item.</dd>
+<dt>count</dt><dd><code>count!collection</code> returns the number of elements in the collection.</dd>
+<dt>count_if</dt><dd><code>count_if!(predicate collection)</code> counts the number of elements for which the predicate says <code>yes</code>.</dd>
+<dt>count_item</dt><dd><code>count!(item collection)</code> counts the number of occurances of an item in the collection.</dd>
+</dl>
+
+</body>
+</html>
