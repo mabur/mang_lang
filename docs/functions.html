@@ -79,18 +79,23 @@ which means that their implementation are written in Manglang.
 <dt>to_lower</dt><dd>Takes a character and converts it to lower case. Only has an effect it the character is an upper case letter.</dd>
 </dl>
 
-<h2>Generic Container Functions</h2>
-These functions work on lists and strings.
+
+<h2>Container Functions</h2>
 <dl>
+<dt>map</dt><dd><code>map!(f container)</code> returns a list with the function f applied to each element in the container.</dd>
+<dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each element in the container.</dd>
 <dt>range</dt><dd><code>range!n</code> returns a list with n elements.</dd>
+<dt>enumerate</dt><dd><code>enumerate!containers</code> returns a list like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
+</dl>
+
+<h2>Generic Container Functions</h2>
+These functions work on both lists and strings, and the type of the output container is the same as the input.
+<dl>
 <dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the first n elements removed.</dd>
 <dt>take</dt><dd><code>take!(n container)</code> returns a containers with the first n elements.</dd>
 <dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth element from the container.</dd>
 <dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
 <dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
-<dt>enumerate</dt><dd><code>enumerate!containers</code> returns a list like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
-<dt>map</dt><dd><code>map!(f container)</code> returns a list with the function f applied to each element in the container.</dd>
-<dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each element in the container.</dd>
 <dt>filter</dt><dd><code>filter!(predicate container)</code> returns a container of all elements for which the predicate says <code>yes</code>.</dd>
 <dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each element is replaced if the predicate says <code>yes</code>.</dd>
 <dt>replace</dt><dd><code>replace!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item.</dd>
