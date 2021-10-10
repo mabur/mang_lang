@@ -22,7 +22,7 @@ TODO:
   - Add second@, third@, fourth@, last@ ... members for lists and strings. _1st@string
     _1st, _2nd, _3rd, _4th, _5th, _6th, _7nth, _8th, _9th
   - Describe ListBase as a "Concept".
-  - Naming of count_*, range, reverse_range, enumerate.
+  - Naming of count_*, range, reverse_range, enumerate, new.
   - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Remove shared_ptr from linked list implementation.
   - Make CodeRange part of ExpressionPointer instead of expression.
