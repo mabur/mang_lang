@@ -685,17 +685,17 @@ int main() {
         {R"(filter!(in x out equal?(x 'a') "ba"))", R"("a")"},
         {R"(filter!(in x out equal?(x 'a') "aba"))", R"("aa")"},
     });
-    test.evaluate("replace list", {
-        {"replace!(1 2 ())", "()"},
-        {"replace!(1 2 (1))", "(2)"},
-        {"replace!(1 2 (2))", "(2)"},
-        {"replace!(1 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
+    test.evaluate("replace_item list", {
+        {"replace_item!(1 2 ())", "()"},
+        {"replace_item!(1 2 (1))", "(2)"},
+        {"replace_item!(1 2 (2))", "(2)"},
+        {"replace_item!(1 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
-    test.evaluate("replace string", {
-        {R"(replace!('a' 'b' ""))", R"("")"},
-        {R"(replace!('a' 'b' "a"))", R"("b")"},
-        {R"(replace!('a' 'b' "c"))", R"("c")"},
-        {R"(replace!('a' 'b' "ab_ba"))", R"("bb_bb")"},
+    test.evaluate("replace_item string", {
+        {R"(replace_item!('a' 'b' ""))", R"("")"},
+        {R"(replace_item!('a' 'b' "a"))", R"("b")"},
+        {R"(replace_item!('a' 'b' "c"))", R"("c")"},
+        {R"(replace_item!('a' 'b' "ab_ba"))", R"("bb_bb")"},
     });
     test.evaluate("replace_if list", {
         {"replace_if!(in x out equal?(x 1) 2 ())", "()"},

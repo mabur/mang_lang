@@ -135,7 +135,7 @@ const std::string STANDARD_LIBRARY = R"(
         result = reverse!reversed_result
     }
 
-    replace = in (old_item new_item list) out
+    replace_item = in (old_item new_item list) out
         replace_if?(in x out equal?(x old_item) new_item list)
 
     count = in list out result@{
