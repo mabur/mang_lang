@@ -1,10 +1,7 @@
 TODO:
-* Document built in functions and functions in standard library
+* Code formatting
 * Fix FunctionDictionary closure
 * Simplifications with new list:
-  - replace boolean(x) with .type == EMPTY_
-  - extract helper function for all built in "n-ary" functions: add, sum, any, etc.
-  - extract helper function for all built in binary functions: arithmetic, logic, prepend, etc.
   - Merge new list and new string?
   - Extract for_each for new lists and strings
   - resolve mutable pointer in iterative dictionary evaluation
@@ -12,8 +9,9 @@ TODO:
 * Generic programming
   - Generic container interface
     - Alternative syntax:
-      - empty!list
       - new!list (bra)
+      - remove!list jmf generic algorithms
+      - empty!list
       - new@list
       - clone!list
       - copy!list
