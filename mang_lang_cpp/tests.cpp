@@ -507,15 +507,15 @@ int main() {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
-    test.evaluate("new list", {
-        {"new!()", "()"},
-        {"new!(1)", "()"},
-        {"new!(1 2)", "()"},
+    test.evaluate("clear list", {
+        {"clear!()", "()"},
+        {"clear!(1)", "()"},
+        {"clear!(1 2)", "()"},
     });
-    test.evaluate("new string", {
-        {R"(new!"")", R"("")"},
-        {R"(new!"a")", R"("")"},
-        {R"(new!"ab")", R"("")"},
+    test.evaluate("clear string", {
+        {R"(clear!"")", R"("")"},
+        {R"(clear!"a")", R"("")"},
+        {R"(clear!"ab")", R"("")"},
     });
     test.evaluate("first list", {
         {"first@(4)", "4"},

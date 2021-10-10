@@ -42,7 +42,7 @@ Expression builtIns() {
     definitions.push_back(define("none", logic::none));
     definitions.push_back(define("equal", logic::equal));
     definitions.push_back(define("unequal", logic::unequal));
-    definitions.push_back(define("new", list_functions::empty));
+    definitions.push_back(define("clear", list_functions::empty));
     definitions.push_back(define("prepend", list_functions::prepend));
     return makeDictionary(
         new Dictionary{CodeRange{}, Expression{}, setContext(definitions)}
