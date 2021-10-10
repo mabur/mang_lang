@@ -10,15 +10,10 @@
 </head>
 <body>
 
-<h1>Built-in Functions</h1>
-The following functions are built-in,
-which means that their implementations are not written in Manglang.
+<h1>Functions</h1>
 
-<h2>Container Functions</h2>
-<dl>
-<dt>clear</dt><dd>Takes either a list or a string and returns an empty container of the same type.</dd>
-<dt>prepend</dt><dd><code>prepend!(item container)</code> returns a new container with item added to the beginning of the old container.</dd>
-</dl>
+Below you can find all functions included with Manglang. They are either built-in or implemented in the
+<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
 
 <h2>Boolean Functions</h2>
 <dl>
@@ -58,11 +53,6 @@ which means that their implementations are not written in Manglang.
 <dt>character</dt><dd>Takes a number and returns the character with that ascii number.</dd>
 </dl>
 
-<h1>Functions in Standard Library</h1>
-The following functions are implemented in the
-<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>,
-which means that their implementation are written in Manglang.
-
 <h2>Number functions</h2>
 <dl>
 <dt>inc</dt><dd>Add 1 to a number.</dd>
@@ -90,12 +80,11 @@ which means that their implementation are written in Manglang.
 
 <h2>Generic Container Functions</h2>
 These functions work on both lists and strings, and the type of the output container is the same as the input.
+
+<h2>Container Functions</h2>
 <dl>
-<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the first n elements removed.</dd>
-<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the first n elements.</dd>
-<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth element from the container.</dd>
-<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
-<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
+<dt>prepend</dt><dd><code>prepend!(item container)</code> returns a new container with item added to the beginning of the old container.</dd>
+<dt>clear</dt><dd>Outputs an empty container of the same type as the input.</dd>
 <dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed.</dd>
 <dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>.</dd>
 <dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each element is replaced with new_item.</dd>
@@ -104,6 +93,11 @@ These functions work on both lists and strings, and the type of the output conta
 <dt>count</dt><dd><code>count!container</code> returns the number of elements in the container.</dd>
 <dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container.</dd>
 <dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of elements for which the predicate says <code>yes</code>.</dd>
+<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the first n elements removed.</dd>
+<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the first n elements.</dd>
+<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth element from the container.</dd>
+<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
+<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
 </dl>
 
 </body>
