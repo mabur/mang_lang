@@ -123,6 +123,16 @@ const std::string STANDARD_LIBRARY = R"(
         result = reverse!reversed_result
     }
 
+    replace = in (new_item list) out result@{
+        result = new!list
+        list = list
+        while list
+            current_item = first@list
+            result = prepend!(new_item result)
+            list = rest@list
+        end
+    }
+
     replace_if = in (predicate new_item list) out result@{
         reversed_result = new!list
         list = list

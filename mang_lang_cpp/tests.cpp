@@ -685,6 +685,18 @@ int main() {
         {R"(filter!(in x out equal?(x 'a') "ba"))", R"("a")"},
         {R"(filter!(in x out equal?(x 'a') "aba"))", R"("aa")"},
     });
+    test.evaluate("replace list", {
+        {"replace!(1 ())", "()"},
+        {"replace!(1 (1))", "(1)"},
+        {"replace!(1 (2))", "(1)"},
+        {"replace!(1 (0 1 0 1 1))", "(1 1 1 1 1)"},
+    });
+    test.evaluate("replace string", {
+        {R"(replace!('a' ""))", R"("")"},
+        {R"(replace!('a' "a"))", R"("a")"},
+        {R"(replace!('a' "c"))", R"("a")"},
+        {R"(replace!('a' "ab_ba"))", R"("aaaaa")"},
+    });
     test.evaluate("replace_item list", {
         {"replace_item!(1 2 ())", "()"},
         {"replace_item!(1 2 (1))", "(2)"},
