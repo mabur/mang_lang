@@ -124,6 +124,9 @@ const std::string STANDARD_LIBRARY = R"(
         result = reverse!reversed_result
     }
 
+    clear_item = in (item list) out
+        clear_if?(in x out equal?(x item) list)
+
     replace = in (new_item list) out result@{
         result = new!list
         list = list

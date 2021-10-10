@@ -686,6 +686,12 @@ int main() {
         {R"(clear_if!(in x out equal?(x 'a') "ba"))", R"("b")"},
         {R"(clear_if!(in x out equal?(x 'a') "bab"))", R"("bb")"},
     });
+    test.evaluate("clear_item list", {
+        {"clear_item!(1 ())", "()"},
+        {"clear_item!(1 (0))", "(0)"},
+        {"clear_item!(1 (1))", "()"},
+        {"clear_item!(1 (1 7 1 2 7 1 1))", "(7 2 7)"},
+    });
     test.evaluate("replace list", {
         {"replace!(1 ())", "()"},
         {"replace!(1 (1))", "(1)"},

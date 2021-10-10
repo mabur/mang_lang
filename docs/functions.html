@@ -96,7 +96,8 @@ These functions work on both lists and strings, and the type of the output conta
 <dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth element from the container.</dd>
 <dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
 <dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
-<dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the elements for which the predicate says <code>yes</code>.</dd>
+<dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed.</dd>
+<dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>.</dd>
 <dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each element is replaced with new_item.</dd>
 <dt>replace_item</dt><dd><code>replace_item!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item.</dd>
 <dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each element is replaced if the predicate says <code>yes</code>.</dd>
