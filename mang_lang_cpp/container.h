@@ -6,7 +6,7 @@
 #include "operations/end.h"
 #include "factory.h"
 
-// TODO: why is this needed?
+// Note that we need code range since we use this during parsing.
 inline CodeRange addCodeRanges(Expression rest, Expression first) {
     const auto first_character = std::min(begin(rest), begin(first));
     const auto last_character = std::max(end(rest), end(first));
@@ -61,9 +61,12 @@ bool allOfPairs(Expression left, Expression right, Predicate predicate) {
 
 namespace new_list {
 
-Expression first(Expression list);
-Expression rest(Expression list);
-Expression second(Expression list);
+struct BinaryInput {
+    Expression left;
+    Expression right;
+};
+
+BinaryInput getBinaryInput(Expression list);
 
 inline Expression prepend(Expression rest, Expression first) {
     return makeList(new List{addCodeRanges(first, rest), first, rest});

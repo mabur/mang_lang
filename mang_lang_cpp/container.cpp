@@ -4,16 +4,10 @@
 
 namespace new_list {
 
-Expression first(Expression list) {
-    return getList(list).first;
-}
-
-Expression rest(Expression expression) {
-    return getList(expression).rest;
-}
-
-Expression second(Expression list) {
-    return first(rest(list));
+BinaryInput getBinaryInput(Expression expression) {
+    const auto list = getList(expression);
+    const auto rest = getList(list.rest);
+    return BinaryInput{list.first, rest.first};
 }
 
 } // namespace new_list

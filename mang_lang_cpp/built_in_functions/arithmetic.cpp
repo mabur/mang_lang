@@ -64,16 +64,14 @@ Expression mul(Expression in) {
 }
 
 Expression sub(Expression in) {
-    const auto left = new_list::first(in);
-    const auto right = new_list::second(in);
-    const auto result = number(left) - number(right);
+    const auto binary = new_list::getBinaryInput(in);
+    const auto result = number(binary.left) - number(binary.right);
     return makeNumber(result);
 }
 
 Expression div(Expression in) {
-    const auto left = new_list::first(in);
-    const auto right = new_list::second(in);
-    const auto result = number(left) / number(right);
+    const auto binary = new_list::getBinaryInput(in);
+    const auto result = number(binary.left) / number(binary.right);
     return makeNumber(result);
 }
 
