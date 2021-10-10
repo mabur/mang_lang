@@ -6,13 +6,17 @@
 #include "operations/end.h"
 #include "factory.h"
 
+// TODO: why is this needed?
+inline CodeRange addCodeRanges(Expression rest, Expression first) {
+    const auto first_character = std::min(begin(rest), begin(first));
+    const auto last_character = std::max(end(rest), end(first));
+    return CodeRange{first_character, last_character};
+}
+
 namespace new_string {
 
 inline Expression prepend(Expression rest, Expression first) {
-    const auto first_character = std::min(begin(rest), begin(first));
-    const auto last_character = std::max(end(rest), end(first));
-    const auto code = CodeRange{first_character, last_character};
-    return makeString(new String{code, first, rest});
+    return makeString(new String{addCodeRanges(first, rest), first, rest});
 }
 
 template<typename T, typename Operation>
@@ -62,10 +66,7 @@ Expression rest(Expression list);
 Expression second(Expression list);
 
 inline Expression prepend(Expression rest, Expression first) {
-    const auto first_character = std::min(begin(rest), begin(first));
-    const auto last_character = std::max(end(rest), end(first));
-    const auto code = CodeRange{first_character, last_character};
-    return makeList(new List{code, first, rest});
+    return makeList(new List{addCodeRanges(first, rest), first, rest});
 }
 
 template<typename T, typename Operation>
