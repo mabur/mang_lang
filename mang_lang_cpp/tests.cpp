@@ -670,20 +670,21 @@ int main() {
         {R"(map_string!(to_upper ""))", R"("")"},
         {R"(map_string!(to_upper "abc"))", R"("ABC")"},
     });
-    test.evaluate("filter list", {
-        {"filter!(in x out 1 ())", "()"},
-        {"filter!(in x out 1 (()))", "(())"},
-        {"filter!(in x out 0 (()))", "()"},
+    test.evaluate("clear_if list", {
+        {"clear_if!(in x out 1 ())", "()"},
+        {"clear_if!(in x out 1 (()))", "()"},
+        {"clear_if!(in x out 0 (()))", "(())"},
+        {"clear_if!(in x out less?(x 5) (7 4 6 1 9 3 2))", "(7 6 9)"},
     });
-    test.evaluate("filter string", {
-        {R"(filter!(in x out 0 ""))", R"("")"},
-        {R"(filter!(in x out 0 "a"))", R"("")"},
-        {R"(filter!(in x out 1 ""))", R"("")"},
-        {R"(filter!(in x out 1 "a"))", R"("a")"},
-        {R"(filter!(in x out equal?(x 'a') "a"))", R"("a")"},
-        {R"(filter!(in x out equal?(x 'a') "ab"))", R"("a")"},
-        {R"(filter!(in x out equal?(x 'a') "ba"))", R"("a")"},
-        {R"(filter!(in x out equal?(x 'a') "aba"))", R"("aa")"},
+    test.evaluate("clear_if string", {
+        {R"(clear_if!(in x out 0 ""))", R"("")"},
+        {R"(clear_if!(in x out 0 "a"))", R"("a")"},
+        {R"(clear_if!(in x out 1 ""))", R"("")"},
+        {R"(clear_if!(in x out 1 "a"))", R"("")"},
+        {R"(clear_if!(in x out equal?(x 'a') "a"))", R"("")"},
+        {R"(clear_if!(in x out equal?(x 'a') "ab"))", R"("b")"},
+        {R"(clear_if!(in x out equal?(x 'a') "ba"))", R"("b")"},
+        {R"(clear_if!(in x out equal?(x 'a') "bab"))", R"("bb")"},
     });
     test.evaluate("replace list", {
         {"replace!(1 ())", "()"},

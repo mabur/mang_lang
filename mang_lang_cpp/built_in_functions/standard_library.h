@@ -109,15 +109,16 @@ const std::string STANDARD_LIBRARY = R"(
         result = reverse!reversed_result
     }
 
-    filter = in (predicate list) out result@{
+    clear_if = in (predicate list) out result@{
         reversed_result = new!list
         list = list
         while list
             reversed_result =
                 if predicate?first@list then
-                    prepend!(first@list reversed_result)
-                else
                     reversed_result
+                else
+                    prepend!(first@list reversed_result)
+
             list = rest@list
         end
         result = reverse!reversed_result
