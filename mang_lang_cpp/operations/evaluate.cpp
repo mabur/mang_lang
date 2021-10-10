@@ -113,10 +113,15 @@ Expression evaluateFunctionList(
 Expression evaluateList(
     Expression list, Expression environment, std::ostream& log
 ) {
-    const auto operation = [&](Expression expression) -> Expression {
-        return evaluate(expression, environment, log);
+    const auto op = [&](Expression rest, Expression first) -> Expression {
+        const auto evaluated_first = evaluate(first, environment, log);
+        return new_list::prepend(rest, evaluated_first);
     };
-    auto result = new_list::map(list, operation);
+    const auto code = CodeRange{};
+    const auto init = makeEmptyList(new EmptyList{});
+    const auto output = new_list::leftFold(init, list, op);
+    auto result = new_list::reverse(code, output);
+
     log << serialize(result) << std::endl;
     return result;
 }

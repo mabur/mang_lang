@@ -33,16 +33,6 @@ inline Expression reverse(CodeRange code, Expression list) {
     return leftFold(makeEmptyString(new EmptyString{code}), list, prepend);
 }
 
-template<typename Function>
-Expression map(Expression list, Function f) {
-    const auto op = [&](Expression new_list, Expression x) -> Expression {
-        return prepend(new_list, f(x));
-    };
-    const auto code = CodeRange{};
-    const auto output = leftFold(makeEmptyString(new EmptyString{}), list, op);
-    return reverse(code, output);
-}
-
 template<typename Predicate>
 bool allOfPairs(Expression left, Expression right, Predicate predicate) {
     while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
@@ -84,16 +74,6 @@ T leftFold(T value, Expression expression, Operation operation) {
 
 inline Expression reverse(CodeRange code, Expression list) {
     return leftFold(makeEmptyList(new EmptyList{code}), list, prepend);
-}
-
-template<typename Function>
-Expression map(Expression list, Function f) {
-    const auto op = [&](Expression new_list, Expression x) -> Expression {
-        return prepend(new_list, f(x));
-    };
-    const auto code = CodeRange{};
-    const auto output = leftFold(makeEmptyList(new EmptyList{}), list, op);
-    return reverse(code, output);
 }
 
 template<typename Predicate>
