@@ -22,18 +22,6 @@ Expression logic_not(Expression in) {
     return makeBoolean(!boolean(in));
 }
 
-Expression all(Expression list) {
-    return makeBoolean(new_list::allOf(list, boolean));
-}
-
-Expression any(Expression list) {
-    return makeBoolean(!new_list::allOf(list, isFalse));
-}
-
-Expression none(Expression list) {
-    return makeBoolean(new_list::allOf(list, isFalse));
-}
-
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;

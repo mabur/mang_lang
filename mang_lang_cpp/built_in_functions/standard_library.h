@@ -189,5 +189,25 @@ const std::string STANDARD_LIBRARY = R"(
     count_item = in (item list) out
         count_if!(in x out equal?(x item) list)
 
+    all = in list out not?list@{
+        list = list
+        while if list then first@list else no
+            list = rest@list
+        end
+    }
+
+    none = in list out not?list@{
+        list = list
+        while if list then not?first@list else no
+            list = rest@list
+        end
+    }
+
+    any = in list out boolean?list@{
+        list = list
+        while if list then not?first@list else no
+            list = rest@list
+        end
+    }
 }
 )";
