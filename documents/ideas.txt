@@ -15,6 +15,7 @@ TODO:
 * Generic programming
   - Generic container interface
     - Alternative syntax:
+      - clear!list (bra)
       - new!list (bra)
       - remove!list jmf generic algorithms
       - empty!list
