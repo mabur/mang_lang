@@ -90,10 +90,6 @@ Expression are_all_less_or_equal(Expression in) {
     return makeBoolean(new_list::allOfNeighbours(in, lessOrEqual));
 }
 
-Expression abs(Expression in) {
-    return makeNumber(std::fabs(number(in)));
-}
-
 Expression sqrt(Expression in) {
     return makeNumber(std::sqrt(number(in)));
 }

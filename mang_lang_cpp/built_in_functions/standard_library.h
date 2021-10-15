@@ -6,6 +6,8 @@ const std::string STANDARD_LIBRARY = R"(
 {
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
+    neg = in x out sub!(0 x)
+    abs = in x out if less?(0 x) then x else neg!x
 
     is_digit = in c out less_or_equal?(48 number!c 57)
     is_upper = in c out less_or_equal?(65 number!c 90)
