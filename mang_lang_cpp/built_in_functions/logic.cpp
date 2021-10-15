@@ -6,20 +6,12 @@
 
 namespace logic {
 
-bool isFalse(Expression x) {
-    return !boolean(x);
-}
-
 Expression makeBoolean(bool x) {
     return makeBoolean(new Boolean{CodeRange{}, x});
 }
 
 Expression booleanExpression(Expression in) {
     return makeBoolean(boolean(in));
-}
-
-Expression logic_not(Expression in) {
-    return makeBoolean(!boolean(in));
 }
 
 bool isEqual(Expression left, Expression right) {

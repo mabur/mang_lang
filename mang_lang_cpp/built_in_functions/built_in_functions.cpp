@@ -35,7 +35,6 @@ Expression builtIns() {
     definitions.push_back(define("number", arithmetic::ascii_number));
     definitions.push_back(define("character", arithmetic::ascii_character));
     definitions.push_back(define("boolean", logic::booleanExpression));
-    definitions.push_back(define("not", logic::logic_not));
     definitions.push_back(define("equal", logic::equal));
     definitions.push_back(define("unequal", logic::unequal));
     definitions.push_back(define("clear", list_functions::empty));
