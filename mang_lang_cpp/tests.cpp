@@ -776,6 +776,12 @@ int main() {
         {R"(drop!(2 "abc"))", R"("c")"},
         {R"(drop!(3 "abc"))", R"("")"},
     });
+    test.evaluate("drop_while string", {
+        {R"(drop_while!(is_lower ""))", R"("")"},
+        {R"(drop_while!(is_lower "a"))", R"("")"},
+        {R"(drop_while!(is_lower "A"))", R"("A")"},
+        {R"(drop_while!(is_lower "abCD"))", R"("CD")"},
+    });
     test.evaluate("take list", {
         {"take!(0 (3 7 6))", "()"},
         {"take!(1 (3 7 6))", "(3)"},

@@ -47,6 +47,13 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    drop_while = in (predicate list) out list@{
+        list = list
+        while if list then predicate?first@list else no
+            list = rest@list
+        end
+    }
+
     take = in (n list) out short_list@{
         reversed_result = clear!list
         list = list
