@@ -377,6 +377,18 @@ int main() {
         {R"(not?"a")", "no"},
         {R"(not?"ab")", "no"},
     });
+    test.evaluate("and", {
+        {"and?(no no)", "no"},
+        {"and?(no yes)", "no"},
+        {"and?(yes no)", "no"},
+        {"and?(yes yes)", "yes"},
+    });
+    test.evaluate("or", {
+        {"or?(no no)", "no"},
+        {"or?(no yes)", "yes"},
+        {"or?(yes no)", "yes"},
+        {"or?(yes yes)", "yes"},
+    });
     test.evaluate("all", {
         {"all?()", "yes"},
         {"all?(0)", "no"},

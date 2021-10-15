@@ -4,6 +4,9 @@
 
 const std::string STANDARD_LIBRARY = R"(
 {
+    and = in (left right) out if left then boolean?right else no
+    or = in (left right) out if left then yes else boolean?right
+
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
     neg = in x out sub!(0 x)
