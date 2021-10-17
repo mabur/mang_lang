@@ -1,17 +1,12 @@
 #include "logic.h"
 
 #include "../factory.h"
-#include "../operations/boolean.h"
 #include "../container.h"
 
 namespace logic {
 
 Expression makeBoolean(bool x) {
     return makeBoolean(new Boolean{CodeRange{}, x});
-}
-
-Expression booleanExpression(Expression in) {
-    return makeBoolean(boolean(in));
 }
 
 bool isEqual(Expression left, Expression right) {
