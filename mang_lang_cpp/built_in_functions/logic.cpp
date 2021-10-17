@@ -14,6 +14,9 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return getCharacter(left).value == getCharacter(right).value;
     }
+    if (left_type == BOOLEAN && right_type == BOOLEAN) {
+        return getBoolean(left).value == getBoolean(right).value;
+    }
     if (left_type == EMPTY_LIST && right_type == EMPTY_LIST) {
         return true;
     }

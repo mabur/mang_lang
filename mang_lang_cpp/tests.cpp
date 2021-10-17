@@ -437,6 +437,18 @@ int main() {
         {"unequal?('b' 'a')", "yes"},
         {"unequal?('b' 'b')", "no"},
     });
+    test.evaluate("equal boolean", {
+        {"equal?(yes yes)", "yes"},
+        {"equal?(yes no)", "no"},
+        {"equal?(no yes)", "no"},
+        {"equal?(no no)", "yes"},
+    });
+    test.evaluate("unequal boolean", {
+        {"unequal?(yes yes)", "no"},
+        {"unequal?(yes no)", "yes"},
+        {"unequal?(no yes)", "yes"},
+        {"unequal?(no no)", "no"},
+    });
     test.evaluate("equal list", {
         {"equal?(() ())", "yes"},
         {"equal?((1) (1))", "yes"},
