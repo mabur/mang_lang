@@ -259,7 +259,8 @@ typename ArrayType::value_type::element_type getExpression(
 ) {
     if (expression.type != type) {
         std::stringstream s;
-        s << "getExpression expected " << type << " got " << expression.type;
+        s << "getExpression expected " << NAMES[type]
+          << " got " << NAMES[expression.type];
         throw std::runtime_error{s.str()};
     }
     assert(expression.type == type);

@@ -30,6 +30,30 @@ enum ExpressionType {
     EMPTY,
 };
 
+const auto NAMES = std::vector<std::string>{
+    "CHARACTER",
+    "CONDITIONAL",
+    "DICTIONARY",
+    "FUNCTION",
+    "FUNCTION_BUILT_IN",
+    "FUNCTION_DICTIONARY",
+    "FUNCTION_LIST",
+    "LIST",
+    "EMPTY_LIST",
+    "LOOKUP_CHILD",
+    "FUNCTION_APPLICATION",
+    "LOOKUP_SYMBOL",
+    "NAME",
+    "DEFINITION",
+    "WHILE_STATEMENT",
+    "END_STATEMENT",
+    "NUMBER",
+    "STRING",
+    "EMPTY_STRING",
+    "BOOLEAN",
+    "EMPTY",
+};
+
 struct Expression {
     ExpressionType type = EMPTY;
     size_t index = 0;
