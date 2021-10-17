@@ -69,6 +69,10 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_index = in (index list) out first@drop!(index list)
 
+    all = in list out not?drop_while!(in x out boolean?x list)
+    none = in list out not?drop_while!(not list)
+    any = in list out boolean?drop_while!(not list)
+
     reverse = in list out reversed_list@{
         reversed_list = clear!list
         list = list
@@ -189,11 +193,5 @@ const std::string STANDARD_LIBRARY = R"(
 
     count_item = in (item list) out
         count_if!(in x out equal?(x item) list)
-
-    all = in list out not?drop_while!(in x out boolean?x list)
-
-    none = in list out not?drop_while!(not list)
-
-    any = in list out boolean?drop_while!(not list)
 }
 )";
