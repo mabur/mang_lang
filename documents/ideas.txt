@@ -1,6 +1,7 @@
 TODO:
 * Code formatting
 * Fix FunctionDictionary closure
+* Fix sending built-in functions to higher order functions
 * Convert functions from built-in to standard library.
   - all, any, none, med och utan predikat
   - find_if, find_item, drop_item, drop_while...
