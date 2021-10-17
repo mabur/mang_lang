@@ -71,7 +71,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_index = in (index list) out first@drop!(index list)
 
-    all = in list out not?drop_while!(in x out boolean?x list)
+    all = in list out not?drop_while!(boolean list)
     none = in list out not?drop_while!(not list)
     any = in list out boolean?drop_while!(not list)
 
