@@ -38,9 +38,4 @@ Expression equal(Expression in) {
     return makeBoolean(isEqual(binary.left, binary.right));
 }
 
-Expression unequal(Expression in) {
-    const auto binary = new_list::getBinaryInput(in);
-    return makeBoolean(!isEqual(binary.left, binary.right));
-}
-
 }

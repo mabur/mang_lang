@@ -8,6 +8,7 @@ const std::string STANDARD_LIBRARY = R"(
     not = in x out if x then no else yes
     and = in (left right) out if left then boolean?right else no
     or = in (left right) out if left then yes else boolean?right
+    unequal = in pair out not?equal?pair
 
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
