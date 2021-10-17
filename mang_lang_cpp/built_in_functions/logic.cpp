@@ -5,10 +5,6 @@
 
 namespace logic {
 
-Expression makeBoolean(bool x) {
-    return makeBoolean(new Boolean{CodeRange{}, x});
-}
-
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
@@ -35,7 +31,8 @@ bool isEqual(Expression left, Expression right) {
 
 Expression equal(Expression in) {
     const auto binary = new_list::getBinaryInput(in);
-    return makeBoolean(isEqual(binary.left, binary.right));
+    const auto result = isEqual(binary.left, binary.right);
+    return makeBoolean(new Boolean{CodeRange{}, result});
 }
 
 }
