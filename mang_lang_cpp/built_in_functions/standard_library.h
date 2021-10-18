@@ -32,6 +32,85 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
+    fold = in (operation list init) out result@{
+        result = init
+        list = list
+        while list
+            result = operation!(first@list result)
+            list = rest@list
+        end
+    }
+
+    reverse = in list out fold!(
+        in (item list) out prepend!(item list)
+        list
+        clear!list
+    )
+
+    concat = in (left_list right_list) out fold!(
+        in x out prepend!x
+        reverse!left_list
+        right_list
+    )
+
+    map = in (f list) out reverse!fold!(
+        in (item list) out prepend!(f!item list)
+        list
+        ()
+    )
+
+    map_string = in (f list) out reverse!fold!(
+        in (item list) out prepend!(f!item list)
+        list
+        ""
+    )
+
+    clear_if = in (predicate list) out reverse!fold!(
+        in (item list) out
+            if predicate?item then
+                list
+            else
+                prepend!(item list)
+        list
+        clear!list
+    )
+
+    clear_item = in (item list) out
+        clear_if?(in x out equal?(x item) list)
+
+    replace = in (new_item list) out fold!(
+        in (item list) out prepend!(new_item list)
+        list
+        clear!list
+    )
+
+    replace_if = in (predicate new_item list) out reverse!fold!(
+        in (item list) out prepend!(
+            if predicate?item then new_item else item
+            list
+        )
+        list
+        clear!list
+    )
+
+    replace_item = in (old_item new_item list) out
+        replace_if?(in x out equal?(x old_item) new_item list)
+
+    count = in list out fold!(
+        in (item n) out inc!n
+        list
+        0
+    )
+
+    count_if = in (predicate list) out fold!(
+        in (item n) out if predicate?item then inc!n else n
+        list
+        0
+    )
+
+    count_item = in (item list) out
+        count_if!(in x out equal?(x item) list)
+
     range = in n out list@{
         list = ()
         i = n
@@ -39,6 +118,21 @@ const std::string STANDARD_LIBRARY = R"(
             i = dec!i
             list = prepend!(i list)
         end
+    }
+
+    enumerate = in list out result@{
+        reversed_result = ()
+        list = list
+        index = 0
+        while list
+            reversed_result = prepend!(
+                {index=index item=first@list}
+                reversed_result
+            )
+            index = inc!index
+            list = rest@list
+        end
+        result = reverse!reversed_result
     }
 
     drop = in (n list) out short_list@{
@@ -74,128 +168,5 @@ const std::string STANDARD_LIBRARY = R"(
     all = in list out not?drop_while!(boolean list)
     none = in list out not?drop_while!(not list)
     any = in list out boolean?drop_while!(not list)
-
-    fold = in (init operation list) out result@{
-        result = init
-        list = list
-        while list
-            result = operation!(first@list result)
-            list = rest@list
-        end
-    }
-
-    reverse = in list out fold!(clear!list in x out prepend!x list)
-
-    concat = in (left_list right_list) out long_list@{
-        long_list = right_list
-        list = reverse!left_list
-        while list
-            long_list = prepend!(first@list long_list)
-            list = rest@list
-        end
-    }
-
-    enumerate = in list out result@{
-        reversed_result = ()
-        list = list
-        index = 0
-        while list
-            reversed_result = prepend!(
-                {index=index item=first@list}
-                reversed_result
-            )
-            index = inc!index
-            list = rest@list
-        end
-        result = reverse!reversed_result
-    }
-
-    map = in (f list) out result@{
-        reversed_result = ()
-        list = list
-        while list
-            reversed_result = prepend!(f!first@list reversed_result)
-            list = rest@list
-        end
-        result = reverse!reversed_result
-    }
-
-    map_string = in (f list) out result@{
-        reversed_result = ""
-        list = list
-        while list
-            reversed_result = prepend!(f!first@list reversed_result)
-            list = rest@list
-        end
-        result = reverse!reversed_result
-    }
-
-    clear_if = in (predicate list) out result@{
-        reversed_result = clear!list
-        list = list
-        while list
-            reversed_result =
-                if predicate?first@list then
-                    reversed_result
-                else
-                    prepend!(first@list reversed_result)
-
-            list = rest@list
-        end
-        result = reverse!reversed_result
-    }
-
-    clear_item = in (item list) out
-        clear_if?(in x out equal?(x item) list)
-
-    replace = in (new_item list) out result@{
-        result = clear!list
-        list = list
-        while list
-            current_item = first@list
-            result = prepend!(new_item result)
-            list = rest@list
-        end
-    }
-
-    replace_if = in (predicate new_item list) out result@{
-        reversed_result = clear!list
-        list = list
-        while list
-            current_item = first@list
-            item = if predicate?current_item then new_item else current_item
-            reversed_result = prepend!(item reversed_result)
-            list = rest@list
-        end
-        result = reverse!reversed_result
-    }
-
-    replace_item = in (old_item new_item list) out
-        replace_if?(in x out equal?(x old_item) new_item list)
-
-    count = in list out result@{
-        result = 0
-        list = list
-        while list
-            result = inc!result
-            list = rest@list
-        end
-    }
-
-    count_if = in (predicate list) out result@{
-        result = 0
-        list = list
-        while list
-            result =
-                if predicate?first@list then
-                    inc!result
-                else
-                    result
-            list = rest@list
-        end
-    }
-
-    count_item = in (item list) out
-        count_if!(in x out equal?(x item) list)
 }
 )";

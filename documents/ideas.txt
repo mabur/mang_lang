@@ -1,7 +1,7 @@
 TODO:
 * Code formatting
 * Fix FunctionDictionary closure
-* Fix sending built-in functions to higher order functions
+* Fix sending built-in functions like prepend to higher order functions
 * Convert functions from built-in to standard library.
   - fold
   - fold_while
