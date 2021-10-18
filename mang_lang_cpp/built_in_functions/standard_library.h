@@ -85,10 +85,11 @@ const std::string STANDARD_LIBRARY = R"(
     )
 
     replace_if = in (predicate new_item list) out reverse!fold!(
-        in (item list) out prepend!(
-            if predicate?item then new_item else item
-            list
-        )
+        in (item list) out
+            if predicate?item then
+                prepend!(new_item list)
+            else
+                prepend!(item list)
         list
         clear!list
     )
