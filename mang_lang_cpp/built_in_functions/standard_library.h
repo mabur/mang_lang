@@ -75,14 +75,16 @@ const std::string STANDARD_LIBRARY = R"(
     none = in list out not?drop_while!(not list)
     any = in list out boolean?drop_while!(not list)
 
-    reverse = in list out reversed_list@{
-        reversed_list = clear!list
+    fold = in (init operation list) out result@{
+        result = init
         list = list
         while list
-            reversed_list = prepend!(first@list reversed_list)
+            result = operation!(first@list result)
             list = rest@list
         end
     }
+
+    reverse = in list out fold!(clear!list in x out prepend!x list)
 
     concat = in (left_list right_list) out long_list@{
         long_list = right_list
