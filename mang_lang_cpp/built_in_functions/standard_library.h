@@ -48,7 +48,7 @@ const std::string STANDARD_LIBRARY = R"(
     )
 
     concat = in (left_list right_list) out fold!(
-        in x out prepend!x
+        in (item list) out prepend!(item list)
         reverse!left_list
         right_list
     )
