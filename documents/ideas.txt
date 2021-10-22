@@ -3,10 +3,11 @@ TODO:
 * Fix FunctionDictionary closure
 * Fix sending built-in functions like prepend to higher order functions
 * Convert functions from built-in to standard library.
-  - fold
   - fold_while
   - all, any, none, med och utan predikat
   - find_if, find_item, drop_item, drop_while...
+  - split
+  - trim
 * Remove shared_ptr from linked list implementation.
   - Make CodeRange part of ExpressionPointer instead of expression.
 * vector math
