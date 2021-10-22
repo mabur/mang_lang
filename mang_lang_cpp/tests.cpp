@@ -211,6 +211,11 @@ int main() {
     test.reformat("lookup_function", {
         {"add!()", "add!()"},
     });
+    test.evaluate("inf", {
+        {"inf", "inf"},
+        {"neg_inf", "-inf"},
+        {"nan", "nan"},
+    });
     test.evaluate("min", {
         {"min!(0)", "0"},
         {"min!(0 1)", "0"},

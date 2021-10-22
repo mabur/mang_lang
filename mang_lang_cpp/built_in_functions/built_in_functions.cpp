@@ -1,5 +1,6 @@
 #include "built_in_functions.h"
 
+#include <limits>
 #include <memory>
 
 #include "../factory.h"
@@ -13,6 +14,17 @@ Expression define(std::string name, std::function<Expression(Expression)> functi
             CodeRange{},
             makeName(new Name{CodeRange{}, name}),
             makeFunctionBuiltIn(new FunctionBuiltIn{{}, function}),
+            0
+        }
+    );
+}
+
+Expression defineNumber(std::string name, double number) {
+    return makeDefinition(
+        new Definition{
+            CodeRange{},
+            makeName(new Name{CodeRange{}, name}),
+            makeNumber(new Number{{}, number}),
             0
         }
     );
@@ -37,6 +49,9 @@ Expression builtIns() {
     definitions.push_back(define("equal", logic::equal));
     definitions.push_back(define("clear", list_functions::empty));
     definitions.push_back(define("prepend", list_functions::prepend));
+    definitions.push_back(defineNumber("inf", std::numeric_limits<double>::infinity()));
+    definitions.push_back(defineNumber("neg_inf", -std::numeric_limits<double>::infinity()));
+    definitions.push_back(defineNumber("nan", std::numeric_limits<double>::quiet_NaN()));
     return makeDictionary(
         new Dictionary{CodeRange{}, Expression{}, setContext(definitions)}
     );
