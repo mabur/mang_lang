@@ -32,6 +32,9 @@ Expression defineNumber(std::string name, double number) {
 
 Expression builtIns() {
     auto definitions = Statements{};
+    definitions.push_back(define("equal", logic::equal));
+    definitions.push_back(define("clear", list_functions::empty));
+    definitions.push_back(define("prepend", list_functions::prepend));
     definitions.push_back(define("min", arithmetic::min));
     definitions.push_back(define("max", arithmetic::max));
     definitions.push_back(define("add", arithmetic::add));
@@ -46,9 +49,6 @@ Expression builtIns() {
     definitions.push_back(define("sqrt", arithmetic::sqrt));
     definitions.push_back(define("number", arithmetic::ascii_number));
     definitions.push_back(define("character", arithmetic::ascii_character));
-    definitions.push_back(define("equal", logic::equal));
-    definitions.push_back(define("clear", list_functions::empty));
-    definitions.push_back(define("prepend", list_functions::prepend));
     definitions.push_back(defineNumber("inf", std::numeric_limits<double>::infinity()));
     definitions.push_back(defineNumber("neg_inf", -std::numeric_limits<double>::infinity()));
     definitions.push_back(defineNumber("nan", std::numeric_limits<double>::quiet_NaN()));
