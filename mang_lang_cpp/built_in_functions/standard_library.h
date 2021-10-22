@@ -44,6 +44,18 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    min = in list out fold!(
+        in (item value) out if less?(item value) then item else value
+        list
+        inf
+    )
+
+    max = in list out fold!(
+        in (item value) out if less?(item value) then value else item
+        list
+        neg_inf
+    )
+
     reverse = in list out fold!(
         in (item list) out prepend!(item list)
         list

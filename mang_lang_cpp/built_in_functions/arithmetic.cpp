@@ -1,7 +1,6 @@
 #include "arithmetic.h"
 
 #include <cmath>
-#include <limits>
 
 #include "../factory.h"
 #include "../container.h"
@@ -20,33 +19,12 @@ Expression makeBoolean(bool x) {
     return makeBoolean(new Boolean{CodeRange{}, x});
 }
 
-double minExpression(double left, Expression right) {
-    return std::min(left, number(right));
-}
-
-double maxExpression(double left, Expression right) {
-    return std::max(left, number(right));
-}
-
 double addExpression(double left, Expression right) {
     return left + number(right);
 }
 
 double mulExpression(double left, Expression right) {
     return left * number(right);
-}
-
-Expression min(Expression in) {
-
-    const auto init = std::numeric_limits<double>::infinity();
-    const auto result = new_list::leftFold(init, in, minExpression);
-    return makeNumber(result);
-}
-
-Expression max(Expression in) {
-    const auto init = -std::numeric_limits<double>::infinity();
-    const auto result = new_list::leftFold(init, in, maxExpression);
-    return makeNumber(result);
 }
 
 Expression add(Expression in) {

@@ -4,8 +4,6 @@ struct Expression;
 
 namespace arithmetic {
 
-Expression min(Expression in);
-Expression max(Expression in);
 Expression add(Expression in);
 Expression mul(Expression in);
 Expression sub(Expression in);
