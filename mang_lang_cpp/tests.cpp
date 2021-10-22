@@ -215,6 +215,8 @@ int main() {
         {"inf", "inf"},
         {"neg_inf", "-inf"},
         {"nan", "nan"},
+        {"pi", "3.14159"},
+        {"tau", "6.28319"},
     });
     test.evaluate("min", {
         {"min!(0)", "0"},

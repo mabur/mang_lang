@@ -10,6 +10,9 @@ const std::string STANDARD_LIBRARY = R"(
     or = in (left right) out if left then yes else boolean?right
     unequal = in pair out not?equal?pair
 
+    pi = 3.14159265359
+    tau = 6.28318530718
+
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
     neg = in x out sub!(0 x)
