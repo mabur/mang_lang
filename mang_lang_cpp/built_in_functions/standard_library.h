@@ -53,7 +53,7 @@ const std::string STANDARD_LIBRARY = R"(
     max = in list out fold!(
         in (item value) out if less?(item value) then value else item
         list
-        neg_inf
+        -inf
     )
 
     reverse = in list out fold!(

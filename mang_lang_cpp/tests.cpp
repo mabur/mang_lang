@@ -213,7 +213,7 @@ int main() {
     });
     test.evaluate("inf", {
         {"inf", "inf"},
-        {"neg_inf", "-inf"},
+        {"-inf", "-inf"},
         {"nan", "nan"},
         {"pi", "3.14159"},
         {"tau", "6.28319"},

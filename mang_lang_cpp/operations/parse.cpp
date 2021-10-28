@@ -270,6 +270,27 @@ Expression parseNo(CodeRange code) {
     return makeBoolean(new Boolean{parseKeyWordContent(code, "no"), false});
 }
 
+Expression parseInf(CodeRange code) {
+    return makeNumber(new Number{
+        parseKeyWordContent(code, "inf"),
+        std::numeric_limits<double>::infinity()
+    });
+}
+
+Expression parseNegInf(CodeRange code) {
+    return makeNumber(new Number{
+        parseKeyWordContent(code, "-inf"),
+        -std::numeric_limits<double>::infinity()
+    });
+}
+
+Expression parseNan(CodeRange code) {
+    return makeNumber(new Number{
+        parseKeyWordContent(code, "nan"),
+        std::numeric_limits<double>::quiet_NaN()
+    });
+}
+
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
@@ -289,12 +310,15 @@ Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
+        if (isLiteral(code, "yes")) {return parseYes(code);}
+        if (isLiteral(code, "no")) {return parseNo(code);}
+        if (isLiteral(code, "nan")) {return parseNan(code);}
+        if (isLiteral(code, "inf")) {return parseInf(code);}
+        if (isLiteral(code, "-inf")) {return parseNegInf(code);}
         if (startsWithList(code)) {return parseList(code);}
         if (startsWithDictionary(code)) {return parseDictionary(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
-        if (isLiteral(code, "yes")) {return parseYes(code);}
-        if (isLiteral(code, "no")) {return parseNo(code);}
         if (startsWithString(code)) {return parseString(code);}
         if (startsWithConditional(code)) {return parseConditional(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
