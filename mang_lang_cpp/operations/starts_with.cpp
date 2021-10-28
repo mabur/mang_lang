@@ -91,7 +91,3 @@ bool startsWithNumber(CodeRange code) {
 bool startsWithString(CodeRange code) {
     return ::startsWith(code, '"');
 }
-
-bool startsWithBoolean(CodeRange code) {
-    return isLiteral(code, "yes") || isLiteral(code, "no");
-}

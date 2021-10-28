@@ -258,18 +258,18 @@ Expression parseNumber(CodeRange code) {
     );
 }
 
-Expression parseBoolean(CodeRange code) {
-    auto first = code.begin();
-    if (startsWith(code, 'y')) {
-        code = parseKeyword(code, "yes");
-        return makeBoolean(new Boolean{CodeRange{first, code.first}, true});
-    }
-    if (startsWith(code, 'n')) {
-        code = parseKeyword(code, "no");
-        return makeBoolean(new Boolean{CodeRange{first, code.first}, false});
-    }
-    assert(false);
-    return {};
+Expression parseYes(CodeRange code) {
+    const auto first = code.begin();
+    code = parseKeyword(code, "yes");
+    const auto last = code.begin();
+    return makeBoolean(new Boolean{CodeRange{first, last}, true});
+}
+
+Expression parseNo(CodeRange code) {
+    const auto first = code.begin();
+    code = parseKeyword(code, "no");
+    const auto last = code.begin();
+    return makeBoolean(new Boolean{CodeRange{first, last}, false});
 }
 
 Expression parseString(CodeRange code) {
@@ -295,7 +295,8 @@ Expression parseExpression(CodeRange code) {
         if (startsWithDictionary(code)) {return parseDictionary(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
-        if (startsWithBoolean(code)) {return parseBoolean(code);}
+        if (isLiteral(code, "yes")) {return parseYes(code);}
+        if (isLiteral(code, "no")) {return parseNo(code);}
         if (startsWithString(code)) {return parseString(code);}
         if (startsWithConditional(code)) {return parseConditional(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
