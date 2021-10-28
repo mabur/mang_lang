@@ -211,7 +211,7 @@ int main() {
     test.reformat("lookup_function", {
         {"add!()", "add!()"},
     });
-    test.evaluate("inf", {
+    test.evaluate("number constants", {
         {"inf", "inf"},
         {"-inf", "-inf"},
         {"nan", "nan"},
