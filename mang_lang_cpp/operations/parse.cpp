@@ -258,18 +258,16 @@ Expression parseNumber(CodeRange code) {
     );
 }
 
+CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
+    return {code.begin(), parseKeyword(code, keyword).begin()};
+}
+
 Expression parseYes(CodeRange code) {
-    const auto first = code.begin();
-    code = parseKeyword(code, "yes");
-    const auto last = code.begin();
-    return makeBoolean(new Boolean{CodeRange{first, last}, true});
+    return makeBoolean(new Boolean{parseKeyWordContent(code, "yes"), true});
 }
 
 Expression parseNo(CodeRange code) {
-    const auto first = code.begin();
-    code = parseKeyword(code, "no");
-    const auto last = code.begin();
-    return makeBoolean(new Boolean{CodeRange{first, last}, false});
+    return makeBoolean(new Boolean{parseKeyWordContent(code, "no"), false});
 }
 
 Expression parseString(CodeRange code) {
