@@ -226,22 +226,18 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     return evaluate(function_list.body, middle);
 }
 
-Expression apply(Expression expression, Expression input) {
-    switch (expression.type) {
-        case FUNCTION: return applyFunction(getFunction(expression), input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(expression), input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(expression), input);
-        case FUNCTION_LIST: return applyFunctionList(getFunctionList(expression), input);
-        default: throw std::runtime_error{"Expected getFunction"};
-    }
-}
-
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment
 ) {
     const auto function = lookupDictionary(environment, getName(function_application.name).value);
-    const auto evaluated_child = evaluate(function_application.child, environment);
-    return apply(function, evaluated_child);
+    const auto input = evaluate(function_application.child, environment);
+    switch (function.type) {
+        case FUNCTION: return applyFunction(getFunction(function), input);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
+        case FUNCTION_LIST: return applyFunctionList(getFunctionList(function), input);
+        default: throw std::runtime_error{"Expected a function"};
+    }
 }
 
 Expression evaluateLookupSymbol(
