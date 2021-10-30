@@ -1,5 +1,11 @@
 TODO:
 * Code formatting
+* Error handling:
+  - Make "1 2" throw a parse error
+  - c++ add systematic error messages when parsing fails
+    - Print all sub-expressions that it parsed
+  - Better error messages
+  - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
 * Fix sending built-in functions like prepend to higher order functions
 * Convert functions from built-in to standard library.
@@ -41,12 +47,6 @@ TODO:
   - Character: string_from_number, number_from_string
   - child@ as function that can be sent to map
   - Implement equal for dictionary
-* Error handling:
-  - Make "1 2" throw a parse error
-  - c++ add systematic error messages when parsing fails
-    - Print all sub-expressions that it parsed
-  - Better error messages
-  - Tests for syntax error and run-time error.
 * Tools:
   - Command line interface for reading source from file and piping it to interpretor
   - Reformat to html with syntax high-lighting.
