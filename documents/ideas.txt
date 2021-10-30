@@ -1,6 +1,7 @@
 TODO:
 * Code formatting
 * Error handling:
+  - Output logs
   - Make "1 2" throw a parse error
   - c++ add systematic error messages when parsing fails
     - Print all sub-expressions that it parsed
