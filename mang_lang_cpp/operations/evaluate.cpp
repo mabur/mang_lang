@@ -10,11 +10,10 @@
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment
 ) {
-    const auto result =
+    return
         boolean(evaluate(conditional.expression_if, environment)) ?
         evaluate(conditional.expression_then, environment) :
         evaluate(conditional.expression_else, environment);
-    return result;
 }
 
 size_t numNames(const Statements& statements) {
@@ -69,23 +68,19 @@ Expression evaluateDictionary(
             i = end_statement.while_index_;
         }
     }
-    const auto wrapped_result = makeDictionary(result);
-    return wrapped_result;
+    return makeDictionary(result);
 }
 
-Expression evaluateFunction(
-    const Function& function, Expression environment
-) {
-    const auto result = makeFunction(new Function{
+Expression evaluateFunction(const Function& function, Expression environment) {
+    return makeFunction(new Function{
         function.range, environment, function.input_name, function.body
     });
-    return result;
 }
 
 Expression evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, Expression environment
 ) {
-    const auto result = makeFunctionDictionary(
+    return makeFunctionDictionary(
         new FunctionDictionary{
             function_dictionary.range,
             environment,
@@ -93,16 +88,14 @@ Expression evaluateFunctionDictionary(
             function_dictionary.body
         }
     );
-    return result;
 }
 
 Expression evaluateFunctionList(
     const FunctionList& function_list, Expression environment
 ) {
-    const auto result = makeFunctionList(new FunctionList{
+    return makeFunctionList(new FunctionList{
         function_list.range, environment, function_list.input_names, function_list.body
     });
-    return result;
 }
 
 Expression evaluateList(
@@ -115,8 +108,7 @@ Expression evaluateList(
     const auto code = CodeRange{};
     const auto init = makeEmptyList(new EmptyList{});
     const auto output = new_list::leftFold(init, list, op);
-    auto result = new_list::reverse(code, output);
-    return result;
+    return new_list::reverse(code, output);
 }
 
 Expression lookupCurrentDictionary(const Dictionary& dictionary, const std::string& name) {
@@ -184,13 +176,11 @@ Expression evaluateLookupChild(
     const LookupChild& lookup_child, Expression environment
 ) {
     const auto child = evaluate(lookup_child.child, environment);
-    const auto result = lookupChild(child, getName(lookup_child.name).value);
-    return result;
+    const auto name = getName(lookup_child.name).value;
+    return lookupChild(child, name);
 }
 
-Expression applyFunction(
-    const Function& function, Expression input
-) {
+Expression applyFunction(const Function& function, Expression input) {
 
     const auto statements = Statements{
         makeDefinition(new Definition{function.range, function.input_name, input, 0})
@@ -253,31 +243,23 @@ Expression evaluateFunctionApplication(
 ) {
     const auto function = lookupDictionary(environment, getName(function_application.name).value);
     const auto evaluated_child = evaluate(function_application.child, environment);
-    const auto result = apply(function, evaluated_child);
-    return result;
+    return apply(function, evaluated_child);
 }
 
 Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment
 ) {
-    const auto result = lookupDictionary(environment, getName(lookup_symbol.name).value);
-    return result;
-}
-
-Expression evaluateAtom(
-    Expression atom
-) {
-    return atom;
+    return lookupDictionary(environment, getName(lookup_symbol.name).value);
 }
 
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
-        case NUMBER: return evaluateAtom(expression);
-        case CHARACTER: return evaluateAtom(expression);
-        case BOOLEAN: return evaluateAtom(expression);
-        case EMPTY_STRING: return evaluateAtom(expression);
-        case STRING: return evaluateAtom(expression);
-        case EMPTY_LIST: return evaluateAtom(expression);
+        case NUMBER: return expression;
+        case CHARACTER: return expression;
+        case BOOLEAN: return expression;
+        case EMPTY_STRING: return expression;
+        case STRING: return expression;
+        case EMPTY_LIST: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
         case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment);
