@@ -163,21 +163,19 @@ Expression lookupChildInList(const List& list, const std::string& name) {
     throw std::runtime_error("List does not contain symbol " + name);
 }
 
-Expression lookupChild(Expression expression, const std::string& name) {
-    switch(expression.type) {
-        case DICTIONARY: return lookupChildInDictionary(getDictionary(expression), name);
-        case LIST: return lookupChildInList(getList(expression), name);
-        case STRING: return lookupChildInString(getString(expression), name);
-        default: throw std::runtime_error{"Cannot getLookupChild expression of type " + std::to_string(expression.type)};
-    }
-}
-
 Expression evaluateLookupChild(
     const LookupChild& lookup_child, Expression environment
 ) {
     const auto child = evaluate(lookup_child.child, environment);
     const auto name = getName(lookup_child.name).value;
-    return lookupChild(child, name);
+    switch(child.type) {
+        case DICTIONARY: return lookupChildInDictionary(getDictionary(child), name);
+        case LIST: return lookupChildInList(getList(child), name);
+        case STRING: return lookupChildInString(getString(child), name);
+        default: throw std::runtime_error{
+            "Cannot lookup child in type " + std::to_string(child.type)
+        };
+    }
 }
 
 Expression applyFunction(const Function& function, Expression input) {
