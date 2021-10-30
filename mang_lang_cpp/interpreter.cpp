@@ -20,18 +20,22 @@ int main(int argc,  char **argv) {
     input_file.close();
     cout << "Done." << endl;
 
-    cout << "Evaluating program ... ";
-    const auto result = evaluate(code);
-    cout << "Done." << endl;
+    try {
+        cout << "Evaluating program ... ";
+        const auto result = evaluate(code);
+        cout << "Done." << endl;
+
+        cout << "Writing result to " << output_file_path << " ... ";
+        auto output_file = ofstream{output_file_path};
+        output_file << result;
+        output_file.close();
+        cout << "Done." << endl;
+    } catch (const std::runtime_error& e) {
+        cout << e.what() << endl;
+    }
 
     cout << "Getting log ... ";
     const auto log = getLog();
-    cout << "Done." << endl;
-
-    cout << "Writing result to " << output_file_path << " ... ";
-    auto output_file = ofstream{output_file_path};
-    output_file << result;
-    output_file.close();
     cout << "Done." << endl;
 
     cout << "Writing log to " << log_file_path << " ... ";
