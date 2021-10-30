@@ -1,10 +1,14 @@
 #pragma once
 
+#include <string>
+
 #include "expression.h"
 
 Statements setContext(const Statements& statements);
 
 void clearMemory();
+
+std::string getLog();
 
 Definition getDefinition(Expression expression);
 WhileStatement getWileStatement(Expression expression);

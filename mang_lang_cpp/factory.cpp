@@ -1,11 +1,12 @@
 #include "factory.h"
 
 #include <cassert>
-#include <sstream>
 #include <memory>
+#include <sstream>
 #include <vector>
 
 #include "operations/begin.h"
+#include "operations/serialize.h"
 
 std::vector<std::shared_ptr<const Character>> characters;
 std::vector<std::shared_ptr<const Conditional>> conditionals;
@@ -345,4 +346,12 @@ EmptyString getEmptyString(Expression expression) {
 
 Boolean getBoolean(Expression expression) {
     return getExpression(expression, BOOLEAN, booleans);
+}
+
+std::string getLog() {
+    auto log = std::string{};
+    for (const auto expression : expressions) {
+        log += serialize(expression) + '\n';
+    }
+    return log;
 }
