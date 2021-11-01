@@ -1,4 +1,8 @@
 TODO:
+* Example programs:
+  - Parsing Json
+  - Parsing Manglang
+  - Raytracing
 * Code formatting
 * Error handling:
   - Output logs
@@ -18,6 +22,8 @@ TODO:
 * Remove shared_ptr from linked list implementation.
   - Make CodeRange part of ExpressionPointer instead of expression.
 * vector math
+  - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
+  - norms, dot, inner_products
 * Simplifications with new list:
   - Merge new list and new string?
   - Extract for_each for new lists and strings
