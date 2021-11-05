@@ -769,6 +769,13 @@ int main() {
         {R"(enumerate!"a")", R"(({index=0 item='a'}))"},
         {R"(enumerate!"ab")", R"(({index=0 item='a'} {index=1 item='b'}))"},
     });
+    test.evaluate("prepend_each", {
+        {"prepend_each!(() ())", "()"},
+        {"prepend_each!(() (2))", "(2)"},
+        {"prepend_each!((1) ())", "(1)"},
+        {"prepend_each!((1) (2))", "(1 2)"},
+        {"prepend_each!((1 2) (3 4))", "(1 2 3 4)"},
+    });
     test.evaluate("concat", {
         {"concat!(() ())", "()"},
         {"concat!(() (2))", "(2)"},
