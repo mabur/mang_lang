@@ -769,19 +769,19 @@ int main() {
         {R"(enumerate!"a")", R"(({index=0 item='a'}))"},
         {R"(enumerate!"ab")", R"(({index=0 item='a'} {index=1 item='b'}))"},
     });
-    test.evaluate("concat list", {
+    test.evaluate("concat", {
         {"concat!(() ())", "()"},
         {"concat!(() (2))", "(2)"},
         {"concat!((1) ())", "(1)"},
         {"concat!((1) (2))", "(1 2)"},
-        {"concat!((1 2 3) (4 5 6))", "(1 2 3 4 5 6)"},
+        {"concat!((1) (2 3) (4 5 6))", "(1 2 3 4 5 6)"},
     });
-    test.evaluate("concat string", {
-        {R"(concat!("" ""))", R"("")"},
-        {R"(concat!("" "b"))", R"("b")"},
-        {R"(concat!("a" ""))", R"("a")"},
-        {R"(concat!("a" "b"))", R"("ab")"},
-        {R"(concat!("abc" "def"))", R"("abcdef")"},
+    test.evaluate("concat_strings", {
+        {R"(concat_strings!("" ""))", R"("")"},
+        {R"(concat_strings!("" "b"))", R"("b")"},
+        {R"(concat_strings!("a" ""))", R"("a")"},
+        {R"(concat_strings!("a" "b"))", R"("ab")"},
+        {R"(concat_strings!("a" "bc" "def"))", R"("abcdef")"},
     });
     test.evaluate("drop list", {
         {"drop!(0 (3 7 6))", "(3 7 6)"},

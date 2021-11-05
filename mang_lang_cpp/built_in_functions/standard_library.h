@@ -62,10 +62,22 @@ const std::string STANDARD_LIBRARY = R"(
         clear!list
     )
 
-    concat = in (left_list right_list) out fold!(
+    prepend_each = in (left_list init) out fold!(
         in (item list) out prepend!(item list)
-        reverse!left_list
-        right_list
+        left_list
+        init
+    )
+
+    concat = in lists out reverse!fold!(
+        in (left_list list) out prepend_each!(left_list list)
+        lists
+        ()
+    )
+
+    concat_strings = in lists out reverse!fold!(
+        in (left_list list) out prepend_each!(left_list list)
+        lists
+        ""
     )
 
     map = in (f list) out reverse!fold!(
