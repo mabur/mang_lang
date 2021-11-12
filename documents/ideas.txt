@@ -1,4 +1,5 @@
 TODO:
+* fix so that prepend and other built in functions can be sent directly to higher order functions
 * Example programs:
   - Parsing Json
   - Parsing Manglang
