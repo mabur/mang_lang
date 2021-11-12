@@ -56,17 +56,14 @@ const std::string STANDARD_LIBRARY = R"(
         -inf
     )
 
-    reverse = in list out fold!(
-        in (item list) out prepend!(item list)
-        list
-        clear!list
-    )
-
     extend = in (extension init) out fold!(
         in (item list) out prepend!(item list)
         extension
         init
     )
+
+    reverse = in list out
+        extend!(list clear!list)
 
     concat = in lists out reverse!fold!(
         extend
