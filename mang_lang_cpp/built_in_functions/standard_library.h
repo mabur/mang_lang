@@ -62,23 +62,20 @@ const std::string STANDARD_LIBRARY = R"(
         clear!list
     )
 
-    extend = in (init extension) out fold!(
+    extend = in (extension init) out fold!(
         in (item list) out prepend!(item list)
         extension
         init
     )
 
-    prepend_each = in (extension init) out
-        extend!(init reverse!extension)
-
     concat = in lists out reverse!fold!(
-        in (extension list) out extend!(list extension)
+        extend
         lists
         ()
     )
 
     concat_strings = in lists out reverse!fold!(
-        in (extension list) out extend!(list extension)
+        extend
         lists
         ""
     )
