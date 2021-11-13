@@ -4,6 +4,8 @@ TODO:
   - rest -> rest
   - prepend -> put, push
   - extend -> put_all
+  - Syntax (top rest) or (rest top)
+* Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * fix so that prepend and other built in functions can be sent directly to higher order functions
 * Example programs:
   - Parsing Json
