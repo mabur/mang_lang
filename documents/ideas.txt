@@ -1,4 +1,9 @@
 TODO:
+* Use "stack" instead of "list" as main notation?
+  - first -> top
+  - rest -> rest
+  - prepend -> put, push
+  - extend -> put_all
 * fix so that prepend and other built in functions can be sent directly to higher order functions
 * Example programs:
   - Parsing Json
