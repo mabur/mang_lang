@@ -578,15 +578,15 @@ int main() {
         {R"(reverse!"ab")", R"("ba")"},
         {R"(reverse!"abc")", R"("cba")"},
     });
-    test.evaluate("prepend list", {
-        {"prepend!(3 ())", "(3)"},
-        {"prepend!(4 (5))", "(4 5)"},
-        {"prepend!(4 (6 8))", "(4 6 8)"},
+    test.evaluate("put list", {
+        {"put!(3 ())", "(3)"},
+        {"put!(4 (5))", "(4 5)"},
+        {"put!(4 (6 8))", "(4 6 8)"},
     });
-    test.evaluate("prepend string", {
-        {R"(prepend!('a' ""))", R"("a")"},
-        {R"(prepend!('a' "b"))", R"("ab")"},
-        {R"(prepend!('a' "bc"))", R"("abc")"},
+    test.evaluate("put string", {
+        {R"(put!('a' ""))", R"("a")"},
+        {R"(put!('a' "b"))", R"("ab")"},
+        {R"(put!('a' "bc"))", R"("abc")"},
     });
     test.evaluate("inc", {
         {"inc!0", "1"},

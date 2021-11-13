@@ -57,7 +57,7 @@ const std::string STANDARD_LIBRARY = R"(
     )
 
     extend = in (extension init) out fold!(
-        in (item list) out prepend!(item list)
+        in (item list) out put!(item list)
         extension
         init
     )
@@ -78,13 +78,13 @@ const std::string STANDARD_LIBRARY = R"(
     )
 
     map = in (f list) out reverse!fold!(
-        in (item list) out prepend!(f!item list)
+        in (item list) out put!(f!item list)
         list
         ()
     )
 
     map_string = in (f list) out reverse!fold!(
-        in (item list) out prepend!(f!item list)
+        in (item list) out put!(f!item list)
         list
         ""
     )
@@ -94,7 +94,7 @@ const std::string STANDARD_LIBRARY = R"(
             if predicate?item then
                 list
             else
-                prepend!(item list)
+                put!(item list)
         list
         clear!list
     )
@@ -103,7 +103,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear_if?(in x out equal?(x item) list)
 
     replace = in (new_item list) out fold!(
-        in (item list) out prepend!(new_item list)
+        in (item list) out put!(new_item list)
         list
         clear!list
     )
@@ -111,9 +111,9 @@ const std::string STANDARD_LIBRARY = R"(
     replace_if = in (predicate new_item list) out reverse!fold!(
         in (item list) out
             if predicate?item then
-                prepend!(new_item list)
+                put!(new_item list)
             else
-                prepend!(item list)
+                put!(item list)
         list
         clear!list
     )
@@ -141,7 +141,7 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            list = prepend!(i list)
+            list = put!(i list)
         end
     }
 
@@ -150,7 +150,7 @@ const std::string STANDARD_LIBRARY = R"(
         list = list
         index = 0
         while list
-            reversed_result = prepend!(
+            reversed_result = put!(
                 {index=index item=top@list}
                 reversed_result
             )
@@ -182,7 +182,7 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            reversed_result = prepend!(top@list reversed_result)
+            reversed_result = put!(top@list reversed_result)
             list = rest@list
         end
         short_list = reverse!reversed_result

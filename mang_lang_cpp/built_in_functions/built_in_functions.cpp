@@ -22,7 +22,7 @@ Expression builtIns() {
     auto definitions = Statements{};
     definitions.push_back(define("equal", logic::equal));
     definitions.push_back(define("clear", list_functions::empty));
-    definitions.push_back(define("prepend", list_functions::prepend));
+    definitions.push_back(define("put", list_functions::prepend));
     definitions.push_back(define("add", arithmetic::add));
     definitions.push_back(define("mul", arithmetic::mul));
     definitions.push_back(define("sub", arithmetic::sub));

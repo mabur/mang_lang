@@ -344,9 +344,9 @@ Lists in Manglang can be seen as syntactic sugar sprinkled on dictionaries so th
 Conceptually we can think of a list as a dictionary having the members <code>top</code> and <code>rest</code>,
 and we access the data in the list as if it was such a dictionary via <code>top@list</code> and <code>rest@list</code>.
 
-The function <code>prepend</code> is used to construct a new list by adding an element at the beginning of a list:
+The function <code>put</code> is used to construct a new list by adding an element at the beginning of a list:
 <pre>
-prepend!(7 (4 5 2))
+put!(7 (4 5 2))
 </pre>
 The input above is evaluated to the output below:
 <pre>
@@ -358,7 +358,7 @@ The input above is evaluated to the output below:
   a = (3 6 4)
   b = top@a
   c = rest@a
-  d = prepend!(b c) 
+  d = put!(b c) 
 }
 </pre>
 <p>The input above is evaluated to the output below:</p>
@@ -370,7 +370,7 @@ The input above is evaluated to the output below:
   d = (3 6 4)
 }
 </pre>
-In summary, we interact with lists by accessing the members <code>top</code> and <code>rest</code> and via the function <code>prepend</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
+In summary, we interact with lists by accessing the members <code>top</code> and <code>rest</code> and via the function <code>put</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
 
 <h2 id="strings">2.c. Strings</h2>
 <p>
@@ -388,7 +388,7 @@ They can be seen as lists of characters. Example of a program using functions on
   b = top@a
   c = rest@a
   d = reverse!a
-  e = prepend!('E' a)
+  e = put!('E' a)
 }
 </pre>
 The input above is evaluated to the output below:
@@ -486,7 +486,7 @@ However, this single value can be a list or a dictionary, that has multiple valu
   list = (4 2 1)
   sum0 = add!list
   sum1 = add!(4 2 1)
-  list2 = prepend!(3 list)
+  list2 = put!(3 list)
 }
 </pre>
 <p>
