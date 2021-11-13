@@ -17,7 +17,7 @@ Below you can find all functions included with Manglang. They are either built-i
 
 
 <h2>Generic Container Functions</h2>
-These functions work on both lists and strings, and the type of the output container is the same as the input.
+These functions work on both stacks and strings, and the type of the output container is the same as the input.
 <dl>
 <dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container.</dd>
 <dt>clear</dt><dd>Outputs an empty container of the same type as the input.</dd>
@@ -38,33 +38,33 @@ These functions work on both lists and strings, and the type of the output conta
 
 <h2>Specialized Container Functions</h2>
 <dl>
-<dt>map</dt><dd><code>map!(f container)</code> returns a list with the function f applied to each element in the container.</dd>
+<dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each element in the container.</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each element in the container.</dd>
-<dt>range</dt><dd><code>range!n</code> returns the list <code>(0 1 2 ... n-1)</code>.</dd>
-<dt>enumerate</dt><dd><code>enumerate!containers</code> returns a list like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
+<dt>range</dt><dd><code>range!n</code> returns the stack <code>(0 1 2 ... n-1)</code>.</dd>
+<dt>enumerate</dt><dd><code>enumerate!containers</code> returns a stack like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
 </dl>
 
 <h2>Boolean Functions</h2>
 <dl>
-<dt>boolean</dt><dd>Convert a value to a boolean. All values are converted to <code>yes</code>, except empty list <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>no</code>.</dd>
-<dt>not</dt><dd>Convert a value to a boolean. All values are converted to <code>no</code>, except empty list <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>yes</code>.</dd>
-<dt>all</dt><dd>Takes a list of booleans and returns <code>yes</code> if all elements are <code>yes</code> and otherwise <code>no</code>.</dd>
-<dt>any</dt><dd>Takes a list of booleans and returns <code>yes</code> if any element is <code>yes</code> and otherwise <code>no</code>.</dd>
-<dt>none</dt><dd>Takes a list of booleans and returns <code>yes</code> if all element are <code>no</code> and otherwise <code>yes</code>.</dd>
+<dt>boolean</dt><dd>Convert a value to a boolean. All values are converted to <code>yes</code>, except empty stack <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>no</code>.</dd>
+<dt>not</dt><dd>Convert a value to a boolean. All values are converted to <code>no</code>, except empty stack <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>yes</code>.</dd>
+<dt>all</dt><dd>Takes a stack of booleans and returns <code>yes</code> if all elements are <code>yes</code> and otherwise <code>no</code>.</dd>
+<dt>any</dt><dd>Takes a stack of booleans and returns <code>yes</code> if any element is <code>yes</code> and otherwise <code>no</code>.</dd>
+<dt>none</dt><dd>Takes a stack of booleans and returns <code>yes</code> if all element are <code>no</code> and otherwise <code>yes</code>.</dd>
 <dt>equal</dt><dd>Takes two values and returns <code>yes</code> if they are equal and otherwise <code>no</code>.</dd>
 <dt>unequal</dt><dd>Takes two values and returns <code>no</code> if they are equal and otherwise <code>yes</code>.</dd>
 </dl>
 
-<h2>Functions on List of Numbers</h2>
+<h2>Functions on Stack of Numbers</h2>
 <dl>
-<dt>add</dt><dd>Add a list of numbers.</dd>
-<dt>mul</dt><dd>Multiply a list of numbers.</dd>
+<dt>add</dt><dd>Add a stack of numbers.</dd>
+<dt>mul</dt><dd>Multiply a stack of numbers.</dd>
 <dt>sub</dt><dd>Subtract two numbers.</dd>
 <dt>div</dt><dd>Divide two numbers.</dd>
-<dt>min</dt><dd>Minimum of a list of numbers.</dd>
-<dt>max</dt><dd>Maximum of a list of numbers</dd>
-<dt>less</dt><dd>Takes a list of numbers and returns <code>yes</code> if they are strictly increasing, and otherwise <code>no</code></dd>
-<dt>less_or_equal</dt><dd>Takes a list of numbers and returns <code>yes</code> if they are increasing, and otherwise <code>no</code>.</dd>
+<dt>min</dt><dd>Minimum of a stack of numbers.</dd>
+<dt>max</dt><dd>Maximum of a stack of numbers</dd>
+<dt>less</dt><dd>Takes a stack of numbers and returns <code>yes</code> if they are strictly increasing, and otherwise <code>no</code></dd>
+<dt>less_or_equal</dt><dd>Takes a stack of numbers and returns <code>yes</code> if they are increasing, and otherwise <code>no</code>.</dd>
 </dl>
 
 <h2>Functions on Number</h2>

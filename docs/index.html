@@ -151,7 +151,7 @@ Manglang consists of the following basic building blocks:
 <img src="container2.png" width=48 height=48>
 </td>
 <td>
-<a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#lists">lists</a> and <a href="#strings">strings</a>.
+<a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#stacks">stacks</a> and <a href="#strings">strings</a>.
 </td>
 </tr>
 <tr>
@@ -211,7 +211,7 @@ In Manglang we see booleans as answers to questions and therefore write them as 
 
 <h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
 <p>
-Manglang has three different kinds of containers which can store other data inside them: dictionaries, lists and strings.
+Manglang has three different kinds of containers which can store other data inside them: dictionaries, stacks and strings.
 </p>
 
 <h2 id="dictionaries">2.a. Dictionaries</h2>
@@ -320,31 +320,31 @@ So Manglang uses dictionaries to represent both:
 </ul>
 In the next sections we will look at the remaining two containers in Manglang:
 <ul>
-<li>Lists</li>
+<li>Stacks</li>
 <li>Strings</li>
 </ul>
 We will see that both of them can be seen as syntactic sugar sprinkled on dictionaries.
 </p>
 
-<h2 id="lists">2.b. Lists</h2>
-<p>Lists of values are written as:</p>
+<h2 id="stacks">2.b. Stacks</h2>
+<p>Stacks of values are written as:</p>
 <pre>
 (3 6 4)
 </pre>
-A list can be seen as a dictionary containing two things <code>top</code> and <code>rest</code>.
+A stack can be seen as a dictionary containing two things <code>top</code> and <code>rest</code>.
 Consider this example:
 <pre>
 {
-  list = (3 6 4)
+  stack = (3 6 4)
   dictionary = {top=3 rest={top=6 rest={top=4 rest={}}}}
 }
 </pre>
 These are two different ways of storing the same data.
-Lists in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
-Conceptually we can think of a list as a dictionary having the members <code>top</code> and <code>rest</code>,
-and we access the data in the list as if it was such a dictionary via <code>top@list</code> and <code>rest@list</code>.
+Stacks in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
+Conceptually we can think of a stack as a dictionary having the members <code>top</code> and <code>rest</code>,
+and we access the data in the stack as if it was such a dictionary via <code>top@stack</code> and <code>rest@stack</code>.
 
-The function <code>put</code> is used to construct a new list by adding an element at the beginning of a list:
+The function <code>put</code> is used to construct a new stack by putting a new item on top of the stack:
 <pre>
 put!(7 (4 5 2))
 </pre>
@@ -352,7 +352,7 @@ The input above is evaluated to the output below:
 <pre>
 (7 4 5 2)
 </pre>
-<p>Here is another example program with some list operations:</p>
+<p>Here is another example program with some stack operations:</p>
 <pre>
 {
   a = (3 6 4)
@@ -370,7 +370,7 @@ The input above is evaluated to the output below:
   d = (3 6 4)
 }
 </pre>
-In summary, we interact with lists by accessing the members <code>top</code> and <code>rest</code> and via the function <code>put</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
+In summary, we interact with stacks by accessing the members <code>top</code> and <code>rest</code> and via the function <code>put</code>. The standard library of Manglang provides more functions that works on stacks but they are all built on top of this basic interface.
 
 <h2 id="strings">2.c. Strings</h2>
 <p>
@@ -380,7 +380,7 @@ Strings are written as:
 "Manglang"
 </pre>
 <p>
-They can be seen as lists of characters. Example of a program using functions on strings:
+They can be seen as stacks of characters. Example of a program using functions on strings:
 </p>
 <pre>
 {
@@ -413,7 +413,7 @@ The following values are interpreted as <code>no</code> or falsey:
     <ul>
         <li>boolean <code>no</code></li>
         <li>number zero <code>0</code></li>
-        <li>empty list <code>()</code></li>
+        <li>empty stack <code>()</code></li>
         <li>empty string <code>""</code> </li>
     </ul>
 </li>
@@ -479,14 +479,14 @@ We have already seen some examples of calling / applying functions in Manglang.
 A function is called using <code>!</code> like <code>function_name!input</code>.
 We see function application as a command and hence use the symbol <code>!</code> after the verb that names the functions.
 Functions take a single value as input.
-However, this single value can be a list or a dictionary, that has multiple values inside.
+However, this single value can be a stack or a dictionary, that has multiple values inside.
 </p>
 <pre>
 {
-  list = (4 2 1)
-  sum0 = add!list
+  stack = (4 2 1)
+  sum0 = add!stack
   sum1 = add!(4 2 1)
-  list2 = put!(3 list)
+  stack2 = put!(3 stack)
 }
 </pre>
 <p>
@@ -494,14 +494,14 @@ This program is evaluated to:
 </p>
 <pre>
 {
-  list = (4 2 1)
+  stack = (4 2 1)
   sum0 = 7
   sum1 = 7
-  list2 = (3 4 2 1)
+  stack2 = (3 4 2 1)
 }
 </pre>
 <p>
-Manglang does not have any special operators for arithmetics, boolean, list operations etc.
+Manglang does not have any special operators for arithmetics, boolean, stack operations etc.
 Instead functions are used for all computations.
 Function calls can be nested like this:
 </p>
@@ -554,10 +554,10 @@ Here are some examples of defining and calling functions:
   square = in x out mul!(x x)
   inc = in x out add!(x 1)
   dec = in x out sub!(x 1)
-  count = in list
+  count = in stack
     out
-      if list then
-        inc!count!rest@list
+      if stack then
+        inc!count!rest@stack
       else
         0
   a = square!3
@@ -575,10 +575,10 @@ This program is evaluated to:
   square = in x out mul!(x x)
   inc = in x out add!(x 1)
   dec = in x out sub!(x 1)
-  count = in list
+  count = in stack
     out
-      if list then
-        inc!count!rest@list
+      if stack then
+        inc!count!rest@stack
       else
         0
   a = 9
@@ -607,10 +607,10 @@ Function definitions and computations can be broken up into smaller parts by usi
 }
 </pre>
 
-<h2 id="function_list_definition">5.c. Function of List Definition</h2>
+<h2 id="function_stack_definition">5.c. Function of Stack Definition</h2>
 <p>
 Manglang provides syntactic sugar for defining functions that take multiple input,
-in the form of a list.
+in the form of a stack.
 Here are some examples of equivalent ways of defining and calling functions: 
 </p>
 <pre>
@@ -628,7 +628,7 @@ Here are some examples of equivalent ways of defining and calling functions:
 The functions <code>area1</code> and <code>area2</code> are equivalent.
 They expect the same input and return the same result.
 <code>area2</code> just uses syntactic sugar to make its implementation more concise,
-by unpacking the elements of the input list.
+by unpacking the elements of the input stack.
 </p>
 
 
