@@ -144,7 +144,7 @@ Expression lookupChildInDictionary(const Dictionary& dictionary, const std::stri
 }
 
 Expression lookupChildInString(const String& string, const std::string& name) {
-    if (name == "first") {
+    if (name == "top") {
         return string.first;
     }
     if (name == "rest") {
@@ -154,7 +154,7 @@ Expression lookupChildInString(const String& string, const std::string& name) {
 }
 
 Expression lookupChildInList(const List& list, const std::string& name) {
-    if (name == "first") {
+    if (name == "top") {
         return list.first;
     }
     if (name == "rest") {

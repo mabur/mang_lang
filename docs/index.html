@@ -331,18 +331,18 @@ We will see that both of them can be seen as syntactic sugar sprinkled on dictio
 <pre>
 (3 6 4)
 </pre>
-A list can be seen as a dictionary containing two things <code>first</code> and <code>rest</code>.
+A list can be seen as a dictionary containing two things <code>top</code> and <code>rest</code>.
 Consider this example:
 <pre>
 {
   list = (3 6 4)
-  dictionary = {first=3 rest={first=6 rest={first=4 rest={}}}}
+  dictionary = {top=3 rest={top=6 rest={top=4 rest={}}}}
 }
 </pre>
 These are two different ways of storing the same data.
 Lists in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
-Conceptually we can think of a list as a dictionary having the members <code>first</code> and <code>rest</code>,
-and we access the data in the list as if it was such a dictionary via <code>first@list</code> and <code>rest@list</code>.
+Conceptually we can think of a list as a dictionary having the members <code>top</code> and <code>rest</code>,
+and we access the data in the list as if it was such a dictionary via <code>top@list</code> and <code>rest@list</code>.
 
 The function <code>prepend</code> is used to construct a new list by adding an element at the beginning of a list:
 <pre>
@@ -356,7 +356,7 @@ The input above is evaluated to the output below:
 <pre>
 {
   a = (3 6 4)
-  b = first@a
+  b = top@a
   c = rest@a
   d = prepend!(b c) 
 }
@@ -370,7 +370,7 @@ The input above is evaluated to the output below:
   d = (3 6 4)
 }
 </pre>
-In summary, we interact with lists by accessing the members <code>first</code> and <code>rest</code> and via the function <code>prepend</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
+In summary, we interact with lists by accessing the members <code>top</code> and <code>rest</code> and via the function <code>prepend</code>. The standard library of Manglang provides more functions that works on lists but they are all built on top of this basic interface.
 
 <h2 id="strings">2.c. Strings</h2>
 <p>
@@ -385,7 +385,7 @@ They can be seen as lists of characters. Example of a program using functions on
 <pre>
 {
   a = "Manglang"
-  b = first@a
+  b = top@a
   c = rest@a
   d = reverse!a
   e = prepend!('E' a)
@@ -427,7 +427,7 @@ Consider this example:
 {
   a = (0 1)
   b = if a then
-      first@a
+      top@a
     else
       2
   c = if b then "hello" else "world"
@@ -597,7 +597,7 @@ Function definitions and computations can be broken up into smaller parts by usi
 {
   square = in x out mul!(x x)
   square_norm = in vec3 out result@{
-    x = first@vec3
+    x = first!vec3
     y = second!vec3
     z = third!vec3
     result = add!(square!x square!y square!z)
@@ -615,7 +615,7 @@ Here are some examples of equivalent ways of defining and calling functions:
 </p>
 <pre>
 {
-  area1 = in rectangle out mul!(first@rectangle second!rectangle)
+  area1 = in rectangle out mul!(first!rectangle second!rectangle)
   area2 = in (width height) out mul!(width height)
   rectangle = (5 4)
   a = area1!rectangle,

@@ -549,12 +549,12 @@ int main() {
         {R"(clear!"ab")", R"("")"},
     });
     test.evaluate("first list", {
-        {"first@(4)", "4"},
-        {"first@(3 4)", "3"},
+        {"top@(4)", "4"},
+        {"top@(3 4)", "3"},
     });
     test.evaluate("first string", {
-        {R"(first@"b")", R"('b')"},
-        {R"(first@"ab")", R"('a')"},
+        {R"(top@"b")", R"('b')"},
+        {R"(top@"ab")", R"('a')"},
     });
     test.evaluate("rest list", {
         {"rest@(4)", "()"},

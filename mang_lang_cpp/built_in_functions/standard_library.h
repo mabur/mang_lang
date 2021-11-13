@@ -39,7 +39,7 @@ const std::string STANDARD_LIBRARY = R"(
         result = init
         list = list
         while list
-            result = operation!(first@list result)
+            result = operation!(top@list result)
             list = rest@list
         end
     }
@@ -151,7 +151,7 @@ const std::string STANDARD_LIBRARY = R"(
         index = 0
         while list
             reversed_result = prepend!(
-                {index=index item=first@list}
+                {index=index item=top@list}
                 reversed_result
             )
             index = inc!index
@@ -171,7 +171,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     drop_while = in (predicate list) out list@{
         list = list
-        while if list then predicate?first@list else no
+        while if list then predicate?top@list else no
             list = rest@list
         end
     }
@@ -182,13 +182,13 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            reversed_result = prepend!(first@list reversed_result)
+            reversed_result = prepend!(top@list reversed_result)
             list = rest@list
         end
         short_list = reverse!reversed_result
     }
 
-    get_index = in (index list) out first@drop!(index list)
+    get_index = in (index list) out top@drop!(index list)
 
     all = in list out not?drop_while!(boolean list)
     none = in list out not?drop_while!(not list)
