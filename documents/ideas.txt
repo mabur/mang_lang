@@ -1,12 +1,9 @@
 TODO:
 * Use "stack" instead of "list" as main notation?
-  - first -> top
-  - rest -> rest
-  - prepend -> put, push
-  - extend -> put_all
+  - extend -> put_all, put_each
   - Syntax (top rest) or (rest top)
+  - add first, second, third, ... as functions
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
-* fix so that prepend and other built in functions can be sent directly to higher order functions
 * Example programs:
   - Parsing Json
   - Parsing Manglang
@@ -20,7 +17,6 @@ TODO:
   - Better error messages
   - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
-* Fix sending built-in functions like prepend to higher order functions
 * Convert functions from built-in to standard library.
   - fold_while
   - all, any, none, med och utan predikat
