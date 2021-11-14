@@ -11,6 +11,7 @@ const CodeCharacter* begin(Expression expression) {
         case WHILE_STATEMENT: return getWileStatement(expression).range.first;
         case END_STATEMENT: return getEndStatement(expression).range.first;
         case FUNCTION: return getFunction(expression).range.first;
+        case FUNCTION_BUILT_IN: return getFunctionBuiltIn(expression).range.first;
         case FUNCTION_DICTIONARY: return getFunctionDictionary(expression).range.first;
         case FUNCTION_LIST: return getFunctionList(expression).range.first;
         case LIST: return getList(expression).range.first;
