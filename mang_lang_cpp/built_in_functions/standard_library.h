@@ -57,7 +57,7 @@ const std::string STANDARD_LIBRARY = R"(
     )
 
     extend = in (extension init) out fold!(
-        in (item list) out put!(item list)
+        put
         extension
         init
     )
