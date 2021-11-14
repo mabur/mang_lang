@@ -11,7 +11,7 @@ Expression empty(Expression in) {
         case EMPTY_LIST: return makeEmptyList(new EmptyList{});
         case STRING: return makeEmptyString(new EmptyString{});
         case EMPTY_STRING: return makeEmptyString(new EmptyString{});
-        default: throw WrongExpression(in.type, "empty operation");
+        default: throw UnexpectedExpression(in.type, "empty operation");
     }
 }
 
@@ -24,7 +24,7 @@ Expression prepend(Expression in) {
         case EMPTY_LIST: return new_list::prepend(collection, item);
         case STRING: return new_string::prepend(collection, item);
         case EMPTY_STRING: return new_string::prepend(collection, item);
-        default: throw WrongExpression(in.type, "prepend operation");
+        default: throw UnexpectedExpression(in.type, "prepend operation");
     }
 }
 

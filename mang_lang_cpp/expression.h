@@ -55,9 +55,9 @@ const auto NAMES = std::vector<std::string>{
     "EMPTY",
 };
 
-struct WrongExpression : public std::runtime_error
+struct UnexpectedExpression : public std::runtime_error
 {
-    WrongExpression(ExpressionType type, const std::string& location);
+    UnexpectedExpression(ExpressionType type, const std::string& location);
     using runtime_error::runtime_error;
 };
 

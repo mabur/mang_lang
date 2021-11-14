@@ -172,7 +172,7 @@ Expression evaluateLookupChild(
         case DICTIONARY: return lookupChildInDictionary(getDictionary(child), name);
         case LIST: return lookupChildInList(getList(child), name);
         case STRING: return lookupChildInString(getString(child), name);
-        default: throw WrongExpression(child.type, "evaluateLookupChild");
+        default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
 }
 
@@ -234,7 +234,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
         case FUNCTION_LIST: return applyFunctionList(getFunctionList(function), input);
-        default: throw WrongExpression(function.type, "evaluateFunctionApplication");
+        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
 
@@ -263,6 +263,6 @@ Expression evaluate(Expression expression, Expression environment) {
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
-        default: throw WrongExpression(expression.type, "evaluate operation");
+        default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
 }

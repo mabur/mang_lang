@@ -24,6 +24,6 @@ const CodeCharacter* begin(Expression expression) {
         case BOOLEAN: return getBoolean(expression).range.first;
         case STRING: return getString(expression).range.first;
         case EMPTY_STRING: return getEmptyString(expression).range.first;
-        default: throw WrongExpression(expression.type, "begin operation");
+        default: throw UnexpectedExpression(expression.type, "begin operation");
     }
 }

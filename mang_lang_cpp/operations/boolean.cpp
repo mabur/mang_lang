@@ -11,6 +11,6 @@ bool boolean(Expression expression) {
         case EMPTY_LIST: return false;
         case STRING: return true;
         case EMPTY_STRING: return false;
-        default: throw WrongExpression(expression.type, "boolean operation");
+        default: throw UnexpectedExpression(expression.type, "boolean operation");
     }
 }
