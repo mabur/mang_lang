@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -52,6 +53,12 @@ const auto NAMES = std::vector<std::string>{
     "EMPTY_STRING",
     "BOOLEAN",
     "EMPTY",
+};
+
+struct WrongExpression : public std::runtime_error
+{
+    WrongExpression(ExpressionType type, const std::string& location);
+    using runtime_error::runtime_error;
 };
 
 struct Expression {

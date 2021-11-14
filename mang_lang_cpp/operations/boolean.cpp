@@ -11,6 +11,6 @@ bool boolean(Expression expression) {
         case EMPTY_LIST: return false;
         case STRING: return true;
         case EMPTY_STRING: return false;
-        default: throw std::runtime_error{"Expected boolean"};
+        default: throw WrongExpression(expression.type, "boolean operation");
     }
 }

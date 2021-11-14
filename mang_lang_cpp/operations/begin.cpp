@@ -24,6 +24,6 @@ const CodeCharacter* begin(Expression expression) {
         case BOOLEAN: return getBoolean(expression).range.first;
         case STRING: return getString(expression).range.first;
         case EMPTY_STRING: return getEmptyString(expression).range.first;
-        default: throw std::runtime_error{"Missing begin operation for : " + std::to_string(expression.type)};
+        default: throw WrongExpression(expression.type, "begin operation");
     }
 }

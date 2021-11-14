@@ -153,6 +153,6 @@ std::string serialize(Expression expression) {
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
         case EMPTY: return "DUMMY_VALUE";
-        default: throw std::runtime_error{"Did not recognize expression to serialize: " + std::to_string(expression.type)};
+        default: throw WrongExpression(expression.type, "serialize operation");
     }
 }

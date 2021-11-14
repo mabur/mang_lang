@@ -24,6 +24,6 @@ const CodeCharacter* end(Expression expression) {
         case BOOLEAN: return getBoolean(expression).range.last;
         case STRING: return getString(expression).range.last;
         case EMPTY_STRING: return getEmptyString(expression).range.last;
-        default: throw std::runtime_error{"Missing end operation for : " + std::to_string(expression.type)};
+        default: throw WrongExpression(expression.type, "end operation");
     }
 }
