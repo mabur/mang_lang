@@ -61,6 +61,12 @@ struct UnexpectedExpression : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
+struct MissingSymbol : public std::runtime_error
+{
+    MissingSymbol(const std::string& symbol, const std::string& location);
+    using runtime_error::runtime_error;
+};
+
 struct Expression {
     ExpressionType type = EMPTY;
     size_t index = 0;

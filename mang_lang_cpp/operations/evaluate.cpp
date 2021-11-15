@@ -125,7 +125,7 @@ Expression lookupCurrentDictionary(const Dictionary& dictionary, const std::stri
 
 Expression lookupDictionary(Expression expression, const std::string& name) {
     if (expression.type != DICTIONARY) {
-        throw std::runtime_error("Cannot find symbol " + name);
+        throw MissingSymbol(name, "environment");
     }
     const auto d = getDictionary(expression);
     const auto result = lookupCurrentDictionary(d, name);
@@ -140,7 +140,7 @@ Expression lookupChildInDictionary(const Dictionary& dictionary, const std::stri
     if (result.type != EMPTY) {
         return result;
     }
-    throw std::runtime_error("Dictionary does not contain symbol " + name);
+    throw MissingSymbol(name, "dictionary");
 }
 
 Expression lookupChildInString(const String& string, const std::string& name) {
@@ -150,7 +150,7 @@ Expression lookupChildInString(const String& string, const std::string& name) {
     if (name == "rest") {
         return string.rest;
     }
-    throw std::runtime_error("String does not contain symbol " + name);
+    throw MissingSymbol(name, "string");
 }
 
 Expression lookupChildInList(const List& list, const std::string& name) {
@@ -160,7 +160,7 @@ Expression lookupChildInList(const List& list, const std::string& name) {
     if (name == "rest") {
         return list.rest;
     }
-    throw std::runtime_error("List does not contain symbol " + name);
+    throw MissingSymbol(name, "list");
 }
 
 Expression evaluateLookupChild(
