@@ -777,6 +777,14 @@ int main() {
         {"put_each!((1 2) (3 4))", "(2 1 3 4)"},
         {"put_each!((1 2 3) (4 5 6))", "(3 2 1 4 5 6)"},
     });
+    test.evaluate("put_each string", {
+        {R"(put_each!("" ""))", R"("")"},
+        {R"(put_each!("" "a"))", R"("a")"},
+        {R"(put_each!("a" ""))", R"("a")"},
+        {R"(put_each!("a" "b"))", R"("ab")"},
+        {R"(put_each!("ab" "cd"))", R"("bacd")"},
+        {R"(put_each!("abc" "def"))", R"("cbadef")"},
+    });
     test.evaluate("concat", {
         {"concat!(() ())", "()"},
         {"concat!(() (2))", "(2)"},
