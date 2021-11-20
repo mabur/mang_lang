@@ -160,6 +160,17 @@ const std::string STANDARD_LIBRARY = R"(
         result = reverse!reversed_result
     }
 
+    split = in (n stack) out stacks@{
+        top_stack = clear!stack
+        bottom_stack = stack
+        while and?(n bottom_stack)
+            n = dec!n
+            top_stack = put!(top@bottom_stack top_stack)
+            bottom_stack = rest@bottom_stack
+        end
+        stacks = (top_stack bottom_stack)
+    }
+
     drop = in (n stack) out short_stack@{
         short_stack = stack
         i = n

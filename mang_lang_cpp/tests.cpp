@@ -799,6 +799,13 @@ int main() {
         {R"(concat_strings!("a" "b"))", R"("ab")"},
         {R"(concat_strings!("a" "bc" "def"))", R"("abcdef")"},
     });
+    test.evaluate("split", {
+        {"split!(0 ())", "(() ())"},
+        {"split!(1 ())", "(() ())"},
+        {"split!(0 (1))", "(() (1))"},
+        {"split!(1 (1 2))", "((1) (2))"},
+        {"split!(2 (1 2 3 4))", "((2 1) (3 4))"},
+    });
     test.evaluate("drop list", {
         {"drop!(0 (3 7 6))", "(3 7 6)"},
         {"drop!(1 (3 7 6))", "(7 6)"},
