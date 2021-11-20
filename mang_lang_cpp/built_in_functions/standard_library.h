@@ -35,24 +35,24 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    fold = in (operation list init) out result@{
+    fold = in (operation stack init) out result@{
         result = init
-        list = list
-        while list
-            result = operation!(top@list result)
-            list = rest@list
+        stack = stack
+        while stack
+            result = operation!(top@stack result)
+            stack = rest@stack
         end
     }
 
-    min = in list out fold!(
+    min = in stack out fold!(
         in (item value) out if less?(item value) then item else value
-        list
+        stack
         inf
     )
 
-    max = in list out fold!(
+    max = in stack out fold!(
         in (item value) out if less?(item value) then value else item
-        list
+        stack
         -inf
     )
 
@@ -62,136 +62,136 @@ const std::string STANDARD_LIBRARY = R"(
         init
     )
 
-    reverse = in list out
-        extend!(list clear!list)
+    reverse = in stack out
+        extend!(stack clear!stack)
 
-    concat = in lists out reverse!fold!(
+    concat = in stacks out reverse!fold!(
         extend
-        lists
+        stacks
         ()
     )
 
-    concat_strings = in lists out reverse!fold!(
+    concat_strings = in strings out reverse!fold!(
         extend
-        lists
+        strings
         ""
     )
 
-    map = in (f list) out reverse!fold!(
-        in (item list) out put!(f!item list)
-        list
+    map = in (f stack) out reverse!fold!(
+        in (item stack) out put!(f!item stack)
+        stack
         ()
     )
 
-    map_string = in (f list) out reverse!fold!(
-        in (item list) out put!(f!item list)
-        list
+    map_string = in (f stack) out reverse!fold!(
+        in (item stack) out put!(f!item stack)
+        stack
         ""
     )
 
-    clear_if = in (predicate list) out reverse!fold!(
-        in (item list) out
+    clear_if = in (predicate stack) out reverse!fold!(
+        in (item stack) out
             if predicate?item then
-                list
+                stack
             else
-                put!(item list)
-        list
-        clear!list
+                put!(item stack)
+        stack
+        clear!stack
     )
 
-    clear_item = in (item list) out
-        clear_if?(in x out equal?(x item) list)
+    clear_item = in (item stack) out
+        clear_if?(in x out equal?(x item) stack)
 
-    replace = in (new_item list) out fold!(
-        in (item list) out put!(new_item list)
-        list
-        clear!list
+    replace = in (new_item stack) out fold!(
+        in (item stack) out put!(new_item stack)
+        stack
+        clear!stack
     )
 
-    replace_if = in (predicate new_item list) out reverse!fold!(
-        in (item list) out
+    replace_if = in (predicate new_item stack) out reverse!fold!(
+        in (item stack) out
             if predicate?item then
-                put!(new_item list)
+                put!(new_item stack)
             else
-                put!(item list)
-        list
-        clear!list
+                put!(item stack)
+        stack
+        clear!stack
     )
 
-    replace_item = in (old_item new_item list) out
-        replace_if?(in x out equal?(x old_item) new_item list)
+    replace_item = in (old_item new_item stack) out
+        replace_if?(in x out equal?(x old_item) new_item stack)
 
-    count = in list out fold!(
+    count = in stack out fold!(
         in (item n) out inc!n
-        list
+        stack
         0
     )
 
-    count_if = in (predicate list) out fold!(
+    count_if = in (predicate stack) out fold!(
         in (item n) out if predicate?item then inc!n else n
-        list
+        stack
         0
     )
 
-    count_item = in (item list) out
-        count_if!(in x out equal?(x item) list)
+    count_item = in (item stack) out
+        count_if!(in x out equal?(x item) stack)
 
-    range = in n out list@{
-        list = ()
+    range = in n out stack@{
+        stack = ()
         i = n
         while i
             i = dec!i
-            list = put!(i list)
+            stack = put!(i stack)
         end
     }
 
-    enumerate = in list out result@{
+    enumerate = in stack out result@{
         reversed_result = ()
-        list = list
+        stack = stack
         index = 0
-        while list
+        while stack
             reversed_result = put!(
-                {index=index item=top@list}
+                {index=index item=top@stack}
                 reversed_result
             )
             index = inc!index
-            list = rest@list
+            stack = rest@stack
         end
         result = reverse!reversed_result
     }
 
-    drop = in (n list) out short_list@{
-        short_list = list
+    drop = in (n stack) out short_stack@{
+        short_stack = stack
         i = n
         while i
             i = dec!i
-            short_list = rest@short_list
+            short_stack = rest@short_stack
         end
     }
 
-    drop_while = in (predicate list) out list@{
-        list = list
-        while if list then predicate?top@list else no
-            list = rest@list
+    drop_while = in (predicate stack) out stack@{
+        stack = stack
+        while if stack then predicate?top@stack else no
+            stack = rest@stack
         end
     }
 
-    take = in (n list) out short_list@{
-        reversed_result = clear!list
-        list = list
+    take = in (n stack) out short_stack@{
+        reversed_result = clear!stack
+        stack = stack
         i = n
         while i
             i = dec!i
-            reversed_result = put!(top@list reversed_result)
-            list = rest@list
+            reversed_result = put!(top@stack reversed_result)
+            stack = rest@stack
         end
-        short_list = reverse!reversed_result
+        short_stack = reverse!reversed_result
     }
 
-    get_index = in (index list) out top@drop!(index list)
+    get_index = in (index stack) out top@drop!(index stack)
 
-    all = in list out not?drop_while!(boolean list)
-    none = in list out not?drop_while!(not list)
-    any = in list out boolean?drop_while!(not list)
+    all = in stack out not?drop_while!(boolean stack)
+    none = in stack out not?drop_while!(not stack)
+    any = in stack out boolean?drop_while!(not stack)
 }
 )";
