@@ -846,5 +846,13 @@ int main() {
         {R"(get_index!(1 "abc"))", R"('b')"},
         {R"(get_index!(2 "abc"))", R"('c')"},
     });
+    test.evaluate("merge_sorted", {
+        {"merge_sorted!(() ())", "()"},
+        {"merge_sorted!((0) ())", "(0)"},
+        {"merge_sorted!(() (0))", "(0)"},
+        {"merge_sorted!((0) (0))", "(0 0)"},
+        {"merge_sorted!((0 2) (1 3))", "(0 1 2 3)"},
+        {"merge_sorted!((0 1 2 5 8 9) (0 2 4 6 7))", "(0 0 1 2 2 4 5 6 7 8 9)"},
+    });
     return test.exitCode();
 }
