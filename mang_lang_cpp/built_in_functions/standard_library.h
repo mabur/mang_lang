@@ -56,23 +56,23 @@ const std::string STANDARD_LIBRARY = R"(
         -inf
     )
 
-    extend = in (extension init) out fold!(
+    put_each = in (top_stack bottom_stack) out fold!(
         put
-        extension
-        init
+        top_stack
+        bottom_stack
     )
 
     reverse = in stack out
-        extend!(stack clear!stack)
+        put_each!(stack clear!stack)
 
     concat = in stacks out reverse!fold!(
-        extend
+        put_each
         stacks
         ()
     )
 
     concat_strings = in strings out reverse!fold!(
-        extend
+        put_each
         strings
         ""
     )
