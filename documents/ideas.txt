@@ -1,8 +1,11 @@
 TODO:
-* Use "stack" instead of "list" as main notation?
-  - extend -> put_all, put_each
-  - Syntax (top rest) or (rest top)
-  - add first, second, third, ... as functions
+* Remove shared_ptr from linked list implementation.
+  - Make CodeRange part of ExpressionPointer instead of expression.
+* Simplifications with new list:
+  - Merge new list and new string?
+  - Extract for_each for new lists and strings
+  - resolve mutable pointer in iterative dictionary evaluation
+  - remove shared_ptr from vector of expressions in factory
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Example programs:
   - Parsing Json
@@ -18,21 +21,14 @@ TODO:
   - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
 * Convert functions from built-in to standard library.
-  - fold_while
+  - fold_while, fold_until, fold_if
   - all, any, none, med och utan predikat
   - find_if, find_item, drop_item, drop_while...
   - split
   - trim
-* Remove shared_ptr from linked list implementation.
-  - Make CodeRange part of ExpressionPointer instead of expression.
 * vector math
   - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
   - norms, dot, inner_products
-* Simplifications with new list:
-  - Merge new list and new string?
-  - Extract for_each for new lists and strings
-  - resolve mutable pointer in iterative dictionary evaluation
-  - remove shared_ptr from vector of expressions in factory
 * Generic programming
   - Generic container interface
     - Alternative syntax:
@@ -342,7 +338,7 @@ SUB LANGUAGES
 ║ -3.34       ║ 'c'         ║
 ╚═════════════╚═════════════╝
 
-╔═ DICTIONARIES ═════════╔═ LISTS ══════════╔═ STRINGS ══════╗
+╔═ DICTIONARIES ═════════╔═ STACKS══════════╔═ STRINGS ══════╗
 ║ {NAME=EXPRESSION ...}  ║ (EXPRESSION ...) ║ "CHARACTER..." ║
 ║                        ║                  ║                ║
 ║ {}                     ║ ()               ║ ""             ║
@@ -356,15 +352,15 @@ SUB LANGUAGES
 ║ }                      ║ )                ║                ║
 ╚════════════════════════╚══════════════════╚════════════════╝
 
-╔═ REFERENCES ═══════╔═ CHILD REFERENCES ══════════════════╗
-║ NAME               ║ NAME@EXPRESSION                     ║
-║                    ║                                     ║
-║ {                  ║ {                                   ║
-║     x = 1          ║     rectangle = {width=1 height=2}  ║
-║     y = x          ║     w = width@rectangle             ║
-║     z = {a=1 b=y}  ║     coordinate = z@{x=1 y=2 z=3}    ║
-║ }                  ║ }                                   ║
-╚════════════════════╚═════════════════════════════════════╝
+╔═ REFERENCES ═══════╔═ CHILD REFERENCES ═════════════════╗
+║ NAME               ║ NAME@EXPRESSION                    ║
+║                    ║                                    ║
+║ {                  ║ {                                  ║
+║     x = 1          ║     rectangle = {width=1 height=2} ║
+║     y = x          ║     w = width@rectangle            ║
+║     z = {a=1 b=y}  ║     coordinate = z@{x=1 y=2 z=3}   ║
+║ }                  ║ }                                  ║
+╚════════════════════╚════════════════════════════════════╝
 
 ╔══ FUNCTION APPLICATION ════════════════════╗
 ║ NAME!EXPRESSION                            ║
@@ -372,7 +368,7 @@ SUB LANGUAGES
 ║ {                                          ║
 ║     list = (1 2 3)                         ║
 ║     num_elements = count!list              ║
-║     longer_list = prepend!(0 list)         ║
+║     longer_list = put!(0 list)             ║
 ║     backwards = reverse!"Mang Lang"        ║
 ║     area = get_area!{width=320 height=240} ║
 ║ }                                          ║
@@ -391,14 +387,14 @@ SUB LANGUAGES
 ║                                               ║ }                                                      ║
 ╚═══════════════════════════════════════════════╚════════════════════════════════════════════════════════╝
 
-╔══ FUNCTIONS ══════════════════════════════════════╔══ FUNCTIONS OF LISTS ═══════════╔══ FUNCTIONS OF DICTIONARIES ═══════════════╗
+╔══ FUNCTIONS ══════════════════════════════════════╔══ FUNCTIONS OF STACKS ══════════╔══ FUNCTIONS OF DICTIONARIES ═══════════════╗
 ║ in NAME out EXPRESSION                            ║ in (NAME ...) out EXPRESSION    ║ in {NAME ...} out EXPRESSION               ║
 ║                                                   ║                                 ║                                            ║
 ║ {                                                 ║                                 ║                                            ║
 ║     square = in x out mul!(x x)                   ║                                 ║                                            ║
 ║     nine = square 3                               ║ {                               ║                                            ║
 ║     square_norm2 = in vec out                     ║     square_norm2 = in (x y) out ║                                            ║
-║         add!(square!first@vec, square!second!vec) ║         add!(square!x square!y) ║                                            ║
+║         add!(square!first!vec, square!second!vec) ║         add!(square!x square!y) ║                                            ║
 ║     n = square_norm2!(3 4)                        ║     n = square_norm2!(3 4)      ║ {                                          ║
 ║     get_area = in shape out                       ║     conj = in (re im) out       ║     get_area = in {width height} out       ║
 ║         mul!(width@shape height@shape)            ║         (re neg!im)             ║         mul!(width height)                 ║
