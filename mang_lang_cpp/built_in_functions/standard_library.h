@@ -205,28 +205,23 @@ const std::string STANDARD_LIBRARY = R"(
     none = in stack out not?drop_while!(not stack)
     any = in stack out boolean?drop_while!(not stack)
 
+    less_or_equal_top = in (left right) out
+        if left then
+            if right then
+                less_or_equal?(top@left top@right)
+            else
+                yes
+        else
+            no
+
     merge_sorted = in (left right) out reverse!stack@{
         stack = ()
         while or?(left right)
-            while
-                if left then
-                    if right then
-                        or?(less?(top@left top@right) equal?(top@left top@right))
-                    else
-                        yes
-                else
-                    no
+            while less_or_equal_top?(left right)
                 stack = put!(top@left stack)
                 left = rest@left
             end
-            while
-                if right then
-                    if left then
-                        less?(top@right top@left)
-                    else
-                        yes
-                else
-                    no
+            while less_or_equal_top?(right left)
                 stack = put!(top@right stack)
                 right = rest@right
             end
