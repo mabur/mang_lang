@@ -4,6 +4,16 @@
 
 const std::string STANDARD_LIBRARY = R"(
 {
+    first = in stack out top@stack
+    second = in stack out top@rest@stack
+    third = in stack out top@rest@rest@stack
+    fourth = in stack out top@rest@rest@rest@stack
+    fifth = in stack out top@rest@rest@rest@rest@stack
+    sixth = in stack out top@rest@rest@rest@rest@rest@stack
+    seventh = in stack out top@rest@rest@rest@rest@rest@rest@stack
+    eighth = in stack out top@rest@rest@rest@rest@rest@rest@rest@stack
+    ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
+
     boolean = in x out if x then yes else no
     not = in x out if x then no else yes
     and = in (left right) out if left then boolean?right else no
