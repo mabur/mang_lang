@@ -7,10 +7,10 @@ namespace list_functions {
 
 Expression empty(Expression in) {
     switch (in.type) {
-        case LIST: return makeEmptyList(new EmptyList{});
-        case EMPTY_LIST: return makeEmptyList(new EmptyList{});
-        case STRING: return makeEmptyString(new EmptyString{});
-        case EMPTY_STRING: return makeEmptyString(new EmptyString{});
+        case LIST: return makeEmptyList(EmptyList{});
+        case EMPTY_LIST: return makeEmptyList(EmptyList{});
+        case STRING: return makeEmptyString(EmptyString{});
+        case EMPTY_STRING: return makeEmptyString(EmptyString{});
         default: throw UnexpectedExpression(in.type, "empty operation");
     }
 }

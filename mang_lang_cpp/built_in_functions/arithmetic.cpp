@@ -12,11 +12,11 @@ double number(Expression expression) {
 }
 
 Expression makeNumber(double x) {
-    return makeNumber(new Number(Number{CodeRange{}, x}));
+    return makeNumber(Number(Number{CodeRange{}, x}));
 }
 
 Expression makeBoolean(bool x) {
-    return makeBoolean(new Boolean{CodeRange{}, x});
+    return makeBoolean(Boolean{CodeRange{}, x});
 }
 
 double addExpression(double left, Expression right) {

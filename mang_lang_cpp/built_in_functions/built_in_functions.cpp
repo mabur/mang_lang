@@ -9,10 +9,10 @@
 
 Expression define(std::string name, std::function<Expression(Expression)> function) {
     return makeDefinition(
-        new Definition{
+        Definition{
             CodeRange{},
-            makeName(new Name{CodeRange{}, name}),
-            makeFunctionBuiltIn(new FunctionBuiltIn{{}, function}),
+            makeName(Name{CodeRange{}, name}),
+            makeFunctionBuiltIn(FunctionBuiltIn{{}, function}),
             0
         }
     );

@@ -46,7 +46,7 @@ Expression evaluateDictionary(
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
             result->statements.at(definition.name_index_) = makeDefinition(
-                new Definition{
+                Definition{
                     definition.range,
                     definition.name,
                     evaluate(definition.expression, makeDictionary(result)),
@@ -81,7 +81,7 @@ Expression evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, Expression environment
 ) {
     return makeFunctionDictionary(
-        new FunctionDictionary{
+        FunctionDictionary{
             function_dictionary.range,
             environment,
             function_dictionary.input_names,
@@ -93,7 +93,7 @@ Expression evaluateFunctionDictionary(
 Expression evaluateFunctionList(
     const FunctionList& function_list, Expression environment
 ) {
-    return makeFunctionList(new FunctionList{
+    return makeFunctionList(FunctionList{
         function_list.range, environment, function_list.input_names, function_list.body
     });
 }
@@ -106,7 +106,7 @@ Expression evaluateList(
         return new_list::prepend(rest, evaluated_first);
     };
     const auto code = CodeRange{};
-    const auto init = makeEmptyList(new EmptyList{});
+    const auto init = makeEmptyList(EmptyList{});
     const auto output = new_list::leftFold(init, list, op);
     return new_list::reverse(code, output);
 }
@@ -179,7 +179,7 @@ Expression evaluateLookupChild(
 Expression applyFunction(const Function& function, Expression input) {
 
     const auto statements = Statements{
-        makeDefinition(new Definition{function.range, function.input_name, input, 0})
+        makeDefinition(Definition{function.range, function.input_name, input, 0})
     };
     const auto middle = makeDictionary(
         new Dictionary{CodeRange{}, function.environment, statements}
@@ -208,7 +208,7 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
         const auto list = getList(expression);
         statements.push_back(
             makeDefinition(
-                new Definition{
+                Definition{
                     function_list.range,
                     function_list.input_names[i],
                     list.first,

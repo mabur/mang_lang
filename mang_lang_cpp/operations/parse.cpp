@@ -52,7 +52,7 @@ Expression parseConditional(CodeRange code) {
 Expression parseName(CodeRange code) {
     auto first = code.begin();
     code = parseWhile(code, isNameCharacter);
-    return makeName(new Name{
+    return makeName(Name{
         CodeRange{first, code.first}, rawString({first, code.first})
     });
 }
@@ -68,7 +68,7 @@ Expression parseNamedElement(CodeRange code) {
     code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeDefinition(
-        new Definition{
+        Definition{
             CodeRange{first, code.first},
             std::move(name),
             expression,
@@ -85,7 +85,7 @@ Expression parseWhileStatement(CodeRange code) {
     code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeWhileStatement(
-        new WhileStatement{
+        WhileStatement{
             CodeRange{first, code.first},
             expression,
             0,
@@ -97,7 +97,7 @@ Expression parseEndStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeEndStatement(new EndStatement{CodeRange{first, code.first}, 1});
+    return makeEndStatement(EndStatement{CodeRange{first, code.first}, 1});
 }
 
 Expression parseDictionaryElement(CodeRange code) {
@@ -167,7 +167,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunctionDictionary(new FunctionDictionary{
+    return makeFunctionDictionary(FunctionDictionary{
         CodeRange{first, code.begin()}, Expression{}, input_names, body
     });
 }
@@ -191,7 +191,7 @@ Expression parseFunctionList(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunctionList(new FunctionList{
+    return makeFunctionList(FunctionList{
         CodeRange{first, code.begin()}, Expression{}, input_names, body
     });
 }
@@ -200,7 +200,7 @@ Expression parseList(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto list = makeEmptyList(new EmptyList{});
+    auto list = makeEmptyList(EmptyList{});
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
@@ -221,7 +221,7 @@ Expression parseLookupChild(CodeRange code) {
     code = parseWhiteSpace(code);
     auto child = parseExpression(code);
     code.first = end(child);
-    return makeLookupChild(new LookupChild{CodeRange{first, code.first}, name, child});
+    return makeLookupChild(LookupChild{CodeRange{first, code.first}, name, child});
 }
 
 Expression parseLookupFunction(CodeRange code) {
@@ -232,7 +232,7 @@ Expression parseLookupFunction(CodeRange code) {
     code = parseCharacter(code, expected);
     auto child = parseExpression(code);
     code.first = end(child);
-    return makeFunctionApplication(new FunctionApplication{
+    return makeFunctionApplication(FunctionApplication{
         CodeRange{first, code.first}, name, child
     });
 }
@@ -240,7 +240,7 @@ Expression parseLookupFunction(CodeRange code) {
 Expression parseLookupSymbol(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
-    return makeLookupSymbol(new LookupSymbol{
+    return makeLookupSymbol(LookupSymbol{
         CodeRange{first, end(name)}, name
     });
 }
@@ -254,7 +254,7 @@ Expression parseNumber(CodeRange code) {
     code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString({first, code.first}));
     return makeNumber(
-        new Number(Number{CodeRange{first, code.first}, value})
+        Number(Number{CodeRange{first, code.first}, value})
     );
 }
 
@@ -263,29 +263,29 @@ CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
 }
 
 Expression parseYes(CodeRange code) {
-    return makeBoolean(new Boolean{parseKeyWordContent(code, "yes"), true});
+    return makeBoolean(Boolean{parseKeyWordContent(code, "yes"), true});
 }
 
 Expression parseNo(CodeRange code) {
-    return makeBoolean(new Boolean{parseKeyWordContent(code, "no"), false});
+    return makeBoolean(Boolean{parseKeyWordContent(code, "no"), false});
 }
 
 Expression parseInf(CodeRange code) {
-    return makeNumber(new Number{
+    return makeNumber(Number{
         parseKeyWordContent(code, "inf"),
         std::numeric_limits<double>::infinity()
     });
 }
 
 Expression parseNegInf(CodeRange code) {
-    return makeNumber(new Number{
+    return makeNumber(Number{
         parseKeyWordContent(code, "-inf"),
         -std::numeric_limits<double>::infinity()
     });
 }
 
 Expression parseNan(CodeRange code) {
-    return makeNumber(new Number{
+    return makeNumber(Number{
         parseKeyWordContent(code, "nan"),
         std::numeric_limits<double>::quiet_NaN()
     });
@@ -294,7 +294,7 @@ Expression parseNan(CodeRange code) {
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
-    auto value = makeEmptyString(new EmptyString{first, first + 1});
+    auto value = makeEmptyString(EmptyString{first, first + 1});
     for (; code.first->character != '"'; ++code.first) {
         auto item = makeCharacter(Character{
             CodeRange{code.first, code.first + 1}, code.first->character

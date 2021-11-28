@@ -8,26 +8,27 @@
 #include "operations/begin.h"
 #include "operations/serialize.h"
 
+std::vector<std::shared_ptr<const Dictionary>> dictionaries;
+
 std::vector<Character> characters;
 std::vector<Conditional> conditionals;
-std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 std::vector<Function> functions;
-std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
-std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
-std::vector<std::shared_ptr<const FunctionList>> list_functions;
-std::vector<std::shared_ptr<const List>> lists;
-std::vector<std::shared_ptr<const EmptyList>> empty_lists;
-std::vector<std::shared_ptr<const LookupChild>> child_lookups;
-std::vector<std::shared_ptr<const FunctionApplication>> function_applications;
-std::vector<std::shared_ptr<const LookupSymbol>> symbol_lookups;
-std::vector<std::shared_ptr<const Name>> names;
-std::vector<std::shared_ptr<const Number>> numbers;
-std::vector<std::shared_ptr<const WhileStatement>> while_statements;
-std::vector<std::shared_ptr<const EndStatement>> end_statements;
-std::vector<std::shared_ptr<const Definition>> definitions;
-std::vector<std::shared_ptr<const String>> strings;
-std::vector<std::shared_ptr<const EmptyString>> empty_strings;
-std::vector<std::shared_ptr<const Boolean>> booleans;
+std::vector<FunctionBuiltIn> built_in_functions;
+std::vector<FunctionDictionary> dictionary_functions;
+std::vector<FunctionList> list_functions;
+std::vector<List> lists;
+std::vector<EmptyList> empty_lists;
+std::vector<LookupChild> child_lookups;
+std::vector<FunctionApplication> function_applications;
+std::vector<LookupSymbol> symbol_lookups;
+std::vector<Name> names;
+std::vector<Number> numbers;
+std::vector<WhileStatement> while_statements;
+std::vector<EndStatement> end_statements;
+std::vector<Definition> definitions;
+std::vector<String> strings;
+std::vector<EmptyString> empty_strings;
+std::vector<Boolean> booleans;
 std::vector<Expression> expressions;
 
 void clearMemory() {
@@ -134,7 +135,7 @@ Statements setContext(const Statements& statements) {
         const auto type = statements[i].type;
         if (type == DEFINITION) {
             const auto statement = getDefinition(statements[i]);
-            result.push_back(makeDefinition(new Definition{
+            result.push_back(makeDefinition(Definition{
                 statement.range,
                 statement.name,
                 statement.expression,
@@ -142,14 +143,14 @@ Statements setContext(const Statements& statements) {
             }));
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
-            result.push_back(makeWhileStatement(new WhileStatement{
+            result.push_back(makeWhileStatement(WhileStatement{
                 statement.range,
                 statement.expression,
                 end_indices[i],
             }));
         } else if (type == END_STATEMENT) {
             const auto statement = getEndStatement(statements[i]);
-            result.push_back(makeEndStatement(new EndStatement{
+            result.push_back(makeEndStatement(EndStatement{
                 statement.range, while_indices[i]
             }));
         } else {
@@ -181,8 +182,8 @@ Expression makeExpressionValue(
     return expressions.back();
 }
 
-Expression makeNumber(const Number* expression) {
-    return makeExpression(expression, NUMBER, numbers);
+Expression makeNumber(Number expression) {
+    return makeExpressionValue(expression, NUMBER, numbers);
 }
 
 Expression makeCharacter(Character expression) {
@@ -201,64 +202,64 @@ Expression makeFunction(Function expression) {
     return makeExpressionValue(expression, FUNCTION, functions);
 }
 
-Expression makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
-    return makeExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
+Expression makeFunctionBuiltIn(FunctionBuiltIn expression) {
+    return makeExpressionValue(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
-Expression makeFunctionDictionary(const FunctionDictionary* expression) {
-    return makeExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
+Expression makeFunctionDictionary(FunctionDictionary expression) {
+    return makeExpressionValue(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-Expression makeFunctionList(const FunctionList* expression) {
-    return makeExpression(expression, FUNCTION_LIST, list_functions);
+Expression makeFunctionList(FunctionList expression) {
+    return makeExpressionValue(expression, FUNCTION_LIST, list_functions);
 }
 
-Expression makeList(const List* expression) {
-    return makeExpression(expression, LIST, lists);
+Expression makeList(List expression) {
+    return makeExpressionValue(expression, LIST, lists);
 }
 
-Expression makeEmptyList(const EmptyList* expression) {
-    return makeExpression(expression, EMPTY_LIST, empty_lists);
+Expression makeEmptyList(EmptyList expression) {
+    return makeExpressionValue(expression, EMPTY_LIST, empty_lists);
 }
 
-Expression makeLookupChild(const LookupChild* expression) {
-    return makeExpression(expression, LOOKUP_CHILD, child_lookups);
+Expression makeLookupChild(LookupChild expression) {
+    return makeExpressionValue(expression, LOOKUP_CHILD, child_lookups);
 }
 
-Expression makeFunctionApplication(const FunctionApplication* expression) {
-    return makeExpression(expression, FUNCTION_APPLICATION, function_applications);
+Expression makeFunctionApplication(FunctionApplication expression) {
+    return makeExpressionValue(expression, FUNCTION_APPLICATION, function_applications);
 }
 
-Expression makeLookupSymbol(const LookupSymbol* expression) {
-    return makeExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
+Expression makeLookupSymbol(LookupSymbol expression) {
+    return makeExpressionValue(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-Expression makeName(const Name* expression) {
-    return makeExpression(expression, NAME, names);
+Expression makeName(Name expression) {
+    return makeExpressionValue(expression, NAME, names);
 }
 
-Expression makeDefinition(const Definition* expression) {
-    return makeExpression(expression, DEFINITION, definitions);
+Expression makeDefinition(Definition expression) {
+    return makeExpressionValue(expression, DEFINITION, definitions);
 }
 
-Expression makeWhileStatement(const WhileStatement* expression) {
-    return makeExpression(expression, WHILE_STATEMENT, while_statements);
+Expression makeWhileStatement(WhileStatement expression) {
+    return makeExpressionValue(expression, WHILE_STATEMENT, while_statements);
 }
 
-Expression makeEndStatement(const EndStatement* expression) {
-    return makeExpression(expression, END_STATEMENT, end_statements);
+Expression makeEndStatement(EndStatement expression) {
+    return makeExpressionValue(expression, END_STATEMENT, end_statements);
 }
 
-Expression makeString(const String* expression) {
-    return makeExpression(expression, STRING, strings);
+Expression makeString(String expression) {
+    return makeExpressionValue(expression, STRING, strings);
 }
 
-Expression makeEmptyString(const EmptyString* expression) {
-    return makeExpression(expression, EMPTY_STRING, empty_strings);
+Expression makeEmptyString(EmptyString expression) {
+    return makeExpressionValue(expression, EMPTY_STRING, empty_strings);
 }
 
-Expression makeBoolean(const Boolean* expression) {
-    return makeExpression(expression, BOOLEAN, booleans);
+Expression makeBoolean(Boolean expression) {
+    return makeExpressionValue(expression, BOOLEAN, booleans);
 }
 
 // FREE GETTERS
@@ -296,19 +297,19 @@ typename ArrayType::value_type getExpressionValue(
 }
 
 Definition getDefinition(Expression expression) {
-    return getExpression(expression, DEFINITION, definitions);
+    return getExpressionValue(expression, DEFINITION, definitions);
 }
 
 WhileStatement getWileStatement(Expression expression) {
-    return getExpression(expression, WHILE_STATEMENT, while_statements);
+    return getExpressionValue(expression, WHILE_STATEMENT, while_statements);
 }
 
 EndStatement getEndStatement(Expression expression) {
-    return getExpression(expression, END_STATEMENT, end_statements);
+    return getExpressionValue(expression, END_STATEMENT, end_statements);
 }
 
 Number getNumber(Expression expression) {
-    return getExpression(expression, NUMBER, numbers);
+    return getExpressionValue(expression, NUMBER, numbers);
 }
 
 Character getCharacter(Expression expression) {
@@ -328,51 +329,51 @@ Function getFunction(Expression expression) {
 }
 
 FunctionBuiltIn getFunctionBuiltIn(Expression expression) {
-    return getExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
+    return getExpressionValue(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
 FunctionDictionary getFunctionDictionary(Expression expression) {
-    return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
+    return getExpressionValue(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
 FunctionList getFunctionList(Expression expression) {
-    return getExpression(expression, FUNCTION_LIST, list_functions);
+    return getExpressionValue(expression, FUNCTION_LIST, list_functions);
 }
 
 List getList(Expression expression) {
-    return getExpression(expression, LIST, lists);
+    return getExpressionValue(expression, LIST, lists);
 }
 
 EmptyList getEmptyList(Expression expression) {
-    return getExpression(expression, EMPTY_LIST, empty_lists);
+    return getExpressionValue(expression, EMPTY_LIST, empty_lists);
 }
 
 LookupChild getLookupChild(Expression expression) {
-    return getExpression(expression, LOOKUP_CHILD, child_lookups);
+    return getExpressionValue(expression, LOOKUP_CHILD, child_lookups);
 }
 
 FunctionApplication getFunctionApplication(Expression expression) {
-    return getExpression(expression, FUNCTION_APPLICATION, function_applications);
+    return getExpressionValue(expression, FUNCTION_APPLICATION, function_applications);
 }
 
 LookupSymbol getLookupSymbol(Expression expression) {
-    return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
+    return getExpressionValue(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
 Name getName(Expression expression) {
-    return getExpression(expression, NAME, names);
+    return getExpressionValue(expression, NAME, names);
 }
 
 String getString(Expression expression) {
-    return getExpression(expression, STRING, strings);
+    return getExpressionValue(expression, STRING, strings);
 }
 
 EmptyString getEmptyString(Expression expression) {
-    return getExpression(expression, EMPTY_STRING, empty_strings);
+    return getExpressionValue(expression, EMPTY_STRING, empty_strings);
 }
 
 Boolean getBoolean(Expression expression) {
-    return getExpression(expression, BOOLEAN, booleans);
+    return getExpressionValue(expression, BOOLEAN, booleans);
 }
 
 std::string getLog() {
