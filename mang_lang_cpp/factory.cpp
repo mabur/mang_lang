@@ -9,7 +9,7 @@
 #include "operations/serialize.h"
 
 std::vector<Character> characters;
-std::vector<std::shared_ptr<const Conditional>> conditionals;
+std::vector<Conditional> conditionals;
 std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 std::vector<std::shared_ptr<const Function>> functions;
 std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
@@ -189,8 +189,8 @@ Expression makeCharacter(Character expression) {
     return makeExpressionValue(expression, CHARACTER, characters);
 }
 
-Expression makeConditional(const Conditional* expression) {
-    return makeExpression(expression, CONDITIONAL, conditionals);
+Expression makeConditional(Conditional expression) {
+    return makeExpressionValue(expression, CONDITIONAL, conditionals);
 }
 
 Expression makeDictionary(const Dictionary* expression) {
@@ -316,7 +316,7 @@ Character getCharacter(Expression expression) {
 }
 
 Conditional getConditional(Expression expression) {
-    return getExpression(expression, CONDITIONAL, conditionals);
+    return getExpressionValue(expression, CONDITIONAL, conditionals);
 }
 
 Dictionary getDictionary(Expression expression) {

@@ -33,7 +33,7 @@ Boolean getBoolean(Expression expression);
 
 Expression makeNumber(const Number* expression);
 Expression makeCharacter(Character expression);
-Expression makeConditional(const Conditional* expression);
+Expression makeConditional(Conditional expression);
 Expression makeDictionary(const Dictionary* expression);
 Expression makeFunction(const Function* expression);
 Expression makeFunctionBuiltIn(const FunctionBuiltIn* expression);

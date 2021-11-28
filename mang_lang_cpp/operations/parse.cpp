@@ -41,7 +41,7 @@ Expression parseConditional(CodeRange code) {
     code.first = end(expression_else);
     code = parseWhiteSpace(code);
 
-    return makeConditional(new Conditional{
+    return makeConditional(Conditional{
         CodeRange{first, code.begin()},
         expression_if,
         expression_then,
