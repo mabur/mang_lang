@@ -11,7 +11,7 @@
 std::vector<Character> characters;
 std::vector<Conditional> conditionals;
 std::vector<std::shared_ptr<const Dictionary>> dictionaries;
-std::vector<std::shared_ptr<const Function>> functions;
+std::vector<Function> functions;
 std::vector<std::shared_ptr<const FunctionBuiltIn>> built_in_functions;
 std::vector<std::shared_ptr<const FunctionDictionary>> dictionary_functions;
 std::vector<std::shared_ptr<const FunctionList>> list_functions;
@@ -197,8 +197,8 @@ Expression makeDictionary(const Dictionary* expression) {
     return makeExpression(expression, DICTIONARY, dictionaries);
 }
 
-Expression makeFunction(const Function* expression) {
-    return makeExpression(expression, FUNCTION, functions);
+Expression makeFunction(Function expression) {
+    return makeExpressionValue(expression, FUNCTION, functions);
 }
 
 Expression makeFunctionBuiltIn(const FunctionBuiltIn* expression) {
@@ -324,7 +324,7 @@ Dictionary getDictionary(Expression expression) {
 }
 
 Function getFunction(Expression expression) {
-    return getExpression(expression, FUNCTION, functions);
+    return getExpressionValue(expression, FUNCTION, functions);
 }
 
 FunctionBuiltIn getFunctionBuiltIn(Expression expression) {

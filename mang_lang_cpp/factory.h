@@ -35,7 +35,7 @@ Expression makeNumber(const Number* expression);
 Expression makeCharacter(Character expression);
 Expression makeConditional(Conditional expression);
 Expression makeDictionary(const Dictionary* expression);
-Expression makeFunction(const Function* expression);
+Expression makeFunction(Function expression);
 Expression makeFunctionBuiltIn(const FunctionBuiltIn* expression);
 Expression makeFunctionDictionary(const FunctionDictionary* expression);
 Expression makeFunctionList(const FunctionList* expression);

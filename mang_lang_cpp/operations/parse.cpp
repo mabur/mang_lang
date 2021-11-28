@@ -143,7 +143,7 @@ Expression parseFunction(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunction(new Function{
+    return makeFunction(Function{
         CodeRange{first, code.begin()}, Expression{}, input_name, body
     });
 }

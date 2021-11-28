@@ -72,7 +72,7 @@ Expression evaluateDictionary(
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
-    return makeFunction(new Function{
+    return makeFunction(Function{
         function.range, environment, function.input_name, function.body
     });
 }
