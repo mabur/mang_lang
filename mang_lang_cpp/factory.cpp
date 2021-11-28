@@ -8,7 +8,7 @@
 #include "operations/begin.h"
 #include "operations/serialize.h"
 
-std::vector<std::shared_ptr<const Character>> characters;
+std::vector<Character> characters;
 std::vector<std::shared_ptr<const Conditional>> conditionals;
 std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 std::vector<std::shared_ptr<const Function>> functions;
@@ -170,12 +170,23 @@ Expression makeExpression(
     return expressions.back();
 }
 
+template<typename ElementType, typename ArrayType>
+Expression makeExpressionValue(
+    ElementType expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    array.emplace_back(expression);
+    expressions.push_back(Expression{type, array.size() - 1});
+    return expressions.back();
+}
+
 Expression makeNumber(const Number* expression) {
     return makeExpression(expression, NUMBER, numbers);
 }
 
-Expression makeCharacter(const Character* expression) {
-    return makeExpression(expression, CHARACTER, characters);
+Expression makeCharacter(Character expression) {
+    return makeExpressionValue(expression, CHARACTER, characters);
 }
 
 Expression makeConditional(const Conditional* expression) {
@@ -268,6 +279,22 @@ typename ArrayType::value_type::element_type getExpression(
     return *array.at(expression.index).get();
 }
 
+template<typename ArrayType>
+typename ArrayType::value_type getExpressionValue(
+    Expression expression,
+    ExpressionType type,
+    const ArrayType& array
+) {
+    if (expression.type != type) {
+        std::stringstream s;
+        s << "getExpression expected " << NAMES[type]
+            << " got " << NAMES[expression.type];
+        throw std::runtime_error{s.str()};
+    }
+    assert(expression.type == type);
+    return array.at(expression.index);
+}
+
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
 }
@@ -285,7 +312,7 @@ Number getNumber(Expression expression) {
 }
 
 Character getCharacter(Expression expression) {
-    return getExpression(expression, CHARACTER, characters);
+    return getExpressionValue(expression, CHARACTER, characters);
 }
 
 Conditional getConditional(Expression expression) {

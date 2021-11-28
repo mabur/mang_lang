@@ -89,7 +89,7 @@ Expression ascii_number(Expression in) {
 }
 
 Expression ascii_character(Expression in) {
-    return makeCharacter(new Character{CodeRange{}, static_cast<char>(getNumber(in).value)});
+    return makeCharacter(Character{CodeRange{}, static_cast<char>(getNumber(in).value)});
 }
 
 }

@@ -16,7 +16,7 @@ Expression parseCharacterExpression(CodeRange code) {
     code = parseCharacter(code, '\'');
     const auto value = it->character;
     return makeCharacter(
-        new Character{CodeRange{first, code.begin()}, value}
+        Character{CodeRange{first, code.begin()}, value}
     );
 }
 
@@ -296,7 +296,7 @@ Expression parseString(CodeRange code) {
     code = parseCharacter(code, '"');
     auto value = makeEmptyString(new EmptyString{first, first + 1});
     for (; code.first->character != '"'; ++code.first) {
-        auto item = makeCharacter(new Character{
+        auto item = makeCharacter(Character{
             CodeRange{code.first, code.first + 1}, code.first->character
         });
         value = new_string::prepend(value, item);
