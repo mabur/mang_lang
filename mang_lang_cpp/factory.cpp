@@ -135,7 +135,7 @@ Statements setContext(const Statements& statements) {
         const auto type = statements[i].type;
         if (type == DEFINITION) {
             const auto statement = getDefinition(statements[i]);
-            result.push_back(makeDefinition(Definition{
+            result.push_back(makeDefinition({
                 statement.range,
                 statement.name,
                 statement.expression,
@@ -143,14 +143,14 @@ Statements setContext(const Statements& statements) {
             }));
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
-            result.push_back(makeWhileStatement(WhileStatement{
+            result.push_back(makeWhileStatement({
                 statement.range,
                 statement.expression,
                 end_indices[i],
             }));
         } else if (type == END_STATEMENT) {
             const auto statement = getEndStatement(statements[i]);
-            result.push_back(makeEndStatement(EndStatement{
+            result.push_back(makeEndStatement({
                 statement.range, while_indices[i]
             }));
         } else {

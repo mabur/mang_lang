@@ -45,14 +45,12 @@ Expression evaluateDictionary(
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            result->statements.at(definition.name_index_) = makeDefinition(
-                Definition{
-                    definition.range,
-                    definition.name,
-                    evaluate(definition.expression, makeDictionary(result)),
-                    definition.name_index_
-                }
-            );
+            result->statements.at(definition.name_index_) = makeDefinition({
+                definition.range,
+                definition.name,
+                evaluate(definition.expression, makeDictionary(result)),
+                definition.name_index_
+            });
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -72,7 +70,7 @@ Expression evaluateDictionary(
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
-    return makeFunction(Function{
+    return makeFunction({
         function.range, environment, function.input_name, function.body
     });
 }
@@ -80,20 +78,18 @@ Expression evaluateFunction(const Function& function, Expression environment) {
 Expression evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, Expression environment
 ) {
-    return makeFunctionDictionary(
-        FunctionDictionary{
-            function_dictionary.range,
-            environment,
-            function_dictionary.input_names,
-            function_dictionary.body
-        }
-    );
+    return makeFunctionDictionary({
+        function_dictionary.range,
+        environment,
+        function_dictionary.input_names,
+        function_dictionary.body
+    });
 }
 
 Expression evaluateFunctionList(
     const FunctionList& function_list, Expression environment
 ) {
-    return makeFunctionList(FunctionList{
+    return makeFunctionList({
         function_list.range, environment, function_list.input_names, function_list.body
     });
 }
@@ -106,7 +102,7 @@ Expression evaluateList(
         return new_list::prepend(rest, evaluated_first);
     };
     const auto code = CodeRange{};
-    const auto init = makeEmptyList(EmptyList{});
+    const auto init = makeEmptyList({});
     const auto output = new_list::leftFold(init, list, op);
     return new_list::reverse(code, output);
 }
@@ -179,7 +175,7 @@ Expression evaluateLookupChild(
 Expression applyFunction(const Function& function, Expression input) {
 
     const auto statements = Statements{
-        makeDefinition(Definition{function.range, function.input_name, input, 0})
+        makeDefinition({function.range, function.input_name, input, 0})
     };
     const auto middle = makeDictionary(
         new Dictionary{CodeRange{}, function.environment, statements}
@@ -206,16 +202,12 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     auto expression = input;
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
         const auto list = getList(expression);
-        statements.push_back(
-            makeDefinition(
-                Definition{
-                    function_list.range,
-                    function_list.input_names[i],
-                    list.first,
-                    i
-                }
-            )
-        );
+        statements.push_back(makeDefinition({
+            function_list.range,
+            function_list.input_names[i],
+            list.first,
+            i
+        }));
         expression = list.rest;
     }
     const auto middle = makeDictionary(

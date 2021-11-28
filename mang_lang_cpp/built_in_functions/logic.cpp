@@ -35,7 +35,7 @@ bool isEqual(Expression left, Expression right) {
 Expression equal(Expression in) {
     const auto binary = new_list::getBinaryInput(in);
     const auto result = isEqual(binary.left, binary.right);
-    return makeBoolean(Boolean{CodeRange{}, result});
+    return makeBoolean({CodeRange{}, result});
 }
 
 }

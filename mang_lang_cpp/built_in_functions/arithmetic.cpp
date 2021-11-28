@@ -12,7 +12,7 @@ double number(Expression expression) {
 }
 
 Expression makeNumber(double x) {
-    return makeNumber(Number(Number{CodeRange{}, x}));
+    return makeNumber(Number{CodeRange{}, x});
 }
 
 Expression makeBoolean(bool x) {
