@@ -161,7 +161,7 @@ Statements setContext(const Statements& statements) {
 }
 
 template<typename ElementType, typename ArrayType>
-Expression makeExpression(
+Expression makeMutableExpression(
     const ElementType* expression,
     ExpressionType type,
     ArrayType& array
@@ -172,7 +172,7 @@ Expression makeExpression(
 }
 
 template<typename ElementType, typename ArrayType>
-Expression makeExpressionValue(
+Expression makeExpression(
     ElementType expression,
     ExpressionType type,
     ArrayType& array
@@ -183,96 +183,97 @@ Expression makeExpressionValue(
 }
 
 Expression makeNumber(Number expression) {
-    return makeExpressionValue(expression, NUMBER, numbers);
+    return makeExpression(expression, NUMBER, numbers);
 }
 
 Expression makeCharacter(Character expression) {
-    return makeExpressionValue(expression, CHARACTER, characters);
+    return makeExpression(expression, CHARACTER, characters);
 }
 
 Expression makeConditional(Conditional expression) {
-    return makeExpressionValue(expression, CONDITIONAL, conditionals);
+    return makeExpression(expression, CONDITIONAL, conditionals);
 }
 
 Expression makeDictionary(const Dictionary* expression) {
-    return makeExpression(expression, DICTIONARY, dictionaries);
+    return makeMutableExpression(expression, DICTIONARY, dictionaries);
 }
 
 Expression makeFunction(Function expression) {
-    return makeExpressionValue(expression, FUNCTION, functions);
+    return makeExpression(expression, FUNCTION, functions);
 }
 
 Expression makeFunctionBuiltIn(FunctionBuiltIn expression) {
-    return makeExpressionValue(expression, FUNCTION_BUILT_IN, built_in_functions);
+    return makeExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
 Expression makeFunctionDictionary(FunctionDictionary expression) {
-    return makeExpressionValue(expression, FUNCTION_DICTIONARY, dictionary_functions);
+    return makeExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
 Expression makeFunctionList(FunctionList expression) {
-    return makeExpressionValue(expression, FUNCTION_LIST, list_functions);
+    return makeExpression(expression, FUNCTION_LIST, list_functions);
 }
 
 Expression makeList(List expression) {
-    return makeExpressionValue(expression, LIST, lists);
+    return makeExpression(expression, LIST, lists);
 }
 
 Expression makeEmptyList(EmptyList expression) {
-    return makeExpressionValue(expression, EMPTY_LIST, empty_lists);
+    return makeExpression(expression, EMPTY_LIST, empty_lists);
 }
 
 Expression makeLookupChild(LookupChild expression) {
-    return makeExpressionValue(expression, LOOKUP_CHILD, child_lookups);
+    return makeExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 
 Expression makeFunctionApplication(FunctionApplication expression) {
-    return makeExpressionValue(expression, FUNCTION_APPLICATION, function_applications);
+    return makeExpression(expression, FUNCTION_APPLICATION,
+        function_applications);
 }
 
 Expression makeLookupSymbol(LookupSymbol expression) {
-    return makeExpressionValue(expression, LOOKUP_SYMBOL, symbol_lookups);
+    return makeExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
 Expression makeName(Name expression) {
-    return makeExpressionValue(expression, NAME, names);
+    return makeExpression(expression, NAME, names);
 }
 
 Expression makeDefinition(Definition expression) {
-    return makeExpressionValue(expression, DEFINITION, definitions);
+    return makeExpression(expression, DEFINITION, definitions);
 }
 
 Expression makeWhileStatement(WhileStatement expression) {
-    return makeExpressionValue(expression, WHILE_STATEMENT, while_statements);
+    return makeExpression(expression, WHILE_STATEMENT, while_statements);
 }
 
 Expression makeEndStatement(EndStatement expression) {
-    return makeExpressionValue(expression, END_STATEMENT, end_statements);
+    return makeExpression(expression, END_STATEMENT, end_statements);
 }
 
 Expression makeString(String expression) {
-    return makeExpressionValue(expression, STRING, strings);
+    return makeExpression(expression, STRING, strings);
 }
 
 Expression makeEmptyString(EmptyString expression) {
-    return makeExpressionValue(expression, EMPTY_STRING, empty_strings);
+    return makeExpression(expression, EMPTY_STRING, empty_strings);
 }
 
 Expression makeBoolean(Boolean expression) {
-    return makeExpressionValue(expression, BOOLEAN, booleans);
+    return makeExpression(expression, BOOLEAN, booleans);
 }
 
 // FREE GETTERS
 
 template<typename ArrayType>
-typename ArrayType::value_type::element_type getExpression(
+typename ArrayType::value_type::element_type getMutableExpression(
     Expression expression,
     ExpressionType type,
     ArrayType& array
 ) {
     if (expression.type != type) {
         std::stringstream s;
-        s << "getExpression expected " << NAMES[type]
+        s << "getMutableExpression expected " << NAMES[type]
           << " got " << NAMES[expression.type];
         throw std::runtime_error{s.str()};
     }
@@ -281,14 +282,14 @@ typename ArrayType::value_type::element_type getExpression(
 }
 
 template<typename ArrayType>
-typename ArrayType::value_type getExpressionValue(
+typename ArrayType::value_type getExpression(
     Expression expression,
     ExpressionType type,
     const ArrayType& array
 ) {
     if (expression.type != type) {
         std::stringstream s;
-        s << "getExpression expected " << NAMES[type]
+        s << "getMutableExpression expected " << NAMES[type]
             << " got " << NAMES[expression.type];
         throw std::runtime_error{s.str()};
     }
@@ -297,83 +298,84 @@ typename ArrayType::value_type getExpressionValue(
 }
 
 Definition getDefinition(Expression expression) {
-    return getExpressionValue(expression, DEFINITION, definitions);
+    return getExpression(expression, DEFINITION, definitions);
 }
 
 WhileStatement getWileStatement(Expression expression) {
-    return getExpressionValue(expression, WHILE_STATEMENT, while_statements);
+    return getExpression(expression, WHILE_STATEMENT, while_statements);
 }
 
 EndStatement getEndStatement(Expression expression) {
-    return getExpressionValue(expression, END_STATEMENT, end_statements);
+    return getExpression(expression, END_STATEMENT, end_statements);
 }
 
 Number getNumber(Expression expression) {
-    return getExpressionValue(expression, NUMBER, numbers);
+    return getExpression(expression, NUMBER, numbers);
 }
 
 Character getCharacter(Expression expression) {
-    return getExpressionValue(expression, CHARACTER, characters);
+    return getExpression(expression, CHARACTER, characters);
 }
 
 Conditional getConditional(Expression expression) {
-    return getExpressionValue(expression, CONDITIONAL, conditionals);
+    return getExpression(expression, CONDITIONAL, conditionals);
 }
 
 Dictionary getDictionary(Expression expression) {
-    return getExpression(expression, DICTIONARY, dictionaries);
+    return getMutableExpression(expression, DICTIONARY, dictionaries);
 }
 
 Function getFunction(Expression expression) {
-    return getExpressionValue(expression, FUNCTION, functions);
+    return getExpression(expression, FUNCTION, functions);
 }
 
 FunctionBuiltIn getFunctionBuiltIn(Expression expression) {
-    return getExpressionValue(expression, FUNCTION_BUILT_IN, built_in_functions);
+    return getExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
 FunctionDictionary getFunctionDictionary(Expression expression) {
-    return getExpressionValue(expression, FUNCTION_DICTIONARY, dictionary_functions);
+    return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
 FunctionList getFunctionList(Expression expression) {
-    return getExpressionValue(expression, FUNCTION_LIST, list_functions);
+    return getExpression(expression, FUNCTION_LIST, list_functions);
 }
 
 List getList(Expression expression) {
-    return getExpressionValue(expression, LIST, lists);
+    return getExpression(expression, LIST, lists);
 }
 
 EmptyList getEmptyList(Expression expression) {
-    return getExpressionValue(expression, EMPTY_LIST, empty_lists);
+    return getExpression(expression, EMPTY_LIST, empty_lists);
 }
 
 LookupChild getLookupChild(Expression expression) {
-    return getExpressionValue(expression, LOOKUP_CHILD, child_lookups);
+    return getExpression(expression, LOOKUP_CHILD, child_lookups);
 }
 
 FunctionApplication getFunctionApplication(Expression expression) {
-    return getExpressionValue(expression, FUNCTION_APPLICATION, function_applications);
+    return getExpression(expression, FUNCTION_APPLICATION,
+        function_applications);
 }
 
 LookupSymbol getLookupSymbol(Expression expression) {
-    return getExpressionValue(expression, LOOKUP_SYMBOL, symbol_lookups);
+    return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
 Name getName(Expression expression) {
-    return getExpressionValue(expression, NAME, names);
+    return getExpression(expression, NAME, names);
 }
 
 String getString(Expression expression) {
-    return getExpressionValue(expression, STRING, strings);
+    return getExpression(expression, STRING, strings);
 }
 
 EmptyString getEmptyString(Expression expression) {
-    return getExpressionValue(expression, EMPTY_STRING, empty_strings);
+    return getExpression(expression, EMPTY_STRING, empty_strings);
 }
 
 Boolean getBoolean(Expression expression) {
-    return getExpressionValue(expression, BOOLEAN, booleans);
+    return getExpression(expression, BOOLEAN, booleans);
 }
 
 std::string getLog() {
