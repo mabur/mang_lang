@@ -6,6 +6,12 @@ TODO:
   - Extract for_each for new lists and strings
   - resolve mutable pointer in iterative dictionary evaluation
   - remove shared_ptr from vector of expressions in factory
+* prepend, put, put_each, concatenate
+  - Spread operations like in Javascript and Python
+    - put!(top rest)
+    - (top ...rest)
+    - (top *rest)
+    - Nice syntax but hides computational complexity so that it becomes hard to reason about.
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Example programs:
   - Parsing Json
