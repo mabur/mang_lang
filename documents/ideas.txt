@@ -7,6 +7,7 @@ TODO:
   - resolve mutable pointer in iterative dictionary evaluation
   - remove shared_ptr from vector of expressions in factory
 * prepend, put, put_each, concatenate
+  - (top rest) vs (rest top) for parsing and serializing
   - Spread operations like in Javascript and Python
     - put!(top rest)
     - (top ...rest)
