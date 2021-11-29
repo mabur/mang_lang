@@ -38,7 +38,7 @@ Expression evaluateDictionary(
         environment,
         Statements(num_names, Expression{})
     };
-
+    const auto dictionary_result = makeDictionary(result);
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
         const auto statement = dictionary.statements[i];
@@ -48,14 +48,14 @@ Expression evaluateDictionary(
             result->statements.at(definition.name_index_) = makeDefinition({
                 definition.range,
                 definition.name,
-                evaluate(definition.expression, makeDictionary(result)),
+                evaluate(definition.expression, dictionary_result),
                 definition.name_index_
             });
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWileStatement(statement);
-            if (boolean(evaluate(while_statement.expression, makeDictionary(result)))) {
+            if (boolean(evaluate(while_statement.expression, dictionary_result))) {
                 i += 1;
             } else {
                 i = while_statement.end_index_ + 1;
@@ -66,7 +66,7 @@ Expression evaluateDictionary(
             i = end_statement.while_index_;
         }
     }
-    return makeDictionary(result);
+    return dictionary_result;
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
