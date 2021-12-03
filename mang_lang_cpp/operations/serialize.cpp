@@ -113,6 +113,7 @@ std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
 
 std::string serializeNumber(const Number& number) {
     std::stringstream s;
+    s.precision(std::numeric_limits<double>::digits10 + 1);
     s << number.value;
     return s.str();
 }
