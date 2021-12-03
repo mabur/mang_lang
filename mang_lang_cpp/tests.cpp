@@ -642,6 +642,18 @@ int main() {
         {"to_lower!'0'", "'0'"},
         {"to_lower!'9'", "'9'"},
     });
+    test.evaluate("parse_digit", {
+        {"parse_digit!'0'", "0"},
+        {"parse_digit!'1'", "1"},
+        {"parse_digit!'2'", "2"},
+        {"parse_digit!'3'", "3"},
+        {"parse_digit!'4'", "4"},
+        {"parse_digit!'5'", "5"},
+        {"parse_digit!'6'", "6"},
+        {"parse_digit!'7'", "7"},
+        {"parse_digit!'8'", "8"},
+        {"parse_digit!'9'", "9"},
+    });
     test.evaluate("range", {
         {"range!0", "()"},
         {"range!1", "(0)"},

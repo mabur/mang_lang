@@ -45,6 +45,8 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
+    parse_digit = in c out sub!(number!c 48)
+
     fold = in (operation stack init) out result@{
         result = init
         stack = stack
