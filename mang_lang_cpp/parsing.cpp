@@ -6,8 +6,8 @@
 ParseException::ParseException(const std::string& description, const CodeCharacter* it)
     : std::runtime_error(
         description
-        + " at row " + std::to_string(it->row)
-        + " and column " + std::to_string(it->column)
+        + " at row " + std::to_string(it->row + 1)
+        + " and column " + std::to_string(it->column + 1)
     )
 {}
 
