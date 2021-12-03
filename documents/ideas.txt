@@ -1,4 +1,5 @@
 TODO:
+* Document standard library functions like: fold
 * Remove shared_ptr from linked list implementation.
   - Make CodeRange part of ExpressionPointer instead of expression.
 * Simplifications with new list:
