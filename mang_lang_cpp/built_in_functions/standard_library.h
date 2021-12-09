@@ -240,21 +240,17 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip_onto = in (left right) out reverse!result@{
+    pick_top = in stack out top@stack
+    pick_rest = in stack out rest@stack
+
+    zip = in stacks out reverse!result@{
         result = ()
-        while and?(left right)
-            item = put!(top@left top@right)
+        while top@stacks
+            item = map!(pick_top stacks)
             result = put!(item result)
-            left = rest@left
-            right = rest@right
+            stacks = map!(pick_rest stacks)
         end
     }
-
-    zip = in stacks out fold!(
-        zip_onto
-        reverse!stacks
-        replace!(() top@stacks)
-    )
 
 }
 )";
