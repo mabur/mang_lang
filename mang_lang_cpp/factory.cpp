@@ -289,7 +289,7 @@ typename ArrayType::value_type getExpression(
 ) {
     if (expression.type != type) {
         std::stringstream s;
-        s << "getMutableExpression expected " << NAMES[type]
+        s << "getExpression expected " << NAMES[type]
             << " got " << NAMES[expression.type];
         throw std::runtime_error{s.str()};
     }
