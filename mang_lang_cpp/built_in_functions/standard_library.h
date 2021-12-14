@@ -16,8 +16,6 @@ const std::string STANDARD_LIBRARY = R"(
 
     boolean = in x out if x then yes else no
     not = in x out if x then no else yes
-    and = in (left right) out if left then boolean?right else no
-    or = in (left right) out if left then yes else boolean?right
     unequal = in pair out not?equal?pair
 
     pi = 3.14159265359
@@ -223,6 +221,9 @@ const std::string STANDARD_LIBRARY = R"(
     all = in stack out not?drop_while!(boolean stack)
     none = in stack out not?drop_while!(not stack)
     any = in stack out boolean?drop_while!(not stack)
+
+    and = in stack out all?stack
+    or = in stack out any?stack
 
     less_or_equal_top = in (left right) out
         if left then
