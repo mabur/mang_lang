@@ -836,6 +836,13 @@ int main() {
         {R"(drop_while!(is_lower "A"))", R"("A")"},
         {R"(drop_while!(is_lower "abCD"))", R"("CD")"},
     });
+    test.evaluate("find_item string", {
+        {R"(find_item!('a' ""))", R"("")"},
+        {R"(find_item!('a' "a"))", R"("a")"},
+        {R"(find_item!('a' "b"))", R"("")"},
+        {R"(find_item!('a' "ab"))", R"("ab")"},
+        {R"(find_item!('a' "ba"))", R"("a")"},
+    });
     test.evaluate("take list", {
         {"take!(0 (3 7 6))", "()"},
         {"take!(1 (3 7 6))", "(3)"},
