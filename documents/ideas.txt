@@ -1,4 +1,8 @@
 TODO:
+* Look at advent of code 2021 day 10 for example of code with a bit of friction
+  - If-statement.
+  - Pattern matching / case expression.
+  - Dictionaries with other keys than strings and dynamic lookup.
 * Document standard library functions like: fold
 * Remove shared_ptr from linked list implementation.
   - Make CodeRange part of ExpressionPointer instead of expression.
