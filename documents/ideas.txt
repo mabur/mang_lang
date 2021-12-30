@@ -1,8 +1,98 @@
 TODO:
-* Look at advent of code 2021 day 10 for example of code with a bit of friction
-  - If-statement.
-  - Pattern matching / case expression.
-  - Dictionaries with other keys than strings and dynamic lookup.
+* Advent of code Needs
+  * Look at advent of code 2021 day 10 for example of code with a bit of friction
+    - If-statement.
+    - Pattern matching / case expression.
+    - Functions with pattern matching as main mechanism for lazy branching:
+      f = in yes out 3
+          in no out 5
+      f = in b out if b then 3 else 5
+    - Dictionaries with other keys than strings and dynamic lookup.
+    - Built-in function for dynamic lookup of dictionaries: get!(key dictionary)
+    - Handle dangling else for nested switches.
+     - Always require else?
+
+    1st: if, match, switch, ask, assumem, branch, alternative, select, pick, choose, case,
+    question, is, equal, decide, test, check, categorize, classify, get, observe, what, which, given
+
+    2nd: is, over, via, of, among, from
+
+    get_closer = in c out
+        if equal?(c '(') then ')'
+        else if equal?(c '{') then '}'
+        else if equal?(c '[') then ']'
+        else if equal?(c '<') then '>'
+        else '.'
+
+    get_closer = in c out
+        if c is '(' then ')'
+        else if c is '{' then '}'
+        else if c is '[' then ']'
+        else if c is '<' then '>'
+        else '.'
+
+    get_closer = in c out if c
+        is '(' then ')'
+        is '{' then '}'
+        is '[' then ']'
+        is '<' then '>'
+        else '.'
+
+    get_closer = in c out if c is            (best?)
+        '(' then ')'
+        '{' then '}'
+        '[' then ']'
+        '<' then '>'
+        else '.'
+
+    get_closer = in c out match c            (best?)
+        '(' then ')'
+        '{' then '}'
+        '[' then ']'
+        '<' then '>'
+        else '.'
+
+    get_closer = in c out get!(c {
+            ['('] = ')'
+            ['{'] = '}'
+            ['['] = ']'
+            ['<'] = '>'
+        })
+
+
+  * Dictionaries as arrays with integer keys and dynamic lookups
+  {
+      N = 10
+      result = {    
+          i = 1
+          while less?(i N)
+              j = dec!i
+              [i] = [j]
+              i = inc!i
+              key = (1 2)
+              [key] = 1
+              [(1 2)] = 1
+          end
+      }
+      i = i@result
+      j = j@result
+      c = get!(2 result)
+      d = get!(i result)
+      e = get!(dec!N result)
+      f = get!((1 2) result)
+  }
+
+
+  * aoc algorithms in need:
+    - sort
+    - unique
+    - not unique
+    - Dynamic lookups of dictionary
+    - Dynamic dictionaries/hash-maps/sets for unique-check
+    - General dictionary keys using serializing to string under the hood.
+  * Memory
+    - 64 bit
+    - Use less memory
 * Document standard library functions like: fold
 * Remove shared_ptr from linked list implementation.
   - Make CodeRange part of ExpressionPointer instead of expression.
