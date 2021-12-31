@@ -58,7 +58,7 @@ Expression parseIs(CodeRange code) {
 
     auto alternatives = std::vector<Alternative>{};
 
-    while (!startsWithElse(code)) {
+    while (!isLiteral(code, "else")) {
         auto inner_first = code.begin();
         auto left = parseExpression(code);
         code.first = end(left);
