@@ -12,8 +12,8 @@ struct CodeCharacter {
 };
 
 struct CodeRange {
-    const CodeCharacter* first;
-    const CodeCharacter* last;
+    const CodeCharacter* first = nullptr;
+    const CodeCharacter* last = nullptr;
     const CodeCharacter* begin() const {return first;}
     const CodeCharacter* end() const {return last;}
     bool empty() const {return first == last;}

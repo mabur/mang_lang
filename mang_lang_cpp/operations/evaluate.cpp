@@ -74,22 +74,22 @@ Expression evaluateDictionary(
 ) {
     const auto num_names = numNames(dictionary.statements);
     const auto result = new Dictionary{
-        dictionary.range,
         environment,
         Statements(num_names, Expression{})
     };
-    const auto dictionary_result = makeDictionary(result);
+    const auto dictionary_result = makeDictionary(CodeRange{}, result);
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
         const auto statement = dictionary.statements[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            result->statements.at(definition.name_index_) = makeDefinition({
-                definition.range,
-                definition.name,
-                evaluate(definition.expression, dictionary_result),
-                definition.name_index_
+            result->statements.at(definition.name_index_) = makeDefinition(
+                statement.range,
+                {
+                    definition.name,
+                    evaluate(definition.expression, dictionary_result),
+                    definition.name_index_
             });
             i += 1;
         }
@@ -110,16 +110,15 @@ Expression evaluateDictionary(
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
-    return makeFunction({
-        function.range, environment, function.input_name, function.body
+    return makeFunction(CodeRange{}, {
+        environment, function.input_name, function.body
     });
 }
 
 Expression evaluateFunctionDictionary(
     const FunctionDictionary& function_dictionary, Expression environment
 ) {
-    return makeFunctionDictionary({
-        function_dictionary.range,
+    return makeFunctionDictionary(CodeRange{}, {
         environment,
         function_dictionary.input_names,
         function_dictionary.body
@@ -129,8 +128,8 @@ Expression evaluateFunctionDictionary(
 Expression evaluateFunctionList(
     const FunctionList& function_list, Expression environment
 ) {
-    return makeFunctionList({
-        function_list.range, environment, function_list.input_names, function_list.body
+    return makeFunctionList(CodeRange{}, {
+        environment, function_list.input_names, function_list.body
     });
 }
 
@@ -142,7 +141,7 @@ Expression evaluateList(
         return new_list::prepend(rest, evaluated_first);
     };
     const auto code = CodeRange{};
-    const auto init = makeEmptyList({});
+    const auto init = makeEmptyList(code, {});
     const auto output = new_list::leftFold(init, list, op);
     return new_list::reverse(code, output);
 }
@@ -215,10 +214,10 @@ Expression evaluateLookupChild(
 Expression applyFunction(const Function& function, Expression input) {
 
     const auto statements = Statements{
-        makeDefinition({function.range, function.input_name, input, 0})
+        makeDefinition(CodeRange{}, {function.input_name, input, 0})
     };
-    const auto middle = makeDictionary(
-        new Dictionary{CodeRange{}, function.environment, statements}
+    const auto middle = makeDictionary(CodeRange{},
+        new Dictionary{function.environment, statements}
     );
     return evaluate(function.body, middle);
 }
@@ -242,16 +241,15 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     auto expression = input;
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
         const auto list = getList(expression);
-        statements.push_back(makeDefinition({
-            function_list.range,
+        statements.push_back(makeDefinition(CodeRange{}, {
             function_list.input_names[i],
             list.first,
             i
         }));
         expression = list.rest;
     }
-    const auto middle = makeDictionary(
-        new Dictionary{function_list.range, function_list.environment, statements}
+    const auto middle = makeDictionary(CodeRange{},
+        new Dictionary{function_list.environment, statements}
     );
     return evaluate(function_list.body, middle);
 }

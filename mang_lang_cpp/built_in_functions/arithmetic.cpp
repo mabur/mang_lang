@@ -12,11 +12,11 @@ double number(Expression expression) {
 }
 
 Expression makeNumber(double x) {
-    return makeNumber(Number{CodeRange{}, x});
+    return makeNumber(CodeRange{}, Number{x});
 }
 
 Expression makeBoolean(bool x) {
-    return makeBoolean(Boolean{CodeRange{}, x});
+    return makeBoolean(CodeRange{}, Boolean{x});
 }
 
 double addExpression(double left, Expression right) {
@@ -89,7 +89,7 @@ Expression ascii_number(Expression in) {
 }
 
 Expression ascii_character(Expression in) {
-    return makeCharacter(Character{CodeRange{}, static_cast<char>(getNumber(in).value)});
+    return makeCharacter(CodeRange{}, Character{static_cast<char>(getNumber(in).value)});
 }
 
 }

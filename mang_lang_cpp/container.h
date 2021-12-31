@@ -16,7 +16,7 @@ inline CodeRange addCodeRanges(Expression rest, Expression first) {
 namespace new_string {
 
 inline Expression prepend(Expression rest, Expression first) {
-    return makeString(String{addCodeRanges(first, rest), first, rest});
+    return makeString(addCodeRanges(first, rest), String{first, rest});
 }
 
 template<typename T, typename Operation>
@@ -30,7 +30,7 @@ T leftFold(T value, Expression expression, Operation operation) {
 }
 
 inline Expression reverse(CodeRange code, Expression list) {
-    return leftFold(makeEmptyString(EmptyString{code}), list, prepend);
+    return leftFold(makeEmptyString(code, EmptyString{}), list, prepend);
 }
 
 template<typename Predicate>
@@ -59,7 +59,7 @@ struct BinaryInput {
 BinaryInput getBinaryInput(Expression list);
 
 inline Expression prepend(Expression rest, Expression first) {
-    return makeList(List{addCodeRanges(first, rest), first, rest});
+    return makeList(addCodeRanges(first, rest), List{first, rest});
 }
 
 template<typename T, typename Operation>
@@ -73,7 +73,7 @@ T leftFold(T value, Expression expression, Operation operation) {
 }
 
 inline Expression reverse(CodeRange code, Expression list) {
-    return leftFold(makeEmptyList(EmptyList{code}), list, prepend);
+    return leftFold(makeEmptyList(code, EmptyList{}), list, prepend);
 }
 
 template<typename Predicate>

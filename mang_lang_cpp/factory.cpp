@@ -134,26 +134,22 @@ Statements setContext(const Statements& statements) {
 
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
+        const auto code = statements[i].range;
         if (type == DEFINITION) {
             const auto statement = getDefinition(statements[i]);
-            result.push_back(makeDefinition({
-                statement.range,
+            result.push_back(makeDefinition(code, {
                 statement.name,
                 statement.expression,
                 name_indices[i]
             }));
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
-            result.push_back(makeWhileStatement({
-                statement.range,
+            result.push_back(makeWhileStatement(code, {
                 statement.expression,
                 end_indices[i],
             }));
         } else if (type == END_STATEMENT) {
-            const auto statement = getEndStatement(statements[i]);
-            result.push_back(makeEndStatement({
-                statement.range, while_indices[i]
-            }));
+            result.push_back(makeEndStatement(code, {while_indices[i]}));
         } else {
             assert("Unexpected type");
         }
@@ -163,109 +159,110 @@ Statements setContext(const Statements& statements) {
 
 template<typename ElementType, typename ArrayType>
 Expression makeMutableExpression(
+    CodeRange code,
     const ElementType* expression,
     ExpressionType type,
     ArrayType& array
 ) {
     array.emplace_back(expression);
-    expressions.push_back(Expression{type, array.size() - 1});
+    expressions.push_back(Expression{type, array.size() - 1, code});
     return expressions.back();
 }
 
 template<typename ElementType, typename ArrayType>
 Expression makeExpression(
+    CodeRange code,
     ElementType expression,
     ExpressionType type,
     ArrayType& array
 ) {
     array.emplace_back(expression);
-    expressions.push_back(Expression{type, array.size() - 1});
+    expressions.push_back(Expression{type, array.size() - 1, code});
     return expressions.back();
 }
 
-Expression makeNumber(Number expression) {
-    return makeExpression(expression, NUMBER, numbers);
+Expression makeNumber(CodeRange code, Number expression) {
+    return makeExpression(code, expression, NUMBER, numbers);
 }
 
-Expression makeCharacter(Character expression) {
-    return makeExpression(expression, CHARACTER, characters);
+Expression makeCharacter(CodeRange code, Character expression) {
+    return makeExpression(code, expression, CHARACTER, characters);
 }
 
-Expression makeConditional(Conditional expression) {
-    return makeExpression(expression, CONDITIONAL, conditionals);
+Expression makeConditional(CodeRange code, Conditional expression) {
+    return makeExpression(code, expression, CONDITIONAL, conditionals);
 }
 
-Expression makeIs(IsExpression expression) {
-    return makeExpression(expression, IS, is_expressions);
+Expression makeIs(CodeRange code, IsExpression expression) {
+    return makeExpression(code, expression, IS, is_expressions);
 }
 
-Expression makeDictionary(const Dictionary* expression) {
-    return makeMutableExpression(expression, DICTIONARY, dictionaries);
+Expression makeDictionary(CodeRange code, const Dictionary* expression) {
+    return makeMutableExpression(code, expression, DICTIONARY, dictionaries);
 }
 
-Expression makeFunction(Function expression) {
-    return makeExpression(expression, FUNCTION, functions);
+Expression makeFunction(CodeRange code, Function expression) {
+    return makeExpression(code, expression, FUNCTION, functions);
 }
 
-Expression makeFunctionBuiltIn(FunctionBuiltIn expression) {
-    return makeExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
+Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression) {
+    return makeExpression(code, expression, FUNCTION_BUILT_IN, built_in_functions);
 }
 
-Expression makeFunctionDictionary(FunctionDictionary expression) {
-    return makeExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
+Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression) {
+    return makeExpression(code, expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-Expression makeFunctionList(FunctionList expression) {
-    return makeExpression(expression, FUNCTION_LIST, list_functions);
+Expression makeFunctionList(CodeRange code, FunctionList expression) {
+    return makeExpression(code, expression, FUNCTION_LIST, list_functions);
 }
 
-Expression makeList(List expression) {
-    return makeExpression(expression, LIST, lists);
+Expression makeList(CodeRange code, List expression) {
+    return makeExpression(code, expression, LIST, lists);
 }
 
-Expression makeEmptyList(EmptyList expression) {
-    return makeExpression(expression, EMPTY_LIST, empty_lists);
+Expression makeEmptyList(CodeRange code, EmptyList expression) {
+    return makeExpression(code, expression, EMPTY_LIST, empty_lists);
 }
 
-Expression makeLookupChild(LookupChild expression) {
-    return makeExpression(expression, LOOKUP_CHILD, child_lookups);
+Expression makeLookupChild(CodeRange code, LookupChild expression) {
+    return makeExpression(code, expression, LOOKUP_CHILD, child_lookups);
 }
 
-Expression makeFunctionApplication(FunctionApplication expression) {
-    return makeExpression(expression, FUNCTION_APPLICATION,
-        function_applications);
+Expression makeFunctionApplication(CodeRange code, FunctionApplication expression) {
+    return makeExpression(code, expression, FUNCTION_APPLICATION, function_applications);
 }
 
-Expression makeLookupSymbol(LookupSymbol expression) {
-    return makeExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
+Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
+    return makeExpression(code, expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-Expression makeName(Name expression) {
-    return makeExpression(expression, NAME, names);
+Expression makeName(CodeRange code, Name expression) {
+    return makeExpression(code, expression, NAME, names);
 }
 
-Expression makeDefinition(Definition expression) {
-    return makeExpression(expression, DEFINITION, definitions);
+Expression makeDefinition(CodeRange code, Definition expression) {
+    return makeExpression(code, expression, DEFINITION, definitions);
 }
 
-Expression makeWhileStatement(WhileStatement expression) {
-    return makeExpression(expression, WHILE_STATEMENT, while_statements);
+Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
+    return makeExpression(code, expression, WHILE_STATEMENT, while_statements);
 }
 
-Expression makeEndStatement(EndStatement expression) {
-    return makeExpression(expression, END_STATEMENT, end_statements);
+Expression makeEndStatement(CodeRange code, EndStatement expression) {
+    return makeExpression(code, expression, END_STATEMENT, end_statements);
 }
 
-Expression makeString(String expression) {
-    return makeExpression(expression, STRING, strings);
+Expression makeString(CodeRange code, String expression) {
+    return makeExpression(code, expression, STRING, strings);
 }
 
-Expression makeEmptyString(EmptyString expression) {
-    return makeExpression(expression, EMPTY_STRING, empty_strings);
+Expression makeEmptyString(CodeRange code, EmptyString expression) {
+    return makeExpression(code, expression, EMPTY_STRING, empty_strings);
 }
 
-Expression makeBoolean(Boolean expression) {
-    return makeExpression(expression, BOOLEAN, booleans);
+Expression makeBoolean(CodeRange code, Boolean expression) {
+    return makeExpression(code, expression, BOOLEAN, booleans);
 }
 
 // FREE GETTERS

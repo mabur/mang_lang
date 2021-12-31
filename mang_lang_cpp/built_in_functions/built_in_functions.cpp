@@ -7,10 +7,9 @@
 #include "list.h"
 
 Expression define(std::string name, std::function<Expression(Expression)> function) {
-    return makeDefinition({
-        CodeRange{},
-        makeName({CodeRange{}, name}),
-        makeFunctionBuiltIn({{}, function}),
+    return makeDefinition(CodeRange{}, {
+        makeName(CodeRange{}, {name}),
+        makeFunctionBuiltIn(CodeRange{}, {function}),
         0
     });
 }
@@ -31,7 +30,7 @@ Expression builtIns() {
     definitions.push_back(define("sqrt", arithmetic::sqrt));
     definitions.push_back(define("number", arithmetic::ascii_number));
     definitions.push_back(define("character", arithmetic::ascii_character));
-    return makeDictionary(
-        new Dictionary{CodeRange{}, Expression{}, setContext(definitions)}
+    return makeDictionary(CodeRange{},
+        new Dictionary{Expression{}, setContext(definitions)}
     );
 }
