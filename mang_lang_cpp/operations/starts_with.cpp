@@ -8,14 +8,6 @@ const auto KEYWORDS = std::vector<std::string>{
     "in", "out", "if", "then", "else", "is", "while", "end"
 };
 
-bool startsWithCharacter(CodeRange code) {
-    return ::startsWith(code, '\'');
-}
-
-bool startsWithDictionary(CodeRange code) {
-    return ::startsWith(code, '{');
-}
-
 bool startsWithFunction(CodeRange code) {
     return isLiteral(code, "in");
 }
@@ -35,10 +27,6 @@ bool startsWithFunctionList(CodeRange code) {
     }
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
-    return ::startsWith(code, '(');
-}
-
-bool startsWithList(CodeRange code) {
     return ::startsWith(code, '(');
 }
 
@@ -76,8 +64,4 @@ bool startsWithName(CodeRange code) {
 
 bool startsWithNumber(CodeRange code) {
     return !code.empty() && (isSign(*code.begin()) || isDigit(*code.begin()));
-}
-
-bool startsWithString(CodeRange code) {
-    return ::startsWith(code, '"');
 }

@@ -334,11 +334,11 @@ Expression parseExpression(CodeRange code) {
         if (isLiteral(code, "nan")) {return parseNan(code);}
         if (isLiteral(code, "inf")) {return parseInf(code);}
         if (isLiteral(code, "-inf")) {return parseNegInf(code);}
-        if (startsWithList(code)) {return parseList(code);}
-        if (startsWithDictionary(code)) {return parseDictionary(code);}
+        if (startsWith(code, '(')) {return parseList(code);}
+        if (startsWith(code, '{')) {return parseDictionary(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
-        if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
-        if (startsWithString(code)) {return parseString(code);}
+        if (startsWith(code, '\'')) {return parseCharacterExpression(code);}
+        if (startsWith(code, '\"')) {return parseString(code);}
         if (isLiteral(code, "if")) {return parseConditional(code);}
         if (isLiteral(code, "is")) {return parseIs(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
