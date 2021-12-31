@@ -339,8 +339,8 @@ Expression parseExpression(CodeRange code) {
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
         if (startsWithString(code)) {return parseString(code);}
-        if (startsWithConditional(code)) {return parseConditional(code);}
-        if (startsWithIs(code)) {return parseIs(code);}
+        if (isLiteral(code, "if")) {return parseConditional(code);}
+        if (isLiteral(code, "is")) {return parseIs(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
         if (startsWithFunctionList(code)) {return parseFunctionList(code);}
         if (startsWithFunction(code)) {return parseFunction(code);}

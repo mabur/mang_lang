@@ -12,14 +12,6 @@ bool startsWithCharacter(CodeRange code) {
     return ::startsWith(code, '\'');
 }
 
-bool startsWithConditional(CodeRange code) {
-    return isLiteral(code, "if");
-}
-
-bool startsWithIs(CodeRange code) {
-    return isLiteral(code, "is");
-}
-
 bool startsWithElse(CodeRange code) {
     return isLiteral(code, "else");
 }
