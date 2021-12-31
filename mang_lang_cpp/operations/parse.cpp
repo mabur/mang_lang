@@ -329,18 +329,18 @@ Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
+        if (startsWith(code, '(')) {return parseList(code);}
+        if (startsWith(code, '{')) {return parseDictionary(code);}
+        if (startsWith(code, '\'')) {return parseCharacterExpression(code);}
+        if (startsWith(code, '\"')) {return parseString(code);}
         if (isLiteral(code, "yes")) {return parseYes(code);}
         if (isLiteral(code, "no")) {return parseNo(code);}
         if (isLiteral(code, "nan")) {return parseNan(code);}
         if (isLiteral(code, "inf")) {return parseInf(code);}
         if (isLiteral(code, "-inf")) {return parseNegInf(code);}
-        if (startsWith(code, '(')) {return parseList(code);}
-        if (startsWith(code, '{')) {return parseDictionary(code);}
-        if (startsWithNumber(code)) {return parseNumber(code);}
-        if (startsWith(code, '\'')) {return parseCharacterExpression(code);}
-        if (startsWith(code, '\"')) {return parseString(code);}
         if (isLiteral(code, "if")) {return parseConditional(code);}
         if (isLiteral(code, "is")) {return parseIs(code);}
+        if (startsWithNumber(code)) {return parseNumber(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
         if (startsWithFunctionList(code)) {return parseFunctionList(code);}
         if (startsWithFunction(code)) {return parseFunction(code);}
