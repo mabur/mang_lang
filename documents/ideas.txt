@@ -4,64 +4,9 @@ TODO:
   * Add string constants for all keywords.
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
-    - If-statement.
-    - Pattern matching / case expression.
-    - Functions with pattern matching as main mechanism for lazy branching:
-      f = in yes out 3
-          in no out 5
-      f = in b out if b then 3 else 5
+    - Try new is-operator
     - Dictionaries with other keys than strings and dynamic lookup.
     - Built-in function for dynamic lookup of dictionaries: get!(key dictionary)
-    - Handle dangling else for nested switches.
-     - Always require else?
-
-    1st: if, match, switch, ask, assume, branch, does, is, alternative, select, pick, choose, case,
-    question, is, equal, decide, test, check, categorize, classify, get, observe, what, which, given
-
-    2nd: is, over, via, of, among, from
-
-    get_closer = in c out
-        if equal?(c '(') then ')'
-        else if equal?(c '{') then '}'
-        else if equal?(c '[') then ']'
-        else if equal?(c '<') then '>'
-        else '.'
-
-    get_closer = in c out
-        if c is '(' then ')'
-        else if c is '{' then '}'
-        else if c is '[' then ']'
-        else if c is '<' then '>'
-        else '.'
-
-    get_closer = in c out if c
-        is '(' then ')'
-        is '{' then '}'
-        is '[' then ']'
-        is '<' then '>'
-        else '.'
-
-    get_closer = in c out if c is            (best?)
-        '(' then ')'
-        '{' then '}'
-        '[' then ']'
-        '<' then '>'
-        else '.'
-
-    get_closer = in c out match c            (best?)
-        '(' then ')'
-        '{' then '}'
-        '[' then ']'
-        '<' then '>'
-        else '.'
-
-    get_closer = in c out is c            (best?)
-        '(' then ')'
-        '{' then '}'
-        '[' then ']'
-        '<' then '>'
-        else '.'
-
 
     get_closer = in c out get!(c {
             ['('] = ')'
@@ -69,7 +14,6 @@ TODO:
             ['['] = ']'
             ['<'] = '>'
         })
-
 
   * Dictionaries as arrays with integer keys and dynamic lookups
   {
