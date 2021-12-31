@@ -56,6 +56,10 @@ bool isNameCharacter(CodeCharacter c) {
     return isLetter(c) || isDigit(c) || c.character == '_';
 }
 
+bool isFirstNameCharacter(CodeCharacter c) {
+    return isLetter(c) ||  c.character == '_';
+}
+
 bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }

@@ -3,13 +3,9 @@
 #include "../parsing.h"
 
 bool startsWithName(CodeRange code) {
-    if (code.empty()) {
-        return false;
-    }
-    const auto first = *code.begin();
-    return isNameCharacter(first) && !isDigit(first);
+    return !code.empty() and isFirstNameCharacter(*code.begin());
 }
 
 bool startsWithNumber(CodeRange code) {
-    return !code.empty() && isNumeric(*code.begin());
+    return !code.empty() and isNumeric(*code.begin());
 }

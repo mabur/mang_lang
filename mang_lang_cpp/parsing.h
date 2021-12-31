@@ -47,6 +47,8 @@ bool isLetter(CodeCharacter c);
 
 bool isNameCharacter(CodeCharacter c);
 
+bool isFirstNameCharacter(CodeCharacter c);
+
 bool isWhiteSpace(CodeCharacter c);
 
 bool isKeyword(CodeRange code, const std::string& word);
