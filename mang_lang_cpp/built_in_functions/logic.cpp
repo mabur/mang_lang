@@ -32,10 +32,4 @@ bool isEqual(Expression left, Expression right) {
     return false;
 }
 
-Expression equal(Expression in) {
-    const auto binary = new_list::getBinaryInput(in);
-    const auto result = isEqual(binary.left, binary.right);
-    return makeBoolean({CodeRange{}, result});
-}
-
 }

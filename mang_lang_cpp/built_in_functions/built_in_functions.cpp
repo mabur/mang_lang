@@ -5,7 +5,6 @@
 #include "../factory.h"
 #include "arithmetic.h"
 #include "list.h"
-#include "logic.h"
 
 Expression define(std::string name, std::function<Expression(Expression)> function) {
     return makeDefinition({
@@ -18,7 +17,6 @@ Expression define(std::string name, std::function<Expression(Expression)> functi
 
 Expression builtIns() {
     auto definitions = Statements{};
-    definitions.push_back(define("equal", logic::equal));
     definitions.push_back(define("clear", list_functions::empty));
     definitions.push_back(define("put", list_functions::prepend));
     definitions.push_back(define("add", arithmetic::add));

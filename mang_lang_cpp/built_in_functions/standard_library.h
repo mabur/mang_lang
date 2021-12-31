@@ -16,7 +16,9 @@ const std::string STANDARD_LIBRARY = R"(
 
     boolean = in x out if x then yes else no
     not = in x out if x then no else yes
-    unequal = in pair out not?equal?pair
+
+    equal = in (left right) out is left right then yes else no
+    unequal = in (left right) out not?equal?(left right)
 
     pi = 3.14159265359
     tau = 6.28318530718
