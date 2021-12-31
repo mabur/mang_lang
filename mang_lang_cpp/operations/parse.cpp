@@ -160,8 +160,6 @@ Expression parseDictionary(CodeRange code) {
 
 Expression parseFunction(CodeRange code) {
     auto first = code.begin();
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
     auto input_name = parseName(code);
     code.first = end(input_name);
     code = parseWhiteSpace(code);
@@ -175,8 +173,6 @@ Expression parseFunction(CodeRange code) {
 
 Expression parseFunctionDictionary(CodeRange code) {
     auto first = code.begin();
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto input_names = std::vector<Expression>{};
@@ -199,8 +195,6 @@ Expression parseFunctionDictionary(CodeRange code) {
 
 Expression parseFunctionList(CodeRange code) {
     auto first = code.begin();
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
     auto input_names = std::vector<Expression>{};
@@ -219,6 +213,14 @@ Expression parseFunctionList(CodeRange code) {
     return makeFunctionList({
         CodeRange{first, code.begin()}, Expression{}, input_names, body
     });
+}
+
+Expression parseAnyFunction(CodeRange code) {
+    code = parseKeyword(code, "in");
+    code = parseWhiteSpace(code);
+    if (startsWith(code, '{')) {return parseFunctionDictionary(code);}
+    if (startsWith(code, '(')) {return parseFunctionList(code);}
+    return parseFunction(code);
 }
 
 Expression parseList(CodeRange code) {
@@ -341,10 +343,7 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "if")) {return parseConditional(code);}
         if (isKeyword(code, "is")) {return parseIs(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
-        // TODO: group these into parseAnyFunction
-        if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
-        if (startsWithFunctionList(code)) {return parseFunctionList(code);}
-        if (startsWithFunction(code)) {return parseFunction(code);}
+        if (isKeyword(code, "in")) {return parseAnyFunction(code);}
         // TODO: group these into parseAnySymbol
         if (startsWithLookupChild(code)) {return parseLookupChild(code);}
         if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
