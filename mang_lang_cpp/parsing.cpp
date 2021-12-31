@@ -75,15 +75,6 @@ bool isKeyword(CodeRange code, const std::string& word) {
     return !isNameCharacter(*after);
 }
 
-bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords) {
-    for (const auto& keyword : keywords) {
-        if (isKeyword(code, keyword)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool startsWith(CodeRange code, char c) {
     return !code.empty() && code.begin()->character == c;
 }

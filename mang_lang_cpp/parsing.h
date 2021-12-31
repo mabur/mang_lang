@@ -49,8 +49,6 @@ bool isWhiteSpace(CodeCharacter c);
 
 bool isKeyword(CodeRange code, const std::string& word);
 
-bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords);
-
 bool startsWith(CodeRange code, char c);
 
 CodeRange parseWhiteSpace(CodeRange code);
