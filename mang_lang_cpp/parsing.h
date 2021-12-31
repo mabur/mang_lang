@@ -41,6 +41,8 @@ bool isDigit(CodeCharacter c);
 
 bool isSign(CodeCharacter c);
 
+bool isNumeric(CodeCharacter c);
+
 bool isLetter(CodeCharacter c);
 
 bool isNameCharacter(CodeCharacter c);

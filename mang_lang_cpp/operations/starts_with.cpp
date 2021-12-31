@@ -11,5 +11,5 @@ bool startsWithName(CodeRange code) {
 }
 
 bool startsWithNumber(CodeRange code) {
-    return !code.empty() && (isSign(*code.begin()) || isDigit(*code.begin()));
+    return !code.empty() && isNumeric(*code.begin());
 }

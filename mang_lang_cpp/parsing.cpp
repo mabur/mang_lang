@@ -44,6 +44,10 @@ bool isSign(CodeCharacter c) {
     return c.character == '+' || c.character == '-';
 }
 
+bool isNumeric(CodeCharacter c) {
+    return isDigit(c) or isSign(c);
+}
+
 bool isLetter(CodeCharacter c) {
     return std::isalpha(c.character);
 }
