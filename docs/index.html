@@ -159,7 +159,7 @@ Manglang consists of the following basic building blocks:
 <img src="control_flow.png" width=48 height=48>
 </td>
 <td>
-<a href="#control_flow">Control flow</a> like <a href="#if">if</a> and <a href="#while">while</a>.
+<a href="#control_flow">Control flow</a> like <a href="#if">if</a>,  <a href="#is">is</a> and <a href="#while">while</a>.
 </td>
 </tr>
 <tr>
@@ -444,7 +444,41 @@ This program is evaluated to:
 }
 </pre>
 
-<h2 id="while">4.b. While</h2>
+<h2 id="is">4.b. Is</h2>
+<p>
+The <code>is</code> operator is used to check for equality among many alternatives. It is similar to switch-case or pattern matching in other languages. Consider this example:
+</p>
+<pre>
+{
+  opening = '{'
+  closing = is opening
+    '(' then ')'
+    '[' then ']'
+    '{' then '}'
+    '<' then '>'
+    else  '.'
+}
+</pre>
+The input above is evaluated to the output below:
+<pre>
+{
+  opening = '{'
+  closing = '}'
+}
+</pre>
+The <code>is</code> operator can be seen as syntactic sugar for a more verbose combination of the <code>if</code> operator and the <code>equal</code> function:
+<pre>
+{
+  opening = '{'
+  closing = if equal?(opening '(') then ')'
+    else if equal?(opening '{') then '}'
+    else if equal?(opening '[') then ']'
+    else if equal?(opening '<') then '>'
+    else '.'
+}
+</pre>
+
+<h2 id="while">4.c. While</h2>
 <p>
 In Manglang you can loop while constructing a dictionary:
 </p>
