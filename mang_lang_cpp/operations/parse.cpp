@@ -268,6 +268,14 @@ Expression parseLookupSymbol(CodeRange code) {
     return makeLookupSymbol({CodeRange{first, end(name)}, name});
 }
 
+Expression parseAnyLookup(CodeRange code) {
+    if (startsWithLookupChild(code)) {return parseLookupChild(code);}
+    if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
+    if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}
+    throwParseException(code);
+    return {};
+}
+
 Expression parseNumber(CodeRange code) {
     auto first = code.begin();
     code = parseOptionalCharacter(code, isSign);
@@ -344,10 +352,7 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "is")) {return parseIs(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (isKeyword(code, "in")) {return parseAnyFunction(code);}
-        // TODO: group these into parseAnySymbol
-        if (startsWithLookupChild(code)) {return parseLookupChild(code);}
-        if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
-        if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}
+        if (startsWithName(code)) {return parseAnyLookup(code);}
         throwParseException(code);
         return {};
     } catch (std::runtime_error e) {
