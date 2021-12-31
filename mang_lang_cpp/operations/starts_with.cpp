@@ -8,27 +8,6 @@ const auto KEYWORDS = std::vector<std::string>{
     "in", "out", "if", "then", "else", "is", "while", "end"
 };
 
-bool startsWithLookupChild(CodeRange code) {
-    if (!startsWithName(code)) {
-        return false;
-    }
-    code = parseWhile(code, isNameCharacter);
-    code = parseWhiteSpace(code);
-    return ::startsWith(code, '@');
-}
-
-bool startsWithLookupFunction(CodeRange code) {
-    if (!startsWithName(code)) {
-        return false;
-    }
-    code = parseWhile(code, isNameCharacter);
-    return ::startsWith(code, '!') || ::startsWith(code, '?');
-}
-
-bool startsWithLookupSymbol(CodeRange code) {
-    return startsWithName(code);
-}
-
 bool startsWithName(CodeRange code) {
     if (isAnyKeyword(code, KEYWORDS)) {
         return false;
