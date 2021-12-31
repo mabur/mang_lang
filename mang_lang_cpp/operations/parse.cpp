@@ -58,7 +58,7 @@ Expression parseIs(CodeRange code) {
 
     auto alternatives = std::vector<Alternative>{};
 
-    while (!isLiteral(code, "else")) {
+    while (!isKeyword(code, "else")) {
         auto inner_first = code.begin();
         auto left = parseExpression(code);
         code.first = end(left);
@@ -128,10 +128,10 @@ Expression parseEndStatement(CodeRange code) {
 Expression parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (isLiteral(code, "while")) {
+    if (isKeyword(code, "while")) {
         return parseWhileStatement(code);
     }
-    if (isLiteral(code, "end")) {
+    if (isKeyword(code, "end")) {
         return parseEndStatement(code);
     }
     return parseNamedElement(code);
@@ -333,17 +333,19 @@ Expression parseExpression(CodeRange code) {
         if (startsWith(code, '{')) {return parseDictionary(code);}
         if (startsWith(code, '\'')) {return parseCharacterExpression(code);}
         if (startsWith(code, '\"')) {return parseString(code);}
-        if (isLiteral(code, "yes")) {return parseYes(code);}
-        if (isLiteral(code, "no")) {return parseNo(code);}
-        if (isLiteral(code, "nan")) {return parseNan(code);}
-        if (isLiteral(code, "inf")) {return parseInf(code);}
-        if (isLiteral(code, "-inf")) {return parseNegInf(code);}
-        if (isLiteral(code, "if")) {return parseConditional(code);}
-        if (isLiteral(code, "is")) {return parseIs(code);}
+        if (isKeyword(code, "yes")) {return parseYes(code);}
+        if (isKeyword(code, "no")) {return parseNo(code);}
+        if (isKeyword(code, "nan")) {return parseNan(code);}
+        if (isKeyword(code, "inf")) {return parseInf(code);}
+        if (isKeyword(code, "-inf")) {return parseNegInf(code);}
+        if (isKeyword(code, "if")) {return parseConditional(code);}
+        if (isKeyword(code, "is")) {return parseIs(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
+        // TODO: group these into parseAnyFunction
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
         if (startsWithFunctionList(code)) {return parseFunctionList(code);}
         if (startsWithFunction(code)) {return parseFunction(code);}
+        // TODO: group these into parseAnySymbol
         if (startsWithLookupChild(code)) {return parseLookupChild(code);}
         if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
         if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}

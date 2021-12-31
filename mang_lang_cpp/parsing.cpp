@@ -60,8 +60,8 @@ bool haveSameCharacters(CodeCharacter a, CodeCharacter b) {
     return a.character == b.character;
 }
 
-bool isLiteral(CodeRange code, const std::string& literal) {
-    const auto w = makeCodeCharacters(literal);
+bool isKeyword(CodeRange code, const std::string& word) {
+    const auto w = makeCodeCharacters(word);
     if (code.size() < w.size()) {
         return false;
     }
@@ -77,7 +77,7 @@ bool isLiteral(CodeRange code, const std::string& literal) {
 
 bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords) {
     for (const auto& keyword : keywords) {
-        if (isLiteral(code, keyword)) {
+        if (isKeyword(code, keyword)) {
             return true;
         }
     }

@@ -9,11 +9,11 @@ const auto KEYWORDS = std::vector<std::string>{
 };
 
 bool startsWithFunction(CodeRange code) {
-    return isLiteral(code, "in");
+    return isKeyword(code, "in");
 }
 
 bool startsWithFunctionDictionary(CodeRange code) {
-    if (!isLiteral(code, "in")) {
+    if (!isKeyword(code, "in")) {
         return false;
     }
     code = parseKeyword(code, "in");
@@ -22,7 +22,7 @@ bool startsWithFunctionDictionary(CodeRange code) {
 }
 
 bool startsWithFunctionList(CodeRange code) {
-    if (!isLiteral(code, "in")) {
+    if (!isKeyword(code, "in")) {
         return false;
     }
     code = parseKeyword(code, "in");
