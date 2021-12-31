@@ -128,7 +128,7 @@ Expression parseEndStatement(CodeRange code) {
 Expression parseDictionaryElement(CodeRange code) {
     code = parseWhiteSpace(code);
     throwIfEmpty(code);
-    if (startsWithWhileStatement(code)) {
+    if (isLiteral(code, "while")) {
         return parseWhileStatement(code);
     }
     if (startsWithEndStatement(code)) {

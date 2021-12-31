@@ -16,10 +16,6 @@ bool startsWithDictionary(CodeRange code) {
     return ::startsWith(code, '{');
 }
 
-bool startsWithWhileStatement(CodeRange code) {
-    return isLiteral(code, "while");
-}
-
 bool startsWithEndStatement(CodeRange code) {
     return isLiteral(code, "end");
 }

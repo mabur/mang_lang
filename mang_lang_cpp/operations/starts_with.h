@@ -4,7 +4,6 @@ struct CodeRange;
 
 bool startsWithCharacter(CodeRange code);
 bool startsWithDictionary(CodeRange code);
-bool startsWithWhileStatement(CodeRange code);
 bool startsWithEndStatement(CodeRange code);
 bool startsWithFunction(CodeRange code);
 bool startsWithFunctionDictionary(CodeRange code);
