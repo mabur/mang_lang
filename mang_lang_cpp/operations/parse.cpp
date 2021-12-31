@@ -239,41 +239,25 @@ Expression parseList(CodeRange code) {
     return new_list::reverse(CodeRange{first, code.first}, list);
 }
 
-Expression parseLookupChild(CodeRange code) {
-    auto first = code.begin();
-    auto name = parseName(code);
-    code.first = end(name);
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '@');
-    code = parseWhiteSpace(code);
-    auto child = parseExpression(code);
-    code.first = end(child);
-    return makeLookupChild({CodeRange{first, code.first}, name, child});
-}
-
-Expression parseLookupFunction(CodeRange code) {
-    auto first = code.begin();
-    auto name = parseName(code);
-    code.first = end(name);
-    const auto expected = ::startsWith(code, '!') ? '!' : '?';
-    code = parseCharacter(code, expected);
-    auto child = parseExpression(code);
-    code.first = end(child);
-    return makeFunctionApplication({CodeRange{first, code.first}, name, child});
-}
-
-Expression parseLookupSymbol(CodeRange code) {
-    auto first = code.begin();
-    auto name = parseName(code);
-    return makeLookupSymbol({CodeRange{first, end(name)}, name});
-}
-
 Expression parseAnyLookup(CodeRange code) {
-    if (startsWithLookupChild(code)) {return parseLookupChild(code);}
-    if (startsWithLookupFunction(code)) {return parseLookupFunction(code);}
-    if (startsWithLookupSymbol(code)) {return parseLookupSymbol(code);}
-    throwParseException(code);
-    return {};
+    auto first = code.begin();
+    auto name = parseName(code);
+    code.first = end(name);
+    code = parseWhiteSpace(code);
+    if (startsWith(code, '@')) {
+        code = parseCharacter(code);
+        code = parseWhiteSpace(code);
+        auto child = parseExpression(code);
+        code.first = end(child);
+        return makeLookupChild({CodeRange{first, code.first}, name, child});
+    }
+    if (startsWith(code, '!') or startsWith(code, '?')) {
+        code = parseCharacter(code);
+        auto child = parseExpression(code);
+        code.first = end(child);
+        return makeFunctionApplication({CodeRange{first, code.first}, name, child});
+    }
+    return makeLookupSymbol({CodeRange{first, end(name)}, name});
 }
 
 Expression parseNumber(CodeRange code) {
