@@ -1,8 +1,6 @@
 TODO:
 * Cleanup keywords and literals:
   * Add string constants for all keywords.
-  * Add parseAnyFunction
-  * Add parseAnySymbol
 * Implement begin and end operations using a C-style cast of struct.
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
