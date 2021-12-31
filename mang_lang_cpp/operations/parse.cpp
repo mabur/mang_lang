@@ -236,7 +236,7 @@ Expression parseList(CodeRange code) {
     return new_list::reverse(CodeRange{first, code.first}, list);
 }
 
-Expression parseAnyLookup(CodeRange code) {
+Expression parseSubstitution(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     code.first = end(name);
@@ -339,7 +339,7 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "while")) {throwParseException(code);}
         if (isKeyword(code, "end")) {throwParseException(code);}
         if (isdigit(c) or c == '+' or c == '-') {return parseNumber(code);}
-        if (isalpha(c) or c == '_') {return parseAnyLookup(code);}
+        if (isalpha(c) or c == '_') {return parseSubstitution(code);}
         throwParseException(code);
         return {};
     } catch (std::runtime_error e) {
