@@ -18,7 +18,7 @@ const std::string STANDARD_LIBRARY = R"(
     not = in x out if x then no else yes
 
     equal = in (left right) out is left right then yes else no
-    unequal = in (left right) out not?equal?(left right)
+    unequal = in (left right) out is left right then no else yes
 
     pi = 3.14159265359
     tau = 6.28318530718
