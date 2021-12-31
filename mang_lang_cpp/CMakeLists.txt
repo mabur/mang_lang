@@ -7,9 +7,7 @@ add_library(shared
         built_in_functions/arithmetic.cpp
         built_in_functions/built_in_functions.cpp
         built_in_functions/list.cpp
-        operations/begin.cpp
         operations/boolean.cpp
-        operations/end.cpp
         operations/evaluate.cpp
         operations/parse.cpp
         operations/serialize.cpp

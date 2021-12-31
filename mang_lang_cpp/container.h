@@ -2,14 +2,12 @@
 
 #include "expression.h"
 #include "operations/boolean.h"
-#include "operations/begin.h"
-#include "operations/end.h"
 #include "factory.h"
 
 // Note that we need code range since we use this during parsing.
 inline CodeRange addCodeRanges(Expression rest, Expression first) {
-    const auto first_character = std::min(begin(rest), begin(first));
-    const auto last_character = std::max(end(rest), end(first));
+    const auto first_character = std::min(rest.range.first, first.range.first);
+    const auto last_character = std::max(rest.range.last, first.range.last);
     return CodeRange{first_character, last_character};
 }
 

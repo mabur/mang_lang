@@ -5,6 +5,10 @@
 #include "../factory.h"
 #include "../container.h"
 
+const CodeCharacter* end(Expression expression) {
+    return expression.range.last;
+}
+
 Expression parseCharacterExpression(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '\'');

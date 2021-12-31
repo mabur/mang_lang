@@ -5,7 +5,6 @@
 #include <sstream>
 #include <vector>
 
-#include "operations/begin.h"
 #include "operations/serialize.h"
 
 std::vector<std::shared_ptr<const Dictionary>> dictionaries;
@@ -72,7 +71,7 @@ std::vector<size_t> whileIndices(const Statements& statements) {
         }
     }
     if (!while_positions.empty()) {
-        throw ParseException("More while than end", begin(statements.front()));
+        throw ParseException("More while than end", statements.front().range.first);
     }
     return while_indices;
 }
@@ -96,7 +95,7 @@ std::vector<size_t> endIndices(const Statements& statements) {
         }
     }
     if (!end_positions.empty()) {
-        throw ParseException("Fewer while than end", begin(statements.front()));
+        throw ParseException("Fewer while than end", statements.front().range.first);
     }
     return end_indices;
 }
