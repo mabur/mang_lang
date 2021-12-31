@@ -72,12 +72,12 @@ bool isLiteral(CodeRange code, const std::string& literal) {
     if (after == code.end()) {
         return true;
     }
-    return !isLetter(*after);
+    return !isNameCharacter(*after);
 }
 
 bool isKeyword(CodeRange code, const std::string& keyword) {
     const auto w = makeCodeCharacters(keyword);
-    if (code.size() <= w.size()) {
+    if (code.size() < w.size()) {
         return false;
     }
     const auto after = code.begin() + w.size();
