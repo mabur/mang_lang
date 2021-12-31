@@ -890,5 +890,17 @@ int main() {
         {"zip!((0 1) (2 3))", "((0 2) (1 3))"},
         {"zip!((0 1 2) (3 4 5))", "((0 3) (1 4) (2 5))"},
     });
+    test.reformat("is", {
+        {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
+        {"is 0 0 then 0 1 then 1 else 0", "is 0 0 then 0 1 then 1 else 0"},
+    });
+    test.evaluate("is", {
+        {"is 0 0 then 1 else 2", "1"},
+        {"is 1 0 then 1 else 2", "2"},
+        {"is 0 0 then 0 1 then 1 2 then 4 else 5", "0"},
+        {"is 1 0 then 0 1 then 1 2 then 4 else 5", "1"},
+        {"is 2 0 then 0 1 then 1 2 then 4 else 5", "4"},
+        {"is 3 0 then 0 1 then 1 2 then 4 else 5", "5"},
+    });
     return test.exitCode();
 }

@@ -20,6 +20,19 @@ std::string serializeConditional(const Conditional& conditional) {
         " else " + serialize(conditional.expression_else);
 }
 
+std::string serializeIs(const IsExpression& is_expression) {
+    auto result = "is " + serialize(is_expression.input) + " ";
+    for (const auto& alternative : is_expression.alternatives) {
+        result += serialize(alternative.left);
+        result += " then ";
+        result += serialize(alternative.right);
+        result += " ";
+    }
+    result += "else ";
+    result += serialize(is_expression.expression_else);
+    return result;
+}
+
 std::string serializeDefinition(const Definition& element) {
     return serializeName(element.name) + '=' + serialize(element.expression) + ' ';
 }
@@ -135,6 +148,7 @@ std::string serialize(Expression expression) {
     switch (expression.type) {
         case CHARACTER: return serializeCharacter(getCharacter(expression));
         case CONDITIONAL: return serializeConditional(getConditional(expression));
+        case IS: return serializeIs(getIs(expression));
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));

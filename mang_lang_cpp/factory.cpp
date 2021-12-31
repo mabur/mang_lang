@@ -12,6 +12,7 @@ std::vector<std::shared_ptr<const Dictionary>> dictionaries;
 
 std::vector<Character> characters;
 std::vector<Conditional> conditionals;
+std::vector<IsExpression> is_expressions;
 std::vector<Function> functions;
 std::vector<FunctionBuiltIn> built_in_functions;
 std::vector<FunctionDictionary> dictionary_functions;
@@ -194,6 +195,10 @@ Expression makeConditional(Conditional expression) {
     return makeExpression(expression, CONDITIONAL, conditionals);
 }
 
+Expression makeIs(IsExpression expression) {
+    return makeExpression(expression, IS, is_expressions);
+}
+
 Expression makeDictionary(const Dictionary* expression) {
     return makeMutableExpression(expression, DICTIONARY, dictionaries);
 }
@@ -319,6 +324,10 @@ Character getCharacter(Expression expression) {
 
 Conditional getConditional(Expression expression) {
     return getExpression(expression, CONDITIONAL, conditionals);
+}
+
+IsExpression getIs(Expression expression) {
+    return getExpression(expression, IS, is_expressions);
 }
 
 Dictionary getDictionary(Expression expression) {

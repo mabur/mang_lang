@@ -10,6 +10,7 @@
 enum ExpressionType {
     CHARACTER,
     CONDITIONAL,
+    IS,
     DICTIONARY,
     FUNCTION,
     FUNCTION_BUILT_IN,
@@ -34,6 +35,7 @@ enum ExpressionType {
 const auto NAMES = std::vector<std::string>{
     "CHARACTER",
     "CONDITIONAL",
+    "IS",
     "DICTIONARY",
     "FUNCTION",
     "FUNCTION_BUILT_IN",
@@ -86,6 +88,19 @@ struct Conditional {
     CodeRange range;
     Expression expression_if;
     Expression expression_then;
+    Expression expression_else;
+};
+
+struct Alternative {
+    CodeRange range;
+    Expression left;
+    Expression right;
+};
+
+struct IsExpression {
+    CodeRange range;
+    Expression input;
+    std::vector<Alternative> alternatives;
     Expression expression_else;
 };
 

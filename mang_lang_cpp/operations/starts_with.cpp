@@ -4,7 +4,9 @@
 
 #include "../parsing.h"
 
-const auto KEYWORDS = std::vector<std::string>{"in", "out", "if", "then", "else", "while", "end"};
+const auto KEYWORDS = std::vector<std::string>{
+    "in", "out", "if", "then", "else", "is", "while", "end"
+};
 
 bool startsWithCharacter(CodeRange code) {
     return ::startsWith(code, '\'');
@@ -12,6 +14,14 @@ bool startsWithCharacter(CodeRange code) {
 
 bool startsWithConditional(CodeRange code) {
     return isKeyword(code, "if");
+}
+
+bool startsWithIs(CodeRange code) {
+    return isKeyword(code, "is");
+}
+
+bool startsWithElse(CodeRange code) {
+    return isKeyword(code, "else");
 }
 
 bool startsWithDictionary(CodeRange code) {

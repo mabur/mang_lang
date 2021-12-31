@@ -47,6 +47,46 @@ Expression parseConditional(CodeRange code) {
     });
 }
 
+Expression parseIs(CodeRange code) {
+    auto first = code.begin();
+
+    code = parseKeyword(code, "is");
+    code = parseWhiteSpace(code);
+    auto input = parseExpression(code);
+    code.first = end(input);
+    code = parseWhiteSpace(code);
+
+    auto alternatives = std::vector<Alternative>{};
+
+    while (!startsWithElse(code)) {
+        auto inner_first = code.begin();
+        auto left = parseExpression(code);
+        code.first = end(left);
+        code = parseWhiteSpace(code);
+        code = parseKeyword(code, "then");
+        code = parseWhiteSpace(code);
+        auto right = parseExpression(code);
+        code.first = end(right);
+        code = parseWhiteSpace(code);
+        const auto inner_last = code.last;
+        const auto inner_code_range = CodeRange{inner_first, inner_last};
+        alternatives.push_back(Alternative{inner_code_range, left, right});
+    }
+
+    code = parseKeyword(code, "else");
+    code = parseWhiteSpace(code);
+    auto expression_else = parseExpression(code);
+    code.first = end(expression_else);
+    code = parseWhiteSpace(code);
+
+    return makeIs({
+        CodeRange{first, code.begin()},
+        input,
+        alternatives,
+        expression_else
+    });
+}
+
 Expression parseName(CodeRange code) {
     auto first = code.begin();
     code = parseWhile(code, isNameCharacter);
@@ -300,6 +340,7 @@ Expression parseExpression(CodeRange code) {
         if (startsWithCharacter(code)) {return parseCharacterExpression(code);}
         if (startsWithString(code)) {return parseString(code);}
         if (startsWithConditional(code)) {return parseConditional(code);}
+        if (startsWithIs(code)) {return parseIs(code);}
         if (startsWithFunctionDictionary(code)) {return parseFunctionDictionary(code);}
         if (startsWithFunctionList(code)) {return parseFunctionList(code);}
         if (startsWithFunction(code)) {return parseFunction(code);}

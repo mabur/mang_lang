@@ -4,6 +4,8 @@ struct CodeRange;
 
 bool startsWithCharacter(CodeRange code);
 bool startsWithConditional(CodeRange code);
+bool startsWithIs(CodeRange code);
+bool startsWithElse(CodeRange code);
 bool startsWithDictionary(CodeRange code);
 bool startsWithWhileStatement(CodeRange code);
 bool startsWithEndStatement(CodeRange code);

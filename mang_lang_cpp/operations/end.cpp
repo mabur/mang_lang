@@ -6,6 +6,7 @@ const CodeCharacter* end(Expression expression) {
     switch (expression.type) {
         case CHARACTER: return getCharacter(expression).range.last;
         case CONDITIONAL: return getConditional(expression).range.last;
+        case IS: return getIs(expression).range.last;
         case DICTIONARY: return getDictionary(expression).range.last;
         case DEFINITION: return getDefinition(expression).range.last;
         case WHILE_STATEMENT: return getWileStatement(expression).range.last;

@@ -6,6 +6,7 @@
 #include "boolean.h"
 #include "serialize.h"
 #include "../container.h"
+#include "../built_in_functions/logic.h"
 
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment
@@ -14,6 +15,19 @@ Expression evaluateConditional(
         boolean(evaluate(conditional.expression_if, environment)) ?
         evaluate(conditional.expression_then, environment) :
         evaluate(conditional.expression_else, environment);
+}
+
+Expression evaluateIs(
+    const IsExpression& is_expression, Expression environment
+) {
+    const auto value = evaluate(is_expression.input, environment);
+    for (const auto alternative : is_expression.alternatives) {
+        const auto left_value = evaluate(alternative.left, environment);
+        if (logic::isEqual(value, left_value)) {
+            return evaluate(alternative.right, environment);
+        }
+    }
+    return evaluate(is_expression.expression_else, environment);
 }
 
 size_t numNames(const Statements& statements) {
@@ -250,6 +264,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
+        case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case LIST: return evaluateList(expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
