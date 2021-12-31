@@ -13,15 +13,15 @@ bool startsWithCharacter(CodeRange code) {
 }
 
 bool startsWithConditional(CodeRange code) {
-    return isKeyword(code, "if");
+    return isLiteral(code, "if");
 }
 
 bool startsWithIs(CodeRange code) {
-    return isKeyword(code, "is");
+    return isLiteral(code, "is");
 }
 
 bool startsWithElse(CodeRange code) {
-    return isKeyword(code, "else");
+    return isLiteral(code, "else");
 }
 
 bool startsWithDictionary(CodeRange code) {
@@ -29,19 +29,19 @@ bool startsWithDictionary(CodeRange code) {
 }
 
 bool startsWithWhileStatement(CodeRange code) {
-    return isKeyword(code, "while");
+    return isLiteral(code, "while");
 }
 
 bool startsWithEndStatement(CodeRange code) {
-    return isKeyword(code, "end");
+    return isLiteral(code, "end");
 }
 
 bool startsWithFunction(CodeRange code) {
-    return isKeyword(code, "in");
+    return isLiteral(code, "in");
 }
 
 bool startsWithFunctionDictionary(CodeRange code) {
-    if (!isKeyword(code, "in")) {
+    if (!isLiteral(code, "in")) {
         return false;
     }
     code = parseKeyword(code, "in");
@@ -50,7 +50,7 @@ bool startsWithFunctionDictionary(CodeRange code) {
 }
 
 bool startsWithFunctionList(CodeRange code) {
-    if (!isKeyword(code, "in")) {
+    if (!isLiteral(code, "in")) {
         return false;
     }
     code = parseKeyword(code, "in");

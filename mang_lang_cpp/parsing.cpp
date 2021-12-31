@@ -75,21 +75,9 @@ bool isLiteral(CodeRange code, const std::string& literal) {
     return !isNameCharacter(*after);
 }
 
-bool isKeyword(CodeRange code, const std::string& keyword) {
-    const auto w = makeCodeCharacters(keyword);
-    if (code.size() < w.size()) {
-        return false;
-    }
-    const auto after = code.begin() + w.size();
-    if (isNameCharacter(*after)) {
-        return false;
-    }
-    return std::equal(w.begin(), w.end(), code.begin(), haveSameCharacters);
-}
-
 bool isAnyKeyword(CodeRange code, const std::vector<std::string>& keywords) {
     for (const auto& keyword : keywords) {
-        if (isKeyword(code, keyword)) {
+        if (isLiteral(code, keyword)) {
             return true;
         }
     }
