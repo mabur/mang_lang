@@ -336,6 +336,11 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "is")) {return parseIs(code);}
         if (startsWithNumber(code)) {return parseNumber(code);}
         if (isKeyword(code, "in")) {return parseAnyFunction(code);}
+        if (isKeyword(code, "out")) {throwParseException(code);}
+        if (isKeyword(code, "then")) {throwParseException(code);}
+        if (isKeyword(code, "else")) {throwParseException(code);}
+        if (isKeyword(code, "while")) {throwParseException(code);}
+        if (isKeyword(code, "end")) {throwParseException(code);}
         if (startsWithName(code)) {return parseAnyLookup(code);}
         throwParseException(code);
         return {};
