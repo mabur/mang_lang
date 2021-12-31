@@ -44,20 +44,12 @@ bool isSign(CodeCharacter c) {
     return c.character == '+' || c.character == '-';
 }
 
-bool isNumeric(CodeCharacter c) {
-    return isDigit(c) or isSign(c);
-}
-
 bool isLetter(CodeCharacter c) {
     return std::isalpha(c.character);
 }
 
 bool isNameCharacter(CodeCharacter c) {
     return isLetter(c) || isDigit(c) || c.character == '_';
-}
-
-bool isFirstNameCharacter(CodeCharacter c) {
-    return isLetter(c) ||  c.character == '_';
 }
 
 bool isWhiteSpace(CodeCharacter c) {

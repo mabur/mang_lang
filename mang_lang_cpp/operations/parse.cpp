@@ -1,12 +1,9 @@
 #include "parse.h"
 
-#include <cassert>
 #include <iostream>
 
 #include "../factory.h"
 #include "../container.h"
-#include "end.h"
-#include "starts_with.h"
 
 Expression parseCharacterExpression(CodeRange code) {
     auto first = code.begin();
@@ -335,14 +332,14 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "-inf")) {return parseNegInf(code);}
         if (isKeyword(code, "if")) {return parseConditional(code);}
         if (isKeyword(code, "is")) {return parseIs(code);}
-        if (startsWithNumber(code)) {return parseNumber(code);}
         if (isKeyword(code, "in")) {return parseAnyFunction(code);}
         if (isKeyword(code, "out")) {throwParseException(code);}
         if (isKeyword(code, "then")) {throwParseException(code);}
         if (isKeyword(code, "else")) {throwParseException(code);}
         if (isKeyword(code, "while")) {throwParseException(code);}
         if (isKeyword(code, "end")) {throwParseException(code);}
-        if (startsWithName(code)) {return parseAnyLookup(code);}
+        if (isdigit(c) or c == '+' or c == '-') {return parseNumber(code);}
+        if (isalpha(c) or c == '_') {return parseAnyLookup(code);}
         throwParseException(code);
         return {};
     } catch (std::runtime_error e) {

@@ -13,7 +13,6 @@ add_library(shared
         operations/evaluate.cpp
         operations/parse.cpp
         operations/serialize.cpp
-        operations/starts_with.cpp
         container.cpp
         expression.cpp
         factory.cpp
