@@ -16,10 +16,6 @@ bool startsWithDictionary(CodeRange code) {
     return ::startsWith(code, '{');
 }
 
-bool startsWithEndStatement(CodeRange code) {
-    return isLiteral(code, "end");
-}
-
 bool startsWithFunction(CodeRange code) {
     return isLiteral(code, "in");
 }

@@ -131,7 +131,7 @@ Expression parseDictionaryElement(CodeRange code) {
     if (isLiteral(code, "while")) {
         return parseWhileStatement(code);
     }
-    if (startsWithEndStatement(code)) {
+    if (isLiteral(code, "end")) {
         return parseEndStatement(code);
     }
     return parseNamedElement(code);
