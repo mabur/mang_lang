@@ -81,7 +81,7 @@ bool isKeyword(CodeRange code, const std::string& keyword) {
         return false;
     }
     const auto after = code.begin() + w.size();
-    if (isLetter(*after)) {
+    if (isNameCharacter(*after)) {
         return false;
     }
     return std::equal(w.begin(), w.end(), code.begin(), haveSameCharacters);
