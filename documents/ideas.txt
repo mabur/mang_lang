@@ -1,7 +1,8 @@
 TODO:
 * Cleanup keywords and literals:
-  * Merge isLitteral & isKeyword?
   * Add string constants for all keywords.
+  * Add parseAnyFunction
+  * Add parseAnySymbol
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
     - Try new is-operator
