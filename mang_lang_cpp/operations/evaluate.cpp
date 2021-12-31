@@ -6,7 +6,33 @@
 #include "boolean.h"
 #include "serialize.h"
 #include "../container.h"
-#include "../built_in_functions/logic.h"
+
+bool isEqual(Expression left, Expression right) {
+    const auto left_type = left.type;
+    const auto right_type = right.type;
+    if (left_type == NUMBER && right_type == NUMBER) {
+        return getNumber(left).value == getNumber(right).value;
+    }
+    if (left_type == CHARACTER && right_type == CHARACTER) {
+        return getCharacter(left).value == getCharacter(right).value;
+    }
+    if (left_type == BOOLEAN && right_type == BOOLEAN) {
+        return getBoolean(left).value == getBoolean(right).value;
+    }
+    if (left_type == EMPTY_LIST && right_type == EMPTY_LIST) {
+        return true;
+    }
+    if (left_type == LIST && right_type == LIST) {
+        return new_list::allOfPairs(left, right, isEqual);
+    }
+    if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
+        return true;
+    }
+    if (left_type == STRING && right_type == STRING) {
+        return new_string::allOfPairs(left, right, isEqual);
+    }
+    return false;
+}
 
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment
@@ -23,7 +49,7 @@ Expression evaluateIs(
     const auto value = evaluate(is_expression.input, environment);
     for (const auto alternative : is_expression.alternatives) {
         const auto left_value = evaluate(alternative.left, environment);
-        if (logic::isEqual(value, left_value)) {
+        if (isEqual(value, left_value)) {
             return evaluate(alternative.right, environment);
         }
     }

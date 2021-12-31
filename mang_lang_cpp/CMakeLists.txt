@@ -7,7 +7,6 @@ add_library(shared
         built_in_functions/arithmetic.cpp
         built_in_functions/built_in_functions.cpp
         built_in_functions/list.cpp
-        built_in_functions/logic.cpp
         operations/begin.cpp
         operations/boolean.cpp
         operations/end.cpp
