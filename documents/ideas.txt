@@ -12,7 +12,7 @@ TODO:
     - Handle dangling else for nested switches.
      - Always require else?
 
-    1st: if, match, switch, ask, assumem, branch, alternative, select, pick, choose, case,
+    1st: if, match, switch, ask, assume, branch, does, is, alternative, select, pick, choose, case,
     question, is, equal, decide, test, check, categorize, classify, get, observe, what, which, given
 
     2nd: is, over, via, of, among, from
@@ -51,6 +51,14 @@ TODO:
         '[' then ']'
         '<' then '>'
         else '.'
+
+    get_closer = in c out is c            (best?)
+        '(' then ')'
+        '{' then '}'
+        '[' then ']'
+        '<' then '>'
+        else '.'
+
 
     get_closer = in c out get!(c {
             ['('] = ')'
