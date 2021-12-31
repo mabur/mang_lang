@@ -323,10 +323,11 @@ Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        if (startsWith(code, '(')) {return parseList(code);}
-        if (startsWith(code, '{')) {return parseDictionary(code);}
-        if (startsWith(code, '\'')) {return parseCharacterExpression(code);}
-        if (startsWith(code, '\"')) {return parseString(code);}
+        const auto c = code.first->character;
+        if (c == '(') {return parseList(code);}
+        if (c == '{') {return parseDictionary(code);}
+        if (c == '\'') {return parseCharacterExpression(code);}
+        if (c == '\"') {return parseString(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}
         if (isKeyword(code, "nan")) {return parseNan(code);}
