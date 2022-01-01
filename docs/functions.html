@@ -17,10 +17,10 @@ Below you can find all functions included with Manglang. They are either built-i
 
 
 <h2>Generic Container Functions</h2>
-These functions work on both stacks and strings, and the type of the output container is the same as the input.
+These functions work on both stacks and strings, and the type of the output container is the same as the input. Some of the functions below take a <code>predicate</code> as input, i.e. a function that takes an item and returns a boolean, e.g. <code>is_digit</code>.
 <dl>
 <dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container.</dd>
-<dt>clear</dt><dd>Outputs an empty container of the same type as the input.</dd>
+<dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input.</dd>
 <dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed.</dd>
 <dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>.</dd>
 <dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each element is replaced with new_item.</dd>
@@ -31,9 +31,21 @@ These functions work on both stacks and strings, and the type of the output cont
 <dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of elements for which the predicate says <code>yes</code>.</dd>
 <dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n elements removed.</dd>
 <dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n elements.</dd>
-<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth element from the container.</dd>
 <dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
 <dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
+</dl>
+
+You can access the members of a container via <code>top@container</code> and <code>rest@container</code>, or using the following functions:
+<dl>
+<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container.</dd>
+<dt>first</dt><dd><code>first!container</code> returns the first item in the container.</dd>
+<dt>second</dt><dd><code>second!container</code> returns the second item in the container.</dd>
+<dt>third</dt><dd><code>third!container</code> returns the third item in the container.</dd>
+<dt>fourth</dt><dd><code>fourth!container</code> returns the fourth item in the container.</dd>
+<dt>sixth</dt><dd><code>sixth!container</code> returns the sixth item in the container.</dd>
+<dt>seventh</dt><dd><code>seventh!container</code> returns the seventh item in the container.</dd>
+<dt>eighth</dt><dd><code>eighth!container</code> returns the eighth item in the container.</dd>
+<dt>ninth</dt><dd><code>ninth!container</code> returns the ninth item in the container.</dd>
 </dl>
 
 <h2>Specialized Container Functions</h2>
@@ -41,7 +53,8 @@ These functions work on both stacks and strings, and the type of the output cont
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each element in the container.</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each element in the container.</dd>
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>(0 1 2 ... n-1)</code>.</dd>
-<dt>enumerate</dt><dd><code>enumerate!containers</code> returns a stack like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
+<dt>enumerate</dt><dd><code>enumerate!container</code> returns a stack like <code>({index=0 item=...} {index=1 item=...} ...)</code></dd>
+<dt>zip</dt><dd><code>zip!((1 2 3) (4 5 6)))</code> returns a stack <code>((1 4) (2 5) (3 6))</code>.</dd>
 </dl>
 
 <h2>Boolean Functions</h2>
@@ -69,12 +82,13 @@ These functions work on both stacks and strings, and the type of the output cont
 
 <h2>Functions on Number</h2>
 <dl>
-<dt>inc</dt><dd>Add 1 to a number.</dd>
-<dt>dec</dt><dd>Subtract 1 from a number.</dd>
+<dt>inc</dt><dd>Increments a number by adding 1 to it.</dd>
+<dt>dec</dt><dd>Decrements a number by subtracting 1 from it.</dd>
+<dt>neg</dt><dd>Negates a number.</dd>
+<dt>abs</dt><dd>Absolute value of a number.</dd>
 <dt>round</dt><dd>Round a number to closest integer.</dd>
 <dt>round_up</dt><dd>Round a number up to closest integer.</dd>
 <dt>round_down</dt><dd>Round a number down to closest integer.</dd>
-<dt>abs</dt><dd>Absolute value of a number.</dd>
 <dt>sqrt</dt><dd>Square root of a number.</dd>
 </dl>
 
@@ -82,6 +96,7 @@ These functions work on both stacks and strings, and the type of the output cont
 <dl>
 <dt>number</dt><dd>Takes a character and returns its ascii number.</dd>
 <dt>character</dt><dd>Takes a number and returns the character with that ascii number.</dd>
+<dt>parse_digit</dt><dd>Takes a character and returns the corresponding number.</dd>
 <dt>is_digit</dt><dd>Is a character a digit? Returns <code>yes</code> or <code>no</code>.</dd>
 <dt>is_letter</dt><dd>Is a character a letter? Returns <code>yes</code> or <code>no</code>.</dd>
 <dt>is_upper</dt><dd>Is a character upper case? Returns <code>yes</code> or <code>no</code>.</dd>
