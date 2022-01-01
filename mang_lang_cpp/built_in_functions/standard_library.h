@@ -198,12 +198,8 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    find_item = in (item stack) out stack@{
-        stack = stack
-        while if stack then unequal?(item top@stack) else no
-            stack = rest@stack
-        end
-    }
+    find_item = in (item stack) out
+        find_if?(in x out equal?(x item) stack)
 
     take = in (n stack) out short_stack@{
         reversed_result = clear!stack
