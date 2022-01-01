@@ -28,8 +28,10 @@ So the order of the top_stack gets reversed as it is put on the new stack.</dd>
 <dt>reverse</dt><dd><code>reverse!container</code> returns a container with the items in the reverse order.</dd>
 <dt>fold</dt><dd><code>fold!(binary_operation container init)</code> is mainly used as an algorithmic building block to implement the other container functions.</dd>
 </dl>
+
+<h2>Generic Container Functions - Family of Triplets</h2>
 The following family of container functions follow a similar pattern.
-They all come in three different versions.
+They come in three different versions.
 The first version takes a container as input.
 The second version take a container and an item as input.
 The third version takes a container and a predicate as input.
@@ -47,7 +49,9 @@ A predicate is what we call a function that takes an item and returns a boolean,
 <dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container.</dd>
 <dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of items for which the predicate says <code>yes</code>.</dd>
 </dl>
-You can access the members of a container via <code>top@container</code> and <code>rest@container</code>, or using the following functions:
+
+<h2>Generic Container Functions - Accessing Items</h2>
+You can access the items of a container via <code>top@container</code> and <code>rest@container</code>, or using the following functions:
 <dl>
 <dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n items.</dd>
 <dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n items removed.</dd>
