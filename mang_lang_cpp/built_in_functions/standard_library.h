@@ -126,6 +126,16 @@ const std::string STANDARD_LIBRARY = R"(
     clear_item = in (item stack) out
         clear_if?(in x out equal?(x item) stack)
 
+    find_if = in (predicate stack) out stack@{
+        stack = stack
+        while if stack then not!predicate?top@stack else no
+            stack = rest@stack
+        end
+    }
+
+    find_item = in (item stack) out
+        find_if?(in x out equal?(x item) stack)
+
     replace = in (new_item stack) out fold!(
         in (item stack) out put!(new_item stack)
         stack
@@ -171,17 +181,6 @@ const std::string STANDARD_LIBRARY = R"(
 
     enumerate = in stack out zip!(range!count!stack stack)
 
-    split = in (n stack) out stacks@{
-        top_stack = clear!stack
-        bottom_stack = stack
-        while and?(n bottom_stack)
-            n = dec!n
-            top_stack = put!(top@bottom_stack top_stack)
-            bottom_stack = rest@bottom_stack
-        end
-        stacks = (top_stack bottom_stack)
-    }
-
     drop = in (n stack) out short_stack@{
         short_stack = stack
         i = n
@@ -190,16 +189,6 @@ const std::string STANDARD_LIBRARY = R"(
             short_stack = rest@short_stack
         end
     }
-
-    find_if = in (predicate stack) out stack@{
-        stack = stack
-        while if stack then not!predicate?top@stack else no
-            stack = rest@stack
-        end
-    }
-
-    find_item = in (item stack) out
-        find_if?(in x out equal?(x item) stack)
 
     take = in (n stack) out short_stack@{
         reversed_result = clear!stack
@@ -211,6 +200,17 @@ const std::string STANDARD_LIBRARY = R"(
             stack = rest@stack
         end
         short_stack = reverse!reversed_result
+    }
+
+    split = in (n stack) out stacks@{
+        top_stack = clear!stack
+        bottom_stack = stack
+        while and?(n bottom_stack)
+            n = dec!n
+            top_stack = put!(top@bottom_stack top_stack)
+            bottom_stack = rest@bottom_stack
+        end
+        stacks = (top_stack bottom_stack)
     }
 
     get_index = in (index stack) out top@drop!(index stack)
