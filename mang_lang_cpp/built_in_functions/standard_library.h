@@ -191,9 +191,9 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    drop_while = in (predicate stack) out stack@{
+    find_if = in (predicate stack) out stack@{
         stack = stack
-        while if stack then predicate?top@stack else no
+        while if stack then not!predicate?top@stack else no
             stack = rest@stack
         end
     }
@@ -219,9 +219,9 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_index = in (index stack) out top@drop!(index stack)
 
-    all = in stack out not?drop_while!(boolean stack)
-    none = in stack out not?drop_while!(not stack)
-    any = in stack out boolean?drop_while!(not stack)
+    all = in stack out not?find_if!(not stack)
+    none = in stack out not?find_if!(boolean stack)
+    any = in stack out boolean?find_if!(boolean stack)
 
     and = in stack out all?stack
     or = in stack out any?stack
