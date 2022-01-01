@@ -17,9 +17,28 @@ Below you can find all functions included with Manglang. They are either built-i
 
 
 <h2>Generic Container Functions</h2>
-These functions work on both stacks and strings, and the type of the output container is the same as the input. Some of the functions below take a <code>predicate</code> as input, i.e. a function that takes an item and returns a boolean, e.g. <code>is_digit</code>.
+These functions work on both stacks and strings, and the type of the output container is the same as the input.
+We use the word container to represent either a stack or a string.
 <dl>
 <dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container.</dd>
+<dt>put_each</dt><dd><code>put_each!(top_container bottom_container)</code> returns a new container with each item from the top_container added to the bottom_container,
+such that the bottom of the top_container is the new top element.
+As an example <code>put_each!((1 2 3) (4 5 6))</code> returns <code>(3 2 1 4 5 6)</code> and <code>put_each!("abc" "def")</code> returns <code>"cbadef"</code>.
+So the order of the top_stack gets reversed as it is put on the new stack.</dd>
+<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
+<dt>drop_while</dt><dd><code>drop_while!(predicate container)</code> returns a container with the top items removed as long as the predicate says yes.</dd>
+<dt>find_item</dt><dd><code>find_item!(item container)</code> returns a container with the top items removed until the query item is found.</dd>
+<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n elements removed.</dd>
+<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n elements.</dd>
+<dt>fold</dt><dd><code>fold!(binary_operation container init)</code> is mainly used as an algorithmic building block to implement the other container functions.</dd>
+</dl>
+The following family of container functions follow a similar pattern.
+They all come in three different versions.
+The first version takes a container as input.
+The second version take a container and an item as input.
+The third version takes a container and a predicate as input.
+A predicate is what we call a function that takes an item and returns a boolean, e.g. <code>is_digit</code>.
+<dl>
 <dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input.</dd>
 <dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed.</dd>
 <dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>.</dd>
@@ -29,12 +48,7 @@ These functions work on both stacks and strings, and the type of the output cont
 <dt>count</dt><dd><code>count!container</code> returns the number of elements in the container.</dd>
 <dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container.</dd>
 <dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of elements for which the predicate says <code>yes</code>.</dd>
-<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n elements removed.</dd>
-<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n elements.</dd>
-<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the elements in the reverse order.</dd>
-<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two containers.</dd>
 </dl>
-
 You can access the members of a container via <code>top@container</code> and <code>rest@container</code>, or using the following functions:
 <dl>
 <dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container.</dd>
@@ -52,6 +66,8 @@ You can access the members of a container via <code>top@container</code> and <co
 <dl>
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each element in the container.</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each element in the container.</dd>
+<dt>concat</dt><dd><code>concat!(a b)</code> concatenates two stacks.</dd>
+<dt>concat_strings</dt><dd><code>concat_strings!(a b)</code> concatenates two strings.</dd>
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>(0 1 2 ... n-1)</code>.</dd>
 <dt>enumerate</dt><dd><code>enumerate!(7 9 4)</code> returns the stack <code>((0 7) (1 9) (2 4))</code>, where the first item in each inner stack is its index.</dd>
 <dt>zip</dt><dd><code>zip!((1 2 3) (4 5 6)))</code> returns the stack <code>((1 4) (2 5) (3 6))</code>, where each inner stack combines the corresponding items from the input stacks.</dd>
