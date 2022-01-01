@@ -4,16 +4,6 @@
 
 const std::string STANDARD_LIBRARY = R"(
 {
-    first = in stack out top@stack
-    second = in stack out top@rest@stack
-    third = in stack out top@rest@rest@stack
-    fourth = in stack out top@rest@rest@rest@stack
-    fifth = in stack out top@rest@rest@rest@rest@stack
-    sixth = in stack out top@rest@rest@rest@rest@rest@stack
-    seventh = in stack out top@rest@rest@rest@rest@rest@rest@stack
-    eighth = in stack out top@rest@rest@rest@rest@rest@rest@rest@stack
-    ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
-
     boolean = in x out if x then yes else no
     not = in x out if x then no else yes
 
@@ -28,10 +18,12 @@ const std::string STANDARD_LIBRARY = R"(
     neg = in x out sub!(0 x)
     abs = in x out if less?(0 x) then x else neg!x
 
-    is_digit = in c out less_or_equal?(48 number!c 57)
     is_upper = in c out less_or_equal?(65 number!c 90)
     is_lower = in c out less_or_equal?(97 number!c 122)
     is_letter = in c out any?(is_upper?c is_lower?c)
+    is_digit = in c out less_or_equal?(48 number!c 57)
+
+    parse_digit = in c out sub!(number!c 48)
 
     to_upper = in c out
         if is_lower?c then
@@ -45,7 +37,15 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    parse_digit = in c out sub!(number!c 48)
+    first = in stack out top@stack
+    second = in stack out top@rest@stack
+    third = in stack out top@rest@rest@stack
+    fourth = in stack out top@rest@rest@rest@stack
+    fifth = in stack out top@rest@rest@rest@rest@stack
+    sixth = in stack out top@rest@rest@rest@rest@rest@stack
+    seventh = in stack out top@rest@rest@rest@rest@rest@rest@stack
+    eighth = in stack out top@rest@rest@rest@rest@rest@rest@rest@stack
+    ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
 
     fold = in (operation stack init) out result@{
         result = init
@@ -55,18 +55,6 @@ const std::string STANDARD_LIBRARY = R"(
             stack = rest@stack
         end
     }
-
-    min = in stack out fold!(
-        in (item value) out if less?(item value) then item else value
-        stack
-        inf
-    )
-
-    max = in stack out fold!(
-        in (item value) out if less?(item value) then value else item
-        stack
-        -inf
-    )
 
     put_each = in (top_stack bottom_stack) out fold!(
         put
@@ -99,6 +87,30 @@ const std::string STANDARD_LIBRARY = R"(
         in (item stack) out put!(f!item stack)
         stack
         ""
+    )
+
+    pick_top = in stack out top@stack
+    pick_rest = in stack out rest@stack
+
+    zip = in stacks out reverse!result@{
+        result = ()
+        while top@stacks
+            item = map!(pick_top stacks)
+            result = put!(item result)
+            stacks = map!(pick_rest stacks)
+        end
+    }
+
+    min = in stack out fold!(
+        in (item value) out if less?(item value) then item else value
+        stack
+        inf
+    )
+
+    max = in stack out fold!(
+        in (item value) out if less?(item value) then value else item
+        stack
+        -inf
     )
 
     clear_if = in (predicate stack) out reverse!fold!(
@@ -247,18 +259,6 @@ const std::string STANDARD_LIBRARY = R"(
                 stack = put!(top@right stack)
                 right = rest@right
             end
-        end
-    }
-
-    pick_top = in stack out top@stack
-    pick_rest = in stack out rest@stack
-
-    zip = in stacks out reverse!result@{
-        result = ()
-        while top@stacks
-            item = map!(pick_top stacks)
-            result = put!(item result)
-            stacks = map!(pick_rest stacks)
         end
     }
 
