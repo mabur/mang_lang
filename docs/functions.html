@@ -51,6 +51,7 @@ You can access the members of a container via <code>top@container</code> and <co
 <dl>
 <dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n items.</dd>
 <dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n items removed.</dd>
+<dt>split</dt><dd><code>split!(n container)</code></dd>
 <dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container.</dd>
 <dt>first</dt><dd><code>first!container</code> returns the first item in the container.</dd>
 <dt>second</dt><dd><code>second!container</code> returns the second item in the container.</dd>
@@ -63,6 +64,7 @@ You can access the members of a container via <code>top@container</code> and <co
 </dl>
 
 <h2>Specialized Container Functions</h2>
+For the following container functions you need to know if you want to use stacks or a strings:
 <dl>
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container.</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container.</dd>
