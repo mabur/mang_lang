@@ -1,4 +1,5 @@
 TODO:
+* Name drop_while, find_item, clear as a similar algorithmic triplet.
 * Cleanup keywords and literals:
   * Add string constants for all keywords.
 * Advent of code Needs
