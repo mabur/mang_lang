@@ -14,6 +14,7 @@ TODO:
             ['<'] = '>'
         })
 
+  * put. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
   * Dictionaries as arrays with integer keys and dynamic lookups
   {
       N = 10
@@ -48,20 +49,11 @@ TODO:
     - 64 bit
     - Use less memory
 * Document standard library functions like: fold
-* Remove shared_ptr from linked list implementation.
-  - Make CodeRange part of ExpressionPointer instead of expression.
 * Simplifications with new list:
   - Merge new list and new string?
   - Extract for_each for new lists and strings
   - resolve mutable pointer in iterative dictionary evaluation
   - remove shared_ptr from vector of expressions in factory
-* prepend, put, put_each, concatenate
-  - (top rest) vs (rest top) for parsing and serializing
-  - Spread operations like in Javascript and Python
-    - put!(top rest)
-    - (top ...rest)
-    - (top *rest)
-    - Nice syntax but hides computational complexity so that it becomes hard to reason about.
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Example programs:
   - Parsing Json
@@ -76,12 +68,6 @@ TODO:
   - Better error messages
   - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
-* Convert functions from built-in to standard library.
-  - fold_while, fold_until, fold_if
-  - all, any, none, med och utan predikat
-  - find_if, find_item, drop_item, drop_while...
-  - split
-  - trim
 * vector math
   - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
   - norms, dot, inner_products
@@ -99,11 +85,8 @@ TODO:
       - last@list
       - sentinel@list
       - root@list
-  - Add second@, third@, fourth@, last@ ... members for lists and strings. _1st@string
-    _1st, _2nd, _3rd, _4th, _5th, _6th, _7nth, _8th, _9th
   - Describe ListBase as a "Concept".
   - Naming of count_*, range, reverse_range, enumerate, new.
-  - prepend. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
 * Rename to Mangelang?
 * Functions:
   - Math: trigonometry
