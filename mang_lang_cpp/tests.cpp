@@ -773,13 +773,13 @@ int main() {
     });
     test.evaluate("enumerate list", {
         {"enumerate!()", "()"},
-        {"enumerate!(4)", "({index=0 item=4})"},
-        {"enumerate!(4 3)", "({index=0 item=4} {index=1 item=3})"},
+        {"enumerate!(4)", "((0 4))"},
+        {"enumerate!(4 3)", "((0 4) (1 3))"},
     });
     test.evaluate("enumerate string", {
         {R"(enumerate!"")", R"(())"},
-        {R"(enumerate!"a")", R"(({index=0 item='a'}))"},
-        {R"(enumerate!"ab")", R"(({index=0 item='a'} {index=1 item='b'}))"},
+        {R"(enumerate!"a")", R"(((0 'a')))"},
+        {R"(enumerate!"ab")", R"(((0 'a') (1 'b')))"},
     });
     test.evaluate("put_each", {
         {"put_each!(() ())", "()"},

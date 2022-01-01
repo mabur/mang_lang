@@ -169,20 +169,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in stack out result@{
-        reversed_result = ()
-        stack = stack
-        index = 0
-        while stack
-            reversed_result = put!(
-                {index=index item=top@stack}
-                reversed_result
-            )
-            index = inc!index
-            stack = rest@stack
-        end
-        result = reverse!reversed_result
-    }
+    enumerate = in stack out zip!(range!count!stack stack)
 
     split = in (n stack) out stacks@{
         top_stack = clear!stack
