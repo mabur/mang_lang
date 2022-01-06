@@ -2,8 +2,12 @@ TODO:
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
     - Try new is-operator
+  * Dynamic dictionary keys, as a way to model sets and arrays, 
+    - Store content of IterativeDictionary as array, for simple control flow while.
+    - Store content of evaluated Dictionary as hash-map, for fast lookup for big dicts and arrays.
     - Dictionaries with other keys than strings and dynamic lookup.
-    - Built-in function for dynamic lookup of dictionaries: get!(key dictionary)
+    - Built-in function for dynamic lookup of dictionaries: get!(key dictionary) get!(index dictionary)
+    - Dictionaries as arrays with integer keys and dynamic lookups
 
     get_closer = in c out get!(c {
             ['('] = ')'
@@ -11,9 +15,6 @@ TODO:
             ['['] = ']'
             ['<'] = '>'
         })
-
-  * put. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
-  * Dictionaries as arrays with integer keys and dynamic lookups
   {
       N = 10
       result = {    
@@ -35,7 +36,8 @@ TODO:
       f = get!((1 2) result)
   }
 
-
+  * Arrays as special mutable type, with shared mutable state among references.
+    - put. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
   * aoc algorithms in need:
     - sort
     - unique
@@ -202,17 +204,22 @@ a@{apply=in(f x)out f!x g=in x out 0 a=apply!(g 1)}
 
 
 SIMILAR LANGUAGES
-* Lisp family
-* Json
-* Yaml
+* Lisp family: https://en.wikipedia.org/wiki/Lisp_(programming_language)
+* Json: https://www.json.org/
+
+* HCL / Terraform language https://github.com/hashicorp/hcl https://www.terraform.io/language
 * Jsonnet https://jsonnet.org/
 * Dhall https://dhall-lang.org/
+* CUE https://cuelang.org/
+* GCL https://gcl.readthedocs.io/
+
 * L1 https://mlajtos.github.io/L1/
-* Azor: https://github.com/cstuartroe/azor
-* Pico?
-* CUE?
-* GCL
-* HCL?
+
+* (Yaml)
+* (TOML) https://github.com/toml-lang/toml
+* (Lua) https://www.lua.org/
+* (Pico) http://pico.vub.ac.be/
+* (Azor) https://github.com/cstuartroe/azor
 
 WEBPAGE
 https://www.passerine.io/
