@@ -30,7 +30,7 @@ Expression builtIns() {
     definitions.push_back(define("sqrt", arithmetic::sqrt));
     definitions.push_back(define("number", arithmetic::ascii_number));
     definitions.push_back(define("character", arithmetic::ascii_character));
-    return makeDictionary(CodeRange{},
-        new Dictionary{Expression{}, setContext(definitions)}
+    return makeEvaluatedDictionary(CodeRange{},
+        new EvaluatedDictionary{Expression{}, setContext(definitions)}
     );
 }

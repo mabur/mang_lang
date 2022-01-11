@@ -60,6 +60,21 @@ std::string serializeDictionary(const Dictionary& dictionary) {
     return result;
 }
 
+std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) {
+    auto result = std::string{};
+    result += '{';
+    for (const auto& statement : dictionary.statements) {
+        result += serialize(statement);
+    }
+    if (dictionary.statements.empty()) {
+        result += '}';
+    }
+    else {
+        result.back() = '}';
+    }
+    return result;
+}
+
 std::string serializeFunction(const Function& function) {
     return "in " + serializeName(function.input_name)
         + " out " + serialize(function.body);
@@ -150,6 +165,7 @@ std::string serialize(Expression expression) {
         case CONDITIONAL: return serializeConditional(getConditional(expression));
         case IS: return serializeIs(getIs(expression));
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
+        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));

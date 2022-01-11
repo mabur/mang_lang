@@ -73,11 +73,11 @@ Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
     const auto num_names = numNames(dictionary.statements);
-    const auto result = new Dictionary{
+    const auto result = new EvaluatedDictionary{
         environment,
         Statements(num_names, Expression{})
     };
-    const auto dictionary_result = makeDictionary(CodeRange{}, result);
+    const auto dictionary_result = makeEvaluatedDictionary(CodeRange{}, result);
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
         const auto statement = dictionary.statements[i];
@@ -146,7 +146,7 @@ Expression evaluateList(
     return new_list::reverse(code, output);
 }
 
-Expression lookupCurrentDictionary(const Dictionary& dictionary, const std::string& name) {
+Expression lookupCurrentEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
     for (const auto& statement : dictionary.statements) {
         if (statement.type == DEFINITION) {
             const auto definition = getDefinition(statement);
@@ -159,19 +159,19 @@ Expression lookupCurrentDictionary(const Dictionary& dictionary, const std::stri
 }
 
 Expression lookupDictionary(Expression expression, const std::string& name) {
-    if (expression.type != DICTIONARY) {
+    if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(name, "environment");
     }
-    const auto d = getDictionary(expression);
-    const auto result = lookupCurrentDictionary(d, name);
+    const auto d = getEvaluatedDictionary(expression);
+    const auto result = lookupCurrentEvaluatedDictionary(d, name);
     if (result.type != EMPTY) {
         return result;
     }
     return lookupDictionary(d.environment, name);
 }
 
-Expression lookupChildInDictionary(const Dictionary& dictionary, const std::string& name) {
-    const auto result = lookupCurrentDictionary(dictionary, name);
+Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
+    const auto result = lookupCurrentEvaluatedDictionary(dictionary, name);
     if (result.type != EMPTY) {
         return result;
     }
@@ -204,7 +204,7 @@ Expression evaluateLookupChild(
     const auto child = evaluate(lookup_child.child, environment);
     const auto name = getName(lookup_child.name).value;
     switch(child.type) {
-        case DICTIONARY: return lookupChildInDictionary(getDictionary(child), name);
+        case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), name);
         case LIST: return lookupChildInList(getList(child), name);
         case STRING: return lookupChildInString(getString(child), name);
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
@@ -216,8 +216,8 @@ Expression applyFunction(const Function& function, Expression input) {
     const auto statements = Statements{
         makeDefinition(CodeRange{}, {function.input_name, input, 0})
     };
-    const auto middle = makeDictionary(CodeRange{},
-        new Dictionary{function.environment, statements}
+    const auto middle = makeEvaluatedDictionary(CodeRange{},
+        new EvaluatedDictionary{function.environment, statements}
     );
     return evaluate(function.body, middle);
 }
@@ -248,8 +248,8 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
         }));
         expression = list.rest;
     }
-    const auto middle = makeDictionary(CodeRange{},
-        new Dictionary{function_list.environment, statements}
+    const auto middle = makeEvaluatedDictionary(CodeRange{},
+        new EvaluatedDictionary{function_list.environment, statements}
     );
     return evaluate(function_list.body, middle);
 }
@@ -282,6 +282,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case EMPTY_STRING: return expression;
         case STRING: return expression;
         case EMPTY_LIST: return expression;
+        case EVALUATED_DICTIONARY: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
         case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment);
