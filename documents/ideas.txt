@@ -1,8 +1,16 @@
 TODO:
+* Equality for dictionaries?
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
     - Try new is-operator
   * Dynamic dictionary keys, as a way to model sets and arrays, 
+    - Reduce duplication for Lists, Strings, and future Evaluated Lists
+    - Split structs for evaluated and non-evaluated for:
+      - Dictionaries
+      - Functions
+      - Lists
+    - Split structs for list and EvaluatedList
+    - Split structs for IterativeDictionary and Dictionary
     - Store content of IterativeDictionary as array, for simple control flow while.
     - Store content of evaluated Dictionary as hash-map, for fast lookup for big dicts and arrays.
     - Dictionaries with other keys than strings and dynamic lookup.
