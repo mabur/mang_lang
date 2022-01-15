@@ -150,7 +150,7 @@ Expression parseDictionary(CodeRange code) {
     code = parseCharacter(code, '}');
     return makeDictionary(
         CodeRange{first, code.begin()},
-        new Dictionary{Expression{}, setContext(statements)}
+        Dictionary{Expression{}, setContext(statements)}
     );
 }
 

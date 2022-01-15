@@ -7,7 +7,8 @@
 
 #include "operations/serialize.h"
 
-std::vector<std::shared_ptr<const Dictionary>> dictionaries;
+std::vector<Dictionary> dictionaries;
+std::vector<std::shared_ptr<const EvaluatedDictionary>> evaluated_dictionaries;
 
 std::vector<Character> characters;
 std::vector<Conditional> conditionals;
@@ -196,8 +197,12 @@ Expression makeIs(CodeRange code, IsExpression expression) {
     return makeExpression(code, expression, IS, is_expressions);
 }
 
-Expression makeDictionary(CodeRange code, const Dictionary* expression) {
-    return makeMutableExpression(code, expression, DICTIONARY, dictionaries);
+Expression makeDictionary(CodeRange code, const Dictionary expression) {
+    return makeExpression(code, expression, DICTIONARY, dictionaries);
+}
+
+Expression makeEvaluatedDictionary(CodeRange code, const EvaluatedDictionary* expression) {
+    return makeMutableExpression(code, expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
@@ -327,7 +332,11 @@ IsExpression getIs(Expression expression) {
 }
 
 Dictionary getDictionary(Expression expression) {
-    return getMutableExpression(expression, DICTIONARY, dictionaries);
+    return getExpression(expression, DICTIONARY, dictionaries);
+}
+
+EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
+    return getMutableExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 
 Function getFunction(Expression expression) {

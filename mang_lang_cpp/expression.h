@@ -12,6 +12,7 @@ enum ExpressionType {
     CONDITIONAL,
     IS,
     DICTIONARY,
+    EVALUATED_DICTIONARY,
     FUNCTION,
     FUNCTION_BUILT_IN,
     FUNCTION_DICTIONARY,
@@ -37,6 +38,7 @@ const auto NAMES = std::vector<std::string>{
     "CONDITIONAL",
     "IS",
     "DICTIONARY",
+    "EVALUATED_DICTIONARY",
     "FUNCTION",
     "FUNCTION_BUILT_IN",
     "FUNCTION_DICTIONARY",
@@ -178,6 +180,11 @@ struct Boolean {
 using Statements = std::vector<Expression>;
 
 struct Dictionary {
+    Expression environment;
+    Statements statements;
+};
+
+struct EvaluatedDictionary {
     Expression environment;
     Statements statements;
 };

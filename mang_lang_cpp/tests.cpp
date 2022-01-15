@@ -1,6 +1,8 @@
 #include "mang_lang.h"
+#include <chrono>
 #include <functional>
 #include <initializer_list>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <tuple>
@@ -11,7 +13,9 @@ struct Test {
     ~Test() {
         using namespace std;
         cout << endl << num_good_total << "/" << num_good_total + num_bad_total
-            << " tests successful in total" << std::endl;
+            << " tests successful in total. "
+            << "Duration " << std::fixed << std::setprecision(1)
+            << duration_total.count() << " seconds.";
         if (num_bad_total != 0) {
             cout << num_bad_total << " TESTS FAILING!" << endl;
         }
@@ -21,6 +25,7 @@ struct Test {
     }
     size_t num_good_total= 0;
     size_t num_bad_total = 0;
+    std::chrono::duration<double> duration_total = {};
 
     template<typename Input, typename Output>
     void parameterizedTest(
@@ -32,6 +37,7 @@ struct Test {
         using namespace std;
         auto num_good = 0;
         auto num_bad = 0;
+        auto start = std::chrono::steady_clock::now();
         for (const auto& test : data) {
             const auto& input = test.first;
             const auto& output_expected = test.second;
@@ -52,6 +58,8 @@ struct Test {
                     << e.what() << endl;
             }
         }
+        auto end = std::chrono::steady_clock::now();
+        duration_total += end - start;
         cout << num_good << "/" << num_good + num_bad
             << " tests successful for case "
             << function_name << ":" << case_name << endl;
