@@ -11,6 +11,16 @@ inline CodeRange addCodeRanges(Expression rest, Expression first) {
     return CodeRange{first_character, last_character};
 }
 
+template<typename T, typename Operation, typename Getter>
+T leftFold(T value, Expression expression, Operation operation, int empty_type, Getter getter) {
+    while (expression.type != empty_type) {
+        const auto string = getter(expression);
+        value = operation(value, string.first);
+        expression = string.rest;
+    }
+    return value;
+}
+
 namespace new_string {
 
 inline Expression prepend(Expression rest, Expression first) {
@@ -19,12 +29,7 @@ inline Expression prepend(Expression rest, Expression first) {
 
 template<typename T, typename Operation>
 T leftFold(T value, Expression expression, Operation operation) {
-    while (expression.type != EMPTY_STRING) {
-        const auto string = getString(expression);
-        value = operation(value, string.first);
-        expression = string.rest;
-    }
-    return value;
+    return leftFold(value, expression, operation, EMPTY_STRING, getString);
 }
 
 inline Expression reverse(CodeRange code, Expression list) {
@@ -62,12 +67,7 @@ inline Expression prepend(Expression rest, Expression first) {
 
 template<typename T, typename Operation>
 T leftFold(T value, Expression expression, Operation operation) {
-    while (expression.type != EMPTY_LIST) {
-        const auto list = getList(expression);
-        value = operation(value, list.first);
-        expression = list.rest;
-    }
-    return value;
+    return leftFold(value, expression, operation, EMPTY_LIST, getList);
 }
 
 inline Expression reverse(CodeRange code, Expression list) {
