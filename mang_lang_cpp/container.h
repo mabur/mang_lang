@@ -14,11 +14,25 @@ inline CodeRange addCodeRanges(Expression rest, Expression first) {
 template<typename T, typename Operation, typename Getter>
 T leftFold(T value, Expression expression, Operation operation, int empty_type, Getter getter) {
     while (expression.type != empty_type) {
-        const auto string = getter(expression);
-        value = operation(value, string.first);
-        expression = string.rest;
+        const auto container = getter(expression);
+        value = operation(value, container.first);
+        expression = container.rest;
     }
     return value;
+}
+
+template<typename Predicate, typename Getter>
+bool allOfPairs(Expression left, Expression right, Predicate predicate, int empty_type, Getter getter) {
+    while (left.type != EMPTY_STRING && right.type != empty_type) {
+        const auto left_container = getter(left);
+        const auto right_container = getter(right);
+        if (!predicate(left_container.first, right_container.first)) {
+            return false;
+        }
+        left = left_container.rest;
+        right = right_container.rest;
+    }
+    return left.type == EMPTY_STRING && right.type == EMPTY_STRING;
 }
 
 namespace new_string {
@@ -38,16 +52,7 @@ inline Expression reverse(CodeRange code, Expression list) {
 
 template<typename Predicate>
 bool allOfPairs(Expression left, Expression right, Predicate predicate) {
-    while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
-        const auto left_string = getString(left);
-        const auto right_string = getString(right);
-        if (!predicate(left_string.first, right_string.first)) {
-            return false;
-        }
-        left = left_string.rest;
-        right = right_string.rest;
-    }
-    return left.type == EMPTY_STRING && right.type == EMPTY_STRING;
+    return allOfPairs(left, right, predicate, EMPTY_STRING, getString);
 }
 
 } // namespace new_string
@@ -76,16 +81,7 @@ inline Expression reverse(CodeRange code, Expression list) {
 
 template<typename Predicate>
 bool allOfPairs(Expression left, Expression right, Predicate predicate) {
-    while (left.type != EMPTY_LIST && right.type != EMPTY_LIST) {
-        const auto left_string = getList(left);
-        const auto right_string = getList(right);
-        if (!predicate(left_string.first, right_string.first)) {
-            return false;
-        }
-        left = left_string.rest;
-        right = right_string.rest;
-    }
-    return left.type == EMPTY_LIST && right.type == EMPTY_LIST;
+    return allOfPairs(left, right, predicate, EMPTY_LIST, getList);
 }
 
 template<typename Predicate>
