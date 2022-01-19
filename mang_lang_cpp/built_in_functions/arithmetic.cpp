@@ -61,11 +61,11 @@ bool lessOrEqual(Expression left, Expression right) {
 }
 
 Expression are_all_less(Expression in) {
-    return makeBoolean(new_list::allOfNeighbours(in, less));
+    return makeBoolean(allOfNeighbours(in, less, EMPTY_LIST, getList));
 }
 
 Expression are_all_less_or_equal(Expression in) {
-    return makeBoolean(new_list::allOfNeighbours(in, lessOrEqual));
+    return makeBoolean(allOfNeighbours(in, lessOrEqual, EMPTY_LIST, getList));
 }
 
 Expression sqrt(Expression in) {

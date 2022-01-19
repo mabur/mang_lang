@@ -94,9 +94,4 @@ inline Expression reverse(CodeRange code, Expression list) {
     return leftFold(makeEmptyList(code, EmptyList{}), list, prepend);
 }
 
-template<typename Predicate>
-bool allOfNeighbours(Expression in, Predicate predicate) {
-    return allOfNeighbours(in, predicate, EMPTY_LIST, getList);
-}
-
 } // namespace new_list
