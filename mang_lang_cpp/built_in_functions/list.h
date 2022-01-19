@@ -4,7 +4,7 @@ struct Expression;
 
 namespace list_functions {
 
-Expression empty(Expression in);
-Expression prepend(Expression in);
+Expression clear(Expression in);
+Expression put(Expression in);
 
 }

@@ -29,25 +29,25 @@ double mulExpression(double left, Expression right) {
 
 Expression add(Expression in) {
     const auto init = 0.0;
-    const auto result = new_list::leftFold(init, in, addExpression);
+    const auto result = leftFold(init, in, addExpression, EMPTY_LIST, getList);
     return makeNumber(result);
 }
 
 Expression mul(Expression in) {
 
     const auto init = 1.0;
-    const auto result = new_list::leftFold(init, in, mulExpression);
+    const auto result = leftFold(init, in, mulExpression, EMPTY_LIST, getList);
     return makeNumber(result);
 }
 
 Expression sub(Expression in) {
-    const auto binary = new_list::getBinaryInput(in);
+    const auto binary = getBinaryInput(in);
     const auto result = number(binary.left) - number(binary.right);
     return makeNumber(result);
 }
 
 Expression div(Expression in) {
-    const auto binary = new_list::getBinaryInput(in);
+    const auto binary = getBinaryInput(in);
     const auto result = number(binary.left) / number(binary.right);
     return makeNumber(result);
 }

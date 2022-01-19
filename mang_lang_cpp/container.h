@@ -55,24 +55,21 @@ bool allOfNeighbours(Expression in, Predicate predicate, int empty_type, Getter 
     return true;
 }
 
-namespace new_string {
-
-inline Expression prepend(Expression rest, Expression first) {
+inline Expression putString(Expression rest, Expression first) {
     return makeString(addCodeRanges(first, rest), String{first, rest});
 }
 
-template<typename T, typename Operation>
-T leftFold(T value, Expression expression, Operation operation) {
-    return leftFold(value, expression, operation, EMPTY_STRING, getString);
+inline Expression putList(Expression rest, Expression first) {
+    return makeList(addCodeRanges(first, rest), List{first, rest});
 }
 
-inline Expression reverse(CodeRange code, Expression list) {
-    return leftFold(makeEmptyString(code, EmptyString{}), list, prepend);
+inline Expression reverseString(CodeRange code, Expression string) {
+    return leftFold(makeEmptyString(code, EmptyString{}), string, putString, EMPTY_STRING, getString);
 }
 
-} // namespace new_string
-
-namespace new_list {
+inline Expression reverseList(CodeRange code, Expression list) {
+    return leftFold(makeEmptyList(code, EmptyList{}), list, putList, EMPTY_LIST, getList);
+}
 
 struct BinaryInput {
     Expression left;
@@ -80,18 +77,3 @@ struct BinaryInput {
 };
 
 BinaryInput getBinaryInput(Expression list);
-
-inline Expression prepend(Expression rest, Expression first) {
-    return makeList(addCodeRanges(first, rest), List{first, rest});
-}
-
-template<typename T, typename Operation>
-T leftFold(T value, Expression expression, Operation operation) {
-    return leftFold(value, expression, operation, EMPTY_LIST, getList);
-}
-
-inline Expression reverse(CodeRange code, Expression list) {
-    return leftFold(makeEmptyList(code, EmptyList{}), list, prepend);
-}
-
-} // namespace new_list

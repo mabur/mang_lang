@@ -121,7 +121,7 @@ std::string appendElement(const std::string& s, Expression element) {
 }
 
 std::string serializeList(Expression s) {
-    auto result = new_list::leftFold(std::string{"("}, s, appendElement);
+    auto result = leftFold(std::string{"("}, s, appendElement, EMPTY_LIST, getList);
     result.back() = ')';
     return result;
 }
@@ -156,7 +156,8 @@ std::string appendCharacter(const std::string& s, Expression character) {
 
 std::string serializeString(Expression string) {
     const auto delimiter = std::string{"\""};
-    return new_string::leftFold(delimiter, string, appendCharacter) + delimiter;
+    return leftFold(delimiter, string, appendCharacter, EMPTY_STRING, getString)
+        + delimiter;
 }
 
 std::string serialize(Expression expression) {

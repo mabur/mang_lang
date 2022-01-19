@@ -231,11 +231,11 @@ Expression parseList(CodeRange code) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
         code.first = end(expression);
-        list = new_list::prepend(list, expression);
+        list = putList(list, expression);
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
-    return new_list::reverse(CodeRange{first, code.first}, list);
+    return reverseList(CodeRange{first, code.first}, list);
 }
 
 Expression parseSubstitution(CodeRange code) {
@@ -312,11 +312,11 @@ Expression parseString(CodeRange code) {
             CodeRange{code.first, code.first + 1},
             {code.first->character}
         );
-        value = new_string::prepend(value, item);
+        value = putString(value, item);
     }
     code = parseCharacter(code, '"');
     const auto last = code.begin();
-    return new_string::reverse(CodeRange{first, last}, value);
+    return reverseString(CodeRange{first, last}, value);
 }
 
 Expression parseExpression(CodeRange code) {

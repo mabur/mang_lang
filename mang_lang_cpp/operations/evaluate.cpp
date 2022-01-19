@@ -138,12 +138,12 @@ Expression evaluateList(
 ) {
     const auto op = [&](Expression rest, Expression first) -> Expression {
         const auto evaluated_first = evaluate(first, environment);
-        return new_list::prepend(rest, evaluated_first);
+        return putList(rest, evaluated_first);
     };
     const auto code = CodeRange{};
     const auto init = makeEmptyList(code, {});
-    const auto output = new_list::leftFold(init, list, op);
-    return new_list::reverse(code, output);
+    const auto output = leftFold(init, list, op, EMPTY_LIST, getList);
+    return reverseList(code, output);
 }
 
 Expression lookupCurrentEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
