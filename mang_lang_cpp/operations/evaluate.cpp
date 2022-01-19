@@ -23,13 +23,13 @@ bool isEqual(Expression left, Expression right) {
         return true;
     }
     if (left_type == LIST && right_type == LIST) {
-        return new_list::allOfPairs(left, right, isEqual);
+        return allOfPairs(left, right, isEqual, EMPTY_LIST, getList);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
     }
     if (left_type == STRING && right_type == STRING) {
-        return new_string::allOfPairs(left, right, isEqual);
+        return allOfPairs(left, right, isEqual, EMPTY_STRING, getString);
     }
     return false;
 }

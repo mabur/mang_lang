@@ -70,11 +70,6 @@ inline Expression reverse(CodeRange code, Expression list) {
     return leftFold(makeEmptyString(code, EmptyString{}), list, prepend);
 }
 
-template<typename Predicate>
-bool allOfPairs(Expression left, Expression right, Predicate predicate) {
-    return allOfPairs(left, right, predicate, EMPTY_STRING, getString);
-}
-
 } // namespace new_string
 
 namespace new_list {
@@ -97,11 +92,6 @@ T leftFold(T value, Expression expression, Operation operation) {
 
 inline Expression reverse(CodeRange code, Expression list) {
     return leftFold(makeEmptyList(code, EmptyList{}), list, prepend);
-}
-
-template<typename Predicate>
-bool allOfPairs(Expression left, Expression right, Predicate predicate) {
-    return allOfPairs(left, right, predicate, EMPTY_LIST, getList);
 }
 
 template<typename Predicate>
