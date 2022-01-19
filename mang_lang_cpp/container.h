@@ -35,6 +35,26 @@ bool allOfPairs(Expression left, Expression right, Predicate predicate, int empt
     return left.type == empty_type && right.type == empty_type;
 }
 
+template<typename Predicate, typename Getter>
+bool allOfNeighbours(Expression in, Predicate predicate, int empty_type, Getter getter) {
+    if (in.type == empty_type) {
+        return true;
+    }
+    auto current_list = getter(in);
+    auto next = current_list.rest;
+    while (next.type != empty_type) {
+        const auto left = current_list.first;
+        const auto next_list = getter(next);
+        const auto right = next_list.first;
+        if (!predicate(left, right)) {
+            return false;
+        }
+        current_list = next_list;
+        next = next_list.rest;
+    }
+    return true;
+}
+
 namespace new_string {
 
 inline Expression prepend(Expression rest, Expression first) {
@@ -86,22 +106,7 @@ bool allOfPairs(Expression left, Expression right, Predicate predicate) {
 
 template<typename Predicate>
 bool allOfNeighbours(Expression in, Predicate predicate) {
-    if (in.type == EMPTY_LIST) {
-        return true;
-    }
-    auto current_list = getList(in);
-    auto next = current_list.rest;
-    while (next.type != EMPTY_LIST) {
-        const auto left = current_list.first;
-        const auto next_list = getList(next);
-        const auto right = next_list.first;
-        if (!predicate(left, right)) {
-            return false;
-        }
-        current_list = next_list;
-        next = next_list.rest;
-    }
-    return true;
+    return allOfNeighbours(in, predicate, EMPTY_LIST, getList);
 }
 
 } // namespace new_list
