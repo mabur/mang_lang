@@ -1,15 +1,6 @@
 #pragma once
 
 #include "expression.h"
-#include "operations/boolean.h"
-#include "factory.h"
-
-// Note that we need code range since we use this during parsing.
-inline CodeRange addCodeRanges(Expression rest, Expression first) {
-    const auto first_character = std::min(rest.range.first, first.range.first);
-    const auto last_character = std::max(rest.range.last, first.range.last);
-    return CodeRange{first_character, last_character};
-}
 
 template<typename T, typename Operation, typename Getter>
 T leftFold(T value, Expression expression, Operation operation, int empty_type, Getter getter) {
@@ -55,25 +46,14 @@ bool allOfNeighbours(Expression in, Predicate predicate, int empty_type, Getter 
     return true;
 }
 
-inline Expression putString(Expression rest, Expression first) {
-    return makeString(addCodeRanges(first, rest), String{first, rest});
-}
-
-inline Expression putList(Expression rest, Expression first) {
-    return makeList(addCodeRanges(first, rest), List{first, rest});
-}
-
-inline Expression reverseString(CodeRange code, Expression string) {
-    return leftFold(makeEmptyString(code, EmptyString{}), string, putString, EMPTY_STRING, getString);
-}
-
-inline Expression reverseList(CodeRange code, Expression list) {
-    return leftFold(makeEmptyList(code, EmptyList{}), list, putList, EMPTY_LIST, getList);
-}
-
 struct BinaryInput {
     Expression left;
     Expression right;
 };
 
 BinaryInput getBinaryInput(Expression list);
+
+Expression putString(Expression rest, Expression first);
+Expression putList(Expression rest, Expression first);
+Expression reverseString(CodeRange code, Expression string);
+Expression reverseList(CodeRange code, Expression list);
