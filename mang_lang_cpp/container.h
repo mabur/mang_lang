@@ -23,7 +23,7 @@ T leftFold(T value, Expression expression, Operation operation, int empty_type, 
 
 template<typename Predicate, typename Getter>
 bool allOfPairs(Expression left, Expression right, Predicate predicate, int empty_type, Getter getter) {
-    while (left.type != EMPTY_STRING && right.type != empty_type) {
+    while (left.type != empty_type && right.type != empty_type) {
         const auto left_container = getter(left);
         const auto right_container = getter(right);
         if (!predicate(left_container.first, right_container.first)) {
@@ -32,7 +32,7 @@ bool allOfPairs(Expression left, Expression right, Predicate predicate, int empt
         left = left_container.rest;
         right = right_container.rest;
     }
-    return left.type == EMPTY_STRING && right.type == EMPTY_STRING;
+    return left.type == empty_type && right.type == empty_type;
 }
 
 namespace new_string {
