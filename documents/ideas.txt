@@ -1,4 +1,5 @@
 TODO:
+* kebab-case
 * Equality for dictionaries?
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
