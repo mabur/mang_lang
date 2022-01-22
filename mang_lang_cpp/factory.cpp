@@ -18,6 +18,7 @@ std::vector<FunctionBuiltIn> built_in_functions;
 std::vector<FunctionDictionary> dictionary_functions;
 std::vector<FunctionList> list_functions;
 std::vector<List> lists;
+std::vector<EvaluatedList> evaluated_lists;
 std::vector<EmptyList> empty_lists;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
@@ -225,6 +226,10 @@ Expression makeList(CodeRange code, List expression) {
     return makeExpression(code, expression, LIST, lists);
 }
 
+Expression makeEvaluatedList(CodeRange code, EvaluatedList expression) {
+    return makeExpression(code, expression, EVALUATED_LIST, evaluated_lists);
+}
+
 Expression makeEmptyList(CodeRange code, EmptyList expression) {
     return makeExpression(code, expression, EMPTY_LIST, empty_lists);
 }
@@ -357,6 +362,10 @@ FunctionList getFunctionList(Expression expression) {
 
 List getList(Expression expression) {
     return getExpression(expression, LIST, lists);
+}
+
+EvaluatedList getEvaluatedList(Expression expression) {
+    return getExpression(expression, EVALUATED_LIST, evaluated_lists);
 }
 
 EmptyList getEmptyList(Expression expression) {

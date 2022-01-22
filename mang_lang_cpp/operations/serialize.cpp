@@ -126,6 +126,12 @@ std::string serializeList(Expression s) {
     return result;
 }
 
+std::string serializeEvaluatedList(Expression s) {
+    auto result = leftFold(std::string{"("}, s, appendElement, EMPTY_LIST, getEvaluatedList);
+    result.back() = ')';
+    return result;
+}
+
 std::string serializeLookupChild(const LookupChild& lookup_child) {
     return serializeName(lookup_child.name) + "@" + serialize(lookup_child.child);
 }
@@ -175,6 +181,7 @@ std::string serialize(Expression expression) {
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_LIST: return serializeFunctionList(getFunctionList(expression));
         case LIST: return serializeList(expression);
+        case EVALUATED_LIST: return serializeEvaluatedList(expression);
         case EMPTY_LIST: return "()";
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));

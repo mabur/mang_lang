@@ -55,5 +55,7 @@ BinaryInput getBinaryInput(Expression list);
 
 Expression putString(Expression rest, Expression first);
 Expression putList(Expression rest, Expression first);
+Expression putEvaluatedList(Expression rest, Expression first);
 Expression reverseString(CodeRange code, Expression string);
 Expression reverseList(CodeRange code, Expression list);
+Expression reverseEvaluatedList(CodeRange code, Expression list);

@@ -7,7 +7,7 @@ bool boolean(Expression expression) {
         case EVALUATED_DICTIONARY: return !getEvaluatedDictionary(expression).statements.empty();
         case NUMBER: return static_cast<bool>(getNumber(expression).value);
         case BOOLEAN: return getBoolean(expression).value;
-        case LIST: return true;
+        case EVALUATED_LIST: return true;
         case EMPTY_LIST: return false;
         case STRING: return true;
         case EMPTY_STRING: return false;

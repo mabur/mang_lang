@@ -22,8 +22,8 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == EMPTY_LIST && right_type == EMPTY_LIST) {
         return true;
     }
-    if (left_type == LIST && right_type == LIST) {
-        return allOfPairs(left, right, isEqual, EMPTY_LIST, getList);
+    if (left_type == EVALUATED_LIST && right_type == EVALUATED_LIST) {
+        return allOfPairs(left, right, isEqual, EMPTY_LIST, getEvaluatedList);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
@@ -138,12 +138,12 @@ Expression evaluateList(
 ) {
     const auto op = [&](Expression rest, Expression first) -> Expression {
         const auto evaluated_first = evaluate(first, environment);
-        return putList(rest, evaluated_first);
+        return putEvaluatedList(rest, evaluated_first);
     };
     const auto code = CodeRange{};
     const auto init = makeEmptyList(code, {});
     const auto output = leftFold(init, list, op, EMPTY_LIST, getList);
-    return reverseList(code, output);
+    return reverseEvaluatedList(code, output);
 }
 
 Expression lookupCurrentEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
@@ -188,14 +188,14 @@ Expression lookupChildInString(const String& string, const std::string& name) {
     throw MissingSymbol(name, "string");
 }
 
-Expression lookupChildInList(const List& list, const std::string& name) {
+Expression lookupChildInEvaluatedList(const EvaluatedList& list, const std::string& name) {
     if (name == "top") {
         return list.first;
     }
     if (name == "rest") {
         return list.rest;
     }
-    throw MissingSymbol(name, "list");
+    throw MissingSymbol(name, "evaluated_list");
 }
 
 Expression evaluateLookupChild(
@@ -205,7 +205,7 @@ Expression evaluateLookupChild(
     const auto name = getName(lookup_child.name).value;
     switch(child.type) {
         case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), name);
-        case LIST: return lookupChildInList(getList(child), name);
+        case EVALUATED_LIST: return lookupChildInEvaluatedList(getEvaluatedList(child), name);
         case STRING: return lookupChildInString(getString(child), name);
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
@@ -240,7 +240,7 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     auto statements = Statements{};
     auto expression = input;
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
-        const auto list = getList(expression);
+        const auto list = getEvaluatedList(expression);
         statements.push_back(makeDefinition(CodeRange{}, {
             function_list.input_names[i],
             list.first,
@@ -282,6 +282,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case EMPTY_STRING: return expression;
         case STRING: return expression;
         case EMPTY_LIST: return expression;
+        case EVALUATED_LIST: return expression;
         case EVALUATED_DICTIONARY: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);

@@ -18,6 +18,7 @@ enum ExpressionType {
     FUNCTION_DICTIONARY,
     FUNCTION_LIST,
     LIST,
+    EVALUATED_LIST,
     EMPTY_LIST,
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
@@ -44,6 +45,7 @@ const auto NAMES = std::vector<std::string>{
     "FUNCTION_DICTIONARY",
     "FUNCTION_LIST",
     "LIST",
+    "EVALUATED_LIST",
     "EMPTY_LIST",
     "LOOKUP_CHILD",
     "FUNCTION_APPLICATION",
@@ -151,6 +153,11 @@ struct EmptyString {
 };
 
 struct List {
+    Expression first;
+    Expression rest;
+};
+
+struct EvaluatedList {
     Expression first;
     Expression rest;
 };

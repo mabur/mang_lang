@@ -10,8 +10,8 @@ CodeRange addCodeRanges(Expression rest, Expression first) {
 }
 
 BinaryInput getBinaryInput(Expression expression) {
-    const auto list = getList(expression);
-    const auto rest = getList(list.rest);
+    const auto list = getEvaluatedList(expression);
+    const auto rest = getEvaluatedList(list.rest);
     return BinaryInput{list.first, rest.first};
 }
 
@@ -23,10 +23,18 @@ Expression putList(Expression rest, Expression first) {
     return makeList(addCodeRanges(first, rest), List{first, rest});
 }
 
+Expression putEvaluatedList(Expression rest, Expression first) {
+    return makeEvaluatedList(addCodeRanges(first, rest), EvaluatedList{first, rest});
+}
+
 Expression reverseString(CodeRange code, Expression string) {
     return leftFold(makeEmptyString(code, EmptyString{}), string, putString, EMPTY_STRING, getString);
 }
 
 Expression reverseList(CodeRange code, Expression list) {
     return leftFold(makeEmptyList(code, EmptyList{}), list, putList, EMPTY_LIST, getList);
+}
+
+Expression reverseEvaluatedList(CodeRange code, Expression list) {
+    return leftFold(makeEmptyList(code, EmptyList{}), list, putEvaluatedList, EMPTY_LIST, getEvaluatedList);
 }

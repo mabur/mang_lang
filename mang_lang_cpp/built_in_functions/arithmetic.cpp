@@ -29,14 +29,14 @@ double mulExpression(double left, Expression right) {
 
 Expression add(Expression in) {
     const auto init = 0.0;
-    const auto result = leftFold(init, in, addExpression, EMPTY_LIST, getList);
+    const auto result = leftFold(init, in, addExpression, EMPTY_LIST, getEvaluatedList);
     return makeNumber(result);
 }
 
 Expression mul(Expression in) {
 
     const auto init = 1.0;
-    const auto result = leftFold(init, in, mulExpression, EMPTY_LIST, getList);
+    const auto result = leftFold(init, in, mulExpression, EMPTY_LIST, getEvaluatedList);
     return makeNumber(result);
 }
 
@@ -61,11 +61,11 @@ bool lessOrEqual(Expression left, Expression right) {
 }
 
 Expression are_all_less(Expression in) {
-    return makeBoolean(allOfNeighbours(in, less, EMPTY_LIST, getList));
+    return makeBoolean(allOfNeighbours(in, less, EMPTY_LIST, getEvaluatedList));
 }
 
 Expression are_all_less_or_equal(Expression in) {
-    return makeBoolean(allOfNeighbours(in, lessOrEqual, EMPTY_LIST, getList));
+    return makeBoolean(allOfNeighbours(in, lessOrEqual, EMPTY_LIST, getEvaluatedList));
 }
 
 Expression sqrt(Expression in) {
