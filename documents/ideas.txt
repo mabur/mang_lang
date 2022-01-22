@@ -10,10 +10,8 @@ TODO:
       - Dictionaries
       - Functions
       - Lists
-    - Split structs for list and EvaluatedList
-    - Split structs for IterativeDictionary and Dictionary
-    - Store content of IterativeDictionary as array, for simple control flow while.
-    - Store content of evaluated Dictionary as hash-map, for fast lookup for big dicts and arrays.
+    - Store content of Dictionary as array, for simple control flow while.
+    - Store content of EvaluatedDictionary as hash-map, for fast lookup for big dicts and arrays.
     - Dictionaries with other keys than strings and dynamic lookup.
     - Built-in function for dynamic lookup of dictionaries: get!(key dictionary) get!(index dictionary)
     - Dictionaries as arrays with integer keys and dynamic lookups
