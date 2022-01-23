@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <tuple>
 #include <vector>
 
 struct Test {
@@ -13,12 +12,12 @@ struct Test {
     ~Test() {
         using namespace std;
         cout << endl << num_good_total << "/" << num_good_total + num_bad_total
-            << " tests successful in total. "
-            << "Duration " << std::fixed << std::setprecision(1)
-            << duration_total.count() << " seconds.";
+            << " tests successful in total. ";
         if (num_bad_total != 0) {
-            cout << num_bad_total << " TESTS FAILING!" << endl;
+            cout << num_bad_total << " TESTS FAILING! ";
         }
+        cout << "Duration " << std::fixed << std::setprecision(1)
+            << duration_total.count() << " seconds.";
     }
     size_t exitCode() {
         return num_bad_total;
