@@ -126,18 +126,12 @@ Expression evaluateList(
     return reverseEvaluatedList(code, output);
 }
 
-Expression lookupCurrentEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
-    const auto& definitions = dictionary.definitions.definitions;
-    const auto iterator = definitions.find(name);
-    return iterator == definitions.end() ? Expression{} : iterator->second;
-}
-
 Expression lookupDictionary(Expression expression, const std::string& name) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(name, "environment");
     }
     const auto d = getEvaluatedDictionary(expression);
-    const auto result = lookupCurrentEvaluatedDictionary(d, name);
+    const auto result = d.definitions.lookup(name);
     if (result.type != EMPTY) {
         return result;
     }
@@ -145,7 +139,7 @@ Expression lookupDictionary(Expression expression, const std::string& name) {
 }
 
 Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
-    const auto result = lookupCurrentEvaluatedDictionary(dictionary, name);
+    const auto result = dictionary.definitions.lookup(name);
     if (result.type != EMPTY) {
         return result;
     }

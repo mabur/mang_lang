@@ -195,6 +195,10 @@ struct Definitions {
             order[key] = order.size() - 1;
         }
     }
+    Expression lookup(const std::string key) const {
+        const auto iterator = definitions.find(key);
+        return iterator == definitions.end() ? Expression{} : iterator->second;
+    }
     std::vector<std::pair<std::string, Expression>> sorted() const {
         auto items = std::vector<std::pair<std::string, Expression>>{definitions.size()};
         for (const auto& item : definitions) {
