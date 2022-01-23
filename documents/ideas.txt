@@ -4,22 +4,22 @@ TODO:
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
     - Try new is-operator
+  * aoc algorithms in need:
+    - sort
+    - unique
+    - not unique
+    - Dynamic lookups of dictionary
+    - Dynamic dictionaries/hash-maps/sets for unique-check
   * Dynamic dictionary keys, as a way to model sets and arrays, 
-    - Reduce duplication for Lists, Strings, and future Evaluated Lists
     - Split structs for evaluated and non-evaluated for:
       - Dictionaries
-      - Functions
       - Lists
-    - Store content of Dictionary as array, for simple control flow while.
-    - Store content of EvaluatedDictionary as hash-map, for fast lookup for big dicts and arrays.
-      - What about order when serializing?
-      - Sort when serializing?
-        - Alphabetically?
-        - Chronologically? Keep extra value for this purpose.
-      - std::unordered_map<std::string, std::pair<size_t, Expression>>
-    - Dictionaries with other keys than strings and dynamic lookup.
+      - Functions
     - Built-in function for dynamic lookup of dictionaries: get!(key dictionary) get!(index dictionary)
-    - Dictionaries as arrays with integer keys and dynamic lookups
+    - Dictionaries with other keys than strings and dynamic lookup.
+        - Serialize keys to strings under the hood.
+        - Arrays as Dictionaries with integer keys and dynamic lookup.
+        - Add syntax for writing and reading of dynamic Dictionary items during construction.
 
     get_closer = in c out get!(c {
             ['('] = ')'
@@ -47,24 +47,9 @@ TODO:
       e = get!(dec!N result)
       f = get!((1 2) result)
   }
-
-  * Arrays as special mutable type, with shared mutable state among references.
-    - put. Let it be defined for arrays that have capacity and where the current reference is refering to the whole array and not a sub range. Otherwise run-time error.
-  * aoc algorithms in need:
-    - sort
-    - unique
-    - not unique
-    - Dynamic lookups of dictionary
-    - Dynamic dictionaries/hash-maps/sets for unique-check
-    - General dictionary keys using serializing to string under the hood.
   * Memory
     - 64 bit
     - Use less memory
-* Simplifications with new list:
-  - Merge new list and new string?
-  - Extract for_each for new lists and strings
-  - resolve mutable pointer in iterative dictionary evaluation
-  - remove shared_ptr from vector of expressions in factory
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Example programs:
   - Parsing Json
