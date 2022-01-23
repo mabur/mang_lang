@@ -185,17 +185,23 @@ struct Boolean {
 };
 
 using Statements = std::vector<Expression>;
-struct Definitions {
+
+class Definitions {
+private:
     std::unordered_map<std::string, Expression> definitions;
     std::unordered_map<std::string, size_t> order;
-    bool empty() const {return definitions.empty();}
-    void add(std::string key, Expression value) {
-        definitions[key] = value;
-        if (order.find(key) == order.end()) {
-            order[key] = order.size() - 1;
-        }
+public:
+    bool empty() const {
+        return definitions.empty();
     }
-    Expression lookup(const std::string key) const {
+    void add(const std::string& key, Expression value) {
+        auto& definition = definitions[key];
+        if (definition.type == EMPTY) {
+            order[key] = definitions.size() - 1;
+        }
+        definition = value;
+    }
+    Expression lookup(const std::string& key) const {
         const auto iterator = definitions.find(key);
         return iterator == definitions.end() ? Expression{} : iterator->second;
     }
