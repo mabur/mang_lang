@@ -145,6 +145,10 @@ struct Number {
     double value;
 };
 
+struct Boolean {
+    bool value;
+};
+
 struct String {
     Expression first;
     Expression rest;
@@ -178,10 +182,6 @@ struct WhileStatement {
 
 struct EndStatement {
     size_t while_index_;
-};
-
-struct Boolean {
-    bool value;
 };
 
 using Statements = std::vector<Expression>;
