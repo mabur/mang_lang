@@ -198,7 +198,6 @@ public:
 };
 
 struct Dictionary {
-    Expression environment;
     Statements statements;
 };
 
