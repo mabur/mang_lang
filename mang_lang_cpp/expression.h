@@ -191,29 +191,10 @@ private:
     std::unordered_map<std::string, Expression> definitions;
     std::unordered_map<std::string, size_t> order;
 public:
-    bool empty() const {
-        return definitions.empty();
-    }
-    void add(const std::string& key, Expression value) {
-        auto& definition = definitions[key];
-        if (definition.type == EMPTY) {
-            order[key] = definitions.size() - 1;
-        }
-        definition = value;
-    }
-    Expression lookup(const std::string& key) const {
-        const auto iterator = definitions.find(key);
-        return iterator == definitions.end() ? Expression{} : iterator->second;
-    }
-    std::vector<std::pair<std::string, Expression>> sorted() const {
-        auto items = std::vector<std::pair<std::string, Expression>>{definitions.size()};
-        for (const auto& item : definitions) {
-            const auto& key = item.first;
-            const auto& index = order.find(key)->second;
-            items[index] = item;
-        }
-        return items;
-    }
+    bool empty() const;
+    void add(const std::string& key, Expression value);
+    Expression lookup(const std::string& key) const;
+    std::vector<std::pair<std::string, Expression>> sorted() const;
 };
 
 struct Dictionary {
