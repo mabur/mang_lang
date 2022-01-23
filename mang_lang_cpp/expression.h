@@ -3,6 +3,7 @@
 #include <functional>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "parsing.h"
@@ -168,7 +169,6 @@ struct EmptyList {
 struct Definition {
     Expression name;
     Expression expression;
-    size_t name_index_;
 };
 
 struct WhileStatement {
@@ -185,6 +185,26 @@ struct Boolean {
 };
 
 using Statements = std::vector<Expression>;
+struct Definitions {
+    std::unordered_map<std::string, Expression> definitions;
+    std::unordered_map<std::string, size_t> order;
+    bool empty() const {return definitions.empty();}
+    void add(std::string key, Expression value) {
+        definitions[key] = value;
+        if (order.find(key) == order.end()) {
+            order[key] = order.size() - 1;
+        }
+    }
+    std::vector<std::pair<std::string, Expression>> sorted() const {
+        auto items = std::vector<std::pair<std::string, Expression>>{definitions.size()};
+        for (const auto& item : definitions) {
+            const auto& key = item.first;
+            const auto& index = order.find(key)->second;
+            items[index] = item;
+        }
+        return items;
+    }
+};
 
 struct Dictionary {
     Expression environment;
@@ -193,5 +213,5 @@ struct Dictionary {
 
 struct EvaluatedDictionary {
     Expression environment;
-    Statements statements;
+    Definitions definitions;
 };

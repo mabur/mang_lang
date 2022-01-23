@@ -129,7 +129,6 @@ std::vector<size_t> nameIndices(const Statements& statements) {
 Statements setContext(const Statements& statements) {
     const auto while_indices = whileIndices(statements);
     const auto end_indices = endIndices(statements);
-    const auto name_indices = nameIndices(statements);
 
     auto result = Statements{};
 
@@ -141,7 +140,6 @@ Statements setContext(const Statements& statements) {
             result.push_back(makeDefinition(code, {
                 statement.name,
                 statement.expression,
-                name_indices[i]
             }));
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);

@@ -61,17 +61,14 @@ std::string serializeDictionary(const Dictionary& dictionary) {
 }
 
 std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) {
-    auto result = std::string{};
-    result += '{';
-    for (const auto& statement : dictionary.statements) {
-        result += serialize(statement);
+    if (dictionary.definitions.empty()) {
+        return "{}";
     }
-    if (dictionary.statements.empty()) {
-        result += '}';
+    auto result = std::string{"{"};
+    for (const auto& pair : dictionary.definitions.sorted()) {
+        result += pair.first + "=" + serialize(pair.second) + " ";
     }
-    else {
-        result.back() = '}';
-    }
+    result.back() = '}';
     return result;
 }
 

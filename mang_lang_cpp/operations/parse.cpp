@@ -102,8 +102,7 @@ Expression parseNamedElement(CodeRange code) {
     code.first = end(expression);
     code = parseWhiteSpace(code);
     return makeDefinition(
-        CodeRange{first, code.first},
-        Definition{std::move(name), expression, 0}
+        CodeRange{first, code.first}, Definition{std::move(name), expression}
     );
 }
 

@@ -56,27 +56,10 @@ Expression evaluateIs(
     return evaluate(is_expression.expression_else, environment);
 }
 
-size_t numNames(const Statements& statements) {
-    if (statements.empty()) {
-        return 0;
-    }
-    auto max_index = size_t{0};
-    for (const auto& statement : statements) {
-        if (statement.type == DEFINITION) {
-            max_index = std::max(max_index, getDefinition(statement).name_index_);
-        }
-    }
-    return max_index + 1;
-}
-
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
-    const auto num_names = numNames(dictionary.statements);
-    const auto result = new EvaluatedDictionary{
-        environment,
-        Statements(num_names, Expression{})
-    };
+    const auto result = new EvaluatedDictionary{environment, {}};
     const auto dictionary_result = makeEvaluatedDictionary(CodeRange{}, result);
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
@@ -84,13 +67,10 @@ Expression evaluateDictionary(
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            result->statements.at(definition.name_index_) = makeDefinition(
-                statement.range,
-                {
-                    definition.name,
-                    evaluate(definition.expression, dictionary_result),
-                    definition.name_index_
-            });
+            const auto name = getName(definition.name).value;
+            result->definitions.add(name, evaluate(
+                definition.expression, dictionary_result
+            ));
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -147,15 +127,9 @@ Expression evaluateList(
 }
 
 Expression lookupCurrentEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
-    for (const auto& statement : dictionary.statements) {
-        if (statement.type == DEFINITION) {
-            const auto definition = getDefinition(statement);
-            if (getName(definition.name).value == name) {
-                return definition.expression;
-            }
-        }
-    }
-    return Expression{};
+    const auto& definitions = dictionary.definitions.definitions;
+    const auto iterator = definitions.find(name);
+    return iterator == definitions.end() ? Expression{} : iterator->second;
 }
 
 Expression lookupDictionary(Expression expression, const std::string& name) {
@@ -213,11 +187,10 @@ Expression evaluateLookupChild(
 
 Expression applyFunction(const Function& function, Expression input) {
 
-    const auto statements = Statements{
-        makeDefinition(CodeRange{}, {function.input_name, input, 0})
-    };
+    auto definitions = Definitions{};
+    definitions.add(getName(function.input_name).value, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function.environment, statements}
+        new EvaluatedDictionary{function.environment, definitions}
     );
     return evaluate(function.body, middle);
 }
@@ -237,19 +210,16 @@ Expression applyFunctionDictionary(
 
 Expression applyFunctionList(const FunctionList& function_list, Expression input
 ) {
-    auto statements = Statements{};
+    auto definitions = Definitions{};
     auto expression = input;
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
         const auto list = getEvaluatedList(expression);
-        statements.push_back(makeDefinition(CodeRange{}, {
-            function_list.input_names[i],
-            list.first,
-            i
-        }));
+        const auto name = getName(function_list.input_names[i]).value;
+        definitions.add(name, list.first);
         expression = list.rest;
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function_list.environment, statements}
+        new EvaluatedDictionary{function_list.environment, definitions}
     );
     return evaluate(function_list.body, middle);
 }
