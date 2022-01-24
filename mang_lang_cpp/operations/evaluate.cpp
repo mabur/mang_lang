@@ -68,9 +68,21 @@ Expression evaluateDictionary(
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
             const auto name = getName(definition.name).value;
-            result->definitions.add(name, evaluate(
+            const auto value = evaluate(
                 definition.expression, dictionary_result
+            );
+            result->definitions.add(name, value);
+            i += 1;
+        }
+        else if (type == DYNAMIC_DEFINITION) {
+            const auto dynamic_definition = getDynamicDefinition(statement);
+            const auto name = serialize(evaluate(
+                dynamic_definition.dynamic_name, dictionary_result
             ));
+            const auto value = evaluate(
+                dynamic_definition.expression, dictionary_result
+            );
+            result->definitions.add(name, value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {

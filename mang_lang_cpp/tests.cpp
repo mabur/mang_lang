@@ -149,6 +149,13 @@ int main() {
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
         {"{i=2 sum=0 while i sum=add!(sum i) i=dec!i end}", "{i=0 sum=3}"},
         {"{i=1000 sum=0 while i sum=add!(sum i) i=dec!i end}", "{i=0 sum=500500}"},
+        {"{i=1 while i i=dec!i end [i]=i}", "{i=0 [0]=0}"},
+        {"{i=2 while i i=dec!i end [i]=i}", "{i=0 [0]=0}"},
+        {"{i=1 while i i=dec!i [i]=i end}", "{i=0 [0]=0}"},
+        {"{[0]=1 i=2 while i i=dec!i end}", "{[0]=1 i=0}"},
+        {"{i=2 while i i=dec!i [i]=i end}", "{i=0 [1]=1 [0]=0}"},
+        {"{i=1 while i [i]=i i=dec!i end}", "{i=0 [1]=1}"},
+        {"{i=2 while i [i]=i i=dec!i end}", "{i=0 [2]=2 [1]=1}"},
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},
@@ -159,6 +166,12 @@ int main() {
         {"{ a = 1 }", "{a=1}"},
         {"{a=1 b=2}", "{a=1 b=2}"},
         {"{ a = 1  b = 2 }", "{a=1 b=2}"},
+        {"{[1]=2}", "{[1]=2}"},
+        {"{a=1 [a]=2}", "{a=1 [1]=2}"},
+        {"{a=1 [a]=2 a=dec!a [a]=3}", "{a=0 [1]=2 [0]=3}"},
+    });
+    test.reformat("dictionary", {
+        {"{[1]=2}", "{[1]=2}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},

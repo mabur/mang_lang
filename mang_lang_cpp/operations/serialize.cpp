@@ -34,7 +34,12 @@ std::string serializeIs(const IsExpression& is_expression) {
 }
 
 std::string serializeDefinition(const Definition& element) {
-    return serializeName(element.name) + '=' + serialize(element.expression) + ' ';
+    return getName(element.name).value + '=' + serialize(element.expression) + ' ';
+}
+
+std::string serializeDynamicDefinition(const DynamicDefinition& element) {
+    return '[' + serialize(element.dynamic_name) + ']' + '=' +
+        serialize(element.expression) + ' ';
 }
 
 std::string serializeWhileStatement(const WhileStatement& element) {
@@ -66,7 +71,12 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     }
     auto result = std::string{"{"};
     for (const auto& pair : dictionary.definitions.sorted()) {
-        result += pair.first + "=" + serialize(pair.second) + " ";
+        const auto c = pair.first[0];
+        if (std::isalpha(c) or c == '_') {
+            result += pair.first + "=" + serialize(pair.second) + " ";
+        } else {
+            result += "[" + pair.first + "]" + "=" + serialize(pair.second) + " ";
+        }
     }
     result.back() = '}';
     return result;
@@ -171,6 +181,7 @@ std::string serialize(Expression expression) {
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
+        case DYNAMIC_DEFINITION: return serializeDynamicDefinition(getDynamicDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
         case FUNCTION: return serializeFunction(getFunction(expression));

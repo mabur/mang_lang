@@ -106,6 +106,25 @@ Expression parseNamedElement(CodeRange code) {
     );
 }
 
+Expression parseDynamicNamedElement(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '[');
+    code = parseWhiteSpace(code);
+    auto dynamic_name = parseExpression(code);
+    code.first = end(dynamic_name);
+    code = parseWhiteSpace(code);
+    code = parseCharacter(code, ']');
+    code = parseWhiteSpace(code);
+    code = parseCharacter(code, '=');
+    code = parseWhiteSpace(code);
+    auto expression = parseExpression(code);
+    code.first = end(expression);
+    code = parseWhiteSpace(code);
+    return makeDynamicDefinition(
+        CodeRange{first, code.first}, DynamicDefinition{dynamic_name, expression}
+    );
+}
+
 Expression parseWhileStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "while");
@@ -131,6 +150,9 @@ Expression parseDictionaryElement(CodeRange code) {
     }
     if (isKeyword(code, "end")) {
         return parseEndStatement(code);
+    }
+    if (::startsWith(code, '[')) {
+        return parseDynamicNamedElement(code);
     }
     return parseNamedElement(code);
 }

@@ -28,6 +28,7 @@ std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<EndStatement> end_statements;
 std::vector<Definition> definitions;
+std::vector<DynamicDefinition> dynamic_definitions;
 std::vector<String> strings;
 std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
@@ -60,7 +61,7 @@ std::vector<size_t> whileIndices(const Statements& statements) {
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
             while_indices.push_back(1); // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -84,7 +85,7 @@ std::vector<size_t> endIndices(const Statements& statements) {
     auto end_indices = std::vector<size_t>(statements.size());
     for (size_t i = statements.size() - 1; i < statements.size(); --i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
             end_indices[i] = 0; // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -135,12 +136,8 @@ Statements setContext(const Statements& statements) {
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
         const auto code = statements[i].range;
-        if (type == DEFINITION) {
-            const auto statement = getDefinition(statements[i]);
-            result.push_back(makeDefinition(code, {
-                statement.name,
-                statement.expression,
-            }));
+        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+            result.push_back(statements[i]);
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
             result.push_back(makeWhileStatement(code, {
@@ -252,6 +249,10 @@ Expression makeDefinition(CodeRange code, Definition expression) {
     return makeExpression(code, expression, DEFINITION, definitions);
 }
 
+Expression makeDynamicDefinition(CodeRange code, DynamicDefinition expression) {
+    return makeExpression(code, expression, DYNAMIC_DEFINITION, dynamic_definitions);
+}
+
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
     return makeExpression(code, expression, WHILE_STATEMENT, while_statements);
 }
@@ -308,6 +309,10 @@ typename ArrayType::value_type getExpression(
 
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
+}
+
+DynamicDefinition getDynamicDefinition(Expression expression) {
+    return getExpression(expression, DYNAMIC_DEFINITION, dynamic_definitions);
 }
 
 WhileStatement getWileStatement(Expression expression) {

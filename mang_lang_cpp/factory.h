@@ -11,6 +11,7 @@ void clearMemory();
 std::string getLog();
 
 Definition getDefinition(Expression expression);
+DynamicDefinition getDynamicDefinition(Expression expression);
 WhileStatement getWileStatement(Expression expression);
 EndStatement getEndStatement(Expression expression);
 Number getNumber(Expression expression);
@@ -52,6 +53,7 @@ Expression makeFunctionApplication(CodeRange code, FunctionApplication expressio
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression);
 Expression makeName(CodeRange code, Name expression);
 Expression makeDefinition(CodeRange code, Definition expression);
+Expression makeDynamicDefinition(CodeRange code, DynamicDefinition expression);
 Expression makeWhileStatement(CodeRange code, WhileStatement expression);
 Expression makeEndStatement(CodeRange code, EndStatement expression);
 Expression makeString(CodeRange code, String expression);
