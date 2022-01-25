@@ -20,6 +20,7 @@ TODO:
         - Serialize keys to strings under the hood.
         - Arrays as Dictionaries with integer keys and dynamic lookup.
         - Add syntax for writing and reading of dynamic Dictionary items during construction.
+        - How to handle strings and extra ""
 
     get_closer = in c out get!(c {
             ['('] = ')'
