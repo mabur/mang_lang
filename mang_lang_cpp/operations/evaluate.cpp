@@ -250,6 +250,13 @@ Expression evaluateLookupSymbol(
     return lookupDictionary(environment, getName(lookup_symbol.name).value);
 }
 
+Expression evaluateDynamicLookupSymbol(
+    const DynamicLookupSymbol& lookup_symbol, Expression environment
+) {
+    const auto name = serialize(evaluate(lookup_symbol.expression, environment));
+    return lookupDictionary(environment, name);
+}
+
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
         case NUMBER: return expression;
@@ -272,6 +279,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
+        case DYNAMIC_LOOKUP_SYMBOL: return evaluateDynamicLookupSymbol(getDynamicLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
 }

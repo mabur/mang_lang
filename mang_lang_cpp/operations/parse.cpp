@@ -259,6 +259,16 @@ Expression parseList(CodeRange code) {
     return reverseList(CodeRange{first, code.first}, list);
 }
 
+Expression parseDynamicLookupSymbol(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '[');
+    const auto expression = parseExpression(code);
+    code.first = end(expression);
+    code = parseWhiteSpace(code);
+    code = parseCharacter(code, ']');
+    return makeDynamicLookupSymbol(CodeRange{first, code.first}, {expression});
+}
+
 Expression parseSubstitution(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
@@ -349,6 +359,7 @@ Expression parseExpression(CodeRange code) {
         if (c == '{') {return parseDictionary(code);}
         if (c == '\'') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
+        if (c == '[') {return parseDynamicLookupSymbol(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}
         if (isKeyword(code, "nan")) {return parseNan(code);}

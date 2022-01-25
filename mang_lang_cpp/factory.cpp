@@ -23,6 +23,7 @@ std::vector<EmptyList> empty_lists;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
+std::vector<DynamicLookupSymbol> dynamic_symbol_lookups;
 std::vector<Name> names;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
@@ -241,6 +242,10 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
+Expression makeDynamicLookupSymbol(CodeRange code, DynamicLookupSymbol expression) {
+    return makeExpression(code, expression, DYNAMIC_LOOKUP_SYMBOL, dynamic_symbol_lookups);
+}
+
 Expression makeName(CodeRange code, Name expression) {
     return makeExpression(code, expression, NAME, names);
 }
@@ -386,6 +391,10 @@ FunctionApplication getFunctionApplication(Expression expression) {
 
 LookupSymbol getLookupSymbol(Expression expression) {
     return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
+}
+
+DynamicLookupSymbol getDynamicLookupSymbol(Expression expression) {
+    return getExpression(expression, DYNAMIC_LOOKUP_SYMBOL, dynamic_symbol_lookups);
 }
 
 Name getName(Expression expression) {

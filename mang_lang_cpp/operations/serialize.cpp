@@ -152,6 +152,10 @@ std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
     return serializeName(lookup_symbol.name);
 }
 
+std::string serializeDynamicLookupSymbol(const DynamicLookupSymbol& dynamic_lookup_symbol) {
+    return "[" + serialize(dynamic_lookup_symbol.expression) + "]";
+}
+
 std::string serializeNumber(const Number& number) {
     std::stringstream s;
     s.precision(std::numeric_limits<double>::digits10 + 1);
@@ -194,6 +198,7 @@ std::string serialize(Expression expression) {
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
+        case DYNAMIC_LOOKUP_SYMBOL: return serializeDynamicLookupSymbol(getDynamicLookupSymbol(expression));
         case NAME: return serializeName(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
         case BOOLEAN: return serializeBoolean(getBoolean(expression));

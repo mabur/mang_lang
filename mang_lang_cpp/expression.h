@@ -24,6 +24,7 @@ enum ExpressionType {
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
+    DYNAMIC_LOOKUP_SYMBOL,
     NAME,
     DEFINITION,
     DYNAMIC_DEFINITION,
@@ -52,6 +53,7 @@ const auto NAMES = std::vector<std::string>{
     "LOOKUP_CHILD",
     "FUNCTION_APPLICATION",
     "LOOKUP_SYMBOL",
+    "DYNAMIC_LOOKUP_SYMBOL",
     "NAME",
     "DEFINITION",
     "DYNAMIC_DEFINITION",
@@ -141,6 +143,10 @@ struct FunctionApplication {
 
 struct LookupSymbol {
     Expression name;
+};
+
+struct DynamicLookupSymbol {
+    Expression expression;
 };
 
 struct Number {
