@@ -15,12 +15,15 @@ TODO:
       - Dictionaries
       - Lists
       - Functions
-    - Built-in function for dynamic lookup of dictionaries: get!(key dictionary) get!(index dictionary)
+    - Built-in function for dynamic lookup of dictionaries: get!(name dictionary) get!(index dictionary)
+    - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
+    - Built-in functions for gettting all: keys/names, values, items from a dictionary. Last two can be implemented using the first.
     - Dictionaries with other keys than strings and dynamic lookup.
         - Serialize keys to strings under the hood.
         - Arrays as Dictionaries with integer keys and dynamic lookup.
         - Add syntax for writing and reading of dynamic Dictionary items during construction.
         - How to handle strings and extra ""
+    - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
 
     get_closer = in c out get!(c {
             ['('] = ')'
