@@ -618,6 +618,9 @@ int main() {
         {R"(put!('a' "b"))", R"("ab")"},
         {R"(put!('a' "bc"))", R"("abc")"},
     });
+    test.evaluate("get dictionary", {
+        {R"(get!(0 {[0]=1}))", R"(1)"},
+    });
     test.evaluate("inc", {
         {"inc!0", "1"},
     });

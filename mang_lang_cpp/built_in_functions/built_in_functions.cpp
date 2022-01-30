@@ -4,6 +4,7 @@
 
 #include "../factory.h"
 #include "arithmetic.h"
+#include "dictionary.h"
 #include "list.h"
 
 Expression define(std::function<Expression(Expression)> function) {
@@ -14,6 +15,7 @@ Expression builtIns() {
     auto definitions = Definitions{};
     definitions.add("clear", define(list_functions::clear));
     definitions.add("put", define(list_functions::put));
+    definitions.add("get", define(dictionary_functions::get));
     definitions.add("add", define(arithmetic::add));
     definitions.add("mul", define(arithmetic::mul));
     definitions.add("sub", define(arithmetic::sub));

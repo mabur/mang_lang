@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(shared
         built_in_functions/arithmetic.cpp
         built_in_functions/built_in_functions.cpp
+        built_in_functions/dictionary.cpp
         built_in_functions/list.cpp
         operations/boolean.cpp
         operations/evaluate.cpp
