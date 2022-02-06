@@ -23,6 +23,8 @@ TODO:
         - Arrays as Dictionaries with integer keys and dynamic lookup.
         - Add syntax for writing and reading of dynamic Dictionary items during construction.
         - How to handle strings and extra ""
+        - Not all strings are valid as names.
+        - "Evaluate" function as general solution that can be used to convert strings to names and general code.
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
 
     get_closer = in c out get!(c {
