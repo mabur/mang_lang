@@ -25,6 +25,7 @@ std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
 std::vector<DynamicLookupSymbol> dynamic_symbol_lookups;
 std::vector<Name> names;
+std::vector<Label> labels;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<EndStatement> end_statements;
@@ -250,6 +251,10 @@ Expression makeName(CodeRange code, Name expression) {
     return makeExpression(code, expression, NAME, names);
 }
 
+Expression makeLabel(CodeRange code, Label expression) {
+    return makeExpression(code, expression, LABEL, labels);
+}
+
 Expression makeDefinition(CodeRange code, Definition expression) {
     return makeExpression(code, expression, DEFINITION, definitions);
 }
@@ -399,6 +404,10 @@ DynamicLookupSymbol getDynamicLookupSymbol(Expression expression) {
 
 Name getName(Expression expression) {
     return getExpression(expression, NAME, names);
+}
+
+Label getLabel(Expression expression) {
+    return getExpression(expression, LABEL, labels);
 }
 
 String getString(Expression expression) {

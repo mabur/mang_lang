@@ -32,6 +32,7 @@ FunctionApplication getFunctionApplication(Expression expression);
 LookupSymbol getLookupSymbol(Expression expression);
 DynamicLookupSymbol getDynamicLookupSymbol(Expression expression);
 Name getName(Expression expression);
+Label getLabel(Expression expression);
 String getString(Expression expression);
 EmptyString getEmptyString(Expression expression);
 Boolean getBoolean(Expression expression);
@@ -54,6 +55,7 @@ Expression makeFunctionApplication(CodeRange code, FunctionApplication expressio
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression);
 Expression makeDynamicLookupSymbol(CodeRange code, DynamicLookupSymbol expression);
 Expression makeName(CodeRange code, Name expression);
+Expression makeLabel(CodeRange code, Label expression);
 Expression makeDefinition(CodeRange code, Definition expression);
 Expression makeDynamicDefinition(CodeRange code, DynamicDefinition expression);
 Expression makeWhileStatement(CodeRange code, WhileStatement expression);

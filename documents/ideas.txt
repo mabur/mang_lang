@@ -4,6 +4,7 @@ TODO:
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
     - Try new is-operator
+    - Try to implement calculation of most common words in a text.
   * aoc algorithms in need:
     - sort
     - unique
@@ -25,6 +26,7 @@ TODO:
         - How to handle strings and extra ""
         - Not all strings are valid as names.
         - "Evaluate" function as general solution that can be used to convert strings to names and general code.
+        - Add Label object with some syntax like #label or :label or 'label'
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
 
     get_closer = in c out get!(c {
