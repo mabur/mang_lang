@@ -190,10 +190,10 @@ Manglang has a single number type which is a 64 bit float:
 
 <h2 id="characters">1.b. Characters</h2>
 <p>
-A single ascii character is written as:
+A single ascii character is written with <code>\</code> as prefix:
 </p>
 <pre>
-'a'
+\a
 </pre>
 
 <h2 id="booleans">1.c. Booleans</h2>
@@ -219,7 +219,7 @@ Manglang has three different kinds of containers which can store other data insi
 Dictionaries are used to associate names / symbols with expressions:
 </p>
 <pre>
-{pi=3.14 first_letter='A'}
+{pi=3.14 first_letter=\A}
 </pre>
 <p>
 Manglang doesn't care about extra whitespace so the program above can also be written as:
@@ -227,7 +227,7 @@ Manglang doesn't care about extra whitespace so the program above can also be wr
 <pre>
 {
   pi = 1
-  first_letter = 'A'
+  first_letter = \A
 }
 </pre>
 <p>
@@ -388,14 +388,14 @@ They can be seen as stacks of characters. Example of a program using functions o
   b = top@a
   c = rest@a
   d = reverse!a
-  e = put!('E' a)
+  e = put!(\E a)
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
   a = "Manglang"
-  b = 'M'
+  b = \M
   c = "anglang"
   d = "gnalgnaM"
   e = "EManglang"
@@ -446,35 +446,35 @@ This program is evaluated to:
 
 <h2 id="is">4.b. Is</h2>
 <p>
-The <code>is</code> operator is used to check for equality among many alternatives. It is similar to switch-case or pattern matching in other languages. Consider this example:
+The <code>is</code> operator is used to check for equality among many alternatives. It is similar to switch-case or pattern matching in other languages. Consider this example where we use the is operator to find the corresponding characters:
 </p>
 <pre>
 {
-  opening = '{'
+  opening = \{
   closing = is opening
-    '(' then ')'
-    '[' then ']'
-    '{' then '}'
-    '<' then '>'
-    else  '.'
+    \( then \)
+    \[ then \]
+    \{ then \}
+    \< then \>
+    else  \.
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
-  opening = '{'
-  closing = '}'
+  opening = \{
+  closing = \}
 }
 </pre>
 The <code>is</code> operator can be seen as syntactic sugar for a more verbose combination of the <code>if</code> operator and the <code>equal</code> function:
 <pre>
 {
-  opening = '{'
-  closing = if equal?(opening '(') then ')'
-    else if equal?(opening '{') then '}'
-    else if equal?(opening '[') then ']'
-    else if equal?(opening '<') then '>'
-    else '.'
+  opening = \{
+  closing = if equal?(opening \() then \)
+    else if equal?(opening \{) then \}
+    else if equal?(opening \[) then \]
+    else if equal?(opening \<) then \>
+    else \.
 }
 </pre>
 

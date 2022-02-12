@@ -28,10 +28,10 @@ TODO:
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
 
     get_closer = in c out get!(c {
-            ['('] = ')'
-            ['{'] = '}'
-            ['['] = ']'
-            ['<'] = '>'
+            [\(] = \)
+            [\{] = \}
+            [\[] = \]
+            [\<] = \>
         })
   {
       N = 10

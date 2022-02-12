@@ -99,15 +99,15 @@ int main() {
         {"+1.0", "1"},
     });
     test.evaluate("character", {
-        {R"('a')", R"('a')"},
-        {R"('1')", R"('1')"},
-        {R"('+')", R"('+')"},
-        {R"('-')", R"('-')"},
-        {R"('"')", R"('"')"},
-        {R"(')')", R"(')')"},
-        {R"(')')", R"(')')"},
-        {R"('{')", R"('{')"},
-        {R"('}')", R"('}')"},
+        {R"(\a)", R"(\a)"},
+        {R"(\1)", R"(\1)"},
+        {R"(\+)", R"(\+)"},
+        {R"(\-)", R"(\-)"},
+        {R"(\")", R"(\")"},
+        {R"(\))", R"(\))"},
+        {R"(\))", R"(\))"},
+        {R"(\{)", R"(\{)"},
+        {R"(\})", R"(\})"},
     });
     test.evaluate("boolean", {
         {"yes", "yes"},
@@ -362,20 +362,20 @@ int main() {
         {"sqrt!4", "2"},
     });
     test.evaluate("number", {
-        {"number!'0'", "48"},
-        {"number!'9'", "57"},
-        {"number!'A'", "65"},
-        {"number!'Z'", "90"},
-        {"number!'a'", "97"},
-        {"number!'z'", "122"},
+        {R"(number!\0)", "48"},
+        {R"(number!\9)", "57"},
+        {R"(number!\A)", "65"},
+        {R"(number!\Z)", "90"},
+        {R"(number!\a)", "97"},
+        {R"(number!\z)", "122"},
     });
     test.evaluate("character", {
-        {"character!48", "'0'"},
-        {"character!57", "'9'"},
-        {"character!65", "'A'"},
-        {"character!90", "'Z'"},
-        {"character!97", "'a'"},
-        {"character!122", "'z'"},
+        {"character!48", R"(\0)"},
+        {"character!57", R"(\9)"},
+        {"character!65", R"(\A)"},
+        {"character!90", R"(\Z)"},
+        {"character!97", R"(\a)"},
+        {"character!122", R"(\z)"},
     });
     test.evaluate("boolean", {
         {"boolean!-2", "yes"},
@@ -466,16 +466,16 @@ int main() {
         {"unequal?(1 1)", "no"},
     });
     test.evaluate("equal character", {
-        {"equal?('a' 'a')", "yes"},
-        {"equal?('a' 'b')", "no"},
-        {"equal?('b' 'a')", "no"},
-        {"equal?('b' 'b')", "yes"},
+        {R"(equal?(\a \a))", "yes"},
+        {R"(equal?(\a \b))", "no"},
+        {R"(equal?(\b \a))", "no"},
+        {R"(equal?(\b \b))", "yes"},
     });
     test.evaluate("unequal character", {
-        {"unequal?('a' 'a')", "no"},
-        {"unequal?('a' 'b')", "yes"},
-        {"unequal?('b' 'a')", "yes"},
-        {"unequal?('b' 'b')", "no"},
+        {R"(unequal?(\a \a))", "no"},
+        {R"(unequal?(\a \b))", "yes"},
+        {R"(unequal?(\b \a))", "yes"},
+        {R"(unequal?(\b \b))", "no"},
     });
     test.evaluate("equal boolean", {
         {"equal?(yes yes)", "yes"},
@@ -586,8 +586,8 @@ int main() {
         {"top@(3 4)", "3"},
     });
     test.evaluate("first string", {
-        {R"(top@"b")", R"('b')"},
-        {R"(top@"ab")", R"('a')"},
+        {R"(top@"b")", R"(\b)"},
+        {R"(top@"ab")", R"(\a)"},
     });
     test.evaluate("rest list", {
         {"rest@(4)", "()"},
@@ -617,9 +617,9 @@ int main() {
         {"put!(4 (6 8))", "(4 6 8)"},
     });
     test.evaluate("put string", {
-        {R"(put!('a' ""))", R"("a")"},
-        {R"(put!('a' "b"))", R"("ab")"},
-        {R"(put!('a' "bc"))", R"("abc")"},
+        {R"(put!(\a ""))", R"("a")"},
+        {R"(put!(\a "b"))", R"("ab")"},
+        {R"(put!(\a "bc"))", R"("abc")"},
     });
     test.evaluate("get dictionary", {
         {R"(get!(0 {[0]=1}))", R"(1)"},
@@ -632,64 +632,64 @@ int main() {
         {"dec!0", "-1"},
     });
     test.evaluate("is_digit", {
-        {"is_digit?'A'", "no"},
-        {"is_digit?'Z'", "no"},
-        {"is_digit?'a'", "no"},
-        {"is_digit?'z'", "no"},
-        {"is_digit?'0'", "yes"},
-        {"is_digit?'9'", "yes"},
+        {R"(is_digit?\A)", "no"},
+        {R"(is_digit?\Z)", "no"},
+        {R"(is_digit?\a)", "no"},
+        {R"(is_digit?\z)", "no"},
+        {R"(is_digit?\0)", "yes"},
+        {R"(is_digit?\9)", "yes"},
     });
     test.evaluate("is_upper", {
-        {"is_upper?'A'", "yes"},
-        {"is_upper?'Z'", "yes"},
-        {"is_upper?'a'", "no"},
-        {"is_upper?'z'", "no"},
-        {"is_upper?'0'", "no"},
-        {"is_upper?'9'", "no"},
+        {R"(is_upper?\A)", "yes"},
+        {R"(is_upper?\Z)", "yes"},
+        {R"(is_upper?\a)", "no"},
+        {R"(is_upper?\z)", "no"},
+        {R"(is_upper?\0)", "no"},
+        {R"(is_upper?\9)", "no"},
     });
     test.evaluate("is_lower", {
-        {"is_lower?'A'", "no"},
-        {"is_lower?'Z'", "no"},
-        {"is_lower?'a'", "yes"},
-        {"is_lower?'z'", "yes"},
-        {"is_lower?'0'", "no"},
-        {"is_lower?'9'", "no"},
+        {R"(is_lower?\A)", "no"},
+        {R"(is_lower?\Z)", "no"},
+        {R"(is_lower?\a)", "yes"},
+        {R"(is_lower?\z)", "yes"},
+        {R"(is_lower?\0)", "no"},
+        {R"(is_lower?\9)", "no"},
     });
     test.evaluate("is_letter", {
-        {"is_letter?'A'", "yes"},
-        {"is_letter?'Z'", "yes"},
-        {"is_letter?'a'", "yes"},
-        {"is_letter?'z'", "yes"},
-        {"is_letter?'0'", "no"},
-        {"is_letter?'9'", "no"},
+        {R"(is_letter?\A)", "yes"},
+        {R"(is_letter?\Z)", "yes"},
+        {R"(is_letter?\a)", "yes"},
+        {R"(is_letter?\z)", "yes"},
+        {R"(is_letter?\0)", "no"},
+        {R"(is_letter?\9)", "no"},
     });
     test.evaluate("to_upper", {
-        {"to_upper!'A'", "'A'"},
-        {"to_upper!'Z'", "'Z'"},
-        {"to_upper!'a'", "'A'"},
-        {"to_upper!'z'", "'Z'"},
-        {"to_upper!'0'", "'0'"},
-        {"to_upper!'9'", "'9'"},
+        {R"(to_upper!\A)", R"(\A)"},
+        {R"(to_upper!\Z)", R"(\Z)"},
+        {R"(to_upper!\a)", R"(\A)"},
+        {R"(to_upper!\z)", R"(\Z)"},
+        {R"(to_upper!\0)", R"(\0)"},
+        {R"(to_upper!\9)", R"(\9)"},
     });
     test.evaluate("to_lower", {
-        {"to_lower!'A'", "'a'"},
-        {"to_lower!'Z'", "'z'"},
-        {"to_lower!'a'", "'a'"},
-        {"to_lower!'z'", "'z'"},
-        {"to_lower!'0'", "'0'"},
-        {"to_lower!'9'", "'9'"},
+        {R"(to_lower!\A)", R"(\a)"},
+        {R"(to_lower!\Z)", R"(\z)"},
+        {R"(to_lower!\a)", R"(\a)"},
+        {R"(to_lower!\z)", R"(\z)"},
+        {R"(to_lower!\0)", R"(\0)"},
+        {R"(to_lower!\9)", R"(\9)"},
     });
     test.evaluate("parse_digit", {
-        {"parse_digit!'0'", "0"},
-        {"parse_digit!'1'", "1"},
-        {"parse_digit!'2'", "2"},
-        {"parse_digit!'3'", "3"},
-        {"parse_digit!'4'", "4"},
-        {"parse_digit!'5'", "5"},
-        {"parse_digit!'6'", "6"},
-        {"parse_digit!'7'", "7"},
-        {"parse_digit!'8'", "8"},
-        {"parse_digit!'9'", "9"},
+        {R"(parse_digit!\0)", "0"},
+        {R"(parse_digit!\1)", "1"},
+        {R"(parse_digit!\2)", "2"},
+        {R"(parse_digit!\3)", "3"},
+        {R"(parse_digit!\4)", "4"},
+        {R"(parse_digit!\5)", "5"},
+        {R"(parse_digit!\6)", "6"},
+        {R"(parse_digit!\7)", "7"},
+        {R"(parse_digit!\8)", "8"},
+        {R"(parse_digit!\9)", "9"},
     });
     test.evaluate("range", {
         {"range!0", "()"},
@@ -718,10 +718,10 @@ int main() {
         {"count_item!(1 (1 0 1))", "2"},
     });
     test.evaluate("count_item string", {
-        {R"(count_item!('a' ""))", "0"},
-        {R"(count_item!('a' "a"))", "1"},
-        {R"(count_item!('a' "aa"))", "2"},
-        {R"(count_item!('a' "aba"))", "2"},
+        {R"(count_item!(\a ""))", "0"},
+        {R"(count_item!(\a "a"))", "1"},
+        {R"(count_item!(\a "aa"))", "2"},
+        {R"(count_item!(\a "aba"))", "2"},
     });
     test.evaluate("count_if list", {
         {"count_if!(in x out 0 ())", "0"},
@@ -736,8 +736,8 @@ int main() {
         {R"(count_if!(in x out 0 "a"))", "0"},
         {R"(count_if!(in x out 1 ""))", "0"},
         {R"(count_if!(in x out 1 "a"))", "1"},
-        {R"(count_if!(in x out equal?(x 'c') "abc"))", "1"},
-        {R"(count_if!(in x out equal?(x 'c') "cbc"))", "2"},
+        {R"(count_if!(in x out equal?(x \c) "abc"))", "1"},
+        {R"(count_if!(in x out equal?(x \c) "cbc"))", "2"},
     });
     test.evaluate("map list", {
         {"map!(inc ())", "()"},
@@ -761,10 +761,10 @@ int main() {
         {R"(clear_if!(in x out 0 "a"))", R"("a")"},
         {R"(clear_if!(in x out 1 ""))", R"("")"},
         {R"(clear_if!(in x out 1 "a"))", R"("")"},
-        {R"(clear_if!(in x out equal?(x 'a') "a"))", R"("")"},
-        {R"(clear_if!(in x out equal?(x 'a') "ab"))", R"("b")"},
-        {R"(clear_if!(in x out equal?(x 'a') "ba"))", R"("b")"},
-        {R"(clear_if!(in x out equal?(x 'a') "bab"))", R"("bb")"},
+        {R"(clear_if!(in x out equal?(x \a) "a"))", R"("")"},
+        {R"(clear_if!(in x out equal?(x \a) "ab"))", R"("b")"},
+        {R"(clear_if!(in x out equal?(x \a) "ba"))", R"("b")"},
+        {R"(clear_if!(in x out equal?(x \a) "bab"))", R"("bb")"},
     });
     test.evaluate("clear_item list", {
         {"clear_item!(1 ())", "()"},
@@ -779,10 +779,10 @@ int main() {
         {"replace!(1 (0 1 0 1 1))", "(1 1 1 1 1)"},
     });
     test.evaluate("replace string", {
-        {R"(replace!('a' ""))", R"("")"},
-        {R"(replace!('a' "a"))", R"("a")"},
-        {R"(replace!('a' "c"))", R"("a")"},
-        {R"(replace!('a' "ab_ba"))", R"("aaaaa")"},
+        {R"(replace!(\a ""))", R"("")"},
+        {R"(replace!(\a "a"))", R"("a")"},
+        {R"(replace!(\a "c"))", R"("a")"},
+        {R"(replace!(\a "ab_ba"))", R"("aaaaa")"},
     });
     test.evaluate("replace_item list", {
         {"replace_item!(1 2 ())", "()"},
@@ -791,10 +791,10 @@ int main() {
         {"replace_item!(1 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
     test.evaluate("replace_item string", {
-        {R"(replace_item!('a' 'b' ""))", R"("")"},
-        {R"(replace_item!('a' 'b' "a"))", R"("b")"},
-        {R"(replace_item!('a' 'b' "c"))", R"("c")"},
-        {R"(replace_item!('a' 'b' "ab_ba"))", R"("bb_bb")"},
+        {R"(replace_item!(\a \b ""))", R"("")"},
+        {R"(replace_item!(\a \b "a"))", R"("b")"},
+        {R"(replace_item!(\a \b "c"))", R"("c")"},
+        {R"(replace_item!(\a \b "ab_ba"))", R"("bb_bb")"},
     });
     test.evaluate("replace_if list", {
         {"replace_if!(in x out equal?(x 1) 2 ())", "()"},
@@ -803,10 +803,10 @@ int main() {
         {"replace_if!(in x out equal?(x 1) 2 (0 1 0 1 1))", "(0 2 0 2 2)"},
     });
     test.evaluate("replace_if string", {
-        {R"(replace_if!(in x out equal?(x 'a') 'b' ""))", R"("")"},
-        {R"(replace_if!(in x out equal?(x 'a') 'b' "a"))", R"("b")"},
-        {R"(replace_if!(in x out equal?(x 'a') 'b' "c"))", R"("c")"},
-        {R"(replace_if!(in x out equal?(x 'a') 'b' "ab_ba"))", R"("bb_bb")"},
+        {R"(replace_if!(in x out equal?(x \a) \b ""))", R"("")"},
+        {R"(replace_if!(in x out equal?(x \a) \b "a"))", R"("b")"},
+        {R"(replace_if!(in x out equal?(x \a) \b "c"))", R"("c")"},
+        {R"(replace_if!(in x out equal?(x \a) \b "ab_ba"))", R"("bb_bb")"},
     });
     test.evaluate("enumerate list", {
         {"enumerate!()", "()"},
@@ -815,8 +815,8 @@ int main() {
     });
     test.evaluate("enumerate string", {
         {R"(enumerate!"")", R"(())"},
-        {R"(enumerate!"a")", R"(((0 'a')))"},
-        {R"(enumerate!"ab")", R"(((0 'a') (1 'b')))"},
+        {R"(enumerate!"a")", R"(((0 \a)))"},
+        {R"(enumerate!"ab")", R"(((0 \a) (1 \b)))"},
     });
     test.evaluate("put_each", {
         {"put_each!(() ())", "()"},
@@ -874,11 +874,11 @@ int main() {
         {R"(find_if!(is_upper "abCD"))", R"("CD")"},
     });
     test.evaluate("find_item string", {
-        {R"(find_item!('a' ""))", R"("")"},
-        {R"(find_item!('a' "a"))", R"("a")"},
-        {R"(find_item!('a' "b"))", R"("")"},
-        {R"(find_item!('a' "ab"))", R"("ab")"},
-        {R"(find_item!('a' "ba"))", R"("a")"},
+        {R"(find_item!(\a ""))", R"("")"},
+        {R"(find_item!(\a "a"))", R"("a")"},
+        {R"(find_item!(\a "b"))", R"("")"},
+        {R"(find_item!(\a "ab"))", R"("ab")"},
+        {R"(find_item!(\a "ba"))", R"("a")"},
     });
     test.evaluate("take list", {
         {"take!(0 (3 7 6))", "()"},
@@ -898,9 +898,9 @@ int main() {
         {"get_index!(2 (3 7 6))", "6"},
     });
     test.evaluate("get_index string", {
-        {R"(get_index!(0 "abc"))", R"('a')"},
-        {R"(get_index!(1 "abc"))", R"('b')"},
-        {R"(get_index!(2 "abc"))", R"('c')"},
+        {R"(get_index!(0 "abc"))", R"(\a)"},
+        {R"(get_index!(1 "abc"))", R"(\b)"},
+        {R"(get_index!(2 "abc"))", R"(\c)"},
     });
     test.evaluate("merge_sorted", {
         {"merge_sorted!(() ())", "()"},
