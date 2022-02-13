@@ -65,34 +65,31 @@ Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
     const auto result = new EvaluatedDictionary{environment, {}};
-    const auto dictionary_result = makeEvaluatedDictionary(CodeRange{}, result);
+    const auto result_environment = makeEvaluatedDictionary(CodeRange{}, result);
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
         const auto statement = dictionary.statements[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            const auto value = evaluate(
-                definition.expression, dictionary_result
-            );
+            const auto& right_expression = definition.expression;
+            const auto value = evaluate(right_expression, result_environment);
             const auto label = getNameAsLabel(definition.name);
             result->definitions.add(label, value);
             i += 1;
         }
         else if (type == DYNAMIC_DEFINITION) {
             const auto dynamic_definition = getDynamicDefinition(statement);
-            const auto name = serialize(evaluate(
-                dynamic_definition.dynamic_name, dictionary_result
-            ));
-            const auto value = evaluate(
-                dynamic_definition.expression, dictionary_result
-            );
-            result->definitions.add(name, value);
+            const auto right_expression = dynamic_definition.expression;
+            const auto value = evaluate(right_expression, result_environment);
+            const auto& name = dynamic_definition.dynamic_name;
+            const auto label = serialize(evaluate(name, result_environment));
+            result->definitions.add(label, value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWileStatement(statement);
-            if (boolean(evaluate(while_statement.expression, dictionary_result))) {
+            if (boolean(evaluate(while_statement.expression, result_environment))) {
                 i += 1;
             } else {
                 i = while_statement.end_index_ + 1;
@@ -103,7 +100,7 @@ Expression evaluateDictionary(
             i = end_statement.while_index_;
         }
     }
-    return dictionary_result;
+    return result_environment;
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
