@@ -634,6 +634,7 @@ int main() {
     test.evaluate("get dictionary", {
         {R"(get!(0 {[0]=1}))", R"(1)"},
         {R"(get!("a" {["a"]=1}))", R"(1)"},
+        {R"(get!('a' {a=1}))", R"(1)"},
     });
     test.evaluate("inc", {
         {"inc!0", "1"},
