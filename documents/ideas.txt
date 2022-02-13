@@ -18,6 +18,7 @@ TODO:
       - Functions
     - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
     - Built-in functions for gettting all: keys/names, values, items from a dictionary. Last two can be implemented using the first.
+      - How to make keys function work with current implementation with dictionary keys as strings?
     - Dictionaries with other keys than strings and dynamic lookup.
         - "Evaluate" function as general solution that can be used to convert strings to names and general code.
         - Labels could be good for getter functions:

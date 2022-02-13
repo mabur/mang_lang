@@ -1,5 +1,7 @@
 #include "dictionary.h"
 
+#include <algorithm>
+
 #include "../container.h"
 #include "../expression.h"
 #include "../factory.h"
@@ -16,6 +18,18 @@ Expression get(Expression in) {
         return result;
     }
     throw MissingSymbol(name, "dictionary");
+}
+
+Expression names(Expression in) {
+    const auto dictionary = getEvaluatedDictionary(in);
+    auto definitions = dictionary.definitions.sorted();
+    std::reverse(definitions.begin(), definitions.end());
+    auto list = makeEmptyList({}, {});
+    for (const auto& definition : definitions) {
+        const auto name = makeName({}, Name{definition.first});
+        list = putEvaluatedList(list, name);
+    }
+    return list;
 }
 
 }
