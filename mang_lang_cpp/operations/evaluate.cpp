@@ -189,7 +189,7 @@ Expression evaluateLookupChild(
 ) {
     const auto child = evaluate(lookup_child.child, environment);
     const auto name = getName(lookup_child.name).value;
-    switch(child.type) {
+    switch (child.type) {
         case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
         case EVALUATED_LIST: return lookupChildInEvaluatedList(getEvaluatedList(child), name);
         case STRING: return lookupChildInString(getString(child), name);
@@ -217,7 +217,7 @@ Expression applyFunctionBuiltIn(
 Expression applyFunctionDictionary(
     const FunctionDictionary& function_dictionary, Expression input
 ) {
-    // TODO: pass along environment? Is some use case is missing now?
+    // TODO: pass along environment? Is some use case missing now?
     return evaluate(function_dictionary.body, input);
 }
 
