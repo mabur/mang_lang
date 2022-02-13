@@ -644,6 +644,11 @@ int main() {
         {R"(names!{["a"]=1})", R"(("a"))"},
         {"get!(top@names!{a=0} {a=1})", "1"},
     });
+    test.evaluate("get_values dictionary", {
+        {"get_values!{a=0}", "(0)"},
+        {"get_values!{a=0 b=1 c=2}", "(0 1 2)"},
+        {"get_values!{a='a' b='b' c='c'}", "('a' 'b' 'c')"},
+    });
     test.evaluate("inc", {
         {"inc!0", "1"},
     });
