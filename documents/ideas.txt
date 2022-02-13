@@ -12,20 +12,13 @@ TODO:
     - Dynamic lookups of dictionary
     - Dynamic dictionaries/hash-maps/sets for unique-check
   * Dynamic dictionary keys, as a way to model sets and arrays, 
-    - Split structs for evaluated and non-evaluated for:
-      - Dictionaries
-      - Lists
-      - Functions
+    - Fix hacky implementation of get_names, that is not type safe, since it returns keys as strings Names but with '' inside the string, instead of as Labels.
     - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
-    - Built-in functions for gettting all: keys/names, values, items from a dictionary. Last two can be implemented using the first.
-      - How to make keys function work with current implementation with dictionary keys as strings?
-    - Dictionaries with other keys than strings and dynamic lookup.
-        - "Evaluate" function as general solution that can be used to convert strings to names and general code.
-        - Labels could be good for getter functions:
-          get_getter = in label out in dictionary out get!(label dictionary)
-          output = map!(get_getter!'member' input)
-          - get_getter!'member' is similar to member@ if seen as a function
-
+    - "Evaluate" function as general solution that can be used to convert strings to names and general code.
+    - Labels could be good for getter functions:
+      get_getter = in label out in dictionary out get!(label dictionary)
+      output = map!(get_getter!'member' input)
+      - get_getter!'member' is similar to member@ if seen as a function
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
 
     get_closer = in c out get!(c {
@@ -57,6 +50,10 @@ TODO:
   * Memory
     - 64 bit
     - Use less memory
+* Split structs for evaluated and non-evaluated for:
+  - Dictionaries (done)
+  - Lists (done)
+  - Functions (todo)
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Example programs:
   - Parsing Json
