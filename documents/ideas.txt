@@ -11,8 +11,12 @@ TODO:
     - not unique
     - Dynamic lookups of dictionary
     - Dynamic dictionaries/hash-maps/sets for unique-check
-  * Dynamic dictionary keys, as a way to model sets and arrays, 
+  * Dynamic dictionary keys, as a way to model sets and arrays.
     - Fix hacky implementation of get_names, that is not type safe, since it returns keys as strings Names but with '' inside the string, instead of as Labels.
+    - Naming of dictinoary functions:
+      - get_names, get_index, get_keys, index, table of content, get_headings.
+      - get_values
+      - get_items
     - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
     - "Evaluate" function as general solution that can be used to convert strings to names and general code.
     - Labels could be good for getter functions:
