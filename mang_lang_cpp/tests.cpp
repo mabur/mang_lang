@@ -639,6 +639,9 @@ int main() {
     });
     test.evaluate("names dictionary", {
         {"names!{}", "()"},
+        {"names!{a=1}", "('a')"},
+        {"names!{[0]=1}", "(0)"},
+        {R"(names!{["a"]=1})", R"(("a"))"},
         {"get!(top@names!{a=0} {a=1})", "1"},
     });
     test.evaluate("inc", {
