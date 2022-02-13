@@ -71,7 +71,7 @@ Expression evaluateDictionary(
             const auto value = evaluate(
                 definition.expression, dictionary_result
             );
-            result->definitions.add(name, value);
+            result->definitions.add('\'' + name + '\'', value);
             i += 1;
         }
         else if (type == DYNAMIC_DEFINITION) {
@@ -151,7 +151,7 @@ Expression lookupDictionary(Expression expression, const std::string& name) {
 }
 
 Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
-    const auto result = dictionary.definitions.lookup(name);
+    const auto result = dictionary.definitions.lookup('\'' + name + '\'');
     if (result.type != EMPTY) {
         return result;
     }
@@ -194,7 +194,7 @@ Expression evaluateLookupChild(
 Expression applyFunction(const Function& function, Expression input) {
 
     auto definitions = Definitions{};
-    definitions.add(getName(function.input_name).value, input);
+    definitions.add('\'' + getName(function.input_name).value + '\'', input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         new EvaluatedDictionary{function.environment, definitions}
     );
@@ -221,7 +221,7 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
         const auto list = getEvaluatedList(expression);
         const auto name = getName(function_list.input_names[i]).value;
-        definitions.add(name, list.first);
+        definitions.add('\'' + name + '\'', list.first);
         expression = list.rest;
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
@@ -233,7 +233,8 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment
 ) {
-    const auto function = lookupDictionary(environment, getName(function_application.name).value);
+    const auto function = lookupDictionary(
+        environment, '\'' + getName(function_application.name).value + '\'');
     const auto input = evaluate(function_application.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(getFunction(function), input);
@@ -247,7 +248,7 @@ Expression evaluateFunctionApplication(
 Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment
 ) {
-    return lookupDictionary(environment, getName(lookup_symbol.name).value);
+    return lookupDictionary(environment, '\'' + getName(lookup_symbol.name).value + '\'');
 }
 
 Expression evaluateDynamicLookupSymbol(

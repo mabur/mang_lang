@@ -75,8 +75,8 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     auto result = std::string{"{"};
     for (const auto& pair : dictionary.definitions.sorted()) {
         const auto c = pair.first[0];
-        if (std::isalpha(c) or c == '_') {
-            result += pair.first + "=" + serialize(pair.second) + " ";
+        if (c == '\'') {
+            result += pair.first.substr(1, pair.first.size() - 2) + "=" + serialize(pair.second) + " ";
         } else {
             result += "[" + pair.first + "]" + "=" + serialize(pair.second) + " ";
         }
