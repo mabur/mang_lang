@@ -225,9 +225,9 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
 ) {
     auto definitions = Definitions{};
     auto expression = input;
-    for (size_t i = 0; i < function_list.input_names.size(); ++i) {
+    for (const auto& input_name : function_list.input_names) {
         const auto list = getEvaluatedList(expression);
-        const auto label = getNameAsLabel(function_list.input_names[i]);
+        const auto label = getNameAsLabel(input_name);
         definitions.add(label, list.first);
         expression = list.rest;
     }
