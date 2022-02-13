@@ -637,17 +637,22 @@ int main() {
         {R"(get!('a' {a=1}))", R"(1)"},
         {R"(get!('a' {['a']=1}))", R"(1)"},
     });
-    test.evaluate("names dictionary", {
+    test.evaluate("get_names", {
         {"get_names!{}", "()"},
         {"get_names!{a=1}", "('a')"},
         {"get_names!{[0]=1}", "(0)"},
         {R"(get_names!{["a"]=1})", R"(("a"))"},
         {"get!(top@get_names!{a=0} {a=1})", "1"},
     });
-    test.evaluate("get_values dictionary", {
+    test.evaluate("get_values", {
         {"get_values!{a=0}", "(0)"},
         {"get_values!{a=0 b=1 c=2}", "(0 1 2)"},
         {"get_values!{a='a' b='b' c='c'}", "('a' 'b' 'c')"},
+    });
+    test.evaluate("get_items", {
+        {"get_items!{a=0}", "(('a' 0))"},
+        {"get_items!{a=0 b=1 c=2}", "(('a' 0) ('b' 1) ('c' 2))"},
+        {"get_items!{a='a' b='b' c='c'}", "(('a' 'a') ('b' 'b') ('c' 'c'))"},
     });
     test.evaluate("inc", {
         {"inc!0", "1"},

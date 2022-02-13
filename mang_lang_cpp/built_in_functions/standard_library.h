@@ -52,6 +52,11 @@ const std::string STANDARD_LIBRARY = R"(
         get_names!dictionary
     )
 
+    get_items = in dictionary out zip!(
+        get_names!dictionary
+        get_values!dictionary
+    )
+
     fold = in (operation stack init) out result@{
         result = init
         stack = stack
