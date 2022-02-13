@@ -27,6 +27,11 @@ TODO:
         - Not all strings are valid as names.
         - "Evaluate" function as general solution that can be used to convert strings to names and general code.
         - Add Label object with some syntax like #label or :label or 'label'
+        - Labels could be good for getter functions:
+          get_getter = in label out in dictionary out get!(label dictionary)
+          output = map!(get_getter!'member' input)
+          - get_getter!'member' is similar to member@ if seen as a function
+
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
 
     get_closer = in c out get!(c {
