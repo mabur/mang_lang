@@ -34,8 +34,9 @@ bool isEqual(Expression left, Expression right) {
     return false;
 }
 
-std::string asLabel(const std::string name) {
-    return '\'' + name + '\'';
+std::string getNameAsLabel(Expression name)
+{
+    return '\'' + getName(name).value  + '\'';
 }
 
 Expression evaluateConditional(
@@ -71,11 +72,10 @@ Expression evaluateDictionary(
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            const auto name = getName(definition.name).value;
             const auto value = evaluate(
                 definition.expression, dictionary_result
             );
-            result->definitions.add(asLabel(name), value);
+            result->definitions.add(getNameAsLabel(definition.name), value);
             i += 1;
         }
         else if (type == DYNAMIC_DEFINITION) {
@@ -154,12 +154,13 @@ Expression lookupDictionary(Expression expression, const std::string& name) {
     return lookupDictionary(d.environment, name);
 }
 
-Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionary, const std::string& name) {
-    const auto result = dictionary.definitions.lookup(asLabel(name));
+Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionary, Expression name) {
+    const auto label = getNameAsLabel(name);
+    const auto result = dictionary.definitions.lookup(label);
     if (result.type != EMPTY) {
         return result;
     }
-    throw MissingSymbol(name, "dictionary");
+    throw MissingSymbol(label, "dictionary");
 }
 
 Expression lookupChildInString(const String& string, const std::string& name) {
@@ -188,7 +189,7 @@ Expression evaluateLookupChild(
     const auto child = evaluate(lookup_child.child, environment);
     const auto name = getName(lookup_child.name).value;
     switch(child.type) {
-        case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), name);
+        case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
         case EVALUATED_LIST: return lookupChildInEvaluatedList(getEvaluatedList(child), name);
         case STRING: return lookupChildInString(getString(child), name);
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
@@ -198,7 +199,7 @@ Expression evaluateLookupChild(
 Expression applyFunction(const Function& function, Expression input) {
 
     auto definitions = Definitions{};
-    definitions.add(asLabel(getName(function.input_name).value), input);
+    definitions.add(getNameAsLabel(function.input_name), input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         new EvaluatedDictionary{function.environment, definitions}
     );
@@ -224,8 +225,7 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     auto expression = input;
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
         const auto list = getEvaluatedList(expression);
-        const auto name = getName(function_list.input_names[i]).value;
-        definitions.add(asLabel(name), list.first);
+        definitions.add(getNameAsLabel(function_list.input_names[i]), list.first);
         expression = list.rest;
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
@@ -238,7 +238,7 @@ Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment
 ) {
     const auto function = lookupDictionary(
-        environment, asLabel(getName(function_application.name).value));
+        environment, getNameAsLabel(function_application.name));
     const auto input = evaluate(function_application.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(getFunction(function), input);
@@ -252,7 +252,7 @@ Expression evaluateFunctionApplication(
 Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment
 ) {
-    return lookupDictionary(environment, asLabel(getName(lookup_symbol.name).value));
+    return lookupDictionary(environment, getNameAsLabel(lookup_symbol.name));
 }
 
 Expression evaluateDynamicLookupSymbol(
