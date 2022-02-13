@@ -49,7 +49,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_values = in dictionary out map!(
         in name out get!(name dictionary)
-        names!dictionary
+        get_names!dictionary
     )
 
     fold = in (operation stack init) out result@{

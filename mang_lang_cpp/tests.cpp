@@ -638,11 +638,11 @@ int main() {
         {R"(get!('a' {['a']=1}))", R"(1)"},
     });
     test.evaluate("names dictionary", {
-        {"names!{}", "()"},
-        {"names!{a=1}", "('a')"},
-        {"names!{[0]=1}", "(0)"},
-        {R"(names!{["a"]=1})", R"(("a"))"},
-        {"get!(top@names!{a=0} {a=1})", "1"},
+        {"get_names!{}", "()"},
+        {"get_names!{a=1}", "('a')"},
+        {"get_names!{[0]=1}", "(0)"},
+        {R"(get_names!{["a"]=1})", R"(("a"))"},
+        {"get!(top@get_names!{a=0} {a=1})", "1"},
     });
     test.evaluate("get_values dictionary", {
         {"get_values!{a=0}", "(0)"},

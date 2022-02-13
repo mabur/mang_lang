@@ -20,7 +20,7 @@ Expression get(Expression in) {
     throw MissingSymbol(name, "dictionary");
 }
 
-Expression names(Expression in) {
+Expression get_names(Expression in) {
     const auto dictionary = getEvaluatedDictionary(in);
     auto definitions = dictionary.definitions.sorted();
     std::reverse(definitions.begin(), definitions.end());
