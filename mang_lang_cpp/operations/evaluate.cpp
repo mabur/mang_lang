@@ -75,7 +75,8 @@ Expression evaluateDictionary(
             const auto value = evaluate(
                 definition.expression, dictionary_result
             );
-            result->definitions.add(getNameAsLabel(definition.name), value);
+            const auto label = getNameAsLabel(definition.name);
+            result->definitions.add(label, value);
             i += 1;
         }
         else if (type == DYNAMIC_DEFINITION) {
@@ -199,7 +200,8 @@ Expression evaluateLookupChild(
 Expression applyFunction(const Function& function, Expression input) {
 
     auto definitions = Definitions{};
-    definitions.add(getNameAsLabel(function.input_name), input);
+    const auto label = getNameAsLabel(function.input_name);
+    definitions.add(label, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         new EvaluatedDictionary{function.environment, definitions}
     );
@@ -225,7 +227,8 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
     auto expression = input;
     for (size_t i = 0; i < function_list.input_names.size(); ++i) {
         const auto list = getEvaluatedList(expression);
-        definitions.add(getNameAsLabel(function_list.input_names[i]), list.first);
+        const auto label = getNameAsLabel(function_list.input_names[i]);
+        definitions.add(label, list.first);
         expression = list.rest;
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
@@ -237,8 +240,8 @@ Expression applyFunctionList(const FunctionList& function_list, Expression input
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment
 ) {
-    const auto function = lookupDictionary(
-        environment, getNameAsLabel(function_application.name));
+    const auto label = getNameAsLabel(function_application.name);
+    const auto function = lookupDictionary(environment, label);
     const auto input = evaluate(function_application.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(getFunction(function), input);
