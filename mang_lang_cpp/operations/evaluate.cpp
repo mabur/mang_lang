@@ -217,7 +217,7 @@ Expression applyFunctionBuiltIn(
 Expression applyFunctionDictionary(
     const FunctionDictionary& function_dictionary, Expression input
 ) {
-    // TODO: pass along environment.
+    // TODO: pass along environment? Is some use case is missing now?
     return evaluate(function_dictionary.body, input);
 }
 

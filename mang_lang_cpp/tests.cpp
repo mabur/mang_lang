@@ -575,6 +575,7 @@ int main() {
         {"a@{f=in {x} out x a=f!{x=0}}", "0"},
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
         {"a@{f=in {x y z} out add!(x y z) a=f!{x=2 y=3 z=4}}", "9"},
+        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
     });
     test.evaluate("lookup function list", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
