@@ -16,17 +16,10 @@ TODO:
       - Dictionaries
       - Lists
       - Functions
-    - Built-in function for dynamic lookup of dictionaries: get!(name dictionary) get!(index dictionary)
     - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
     - Built-in functions for gettting all: keys/names, values, items from a dictionary. Last two can be implemented using the first.
     - Dictionaries with other keys than strings and dynamic lookup.
-        - Serialize keys to strings under the hood.
-        - Arrays as Dictionaries with integer keys and dynamic lookup.
-        - Add syntax for writing and reading of dynamic Dictionary items during construction.
-        - How to handle strings and extra ""
-        - Not all strings are valid as names.
         - "Evaluate" function as general solution that can be used to convert strings to names and general code.
-        - Add Label object with some syntax like #label or :label or 'label'
         - Labels could be good for getter functions:
           get_getter = in label out in dictionary out get!(label dictionary)
           output = map!(get_getter!'member' input)
