@@ -5,6 +5,8 @@
 #include "../factory.h"
 #include "../container.h"
 
+namespace {
+
 const CodeCharacter* end(Expression expression) {
     return expression.range.last;
 }
@@ -359,6 +361,8 @@ Expression parseString(CodeRange code) {
     const auto last = code.begin();
     return reverseString(CodeRange{first, last}, value);
 }
+
+} // namespace
 
 Expression parseExpression(CodeRange code) {
     try {
