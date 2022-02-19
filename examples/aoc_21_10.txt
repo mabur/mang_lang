@@ -27,21 +27,17 @@ score@{
             c = top@string
             string = rest@string
             open = open@result
-            result = 
-                if find_item!(c "{([<") then
-                    {open = put!(c open) score = 0}
-                else if equal?(c get_closer!top@open) then
-                    {open = rest@open score = 0}
-                else if equal?(c \)) then
-                    {open = "" score = 3}
-                else if equal?(c \]) then
-                    {open = "" score = 57}
-                else if equal?(c \}) then
-                    {open = "" score = 1197}
-                else if equal?(c \>) then
-                    {open = "" score = 25137}
-                else
-                    {open = "" score = 1000000000}
+            result = is c
+                get_closer!top@open then {open = rest@open score = 0}
+                \{ then {open = put!(c open) score = 0}
+                \( then {open = put!(c open) score = 0}
+                \[ then {open = put!(c open) score = 0}
+                \< then {open = put!(c open) score = 0}
+                \) then {open = "" score = 3}
+                \] then {open = "" score = 57}
+                \} then {open = "" score = 1197}
+                \> then {open = "" score = 25137}
+                else {open = "" score = 1000000000}
         end
     }
     score = add!map!(score_string strings)
