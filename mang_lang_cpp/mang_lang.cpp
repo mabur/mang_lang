@@ -1,5 +1,3 @@
-#include <fstream>
-
 #include "mang_lang.h"
 #include "factory.h"
 #include "built_in_functions/built_in_functions.h"
@@ -7,12 +5,6 @@
 #include "operations/evaluate.h"
 #include "operations/parse.h"
 #include "operations/serialize.h"
-
-auto nullStream() {
-    std::ofstream stream;
-    stream.setstate(std::ios_base::badbit);
-    return stream;
-}
 
 Expression parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
