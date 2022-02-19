@@ -2,6 +2,7 @@ documents/*.aux
 documents/*.log
 documents/*.pdf
 documents/*.synctex.gz
+examples/*_evaluated.txt
 mang_lang/.dmypy.json
 mang_lang/.idea/
 mang_lang/__pycache__/
