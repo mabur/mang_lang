@@ -1009,9 +1009,9 @@ result@{
             numbers
         )
     count0 = in stack out
-        count_item!('0' stack)
+        count_item!(\0 stack)
     count1 = in stack out
-        count_item!('1' stack)
+        count_item!(\1 stack)
     pick_most_common_bit = in counts out
         if less?counts then 1 else 0
     pick_least_common_bit = in counts out
