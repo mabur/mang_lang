@@ -5,6 +5,8 @@
 #include "../factory.h"
 #include "../container.h"
 
+namespace {
+
 std::string serializeName(Expression name) {
     return getName(name).value;
 }
@@ -179,6 +181,8 @@ std::string serializeString(Expression string) {
     return leftFold(delimiter, string, appendCharacter, EMPTY_STRING, getString)
         + delimiter;
 }
+
+} // namespace
 
 std::string serialize(Expression expression) {
     switch (expression.type) {
