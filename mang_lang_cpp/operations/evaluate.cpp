@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include "../factory.h"
-#include "boolean.h"
 #include "serialize.h"
 #include "../container.h"
 
@@ -32,6 +31,19 @@ bool isEqual(Expression left, Expression right) {
         return allOfPairs(left, right, isEqual, EMPTY_STRING, getString);
     }
     return false;
+}
+
+bool boolean(Expression expression) {
+    switch (expression.type) {
+        case EVALUATED_DICTIONARY: return !getEvaluatedDictionary(expression).definitions.empty();
+        case NUMBER: return static_cast<bool>(getNumber(expression).value);
+        case BOOLEAN: return getBoolean(expression).value;
+        case EVALUATED_LIST: return true;
+        case EMPTY_LIST: return false;
+        case STRING: return true;
+        case EMPTY_STRING: return false;
+        default: throw UnexpectedExpression(expression.type, "boolean operation");
+    }
 }
 
 std::string getNameAsLabel(Expression name)
