@@ -10,12 +10,21 @@ namespace CommandLineArgumentIndex {
 
 int main(int argc,  char **argv) {
     using namespace std;
-    if (argc < CommandLineArgumentIndex::OUTPUT_PATH + 1) {
-        cout << "Expected input file and output file." << endl;
+    if (argc < CommandLineArgumentIndex::INPUT_PATH + 1) {
+        cout << "Expected input file." << endl;
         return 1;
     }
+    const auto input_file_path = std::string{
+        argv[CommandLineArgumentIndex::INPUT_PATH]
+    };
+    auto output_file_path = std::string{};
+    if (argc < CommandLineArgumentIndex::OUTPUT_PATH + 1) {
+        output_file_path = input_file_path.substr(0, input_file_path.find_last_of('.'))
+            + "_evaluated.txt";
+    } else {
+        output_file_path = argv[CommandLineArgumentIndex::OUTPUT_PATH];
+    }
 
-    const auto input_file_path = argv[CommandLineArgumentIndex::INPUT_PATH];
     cout << "Reading program from " << input_file_path << " ... ";
     auto input_file = ifstream{input_file_path};
     const auto code = string{(istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>()};
@@ -27,7 +36,7 @@ int main(int argc,  char **argv) {
         const auto result = evaluate(code);
         cout << "Done." << endl;
 
-        const auto output_file_path = argv[CommandLineArgumentIndex::OUTPUT_PATH];
+
         cout << "Writing result to " << output_file_path << " ... ";
         auto output_file = ofstream{output_file_path};
         output_file << result;
