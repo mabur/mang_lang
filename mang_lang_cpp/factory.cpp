@@ -7,9 +7,9 @@
 
 #include "operations/serialize.h"
 
-std::vector<Dictionary> dictionaries;
 std::vector<std::shared_ptr<const EvaluatedDictionary>> evaluated_dictionaries;
 
+std::vector<Dictionary> dictionaries;
 std::vector<Character> characters;
 std::vector<Conditional> conditionals;
 std::vector<IsExpression> is_expressions;
@@ -37,22 +37,31 @@ std::vector<Boolean> booleans;
 std::vector<Expression> expressions;
 
 void clearMemory() {
+    evaluated_dictionaries.clear();
+    dictionaries.clear();
     characters.clear();
     conditionals.clear();
-    dictionaries.clear();
+    is_expressions.clear();
     functions.clear();
     built_in_functions.clear();
     dictionary_functions.clear();
     list_functions.clear();
+    lists.clear();
+    evaluated_lists.clear();
+    empty_lists.clear();
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
+    dynamic_symbol_lookups.clear();
     names.clear();
+    labels.clear();
     numbers.clear();
     while_statements.clear();
     end_statements.clear();
     definitions.clear();
+    dynamic_definitions.clear();
     strings.clear();
+    empty_strings.clear();
     booleans.clear();
     expressions.clear();
 }
