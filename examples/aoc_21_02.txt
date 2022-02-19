@@ -1,22 +1,21 @@
 result@{
     commands = (
-"forward 5"
-"down 5"
-"forward 8"
-"up 3"
-"down 8"
-"forward 2"
+        "forward 5"
+        "down 5"
+        "forward 8"
+        "up 3"
+        "down 8"
+        "forward 2"
     )
-    parse_up = in command out parse_digit!fourth!command
-    parse_down = in command out parse_digit!sixth!command
-    parse_forward = in command out parse_digit!ninth!command    
-    move = in (command position) out is top@command
-        \d then
-            (first!position add!(second!position parse_down!command))
-        \u then
-            (first!position sub!(second!position parse_up!command))
-        else
-            (add!(first!position parse_forward!command) second!position)
+    move = in (command position) out new_position@{
+        x = first!position
+        y = second!position
+        steps = parse_digit!top@reverse!command
+        new_position = is top@command
+            \d then (x add!(y steps))
+            \u then (x sub!(y steps))
+            else (add!(x steps) y)
+    }
     start = (0 0)
     position = fold!(move commands start)
     result = mul!position
