@@ -6,6 +6,8 @@
 #include "serialize.h"
 #include "../container.h"
 
+namespace {
+
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
@@ -273,6 +275,8 @@ Expression evaluateDynamicLookupSymbol(
     const auto name = serialize(evaluate(lookup_symbol.expression, environment));
     return lookupDictionary(environment, name);
 }
+
+} // namespace
 
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
