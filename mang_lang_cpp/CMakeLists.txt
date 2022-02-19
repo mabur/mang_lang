@@ -18,15 +18,15 @@ add_library(shared
         parsing.cpp
         )
 
-add_executable(interpreter interpreter.cpp)
+add_executable(manglang interpreter.cpp)
 add_executable(tests tests.cpp)
 
-target_link_libraries(interpreter shared)
+target_link_libraries(manglang shared)
 target_link_libraries(tests shared)
 
 target_compile_options(shared PRIVATE -Wall -Wextra -pedantic -Werror)
-target_compile_options(interpreter PRIVATE -Wall -Wextra -pedantic -Werror)
+target_compile_options(manglang PRIVATE -Wall -Wextra -pedantic -Werror)
 target_compile_options(tests PRIVATE -Wall -Wextra -pedantic -Werror)
 
-target_link_options(interpreter PRIVATE -static)
+target_link_options(manglang PRIVATE -static)
 target_link_options(tests PRIVATE -static)
