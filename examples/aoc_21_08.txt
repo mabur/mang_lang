@@ -11,13 +11,12 @@ result@{
         "gbdfcae" "bgc" "cg" "cgb"
         "fgae" "cfgab" "fg" "bagce"
     )
-    is_easy_digit = in string out any?(
-        equal?(count!string 2)
-        equal?(count!string 4)
-        equal?(count!string 3)
-        equal?(count!string 7)
-        )
-    is_hard_digit = in string out
-        not?is_easy_digit?string
+    is_easy_digit = in string out
+        is count!string
+            2 then yes
+            4 then yes
+            3 then yes
+            7 then yes
+            else no
     result = count_if!(is_easy_digit strings)
 }
