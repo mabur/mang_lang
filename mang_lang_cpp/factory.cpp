@@ -36,35 +36,7 @@ std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
 std::vector<Expression> expressions;
 
-void clearMemory() {
-    evaluated_dictionaries.clear();
-    dictionaries.clear();
-    characters.clear();
-    conditionals.clear();
-    is_expressions.clear();
-    functions.clear();
-    built_in_functions.clear();
-    dictionary_functions.clear();
-    list_functions.clear();
-    lists.clear();
-    evaluated_lists.clear();
-    empty_lists.clear();
-    child_lookups.clear();
-    function_applications.clear();
-    symbol_lookups.clear();
-    dynamic_symbol_lookups.clear();
-    names.clear();
-    labels.clear();
-    numbers.clear();
-    while_statements.clear();
-    end_statements.clear();
-    definitions.clear();
-    dynamic_definitions.clear();
-    strings.clear();
-    empty_strings.clear();
-    booleans.clear();
-    expressions.clear();
-}
+namespace {
 
 std::vector<size_t> whileIndices(const Statements& statements) {
     // Forward pass to set backward jumps:
@@ -114,29 +86,63 @@ std::vector<size_t> endIndices(const Statements& statements) {
     return end_indices;
 }
 
-std::vector<size_t> nameIndices(const Statements& statements) {
-    // Forward pass to set name_index_:
-    auto names = std::vector<std::string>{};
-    auto name_indices = std::vector<size_t>{};
-    for (size_t i = 0; i < statements.size(); ++i) {
-        const auto type = statements[i].type;
-        if (type == DEFINITION) {
-            const auto name = getName(getDefinition(statements[i]).name).value;
-            const auto it = std::find(names.begin(), names.end(), name);
-            name_indices.push_back(std::distance(names.begin(), it));
-            if (it == names.end()) {
-                names.push_back(name);
-            }
-        }
-        if (type == WHILE_STATEMENT) {
-            name_indices.push_back(0); // dummy
-        }
-        if (type == END_STATEMENT) {
-            name_indices.push_back(0); // dummy
-        }
-    }
-    return name_indices;
+template<typename ElementType, typename ArrayType>
+Expression makeMutableExpression(
+    CodeRange code,
+    const ElementType* expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    array.emplace_back(expression);
+    expressions.push_back(Expression{type, array.size() - 1, code});
+    return expressions.back();
 }
+
+template<typename ElementType, typename ArrayType>
+Expression makeExpression(
+    CodeRange code,
+    ElementType expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    array.emplace_back(expression);
+    expressions.push_back(Expression{type, array.size() - 1, code});
+    return expressions.back();
+}
+
+template<typename ArrayType>
+typename ArrayType::value_type::element_type getMutableExpression(
+    Expression expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    if (expression.type != type) {
+        std::stringstream s;
+        s << "getMutableExpression expected " << NAMES[type]
+            << " got " << NAMES[expression.type];
+        throw std::runtime_error{s.str()};
+    }
+    assert(expression.type == type);
+    return *array.at(expression.index).get();
+}
+
+template<typename ArrayType>
+typename ArrayType::value_type getExpression(
+    Expression expression,
+    ExpressionType type,
+    const ArrayType& array
+) {
+    if (expression.type != type) {
+        std::stringstream s;
+        s << "getExpression expected " << NAMES[type]
+            << " got " << NAMES[expression.type];
+        throw std::runtime_error{s.str()};
+    }
+    assert(expression.type == type);
+    return array.at(expression.index);
+}
+
+} // namespace
 
 Statements setContext(const Statements& statements) {
     const auto while_indices = whileIndices(statements);
@@ -164,29 +170,45 @@ Statements setContext(const Statements& statements) {
     return result;
 }
 
-template<typename ElementType, typename ArrayType>
-Expression makeMutableExpression(
-    CodeRange code,
-    const ElementType* expression,
-    ExpressionType type,
-    ArrayType& array
-) {
-    array.emplace_back(expression);
-    expressions.push_back(Expression{type, array.size() - 1, code});
-    return expressions.back();
+void clearMemory() {
+    evaluated_dictionaries.clear();
+    dictionaries.clear();
+    characters.clear();
+    conditionals.clear();
+    is_expressions.clear();
+    functions.clear();
+    built_in_functions.clear();
+    dictionary_functions.clear();
+    list_functions.clear();
+    lists.clear();
+    evaluated_lists.clear();
+    empty_lists.clear();
+    child_lookups.clear();
+    function_applications.clear();
+    symbol_lookups.clear();
+    dynamic_symbol_lookups.clear();
+    names.clear();
+    labels.clear();
+    numbers.clear();
+    while_statements.clear();
+    end_statements.clear();
+    definitions.clear();
+    dynamic_definitions.clear();
+    strings.clear();
+    empty_strings.clear();
+    booleans.clear();
+    expressions.clear();
 }
 
-template<typename ElementType, typename ArrayType>
-Expression makeExpression(
-    CodeRange code,
-    ElementType expression,
-    ExpressionType type,
-    ArrayType& array
-) {
-    array.emplace_back(expression);
-    expressions.push_back(Expression{type, array.size() - 1, code});
-    return expressions.back();
+std::string getLog() {
+    auto log = std::string{};
+    for (const auto expression : expressions) {
+        log += serialize(expression) + '\n';
+    }
+    return log;
 }
+
+// MAKERS:
 
 Expression makeNumber(CodeRange code, Number expression) {
     return makeExpression(code, expression, NUMBER, numbers);
@@ -292,39 +314,7 @@ Expression makeBoolean(CodeRange code, Boolean expression) {
     return makeExpression(code, expression, BOOLEAN, booleans);
 }
 
-// FREE GETTERS
-
-template<typename ArrayType>
-typename ArrayType::value_type::element_type getMutableExpression(
-    Expression expression,
-    ExpressionType type,
-    ArrayType& array
-) {
-    if (expression.type != type) {
-        std::stringstream s;
-        s << "getMutableExpression expected " << NAMES[type]
-          << " got " << NAMES[expression.type];
-        throw std::runtime_error{s.str()};
-    }
-    assert(expression.type == type);
-    return *array.at(expression.index).get();
-}
-
-template<typename ArrayType>
-typename ArrayType::value_type getExpression(
-    Expression expression,
-    ExpressionType type,
-    const ArrayType& array
-) {
-    if (expression.type != type) {
-        std::stringstream s;
-        s << "getExpression expected " << NAMES[type]
-            << " got " << NAMES[expression.type];
-        throw std::runtime_error{s.str()};
-    }
-    assert(expression.type == type);
-    return array.at(expression.index);
-}
+// GETTERS
 
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
@@ -429,12 +419,4 @@ EmptyString getEmptyString(Expression expression) {
 
 Boolean getBoolean(Expression expression) {
     return getExpression(expression, BOOLEAN, booleans);
-}
-
-std::string getLog() {
-    auto log = std::string{};
-    for (const auto expression : expressions) {
-        log += serialize(expression) + '\n';
-    }
-    return log;
 }

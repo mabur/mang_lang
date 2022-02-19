@@ -5,9 +5,7 @@
 #include "expression.h"
 
 Statements setContext(const Statements& statements);
-
 void clearMemory();
-
 std::string getLog();
 
 Definition getDefinition(Expression expression);
