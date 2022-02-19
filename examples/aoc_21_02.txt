@@ -12,9 +12,10 @@ result@{
         y = second!position
         steps = parse_digit!top@reverse!command
         new_position = is top@command
-            \d then (x add!(y steps))
             \u then (x sub!(y steps))
-            else (add!(x steps) y)
+            \d then (x add!(y steps))
+            \f then (add!(x steps) y)
+            else (inf inf)
     }
     start = (0 0)
     position = fold!(move commands start)
