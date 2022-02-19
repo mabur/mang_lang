@@ -6,6 +6,7 @@
 #include "../container.h"
 
 namespace arithmetic {
+namespace {
 
 double number(Expression expression) {
     return getNumber(expression).value;
@@ -26,6 +27,8 @@ double addExpression(double left, Expression right) {
 double mulExpression(double left, Expression right) {
     return left * number(right);
 }
+
+} // namespace
 
 Expression add(Expression in) {
     const auto init = 0.0;
