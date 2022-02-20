@@ -969,7 +969,14 @@ int main() {
         {"unique!(1)", "(1)"},
         {"unique!(1 2)", "(1 2)"},
         {"unique!(1 1)", "(1)"},
-        {"unique!(1 1 2 3 1 4 2 4)", "(1 2 3 4)"},
+        {"unique!(1 1 2 3 1 4 2 4 0)", "(1 2 3 4 0)"},
+    });
+    test.evaluate("duplicate", {
+        {"duplicate!()", "()"},
+        {"duplicate!(1)", "()"},
+        {"duplicate!(1 2)", "()"},
+        {"duplicate!(1 1)", "(1)"},
+        {"duplicate!(1 1 2 3 1 4 2 4 0)", "(1 2 4)"},
     });
     test.reformat("is", {
         {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},

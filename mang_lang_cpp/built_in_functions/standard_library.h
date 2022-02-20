@@ -265,5 +265,15 @@ const std::string STANDARD_LIBRARY = R"(
             stack = rest@stack
         end
     }
+    duplicate = in stack out reverse!unique!result@{
+        result = clear!stack
+        while stack
+            result = is [top@stack] missing
+                then result
+                else put!(top@stack result)
+            [top@stack] = yes
+            stack = rest@stack
+        end
+    }
 }
 )";
