@@ -1,0 +1,37 @@
+result@{
+    lines = (
+        ((0 9) (5 9))
+        ((8 0) (0 8))
+        ((9 4) (3 4))
+        ((2 2) (2 1))
+        ((7 0) (7 4))
+        ((6 4) (2 0))
+        ((0 9) (2 9))
+        ((3 4) (1 4))
+        ((0 0) (8 8))
+        ((5 5) (8 2))
+    )
+    is_line_diagonal = in (point0 point1) out none?(
+        equal?(first!point0 first!point1)
+        equal?(second!point0 second!point1)
+    )
+    fill_line = in (point0 point1) out positions@{
+        x0 = first!point0
+        x1 = first!point1
+        y0 = second!point0
+        y1 = second!point1
+        dx = if less?(x0 x1) then 1 else if less?(x1 x0) then -1 else 0
+        dy = if less?(y0 y1) then 1 else if less?(y1 y0) then -1 else 0
+        x = x0
+        y = y0
+        positions = ((x y))
+        while unequal?(top@positions point1)
+            x = add!(x dx)
+            y = add!(y dy)
+            positions = put!((x y) positions)
+        end
+    }
+    axis_aligned_lines = clear_if!(is_line_diagonal lines)
+    filled_lines = concat!map!(fill_line axis_aligned_lines)
+    result = count!duplicate!filled_lines
+}
