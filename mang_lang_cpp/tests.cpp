@@ -113,6 +113,9 @@ int main() {
         {"yes", "yes"},
         {"no", "no"},
     });
+    test.evaluate("missing", {
+        {"missing", "missing"},
+    });
     test.evaluate("label", {
         {"'a'", "'a'"},
         {"'ab'", "'ab'"},

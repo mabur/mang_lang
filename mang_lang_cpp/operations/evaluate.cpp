@@ -285,6 +285,7 @@ Expression evaluateDynamicLookupSymbol(
 
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
+        case EMPTY: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case BOOLEAN: return expression;
