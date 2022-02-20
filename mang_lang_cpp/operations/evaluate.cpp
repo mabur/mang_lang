@@ -11,6 +11,9 @@ namespace {
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
+    if (left_type == EMPTY && right_type == EMPTY) {
+        return true;
+    }
     if (left_type == NUMBER && right_type == NUMBER) {
         return getNumber(left).value == getNumber(right).value;
     }
