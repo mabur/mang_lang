@@ -964,6 +964,13 @@ int main() {
         {"zip!((0 1) (2 3))", "((0 2) (1 3))"},
         {"zip!((0 1 2) (3 4 5))", "((0 3) (1 4) (2 5))"},
     });
+    test.evaluate("unique", {
+        {"unique!()", "()"},
+        {"unique!(1)", "(1)"},
+        {"unique!(1 2)", "(1 2)"},
+        {"unique!(1 1)", "(1)"},
+        {"unique!(1 1 2 3 1 4 2 4)", "(1 2 3 4)"},
+    });
     test.reformat("is", {
         {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
         {"is 0 0 then 0 1 then 1 else 0", "is 0 0 then 0 1 then 1 else 0"},
