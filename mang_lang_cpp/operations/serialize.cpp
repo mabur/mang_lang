@@ -212,7 +212,7 @@ std::string serialize(Expression expression) {
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
-        case EMPTY: return "DUMMY_VALUE";
+        case EMPTY: return "missing";
         default: throw UnexpectedExpression(expression.type, "serialize operation");
     }
 }

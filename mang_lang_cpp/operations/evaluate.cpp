@@ -154,15 +154,20 @@ Expression evaluateList(
     return reverseEvaluatedList(code, output);
 }
 
-Expression lookupDictionary(Expression expression, const std::string& name) {
+Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(name, "environment");
     }
     const auto d = getEvaluatedDictionary(expression);
-    const auto result = d.definitions.lookup(name);
+    return d.definitions.lookup(name);
+}
+
+Expression lookupDictionary(Expression expression, const std::string& name) {
+    const auto result = lookupCurrentDictionary(expression, name);
     if (result.type != EMPTY) {
         return result;
     }
+    const auto d = getEvaluatedDictionary(expression);
     return lookupDictionary(d.environment, name);
 }
 
@@ -273,7 +278,7 @@ Expression evaluateDynamicLookupSymbol(
     const DynamicLookupSymbol& lookup_symbol, Expression environment
 ) {
     const auto name = serialize(evaluate(lookup_symbol.expression, environment));
-    return lookupDictionary(environment, name);
+    return lookupCurrentDictionary(environment, name);
 }
 
 } // namespace

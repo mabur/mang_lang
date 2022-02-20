@@ -192,6 +192,10 @@ int main() {
         {R"({a=["b"]})", R"({a=["b"]})"},
         {R"({a=1 b=["a"]})", R"({a=1 b=["a"]})"},
     });
+    test.evaluate("dynamic_lookup", {
+        {"{a=[1]}", "{a=missing}"},
+        {"{a=1 b=['a']}", "{a=1 b=1}"},
+    });
     test.reformat("dictionary", {
         {"{[1]=2}", "{[1]=2}"},
     });
@@ -632,10 +636,11 @@ int main() {
         {R"(put!(\a "bc"))", R"("abc")"},
     });
     test.evaluate("get dictionary", {
-        {R"(get!(0 {[0]=1}))", R"(1)"},
-        {R"(get!("a" {["a"]=1}))", R"(1)"},
-        {R"(get!('a' {a=1}))", R"(1)"},
-        {R"(get!('a' {['a']=1}))", R"(1)"},
+        {R"(get!(0 {[0]=1}))", "1"},
+        {R"(get!("a" {["a"]=1}))", "1"},
+        {R"(get!('a' {a=1}))", "1"},
+        {R"(get!('a' {['a']=1}))", "1"},
+        {R"(get!('a' {}))", "missing"},
     });
     test.evaluate("get_names", {
         {"get_names!{}", "()"},

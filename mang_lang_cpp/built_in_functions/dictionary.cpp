@@ -14,10 +14,7 @@ Expression get(Expression in) {
     const auto name = serialize(binary.left);
     const auto dictionary = getEvaluatedDictionary(binary.right);
     const auto result = dictionary.definitions.lookup(name);
-    if (result.type != EMPTY) {
-        return result;
-    }
-    throw MissingSymbol(name, "dictionary");
+    return result;
 }
 
 Expression get_names(Expression in) {
