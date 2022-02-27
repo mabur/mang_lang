@@ -12,16 +12,16 @@ TODO:
     - Dynamic dictionaries/hash-maps/sets for unique-check
   * Dynamic dictionary keys, as a way to model sets and arrays.
     - Fix hacky implementation of get_names, that is not type safe, since it returns keys as strings Names but with '' inside the string, instead of as Labels.
-    - Naming of dictinoary functions:
+    - Naming of dictionary functions:
       - get_names, get_index, get_keys, index, table of content, get_headings.
       - get_values
       - get_items
     - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
     - "Evaluate" function as general solution that can be used to convert strings to names and general code.
     - Labels could be good for getter functions:
-      get_getter = in label out in dictionary out get!(label dictionary)
-      output = map!(get_getter!'member' input)
-      - get_getter!'member' is similar to member@ if seen as a function
+      getter = in label out in dictionary out get!(label dictionary)
+      output = map!(getter!\member input)
+      - getter!\member is similar to member@ if seen as a function
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
   {
       N = 10
@@ -74,7 +74,6 @@ TODO:
       - new!list (bra)
       - remove!list jmf generic algorithms
       - empty!list
-      - new@list
       - clone!list
       - copy!list
       - end@list (Compare end-keyword in while-loop)
@@ -86,8 +85,6 @@ TODO:
 * Functions:
   - Math: trigonometry
   - Character: string_from_number, number_from_string
-  - child@ as function that can be sent to map
-  - Implement equal for dictionary
 * Tools:
   - Command line interface for reading source from file and piping it to interpretor
   - Reformat to html with syntax high-lighting.
@@ -100,12 +97,9 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Minimal computation: number, dictionaries, references, child references, function application, function definition
 * Is manglang suitable for numerical computations on arrays?
 * Importing source files.
-* Should setContext be run whenever we create a dict? Possible bug?
 * Homepage
   - Syntax high-lighting.
   - Implement tool that takes a source file and outputs an html.
-  * Skill / level tree visualization for manglang syntax and taxonomy.
-    - 8 bit or 16 bit icons.
 
 * Oding keyword "using" for unpacking dictionary into dictionary.
 {
@@ -137,7 +131,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   unpack max_element!(3 7 6)
 }
 
-* Remove python
 * Problem with lookup of first and rest inside list environment 
 {
   first = ...
@@ -150,54 +143,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Modern C and What We Can Learn From It - Luca Sas [ ACCU 2021 ]
  https://www.youtube.com/watch?v=QpAhX-gsHMs&t=1775s
   - https://floooh.github.io/2019/09/27/modern-c-for-cpp-peeps.html
-  - Pass by value everywhere. Can all pointers be pointers to constants so that everything is immutable?
   - Error handling - have a "valid" member variable in CodeRange to handle parse errors.
-  - Memory ownership.
-    - Have a global array for each type of expression.
-    - Pass around indices to elements in it.
-    - Re-allocate when runnig out of capacity.
-    - Deallocate everything at the same time at the end of the program.
-      No distinction between owning and non-owning pointers.
-    - Store every value computed during the life-time of the program as immutable state.
-
-* Pointers
-  - Ownership model of raw and smart pointers in different passes.
-  - When are nullpointers allowed?
-  - Separate storage of parent and rest of node, for simple reseting of parent for lookups, without sacrificing immutability
-  - How to represent the environment/parent tree during evaluation?
-  - Parent is needed for lookup and apply.
-    - Can we store the chain of parents locally when calling evaluate,
-      instead of writing it to the tree?
-    - When evaluating a functions we need to store its parent,
-      so that we can later refer to the function from another place,
-      and bind it to another name.
-
-* Dynamic dictionaries
-  - file and directory handling.
-  - How to lookup a dynamic name in a dictionary?
-  - How to define a dynamin name in a dictionary?
-{
-  x = "a"
-  "x" = "a"
-  x = a
-  "x" = a
-  x = x@dict
-  x = x@@dict
-  x = x<<dict
-  x<= x<<dict
-  name = <magnus
-  name = "magnus"
-}
-
-
-EVALUATION EXAMPLES
-{a = 0 b = a} -> {a = 0 b = 0}
-a@{a = 0} -> 0
-{f = in x out 0 g = f}         -> {f = in x out 0 g = ?} // Let it be undefined?
-{f = in x out 0 a = f!1}       -> {f = in x out 0 a = 0}
-{f = in x out 0 g = f!a = g!1} -> {f = in x out 0 g = ? a = 0}
-{a = {a = 0 f = in x out a} g = f@a b = g!1} -> {a = {a = 0 f = in x out a} g = ? b = 1}
-a@{apply=in(f x)out f!x g=in x out 0 a=apply!(g 1)}
 
 
 SIMILAR LANGUAGES
