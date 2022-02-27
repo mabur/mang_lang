@@ -20,8 +20,8 @@ TODO:
     - "Evaluate" function as general solution that can be used to convert strings to names and general code.
     - Labels could be good for getter functions:
       getter = in label out in dictionary out get!(label dictionary)
-      output = map!(getter!\member input)
-      - getter!\member is similar to member@ if seen as a function
+      output = map!(getter!'member' input)
+      - getter!'member' is similar to member@ if seen as a function
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
   {
       N = 10
