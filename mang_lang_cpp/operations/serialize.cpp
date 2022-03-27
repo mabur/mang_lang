@@ -12,7 +12,7 @@ std::string serializeName(Expression name) {
 }
 
 std::string serializeLabel(Expression name) {
-    return getLabel(name).value;
+    return "\'" + getLabel(name).value + "\'";
 }
 
 std::string serializeCharacter(const Character& character) {

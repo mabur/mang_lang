@@ -99,7 +99,7 @@ Expression parseLabel(CodeRange code) {
     code = parseCharacter(code, '\'');
     return makeLabel(
         CodeRange{first, code.first},
-        Label{rawString({first, code.first})}
+        Label{rawString({first + 1, code.first - 1})}
     );
 }
 
