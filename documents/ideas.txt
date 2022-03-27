@@ -1,4 +1,24 @@
 TODO:
+* Type theory
+  - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
+  - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
+  - Is it simple to check types without any type annotation?
+    - By evaluating/checking the types in the AST?
+    - As long as we don't want to infer concepts of generic functions?
+    - While loops are just iterated once.
+    - Might need to differentiate between homogeneous stacks and tuples.
+    - Is type annotation just making it faster but not simpler?
+    - It should still be much faster to check the AST once, than to evaluate all loops.
+    - Or maybe we cannot lookup symbols without doing full evaluation?
+      - So is type checking like a mini-evaluation that allows symbol lookup?
+        - Where we only store type of most variables,
+          except functions for which we story body as well,
+          so that we can check their types everytime we call them?
+    - How to handle recursion?
+      - Simple for functions with concrete types.
+      - Hard for functions without annotated types.
+      - Might be ok to not handle recursive generic functions, and say that they return Any.
+    - How to avoid duplicating all structs and functions when evaluating values and types?
 * kebab-case
 * Equality for dictionaries?
 * Advent of code Needs
@@ -234,6 +254,35 @@ count_if : in {list: List!Generic predicate: in Generic out Boolean} out Number 
 map: in {list: List!Generic0 operation: in Generic0 out Generic1} out List!Generic1 = ...
 map2 : in {list0: List!Generic0 list1: List!Generic0 operation: in List!Generic0 out Generic1} out List!Generic1 = ...
 map2heterogeneous : in {list0: List!Generic0 list1: List!Generic1 operation: in {value0: Generic0 value1: Generic1} out Generic2} out List!Generic2 = ...
+
+// Enklare alternativ - annotera bara definitioner av funktioner.
+
+// primitive to primitive:
+in Number : x out Number : mul!(x x)
+
+// record to primitive:
+in {Number : x Number : y} out Number : sqrt!add!(mul!(x x) mul!(y y))
+
+// list to list:
+in List!Number : x out List!Number : (first@x neg!second!x)
+
+// record to record:
+in {Number : r Number : i} out {Number : r Number : i} : {r := r i := neg!i}
+
+// Generics:
+max_value = in : list out ValueType!list : ...
+max_index = in : list out Number : ...
+count_if = in {: list in ValueType!list : item out Boolean : predicate} out Number : ...
+map = in {: list in ValueType!list : item out : operation} out List!OutputType!operation : ...
+
+// Generics:
+max_value = in List : list out : ...
+max_index = in List : list out Number : ...
+count_if = in {List : list Function : predicate} out Number : ...
+map = in {List : list Function : f} out : ...
+
+// Ännu enklare alternativ - annotera ingenting men checka allt.
+
 
 TYPER
 *Number
