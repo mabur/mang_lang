@@ -1,5 +1,6 @@
 TODO:
 * Type theory
+  - Separate tuples and stacks.
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
   - Is it simple to check types without any type annotation?

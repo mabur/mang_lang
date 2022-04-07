@@ -325,24 +325,10 @@ Expression parseNo(CodeRange code) {
     return makeBoolean(parseKeyWordContent(code, "no"), {false});
 }
 
-Expression parseInf(CodeRange code) {
-    return makeNumber(
-        parseKeyWordContent(code, "inf"),
-        {std::numeric_limits<double>::infinity()}
-    );
-}
-
 Expression parseNegInf(CodeRange code) {
     return makeNumber(
         parseKeyWordContent(code, "-inf"),
         {-std::numeric_limits<double>::infinity()}
-    );
-}
-
-Expression parseNan(CodeRange code) {
-    return makeNumber(
-        parseKeyWordContent(code, "nan"),
-        {std::numeric_limits<double>::quiet_NaN()}
     );
 }
 
@@ -382,8 +368,6 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}
-        if (isKeyword(code, "nan")) {return parseNan(code);}
-        if (isKeyword(code, "inf")) {return parseInf(code);}
         if (isKeyword(code, "-inf")) {return parseNegInf(code);}
         if (isKeyword(code, "if")) {return parseConditional(code);}
         if (isKeyword(code, "is")) {return parseIs(code);}

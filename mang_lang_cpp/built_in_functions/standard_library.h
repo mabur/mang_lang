@@ -10,6 +10,8 @@ const std::string STANDARD_LIBRARY = R"(
     equal = in (left right) out is left right then yes else no
     unequal = in (left right) out is left right then no else yes
 
+    inf = div!(1 0)
+    nan = div!(0 0)
     pi = 3.14159265359
     tau = 6.28318530718
 
