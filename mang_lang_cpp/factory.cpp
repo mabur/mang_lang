@@ -17,6 +17,8 @@ std::vector<Function> functions;
 std::vector<FunctionBuiltIn> built_in_functions;
 std::vector<FunctionDictionary> dictionary_functions;
 std::vector<FunctionStack> stack_functions;
+std::vector<Tuple> tuples;
+std::vector<EvaluatedTuple> evaluated_tuples;
 std::vector<Stack> stacks;
 std::vector<EvaluatedStack> evaluated_stacks;
 std::vector<EmptyStack> empty_stacks;
@@ -250,6 +252,14 @@ Expression makeFunctionStack(CodeRange code, FunctionStack expression) {
     return makeExpression(code, expression, FUNCTION_STACK, stack_functions);
 }
 
+Expression makeTuple(CodeRange code, Tuple expression) {
+    return makeExpression(code, expression, TUPLE, tuples);
+}
+
+Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression) {
+    return makeExpression(code, expression, EVALUATED_TUPLE, evaluated_tuples);
+}
+
 Expression makeStack(CodeRange code, Stack expression) {
     return makeExpression(code, expression, STACK, stacks);
 }
@@ -354,6 +364,14 @@ Dictionary getDictionary(Expression expression) {
 
 EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
     return getMutableExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+}
+
+Tuple getTuple(Expression expression) {
+    return getExpression(expression, TUPLE, tuples);
+}
+
+EvaluatedTuple getEvaluatedTuple(Expression expression) {
+    return getExpression(expression, EVALUATED_TUPLE, evaluated_tuples);
 }
 
 Function getFunction(Expression expression) {

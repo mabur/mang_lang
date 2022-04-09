@@ -271,6 +271,22 @@ Expression parseStack(CodeRange code) {
     return reverseStack(CodeRange{first, code.first}, stack);
 }
 
+Expression parseTuple(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, ':');
+    code = parseWhiteSpace(code);
+    auto expressions = std::vector<Expression>{};
+    while (!::startsWith(code, ';')) {
+        throwIfEmpty(code);
+        auto expression = parseExpression(code);
+        code.first = end(expression);
+        expressions.push_back(expression);
+        code = parseWhiteSpace(code);
+    }
+    code = parseCharacter(code, ';');
+    return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
+}
+
 Expression parseDynamicLookupSymbol(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '<');
@@ -361,6 +377,7 @@ Expression parseExpression(CodeRange code) {
         const auto c = code.first->character;
         if (c == '(') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}
+        if (c == ':') {return parseTuple(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (c == '\'') {return parseLabel(code);}

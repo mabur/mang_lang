@@ -14,6 +14,8 @@ enum ExpressionType {
     IS,
     DICTIONARY,
     EVALUATED_DICTIONARY,
+    TUPLE,
+    EVALUATED_TUPLE,
     FUNCTION,
     FUNCTION_BUILT_IN,
     FUNCTION_DICTIONARY,
@@ -44,6 +46,8 @@ const auto NAMES = std::vector<std::string>{
     "IS",
     "DICTIONARY",
     "EVALUATED_DICTIONARY",
+    "TUPLE",
+    "EVALUATED_TUPLE",
     "FUNCTION",
     "FUNCTION_BUILT_IN",
     "FUNCTION_DICTIONARY",
@@ -131,6 +135,7 @@ struct FunctionDictionary {
     Expression body;
 };
 
+
 struct FunctionStack {
     Expression environment;
     std::vector<Expression> input_names;
@@ -169,6 +174,14 @@ struct String {
 };
 
 struct EmptyString {
+};
+
+struct Tuple {
+    std::vector<Expression> expressions;
+};
+
+struct EvaluatedTuple {
+    std::vector<Expression> expressions;
 };
 
 struct Stack {

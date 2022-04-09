@@ -128,6 +128,32 @@ std::string serializeFunctionStack(const FunctionStack& function_stack) {
     return result;
 }
 
+std::string serializeTuple(Expression s) {
+    const auto expressions = getTuple(s).expressions;
+    if (expressions.empty()) {
+        return ":;";
+    }
+    auto result = std::string{':'};
+    for (const auto& expression : expressions) {
+        result += serialize(expression) + ' ';
+    }
+    result.back() = ';';
+    return result;
+}
+
+std::string serializeEvaluatedTuple(Expression s) {
+    const auto expressions = getEvaluatedTuple(s).expressions;
+    if (expressions.empty()) {
+        return ":;";
+    }
+    auto result = std::string{':'};
+    for (const auto& expression : expressions) {
+        result += serialize(expression) + ' ';
+    }
+    result.back() = ';';
+    return result;
+}
+
 std::string appendElement(const std::string& s, Expression element) {
     return s + serialize(element) + ' ';
 }
@@ -200,8 +226,9 @@ std::string serialize(Expression expression) {
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
-        case FUNCTION_STACK: return serializeFunctionStack(
-                getFunctionStack(expression));
+        case FUNCTION_STACK: return serializeFunctionStack(getFunctionStack(expression));
+        case TUPLE: return serializeTuple(expression);
+        case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return "()";
