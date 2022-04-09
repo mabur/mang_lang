@@ -618,6 +618,10 @@ int main() {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
+    test.evaluate("lookup function tuple", {
+        {"a@{f=in (x) out x a=f!:0;}", "0"},
+        {"a@{f=in (x y) out add!:x y; a=f!:2 3;}", "5"},
+    });
     test.evaluate("clear stack", {
         {"clear!()", "()"},
         {"clear!(1)", "()"},
