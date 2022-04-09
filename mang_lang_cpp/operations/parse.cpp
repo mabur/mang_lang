@@ -271,6 +271,22 @@ Expression parseStack(CodeRange code) {
     return reverseStack(CodeRange{first, code.first}, stack);
 }
 
+Expression parseStackNew(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '[');
+    code = parseWhiteSpace(code);
+    auto stack = makeEmptyStack({}, {});
+    while (!::startsWith(code, ']')) {
+        throwIfEmpty(code);
+        auto expression = parseExpression(code);
+        code.first = end(expression);
+        stack = putStack(stack, expression);
+        code = parseWhiteSpace(code);
+    }
+    code = parseCharacter(code, ']');
+    return reverseStack(CodeRange{first, code.first}, stack);
+}
+
 Expression parseTuple(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, ':');
@@ -376,6 +392,7 @@ Expression parseExpression(CodeRange code) {
         throwIfEmpty(code);
         const auto c = code.first->character;
         if (c == '(') {return parseStack(code);}
+        if (c == '[') {return parseStackNew(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == ':') {return parseTuple(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
