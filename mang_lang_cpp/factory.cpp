@@ -16,10 +16,10 @@ std::vector<IsExpression> is_expressions;
 std::vector<Function> functions;
 std::vector<FunctionBuiltIn> built_in_functions;
 std::vector<FunctionDictionary> dictionary_functions;
-std::vector<FunctionList> list_functions;
-std::vector<List> lists;
-std::vector<EvaluatedList> evaluated_lists;
-std::vector<EmptyList> empty_lists;
+std::vector<FunctionStack> stack_functions;
+std::vector<Stack> stacks;
+std::vector<EvaluatedStack> evaluated_stacks;
+std::vector<EmptyStack> empty_stacks;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
@@ -179,10 +179,10 @@ void clearMemory() {
     functions.clear();
     built_in_functions.clear();
     dictionary_functions.clear();
-    list_functions.clear();
-    lists.clear();
-    evaluated_lists.clear();
-    empty_lists.clear();
+    stack_functions.clear();
+    stacks.clear();
+    evaluated_stacks.clear();
+    empty_stacks.clear();
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
@@ -246,20 +246,20 @@ Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression)
     return makeExpression(code, expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-Expression makeFunctionList(CodeRange code, FunctionList expression) {
-    return makeExpression(code, expression, FUNCTION_LIST, list_functions);
+Expression makeFunctionStack(CodeRange code, FunctionStack expression) {
+    return makeExpression(code, expression, FUNCTION_STACK, stack_functions);
 }
 
-Expression makeList(CodeRange code, List expression) {
-    return makeExpression(code, expression, LIST, lists);
+Expression makeStack(CodeRange code, Stack expression) {
+    return makeExpression(code, expression, STACK, stacks);
 }
 
-Expression makeEvaluatedList(CodeRange code, EvaluatedList expression) {
-    return makeExpression(code, expression, EVALUATED_LIST, evaluated_lists);
+Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
+    return makeExpression(code, expression, EVALUATED_STACK, evaluated_stacks);
 }
 
-Expression makeEmptyList(CodeRange code, EmptyList expression) {
-    return makeExpression(code, expression, EMPTY_LIST, empty_lists);
+Expression makeEmptyStack(CodeRange code, EmptyStack expression) {
+    return makeExpression(code, expression, EMPTY_STACK, empty_stacks);
 }
 
 Expression makeLookupChild(CodeRange code, LookupChild expression) {
@@ -368,20 +368,20 @@ FunctionDictionary getFunctionDictionary(Expression expression) {
     return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-FunctionList getFunctionList(Expression expression) {
-    return getExpression(expression, FUNCTION_LIST, list_functions);
+FunctionStack getFunctionStack(Expression expression) {
+    return getExpression(expression, FUNCTION_STACK, stack_functions);
 }
 
-List getList(Expression expression) {
-    return getExpression(expression, LIST, lists);
+Stack getStack(Expression expression) {
+    return getExpression(expression, STACK, stacks);
 }
 
-EvaluatedList getEvaluatedList(Expression expression) {
-    return getExpression(expression, EVALUATED_LIST, evaluated_lists);
+EvaluatedStack getEvaluatedStack(Expression expression) {
+    return getExpression(expression, EVALUATED_STACK, evaluated_stacks);
 }
 
-EmptyList getEmptyList(Expression expression) {
-    return getExpression(expression, EMPTY_LIST, empty_lists);
+EmptyStack getEmptyStack(Expression expression) {
+    return getExpression(expression, EMPTY_STACK, empty_stacks);
 }
 
 LookupChild getLookupChild(Expression expression) {

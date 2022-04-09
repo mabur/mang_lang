@@ -10,31 +10,34 @@ CodeRange addCodeRanges(Expression rest, Expression first) {
 }
 
 BinaryInput getBinaryInput(Expression expression) {
-    const auto list = getEvaluatedList(expression);
-    const auto rest = getEvaluatedList(list.rest);
-    return BinaryInput{list.first, rest.first};
+    const auto stack = getEvaluatedStack(expression);
+    const auto rest = getEvaluatedStack(stack.rest);
+    return BinaryInput{stack.first, rest.first};
 }
 
 Expression putString(Expression rest, Expression first) {
     return makeString(addCodeRanges(first, rest), String{first, rest});
 }
 
-Expression putList(Expression rest, Expression first) {
-    return makeList(addCodeRanges(first, rest), List{first, rest});
+Expression putStack(Expression rest, Expression first) {
+    return makeStack(addCodeRanges(first, rest), Stack{first, rest});
 }
 
-Expression putEvaluatedList(Expression rest, Expression first) {
-    return makeEvaluatedList(addCodeRanges(first, rest), EvaluatedList{first, rest});
+Expression putEvaluatedStack(Expression rest, Expression first) {
+    return makeEvaluatedStack(addCodeRanges(first, rest),
+        EvaluatedStack{first, rest});
 }
 
 Expression reverseString(CodeRange code, Expression string) {
     return leftFold(makeEmptyString(code, EmptyString{}), string, putString, EMPTY_STRING, getString);
 }
 
-Expression reverseList(CodeRange code, Expression list) {
-    return leftFold(makeEmptyList(code, EmptyList{}), list, putList, EMPTY_LIST, getList);
+Expression reverseStack(CodeRange code, Expression stack) {
+    return leftFold(makeEmptyStack(code, EmptyStack{}), stack, putStack,
+        EMPTY_STACK, getStack);
 }
 
-Expression reverseEvaluatedList(CodeRange code, Expression list) {
-    return leftFold(makeEmptyList(code, EmptyList{}), list, putEvaluatedList, EMPTY_LIST, getEvaluatedList);
+Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
+    return leftFold(makeEmptyStack(code, EmptyStack{}), stack, putEvaluatedStack,
+        EMPTY_STACK, getEvaluatedStack);
 }

@@ -23,11 +23,11 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == BOOLEAN && right_type == BOOLEAN) {
         return getBoolean(left).value == getBoolean(right).value;
     }
-    if (left_type == EMPTY_LIST && right_type == EMPTY_LIST) {
+    if (left_type == EMPTY_STACK && right_type == EMPTY_STACK) {
         return true;
     }
-    if (left_type == EVALUATED_LIST && right_type == EVALUATED_LIST) {
-        return allOfPairs(left, right, isEqual, EMPTY_LIST, getEvaluatedList);
+    if (left_type == EVALUATED_STACK && right_type == EVALUATED_STACK) {
+        return allOfPairs(left, right, isEqual, EMPTY_STACK, getEvaluatedStack);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
@@ -43,8 +43,8 @@ bool boolean(Expression expression) {
         case EVALUATED_DICTIONARY: return !getEvaluatedDictionary(expression).definitions.empty();
         case NUMBER: return static_cast<bool>(getNumber(expression).value);
         case BOOLEAN: return getBoolean(expression).value;
-        case EVALUATED_LIST: return true;
-        case EMPTY_LIST: return false;
+        case EVALUATED_STACK: return true;
+        case EMPTY_STACK: return false;
         case STRING: return true;
         case EMPTY_STRING: return false;
         default: throw UnexpectedExpression(expression.type, "boolean operation");
@@ -136,25 +136,25 @@ Expression evaluateFunctionDictionary(
     });
 }
 
-Expression evaluateFunctionList(
-    const FunctionList& function_list, Expression environment
+Expression evaluateFunctionStack(
+    const FunctionStack& function_stack, Expression environment
 ) {
-    return makeFunctionList(CodeRange{}, {
-        environment, function_list.input_names, function_list.body
+    return makeFunctionStack(CodeRange{}, {
+        environment, function_stack.input_names, function_stack.body
     });
 }
 
-Expression evaluateList(
-    Expression list, Expression environment
+Expression evaluateStack(
+    Expression stack, Expression environment
 ) {
     const auto op = [&](Expression rest, Expression first) -> Expression {
         const auto evaluated_first = evaluate(first, environment);
-        return putEvaluatedList(rest, evaluated_first);
+        return putEvaluatedStack(rest, evaluated_first);
     };
     const auto code = CodeRange{};
-    const auto init = makeEmptyList(code, {});
-    const auto output = leftFold(init, list, op, EMPTY_LIST, getList);
-    return reverseEvaluatedList(code, output);
+    const auto init = makeEmptyStack(code, {});
+    const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
+    return reverseEvaluatedStack(code, output);
 }
 
 Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
@@ -193,14 +193,14 @@ Expression lookupChildInString(const String& string, const std::string& name) {
     throw MissingSymbol(name, "string");
 }
 
-Expression lookupChildInEvaluatedList(const EvaluatedList& list, const std::string& name) {
+Expression lookupChildInEvaluatedStack(const EvaluatedStack& stack, const std::string& name) {
     if (name == "top") {
-        return list.first;
+        return stack.first;
     }
     if (name == "rest") {
-        return list.rest;
+        return stack.rest;
     }
-    throw MissingSymbol(name, "evaluated_list");
+    throw MissingSymbol(name, "evaluated_stack");
 }
 
 Expression evaluateLookupChild(
@@ -210,7 +210,8 @@ Expression evaluateLookupChild(
     const auto name = getName(lookup_child.name).value;
     switch (child.type) {
         case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
-        case EVALUATED_LIST: return lookupChildInEvaluatedList(getEvaluatedList(child), name);
+        case EVALUATED_STACK: return lookupChildInEvaluatedStack(
+                getEvaluatedStack(child), name);
         case STRING: return lookupChildInString(getString(child), name);
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
@@ -240,20 +241,20 @@ Expression applyFunctionDictionary(
     return evaluate(function_dictionary.body, input);
 }
 
-Expression applyFunctionList(const FunctionList& function_list, Expression input
+Expression applyFunctionStack(const FunctionStack& function_stack, Expression input
 ) {
     auto definitions = Definitions{};
     auto expression = input;
-    for (const auto& input_name : function_list.input_names) {
-        const auto list = getEvaluatedList(expression);
+    for (const auto& input_name : function_stack.input_names) {
+        const auto stack = getEvaluatedStack(expression);
         const auto label = getNameAsLabel(input_name);
-        definitions.add(label, list.first);
-        expression = list.rest;
+        definitions.add(label, stack.first);
+        expression = stack.rest;
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function_list.environment, definitions}
+        new EvaluatedDictionary{function_stack.environment, definitions}
     );
-    return evaluate(function_list.body, middle);
+    return evaluate(function_stack.body, middle);
 }
 
 Expression evaluateFunctionApplication(
@@ -266,7 +267,8 @@ Expression evaluateFunctionApplication(
         case FUNCTION: return applyFunction(getFunction(function), input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
-        case FUNCTION_LIST: return applyFunctionList(getFunctionList(function), input);
+        case FUNCTION_STACK: return applyFunctionStack(
+                getFunctionStack(function), input);
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
@@ -295,18 +297,19 @@ Expression evaluate(Expression expression, Expression environment) {
         case LABEL: return expression;
         case EMPTY_STRING: return expression;
         case STRING: return expression;
-        case EMPTY_LIST: return expression;
-        case EVALUATED_LIST: return expression;
+        case EMPTY_STACK: return expression;
+        case EVALUATED_STACK: return expression;
         case EVALUATED_DICTIONARY: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
-        case FUNCTION_LIST: return evaluateFunctionList(getFunctionList(expression), environment);
+        case FUNCTION_STACK: return evaluateFunctionStack(
+                getFunctionStack(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
-        case LIST: return evaluateList(expression, environment);
+        case STACK: return evaluateStack(expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);

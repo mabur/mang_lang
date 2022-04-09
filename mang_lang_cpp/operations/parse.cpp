@@ -224,7 +224,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     );
 }
 
-Expression parseFunctionList(CodeRange code) {
+Expression parseFunctionStack(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
@@ -241,7 +241,7 @@ Expression parseFunctionList(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunctionList(
+    return makeFunctionStack(
         CodeRange{first, code.begin()},
         {Expression{}, input_names, body}
     );
@@ -251,24 +251,24 @@ Expression parseAnyFunction(CodeRange code) {
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     if (startsWith(code, '{')) {return parseFunctionDictionary(code);}
-    if (startsWith(code, '(')) {return parseFunctionList(code);}
+    if (startsWith(code, '(')) {return parseFunctionStack(code);}
     return parseFunction(code);
 }
 
-Expression parseList(CodeRange code) {
+Expression parseStack(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto list = makeEmptyList({}, {});
+    auto stack = makeEmptyStack({}, {});
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
         code.first = end(expression);
-        list = putList(list, expression);
+        stack = putStack(stack, expression);
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
-    return reverseList(CodeRange{first, code.first}, list);
+    return reverseStack(CodeRange{first, code.first}, stack);
 }
 
 Expression parseDynamicLookupSymbol(CodeRange code) {
@@ -359,7 +359,7 @@ Expression parseExpression(CodeRange code) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         const auto c = code.first->character;
-        if (c == '(') {return parseList(code);}
+        if (c == '(') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}

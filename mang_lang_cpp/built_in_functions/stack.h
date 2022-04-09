@@ -2,7 +2,7 @@
 
 struct Expression;
 
-namespace list_functions {
+namespace stack_functions {
 
 Expression clear(Expression in);
 Expression put(Expression in);

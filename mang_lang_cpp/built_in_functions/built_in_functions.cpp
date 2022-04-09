@@ -5,7 +5,7 @@
 #include "../factory.h"
 #include "arithmetic.h"
 #include "dictionary.h"
-#include "list.h"
+#include "stack.h"
 
 Expression define(std::function<Expression(Expression)> function) {
     return makeFunctionBuiltIn(CodeRange{}, {function});
@@ -13,8 +13,8 @@ Expression define(std::function<Expression(Expression)> function) {
 
 Expression builtIns() {
     auto definitions = Definitions{};
-    definitions.add("'clear'", define(list_functions::clear));
-    definitions.add("'put'", define(list_functions::put));
+    definitions.add("'clear'", define(stack_functions::clear));
+    definitions.add("'put'", define(stack_functions::put));
     definitions.add("'get'", define(dictionary_functions::get));
     definitions.add("'get_names'", define(dictionary_functions::get_names));
     definitions.add("'add'", define(arithmetic::add));

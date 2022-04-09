@@ -133,7 +133,7 @@ int main() {
         {R"#("()")#", R"#("()")#"},
         {R"("{}")", R"("{}")"},
     });
-    test.evaluate("list", {
+    test.evaluate("stack", {
         {"()", "()"},
         {"( )", "()"},
         {"(  )", "()"},
@@ -505,7 +505,7 @@ int main() {
         {"unequal?(no yes)", "yes"},
         {"unequal?(no no)", "no"},
     });
-    test.evaluate("equal list", {
+    test.evaluate("equal stack", {
         {"equal?(() ())", "yes"},
         {"equal?((1) (1))", "yes"},
         {"equal?((0) (1))", "no"},
@@ -513,7 +513,7 @@ int main() {
         {"equal?((0 1) (1 1))", "no"},
         {"equal?((0 1) (0))", "no"},
     });
-    test.evaluate("unequal list", {
+    test.evaluate("unequal stack", {
         {"unequal?(() ())", "no"},
         {"unequal?((1) (1))", "no"},
         {"unequal?((0) (1))", "yes"},
@@ -550,7 +550,7 @@ int main() {
         {"in {x y} out x", "in {x y} out x"},
         {"in  {  x    y  }  out  x", "in {x y} out x"},
     });
-    test.evaluate("function list", {
+    test.evaluate("function stack", {
         {"in (x) out x", "in (x) out x"},
         {"in (x y) out x", "in (x y) out x"},
         {"in  (  x    y  )  out  x", "in (x y) out x"},
@@ -566,14 +566,14 @@ int main() {
         {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
         {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
         {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "1"},
-        {"y@{f=in list out map!(in y out 2 list) y=f!(0 0)}", "(2 2)"},
+        {"y@{f=in stack out map!(in y out 2 stack) y=f!(0 0)}", "(2 2)"},
         {"a@{call=in f out f!() g=in x out 0 a=call!g}", "0"},
         {"a@{call=in f out f!() b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
         {"a@{call=in(f)out f!(()) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "0"},
-        {"y@{a=1 g=in y out a f=in list out map!(g list) y=f!(0 0)}", "(1 1)"},
-        {"y@{a=1 f=in list out map!(in y out a list) y=f!(0 0)}", "(1 1)"},
+        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f!(0 0)}", "(1 1)"},
+        {"y@{a=1 f=in stack out map!(in y out a stack) y=f!(0 0)}", "(1 1)"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
-        {"y@{f=in (x list) out map!(in y out x list) y=f!(2 (0 0))}", "(2 2)"},
+        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 (0 0))}", "(2 2)"},
     });
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
@@ -584,11 +584,11 @@ int main() {
         {"a@{f=in {x y z} out add!(x y z) a=f!{x=2 y=3 z=4}}", "9"},
         {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
     });
-    test.evaluate("lookup function list", {
+    test.evaluate("lookup function stack", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
-    test.evaluate("clear list", {
+    test.evaluate("clear stack", {
         {"clear!()", "()"},
         {"clear!(1)", "()"},
         {"clear!(1 2)", "()"},
@@ -598,7 +598,7 @@ int main() {
         {R"(clear!"a")", R"("")"},
         {R"(clear!"ab")", R"("")"},
     });
-    test.evaluate("first list", {
+    test.evaluate("first stack", {
         {"top@(4)", "4"},
         {"top@(3 4)", "3"},
     });
@@ -606,7 +606,7 @@ int main() {
         {R"(top@"b")", R"(\b)"},
         {R"(top@"ab")", R"(\a)"},
     });
-    test.evaluate("rest list", {
+    test.evaluate("rest stack", {
         {"rest@(4)", "()"},
         {"rest@(4 3)", "(3)"},
         {"rest@(4 3 7)", "(3 7)"},
@@ -616,7 +616,7 @@ int main() {
         {R"(rest@"ab")", R"("b")"},
         {R"(rest@"abc")", R"("bc")"},
     });
-    test.evaluate("reverse list", {
+    test.evaluate("reverse stack", {
         {"reverse!()", "()"},
         {"reverse!(0)", "(0)"},
         {"reverse!(0 1)", "(1 0)"},
@@ -628,7 +628,7 @@ int main() {
         {R"(reverse!"ab")", R"("ba")"},
         {R"(reverse!"abc")", R"("cba")"},
     });
-    test.evaluate("put list", {
+    test.evaluate("put stack", {
         {"put!(3 ())", "(3)"},
         {"put!(4 (5))", "(4 5)"},
         {"put!(4 (6 8))", "(4 6 8)"},
@@ -738,7 +738,7 @@ int main() {
         {"count!range!100", "100"},
         {"add!range!100", "4950"},
     });
-    test.evaluate("count list", {
+    test.evaluate("count stack", {
         {"count!()", "0"},
         {"count!(())", "1"},
         {"count!(() ())", "2"},
@@ -748,7 +748,7 @@ int main() {
         {R"(count!"a")", "1"},
         {R"(count!"ab")", "2"},
     });
-    test.evaluate("count_item list", {
+    test.evaluate("count_item stack", {
         {"count_item!(1 ())", "0"},
         {"count_item!(1 (1))", "1"},
         {"count_item!(1 (1 1))", "2"},
@@ -760,7 +760,7 @@ int main() {
         {R"(count_item!(\a "aa"))", "2"},
         {R"(count_item!(\a "aba"))", "2"},
     });
-    test.evaluate("count_if list", {
+    test.evaluate("count_if stack", {
         {"count_if!(in x out 0 ())", "0"},
         {"count_if!(in x out 0 (1))", "0"},
         {"count_if!(in x out 1 ())", "0"},
@@ -776,7 +776,7 @@ int main() {
         {R"(count_if!(in x out equal?(x \c) "abc"))", "1"},
         {R"(count_if!(in x out equal?(x \c) "cbc"))", "2"},
     });
-    test.evaluate("map list", {
+    test.evaluate("map stack", {
         {"map!(inc ())", "()"},
         {"map!(inc (0))", "(1)"},
         {"map!(inc (0 1))", "(1 2)"},
@@ -787,7 +787,7 @@ int main() {
         {R"(map_string!(to_upper ""))", R"("")"},
         {R"(map_string!(to_upper "abc"))", R"("ABC")"},
     });
-    test.evaluate("clear_if list", {
+    test.evaluate("clear_if stack", {
         {"clear_if!(in x out 1 ())", "()"},
         {"clear_if!(in x out 1 (()))", "()"},
         {"clear_if!(in x out 0 (()))", "(())"},
@@ -803,13 +803,13 @@ int main() {
         {R"(clear_if!(in x out equal?(x \a) "ba"))", R"("b")"},
         {R"(clear_if!(in x out equal?(x \a) "bab"))", R"("bb")"},
     });
-    test.evaluate("clear_item list", {
+    test.evaluate("clear_item stack", {
         {"clear_item!(1 ())", "()"},
         {"clear_item!(1 (0))", "(0)"},
         {"clear_item!(1 (1))", "()"},
         {"clear_item!(1 (1 7 1 2 7 1 1))", "(7 2 7)"},
     });
-    test.evaluate("replace list", {
+    test.evaluate("replace stack", {
         {"replace!(1 ())", "()"},
         {"replace!(1 (1))", "(1)"},
         {"replace!(1 (2))", "(1)"},
@@ -821,7 +821,7 @@ int main() {
         {R"(replace!(\a "c"))", R"("a")"},
         {R"(replace!(\a "ab_ba"))", R"("aaaaa")"},
     });
-    test.evaluate("replace_item list", {
+    test.evaluate("replace_item stack", {
         {"replace_item!(1 2 ())", "()"},
         {"replace_item!(1 2 (1))", "(2)"},
         {"replace_item!(1 2 (2))", "(2)"},
@@ -833,7 +833,7 @@ int main() {
         {R"(replace_item!(\a \b "c"))", R"("c")"},
         {R"(replace_item!(\a \b "ab_ba"))", R"("bb_bb")"},
     });
-    test.evaluate("replace_if list", {
+    test.evaluate("replace_if stack", {
         {"replace_if!(in x out equal?(x 1) 2 ())", "()"},
         {"replace_if!(in x out equal?(x 1) 2 (1))", "(2)"},
         {"replace_if!(in x out equal?(x 1) 2 (2))", "(2)"},
@@ -845,7 +845,7 @@ int main() {
         {R"(replace_if!(in x out equal?(x \a) \b "c"))", R"("c")"},
         {R"(replace_if!(in x out equal?(x \a) \b "ab_ba"))", R"("bb_bb")"},
     });
-    test.evaluate("enumerate list", {
+    test.evaluate("enumerate stack", {
         {"enumerate!()", "()"},
         {"enumerate!(4)", "((0 4))"},
         {"enumerate!(4 3)", "((0 4) (1 3))"},
@@ -892,7 +892,7 @@ int main() {
         {"split!(1 (1 2))", "((1) (2))"},
         {"split!(2 (1 2 3 4))", "((2 1) (3 4))"},
     });
-    test.evaluate("drop list", {
+    test.evaluate("drop stack", {
         {"drop!(0 (3 7 6))", "(3 7 6)"},
         {"drop!(1 (3 7 6))", "(7 6)"},
         {"drop!(2 (3 7 6))", "(6)"},
@@ -917,7 +917,7 @@ int main() {
         {R"(find_item!(\a "ab"))", R"("ab")"},
         {R"(find_item!(\a "ba"))", R"("a")"},
     });
-    test.evaluate("take list", {
+    test.evaluate("take stack", {
         {"take!(0 (3 7 6))", "()"},
         {"take!(1 (3 7 6))", "(3)"},
         {"take!(2 (3 7 6))", "(3 7)"},
@@ -929,7 +929,7 @@ int main() {
         {R"(take!(2 "abc"))", R"("ab")"},
         {R"(take!(3 "abc"))", R"("abc")"},
     });
-    test.evaluate("get_index list", {
+    test.evaluate("get_index stack", {
         {"get_index!(0 (3 7 6))", "3"},
         {"get_index!(1 (3 7 6))", "7"},
         {"get_index!(2 (3 7 6))", "6"},

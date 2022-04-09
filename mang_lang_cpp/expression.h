@@ -17,10 +17,10 @@ enum ExpressionType {
     FUNCTION,
     FUNCTION_BUILT_IN,
     FUNCTION_DICTIONARY,
-    FUNCTION_LIST,
-    LIST,
-    EVALUATED_LIST,
-    EMPTY_LIST,
+    FUNCTION_STACK,
+    STACK,
+    EVALUATED_STACK,
+    EMPTY_STACK,
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
@@ -47,10 +47,10 @@ const auto NAMES = std::vector<std::string>{
     "FUNCTION",
     "FUNCTION_BUILT_IN",
     "FUNCTION_DICTIONARY",
-    "FUNCTION_LIST",
-    "LIST",
-    "EVALUATED_LIST",
-    "EMPTY_LIST",
+    "FUNCTION_STACK",
+    "STACK",
+    "EVALUATED_STACK",
+    "EMPTY_STACK",
     "LOOKUP_CHILD",
     "FUNCTION_APPLICATION",
     "LOOKUP_SYMBOL",
@@ -131,7 +131,7 @@ struct FunctionDictionary {
     Expression body;
 };
 
-struct FunctionList {
+struct FunctionStack {
     Expression environment;
     std::vector<Expression> input_names;
     Expression body;
@@ -171,17 +171,17 @@ struct String {
 struct EmptyString {
 };
 
-struct List {
+struct Stack {
     Expression first;
     Expression rest;
 };
 
-struct EvaluatedList {
+struct EvaluatedStack {
     Expression first;
     Expression rest;
 };
 
-struct EmptyList {
+struct EmptyStack {
 };
 
 struct Definition {

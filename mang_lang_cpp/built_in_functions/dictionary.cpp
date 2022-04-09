@@ -21,12 +21,12 @@ Expression get_names(Expression in) {
     const auto dictionary = getEvaluatedDictionary(in);
     auto definitions = dictionary.definitions.sorted();
     std::reverse(definitions.begin(), definitions.end());
-    auto list = makeEmptyList({}, {});
+    auto stack = makeEmptyStack({}, {});
     for (const auto& definition : definitions) {
         const auto name = makeName({}, Name{definition.first});
-        list = putEvaluatedList(list, name);
+        stack = putEvaluatedStack(stack, name);
     }
-    return list;
+    return stack;
 }
 
 }
