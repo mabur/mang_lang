@@ -253,32 +253,17 @@ Expression applyFunctionDictionary(
 
 Expression applyFunctionStack(const FunctionStack& function_stack, Expression input
 ) {
-    if (input.type == EVALUATED_TUPLE) {
-        auto tuple = getEvaluatedTuple(input);
-        const auto& input_names = function_stack.input_names;
-        if (input_names.size() != tuple.expressions.size()) {
-            throw std::runtime_error{"Wrong number of input to function"};
-        }
-        auto definitions = Definitions{};
-        const auto num_inputs = input_names.size();
-        for (size_t i = 0; i < num_inputs; ++i) {
-            const auto label = getNameAsLabel(input_names[i]);
-            const auto expression = tuple.expressions[i];
-            definitions.add(label, expression);
-        }
-        const auto middle = makeEvaluatedDictionary(CodeRange{},
-            new EvaluatedDictionary{function_stack.environment, definitions}
-        );
-        return evaluate(function_stack.body, middle);
+    auto tuple = getEvaluatedTuple(input);
+    const auto& input_names = function_stack.input_names;
+    if (input_names.size() != tuple.expressions.size()) {
+        throw std::runtime_error{"Wrong number of input to function"};
     }
-
     auto definitions = Definitions{};
-    auto expression = input;
-    for (const auto& input_name : function_stack.input_names) {
-        const auto stack = getEvaluatedStack(expression);
-        const auto label = getNameAsLabel(input_name);
-        definitions.add(label, stack.top);
-        expression = stack.rest;
+    const auto num_inputs = input_names.size();
+    for (size_t i = 0; i < num_inputs; ++i) {
+        const auto label = getNameAsLabel(input_names[i]);
+        const auto expression = tuple.expressions[i];
+        definitions.add(label, expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         new EvaluatedDictionary{function_stack.environment, definitions}

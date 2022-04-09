@@ -506,70 +506,70 @@ int main() {
         {"equal?:1 1;", "yes"},
     });
     test.evaluate("unequal number", {
-        {"unequal?(0 0)", "no"},
-        {"unequal?(0 1)", "yes"},
-        {"unequal?(1 0)", "yes"},
-        {"unequal?(1 1)", "no"},
+        {"unequal?:0 0;", "no"},
+        {"unequal?:0 1;", "yes"},
+        {"unequal?:1 0;", "yes"},
+        {"unequal?:1 1;", "no"},
     });
     test.evaluate("equal character", {
-        {R"(equal?(\a \a))", "yes"},
-        {R"(equal?(\a \b))", "no"},
-        {R"(equal?(\b \a))", "no"},
-        {R"(equal?(\b \b))", "yes"},
+        {R"(equal?:\a \a;)", "yes"},
+        {R"(equal?:\a \b;)", "no"},
+        {R"(equal?:\b \a;)", "no"},
+        {R"(equal?:\b \b;)", "yes"},
     });
     test.evaluate("unequal character", {
-        {R"(unequal?(\a \a))", "no"},
-        {R"(unequal?(\a \b))", "yes"},
-        {R"(unequal?(\b \a))", "yes"},
-        {R"(unequal?(\b \b))", "no"},
+        {R"(unequal?:\a \a;)", "no"},
+        {R"(unequal?:\a \b;)", "yes"},
+        {R"(unequal?:\b \a;)", "yes"},
+        {R"(unequal?:\b \b;)", "no"},
     });
     test.evaluate("equal boolean", {
-        {"equal?(yes yes)", "yes"},
-        {"equal?(yes no)", "no"},
-        {"equal?(no yes)", "no"},
-        {"equal?(no no)", "yes"},
+        {"equal?:yes yes;", "yes"},
+        {"equal?:yes no;", "no"},
+        {"equal?:no yes;", "no"},
+        {"equal?:no no;", "yes"},
     });
     test.evaluate("unequal boolean", {
-        {"unequal?(yes yes)", "no"},
-        {"unequal?(yes no)", "yes"},
-        {"unequal?(no yes)", "yes"},
-        {"unequal?(no no)", "no"},
+        {"unequal?:yes yes;", "no"},
+        {"unequal?:yes no;", "yes"},
+        {"unequal?:no yes;", "yes"},
+        {"unequal?:no no;", "no"},
     });
     test.evaluate("equal stack", {
-        {"equal?(() ())", "yes"},
-        {"equal?((1) (1))", "yes"},
-        {"equal?((0) (1))", "no"},
-        {"equal?((0 1) (0 1))", "yes"},
-        {"equal?((0 1) (1 1))", "no"},
-        {"equal?((0 1) (0))", "no"},
+        {"equal?:() ();", "yes"},
+        {"equal?:(1) (1);", "yes"},
+        {"equal?:(0) (1);", "no"},
+        {"equal?:(0 1) (0 1);", "yes"},
+        {"equal?:(0 1) (1 1);", "no"},
+        {"equal?:(0 1) (0);", "no"},
     });
     test.evaluate("unequal stack", {
-        {"unequal?(() ())", "no"},
-        {"unequal?((1) (1))", "no"},
-        {"unequal?((0) (1))", "yes"},
-        {"unequal?((0 1) (0 1))", "no"},
-        {"unequal?((0 1) (1 1))", "yes"},
-        {"unequal?((0 1) (0))", "yes"},
+        {"unequal?:() ();", "no"},
+        {"unequal?:(1) (1);", "no"},
+        {"unequal?:(0) (1);", "yes"},
+        {"unequal?:(0 1) (0 1);", "no"},
+        {"unequal?:(0 1) (1 1);", "yes"},
+        {"unequal?:(0 1) (0);", "yes"},
     });
     test.evaluate("equal string", {
-        {R"(equal?("" ""))", "yes"},
-        {R"(equal?("a" ""))", "no"},
-        {R"(equal?("" "a"))", "no"},
-        {R"(equal?("a" "a"))", "yes"},
-        {R"(equal?("a" "b"))", "no"},
-        {R"(equal?("ab" "ab"))", "yes"},
-        {R"(equal?("abc" "ab"))", "no"},
-        {R"(equal?("ab" "abc"))", "no"},
+        {R"(equal?:"" "";)", "yes"},
+        {R"(equal?:"a" "";)", "no"},
+        {R"(equal?:"" "a";)", "no"},
+        {R"(equal?:"a" "a";)", "yes"},
+        {R"(equal?:"a" "b";)", "no"},
+        {R"(equal?:"ab" "ab";)", "yes"},
+        {R"(equal?:"abc" "ab";)", "no"},
+        {R"(equal?:"ab" "abc";)", "no"},
     });
     test.evaluate("unequal string", {
-        {R"(unequal?("" ""))", "no"},
-        {R"(unequal?("a" ""))", "yes"},
-        {R"(unequal?("" "a"))", "yes"},
-        {R"(unequal?("a" "a"))", "no"},
-        {R"(unequal?("a" "b"))", "yes"},
-        {R"(unequal?("ab" "ab"))", "no"},
-        {R"(unequal?("abc" "ab"))", "yes"},
-        {R"(unequal?("ab" "abc"))", "yes"},
+        {R"(unequal?:"" "";)", "no"},
+        {R"(unequal?:"a" "";)", "yes"},
+        {R"(unequal?:"" "a";)", "yes"},
+        {R"(unequal?:"a" "a";)", "no"},
+        {R"(unequal?:"a" "b";)", "yes"},
+        {R"(unequal?:"ab" "ab";)", "no"},
+        {R"(unequal?:"abc" "ab";)", "yes"},
+        {R"(unequal?:"ab" "abc";)", "yes"},
     });
     test.evaluate("function", {
         {"in x out x",       "in x out x"},
@@ -599,7 +599,7 @@ int main() {
         {"y@{f=in stack out map!:in y out 2 stack; y=f!(0 0)}", "(2 2)"},
         {"a@{call=in f out f!() g=in x out 0 a=call!g}", "0"},
         {"a@{call=in f out f!() b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
-        {"a@{call=in(f)out f!(()) b={a=0 g=in(x)out a} g=g@b a=call!:g;}", "0"},
+        {"a@{call=in(f)out f!:(); b={a=0 g=in(x)out a} g=g@b a=call!:g;}", "0"},
         {"y@{a=1 g=in y out a f=in stack out map!:g stack; y=f!(0 0)}", "(1 1)"},
         {"y@{a=1 f=in stack out map!:in y out a stack; y=f!(0 0)}", "(1 1)"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
@@ -615,8 +615,8 @@ int main() {
         {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
     });
     test.evaluate("lookup function stack", {
-        {"a@{f=in (x) out x a=f!(0)}", "0"},
-        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
+        {"a@{f=in (x) out x a=f!:0;}", "0"},
+        {"a@{f=in (x y) out add!(x y) a=f!:2 3;}", "5"},
     });
     test.evaluate("lookup function tuple", {
         {"a@{f=in (x) out x a=f!:0;}", "0"},
@@ -799,16 +799,16 @@ int main() {
         {"count_if!:in x out 0 (1);", "0"},
         {"count_if!:in x out 1 ();", "0"},
         {"count_if!:in x out 1 (1);", "1"},
-        {"count_if!:in x out equal?(x 3) (1 2 3);", "1"},
-        {"count_if!:in x out equal?(x 3) (3 2 3);", "2"},
+        {"count_if!:in x out equal?:x 3; (1 2 3);", "1"},
+        {"count_if!:in x out equal?:x 3; (3 2 3);", "2"},
     });
     test.evaluate("count_if string", {
         {R"(count_if!:in x out 0 "";)", "0"},
         {R"(count_if!:in x out 0 "a";)", "0"},
         {R"(count_if!:in x out 1 "";)", "0"},
         {R"(count_if!:in x out 1 "a";)", "1"},
-        {R"(count_if!:in x out equal?(x \c) "abc";)", "1"},
-        {R"(count_if!:in x out equal?(x \c) "cbc";)", "2"},
+        {R"(count_if!:in x out equal?:x \c; "abc";)", "1"},
+        {R"(count_if!:in x out equal?:x \c; "cbc";)", "2"},
     });
     test.evaluate("map stack", {
         {"map!:inc ();", "()"},
@@ -832,10 +832,10 @@ int main() {
         {R"(clear_if!:in x out 0 "a";)", R"("a")"},
         {R"(clear_if!:in x out 1 "";)", R"("")"},
         {R"(clear_if!:in x out 1 "a";)", R"("")"},
-        {R"(clear_if!:in x out equal?(x \a) "a";)", R"("")"},
-        {R"(clear_if!:in x out equal?(x \a) "ab";)", R"("b")"},
-        {R"(clear_if!:in x out equal?(x \a) "ba";)", R"("b")"},
-        {R"(clear_if!:in x out equal?(x \a) "bab";)", R"("bb")"},
+        {R"(clear_if!:in x out equal?:x \a; "a";)", R"("")"},
+        {R"(clear_if!:in x out equal?:x \a; "ab";)", R"("b")"},
+        {R"(clear_if!:in x out equal?:x \a; "ba";)", R"("b")"},
+        {R"(clear_if!:in x out equal?:x \a; "bab";)", R"("bb")"},
     });
     test.evaluate("clear_item stack", {
         {"clear_item!:1 ();", "()"},
@@ -868,16 +868,16 @@ int main() {
         {R"(replace_item!:\a \b "ab_ba";)", R"("bb_bb")"},
     });
     test.evaluate("replace_if stack", {
-        {"replace_if!:in x out equal?(x 1) 2 ();", "()"},
-        {"replace_if!:in x out equal?(x 1) 2 (1);", "(2)"},
-        {"replace_if!:in x out equal?(x 1) 2 (2);", "(2)"},
-        {"replace_if!:in x out equal?(x 1) 2 (0 1 0 1 1);", "(0 2 0 2 2)"},
+        {"replace_if!:in x out equal?:x 1; 2 ();", "()"},
+        {"replace_if!:in x out equal?:x 1; 2 (1);", "(2)"},
+        {"replace_if!:in x out equal?:x 1; 2 (2);", "(2)"},
+        {"replace_if!:in x out equal?:x 1; 2 (0 1 0 1 1);", "(0 2 0 2 2)"},
     });
     test.evaluate("replace_if string", {
-        {R"(replace_if!:in x out equal?(x \a) \b "";)", R"("")"},
-        {R"(replace_if!:in x out equal?(x \a) \b "a";)", R"("b")"},
-        {R"(replace_if!:in x out equal?(x \a) \b "c";)", R"("c")"},
-        {R"(replace_if!:in x out equal?(x \a) \b "ab_ba";)", R"("bb_bb")"},
+        {R"(replace_if!:in x out equal?:x \a; \b "";)", R"("")"},
+        {R"(replace_if!:in x out equal?:x \a; \b "a";)", R"("b")"},
+        {R"(replace_if!:in x out equal?:x \a; \b "c";)", R"("c")"},
+        {R"(replace_if!:in x out equal?:x \a; \b "ab_ba";)", R"("bb_bb")"},
     });
     test.evaluate("enumerate stack", {
         {"enumerate!()", "()"},

@@ -136,7 +136,7 @@ const std::string STANDARD_LIBRARY = R"(
     ;
 
     clear_item = in (item stack) out
-        clear_if?:in x out equal?(x item) stack;
+        clear_if?:in x out equal?:x item; stack;
 
     find_if = in (predicate stack) out stack@{
         stack = stack
@@ -146,7 +146,7 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     find_item = in (item stack) out
-        find_if?:in x out equal?(x item) stack;
+        find_if?:in x out equal?:x item; stack;
 
     replace = in (new_item stack) out fold!:
         in (item stack) out put!:new_item stack;
@@ -165,7 +165,7 @@ const std::string STANDARD_LIBRARY = R"(
     ;
 
     replace_item = in (old_item new_item stack) out
-        replace_if?:in x out equal?(x old_item) new_item stack;
+        replace_if?:in x out equal?:x old_item; new_item stack;
 
     count = in stack out fold!:
         in (item n) out inc!n
@@ -180,7 +180,7 @@ const std::string STANDARD_LIBRARY = R"(
     ;
 
     count_item = in (item stack) out
-        count_if!:in x out equal?(x item) stack;
+        count_if!:in x out equal?:x item; stack;
 
     range = in n out stack@{
         stack = ()
@@ -246,11 +246,11 @@ const std::string STANDARD_LIBRARY = R"(
     merge_sorted = in (left right) out reverse!stack@{
         stack = ()
         while or?(left right)
-            while less_or_equal_top?(left right)
+            while less_or_equal_top?:left right;
                 stack = put!:top@left stack;
                 left = rest@left
             end
-            while less_or_equal_top?(right left)
+            while less_or_equal_top?:right left;
                 stack = put!:top@right stack;
                 right = rest@right
             end
