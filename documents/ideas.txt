@@ -21,6 +21,7 @@ TODO:
       - Might be ok to not handle recursive generic functions, and say that they return Any.
     - How to avoid duplicating all structs and functions when evaluating values and types?
 * kebab-case
+  - Numbers and -inf constant.
 * Equality for dictionaries?
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
