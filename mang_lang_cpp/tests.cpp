@@ -134,19 +134,19 @@ int main() {
         {R"("{}")", R"("{}")"},
     });
     test.evaluate("stack", {
-        {"[]", "()"},
-        {"[ ]", "()"},
-        {"[  ]", "()"},
-        {"[1]", "(1)"},
-        {"[ 1]", "(1)"},
-        {"[1 ]", "(1)"},
-        {"[ 1 ]", "(1)"},
-        {"[1 2]", "(1 2)"},
-        {"[1  2]", "(1 2)"},
-        {"[ 1  2 ]", "(1 2)"},
-        {"[[]]", "(())"},
-        {"[[] []]", "(() ())"},
-        {"[[[]]]", "((()))"},
+        {"[]", "[]"},
+        {"[ ]", "[]"},
+        {"[  ]", "[]"},
+        {"[1]", "[1]"},
+        {"[ 1]", "[1]"},
+        {"[1 ]", "[1]"},
+        {"[ 1 ]", "[1]"},
+        {"[1 2]", "[1 2]"},
+        {"[1  2]", "[1 2]"},
+        {"[ 1  2 ]", "[1 2]"},
+        {"[[]]", "[[]]"},
+        {"[[] []]", "[[] []]"},
+        {"[[[]]]", "[[[]]]"},
     });
     test.reformat("tuple", {
         {":;", ":;"},
@@ -221,7 +221,7 @@ int main() {
     test.reformat("dynamic_lookup", {
         {"<1>", "<1>"},
         {R"(<"a">)", R"(<"a">)"},
-        {R"([<"a">])", R"((<"a">))"},
+        {R"([<"a">])", R"([<"a">])"},
         {R"({a=<"b">})", R"({a=<"b">})"},
         {R"({a=1 b=<"a">})", R"({a=1 b=<"a">})"},
     });
@@ -252,8 +252,8 @@ int main() {
         {"{a=1 b_0=a}", "{a=1 b_0=1}"},
         {"{a=1 b={c=a}}", "{a=1 b={c=1}}"},
         {"{a=1 b={c={d=a}}}", "{a=1 b={c={d=1}}}"},
-        {"{a=1 b=[a]}", "{a=1 b=(1)}"},
-        {"{a=1 b=[[a]]}", "{a=1 b=((1))}"},
+        {"{a=1 b=[a]}", "{a=1 b=[1]}"},
+        {"{a=1 b=[[a]]}", "{a=1 b=[[1]]}"},
         {"{a=1 b=c@{c=a}}", "{a=1 b=1}"},
         {"{a=1 b=add![a a]}", "{a=1 b=2}"},
         {"{a=1 b=if a then a else 2}", "{a=1 b=1}"},
@@ -288,7 +288,7 @@ int main() {
         {"endar@{endar=5}", "5"},
     });
     test.reformat("lookup_function", {
-        {"add![]", "add!()"},
+        {"add![]", "add![]"},
     });
     test.evaluate("number constants", {
         {"inf", "inf"},
@@ -587,7 +587,7 @@ int main() {
     });
     test.evaluate("lookup function", {
         {"a@{f=in x out x a=f!0}", "0"},
-        {"a@{f=in x out x a=f![]}", "()"},
+        {"a@{f=in x out x a=f![]}", "[]"},
         {"a@{f=in x out 1 a=f!0}", "1"},
         {"z@{f=in x out y@{y = 3} z=f!2}", "3"},
         {"z@{f=in x out result@{y=3 result=add![x y]}  z=f!2}", "5"},
@@ -596,14 +596,14 @@ int main() {
         {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
         {"y@{apply=in (f x) out f!x y = apply!:inc 2;}", "3"},
         {"y@{apply=in (f x) out f!x id=in x out apply!:in x out x x; y = id!1}", "1"},
-        {"y@{f=in stack out map!:in y out 2 stack; y=f![0 0]}", "(2 2)"},
+        {"y@{f=in stack out map!:in y out 2 stack; y=f![0 0]}", "[2 2]"},
         {"a@{call=in f out f![] g=in x out 0 a=call!g}", "0"},
         {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
         {"a@{call=in(f)out f!:[]; b={a=0 g=in(x)out a} g=g@b a=call!:g;}", "0"},
-        {"y@{a=1 g=in y out a f=in stack out map!:g stack; y=f![0 0]}", "(1 1)"},
-        {"y@{a=1 f=in stack out map!:in y out a stack; y=f![0 0]}", "(1 1)"},
+        {"y@{a=1 g=in y out a f=in stack out map!:g stack; y=f![0 0]}", "[1 1]"},
+        {"y@{a=1 f=in stack out map!:in y out a stack; y=f![0 0]}", "[1 1]"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
-        {"y@{f=in (x stack) out map!:in y out x stack; y=f!:2 [0 0];}", "(2 2)"},
+        {"y@{f=in (x stack) out map!:in y out x stack; y=f!:2 [0 0];}", "[2 2]"},
     });
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add![x f!dec!x] else 0 y=f!3}", "6"},
@@ -623,9 +623,9 @@ int main() {
         {"a@{f=in (x y) out add![x y] a=f!:2 3;}", "5"},
     });
     test.evaluate("clear stack", {
-        {"clear![]", "()"},
-        {"clear![1]", "()"},
-        {"clear![1 2]", "()"},
+        {"clear![]", "[]"},
+        {"clear![1]", "[]"},
+        {"clear![1 2]", "[]"},
     });
     test.evaluate("clear string", {
         {R"(clear!"")", R"("")"},
@@ -641,9 +641,9 @@ int main() {
         {R"(top@"ab")", R"(\a)"},
     });
     test.evaluate("rest stack", {
-        {"rest@[4]", "()"},
-        {"rest@[4 3]", "(3)"},
-        {"rest@[4 3 7]", "(3 7)"},
+        {"rest@[4]", "[]"},
+        {"rest@[4 3]", "[3]"},
+        {"rest@[4 3 7]", "[3 7]"},
     });
     test.evaluate("rest string", {
         {R"(rest@"a")", R"("")"},
@@ -651,10 +651,10 @@ int main() {
         {R"(rest@"abc")", R"("bc")"},
     });
     test.evaluate("reverse stack", {
-        {"reverse![]", "()"},
-        {"reverse![0]", "(0)"},
-        {"reverse![0 1]", "(1 0)"},
-        {"reverse![0 1 2]", "(2 1 0)"},
+        {"reverse![]", "[]"},
+        {"reverse![0]", "[0]"},
+        {"reverse![0 1]", "[1 0]"},
+        {"reverse![0 1 2]", "[2 1 0]"},
     });
     test.evaluate("reverse string", {
         {R"(reverse!"")", R"("")"},
@@ -663,9 +663,9 @@ int main() {
         {R"(reverse!"abc")", R"("cba")"},
     });
     test.evaluate("put stack", {
-        {"put!:3 [];", "(3)"},
-        {"put!:4 [5];", "(4 5)"},
-        {"put!:4 [6 8];", "(4 6 8)"},
+        {"put!:3 [];", "[3]"},
+        {"put!:4 [5];", "[4 5]"},
+        {"put!:4 [6 8];", "[4 6 8]"},
     });
     test.evaluate("put string", {
         {R"(put!:\a "";)", R"("a")"},
@@ -680,21 +680,21 @@ int main() {
         {R"(get!:'a' {};)", "missing"},
     });
     test.evaluate("get_names", {
-        {"get_names!{}", "()"},
-        {"get_names!{a=1}", "('a')"},
-        {"get_names!{<0>=1}", "(0)"},
-        {R"(get_names!{<"a">=1})", R"(("a"))"},
+        {"get_names!{}", "[]"},
+        {"get_names!{a=1}", "['a']"},
+        {"get_names!{<0>=1}", "[0]"},
+        {R"(get_names!{<"a">=1})", R"(["a"])"},
         {"get!:top@get_names!{a=0} {a=1};", "1"},
     });
     test.evaluate("get_values", {
-        {"get_values!{a=0}", "(0)"},
-        {"get_values!{a=0 b=1 c=2}", "(0 1 2)"},
-        {"get_values!{a='a' b='b' c='c'}", "('a' 'b' 'c')"},
+        {"get_values!{a=0}", "[0]"},
+        {"get_values!{a=0 b=1 c=2}", "[0 1 2]"},
+        {"get_values!{a='a' b='b' c='c'}", "['a' 'b' 'c']"},
     });
     test.evaluate("get_items", {
-        {"get_items!{a=0}", "(('a' 0))"},
-        {"get_items!{a=0 b=1 c=2}", "(('a' 0) ('b' 1) ('c' 2))"},
-        {"get_items!{a='a' b='b' c='c'}", "(('a' 'a') ('b' 'b') ('c' 'c'))"},
+        {"get_items!{a=0}", "[['a' 0]]"},
+        {"get_items!{a=0 b=1 c=2}", "[['a' 0] ['b' 1] ['c' 2]]"},
+        {"get_items!{a='a' b='b' c='c'}", "[['a' 'a'] ['b' 'b'] ['c' 'c']]"},
     });
     test.evaluate("inc", {
         {"inc!0", "1"},
@@ -763,10 +763,10 @@ int main() {
         {R"(parse_digit!\9)", "9"},
     });
     test.evaluate("range", {
-        {"range!0", "()"},
-        {"range!1", "(0)"},
-        {"range!2", "(0 1)"},
-        {"range!3", "(0 1 2)"},
+        {"range!0", "[]"},
+        {"range!1", "[0]"},
+        {"range!2", "[0 1]"},
+        {"range!3", "[0 1 2]"},
     });
     test.evaluate("iteration", {
         {"count!range!100", "100"},
@@ -811,21 +811,21 @@ int main() {
         {R"(count_if!:in x out equal?:x \c; "cbc";)", "2"},
     });
     test.evaluate("map stack", {
-        {"map!:inc [];", "()"},
-        {"map!:inc [0];", "(1)"},
-        {"map!:inc [0 1];", "(1 2)"},
-        {"map!:in x out 2 [0 0];", "(2 2)"},
-        {"a@{b=2 f=in x out b a=map!:f [0 0];}", "(2 2)"},
+        {"map!:inc [];", "[]"},
+        {"map!:inc [0];", "[1]"},
+        {"map!:inc [0 1];", "[1 2]"},
+        {"map!:in x out 2 [0 0];", "[2 2]"},
+        {"a@{b=2 f=in x out b a=map!:f [0 0];}", "[2 2]"},
     });
     test.evaluate("map_string", {
         {R"(map_string!:to_upper "";)", R"("")"},
         {R"(map_string!:to_upper "abc";)", R"("ABC")"},
     });
     test.evaluate("clear_if stack", {
-        {"clear_if!:in x out 1 [];", "()"},
-        {"clear_if!:in x out 1 [[]];", "()"},
-        {"clear_if!:in x out 0 [[]];", "(())"},
-        {"clear_if!:in x out less?[x 5] [7 4 6 1 9 3 2];", "(7 6 9)"},
+        {"clear_if!:in x out 1 [];", "[]"},
+        {"clear_if!:in x out 1 [[]];", "[]"},
+        {"clear_if!:in x out 0 [[]];", "[[]]"},
+        {"clear_if!:in x out less?[x 5] [7 4 6 1 9 3 2];", "[7 6 9]"},
     });
     test.evaluate("clear_if string", {
         {R"(clear_if!:in x out 0 "";)", R"("")"},
@@ -838,16 +838,16 @@ int main() {
         {R"(clear_if!:in x out equal?:x \a; "bab";)", R"("bb")"},
     });
     test.evaluate("clear_item stack", {
-        {"clear_item!:1 [];", "()"},
-        {"clear_item!:1 [0];", "(0)"},
-        {"clear_item!:1 [1];", "()"},
-        {"clear_item!:1 [1 7 1 2 7 1 1];", "(7 2 7)"},
+        {"clear_item!:1 [];", "[]"},
+        {"clear_item!:1 [0];", "[0]"},
+        {"clear_item!:1 [1];", "[]"},
+        {"clear_item!:1 [1 7 1 2 7 1 1];", "[7 2 7]"},
     });
     test.evaluate("replace stack", {
-        {"replace!:1 [];", "()"},
-        {"replace!:1 [1];", "(1)"},
-        {"replace!:1 [2];", "(1)"},
-        {"replace!:1 [0 1 0 1 1];", "(1 1 1 1 1)"},
+        {"replace!:1 [];", "[]"},
+        {"replace!:1 [1];", "[1]"},
+        {"replace!:1 [2];", "[1]"},
+        {"replace!:1 [0 1 0 1 1];", "[1 1 1 1 1]"},
     });
     test.evaluate("replace string", {
         {R"(replace!:\a "";)", R"("")"},
@@ -856,10 +856,10 @@ int main() {
         {R"(replace!:\a "ab_ba";)", R"("aaaaa")"},
     });
     test.evaluate("replace_item stack", {
-        {"replace_item!:1 2 [];", "()"},
-        {"replace_item!:1 2 [1];", "(2)"},
-        {"replace_item!:1 2 [2];", "(2)"},
-        {"replace_item!:1 2 [0 1 0 1 1];", "(0 2 0 2 2)"},
+        {"replace_item!:1 2 [];", "[]"},
+        {"replace_item!:1 2 [1];", "[2]"},
+        {"replace_item!:1 2 [2];", "[2]"},
+        {"replace_item!:1 2 [0 1 0 1 1];", "[0 2 0 2 2]"},
     });
     test.evaluate("replace_item string", {
         {R"(replace_item!:\a \b "";)", R"("")"},
@@ -868,10 +868,10 @@ int main() {
         {R"(replace_item!:\a \b "ab_ba";)", R"("bb_bb")"},
     });
     test.evaluate("replace_if stack", {
-        {"replace_if!:in x out equal?:x 1; 2 [];", "()"},
-        {"replace_if!:in x out equal?:x 1; 2 [1];", "(2)"},
-        {"replace_if!:in x out equal?:x 1; 2 [2];", "(2)"},
-        {"replace_if!:in x out equal?:x 1; 2 [0 1 0 1 1];", "(0 2 0 2 2)"},
+        {"replace_if!:in x out equal?:x 1; 2 [];", "[]"},
+        {"replace_if!:in x out equal?:x 1; 2 [1];", "[2]"},
+        {"replace_if!:in x out equal?:x 1; 2 [2];", "[2]"},
+        {"replace_if!:in x out equal?:x 1; 2 [0 1 0 1 1];", "[0 2 0 2 2]"},
     });
     test.evaluate("replace_if string", {
         {R"(replace_if!:in x out equal?:x \a; \b "";)", R"("")"},
@@ -880,22 +880,22 @@ int main() {
         {R"(replace_if!:in x out equal?:x \a; \b "ab_ba";)", R"("bb_bb")"},
     });
     test.evaluate("enumerate stack", {
-        {"enumerate![]", "()"},
-        {"enumerate![4]", "((0 4))"},
-        {"enumerate![4 3]", "((0 4) (1 3))"},
+        {"enumerate![]", "[]"},
+        {"enumerate![4]", "[[0 4]]"},
+        {"enumerate![4 3]", "[[0 4] [1 3]]"},
     });
     test.evaluate("enumerate string", {
-        {R"(enumerate!"")", R"(())"},
-        {R"(enumerate!"a")", R"(((0 \a)))"},
-        {R"(enumerate!"ab")", R"(((0 \a) (1 \b)))"},
+        {R"(enumerate!"")", R"([])"},
+        {R"(enumerate!"a")", R"([[0 \a]])"},
+        {R"(enumerate!"ab")", R"([[0 \a] [1 \b]])"},
     });
     test.evaluate("put_each", {
-        {"put_each!:[] [];", "()"},
-        {"put_each!:[] [2];", "(2)"},
-        {"put_each!:[1] [];", "(1)"},
-        {"put_each!:[1] [2];", "(1 2)"},
-        {"put_each!:[1 2] [3 4];", "(2 1 3 4)"},
-        {"put_each!:[1 2 3] [4 5 6];", "(3 2 1 4 5 6)"},
+        {"put_each!:[] [];", "[]"},
+        {"put_each!:[] [2];", "[2]"},
+        {"put_each!:[1] [];", "[1]"},
+        {"put_each!:[1] [2];", "[1 2]"},
+        {"put_each!:[1 2] [3 4];", "[2 1 3 4]"},
+        {"put_each!:[1 2 3] [4 5 6];", "[3 2 1 4 5 6]"},
     });
     test.evaluate("put_each string", {
         {R"(put_each!:"" "";)", R"("")"},
@@ -906,11 +906,11 @@ int main() {
         {R"(put_each!:"abc" "def";)", R"("cbadef")"},
     });
     test.evaluate("concat", {
-        {"concat![[] []]", "()"},
-        {"concat![[] [2]]", "(2)"},
-        {"concat![[1] []]", "(1)"},
-        {"concat![[1] [2]]", "(1 2)"},
-        {"concat![[1] [2 3] [4 5 6]]", "(1 2 3 4 5 6)"},
+        {"concat![[] []]", "[]"},
+        {"concat![[] [2]]", "[2]"},
+        {"concat![[1] []]", "[1]"},
+        {"concat![[1] [2]]", "[1 2]"},
+        {"concat![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
     });
     test.evaluate("concat_strings", {
         {R"(concat_strings!["" ""])", R"("")"},
@@ -920,17 +920,17 @@ int main() {
         {R"(concat_strings!["a" "bc" "def"])", R"("abcdef")"},
     });
     test.evaluate("split", {
-        {"split!:0 [];", "(() ())"},
-        {"split!:1 [];", "(() ())"},
-        {"split!:0 [1];", "(() (1))"},
-        {"split!:1 [1 2];", "((1) (2))"},
-        {"split!:2 [1 2 3 4];", "((2 1) (3 4))"},
+        {"split!:0 [];", "[[] []]"},
+        {"split!:1 [];", "[[] []]"},
+        {"split!:0 [1];", "[[] [1]]"},
+        {"split!:1 [1 2];", "[[1] [2]]"},
+        {"split!:2 [1 2 3 4];", "[[2 1] [3 4]]"},
     });
     test.evaluate("drop stack", {
-        {"drop!:0 [3 7 6];", "(3 7 6)"},
-        {"drop!:1 [3 7 6];", "(7 6)"},
-        {"drop!:2 [3 7 6];", "(6)"},
-        {"drop!:3 [3 7 6];", "()"},
+        {"drop!:0 [3 7 6];", "[3 7 6]"},
+        {"drop!:1 [3 7 6];", "[7 6]"},
+        {"drop!:2 [3 7 6];", "[6]"},
+        {"drop!:3 [3 7 6];", "[]"},
     });
     test.evaluate("drop string", {
         {R"(drop!:0 "abc";)", R"("abc")"},
@@ -952,10 +952,10 @@ int main() {
         {R"(find_item!:\a "ba";)", R"("a")"},
     });
     test.evaluate("take stack", {
-        {"take!:0 [3 7 6];", "()"},
-        {"take!:1 [3 7 6];", "(3)"},
-        {"take!:2 [3 7 6];", "(3 7)"},
-        {"take!:3 [3 7 6];", "(3 7 6)"},
+        {"take!:0 [3 7 6];", "[]"},
+        {"take!:1 [3 7 6];", "[3]"},
+        {"take!:2 [3 7 6];", "[3 7]"},
+        {"take!:3 [3 7 6];", "[3 7 6]"},
     });
     test.evaluate("take string", {
         {R"(take!:0 "abc";)", R"("")"},
@@ -974,12 +974,12 @@ int main() {
         {R"(get_index!:2 "abc";)", R"(\c)"},
     });
     test.evaluate("merge_sorted", {
-        {"merge_sorted!:[] [];", "()"},
-        {"merge_sorted!:[0] [];", "(0)"},
-        {"merge_sorted!:[] [0];", "(0)"},
-        {"merge_sorted!:[0] [0];", "(0 0)"},
-        {"merge_sorted!:[0 2] [1 3];", "(0 1 2 3)"},
-        {"merge_sorted!:[0 1 2 5 8 9] [0 2 4 6 7];", "(0 0 1 2 2 4 5 6 7 8 9)"},
+        {"merge_sorted!:[] [];", "[]"},
+        {"merge_sorted!:[0] [];", "[0]"},
+        {"merge_sorted!:[] [0];", "[0]"},
+        {"merge_sorted!:[0] [0];", "[0 0]"},
+        {"merge_sorted!:[0 2] [1 3];", "[0 1 2 3]"},
+        {"merge_sorted!:[0 1 2 5 8 9] [0 2 4 6 7];", "[0 0 1 2 2 4 5 6 7 8 9]"},
     });
     test.evaluate("indexing", {
         {"first![11 12 13 14 15 16 17 18 19]", "11"},
@@ -993,24 +993,24 @@ int main() {
         {"ninth![11 12 13 14 15 16 17 18 19]", "19"},
     });
     test.evaluate("zip", {
-        {"zip![[] []]", "()"},
-        {"zip![[0] [1]]", "((0 1))"},
-        {"zip![[0 1] [2 3]]", "((0 2) (1 3))"},
-        {"zip![[0 1 2] [3 4 5]]", "((0 3) (1 4) (2 5))"},
+        {"zip![[] []]", "[]"},
+        {"zip![[0] [1]]", "[[0 1]]"},
+        {"zip![[0 1] [2 3]]", "[[0 2] [1 3]]"},
+        {"zip![[0 1 2] [3 4 5]]", "[[0 3] [1 4] [2 5]]"},
     });
     test.evaluate("unique", {
-        {"unique![]", "()"},
-        {"unique![1]", "(1)"},
-        {"unique![1 2]", "(1 2)"},
-        {"unique![1 1]", "(1)"},
-        {"unique![1 1 2 3 1 4 2 4 0]", "(1 2 3 4 0)"},
+        {"unique![]", "[]"},
+        {"unique![1]", "[1]"},
+        {"unique![1 2]", "[1 2]"},
+        {"unique![1 1]", "[1]"},
+        {"unique![1 1 2 3 1 4 2 4 0]", "[1 2 3 4 0]"},
     });
     test.evaluate("duplicate", {
-        {"duplicate![]", "()"},
-        {"duplicate![1]", "()"},
-        {"duplicate![1 2]", "()"},
-        {"duplicate![1 1]", "(1)"},
-        {"duplicate![1 1 2 3 1 4 2 4 0]", "(1 2 4)"},
+        {"duplicate![]", "[]"},
+        {"duplicate![1]", "[]"},
+        {"duplicate![1 2]", "[]"},
+        {"duplicate![1 1]", "[1]"},
+        {"duplicate![1 1 2 3 1 4 2 4 0]", "[1 2 4]"},
     });
     test.reformat("is", {
         {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
