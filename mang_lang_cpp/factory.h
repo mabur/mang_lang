@@ -23,7 +23,7 @@ EvaluatedTuple getEvaluatedTuple(Expression expression);
 Function getFunction(Expression expression);
 FunctionBuiltIn getFunctionBuiltIn(Expression expression);
 FunctionDictionary getFunctionDictionary(Expression expression);
-FunctionStack getFunctionStack(Expression expression);
+FunctionTuple getFunctionTuple(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
 EmptyStack getEmptyStack(Expression expression);
@@ -46,7 +46,7 @@ Expression makeEvaluatedDictionary(CodeRange code, const EvaluatedDictionary* ex
 Expression makeFunction(CodeRange code, Function expression);
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression);
 Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression);
-Expression makeFunctionStack(CodeRange code, FunctionStack expression);
+Expression makeFunctionTuple(CodeRange code, FunctionTuple expression);
 Expression makeTuple(CodeRange code, Tuple expression);
 Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression);
 Expression makeStack(CodeRange code, Stack expression);

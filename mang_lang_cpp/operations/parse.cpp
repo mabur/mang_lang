@@ -224,7 +224,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     );
 }
 
-Expression parseFunctionStack(CodeRange code) {
+Expression parseFunctionTuple(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
@@ -241,7 +241,7 @@ Expression parseFunctionStack(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunctionStack(
+    return makeFunctionTuple(
         CodeRange{first, code.begin()},
         {Expression{}, input_names, body}
     );
@@ -251,7 +251,7 @@ Expression parseAnyFunction(CodeRange code) {
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     if (startsWith(code, '{')) {return parseFunctionDictionary(code);}
-    if (startsWith(code, '(')) {return parseFunctionStack(code);}
+    if (startsWith(code, '(')) {return parseFunctionTuple(code);}
     return parseFunction(code);
 }
 

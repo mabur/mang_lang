@@ -16,7 +16,7 @@ std::vector<IsExpression> is_expressions;
 std::vector<Function> functions;
 std::vector<FunctionBuiltIn> built_in_functions;
 std::vector<FunctionDictionary> dictionary_functions;
-std::vector<FunctionStack> stack_functions;
+std::vector<FunctionTuple> tuple_functions;
 std::vector<Tuple> tuples;
 std::vector<EvaluatedTuple> evaluated_tuples;
 std::vector<Stack> stacks;
@@ -181,7 +181,7 @@ void clearMemory() {
     functions.clear();
     built_in_functions.clear();
     dictionary_functions.clear();
-    stack_functions.clear();
+    tuple_functions.clear();
     stacks.clear();
     evaluated_stacks.clear();
     empty_stacks.clear();
@@ -248,8 +248,8 @@ Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression)
     return makeExpression(code, expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-Expression makeFunctionStack(CodeRange code, FunctionStack expression) {
-    return makeExpression(code, expression, FUNCTION_STACK, stack_functions);
+Expression makeFunctionTuple(CodeRange code, FunctionTuple expression) {
+    return makeExpression(code, expression, FUNCTION_TUPLE, tuple_functions);
 }
 
 Expression makeTuple(CodeRange code, Tuple expression) {
@@ -386,8 +386,8 @@ FunctionDictionary getFunctionDictionary(Expression expression) {
     return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
 }
 
-FunctionStack getFunctionStack(Expression expression) {
-    return getExpression(expression, FUNCTION_STACK, stack_functions);
+FunctionTuple getFunctionTuple(Expression expression) {
+    return getExpression(expression, FUNCTION_TUPLE, tuple_functions);
 }
 
 Stack getStack(Expression expression) {

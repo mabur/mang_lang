@@ -110,7 +110,7 @@ std::string serializeFunctionDictionary(const FunctionDictionary& function_dicti
     return result;
 }
 
-std::string serializeFunctionStack(const FunctionStack& function_stack) {
+std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
     auto result = std::string{};
     result += "in ";
     result += "(";
@@ -226,7 +226,8 @@ std::string serialize(Expression expression) {
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
-        case FUNCTION_STACK: return serializeFunctionStack(getFunctionStack(expression));
+        case FUNCTION_TUPLE: return serializeFunctionTuple(
+                getFunctionTuple(expression));
         case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);

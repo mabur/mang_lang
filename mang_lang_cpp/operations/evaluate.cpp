@@ -136,10 +136,10 @@ Expression evaluateFunctionDictionary(
     });
 }
 
-Expression evaluateFunctionStack(
-    const FunctionStack& function_stack, Expression environment
+Expression evaluateFunctionTuple(
+    const FunctionTuple& function_stack, Expression environment
 ) {
-    return makeFunctionStack(CodeRange{}, {
+    return makeFunctionTuple(CodeRange{}, {
         environment, function_stack.input_names, function_stack.body
     });
 }
@@ -251,7 +251,7 @@ Expression applyFunctionDictionary(
     return evaluate(function_dictionary.body, input);
 }
 
-Expression applyFunctionStack(const FunctionStack& function_stack, Expression input
+Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression input
 ) {
     auto tuple = getEvaluatedTuple(input);
     const auto& input_names = function_stack.input_names;
@@ -281,8 +281,8 @@ Expression evaluateFunctionApplication(
         case FUNCTION: return applyFunction(getFunction(function), input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
-        case FUNCTION_STACK: return applyFunctionStack(
-                getFunctionStack(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(
+                getFunctionTuple(function), input);
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
@@ -317,8 +317,8 @@ Expression evaluate(Expression expression, Expression environment) {
         case EVALUATED_TUPLE: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
-        case FUNCTION_STACK: return evaluateFunctionStack(
-                getFunctionStack(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(
+                getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
