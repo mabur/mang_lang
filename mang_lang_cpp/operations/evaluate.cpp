@@ -147,9 +147,9 @@ Expression evaluateFunctionStack(
 Expression evaluateStack(
     Expression stack, Expression environment
 ) {
-    const auto op = [&](Expression rest, Expression first) -> Expression {
-        const auto evaluated_first = evaluate(first, environment);
-        return putEvaluatedStack(rest, evaluated_first);
+    const auto op = [&](Expression rest, Expression top) -> Expression {
+        const auto evaluated_top = evaluate(top, environment);
+        return putEvaluatedStack(rest, evaluated_top);
     };
     const auto code = CodeRange{};
     const auto init = makeEmptyStack(code, {});
@@ -185,7 +185,7 @@ Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionar
 
 Expression lookupChildInString(const String& string, const std::string& name) {
     if (name == "top") {
-        return string.first;
+        return string.top;
     }
     if (name == "rest") {
         return string.rest;
@@ -195,7 +195,7 @@ Expression lookupChildInString(const String& string, const std::string& name) {
 
 Expression lookupChildInEvaluatedStack(const EvaluatedStack& stack, const std::string& name) {
     if (name == "top") {
-        return stack.first;
+        return stack.top;
     }
     if (name == "rest") {
         return stack.rest;
@@ -248,7 +248,7 @@ Expression applyFunctionStack(const FunctionStack& function_stack, Expression in
     for (const auto& input_name : function_stack.input_names) {
         const auto stack = getEvaluatedStack(expression);
         const auto label = getNameAsLabel(input_name);
-        definitions.add(label, stack.first);
+        definitions.add(label, stack.top);
         expression = stack.rest;
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},

@@ -598,11 +598,11 @@ int main() {
         {R"(clear!"a")", R"("")"},
         {R"(clear!"ab")", R"("")"},
     });
-    test.evaluate("first stack", {
+    test.evaluate("top stack", {
         {"top@(4)", "4"},
         {"top@(3 4)", "3"},
     });
-    test.evaluate("first string", {
+    test.evaluate("top string", {
         {R"(top@"b")", R"(\b)"},
         {R"(top@"ab")", R"(\a)"},
     });

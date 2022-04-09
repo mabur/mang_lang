@@ -164,7 +164,7 @@ struct Boolean {
 };
 
 struct String {
-    Expression first;
+    Expression top;
     Expression rest;
 };
 
@@ -172,12 +172,12 @@ struct EmptyString {
 };
 
 struct Stack {
-    Expression first;
+    Expression top;
     Expression rest;
 };
 
 struct EvaluatedStack {
-    Expression first;
+    Expression top;
     Expression rest;
 };
 
