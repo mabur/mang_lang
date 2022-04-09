@@ -191,7 +191,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in stack out zip!(range!count!stack stack)
+    enumerate = in stack out zip![range!count!stack stack]
 
     drop = in (n stack) out short_stack@{
         short_stack = stack
