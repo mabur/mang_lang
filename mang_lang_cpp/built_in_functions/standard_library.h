@@ -260,20 +260,20 @@ const std::string STANDARD_LIBRARY = R"(
     unique = in stack out reverse!result@{
         result = clear!stack
         while stack
-            result = is [top@stack] missing
+            result = is <top@stack> missing
                 then put!(top@stack result)
                 else result
-            [top@stack] = yes
+            <top@stack> = yes
             stack = rest@stack
         end
     }
     duplicate = in stack out reverse!unique!result@{
         result = clear!stack
         while stack
-            result = is [top@stack] missing
+            result = is <top@stack> missing
                 then result
                 else put!(top@stack result)
-            [top@stack] = yes
+            <top@stack> = yes
             stack = rest@stack
         end
     }

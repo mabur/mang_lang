@@ -43,7 +43,7 @@ std::string serializeDefinition(const Definition& element) {
 }
 
 std::string serializeDynamicDefinition(const DynamicDefinition& element) {
-    return '[' + serialize(element.dynamic_name) + ']' + '=' +
+    return '<' + serialize(element.dynamic_name) + '>' + '=' +
         serialize(element.expression) + ' ';
 }
 
@@ -80,7 +80,7 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
         if (c == '\'') {
             result += pair.first.substr(1, pair.first.size() - 2) + "=" + serialize(pair.second) + " ";
         } else {
-            result += "[" + pair.first + "]" + "=" + serialize(pair.second) + " ";
+            result += "<" + pair.first + ">" + "=" + serialize(pair.second) + " ";
         }
     }
     result.back() = '}';
@@ -160,7 +160,7 @@ std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
 }
 
 std::string serializeDynamicLookupSymbol(const DynamicLookupSymbol& dynamic_lookup_symbol) {
-    return "[" + serialize(dynamic_lookup_symbol.expression) + "]";
+    return "<" + serialize(dynamic_lookup_symbol.expression) + ">";
 }
 
 std::string serializeNumber(const Number& number) {

@@ -120,12 +120,12 @@ Expression parseNamedElement(CodeRange code) {
 
 Expression parseDynamicNamedElement(CodeRange code) {
     auto first = code.begin();
-    code = parseCharacter(code, '[');
+    code = parseCharacter(code, '<');
     code = parseWhiteSpace(code);
     auto dynamic_name = parseExpression(code);
     code.first = end(dynamic_name);
     code = parseWhiteSpace(code);
-    code = parseCharacter(code, ']');
+    code = parseCharacter(code, '>');
     code = parseWhiteSpace(code);
     code = parseCharacter(code, '=');
     code = parseWhiteSpace(code);
@@ -163,7 +163,7 @@ Expression parseDictionaryElement(CodeRange code) {
     if (isKeyword(code, "end")) {
         return parseEndStatement(code);
     }
-    if (::startsWith(code, '[')) {
+    if (::startsWith(code, '<')) {
         return parseDynamicNamedElement(code);
     }
     return parseNamedElement(code);
@@ -273,11 +273,11 @@ Expression parseStack(CodeRange code) {
 
 Expression parseDynamicLookupSymbol(CodeRange code) {
     auto first = code.begin();
-    code = parseCharacter(code, '[');
+    code = parseCharacter(code, '<');
     const auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    code = parseCharacter(code, ']');
+    code = parseCharacter(code, '>');
     return makeDynamicLookupSymbol(CodeRange{first, code.first}, {expression});
 }
 
@@ -364,7 +364,7 @@ Expression parseExpression(CodeRange code) {
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (c == '\'') {return parseLabel(code);}
-        if (c == '[') {return parseDynamicLookupSymbol(code);}
+        if (c == '<') {return parseDynamicLookupSymbol(code);}
         if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}

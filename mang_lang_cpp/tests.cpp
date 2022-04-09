@@ -158,14 +158,14 @@ int main() {
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
         {"{i=2 sum=0 while i sum=add!(sum i) i=dec!i end}", "{i=0 sum=3}"},
         {"{i=1000 sum=0 while i sum=add!(sum i) i=dec!i end}", "{i=0 sum=500500}"},
-        {"{i=1 while i i=dec!i end [i]=i}", "{i=0 [0]=0}"},
-        {"{i=2 while i i=dec!i end [i]=i}", "{i=0 [0]=0}"},
-        {"{i=1 while i i=dec!i [i]=i end}", "{i=0 [0]=0}"},
-        {"{[0]=1 i=2 while i i=dec!i end}", "{[0]=1 i=0}"},
-        {"{i=2 while i i=dec!i [i]=i end}", "{i=0 [1]=1 [0]=0}"},
-        {"{i=1 while i [i]=i i=dec!i end}", "{i=0 [1]=1}"},
-        {"{i=2 while i [i]=i i=dec!i end}", "{i=0 [2]=2 [1]=1}"},
-        {"{i=1 [0]=1 while less?(i 3) [i]=[dec!i] i=inc!i end}", "{i=3 [0]=1 [1]=1 [2]=1}"}
+        {"{i=1 while i i=dec!i end <i>=i}", "{i=0 <0>=0}"},
+        {"{i=2 while i i=dec!i end <i>=i}", "{i=0 <0>=0}"},
+        {"{i=1 while i i=dec!i <i>=i end}", "{i=0 <0>=0}"},
+        {"{<0>=1 i=2 while i i=dec!i end}", "{<0>=1 i=0}"},
+        {"{i=2 while i i=dec!i <i>=i end}", "{i=0 <1>=1 <0>=0}"},
+        {"{i=1 while i <i>=i i=dec!i end}", "{i=0 <1>=1}"},
+        {"{i=2 while i <i>=i i=dec!i end}", "{i=0 <2>=2 <1>=1}"},
+        {"{i=1 <0>=1 while less?(i 3) <i>=<dec!i> i=inc!i end}", "{i=3 <0>=1 <1>=1 <2>=1}"}
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},
@@ -175,32 +175,32 @@ int main() {
         {"{a_0=1}", "{a_0=1}"},
         {"{ a = 1 }", "{a=1}"},
         {"{a=1 a=2}", "{a=2}"},
-        {"{a=1 ['a']=2}", "{a=2}"},
+        {"{a=1 <'a'>=2}", "{a=2}"},
         {"{a=1 b=2}", "{a=1 b=2}"},
         {"{ a = 1  b = 2 }", "{a=1 b=2}"},
-        {"{[1]=2}", "{[1]=2}"},
-        {"{['a']=2}", "{a=2}"},
-        {"{a=1 [a]=2}", "{a=1 [1]=2}"},
-        {"{a=1 [a]=2 a=dec!a [a]=3}", "{a=0 [1]=2 [0]=3}"},
+        {"{<1>=2}", "{<1>=2}"},
+        {"{<'a'>=2}", "{a=2}"},
+        {"{a=1 <a>=2}", "{a=1 <1>=2}"},
+        {"{a=1 <a>=2 a=dec!a <a>=3}", "{a=0 <1>=2 <0>=3}"},
         {"{a=1 b=a}", "{a=1 b=1}"},
-        {"{[1]=2 a=[1]}", "{[1]=2 a=2}"},
+        {"{<1>=2 a=<1>}", "{<1>=2 a=2}"},
         {R"({a=1})", R"({a=1})"},
-        {R"({["a"]=1})", R"({["a"]=1})"},
-        {R"({[0]=1 a=0 [a]=2})", R"({[0]=2 a=0})"},
+        {R"({<"a">=1})", R"({<"a">=1})"},
+        {R"({<0>=1 a=0 <a>=2})", R"({<0>=2 a=0})"},
     });
     test.reformat("dynamic_lookup", {
-        {"[1]", "[1]"},
-        {R"(["a"])", R"(["a"])"},
-        {R"((["a"]))", R"((["a"]))"},
-        {R"({a=["b"]})", R"({a=["b"]})"},
-        {R"({a=1 b=["a"]})", R"({a=1 b=["a"]})"},
+        {"<1>", "<1>"},
+        {R"(<"a">)", R"(<"a">)"},
+        {R"((<"a">))", R"((<"a">))"},
+        {R"({a=<"b">})", R"({a=<"b">})"},
+        {R"({a=1 b=<"a">})", R"({a=1 b=<"a">})"},
     });
     test.evaluate("dynamic_lookup", {
-        {"{a=[1]}", "{a=missing}"},
-        {"{a=1 b=['a']}", "{a=1 b=1}"},
+        {"{a=<1>}", "{a=missing}"},
+        {"{a=1 b=<'a'>}", "{a=1 b=1}"},
     });
     test.reformat("dictionary", {
-        {"{[1]=2}", "{[1]=2}"},
+        {"{<1>=2}", "{<1>=2}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
@@ -639,17 +639,17 @@ int main() {
         {R"(put!(\a "bc"))", R"("abc")"},
     });
     test.evaluate("get dictionary", {
-        {R"(get!(0 {[0]=1}))", "1"},
-        {R"(get!("a" {["a"]=1}))", "1"},
+        {R"(get!(0 {<0>=1}))", "1"},
+        {R"(get!("a" {<"a">=1}))", "1"},
         {R"(get!('a' {a=1}))", "1"},
-        {R"(get!('a' {['a']=1}))", "1"},
+        {R"(get!('a' {<'a'>=1}))", "1"},
         {R"(get!('a' {}))", "missing"},
     });
     test.evaluate("get_names", {
         {"get_names!{}", "()"},
         {"get_names!{a=1}", "('a')"},
-        {"get_names!{[0]=1}", "(0)"},
-        {R"(get_names!{["a"]=1})", R"(("a"))"},
+        {"get_names!{<0>=1}", "(0)"},
+        {R"(get_names!{<"a">=1})", R"(("a"))"},
         {"get!(top@get_names!{a=0} {a=1})", "1"},
     });
     test.evaluate("get_values", {
