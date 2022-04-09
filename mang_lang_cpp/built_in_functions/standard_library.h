@@ -49,10 +49,10 @@ const std::string STANDARD_LIBRARY = R"(
     eighth = in stack out top@rest@rest@rest@rest@rest@rest@rest@stack
     ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
 
-    get_values = in dictionary out map!(
+    get_values = in dictionary out map!:
         in name out get!(name dictionary)
         get_names!dictionary
-    )
+    ;
 
     get_items = in dictionary out zip!(
         get_names!dictionary
@@ -68,38 +68,38 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    put_each = in (top_stack bottom_stack) out fold!(
+    put_each = in (top_stack bottom_stack) out fold!:
         put
         top_stack
         bottom_stack
-    )
+    ;
 
     reverse = in stack out
-        put_each!(stack clear!stack)
+        put_each!:stack clear!stack;
 
-    concat = in stacks out reverse!fold!(
+    concat = in stacks out reverse!fold!:
         put_each
         stacks
         ()
-    )
+    ;
 
-    concat_strings = in strings out reverse!fold!(
+    concat_strings = in strings out reverse!fold!:
         put_each
         strings
         ""
-    )
+    ;
 
-    map = in (f stack) out reverse!fold!(
+    map = in (f stack) out reverse!fold!:
         in (item stack) out put!(f!item stack)
         stack
         ()
-    )
+    ;
 
-    map_string = in (f stack) out reverse!fold!(
+    map_string = in (f stack) out reverse!fold!:
         in (item stack) out put!(f!item stack)
         stack
         ""
-    )
+    ;
 
     pick_top = in stack out top@stack
     pick_rest = in stack out rest@stack
@@ -107,25 +107,25 @@ const std::string STANDARD_LIBRARY = R"(
     zip = in stacks out reverse!result@{
         result = ()
         while top@stacks
-            item = map!(pick_top stacks)
+            item = map!:pick_top stacks;
             result = put!(item result)
-            stacks = map!(pick_rest stacks)
+            stacks = map!:pick_rest stacks;
         end
     }
 
-    min = in stack out fold!(
+    min = in stack out fold!:
         in (item value) out if less?(item value) then item else value
         stack
         inf
-    )
+    ;
 
-    max = in stack out fold!(
+    max = in stack out fold!:
         in (item value) out if less?(item value) then value else item
         stack
         -inf
-    )
+    ;
 
-    clear_if = in (predicate stack) out reverse!fold!(
+    clear_if = in (predicate stack) out reverse!fold!:
         in (item stack) out
             if predicate?item then
                 stack
@@ -133,10 +133,10 @@ const std::string STANDARD_LIBRARY = R"(
                 put!(item stack)
         stack
         clear!stack
-    )
+    ;
 
     clear_item = in (item stack) out
-        clear_if?(in x out equal?(x item) stack)
+        clear_if?:in x out equal?(x item) stack;
 
     find_if = in (predicate stack) out stack@{
         stack = stack
@@ -146,15 +146,15 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     find_item = in (item stack) out
-        find_if?(in x out equal?(x item) stack)
+        find_if?:in x out equal?(x item) stack;
 
-    replace = in (new_item stack) out fold!(
+    replace = in (new_item stack) out fold!:
         in (item stack) out put!(new_item stack)
         stack
         clear!stack
-    )
+    ;
 
-    replace_if = in (predicate new_item stack) out reverse!fold!(
+    replace_if = in (predicate new_item stack) out reverse!fold!:
         in (item stack) out
             if predicate?item then
                 put!(new_item stack)
@@ -162,25 +162,25 @@ const std::string STANDARD_LIBRARY = R"(
                 put!(item stack)
         stack
         clear!stack
-    )
+    ;
 
     replace_item = in (old_item new_item stack) out
-        replace_if?(in x out equal?(x old_item) new_item stack)
+        replace_if?:in x out equal?(x old_item) new_item stack;
 
-    count = in stack out fold!(
+    count = in stack out fold!:
         in (item n) out inc!n
         stack
         0
-    )
+    ;
 
-    count_if = in (predicate stack) out fold!(
+    count_if = in (predicate stack) out fold!:
         in (item n) out if predicate?item then inc!n else n
         stack
         0
-    )
+    ;
 
     count_item = in (item stack) out
-        count_if!(in x out equal?(x item) stack)
+        count_if!:in x out equal?(x item) stack;
 
     range = in n out stack@{
         stack = ()
@@ -225,11 +225,11 @@ const std::string STANDARD_LIBRARY = R"(
         stacks = (top_stack bottom_stack)
     }
 
-    get_index = in (index stack) out top@drop!(index stack)
+    get_index = in (index stack) out top@drop!:index stack;
 
-    all = in stack out not?find_if!(not stack)
-    none = in stack out not?find_if!(boolean stack)
-    any = in stack out boolean?find_if!(boolean stack)
+    all = in stack out not?find_if!:not stack;
+    none = in stack out not?find_if!:boolean stack;
+    any = in stack out boolean?find_if!:boolean stack;
 
     and = in stack out all?stack
     or = in stack out any?stack
