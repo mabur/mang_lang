@@ -10,14 +10,14 @@ const std::string STANDARD_LIBRARY = R"(
     equal = in (left right) out is left right then yes else no
     unequal = in (left right) out is left right then no else yes
 
-    inf = div!(1 0)
-    nan = div!(0 0)
+    inf = div!:1 0;
+    nan = div!:0 0;
     pi = 3.14159265359
     tau = 6.28318530718
 
     inc = in x out add!(x 1)
-    dec = in x out sub!(x 1)
-    neg = in x out sub!(0 x)
+    dec = in x out sub!:x 1;
+    neg = in x out sub!:0 x;
     abs = in x out if less?(0 x) then x else neg!x
 
     is_upper = in c out less_or_equal?(65 number!c 90)
@@ -25,11 +25,11 @@ const std::string STANDARD_LIBRARY = R"(
     is_letter = in c out any?(is_upper?c is_lower?c)
     is_digit = in c out less_or_equal?(48 number!c 57)
 
-    parse_digit = in c out sub!(number!c 48)
+    parse_digit = in c out sub!:number!c 48;
 
     to_upper = in c out
         if is_lower?c then
-            character!sub!(number!c 32)
+            character!sub!:number!c 32;
         else
             c
 
@@ -50,7 +50,7 @@ const std::string STANDARD_LIBRARY = R"(
     ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
 
     get_values = in dictionary out map!:
-        in name out get!(name dictionary)
+        in name out get!:name dictionary;
         get_names!dictionary
     ;
 
@@ -63,7 +63,7 @@ const std::string STANDARD_LIBRARY = R"(
         result = init
         stack = stack
         while stack
-            result = operation!(top@stack result)
+            result = operation!:top@stack result;
             stack = rest@stack
         end
     }
@@ -90,13 +90,13 @@ const std::string STANDARD_LIBRARY = R"(
     ;
 
     map = in (f stack) out reverse!fold!:
-        in (item stack) out put!(f!item stack)
+        in (item stack) out put!:f!item stack;
         stack
         ()
     ;
 
     map_string = in (f stack) out reverse!fold!:
-        in (item stack) out put!(f!item stack)
+        in (item stack) out put!:f!item stack;
         stack
         ""
     ;
@@ -108,7 +108,7 @@ const std::string STANDARD_LIBRARY = R"(
         result = ()
         while top@stacks
             item = map!:pick_top stacks;
-            result = put!(item result)
+            result = put!:item result;
             stacks = map!:pick_rest stacks;
         end
     }
@@ -130,7 +130,7 @@ const std::string STANDARD_LIBRARY = R"(
             if predicate?item then
                 stack
             else
-                put!(item stack)
+                put!:item stack;
         stack
         clear!stack
     ;
@@ -149,7 +149,7 @@ const std::string STANDARD_LIBRARY = R"(
         find_if?:in x out equal?(x item) stack;
 
     replace = in (new_item stack) out fold!:
-        in (item stack) out put!(new_item stack)
+        in (item stack) out put!:new_item stack;
         stack
         clear!stack
     ;
@@ -157,9 +157,9 @@ const std::string STANDARD_LIBRARY = R"(
     replace_if = in (predicate new_item stack) out reverse!fold!:
         in (item stack) out
             if predicate?item then
-                put!(new_item stack)
+                put!:new_item stack;
             else
-                put!(item stack)
+                put!:item stack;
         stack
         clear!stack
     ;
@@ -187,7 +187,7 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            stack = put!(i stack)
+            stack = put!:i stack;
         end
     }
 
@@ -208,7 +208,7 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            reversed_result = put!(top@stack reversed_result)
+            reversed_result = put!:top@stack reversed_result;
             stack = rest@stack
         end
         short_stack = reverse!reversed_result
@@ -219,7 +219,7 @@ const std::string STANDARD_LIBRARY = R"(
         bottom_stack = stack
         while and?(n bottom_stack)
             n = dec!n
-            top_stack = put!(top@bottom_stack top_stack)
+            top_stack = put!:top@bottom_stack top_stack;
             bottom_stack = rest@bottom_stack
         end
         stacks = (top_stack bottom_stack)
@@ -247,11 +247,11 @@ const std::string STANDARD_LIBRARY = R"(
         stack = ()
         while or?(left right)
             while less_or_equal_top?(left right)
-                stack = put!(top@left stack)
+                stack = put!:top@left stack;
                 left = rest@left
             end
             while less_or_equal_top?(right left)
-                stack = put!(top@right stack)
+                stack = put!:top@right stack;
                 right = rest@right
             end
         end
@@ -261,7 +261,7 @@ const std::string STANDARD_LIBRARY = R"(
         result = clear!stack
         while stack
             result = is <top@stack> missing
-                then put!(top@stack result)
+                then put!:top@stack result;
                 else result
             <top@stack> = yes
             stack = rest@stack
@@ -272,7 +272,7 @@ const std::string STANDARD_LIBRARY = R"(
         while stack
             result = is <top@stack> missing
                 then result
-                else put!(top@stack result)
+                else put!:top@stack result;
             <top@stack> = yes
             stack = rest@stack
         end

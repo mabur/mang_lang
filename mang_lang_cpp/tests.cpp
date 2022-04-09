@@ -327,14 +327,14 @@ int main() {
         {"mul!(1 2 3 4)", "24"},
     });
     test.evaluate("sub", {
-        {"sub!(0 0)", "0"},
-        {"sub!(6 3)", "3"},
-        {"sub!(4 8)", "-4"},
+        {"sub!:0 0;", "0"},
+        {"sub!:6 3;", "3"},
+        {"sub!:4 8;", "-4"},
     });
     test.evaluate("div", {
-        {"div!(0 1)", "0"},
-        {"div!(2 1)", "2"},
-        {"div!(9 3)", "3"},
+        {"div!:0 1;", "0"},
+        {"div!:2 1;", "2"},
+        {"div!:9 3;", "3"},
     });
     test.evaluate("less", {
         {"less?(0 0)", "no"},
@@ -594,16 +594,16 @@ int main() {
         {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "5"},
         {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f!()}", "1"},
         {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
-        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
-        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "1"},
-        {"y@{f=in stack out map!(in y out 2 stack) y=f!(0 0)}", "(2 2)"},
+        {"y@{apply=in (f x) out f!x y = apply!:inc 2;}", "3"},
+        {"y@{apply=in (f x) out f!x id=in x out apply!:in x out x x; y = id!1}", "1"},
+        {"y@{f=in stack out map!:in y out 2 stack; y=f!(0 0)}", "(2 2)"},
         {"a@{call=in f out f!() g=in x out 0 a=call!g}", "0"},
         {"a@{call=in f out f!() b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
-        {"a@{call=in(f)out f!(()) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "0"},
-        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f!(0 0)}", "(1 1)"},
-        {"y@{a=1 f=in stack out map!(in y out a stack) y=f!(0 0)}", "(1 1)"},
+        {"a@{call=in(f)out f!(()) b={a=0 g=in(x)out a} g=g@b a=call!:g;}", "0"},
+        {"y@{a=1 g=in y out a f=in stack out map!:g stack; y=f!(0 0)}", "(1 1)"},
+        {"y@{a=1 f=in stack out map!:in y out a stack; y=f!(0 0)}", "(1 1)"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
-        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 (0 0))}", "(2 2)"},
+        {"y@{f=in (x stack) out map!:in y out x stack; y=f!:2 (0 0);}", "(2 2)"},
     });
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
@@ -663,28 +663,28 @@ int main() {
         {R"(reverse!"abc")", R"("cba")"},
     });
     test.evaluate("put stack", {
-        {"put!(3 ())", "(3)"},
-        {"put!(4 (5))", "(4 5)"},
-        {"put!(4 (6 8))", "(4 6 8)"},
+        {"put!:3 ();", "(3)"},
+        {"put!:4 (5);", "(4 5)"},
+        {"put!:4 (6 8);", "(4 6 8)"},
     });
     test.evaluate("put string", {
-        {R"(put!(\a ""))", R"("a")"},
-        {R"(put!(\a "b"))", R"("ab")"},
-        {R"(put!(\a "bc"))", R"("abc")"},
+        {R"(put!:\a "";)", R"("a")"},
+        {R"(put!:\a "b";)", R"("ab")"},
+        {R"(put!:\a "bc";)", R"("abc")"},
     });
     test.evaluate("get dictionary", {
-        {R"(get!(0 {<0>=1}))", "1"},
-        {R"(get!("a" {<"a">=1}))", "1"},
-        {R"(get!('a' {a=1}))", "1"},
-        {R"(get!('a' {<'a'>=1}))", "1"},
-        {R"(get!('a' {}))", "missing"},
+        {R"(get!:0 {<0>=1};)", "1"},
+        {R"(get!:"a" {<"a">=1};)", "1"},
+        {R"(get!:'a' {a=1};)", "1"},
+        {R"(get!:'a' {<'a'>=1};)", "1"},
+        {R"(get!:'a' {};)", "missing"},
     });
     test.evaluate("get_names", {
         {"get_names!{}", "()"},
         {"get_names!{a=1}", "('a')"},
         {"get_names!{<0>=1}", "(0)"},
         {R"(get_names!{<"a">=1})", R"(("a"))"},
-        {"get!(top@get_names!{a=0} {a=1})", "1"},
+        {"get!:top@get_names!{a=0} {a=1};", "1"},
     });
     test.evaluate("get_values", {
         {"get_values!{a=0}", "(0)"},
@@ -815,7 +815,7 @@ int main() {
         {"map!:inc (0);", "(1)"},
         {"map!:inc (0 1);", "(1 2)"},
         {"map!:in x out 2 (0 0);", "(2 2)"},
-        {"a@{b=2 f=in x out b a=map!(f (0 0))}", "(2 2)"},
+        {"a@{b=2 f=in x out b a=map!:f (0 0);}", "(2 2)"},
     });
     test.evaluate("map_string", {
         {R"(map_string!:to_upper "";)", R"("")"},

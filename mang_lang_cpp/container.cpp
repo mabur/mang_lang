@@ -10,9 +10,8 @@ CodeRange addCodeRanges(Expression rest, Expression top) {
 }
 
 BinaryInput getBinaryInput(Expression expression) {
-    const auto stack = getEvaluatedStack(expression);
-    const auto rest = getEvaluatedStack(stack.rest);
-    return BinaryInput{stack.top, rest.top};
+    const auto tuple = getEvaluatedTuple(expression);
+    return BinaryInput{tuple.expressions.at(0), tuple.expressions.at(1)};
 }
 
 Expression putString(Expression rest, Expression top) {
