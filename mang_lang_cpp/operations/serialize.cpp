@@ -131,13 +131,13 @@ std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
 std::string serializeTuple(Expression s) {
     const auto expressions = getTuple(s).expressions;
     if (expressions.empty()) {
-        return ":;";
+        return "()";
     }
-    auto result = std::string{':'};
+    auto result = std::string{'('};
     for (const auto& expression : expressions) {
         result += serialize(expression) + ' ';
     }
-    result.back() = ';';
+    result.back() = ')';
     return result;
 }
 
