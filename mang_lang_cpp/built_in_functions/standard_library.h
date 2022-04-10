@@ -74,6 +74,12 @@ const std::string STANDARD_LIBRARY = R"(
         0
     )
 
+    product = in stack out fold!(
+        mul
+        stack
+        1
+    )
+
     put_each = in (top_stack bottom_stack) out fold!(
         put
         top_stack
