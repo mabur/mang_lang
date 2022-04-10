@@ -20,10 +20,6 @@ Expression makeBoolean(bool x) {
     return makeBoolean(CodeRange{}, Boolean{x});
 }
 
-double addExpression(double left, Expression right) {
-    return left + number(right);
-}
-
 double mulExpression(double left, Expression right) {
     return left * number(right);
 }
@@ -31,9 +27,8 @@ double mulExpression(double left, Expression right) {
 } // namespace
 
 Expression add(Expression in) {
-    const auto init = 0.0;
-    const auto result = leftFold(init, in, addExpression, EMPTY_STACK,
-        getEvaluatedStack);
+    const auto binary = getBinaryInput(in);
+    const auto result = number(binary.left) + number(binary.right);
     return makeNumber(result);
 }
 

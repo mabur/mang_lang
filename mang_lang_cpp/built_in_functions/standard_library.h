@@ -15,7 +15,7 @@ const std::string STANDARD_LIBRARY = R"(
     pi = 3.14159265359
     tau = 6.28318530718
 
-    inc = in x out add![x 1]
+    inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
     neg = in x out sub!(0 x)
     abs = in x out if less?[0 x] then x else neg!x
@@ -35,7 +35,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     to_lower = in c out
         if is_upper?c then
-            character!add![number!c 32]
+            character!add!(number!c 32)
         else
             c
 
@@ -67,6 +67,12 @@ const std::string STANDARD_LIBRARY = R"(
             stack = rest@stack
         end
     }
+
+    sum = in stack out fold!(
+        add
+        stack
+        0
+    )
 
     put_each = in (top_stack bottom_stack) out fold!(
         put

@@ -186,8 +186,8 @@ int main() {
     test.evaluate("dictionary iterations", {
         {"{i=2 while i i=dec!i end}", "{i=0}"},
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
-        {"{i=2 sum=0 while i sum=add![sum i] i=dec!i end}", "{i=0 sum=3}"},
-        {"{i=1000 sum=0 while i sum=add![sum i] i=dec!i end}", "{i=0 sum=500500}"},
+        {"{i=2 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=3}"},
+        {"{i=1000 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=500500}"},
         {"{i=1 while i i=dec!i end <i>=i}", "{i=0 <0>=0}"},
         {"{i=2 while i i=dec!i end <i>=i}", "{i=0 <0>=0}"},
         {"{i=1 while i i=dec!i <i>=i end}", "{i=0 <0>=0}"},
@@ -255,7 +255,7 @@ int main() {
         {"{a=1 b=[a]}", "{a=1 b=[1]}"},
         {"{a=1 b=[[a]]}", "{a=1 b=[[1]]}"},
         {"{a=1 b=c@{c=a}}", "{a=1 b=1}"},
-        {"{a=1 b=add![a a]}", "{a=1 b=2}"},
+        {"{a=1 b=add!(a a)}", "{a=1 b=2}"},
         {"{a=1 b=if a then a else 2}", "{a=1 b=1}"},
     });
     test.reformat("child_symbol", {
@@ -288,7 +288,7 @@ int main() {
         {"endar@{endar=5}", "5"},
     });
     test.reformat("lookup_function", {
-        {"add![]", "add![]"},
+        {"add!(1 2)", "add!(1 2)"},
     });
     test.evaluate("number constants", {
         {"inf", "inf"},
@@ -312,11 +312,9 @@ int main() {
         {"max![7 -3 8 -9]", "8"},
     });
     test.evaluate("add", {
-        {"add![]", "0"},
-        {"add![0]", "0"},
-        {"add![1]", "1"},
-        {"add![0 1]", "1"},
-        {"add![0 1 2]", "3"},
+        {"add!(1 0)", "1"},
+        {"add!(0 1)", "1"},
+        {"add!(-1 +1)", "0"},
     });
     test.evaluate("mul", {
         {"mul![]", "1"},
@@ -590,8 +588,8 @@ int main() {
         {"a@{f=in x out x a=f![]}", "[]"},
         {"a@{f=in x out 1 a=f!0}", "1"},
         {"z@{f=in x out y@{y = 3} z=f!2}", "3"},
-        {"z@{f=in x out result@{y=3 result=add![x y]}  z=f!2}", "5"},
-        {"z@{y=2 f=in x out result@{y=3 result=add![x y]} z=f!2}", "5"},
+        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "5"},
+        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "5"},
         {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f![]}", "1"},
         {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
         {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
@@ -606,21 +604,20 @@ int main() {
         {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
     });
     test.evaluate("recursive function", {
-        {"y@{f=in x out if x then add![x f!dec!x] else 0 y=f!3}", "6"},
+        {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     });
     test.evaluate("lookup function dictionary", {
         {"a@{f=in {x} out x a=f!{x=0}}", "0"},
-        {"a@{f=in {x y} out add![x y] a=f!{x=2 y=3}}", "5"},
-        {"a@{f=in {x y z} out add![x y z] a=f!{x=2 y=3 z=4}}", "9"},
-        {"a@{b=2 f=in {x} out add![b x] a=f!{x=0}}", "2"},
+        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
+        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
     });
     test.evaluate("lookup function stack", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
-        {"a@{f=in (x y) out add![x y] a=f!(2 3)}", "5"},
+        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
     test.evaluate("lookup function tuple", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
-        {"a@{f=in (x y) out add![x y] a=f!(2 3)}", "5"},
+        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
     test.evaluate("clear stack", {
         {"clear![]", "[]"},
@@ -770,7 +767,7 @@ int main() {
     });
     test.evaluate("iteration", {
         {"count!range!100", "100"},
-        {"add!range!100", "4950"},
+        {"sum!range!100", "4950"},
     });
     test.evaluate("count stack", {
         {"count![]", "0"},
@@ -888,6 +885,12 @@ int main() {
         {R"(enumerate!"")", R"([])"},
         {R"(enumerate!"a")", R"([[0 \a]])"},
         {R"(enumerate!"ab")", R"([[0 \a] [1 \b]])"},
+    });
+    test.evaluate("sum", {
+        {"sum![]", "0"},
+        {"sum![1]", "1"},
+        {"sum![1 2]", "3"},
+        {"sum![1 2 3]", "6"},
     });
     test.evaluate("put_each", {
         {"put_each!([] [])", "[]"},
