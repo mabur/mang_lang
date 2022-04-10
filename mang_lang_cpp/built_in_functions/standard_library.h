@@ -48,6 +48,7 @@ const std::string STANDARD_LIBRARY = R"(
     seventh = in stack out top@rest@rest@rest@rest@rest@rest@stack
     eighth = in stack out top@rest@rest@rest@rest@rest@rest@rest@stack
     ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
+    tenth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@rest@stack
 
     get_values = in dictionary out map!(
         in name out get!(name dictionary)

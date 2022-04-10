@@ -194,23 +194,30 @@ Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionar
 }
 
 Expression lookupChildInString(const String& string, const std::string& name) {
-    if (name == "top") {
-        return string.top;
-    }
-    if (name == "rest") {
-        return string.rest;
-    }
+    if (name == "top") return string.top;
+    if (name == "rest") return string.rest;
     throw MissingSymbol(name, "string");
 }
 
 Expression lookupChildInEvaluatedStack(const EvaluatedStack& stack, const std::string& name) {
-    if (name == "top") {
-        return stack.top;
-    }
-    if (name == "rest") {
-        return stack.rest;
-    }
+    if (name == "top") return stack.top;
+    if (name == "rest") return stack.rest;
     throw MissingSymbol(name, "evaluated_stack");
+}
+
+Expression lookupChildInEvaluatedTuple(const EvaluatedTuple& stack, const std::string& name) {
+    const auto& expressions = stack.expressions;
+    if (name == "first") return expressions.at(0);
+    if (name == "second") return expressions.at(1);
+    if (name == "third") return expressions.at(2);
+    if (name == "fourth") return expressions.at(3);
+    if (name == "fifth") return expressions.at(4);
+    if (name == "sixth") return expressions.at(5);
+    if (name == "seventh") return expressions.at(6);
+    if (name == "eighth") return expressions.at(7);
+    if (name == "ninth") return expressions.at(8);
+    if (name == "tenth") return expressions.at(9);
+    throw MissingSymbol(name, "evaluated_tuple");
 }
 
 Expression evaluateLookupChild(
@@ -220,8 +227,8 @@ Expression evaluateLookupChild(
     const auto name = getName(lookup_child.name).value;
     switch (child.type) {
         case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
-        case EVALUATED_STACK: return lookupChildInEvaluatedStack(
-                getEvaluatedStack(child), name);
+        case EVALUATED_STACK: return lookupChildInEvaluatedStack(getEvaluatedStack(child), name);
+        case EVALUATED_TUPLE: return lookupChildInEvaluatedTuple(getEvaluatedTuple(child), name);
         case STRING: return lookupChildInString(getString(child), name);
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
