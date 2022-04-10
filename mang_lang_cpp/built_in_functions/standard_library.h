@@ -80,14 +80,17 @@ const std::string STANDARD_LIBRARY = R"(
         1
     )
 
+    reverse = in stack out fold!(
+        put
+        stack
+        clear!stack
+    )
+
     put_each = in (top_stack bottom_stack) out fold!(
         put
         top_stack
         bottom_stack
     )
-
-    reverse = in stack out
-        put_each!(stack clear!stack)
 
     concat = in stacks out reverse!fold!(
         put_each
