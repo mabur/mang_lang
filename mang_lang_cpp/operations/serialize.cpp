@@ -144,13 +144,13 @@ std::string serializeTuple(Expression s) {
 std::string serializeEvaluatedTuple(Expression s) {
     const auto expressions = getEvaluatedTuple(s).expressions;
     if (expressions.empty()) {
-        return ":;";
+        return "()";
     }
-    auto result = std::string{':'};
+    auto result = std::string{'('};
     for (const auto& expression : expressions) {
         result += serialize(expression) + ' ';
     }
-    result.back() = ';';
+    result.back() = ')';
     return result;
 }
 
