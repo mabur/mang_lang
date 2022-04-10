@@ -273,17 +273,17 @@ Expression parseStackNew(CodeRange code) {
 
 Expression parseTuple(CodeRange code) {
     auto first = code.begin();
-    code = parseCharacter(code, ':');
+    code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
     auto expressions = std::vector<Expression>{};
-    while (!::startsWith(code, ';')) {
+    while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
         code.first = end(expression);
         expressions.push_back(expression);
         code = parseWhiteSpace(code);
     }
-    code = parseCharacter(code, ';');
+    code = parseCharacter(code, ')');
     return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
 }
 
@@ -377,7 +377,7 @@ Expression parseExpression(CodeRange code) {
         const auto c = code.first->character;
         if (c == '[') {return parseStackNew(code);}
         if (c == '{') {return parseDictionary(code);}
-        if (c == ':') {return parseTuple(code);}
+        if (c == '(') {return parseTuple(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (c == '\'') {return parseLabel(code);}
