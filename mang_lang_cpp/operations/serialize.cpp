@@ -110,7 +110,7 @@ std::string serializeFunctionDictionary(const FunctionDictionary& function_dicti
     return result;
 }
 
-std::string serializeFunctionStack(const FunctionStack& function_stack) {
+std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
     auto result = std::string{};
     result += "in ";
     result += "(";
@@ -128,21 +128,47 @@ std::string serializeFunctionStack(const FunctionStack& function_stack) {
     return result;
 }
 
+std::string serializeTuple(Expression s) {
+    const auto expressions = getTuple(s).expressions;
+    if (expressions.empty()) {
+        return "()";
+    }
+    auto result = std::string{'('};
+    for (const auto& expression : expressions) {
+        result += serialize(expression) + ' ';
+    }
+    result.back() = ')';
+    return result;
+}
+
+std::string serializeEvaluatedTuple(Expression s) {
+    const auto expressions = getEvaluatedTuple(s).expressions;
+    if (expressions.empty()) {
+        return "()";
+    }
+    auto result = std::string{'('};
+    for (const auto& expression : expressions) {
+        result += serialize(expression) + ' ';
+    }
+    result.back() = ')';
+    return result;
+}
+
 std::string appendElement(const std::string& s, Expression element) {
     return s + serialize(element) + ' ';
 }
 
 std::string serializeStack(Expression s) {
-    auto result = leftFold(std::string{"("}, s, appendElement, EMPTY_STACK,
+    auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
         getStack);
-    result.back() = ')';
+    result.back() = ']';
     return result;
 }
 
 std::string serializeEvaluatedStack(Expression s) {
-    auto result = leftFold(std::string{"("}, s, appendElement, EMPTY_STACK,
+    auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
         getEvaluatedStack);
-    result.back() = ')';
+    result.back() = ']';
     return result;
 }
 
@@ -200,11 +226,12 @@ std::string serialize(Expression expression) {
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
-        case FUNCTION_STACK: return serializeFunctionStack(
-                getFunctionStack(expression));
+        case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
+        case TUPLE: return serializeTuple(expression);
+        case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
-        case EMPTY_STACK: return "()";
+        case EMPTY_STACK: return "[]";
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));

@@ -15,15 +15,15 @@ const std::string STANDARD_LIBRARY = R"(
     pi = 3.14159265359
     tau = 6.28318530718
 
-    inc = in x out add!(x 1)
+    inc = in x out add![x 1]
     dec = in x out sub!(x 1)
     neg = in x out sub!(0 x)
-    abs = in x out if less?(0 x) then x else neg!x
+    abs = in x out if less?[0 x] then x else neg!x
 
-    is_upper = in c out less_or_equal?(65 number!c 90)
-    is_lower = in c out less_or_equal?(97 number!c 122)
-    is_letter = in c out any?(is_upper?c is_lower?c)
-    is_digit = in c out less_or_equal?(48 number!c 57)
+    is_upper = in c out less_or_equal?[65 number!c 90]
+    is_lower = in c out less_or_equal?[97 number!c 122]
+    is_letter = in c out any?[is_upper?c is_lower?c]
+    is_digit = in c out less_or_equal?[48 number!c 57]
 
     parse_digit = in c out sub!(number!c 48)
 
@@ -35,7 +35,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     to_lower = in c out
         if is_upper?c then
-            character!add!(number!c 32)
+            character!add![number!c 32]
         else
             c
 
@@ -54,10 +54,10 @@ const std::string STANDARD_LIBRARY = R"(
         get_names!dictionary
     )
 
-    get_items = in dictionary out zip!(
+    get_items = in dictionary out zip![
         get_names!dictionary
         get_values!dictionary
-    )
+    ]
 
     fold = in (operation stack init) out result@{
         result = init
@@ -80,7 +80,7 @@ const std::string STANDARD_LIBRARY = R"(
     concat = in stacks out reverse!fold!(
         put_each
         stacks
-        ()
+        []
     )
 
     concat_strings = in strings out reverse!fold!(
@@ -92,7 +92,7 @@ const std::string STANDARD_LIBRARY = R"(
     map = in (f stack) out reverse!fold!(
         in (item stack) out put!(f!item stack)
         stack
-        ()
+        []
     )
 
     map_string = in (f stack) out reverse!fold!(
@@ -105,7 +105,7 @@ const std::string STANDARD_LIBRARY = R"(
     pick_rest = in stack out rest@stack
 
     zip = in stacks out reverse!result@{
-        result = ()
+        result = []
         while top@stacks
             item = map!(pick_top stacks)
             result = put!(item result)
@@ -114,13 +114,13 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     min = in stack out fold!(
-        in (item value) out if less?(item value) then item else value
+        in (item value) out if less?[item value] then item else value
         stack
         inf
     )
 
     max = in stack out fold!(
-        in (item value) out if less?(item value) then value else item
+        in (item value) out if less?[item value] then value else item
         stack
         -inf
     )
@@ -183,7 +183,7 @@ const std::string STANDARD_LIBRARY = R"(
         count_if!(in x out equal?(x item) stack)
 
     range = in n out stack@{
-        stack = ()
+        stack = []
         i = n
         while i
             i = dec!i
@@ -191,7 +191,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in stack out zip!(range!count!stack stack)
+    enumerate = in stack out zip![range!count!stack stack]
 
     drop = in (n stack) out short_stack@{
         short_stack = stack
@@ -217,12 +217,12 @@ const std::string STANDARD_LIBRARY = R"(
     split = in (n stack) out stacks@{
         top_stack = clear!stack
         bottom_stack = stack
-        while and?(n bottom_stack)
+        while and?[n bottom_stack]
             n = dec!n
             top_stack = put!(top@bottom_stack top_stack)
             bottom_stack = rest@bottom_stack
         end
-        stacks = (top_stack bottom_stack)
+        stacks = [top_stack bottom_stack]
     }
 
     get_index = in (index stack) out top@drop!(index stack)
@@ -237,15 +237,15 @@ const std::string STANDARD_LIBRARY = R"(
     less_or_equal_top = in (left right) out
         if left then
             if right then
-                less_or_equal?(top@left top@right)
+                less_or_equal?[top@left top@right]
             else
                 yes
         else
             no
 
     merge_sorted = in (left right) out reverse!stack@{
-        stack = ()
-        while or?(left right)
+        stack = []
+        while or?[left right]
             while less_or_equal_top?(left right)
                 stack = put!(top@left stack)
                 left = rest@left

@@ -136,10 +136,10 @@ Expression evaluateFunctionDictionary(
     });
 }
 
-Expression evaluateFunctionStack(
-    const FunctionStack& function_stack, Expression environment
+Expression evaluateFunctionTuple(
+    const FunctionTuple& function_stack, Expression environment
 ) {
-    return makeFunctionStack(CodeRange{}, {
+    return makeFunctionTuple(CodeRange{}, {
         environment, function_stack.input_names, function_stack.body
     });
 }
@@ -155,6 +155,16 @@ Expression evaluateStack(
     const auto init = makeEmptyStack(code, {});
     const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
     return reverseEvaluatedStack(code, output);
+}
+
+Expression evaluateTuple(Tuple tuple, Expression environment) {
+    auto evaluated_expressions = std::vector<Expression>{};
+    evaluated_expressions.reserve(tuple.expressions.size());
+    for (const auto& expression : tuple.expressions) {
+        evaluated_expressions.push_back(evaluate(expression, environment));
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
 }
 
 Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
@@ -241,15 +251,19 @@ Expression applyFunctionDictionary(
     return evaluate(function_dictionary.body, input);
 }
 
-Expression applyFunctionStack(const FunctionStack& function_stack, Expression input
+Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression input
 ) {
+    auto tuple = getEvaluatedTuple(input);
+    const auto& input_names = function_stack.input_names;
+    if (input_names.size() != tuple.expressions.size()) {
+        throw std::runtime_error{"Wrong number of input to function"};
+    }
     auto definitions = Definitions{};
-    auto expression = input;
-    for (const auto& input_name : function_stack.input_names) {
-        const auto stack = getEvaluatedStack(expression);
-        const auto label = getNameAsLabel(input_name);
-        definitions.add(label, stack.top);
-        expression = stack.rest;
+    const auto num_inputs = input_names.size();
+    for (size_t i = 0; i < num_inputs; ++i) {
+        const auto label = getNameAsLabel(input_names[i]);
+        const auto expression = tuple.expressions[i];
+        definitions.add(label, expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         new EvaluatedDictionary{function_stack.environment, definitions}
@@ -267,8 +281,8 @@ Expression evaluateFunctionApplication(
         case FUNCTION: return applyFunction(getFunction(function), input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
-        case FUNCTION_STACK: return applyFunctionStack(
-                getFunctionStack(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(
+                getFunctionTuple(function), input);
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
@@ -300,16 +314,18 @@ Expression evaluate(Expression expression, Expression environment) {
         case EMPTY_STACK: return expression;
         case EVALUATED_STACK: return expression;
         case EVALUATED_DICTIONARY: return expression;
+        case EVALUATED_TUPLE: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
-        case FUNCTION_STACK: return evaluateFunctionStack(
-                getFunctionStack(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(
+                getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(expression, environment);
+        case TUPLE: return evaluateTuple(getTuple(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);

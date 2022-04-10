@@ -224,7 +224,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     );
 }
 
-Expression parseFunctionStack(CodeRange code) {
+Expression parseFunctionTuple(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
@@ -241,7 +241,7 @@ Expression parseFunctionStack(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
-    return makeFunctionStack(
+    return makeFunctionTuple(
         CodeRange{first, code.begin()},
         {Expression{}, input_names, body}
     );
@@ -251,24 +251,40 @@ Expression parseAnyFunction(CodeRange code) {
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     if (startsWith(code, '{')) {return parseFunctionDictionary(code);}
-    if (startsWith(code, '(')) {return parseFunctionStack(code);}
+    if (startsWith(code, '(')) {return parseFunctionTuple(code);}
     return parseFunction(code);
 }
 
-Expression parseStack(CodeRange code) {
+Expression parseStackNew(CodeRange code) {
     auto first = code.begin();
-    code = parseCharacter(code, '(');
+    code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
     auto stack = makeEmptyStack({}, {});
-    while (!::startsWith(code, ')')) {
+    while (!::startsWith(code, ']')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
         code.first = end(expression);
         stack = putStack(stack, expression);
         code = parseWhiteSpace(code);
     }
-    code = parseCharacter(code, ')');
+    code = parseCharacter(code, ']');
     return reverseStack(CodeRange{first, code.first}, stack);
+}
+
+Expression parseTuple(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '(');
+    code = parseWhiteSpace(code);
+    auto expressions = std::vector<Expression>{};
+    while (!::startsWith(code, ')')) {
+        throwIfEmpty(code);
+        auto expression = parseExpression(code);
+        code.first = end(expression);
+        expressions.push_back(expression);
+        code = parseWhiteSpace(code);
+    }
+    code = parseCharacter(code, ')');
+    return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
 }
 
 Expression parseDynamicLookupSymbol(CodeRange code) {
@@ -359,8 +375,9 @@ Expression parseExpression(CodeRange code) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         const auto c = code.first->character;
-        if (c == '(') {return parseStack(code);}
+        if (c == '[') {return parseStackNew(code);}
         if (c == '{') {return parseDictionary(code);}
+        if (c == '(') {return parseTuple(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (c == '\'') {return parseLabel(code);}
