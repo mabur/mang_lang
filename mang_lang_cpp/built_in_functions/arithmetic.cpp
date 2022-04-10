@@ -1,6 +1,7 @@
 #include "arithmetic.h"
 
 #include <cmath>
+#include <functional>
 
 #include "../factory.h"
 #include "../container.h"
@@ -20,30 +21,30 @@ Expression makeBoolean(bool x) {
     return makeBoolean(CodeRange{}, Boolean{x});
 }
 
+template <typename BinaryOperation>
+Expression binaryOperation(Expression in, BinaryOperation operation) {
+    const auto expressions = getEvaluatedTuple(in).expressions;
+    const auto left = number(expressions.at(0));
+    const auto right = number(expressions.at(1));
+    return makeNumber(operation(left, right));
+}
+
 } // namespace
 
 Expression add(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto result = number(binary.left) + number(binary.right);
-    return makeNumber(result);
+    return binaryOperation(in, std::plus<>());
 }
 
 Expression mul(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto result = number(binary.left) * number(binary.right);
-    return makeNumber(result);
+    return binaryOperation(in, std::multiplies<>());
 }
 
 Expression sub(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto result = number(binary.left) - number(binary.right);
-    return makeNumber(result);
+    return binaryOperation(in, std::minus<>());
 }
 
 Expression div(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto result = number(binary.left) / number(binary.right);
-    return makeNumber(result);
+    return binaryOperation(in, std::divides<>());
 }
 
 bool less(Expression left, Expression right) {
