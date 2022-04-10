@@ -23,7 +23,7 @@ We use the word container to represent either a stack or a string.
 <dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container.</dd>
 <dt>put_each</dt><dd><code>put_each!(top_container bottom_container)</code> returns a new container with each item from the top_container added to the bottom_container,
 such that the bottom of the top_container is the new top item.
-As an example <code>put_each!((1 2 3) (4 5 6))</code> returns <code>(3 2 1 4 5 6)</code> and <code>put_each!("abc" "def")</code> returns <code>"cbadef"</code>.
+As an example <code>put_each!([1 2 3] [4 5 6])</code> returns <code>[3 2 1 4 5 6]</code> and <code>put_each!("abc" "def")</code> returns <code>"cbadef"</code>.
 So the order of the top_stack gets reversed as it is put on the new stack.</dd>
 <dt>reverse</dt><dd><code>reverse!container</code> returns a container with the items in the reverse order.</dd>
 <dt>fold</dt><dd><code>fold!(binary_operation container init)</code> is mainly used as an algorithmic building block to implement the other container functions.</dd>
@@ -61,10 +61,12 @@ You can access the items of a container via <code>top@container</code> and <code
 <dt>second</dt><dd><code>second!container</code> returns the second item in the container.</dd>
 <dt>third</dt><dd><code>third!container</code> returns the third item in the container.</dd>
 <dt>fourth</dt><dd><code>fourth!container</code> returns the fourth item in the container.</dd>
+<dt>fifth</dt><dd><code>fifth!container</code> returns the fifth item in the container.</dd>
 <dt>sixth</dt><dd><code>sixth!container</code> returns the sixth item in the container.</dd>
 <dt>seventh</dt><dd><code>seventh!container</code> returns the seventh item in the container.</dd>
 <dt>eighth</dt><dd><code>eighth!container</code> returns the eighth item in the container.</dd>
 <dt>ninth</dt><dd><code>ninth!container</code> returns the ninth item in the container.</dd>
+<dt>tenth</dt><dd><code>tenth!container</code> returns the tenth item in the container.</dd>
 </dl>
 
 <h2>Specialized Container Functions</h2>
@@ -74,15 +76,15 @@ For the following container functions you need to know if you want to use stacks
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container.</dd>
 <dt>concat</dt><dd><code>concat!stacks</code> concatenates multiple stacks.</dd>
 <dt>concat_strings</dt><dd><code>concat_strings!strings</code> concatenates multiple strings.</dd>
-<dt>range</dt><dd><code>range!n</code> returns the stack <code>(0 1 2 ... n-1)</code>.</dd>
-<dt>enumerate</dt><dd><code>enumerate!(7 9 4)</code> returns the stack <code>((0 7) (1 9) (2 4))</code>, where the first item in each inner stack is its index.</dd>
-<dt>zip</dt><dd><code>zip!((1 2 3) (4 5 6)))</code> returns the stack <code>((1 4) (2 5) (3 6))</code>, where each inner stack combines the corresponding items from the input stacks.</dd>
+<dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.</dd>
+<dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack <code>[[0 7]] [1 9] [2 4]]</code>, where the first item in each inner stack is its index.</dd>
+<dt>zip</dt><dd><code>zip![[1 2 3] [4 5 6]]</code> returns the stack <code>[[1 4] [2 5] [3 6]]</code>, where each inner stack combines the corresponding items from the input stacks.</dd>
 </dl>
 
 <h2>Boolean Functions</h2>
 <dl>
-<dt>boolean</dt><dd>Convert a value to a boolean. All values are converted to <code>yes</code>, except empty stack <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>no</code>.</dd>
-<dt>not</dt><dd>Convert a value to a boolean. All values are converted to <code>no</code>, except empty stack <code>()</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>yes</code>.</dd>
+<dt>boolean</dt><dd>Convert a value to a boolean. All values are converted to <code>yes</code>, except empty stack <code>[]</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>no</code>.</dd>
+<dt>not</dt><dd>Convert a value to a boolean. All values are converted to <code>no</code>, except empty stack <code>[]</code> and empty string <code>""</code> and number zero <code>0</code> and the boolean <code>no</code> which are all converted to <code>yes</code>.</dd>
 <dt>all</dt><dd>Takes a stack of booleans and returns <code>yes</code> if all items are <code>yes</code> and otherwise <code>no</code>.</dd>
 <dt>any</dt><dd>Takes a stack of booleans and returns <code>yes</code> if any item is <code>yes</code> and otherwise <code>no</code>.</dd>
 <dt>none</dt><dd>Takes a stack of booleans and returns <code>yes</code> if all item are <code>no</code> and otherwise <code>yes</code>.</dd>
@@ -92,10 +94,10 @@ For the following container functions you need to know if you want to use stacks
 
 <h2>Functions on Stack of Numbers</h2>
 <dl>
-<dt>add</dt><dd>Add a stack of numbers.</dd>
-<dt>mul</dt><dd>Multiply a stack of numbers.</dd>
-<dt>sub</dt><dd>Subtract two numbers.</dd>
-<dt>div</dt><dd>Divide two numbers.</dd>
+<dt>add</dt><dd>Add a tuple of two numbers.</dd>
+<dt>mul</dt><dd>Multiply a tuple of two numbers.</dd>
+<dt>sub</dt><dd>Subtract a tuple of two numbers.</dd>
+<dt>div</dt><dd>Divide a tuple of two numbers.</dd>
 <dt>min</dt><dd>Minimum of a stack of numbers.</dd>
 <dt>max</dt><dd>Maximum of a stack of numbers</dd>
 <dt>less</dt><dd>Takes a stack of numbers and returns <code>yes</code> if they are strictly increasing, and otherwise <code>no</code></dd>

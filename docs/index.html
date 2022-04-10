@@ -89,12 +89,12 @@ Consider the following input program:
 </p>
 <pre>
 {
-  rectangles = (
+  rectangles = [
     {width = 3 height = 1}
     {width = 6 height = 2}
     {width = 3 height = 6}
     {width = 8 height = 4}
-  )
+  ]
   get_area = in {width height}
     out mul!(width height)
   areas = map!(get_area rectangles)
@@ -109,12 +109,12 @@ When we evaluate the input above we get the output below:
 </p>
 <pre>
 {
-  rectangles = (
+  rectangles = [
     {width = 3 height = 1}
     {width = 6 height = 2}
     {width = 3 height = 6}
     {width = 8 height = 4}
-  )
+  ]
   get_area = in {width height}
     out mul!(width height)
   areas = (3 12 18 32)
@@ -151,7 +151,7 @@ Manglang consists of the following basic building blocks:
 <img src="container2.png" width=48 height=48>
 </td>
 <td>
-<a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#stacks">stacks</a> and <a href="#strings">strings</a>.
+<a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#tuples">tuples</a> , <a href="#stacks">stacks</a> and <a href="#strings">strings</a>.
 </td>
 </tr>
 <tr>
@@ -318,44 +318,71 @@ So Manglang uses dictionaries to represent both:
 <li>Function input</li>
 <li>Function output</li>
 </ul>
-In the next sections we will look at the remaining two containers in Manglang:
+In the next sections we will look at the remaining three containers in Manglang:
 <ul>
+<li>Tuples</li>
 <li>Stacks</li>
 <li>Strings</li>
 </ul>
-We will see that both of them can be seen as syntactic sugar sprinkled on dictionaries.
+We will see that each of them can be seen as syntactic sugar sprinkled on dictionaries.
 </p>
 
-<h2 id="stacks">2.b. Stacks</h2>
+<h2 id="tuples">2.b. Tuples</h2>
+<p>Tuples of values are written as:</p>
+<pre>
+(3 17.5 yes \A)
+</pre>
+<p>
+We use tuples to group different atomics as an ordered list. The elements of the tuple can have different types, just as the elements of a dictionary can have different types. To see the similarity consider this example:
+</p>
+<pre>
+{
+  tuple = (3 17.5 yes \A)
+  dictionary = {first=3 second=17.5 third=yes fourth=\A}
+}
+</pre>
+These are two different ways of storing the same data.
+Tuples in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
+Conceptually we can think of a tuple as a dictionary having the members <code>first, second, third, ...</code>,
+and we can access the data in the tuple as if it was such a dictionary via <code>first@tuple</code> etc. A common use case for tuples is to send multiple inputs of different types to a function.
+
+<h2 id="stacks">2.c. Stacks</h2>
 <p>Stacks of values are written as:</p>
 <pre>
-(3 6 4)
+[3 6 4]
 </pre>
 A stack can be seen as a dictionary containing two things <code>top</code> and <code>rest</code>.
 Consider this example:
 <pre>
 {
-  stack = (3 6 4)
+  stack = [3 6 4]
   dictionary = {top=3 rest={top=6 rest={top=4 rest={}}}}
 }
 </pre>
+<p>
 These are two different ways of storing the same data.
 Stacks in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
 Conceptually we can think of a stack as a dictionary having the members <code>top</code> and <code>rest</code>,
-and we access the data in the stack as if it was such a dictionary via <code>top@stack</code> and <code>rest@stack</code>.
-
-The function <code>put</code> is used to construct a new stack by putting a new item on top of the stack:
+and we access the data in the stack as if it was such a dictionary via <code>top@stack</code> and <code>rest@stack</code>. There are two differences between tuples and stacks:
+<ul>
+<li>All elements of a stack should have the same type.</li>
+<li>We can generate a new stack from base stack by adding or removing elements from it.</li>
+</ul>
+</p>
+<p>
+If we have a <code>stack</code> we can the stack with all elements except the first via <code>rest@stack</code>. The function <code>put</code> is used to construct a new stack by putting a new item on top of the stack:
+</p>
 <pre>
-put!(7 (4 5 2))
+put!(7 [4 5 2])
 </pre>
 The input above is evaluated to the output below:
 <pre>
-(7 4 5 2)
+[7 4 5 2]
 </pre>
 <p>Here is another example program with some stack operations:</p>
 <pre>
 {
-  a = (3 6 4)
+  a = [3 6 4]
   b = top@a
   c = rest@a
   d = put!(b c) 
@@ -364,15 +391,15 @@ The input above is evaluated to the output below:
 <p>The input above is evaluated to the output below:</p>
 <pre>
 {
-  a = (3 6 4)
+  a = [3 6 4]
   b = 3
-  c = (6 4)
-  d = (3 6 4)
+  c = [6 4]
+  d = [3 6 4]
 }
 </pre>
 In summary, we interact with stacks by accessing the members <code>top</code> and <code>rest</code> and via the function <code>put</code>. The standard library of Manglang provides more functions that works on stacks but they are all built on top of this basic interface.
 
-<h2 id="strings">2.c. Strings</h2>
+<h2 id="strings">2.d. Strings</h2>
 <p>
 Strings are written as:
 </p>
@@ -425,7 +452,7 @@ Consider this example:
 </p>
 <pre>
 {
-  a = (0 1)
+  a = [0 1]
   b = if a then
       top@a
     else
@@ -438,7 +465,7 @@ This program is evaluated to:
 </p>
 <pre>
 {
-  a = (0 1)
+  a = [0 1]
   b = 0
   c = "world"
 }
@@ -485,9 +512,9 @@ In Manglang you can loop while constructing a dictionary:
 <pre>
 {
   x = 10
-  sum = 0
+  tot = 0
   while x
-    sum = add!(sum x)
+    tot = add!(tot x)
     x = dec!x
   end
 }
@@ -496,7 +523,7 @@ The input above is evaluated to the output below:
 <pre>
 {
   x = 0
-  sum = 55
+  tot = 55
 }
 </pre>
 <p>
@@ -518,8 +545,8 @@ However, this single value can be a stack or a dictionary, that has multiple val
 <pre>
 {
   stack = (4 2 1)
-  sum0 = add!stack
-  sum1 = add!(4 2 1)
+  sum0 = sum!stack
+  sum1 = sum!(4 2 1)
   stack2 = put!(3 stack)
 }
 </pre>
@@ -551,8 +578,8 @@ Manglang does not support currying.
 Manglang encourages using <code>?</code> instead of <code>!</code> for applying functions that return a boolean value, a.k.a. predicates. Applying such a function is like asking a question. As an example consider the following functions from the standard library that operate on ascii characters:
 <pre>
 {
-  is_upper = in c out less_or_equal?(65 number!c 90)
-  is_lower = in c out less_or_equal?(97 number!c 122)
+  is_upper = in c out less_or_equal?[65 number!c 90]
+  is_lower = in c out less_or_equal?[97 number!c 122]
   to_upper = in c out
       if is_lower?c then
           character!sub!(number!c 32)
@@ -597,7 +624,7 @@ Here are some examples of defining and calling functions:
   a = square!3
   b = inc!3
   c = dec!3
-  d = count!(3 7 3 8 2)
+  d = count![3 7 3 8 2]
   e = count!"apple"        
 }
 </pre>
@@ -631,9 +658,9 @@ Function definitions and computations can be broken up into smaller parts by usi
 {
   square = in x out mul!(x x)
   square_norm = in vec3 out result@{
-    x = first!vec3
-    y = second!vec3
-    z = third!vec3
+    x = first@vec3
+    y = second@vec3
+    z = third@vec3
     result = add!(square!x square!y square!z)
   }
   vector = (3 4 5)
@@ -641,15 +668,15 @@ Function definitions and computations can be broken up into smaller parts by usi
 }
 </pre>
 
-<h2 id="function_stack_definition">5.c. Function of Stack Definition</h2>
+<h2 id="function_tuple_definition">5.c. Function of Tuple Definition</h2>
 <p>
 Manglang provides syntactic sugar for defining functions that take multiple input,
-in the form of a stack.
+in the form of a tuple.
 Here are some examples of equivalent ways of defining and calling functions: 
 </p>
 <pre>
 {
-  area1 = in rectangle out mul!(first!rectangle second!rectangle)
+  area1 = in rectangle out mul!(first@rectangle second@rectangle)
   area2 = in (width height) out mul!(width height)
   rectangle = (5 4)
   a = area1!rectangle,
@@ -662,7 +689,7 @@ Here are some examples of equivalent ways of defining and calling functions:
 The functions <code>area1</code> and <code>area2</code> are equivalent.
 They expect the same input and return the same result.
 <code>area2</code> just uses syntactic sugar to make its implementation more concise,
-by unpacking the elements of the input stack.
+by unpacking the elements of the input tuple.
 </p>
 
 
