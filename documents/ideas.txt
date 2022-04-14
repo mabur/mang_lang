@@ -1,6 +1,5 @@
 TODO:
 * Type theory
-  - Separate tuples and stacks.
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
   - Is it simple to check types without any type annotation?
@@ -20,6 +19,13 @@ TODO:
       - Hard for functions without annotated types.
       - Might be ok to not handle recursive generic functions, and say that they return Any.
     - How to avoid duplicating all structs and functions when evaluating values and types?
+    - How to handle empty list [] in generic functions like: map, zip, concat
+      - Might be ok since we always would execute the body of while inside the fold during type checking.
+      - So [] could be handled as not yet specified.
+    - How to handle higher order functions?
+    - How to infer types of variables that refer to functions?
+      - Have type Function or Function<InType, OutType> ?
+      - Would the former work?
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
