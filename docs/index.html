@@ -439,7 +439,7 @@ The following values are interpreted as <code>no</code> or falsey:
     <ul>
         <li>boolean <code>no</code></li>
         <li>number zero <code>0</code></li>
-        <li>empty stack <code>()</code></li>
+        <li>empty stack <code>[]</code></li>
         <li>empty string <code>""</code> </li>
     </ul>
 </li>
@@ -539,13 +539,13 @@ We have already seen some examples of calling / applying functions in Manglang.
 A function is called using <code>!</code> like <code>function_name!input</code>.
 We see function application as a command and hence use the symbol <code>!</code> after the verb that names the functions.
 Functions take a single value as input.
-However, this single value can be a stack or a dictionary, that has multiple values inside.
+However, this single value can be a stack or tuple or dictionary, that has multiple values inside.
 </p>
 <pre>
 {
-  stack = (4 2 1)
+  stack = [4 2 1]
   sum0 = sum!stack
-  sum1 = sum!(4 2 1)
+  sum1 = sum![4 2 1]
   stack2 = put!(3 stack)
 }
 </pre>
@@ -554,10 +554,10 @@ This program is evaluated to:
 </p>
 <pre>
 {
-  stack = (4 2 1)
+  stack = [4 2 1]
   sum0 = 7
   sum1 = 7
-  stack2 = (3 4 2 1)
+  stack2 = [3 4 2 1]
 }
 </pre>
 <p>
