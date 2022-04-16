@@ -210,7 +210,7 @@ In Manglang we see booleans as answers to questions and therefore write them as 
 
 <h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
 <p>
-Manglang has three different kinds of containers which can store other data inside them: dictionaries, stacks and strings.
+Manglang has four different kinds of containers which can store other data inside them: dictionaries, tuples, stacks and strings.
 </p>
 
 <h2 id="dictionaries">2.a. Dictionaries</h2>
@@ -332,7 +332,7 @@ We will see that each of them can be seen as syntactic sugar sprinkled on dictio
 (3 17.5 yes \A)
 </pre>
 <p>
-We use tuples to group different atomics as an ordered list. The elements of the tuple can have different types, just as the elements of a dictionary can have different types. To see the similarity consider this example:
+We use tuples to group different atomics as an ordered collection. The elements of the tuple can have different types, just as the elements of a dictionary can have different types. To see the similarity consider this example:
 </p>
 <pre>
 {
@@ -364,8 +364,8 @@ Stacks in Manglang can be seen as syntactic sugar sprinkled on dictionaries so t
 Conceptually we can think of a stack as a dictionary having the members <code>top</code> and <code>rest</code>,
 and we access the data in the stack as if it was such a dictionary via <code>top@stack</code> and <code>rest@stack</code>. There are two differences between tuples and stacks:
 <ul>
-<li>All elements of a stack should have the same type.</li>
-<li>We can generate a new stack from base stack by adding or removing elements from it.</li>
+<li>All elements of a stack should have the same type. The elements of a tuple can have different types.</li>
+<li>We can generate a new stack from a base stack by adding or removing elements from it. A tuple is static.</li>
 </ul>
 </p>
 <p>
