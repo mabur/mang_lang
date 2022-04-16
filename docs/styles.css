@@ -25,26 +25,26 @@ q {
   padding: 10px 2px 10px 2px;
 }
 h1 {
-  font-family: 'Fira Sans';
+  font-family: 'Roboto Mono';
   font-weight: normal;
   color: #E3322F;
   color: #3FAF7E;
   margin: 40px 0px 20px 0px;
 }
 h2 {
-  font-family: 'Fira Sans';
+  font-family: 'Roboto Mono';
   font-weight: normal;
   color: #3FAF7E;
   margin: 40px 0px 20px 0px;
 }
 h3 {
-  font-family: 'Fira Sans';
+  font-family: 'Roboto Mono';
   font-weight: normal;
   color: #3FAF7E;
   margin: 40px 0px 20px 0px;
 }
 pre {
-  font-family: 'Fira Mono';
+  font-family: 'Roboto Mono';
   font-size: 90%;
   color: #000000;
   background-color: #FFFFDD;
@@ -53,7 +53,7 @@ pre {
 }
 code {
   background-color: #FFFFDD;
-  font-family: 'Fira Mono';
+  font-family: 'Roboto Mono';
   padding: 0px 5px 0px 5px;
 }
 li {
