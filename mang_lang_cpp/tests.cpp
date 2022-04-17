@@ -75,6 +75,11 @@ struct MangLangTest : public Test {
             ::reformat, "reformat", case_name, data
         );
     }
+    void evaluate_types(std::string case_name, InputOutputList data) {
+        parameterizedTest<std::string, std::string>(
+            ::evaluate_types, "evaluate types", case_name, data
+        );
+    }
     void evaluate(std::string case_name, InputOutputList data) {
         parameterizedTest<std::string, std::string>(
             ::evaluate, "evaluate", case_name, data
@@ -97,6 +102,20 @@ int main() {
         {"1.0", "1"},
         {"+1", "1"},
         {"+1.0", "1"},
+    });
+    test.evaluate_types("number", {
+        {"-1", "NUMBER"},
+        {"-1.0", "NUMBER"},
+        {"-0", "NUMBER"},
+        {"-0.0", "NUMBER"},
+        {"0", "NUMBER"},
+        {"0.0", "NUMBER"},
+        {"+0", "NUMBER"},
+        {"+0.0", "NUMBER"},
+        {"1", "NUMBER"},
+        {"1.0", "NUMBER"},
+        {"+1", "NUMBER"},
+        {"+1.0", "NUMBER"},
     });
     test.evaluate("character", {
         {R"(\a)", R"(\a)"},
