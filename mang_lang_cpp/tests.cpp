@@ -369,6 +369,22 @@ int main() {
         {"a@{a=1}", "a@{a=1}"},
         {"A_0@{A_0=1}", "A_0@{A_0=1}"},
     });
+    test.evaluate_types("child_symbol", {
+        {"a@{a=1}", "NUMBER"},
+        {"A_0@{A_0=1}", "NUMBER"},
+        {"_0@{_0=1}", "NUMBER"},
+        {"y@{x=5 y=x}", "NUMBER"},
+        {"c@{a=1 b=a c=b}", "NUMBER"},
+        {"y@x@{x = {y = 1}}", "NUMBER"},
+        {"b@x@{x={a=no b=2}}", "NUMBER"},
+        {"z@y@x@{x = {y = {z = 1}}}", "NUMBER"},
+        {"w@z@y@x@{x = {y = {z = {w=1}}}}", "NUMBER"},
+        {"b@{a={f=in x out 1} g=f@a b=g!3}", "NUMBER"},
+        {"b@{a={f = in x out inc!x} g=f@a b = g!3}", "NUMBER"},
+        {"c@{a={b={f=in x out inc!x}} g=f@b@a c = g!3}", "NUMBER"},
+        {"ABBA@{ABBA = 1}", "NUMBER"},
+        {"ABBA@{ABBA = 1 PADDA = no}", "NUMBER"},
+    });
     test.evaluate("child_symbol", {
         {"a@{a=1}", "1"},
         {"A_0@{A_0=1}", "1"},
