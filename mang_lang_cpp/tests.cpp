@@ -799,6 +799,10 @@ int main() {
         {"top@[4]", "4"},
         {"top@[3 4]", "3"},
     });
+    test.evaluate_types("top string", {
+        {R"(top@"b")", "CHARACTER"},
+        {R"(top@"ab")", "CHARACTER"},
+    });
     test.evaluate("top string", {
         {R"(top@"b")", R"(\b)"},
         {R"(top@"ab")", R"(\a)"},
