@@ -791,6 +791,10 @@ int main() {
         {R"(clear!"a")", R"("")"},
         {R"(clear!"ab")", R"("")"},
     });
+    test.evaluate_types("top stack", {
+        {"top@[4]", "NUMBER"},
+        {"top@[3 4]", "NUMBER"},
+    });
     test.evaluate("top stack", {
         {"top@[4]", "4"},
         {"top@[3 4]", "3"},
