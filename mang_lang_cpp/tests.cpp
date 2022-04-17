@@ -799,6 +799,11 @@ int main() {
         {R"(top@"b")", R"(\b)"},
         {R"(top@"ab")", R"(\a)"},
     });
+    test.evaluate_types("rest stack", {
+        {"rest@[4]", "[NUMBER]"},
+        {"rest@[4 3]", "[NUMBER]"},
+        {"rest@[4 3 7]", "[NUMBER]"},
+    });
     test.evaluate("rest stack", {
         {"rest@[4]", "[]"},
         {"rest@[4 3]", "[3]"},
