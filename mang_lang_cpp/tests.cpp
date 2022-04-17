@@ -771,10 +771,20 @@ int main() {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
+    test.evaluate_types("clear stack", {
+        {"clear![]", "EMPTY_STACK"},
+        {"clear![1]", "EMPTY_STACK"},
+        {"clear![1 2]", "EMPTY_STACK"},
+    });
     test.evaluate("clear stack", {
         {"clear![]", "[]"},
         {"clear![1]", "[]"},
         {"clear![1 2]", "[]"},
+    });
+    test.evaluate_types("clear string", {
+        {R"(clear!"")", "EMPTY_STRING"},
+        {R"(clear!"a")", "EMPTY_STRING"},
+        {R"(clear!"ab")", "EMPTY_STRING"},
     });
     test.evaluate("clear string", {
         {R"(clear!"")", R"("")"},
