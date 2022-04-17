@@ -79,11 +79,6 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     return result;
 }
 
-std::string serializeFunction(const Function& function) {
-    return "in " + serializeName(function.input_name)
-        + " out " + serialize_types(function.body);
-}
-
 std::string serializeFunctionDictionary(const FunctionDictionary& function_dictionary) {
     auto result = std::string{};
     result += "in ";
@@ -184,7 +179,7 @@ std::string serialize_types(Expression expression) {
         case DYNAMIC_DEFINITION: return serializeDynamicDefinition(getDynamicDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
-        case FUNCTION: return serializeFunction(getFunction(expression));
+        case FUNCTION: return NAMES[FUNCTION];
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));

@@ -657,6 +657,9 @@ int main() {
         {R"(unequal?("abc" "ab"))", "yes"},
         {R"(unequal?("ab" "abc"))", "yes"},
     });
+    test.evaluate_types("function", {
+        {"in x out x",       "FUNCTION"},
+    });
     test.evaluate("function", {
         {"in x out x",       "in x out x"},
         {"f@{f=in x out x}", "in x out x"},
