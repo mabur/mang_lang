@@ -79,24 +79,6 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     return result;
 }
 
-std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
-    auto result = std::string{};
-    result += "in ";
-    result += "(";
-    for (const auto& name : function_stack.input_names) {
-        result += serializeName(name);
-        result += " ";
-    }
-    if (function_stack.input_names.empty()) {
-        result += ')';
-    }
-    else {
-        result.back() = ')';
-    }
-    result += " out " + serialize_types(function_stack.body);
-    return result;
-}
-
 std::string serializeTuple(Expression s) {
     const auto expressions = getTuple(s).expressions;
     if (expressions.empty()) {
@@ -164,7 +146,7 @@ std::string serialize_types(Expression expression) {
         case FUNCTION: return NAMES[FUNCTION];
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return NAMES[FUNCTION_DICTIONARY];
-        case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
+        case FUNCTION_TUPLE: return NAMES[FUNCTION_TUPLE];
         case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);

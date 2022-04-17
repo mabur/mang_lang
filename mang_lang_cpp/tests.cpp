@@ -674,7 +674,12 @@ int main() {
         {"in {x y} out x", "in {x y} out x"},
         {"in  {  x    y  }  out  x", "in {x y} out x"},
     });
-    test.evaluate("function stack", {
+    test.evaluate_types("function tuple", {
+        {"in (x) out x", "FUNCTION_TUPLE"},
+        {"in (x y) out x", "FUNCTION_TUPLE"},
+        {"in  (  x    y  )  out  x", "FUNCTION_TUPLE"},
+    });
+    test.evaluate("function tuple", {
         {"in (x) out x", "in (x) out x"},
         {"in (x y) out x", "in (x y) out x"},
         {"in  (  x    y  )  out  x", "in (x y) out x"},
