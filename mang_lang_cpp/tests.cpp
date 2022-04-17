@@ -354,6 +354,17 @@ int main() {
         {"a", "a"},
         {"{a=1 b=a}", "{a=1 b=a}"},
     });
+    test.evaluate_types("symbol", {
+        {"{a=1 b=a}", "{a=NUMBER b=NUMBER}"},
+        {"{a=1 b_0=a}", "{a=NUMBER b_0=NUMBER}"},
+        {"{a=1 b={c=a}}", "{a=NUMBER b={c=NUMBER}}"},
+        {"{a=1 b={c={d=a}}}", "{a=NUMBER b={c={d=NUMBER}}}"},
+        {"{a=1 b=[a]}", "{a=NUMBER b=[NUMBER]}"},
+        {"{a=1 b=[[a]]}", "{a=NUMBER b=[[NUMBER]]}"},
+        {"{a=1 b=c@{c=a}}", "{a=NUMBER b=NUMBER}"},
+        {"{a=1 b=add!(a a)}", "{a=NUMBER b=NUMBER}"},
+        {"{a=1 b=if a then a else 2}", "{a=NUMBER b=NUMBER}"},
+    });
     test.evaluate("symbol", {
         {"{a=1 b=a}", "{a=1 b=1}"},
         {"{a=1 b_0=a}", "{a=1 b_0=1}"},
