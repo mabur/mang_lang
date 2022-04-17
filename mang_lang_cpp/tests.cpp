@@ -809,6 +809,11 @@ int main() {
         {"rest@[4 3]", "[3]"},
         {"rest@[4 3 7]", "[3 7]"},
     });
+    test.evaluate_types("rest string", {
+        {R"(rest@"a")", "STRING"},
+        {R"(rest@"ab")", "STRING"},
+        {R"(rest@"abc")", "STRING"},
+    });
     test.evaluate("rest string", {
         {R"(rest@"a")", R"("")"},
         {R"(rest@"ab")", R"("b")"},
