@@ -267,6 +267,11 @@ int main() {
         {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
     });
+    test.evaluate_types("dictionary iteration", {
+        {"{while 1 end}", "{}"},
+        {"{i=2 while i i=dec!i end}", "{i=NUMBER}"},
+        {"{i=10 while i i=dec!i end j=1}", "{i=NUMBER j=NUMBER}"},
+    });
     test.evaluate("dictionary iterations", {
         {"{i=2 while i i=dec!i end}", "{i=0}"},
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
@@ -280,6 +285,18 @@ int main() {
         {"{i=1 while i <i>=i i=dec!i end}", "{i=0 <1>=1}"},
         {"{i=2 while i <i>=i i=dec!i end}", "{i=0 <2>=2 <1>=1}"},
         {"{i=1 <0>=1 while less?[i 3] <i>=<dec!i> i=inc!i end}", "{i=3 <0>=1 <1>=1 <2>=1}"}
+    });
+    test.evaluate_types("dictionary", {
+        {"{}", "{}"},
+        {"{ }", "{}"},
+        {"{a=1}", "{a=NUMBER}"},
+        {"{a0=1}", "{a0=NUMBER}"},
+        {"{a_0=1}", "{a_0=NUMBER}"},
+        {"{ a = 1 }", "{a=NUMBER}"},
+        {"{a=1 a=2}", "{a=NUMBER}"},
+        {"{a=1 b=2}", "{a=NUMBER b=NUMBER}"},
+        {"{ a = 1  b = 2 }", "{a=NUMBER b=NUMBER}"},
+        {"{a=1 b=a}", "{a=NUMBER b=NUMBER}"},
     });
     test.evaluate("dictionary", {
         {"{}", "{}"},

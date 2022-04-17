@@ -85,8 +85,8 @@ Expression evaluateDictionary(
 ) {
     const auto result = new EvaluatedDictionary{environment, {}};
     const auto result_environment = makeEvaluatedDictionary(CodeRange{}, result);
-    auto i = size_t{0};
-    while (i < dictionary.statements.size()) {
+
+    for (size_t i = 0; i < dictionary.statements.size(); ++i) {
         const auto statement = dictionary.statements[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
@@ -95,28 +95,10 @@ Expression evaluateDictionary(
             const auto value = evaluate_types(right_expression, result_environment);
             const auto label = getNameAsLabel(definition.name);
             result->definitions.add(label, value);
-            i += 1;
-        }
-        else if (type == DYNAMIC_DEFINITION) {
-            const auto dynamic_definition = getDynamicDefinition(statement);
-            const auto right_expression = dynamic_definition.expression;
-            const auto value = evaluate_types(right_expression, result_environment);
-            const auto& name = dynamic_definition.dynamic_name;
-            const auto label = serialize(evaluate_types(name, result_environment));
-            result->definitions.add(label, value);
-            i += 1;
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWileStatement(statement);
-            if (boolean(evaluate_types(while_statement.expression, result_environment))) {
-                i += 1;
-            } else {
-                i = while_statement.end_index_ + 1;
-            }
-        }
-        else if (type == END_STATEMENT) {
-            const auto end_statement = getEndStatement(statement);
-            i = end_statement.while_index_;
+            boolean(evaluate_types(while_statement.expression, result_environment));
         }
     }
     return result_environment;
