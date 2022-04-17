@@ -40,14 +40,13 @@ bool isEqual(Expression left, Expression right) {
 
 bool boolean(Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: return !getEvaluatedDictionary(expression).definitions.empty();
-        case NUMBER: return static_cast<bool>(getNumber(expression).value);
-        case BOOLEAN: return getBoolean(expression).value;
+        case NUMBER: return true;
+        case BOOLEAN: return true;
         case EVALUATED_STACK: return true;
-        case EMPTY_STACK: return false;
+        case EMPTY_STACK: return true;
         case STRING: return true;
-        case EMPTY_STRING: return false;
-        default: throw UnexpectedExpression(expression.type, "boolean operation");
+        case EMPTY_STRING: return true;
+        default: throw StaticTypeError(expression.type, "expected type that can be evaluated to boolean");
     }
 }
 
@@ -59,10 +58,13 @@ std::string getNameAsLabel(Expression name)
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment
 ) {
-    return
-        boolean(evaluate_types(conditional.expression_if, environment)) ?
-            evaluate_types(conditional.expression_then, environment) :
-            evaluate_types(conditional.expression_else, environment);
+    boolean(evaluate_types(conditional.expression_if, environment));
+    const auto left = evaluate_types(conditional.expression_then, environment);
+    const auto right = evaluate_types(conditional.expression_else, environment);
+    if (left.type != right.type) {
+        throw StaticTypeError(left.type, "Different types in conditional branches");
+    }
+    return left;
 }
 
 Expression evaluateIs(

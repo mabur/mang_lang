@@ -321,6 +321,12 @@ int main() {
         {"if  1  then  2  else  3", "if 1 then 2 else 3"},
         {"if a then b else c", "if a then b else c"},
     });
+    test.evaluate_types("conditional", {
+        {"if 1 then 2 else 3", "NUMBER"},
+        {"if 0 then 2 else 3", "NUMBER"},
+        {"if [0] then 2 else 3", "NUMBER"},
+        {"if [] then 2 else 3", "NUMBER"},
+    });
     test.evaluate("conditional", {
         {"if 1 then 2 else 3", "2"},
         {"if 0 then 2 else 3", "3"},
