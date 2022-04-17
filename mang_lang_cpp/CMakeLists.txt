@@ -12,6 +12,7 @@ add_library(shared
         operations/evaluate_types.cpp
         operations/parse.cpp
         operations/serialize.cpp
+        operations/serialize_types.cpp
         container.cpp
         expression.cpp
         factory.cpp
