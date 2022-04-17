@@ -15,10 +15,6 @@ std::string serializeLabel(Expression name) {
     return "\'" + getLabel(name).value + "\'";
 }
 
-std::string serializeCharacter(const Character& character) {
-    return "\\" + std::string{character.value};
-}
-
 std::string serializeConditional(const Conditional& conditional) {
     return "if " + serialize_types(conditional.expression_if) +
         " then " + serialize_types(conditional.expression_then) +
@@ -207,7 +203,7 @@ std::string serializeString(Expression string) {
 
 std::string serialize_types(Expression expression) {
     switch (expression.type) {
-        case CHARACTER: return serializeCharacter(getCharacter(expression));
+        case CHARACTER: return NAMES[CHARACTER];
         case CONDITIONAL: return serializeConditional(getConditional(expression));
         case IS: return serializeIs(getIs(expression));
         case DICTIONARY: return serializeDictionary(getDictionary(expression));

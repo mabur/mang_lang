@@ -128,6 +128,17 @@ int main() {
         {R"(\{)", R"(\{)"},
         {R"(\})", R"(\})"},
     });
+    test.evaluate_types("character", {
+        {R"(\a)", "CHARACTER"},
+        {R"(\1)", "CHARACTER"},
+        {R"(\+)", "CHARACTER"},
+        {R"(\-)", "CHARACTER"},
+        {R"(\")", "CHARACTER"},
+        {R"(\))", "CHARACTER"},
+        {R"(\))", "CHARACTER"},
+        {R"(\{)", "CHARACTER"},
+        {R"(\})", "CHARACTER"},
+    });
     test.evaluate("boolean", {
         {"yes", "yes"},
         {"no", "no"},
