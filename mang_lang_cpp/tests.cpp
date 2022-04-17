@@ -176,6 +176,17 @@ int main() {
         {R"#("()")#", R"#("()")#"},
         {R"("{}")", R"("{}")"},
     });
+    test.evaluate_types("string", {
+        {R"("")", "EMPTY_STRING"},
+        {R"("a")", "STRING"},
+        {R"("ab")", "STRING"},
+        {R"("abc")", "STRING"},
+        {R"("1")", "STRING"},
+        {R"("-1")", "STRING"},
+        {R"("+1")", "STRING"},
+        {R"#("()")#", "STRING"},
+        {R"("{}")", "STRING"},
+    });
     test.evaluate("stack", {
         {"[]", "[]"},
         {"[ ]", "[]"},

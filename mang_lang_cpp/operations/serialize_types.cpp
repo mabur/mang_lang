@@ -181,16 +181,6 @@ std::string serializeDynamicLookupSymbol(const DynamicLookupSymbol& dynamic_look
     return "<" + serialize_types(dynamic_lookup_symbol.expression) + ">";
 }
 
-std::string appendCharacter(const std::string& s, Expression character) {
-    return s + getCharacter(character).value;
-}
-
-std::string serializeString(Expression string) {
-    const auto delimiter = std::string{"\""};
-    return leftFold(delimiter, string, appendCharacter, EMPTY_STRING, getString)
-        + delimiter;
-}
-
 } // namespace
 
 std::string serialize_types(Expression expression) {
@@ -221,8 +211,8 @@ std::string serialize_types(Expression expression) {
         case LABEL: return NAMES[LABEL];
         case NUMBER: return NAMES[NUMBER];
         case BOOLEAN: return NAMES[BOOLEAN];
-        case EMPTY_STRING: return serializeString(expression);
-        case STRING: return serializeString(expression);
+        case EMPTY_STRING: return NAMES[EMPTY_STRING];
+        case STRING: return NAMES[STRING];
         case EMPTY: return NAMES[EMPTY];
         default: throw UnexpectedExpression(expression.type, "serialize operation");
     }
