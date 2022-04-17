@@ -9,6 +9,7 @@ add_library(shared
         built_in_functions/dictionary.cpp
         built_in_functions/stack.cpp
         operations/evaluate.cpp
+        operations/evaluate_types.cpp
         operations/parse.cpp
         operations/serialize.cpp
         container.cpp
