@@ -424,6 +424,13 @@ int main() {
     test.reformat("lookup_function", {
         {"add!(1 2)", "add!(1 2)"},
     });
+    test.evaluate_types("number constants", {
+        {"inf", "NUMBER"},
+        {"-inf", "NUMBER"},
+        {"nan", "NUMBER"},
+        {"pi", "NUMBER"},
+        {"tau", "NUMBER"},
+    });
     test.evaluate("number constants", {
         {"inf", "inf"},
         {"-inf", "-inf"},
