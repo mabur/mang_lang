@@ -143,6 +143,10 @@ int main() {
         {"yes", "yes"},
         {"no", "no"},
     });
+    test.evaluate_types("boolean", {
+        {"yes", "BOOLEAN"},
+        {"no", "BOOLEAN"},
+    });
     test.evaluate("missing", {
         {"missing", "missing"},
     });

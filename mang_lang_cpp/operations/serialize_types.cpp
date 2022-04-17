@@ -185,10 +185,6 @@ std::string serializeDynamicLookupSymbol(const DynamicLookupSymbol& dynamic_look
     return "<" + serialize_types(dynamic_lookup_symbol.expression) + ">";
 }
 
-std::string serializeBoolean(const Boolean& boolean) {
-    return boolean.value ? "yes" : "no";
-}
-
 std::string appendCharacter(const std::string& s, Expression character) {
     return s + getCharacter(character).value;
 }
@@ -228,7 +224,7 @@ std::string serialize_types(Expression expression) {
         case NAME: return serializeName(expression);
         case LABEL: return serializeLabel(expression);
         case NUMBER: return NAMES[NUMBER];
-        case BOOLEAN: return serializeBoolean(getBoolean(expression));
+        case BOOLEAN: return NAMES[BOOLEAN];
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
         case EMPTY: return "missing";
