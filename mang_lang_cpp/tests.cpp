@@ -150,6 +150,9 @@ int main() {
     test.evaluate("missing", {
         {"missing", "missing"},
     });
+    test.evaluate_types("missing", {
+        {"missing", "EMPTY"},
+    });
     test.evaluate("label", {
         {"'a'", "'a'"},
         {"'ab'", "'ab'"},
