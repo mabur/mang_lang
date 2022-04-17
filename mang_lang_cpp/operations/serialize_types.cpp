@@ -146,22 +146,12 @@ std::string serializeEvaluatedTuple(Expression s) {
     return result;
 }
 
-std::string appendElement(const std::string& s, Expression element) {
-    return s + serialize_types(element) + ' ';
-}
-
 std::string serializeStack(Expression s) {
-    auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
-        getStack);
-    result.back() = ']';
-    return result;
+    return '[' + serialize_types(getStack(s).top) + ']';
 }
 
 std::string serializeEvaluatedStack(Expression s) {
-    auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
-        getEvaluatedStack);
-    result.back() = ']';
-    return result;
+    return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
 }
 
 std::string serializeLookupChild(const LookupChild& lookup_child) {
@@ -202,7 +192,7 @@ std::string serialize_types(Expression expression) {
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
-        case EMPTY_STACK: return "[]";
+        case EMPTY_STACK: return NAMES[EMPTY_STACK];
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));

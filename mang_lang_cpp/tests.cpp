@@ -202,6 +202,21 @@ int main() {
         {"[[] []]", "[[] []]"},
         {"[[[]]]", "[[[]]]"},
     });
+    test.evaluate_types("stack", {
+        {"[]", "EMPTY_STACK"},
+        {"[ ]", "EMPTY_STACK"},
+        {"[  ]", "EMPTY_STACK"},
+        {"[1]", "[NUMBER]"},
+        {"[ 1]", "[NUMBER]"},
+        {"[1 ]", "[NUMBER]"},
+        {"[ 1 ]", "[NUMBER]"},
+        {"[1 2]", "[NUMBER]"},
+        {"[1  2]", "[NUMBER]"},
+        {"[ 1  2 ]", "[NUMBER]"},
+        {"[[]]", "[EMPTY_STACK]"},
+        {"[[] []]", "[EMPTY_STACK]"},
+        {"[[[]]]", "[[EMPTY_STACK]]"},
+    });
     test.reformat("tuple", {
         {"()", "()"},
         {"( )", "()"},
