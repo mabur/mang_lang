@@ -664,6 +664,11 @@ int main() {
         {"in x out x",       "in x out x"},
         {"f@{f=in x out x}", "in x out x"},
     });
+    test.evaluate_types("function dictionary", {
+        {"in {x} out x", "FUNCTION_DICTIONARY"},
+        {"in {x y} out x", "FUNCTION_DICTIONARY"},
+        {"in  {  x    y  }  out  x", "FUNCTION_DICTIONARY"},
+    });
     test.evaluate("function dictionary", {
         {"in {x} out x", "in {x} out x"},
         {"in {x y} out x", "in {x y} out x"},
