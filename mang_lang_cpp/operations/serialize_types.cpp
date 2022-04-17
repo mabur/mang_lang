@@ -11,10 +11,6 @@ std::string serializeName(Expression name) {
     return getName(name).value;
 }
 
-std::string serializeLabel(Expression name) {
-    return "\'" + getLabel(name).value + "\'";
-}
-
 std::string serializeConditional(const Conditional& conditional) {
     return "if " + serialize_types(conditional.expression_if) +
         " then " + serialize_types(conditional.expression_then) +
@@ -222,7 +218,7 @@ std::string serialize_types(Expression expression) {
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case DYNAMIC_LOOKUP_SYMBOL: return serializeDynamicLookupSymbol(getDynamicLookupSymbol(expression));
         case NAME: return serializeName(expression);
-        case LABEL: return serializeLabel(expression);
+        case LABEL: return NAMES[LABEL];
         case NUMBER: return NAMES[NUMBER];
         case BOOLEAN: return NAMES[BOOLEAN];
         case EMPTY_STRING: return serializeString(expression);

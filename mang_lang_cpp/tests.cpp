@@ -159,6 +159,12 @@ int main() {
         {"'a1'", "'a1'"},
         {"'_'", "'_'"},
     });
+    test.evaluate_types("label", {
+        {"'a'", "LABEL"},
+        {"'ab'", "LABEL"},
+        {"'a1'", "LABEL"},
+        {"'_'", "LABEL"},
+    });
     test.evaluate("string", {
         {R"("")", R"("")"},
         {R"("a")", R"("a")"},
