@@ -465,6 +465,7 @@ int main() {
         {"tau", "6.28318530718"},
     });
     test.evaluate_types("min", {
+        // TODO: {"min![]", "NUMBER"},
         {"min![0]", "NUMBER"},
         {"min![0 1]", "NUMBER"},
         {"min![1 0]", "NUMBER"},
@@ -472,6 +473,7 @@ int main() {
         {"min![7 -3 8 -9]", "NUMBER"},
     });
     test.evaluate("min", {
+        {"min![]", "inf"},
         {"min![0]", "0"},
         {"min![0 1]", "0"},
         {"min![1 0]", "0"},
@@ -479,6 +481,7 @@ int main() {
         {"min![7 -3 8 -9]", "-9"},
     });
     test.evaluate_types("max", {
+        // TODO {"max![]", "NUMBER"},
         {"max![0]", "NUMBER"},
         {"max![0 1]", "NUMBER"},
         {"max![1 0]", "NUMBER"},
@@ -486,6 +489,7 @@ int main() {
         {"max![7 -3 8 -9]", "NUMBER"},
     });
     test.evaluate("max", {
+        {"max![]", "-inf"},
         {"max![0]", "0"},
         {"max![0 1]", "1"},
         {"max![1 0]", "1"},
