@@ -1152,6 +1152,11 @@ int main() {
         {R"(replace_if!(in x out equal?(x \a) \b "c"))", R"("c")"},
         {R"(replace_if!(in x out equal?(x \a) \b "ab_ba"))", R"("bb_bb")"},
     });
+    test.evaluate_types("enumerate stack", {
+        {"enumerate![]", "[[NUMBER]]"},
+        {"enumerate![4]", "[[NUMBER]]"},
+        {"enumerate![4 3]", "[[NUMBER]]"},
+    });
     test.evaluate("enumerate stack", {
         {"enumerate![]", "[]"},
         {"enumerate![4]", "[[0 4]]"},
