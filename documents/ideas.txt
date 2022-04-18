@@ -1,5 +1,12 @@
 TODO:
 * Type theory
+  - How to handle type of empty stack,
+    when sent to function that takes top@stack inside while loop?
+    - Add syntax for type annotation.
+    - Create emtpy stack using a function: clear![3] empty![3] stack!3
+    - Let empty stack have type [ANY] or [EMPTY]
+    - Let empty stack have type EMTPY_STACK, but allow top@stack and let it be ANY or EMPTY
+    - Could also let top@stack always return EMPTY also for normal evaluation.
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
   - Is it simple to check types without any type annotation?
