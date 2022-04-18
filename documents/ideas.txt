@@ -1,10 +1,15 @@
 TODO:
+* Built-ins
+  - Let less be defined for 2-tuple.
+  - Implement less_or_equal and less for stack in standard-library.
 * Type theory
   - Type checking for folds that transform input with empty stack as input: min, max, map:
     - Can the problem be avoided by not using fold?
     - Allow EMPTY as input for all built-in functions,
       - Only create EMPTY during evaluation of types but not evaluation of values?
-      - Simlar to null-pointer and billion-dollar mistake.
+      - Similar to null-pointer and billion-dollar mistake.
+      - Numeric built-ins can return nan for EMPTY input.
+      - Boolean/less/less_equal built-ins can return false for EMPTY input, similarly as for NAN.
   - Type checking for zip, which now uses a stack with elements of different types.
   - How to handle type of empty stack,
     when sent to function that takes top@stack inside while loop?
