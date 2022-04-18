@@ -169,7 +169,7 @@ Expression evaluateTuple(Tuple tuple, Expression environment) {
 
 Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(name, "environment");
+        throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
     }
     const auto d = getEvaluatedDictionary(expression);
     return d.definitions.lookup(name);
