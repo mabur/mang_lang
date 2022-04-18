@@ -1000,6 +1000,12 @@ int main() {
         {R"(parse_digit!\8)", "8"},
         {R"(parse_digit!\9)", "9"},
     });
+    test.evaluate_types("range", {
+        {"range!0", "[NUMBER]"},
+        {"range!1", "[NUMBER]"},
+        {"range!2", "[NUMBER]"},
+        {"range!3", "[NUMBER]"},
+    });
     test.evaluate("range", {
         {"range!0", "[]"},
         {"range!1", "[0]"},
