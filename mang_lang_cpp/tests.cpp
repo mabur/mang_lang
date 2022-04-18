@@ -1016,6 +1016,11 @@ int main() {
         {"count!range!100", "100"},
         {"sum!range!100", "4950"},
     });
+    test.evaluate_types("count stack", {
+        {"count![]", "NUMBER"},
+        {"count![[]]", "NUMBER"},
+        {"count![[] []]", "NUMBER"},
+    });
     test.evaluate("count stack", {
         {"count![]", "0"},
         {"count![[]]", "1"},
