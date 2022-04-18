@@ -839,6 +839,12 @@ int main() {
         {"reverse![0 1]", "[1 0]"},
         {"reverse![0 1 2]", "[2 1 0]"},
     });
+    test.evaluate_types("reverse string", {
+        {R"(reverse!"")", "STRING"},
+        {R"(reverse!"a")", "STRING"},
+        {R"(reverse!"ab")", "STRING"},
+        {R"(reverse!"abc")", "STRING"},
+    });
     test.evaluate("reverse string", {
         {R"(reverse!"")", R"("")"},
         {R"(reverse!"a")", R"("a")"},
