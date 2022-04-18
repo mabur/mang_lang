@@ -761,6 +761,26 @@ int main() {
         {"in (x y) out x", "in (x y) out x"},
         {"in  (  x    y  )  out  x", "in (x y) out x"},
     });
+    test.evaluate_types("lookup function", {
+        {"a@{f=in x out x a=f!0}", "NUMBER"},
+        {"a@{f=in x out x a=f![]}", "EMPTY_STACK"},
+        {"a@{f=in x out 1 a=f!0}", "NUMBER"},
+        {"z@{f=in x out y@{y = 3} z=f!2}", "NUMBER"},
+        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "NUMBER"},
+        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "NUMBER"},
+        {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f![]}", "NUMBER"},
+        {"x@{f=in a out 1 g = in b out f!b x = g!2}", "NUMBER"},
+        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "NUMBER"},
+        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "NUMBER"},
+        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[NUMBER]"},
+        {"a@{call=in f out f![] g=in x out 0 a=call!g}", "NUMBER"},
+        {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "NUMBER"},
+        {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "NUMBER"},
+        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[NUMBER]"},
+        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[NUMBER]"},
+        {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "NUMBER"},
+        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[NUMBER]"},
+    });
     test.evaluate("lookup function", {
         {"a@{f=in x out x a=f!0}", "0"},
         {"a@{f=in x out x a=f![]}", "[]"},
