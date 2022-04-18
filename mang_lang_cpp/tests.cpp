@@ -851,10 +851,20 @@ int main() {
         {R"(reverse!"ab")", R"("ba")"},
         {R"(reverse!"abc")", R"("cba")"},
     });
+    test.evaluate_types("put stack", {
+        {"put!(3 [])", "[NUMBER]"},
+        {"put!(4 [5])", "[NUMBER]"},
+        {"put!(4 [6 8])", "[NUMBER]"},
+    });
     test.evaluate("put stack", {
         {"put!(3 [])", "[3]"},
         {"put!(4 [5])", "[4 5]"},
         {"put!(4 [6 8])", "[4 6 8]"},
+    });
+    test.evaluate_types("put string", {
+        {R"(put!(\a ""))", "STRING"},
+        {R"(put!(\a "b"))", "STRING"},
+        {R"(put!(\a "bc"))", "STRING"},
     });
     test.evaluate("put string", {
         {R"(put!(\a ""))", R"("a")"},
