@@ -286,8 +286,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case EVALUATED_TUPLE: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
-        case FUNCTION_TUPLE: return evaluateFunctionTuple(
-                getFunctionTuple(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
@@ -299,6 +298,6 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
         case DYNAMIC_LOOKUP_SYMBOL: return evaluateDynamicLookupSymbol(getDynamicLookupSymbol(expression), environment);
-        default: throw UnexpectedExpression(expression.type, "evaluate operation");
+        default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
 }
