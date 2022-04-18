@@ -928,6 +928,9 @@ int main() {
     test.evaluate("dec", {
         {"dec!0", "-1"},
     });
+    test.evaluate_types("is_digit", {
+        {R"(is_digit?\A)", "BOOLEAN"},
+    });
     test.evaluate("is_digit", {
         {R"(is_digit?\A)", "no"},
         {R"(is_digit?\Z)", "no"},
@@ -935,6 +938,9 @@ int main() {
         {R"(is_digit?\z)", "no"},
         {R"(is_digit?\0)", "yes"},
         {R"(is_digit?\9)", "yes"},
+    });
+    test.evaluate_types("is_upper", {
+        {R"(is_upper?\A)", "BOOLEAN"},
     });
     test.evaluate("is_upper", {
         {R"(is_upper?\A)", "yes"},
@@ -944,6 +950,9 @@ int main() {
         {R"(is_upper?\0)", "no"},
         {R"(is_upper?\9)", "no"},
     });
+    test.evaluate_types("is_lower", {
+        {R"(is_lower?\A)", "BOOLEAN"},
+    });
     test.evaluate("is_lower", {
         {R"(is_lower?\A)", "no"},
         {R"(is_lower?\Z)", "no"},
@@ -951,6 +960,9 @@ int main() {
         {R"(is_lower?\z)", "yes"},
         {R"(is_lower?\0)", "no"},
         {R"(is_lower?\9)", "no"},
+    });
+    test.evaluate_types("is_letter", {
+        {R"(is_letter?\A)", "BOOLEAN"},
     });
     test.evaluate("is_letter", {
         {R"(is_letter?\A)", "yes"},
