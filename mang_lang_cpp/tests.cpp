@@ -1054,6 +1054,12 @@ int main() {
         {R"(count!"a")", "1"},
         {R"(count!"ab")", "2"},
     });
+    test.evaluate_types("count_item stack", {
+        // TODO: {"count_item!(1 [])", "NUMBER"},
+        {"count_item!(1 [1])", "NUMBER"},
+        {"count_item!(1 [1 1])", "NUMBER"},
+        {"count_item!(1 [1 0 1])", "NUMBER"},
+    });
     test.evaluate("count_item stack", {
         {"count_item!(1 [])", "0"},
         {"count_item!(1 [1])", "1"},
