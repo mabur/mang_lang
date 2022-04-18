@@ -450,52 +450,6 @@ int main() {
     test.reformat("lookup_function", {
         {"add!(1 2)", "add!(1 2)"},
     });
-    test.evaluate_types("number constants", {
-        {"inf", "NUMBER"},
-        {"-inf", "NUMBER"},
-        {"nan", "NUMBER"},
-        {"pi", "NUMBER"},
-        {"tau", "NUMBER"},
-    });
-    test.evaluate("number constants", {
-        {"inf", "inf"},
-        {"-inf", "-inf"},
-        {"nan", "nan"},
-        {"pi", "3.14159265359"},
-        {"tau", "6.28318530718"},
-    });
-    test.evaluate_types("min", {
-        // TODO: {"min![]", "NUMBER"},
-        {"min![0]", "NUMBER"},
-        {"min![0 1]", "NUMBER"},
-        {"min![1 0]", "NUMBER"},
-        {"min![3 6 1]", "NUMBER"},
-        {"min![7 -3 8 -9]", "NUMBER"},
-    });
-    test.evaluate("min", {
-        {"min![]", "inf"},
-        {"min![0]", "0"},
-        {"min![0 1]", "0"},
-        {"min![1 0]", "0"},
-        {"min![3 6 1]", "1"},
-        {"min![7 -3 8 -9]", "-9"},
-    });
-    test.evaluate_types("max", {
-        // TODO {"max![]", "NUMBER"},
-        {"max![0]", "NUMBER"},
-        {"max![0 1]", "NUMBER"},
-        {"max![1 0]", "NUMBER"},
-        {"max![3 6 1]", "NUMBER"},
-        {"max![7 -3 8 -9]", "NUMBER"},
-    });
-    test.evaluate("max", {
-        {"max![]", "-inf"},
-        {"max![0]", "0"},
-        {"max![0 1]", "1"},
-        {"max![1 0]", "1"},
-        {"max![3 6 1]", "6"},
-        {"max![7 -3 8 -9]", "8"},
-    });
     test.evaluate("add", {
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},
@@ -603,6 +557,52 @@ int main() {
         {"character!90", R"(\Z)"},
         {"character!97", R"(\a)"},
         {"character!122", R"(\z)"},
+    });
+    test.evaluate_types("number constants", {
+        {"inf", "NUMBER"},
+        {"-inf", "NUMBER"},
+        {"nan", "NUMBER"},
+        {"pi", "NUMBER"},
+        {"tau", "NUMBER"},
+    });
+    test.evaluate("number constants", {
+        {"inf", "inf"},
+        {"-inf", "-inf"},
+        {"nan", "nan"},
+        {"pi", "3.14159265359"},
+        {"tau", "6.28318530718"},
+    });
+    test.evaluate_types("min", {
+        // TODO: {"min![]", "NUMBER"},
+        {"min![0]", "NUMBER"},
+        {"min![0 1]", "NUMBER"},
+        {"min![1 0]", "NUMBER"},
+        {"min![3 6 1]", "NUMBER"},
+        {"min![7 -3 8 -9]", "NUMBER"},
+    });
+    test.evaluate("min", {
+        {"min![]", "inf"},
+        {"min![0]", "0"},
+        {"min![0 1]", "0"},
+        {"min![1 0]", "0"},
+        {"min![3 6 1]", "1"},
+        {"min![7 -3 8 -9]", "-9"},
+    });
+    test.evaluate_types("max", {
+        // TODO {"max![]", "NUMBER"},
+        {"max![0]", "NUMBER"},
+        {"max![0 1]", "NUMBER"},
+        {"max![1 0]", "NUMBER"},
+        {"max![3 6 1]", "NUMBER"},
+        {"max![7 -3 8 -9]", "NUMBER"},
+    });
+    test.evaluate("max", {
+        {"max![]", "-inf"},
+        {"max![0]", "0"},
+        {"max![0 1]", "1"},
+        {"max![1 0]", "1"},
+        {"max![3 6 1]", "6"},
+        {"max![7 -3 8 -9]", "8"},
     });
     test.evaluate("boolean", {
         {"boolean!-2", "yes"},
