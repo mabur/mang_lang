@@ -216,6 +216,7 @@ Expression evaluateLookupChild(
         case EVALUATED_STACK: return lookupChildInEvaluatedStack(child, name);
         case EVALUATED_TUPLE: return lookupChildInEvaluatedTuple(getEvaluatedTuple(child), name);
         case STRING: return lookupChildInString(child, name);
+        case EMPTY_STACK: return Expression{};
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
 }

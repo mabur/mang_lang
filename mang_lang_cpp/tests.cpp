@@ -828,7 +828,7 @@ int main() {
         {R"(rest@"abc")", R"("bc")"},
     });
     test.evaluate_types("reverse stack", {
-        // TODO: {"reverse![]", "EMPTY_STACK"},
+        {"reverse![]", "[EMPTY]"},
         {"reverse![0]", "[NUMBER]"},
         {"reverse![0 1]", "[NUMBER]"},
         {"reverse![0 1 2]", "[NUMBER]"},
