@@ -660,38 +660,6 @@ int main() {
         {"pi", "3.14159265359"},
         {"tau", "6.28318530718"},
     });
-    test.evaluate_types("min", {
-        // TODO: {"min![]", "NUMBER"},
-        {"min![0]", "NUMBER"},
-        {"min![0 1]", "NUMBER"},
-        {"min![1 0]", "NUMBER"},
-        {"min![3 6 1]", "NUMBER"},
-        {"min![7 -3 8 -9]", "NUMBER"},
-    });
-    test.evaluate("min", {
-        {"min![]", "inf"},
-        {"min![0]", "0"},
-        {"min![0 1]", "0"},
-        {"min![1 0]", "0"},
-        {"min![3 6 1]", "1"},
-        {"min![7 -3 8 -9]", "-9"},
-    });
-    test.evaluate_types("max", {
-        // TODO {"max![]", "NUMBER"},
-        {"max![0]", "NUMBER"},
-        {"max![0 1]", "NUMBER"},
-        {"max![1 0]", "NUMBER"},
-        {"max![3 6 1]", "NUMBER"},
-        {"max![7 -3 8 -9]", "NUMBER"},
-    });
-    test.evaluate("max", {
-        {"max![]", "-inf"},
-        {"max![0]", "0"},
-        {"max![0 1]", "1"},
-        {"max![1 0]", "1"},
-        {"max![3 6 1]", "6"},
-        {"max![7 -3 8 -9]", "8"},
-    });
     test.evaluate("boolean", {
         {"boolean!-2", "yes"},
         {"boolean!-1", "yes"},
@@ -1017,6 +985,38 @@ int main() {
         {R"(parse_digit!\7)", "7"},
         {R"(parse_digit!\8)", "8"},
         {R"(parse_digit!\9)", "9"},
+    });
+    test.evaluate_types("min", {
+        // TODO: {"min![]", "NUMBER"},
+        {"min![0]", "NUMBER"},
+        {"min![0 1]", "NUMBER"},
+        {"min![1 0]", "NUMBER"},
+        {"min![3 6 1]", "NUMBER"},
+        {"min![7 -3 8 -9]", "NUMBER"},
+    });
+    test.evaluate("min", {
+        {"min![]", "inf"},
+        {"min![0]", "0"},
+        {"min![0 1]", "0"},
+        {"min![1 0]", "0"},
+        {"min![3 6 1]", "1"},
+        {"min![7 -3 8 -9]", "-9"},
+    });
+    test.evaluate_types("max", {
+        // TODO {"max![]", "NUMBER"},
+        {"max![0]", "NUMBER"},
+        {"max![0 1]", "NUMBER"},
+        {"max![1 0]", "NUMBER"},
+        {"max![3 6 1]", "NUMBER"},
+        {"max![7 -3 8 -9]", "NUMBER"},
+    });
+    test.evaluate("max", {
+        {"max![]", "-inf"},
+        {"max![0]", "0"},
+        {"max![0 1]", "1"},
+        {"max![1 0]", "1"},
+        {"max![3 6 1]", "6"},
+        {"max![7 -3 8 -9]", "8"},
     });
     test.evaluate_types("range", {
         {"range!0", "[NUMBER]"},
