@@ -354,6 +354,17 @@ int main() {
         {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
         {"is 0 0 then 0 1 then 1 else 0", "is 0 0 then 0 1 then 1 else 0"},
     });
+    test.evaluate_types("is", {
+        {"is 0 0 then 1 else 2", "NUMBER"},
+        {"is 1 0 then 1 else 2", "NUMBER"},
+        {"is 0 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
+        {"is 1 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
+        {"is 2 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
+        {"is 3 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
+        {"is missing missing then 1 else 2", "NUMBER"},
+        {"is missing 0 then 1 else 2", "NUMBER"},
+        {"is 0 missing then 1 else 2", "NUMBER"},
+    });
     test.evaluate("is", {
         {"is 0 0 then 1 else 2", "1"},
         {"is 1 0 then 1 else 2", "2"},

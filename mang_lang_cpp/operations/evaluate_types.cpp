@@ -8,36 +8,6 @@
 
 namespace {
 
-bool isEqual(Expression left, Expression right) {
-    const auto left_type = left.type;
-    const auto right_type = right.type;
-    if (left_type == EMPTY && right_type == EMPTY) {
-        return true;
-    }
-    if (left_type == NUMBER && right_type == NUMBER) {
-        return getNumber(left).value == getNumber(right).value;
-    }
-    if (left_type == CHARACTER && right_type == CHARACTER) {
-        return getCharacter(left).value == getCharacter(right).value;
-    }
-    if (left_type == BOOLEAN && right_type == BOOLEAN) {
-        return getBoolean(left).value == getBoolean(right).value;
-    }
-    if (left_type == EMPTY_STACK && right_type == EMPTY_STACK) {
-        return true;
-    }
-    if (left_type == EVALUATED_STACK && right_type == EVALUATED_STACK) {
-        return allOfPairs(left, right, isEqual, EMPTY_STACK, getEvaluatedStack);
-    }
-    if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
-        return true;
-    }
-    if (left_type == STRING && right_type == STRING) {
-        return allOfPairs(left, right, isEqual, EMPTY_STRING, getString);
-    }
-    return false;
-}
-
 bool boolean(Expression expression) {
     switch (expression.type) {
         case NUMBER: return true;
@@ -70,14 +40,18 @@ Expression evaluateConditional(
 Expression evaluateIs(
     const IsExpression& is_expression, Expression environment
 ) {
-    const auto value = evaluate_types(is_expression.input, environment);
+    evaluate_types(is_expression.input, environment);
     for (const auto alternative : is_expression.alternatives) {
-        const auto left_value = evaluate_types(alternative.left, environment);
-        if (isEqual(value, left_value)) {
-            return evaluate_types(alternative.right, environment);
+        evaluate_types(alternative.left, environment);
+    }
+    const auto else_expression = evaluate_types(is_expression.expression_else, environment);
+    for (const auto alternative : is_expression.alternatives) {
+        const auto alternative_expression = evaluate_types(alternative.right, environment);
+        if (else_expression.type != alternative_expression.type) {
+            throw StaticTypeError(else_expression.type, "Different types in is-alternatives");
         }
     }
-    return evaluate_types(is_expression.expression_else, environment);
+    return else_expression;
 }
 
 Expression evaluateDictionary(
