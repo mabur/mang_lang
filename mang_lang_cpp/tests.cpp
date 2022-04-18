@@ -1044,6 +1044,11 @@ int main() {
         {"count![[]]", "1"},
         {"count![[] []]", "2"},
     });
+    test.evaluate_types("count string", {
+        {R"(count!"")", "NUMBER"},
+        {R"(count!"a")", "NUMBER"},
+        {R"(count!"ab")", "NUMBER"},
+    });
     test.evaluate("count string", {
         {R"(count!"")", "0"},
         {R"(count!"a")", "1"},
