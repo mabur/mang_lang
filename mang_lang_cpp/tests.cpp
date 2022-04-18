@@ -361,8 +361,6 @@ int main() {
         {"is 1 0 then 0 1 then 1 2 then 4 else 5", "1"},
         {"is 2 0 then 0 1 then 1 2 then 4 else 5", "4"},
         {"is 3 0 then 0 1 then 1 2 then 4 else 5", "5"},
-    });
-    test.evaluate("is missing", {
         {"is missing missing then 1 else 2", "1"},
         {"is missing 0 then 1 else 2", "2"},
         {"is 0 missing then 1 else 2", "2"},
