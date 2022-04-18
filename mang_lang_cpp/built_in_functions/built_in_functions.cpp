@@ -22,7 +22,6 @@ Expression builtIns() {
     definitions.add("'sub'", define(arithmetic::sub));
     definitions.add("'div'", define(arithmetic::div));
     definitions.add("'less'", define(arithmetic::are_all_less));
-    definitions.add("'less_or_equal'", define(arithmetic::are_all_less_or_equal));
     definitions.add("'round'", define(arithmetic::round));
     definitions.add("'round_up'", define(arithmetic::round_up));
     definitions.add("'round_down'", define(arithmetic::round_down));

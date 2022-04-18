@@ -10,6 +10,8 @@ const std::string STANDARD_LIBRARY = R"(
     equal = in (left right) out is left right then yes else no
     unequal = in (left right) out is left right then no else yes
 
+    greater = in (left right) out less?(right left)
+
     inf = div!(1 0)
     nan = div!(0 0)
     pi = 3.14159265359
@@ -18,12 +20,12 @@ const std::string STANDARD_LIBRARY = R"(
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
     neg = in x out sub!(0 x)
-    abs = in x out if less?[0 x] then x else neg!x
+    abs = in x out if less?(0 x) then x else neg!x
 
-    is_upper = in c out less_or_equal?[65 number!c 90]
-    is_lower = in c out less_or_equal?[97 number!c 122]
+    is_upper = in c out is_increasing?[65 number!c 90]
+    is_lower = in c out is_increasing?[97 number!c 122]
     is_letter = in c out any?[is_upper?c is_lower?c]
-    is_digit = in c out less_or_equal?[48 number!c 57]
+    is_digit = in c out is_increasing?[48 number!c 57]
 
     parse_digit = in c out sub!(number!c 48)
 
@@ -129,14 +131,22 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    consecutive_pairs = in stack out reverse!result@{
+        result = []
+        while if stack then boolean!rest@stack else no
+            result = put!((top@stack top@rest@stack) result)
+            stack = rest@stack
+        end
+    }
+
     min = in stack out fold!(
-        in (item value) out if less?[item value] then item else value
+        in (item value) out if less?(item value) then item else value
         stack
         inf
     )
 
     max = in stack out fold!(
-        in (item value) out if less?[item value] then value else item
+        in (item value) out if less?(item value) then value else item
         stack
         -inf
     )
@@ -247,13 +257,15 @@ const std::string STANDARD_LIBRARY = R"(
     none = in stack out not?find_if!(boolean stack)
     any = in stack out boolean?find_if!(boolean stack)
 
+    is_increasing = in stack out not?find_if!(greater consecutive_pairs!stack)
+
     and = in stack out all?stack
     or = in stack out any?stack
 
     less_or_equal_top = in (left right) out
         if left then
             if right then
-                less_or_equal?[top@left top@right]
+                is_increasing?[top@left top@right]
             else
                 yes
         else

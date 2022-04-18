@@ -4,7 +4,6 @@
 #include <functional>
 
 #include "../factory.h"
-#include "../container.h"
 
 namespace arithmetic {
 namespace {
@@ -47,21 +46,11 @@ Expression div(Expression in) {
     return binaryOperation(in, std::divides<>());
 }
 
-bool less(Expression left, Expression right) {
-    return number(left) < number(right);
-}
-
-bool lessOrEqual(Expression left, Expression right) {
-    return number(left) <= number(right);
-}
-
 Expression are_all_less(Expression in) {
-    return makeBoolean(allOfNeighbours(in, less, EMPTY_STACK, getEvaluatedStack));
-}
-
-Expression are_all_less_or_equal(Expression in) {
-    return makeBoolean(
-        allOfNeighbours(in, lessOrEqual, EMPTY_STACK, getEvaluatedStack));
+    const auto expressions = getEvaluatedTuple(in).expressions;
+    const auto left = number(expressions.at(0));
+    const auto right = number(expressions.at(1));
+    return makeBoolean(left < right);
 }
 
 Expression sqrt(Expression in) {

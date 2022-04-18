@@ -284,7 +284,7 @@ int main() {
         {"{i=2 while i i=dec!i <i>=i end}", "{i=0 <1>=1 <0>=0}"},
         {"{i=1 while i <i>=i i=dec!i end}", "{i=0 <1>=1}"},
         {"{i=2 while i <i>=i i=dec!i end}", "{i=0 <2>=2 <1>=1}"},
-        {"{i=1 <0>=1 while less?[i 3] <i>=<dec!i> i=inc!i end}", "{i=3 <0>=1 <1>=1 <2>=1}"}
+        {"{i=1 <0>=1 while less?(i 3) <i>=<dec!i> i=inc!i end}", "{i=3 <0>=1 <1>=1 <2>=1}"}
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
@@ -560,32 +560,27 @@ int main() {
         {"div!(9 3)", "3"},
     });
     test.evaluate("less", {
-        {"less?[0 0]", "no"},
-        {"less?[0 1]", "yes"},
-        {"less?[-1 0]", "yes"},
-        {"less?[1 0]", "no"},
-        {"less?[0 -1]", "no"},
-        {"less?[1 1]", "no"},
-        {"less?[-1 -1]", "no"},
-        {"less?[]", "yes"},
-        {"less?[0]", "yes"},
-        {"less?[0 1 2]", "yes"},
-        {"less?[0 1 2 3]", "yes"},
-        {"less?[0 1 2 3 3]", "no"},
+        {"less?(0 0)", "no"},
+        {"less?(0 1)", "yes"},
+        {"less?(-1 0)", "yes"},
+        {"less?(1 0)", "no"},
+        {"less?(0 -1)", "no"},
+        {"less?(1 1)", "no"},
+        {"less?(-1 -1)", "no"},
     });
-    test.evaluate("less_or_equal", {
-        {"less_or_equal?[0 0]", "yes"},
-        {"less_or_equal?[0 1]", "yes"},
-        {"less_or_equal?[-1 0]", "yes"},
-        {"less_or_equal?[1 0]", "no"},
-        {"less_or_equal?[0 -1]", "no"},
-        {"less_or_equal?[1 1]", "yes"},
-        {"less_or_equal?[-1 -1]", "yes"},
-        {"less_or_equal?[]", "yes"},
-        {"less_or_equal?[0]", "yes"},
-        {"less_or_equal?[0 1 2]", "yes"},
-        {"less_or_equal?[0 1 2 3]", "yes"},
-        {"less_or_equal?[0 1 2 3 3]", "yes"},
+    test.evaluate("is_increasing", {
+        {"is_increasing?[0 0]", "yes"},
+        {"is_increasing?[0 1]", "yes"},
+        {"is_increasing?[-1 0]", "yes"},
+        {"is_increasing?[1 0]", "no"},
+        {"is_increasing?[0 -1]", "no"},
+        {"is_increasing?[1 1]", "yes"},
+        {"is_increasing?[-1 -1]", "yes"},
+        {"is_increasing?[]", "yes"},
+        {"is_increasing?[0]", "yes"},
+        {"is_increasing?[0 1 2]", "yes"},
+        {"is_increasing?[0 1 2 3]", "yes"},
+        {"is_increasing?[0 1 2 3 3]", "yes"},
     });
     test.evaluate("round", {
         {"round!-0.9", "-1"},
@@ -1127,7 +1122,7 @@ int main() {
         {"clear_if!(in x out 1 [])", "[]"},
         {"clear_if!(in x out 1 [[]])", "[]"},
         {"clear_if!(in x out 0 [[]])", "[[]]"},
-        {"clear_if!(in x out less?[x 5] [7 4 6 1 9 3 2])", "[7 6 9]"},
+        {"clear_if!(in x out less?(x 5) [7 4 6 1 9 3 2])", "[7 6 9]"},
     });
     test.evaluate("clear_if string", {
         {R"(clear_if!(in x out 0 ""))", R"("")"},
@@ -1329,6 +1324,9 @@ int main() {
         {"zip![[0] [1]]", "[[0 1]]"},
         {"zip![[0 1] [2 3]]", "[[0 2] [1 3]]"},
         {"zip![[0 1 2] [3 4 5]]", "[[0 3] [1 4] [2 5]]"},
+    });
+    test.evaluate("consecutive_pairs", {
+        {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},
     });
     test.evaluate("unique", {
         {"unique![]", "[]"},
