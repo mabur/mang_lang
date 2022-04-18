@@ -350,6 +350,23 @@ int main() {
         {"if [0] then 2 else 3", "2"},
         {"if [] then 2 else 3", "3"},
     });
+    test.reformat("is", {
+        {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
+        {"is 0 0 then 0 1 then 1 else 0", "is 0 0 then 0 1 then 1 else 0"},
+    });
+    test.evaluate("is", {
+        {"is 0 0 then 1 else 2", "1"},
+        {"is 1 0 then 1 else 2", "2"},
+        {"is 0 0 then 0 1 then 1 2 then 4 else 5", "0"},
+        {"is 1 0 then 0 1 then 1 2 then 4 else 5", "1"},
+        {"is 2 0 then 0 1 then 1 2 then 4 else 5", "4"},
+        {"is 3 0 then 0 1 then 1 2 then 4 else 5", "5"},
+    });
+    test.evaluate("is missing", {
+        {"is missing missing then 1 else 2", "1"},
+        {"is missing 0 then 1 else 2", "2"},
+        {"is 0 missing then 1 else 2", "2"},
+    });
     test.reformat("symbol", {
         {"a", "a"},
         {"{a=1 b=a}", "{a=1 b=a}"},
@@ -1235,23 +1252,6 @@ int main() {
         {"duplicate![1 2]", "[]"},
         {"duplicate![1 1]", "[1]"},
         {"duplicate![1 1 2 3 1 4 2 4 0]", "[1 2 4]"},
-    });
-    test.reformat("is", {
-        {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
-        {"is 0 0 then 0 1 then 1 else 0", "is 0 0 then 0 1 then 1 else 0"},
-    });
-    test.evaluate("is", {
-        {"is 0 0 then 1 else 2", "1"},
-        {"is 1 0 then 1 else 2", "2"},
-        {"is 0 0 then 0 1 then 1 2 then 4 else 5", "0"},
-        {"is 1 0 then 0 1 then 1 2 then 4 else 5", "1"},
-        {"is 2 0 then 0 1 then 1 2 then 4 else 5", "4"},
-        {"is 3 0 then 0 1 then 1 2 then 4 else 5", "5"},
-    });
-    test.evaluate("is missing", {
-        {"is missing missing then 1 else 2", "1"},
-        {"is missing 0 then 1 else 2", "2"},
-        {"is 0 missing then 1 else 2", "2"},
     });
     return test.exitCode();
 }
