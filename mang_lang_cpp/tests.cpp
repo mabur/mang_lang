@@ -784,6 +784,11 @@ int main() {
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     });
+    test.evaluate_types("lookup function dictionary", {
+        {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},
+        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "NUMBER"},
+        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "NUMBER"},
+    });
     test.evaluate("lookup function dictionary", {
         {"a@{f=in {x} out x a=f!{x=0}}", "0"},
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
