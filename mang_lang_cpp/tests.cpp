@@ -450,6 +450,94 @@ int main() {
     test.reformat("lookup_function", {
         {"add!(1 2)", "add!(1 2)"},
     });
+    test.evaluate_types("function", {
+        {"in x out x",       "FUNCTION"},
+    });
+    test.evaluate("function", {
+        {"in x out x",       "in x out x"},
+        {"f@{f=in x out x}", "in x out x"},
+    });
+    test.evaluate_types("function dictionary", {
+        {"in {x} out x", "FUNCTION_DICTIONARY"},
+        {"in {x y} out x", "FUNCTION_DICTIONARY"},
+        {"in  {  x    y  }  out  x", "FUNCTION_DICTIONARY"},
+    });
+    test.evaluate("function dictionary", {
+        {"in {x} out x", "in {x} out x"},
+        {"in {x y} out x", "in {x y} out x"},
+        {"in  {  x    y  }  out  x", "in {x y} out x"},
+    });
+    test.evaluate_types("function tuple", {
+        {"in (x) out x", "FUNCTION_TUPLE"},
+        {"in (x y) out x", "FUNCTION_TUPLE"},
+        {"in  (  x    y  )  out  x", "FUNCTION_TUPLE"},
+    });
+    test.evaluate("function tuple", {
+        {"in (x) out x", "in (x) out x"},
+        {"in (x y) out x", "in (x y) out x"},
+        {"in  (  x    y  )  out  x", "in (x y) out x"},
+    });
+    test.evaluate_types("lookup function", {
+        {"a@{f=in x out x a=f!0}", "NUMBER"},
+        {"a@{f=in x out x a=f![]}", "EMPTY_STACK"},
+        {"a@{f=in x out 1 a=f!0}", "NUMBER"},
+        {"z@{f=in x out y@{y = 3} z=f!2}", "NUMBER"},
+        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "NUMBER"},
+        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "NUMBER"},
+        {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f![]}", "NUMBER"},
+        {"x@{f=in a out 1 g = in b out f!b x = g!2}", "NUMBER"},
+        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "NUMBER"},
+        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "NUMBER"},
+        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[NUMBER]"},
+        {"a@{call=in f out f![] g=in x out 0 a=call!g}", "NUMBER"},
+        {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "NUMBER"},
+        {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "NUMBER"},
+        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[NUMBER]"},
+        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[NUMBER]"},
+        {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "NUMBER"},
+        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[NUMBER]"},
+    });
+    test.evaluate("lookup function", {
+        {"a@{f=in x out x a=f!0}", "0"},
+        {"a@{f=in x out x a=f![]}", "[]"},
+        {"a@{f=in x out 1 a=f!0}", "1"},
+        {"z@{f=in x out y@{y = 3} z=f!2}", "3"},
+        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "5"},
+        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "5"},
+        {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f![]}", "1"},
+        {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
+        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
+        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "1"},
+        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[2 2]"},
+        {"a@{call=in f out f![] g=in x out 0 a=call!g}", "0"},
+        {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
+        {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "0"},
+        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[1 1]"},
+        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[1 1]"},
+        {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
+        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
+    });
+    test.evaluate("recursive function", {
+        {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
+    });
+    test.evaluate_types("lookup function dictionary", {
+        {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},
+        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "NUMBER"},
+        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "NUMBER"},
+    });
+    test.evaluate("lookup function dictionary", {
+        {"a@{f=in {x} out x a=f!{x=0}}", "0"},
+        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
+        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
+    });
+    test.evaluate_types("lookup function tuple", {
+        {"a@{f=in (x) out x a=f!(0)}", "NUMBER"},
+        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "NUMBER"},
+    });
+    test.evaluate("lookup function tuple", {
+        {"a@{f=in (x) out x a=f!(0)}", "0"},
+        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
+    });
     test.evaluate("add", {
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},
@@ -751,94 +839,6 @@ int main() {
         {R"(unequal?("ab" "ab"))", "no"},
         {R"(unequal?("abc" "ab"))", "yes"},
         {R"(unequal?("ab" "abc"))", "yes"},
-    });
-    test.evaluate_types("function", {
-        {"in x out x",       "FUNCTION"},
-    });
-    test.evaluate("function", {
-        {"in x out x",       "in x out x"},
-        {"f@{f=in x out x}", "in x out x"},
-    });
-    test.evaluate_types("function dictionary", {
-        {"in {x} out x", "FUNCTION_DICTIONARY"},
-        {"in {x y} out x", "FUNCTION_DICTIONARY"},
-        {"in  {  x    y  }  out  x", "FUNCTION_DICTIONARY"},
-    });
-    test.evaluate("function dictionary", {
-        {"in {x} out x", "in {x} out x"},
-        {"in {x y} out x", "in {x y} out x"},
-        {"in  {  x    y  }  out  x", "in {x y} out x"},
-    });
-    test.evaluate_types("function tuple", {
-        {"in (x) out x", "FUNCTION_TUPLE"},
-        {"in (x y) out x", "FUNCTION_TUPLE"},
-        {"in  (  x    y  )  out  x", "FUNCTION_TUPLE"},
-    });
-    test.evaluate("function tuple", {
-        {"in (x) out x", "in (x) out x"},
-        {"in (x y) out x", "in (x y) out x"},
-        {"in  (  x    y  )  out  x", "in (x y) out x"},
-    });
-    test.evaluate_types("lookup function", {
-        {"a@{f=in x out x a=f!0}", "NUMBER"},
-        {"a@{f=in x out x a=f![]}", "EMPTY_STACK"},
-        {"a@{f=in x out 1 a=f!0}", "NUMBER"},
-        {"z@{f=in x out y@{y = 3} z=f!2}", "NUMBER"},
-        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "NUMBER"},
-        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "NUMBER"},
-        {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f![]}", "NUMBER"},
-        {"x@{f=in a out 1 g = in b out f!b x = g!2}", "NUMBER"},
-        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "NUMBER"},
-        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "NUMBER"},
-        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[NUMBER]"},
-        {"a@{call=in f out f![] g=in x out 0 a=call!g}", "NUMBER"},
-        {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "NUMBER"},
-        {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "NUMBER"},
-        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[NUMBER]"},
-        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[NUMBER]"},
-        {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "NUMBER"},
-        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[NUMBER]"},
-    });
-    test.evaluate("lookup function", {
-        {"a@{f=in x out x a=f!0}", "0"},
-        {"a@{f=in x out x a=f![]}", "[]"},
-        {"a@{f=in x out 1 a=f!0}", "1"},
-        {"z@{f=in x out y@{y = 3} z=f!2}", "3"},
-        {"z@{f=in x out result@{y=3 result=add!(x y)}  z=f!2}", "5"},
-        {"z@{y=2 f=in x out result@{y=3 result=add!(x y)} z=f!2}", "5"},
-        {"x@{a={b=1 f=in x out b} b=2 f=f@a x=f![]}", "1"},
-        {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
-        {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
-        {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "1"},
-        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[2 2]"},
-        {"a@{call=in f out f![] g=in x out 0 a=call!g}", "0"},
-        {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
-        {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "0"},
-        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[1 1]"},
-        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[1 1]"},
-        {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
-        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
-    });
-    test.evaluate("recursive function", {
-        {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
-    });
-    test.evaluate_types("lookup function dictionary", {
-        {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},
-        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "NUMBER"},
-        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "NUMBER"},
-    });
-    test.evaluate("lookup function dictionary", {
-        {"a@{f=in {x} out x a=f!{x=0}}", "0"},
-        {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
-        {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
-    });
-    test.evaluate_types("lookup function tuple", {
-        {"a@{f=in (x) out x a=f!(0)}", "NUMBER"},
-        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "NUMBER"},
-    });
-    test.evaluate("lookup function tuple", {
-        {"a@{f=in (x) out x a=f!(0)}", "0"},
-        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
     test.evaluate_types("clear stack", {
         {"clear![]", "EMPTY_STACK"},
