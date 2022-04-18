@@ -478,7 +478,14 @@ int main() {
         {"min![3 6 1]", "1"},
         {"min![7 -3 8 -9]", "-9"},
     });
-    test.evaluate("min", {
+    test.evaluate_types("max", {
+        {"max![0]", "NUMBER"},
+        {"max![0 1]", "NUMBER"},
+        {"max![1 0]", "NUMBER"},
+        {"max![3 6 1]", "NUMBER"},
+        {"max![7 -3 8 -9]", "NUMBER"},
+    });
+    test.evaluate("max", {
         {"max![0]", "0"},
         {"max![0 1]", "1"},
         {"max![1 0]", "1"},
