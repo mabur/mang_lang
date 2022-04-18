@@ -827,30 +827,6 @@ int main() {
         {R"(rest@"ab")", R"("b")"},
         {R"(rest@"abc")", R"("bc")"},
     });
-    test.evaluate_types("reverse stack", {
-        {"reverse![]", "[EMPTY]"},
-        {"reverse![0]", "[NUMBER]"},
-        {"reverse![0 1]", "[NUMBER]"},
-        {"reverse![0 1 2]", "[NUMBER]"},
-    });
-    test.evaluate("reverse stack", {
-        {"reverse![]", "[]"},
-        {"reverse![0]", "[0]"},
-        {"reverse![0 1]", "[1 0]"},
-        {"reverse![0 1 2]", "[2 1 0]"},
-    });
-    test.evaluate_types("reverse string", {
-        {R"(reverse!"")", "STRING"},
-        {R"(reverse!"a")", "STRING"},
-        {R"(reverse!"ab")", "STRING"},
-        {R"(reverse!"abc")", "STRING"},
-    });
-    test.evaluate("reverse string", {
-        {R"(reverse!"")", R"("")"},
-        {R"(reverse!"a")", R"("a")"},
-        {R"(reverse!"ab")", R"("ba")"},
-        {R"(reverse!"abc")", R"("cba")"},
-    });
     test.evaluate_types("put stack", {
         {"put!(3 [])", "[NUMBER]"},
         {"put!(4 [5])", "[NUMBER]"},
@@ -1008,6 +984,30 @@ int main() {
         {R"(count_if!(in x out 1 "a"))", "1"},
         {R"(count_if!(in x out equal?(x \c) "abc"))", "1"},
         {R"(count_if!(in x out equal?(x \c) "cbc"))", "2"},
+    });
+    test.evaluate_types("reverse stack", {
+        {"reverse![]", "[EMPTY]"},
+        {"reverse![0]", "[NUMBER]"},
+        {"reverse![0 1]", "[NUMBER]"},
+        {"reverse![0 1 2]", "[NUMBER]"},
+    });
+    test.evaluate("reverse stack", {
+        {"reverse![]", "[]"},
+        {"reverse![0]", "[0]"},
+        {"reverse![0 1]", "[1 0]"},
+        {"reverse![0 1 2]", "[2 1 0]"},
+    });
+    test.evaluate_types("reverse string", {
+        {R"(reverse!"")", "STRING"},
+        {R"(reverse!"a")", "STRING"},
+        {R"(reverse!"ab")", "STRING"},
+        {R"(reverse!"abc")", "STRING"},
+    });
+    test.evaluate("reverse string", {
+        {R"(reverse!"")", R"("")"},
+        {R"(reverse!"a")", R"("a")"},
+        {R"(reverse!"ab")", R"("ba")"},
+        {R"(reverse!"abc")", R"("cba")"},
     });
     test.evaluate("map stack", {
         {"map!(inc [])", "[]"},
