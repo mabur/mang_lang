@@ -46,7 +46,7 @@ Expression div(Expression in) {
     return binaryOperation(in, std::divides<>());
 }
 
-Expression are_all_less(Expression in) {
+Expression less(Expression in) {
     const auto expressions = getEvaluatedTuple(in).expressions;
     const auto left = number(expressions.at(0));
     const auto right = number(expressions.at(1));
