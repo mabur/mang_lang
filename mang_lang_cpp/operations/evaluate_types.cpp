@@ -8,14 +8,14 @@
 
 namespace {
 
-bool boolean(Expression expression) {
+void boolean(Expression expression) {
     switch (expression.type) {
-        case NUMBER: return true;
-        case BOOLEAN: return true;
-        case EVALUATED_STACK: return true;
-        case EMPTY_STACK: return true;
-        case STRING: return true;
-        case EMPTY_STRING: return true;
+        case NUMBER: return;
+        case BOOLEAN: return;
+        case EVALUATED_STACK: return;
+        case EMPTY_STACK: return;
+        case STRING: return;
+        case EMPTY_STRING: return;
         default: throw StaticTypeError(expression.type, "expected type that can be evaluated to boolean");
     }
 }
