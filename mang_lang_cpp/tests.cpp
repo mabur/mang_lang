@@ -794,9 +794,9 @@ int main() {
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
         {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
     });
-    test.evaluate("lookup function stack", {
-        {"a@{f=in (x) out x a=f!(0)}", "0"},
-        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
+    test.evaluate_types("lookup function tuple", {
+        {"a@{f=in (x) out x a=f!(0)}", "NUMBER"},
+        {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "NUMBER"},
     });
     test.evaluate("lookup function tuple", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
