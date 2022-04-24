@@ -1,5 +1,15 @@
 TODO:
 * Type theory
+  - Type checking for [[] [1]] and [[[]] [[1]]].
+    - How to know that type is [[NUMBER]] and [[[NUMBER]]]?
+    - Reduce stacks to exactly 1 element during type evaluation.
+      - Reduce parsed stacks, during type evaluation.
+        - Do it in evaluateStack in evaluate_types.cpp
+      - Limit stacks to grow beyond 1, during type evaluation.
+    - Force type annotation for empty stack [NUMBER].
+    - Create empty stack using a function: clear![3] empty![3] stack!3, stack!NUMBER
+    - Let NUMBER represent a missing number.
+    - Alternatively allow types like NUMBER and let them represent integer values.
   - Type checking for folds that transform input with empty stack as input: min, max, map:
     - Can the problem be avoided by not using fold?
     - Allow EMPTY as input for all built-in functions,
