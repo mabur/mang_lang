@@ -1,7 +1,4 @@
 TODO:
-* Built-ins
-  - Let less be defined for 2-tuple.
-  - Implement less_or_equal and less for stack in standard-library.
 * Type theory
   - Type checking for folds that transform input with empty stack as input: min, max, map:
     - Can the problem be avoided by not using fold?
