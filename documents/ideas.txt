@@ -44,6 +44,7 @@ TODO:
     - How to infer types of variables that refer to functions?
       - Have type Function or Function<InType, OutType> ?
       - Would the former work?
+* Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
