@@ -1084,7 +1084,7 @@ int main() {
         {R"(count_if!(in x out equal?(x \c) "cbc"))", "2"},
     });
     test.evaluate_types("reverse stack", {
-        {"reverse![]", "[EMPTY]"},
+        {"reverse![]", "EMPTY_STACK"},
         {"reverse![0]", "[NUMBER]"},
         {"reverse![0 1]", "[NUMBER]"},
         {"reverse![0 1 2]", "[NUMBER]"},
@@ -1096,7 +1096,7 @@ int main() {
         {"reverse![0 1 2]", "[2 1 0]"},
     });
     test.evaluate_types("reverse string", {
-        {R"(reverse!"")", "STRING"},
+        {R"(reverse!"")", "EMPTY_STRING"},
         {R"(reverse!"a")", "STRING"},
         {R"(reverse!"ab")", "STRING"},
         {R"(reverse!"abc")", "STRING"},
@@ -1224,8 +1224,8 @@ int main() {
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
     });
     test.evaluate_types("put_each", {
-        {"put_each!([] [])", "[EMPTY]"},
-        {"put_each!([] [2])", "[EMPTY]"}, // TODO
+        {"put_each!([] [])", "EMPTY_STACK"},
+        {"put_each!([] [2])", "[NUMBER]"},
         {"put_each!([1] [])", "[NUMBER]"},
         {"put_each!([1] [2])", "[NUMBER]"},
         {"put_each!([1 2] [3 4])", "[NUMBER]"},
