@@ -1197,6 +1197,12 @@ int main() {
         {"sum![1 2]", "3"},
         {"sum![1 2 3]", "6"},
     });
+    test.evaluate_types("sum", {
+        // TODO: {"sum![]", "NUMBER"},
+        {"sum![1]", "NUMBER"},
+        {"sum![1 2]", "NUMBER"},
+        {"sum![1 2 3]", "NUMBER"},
+    });
     test.evaluate("product", {
         {"product![]", "1"},
         {"product![1]", "1"},
