@@ -1246,6 +1246,13 @@ int main() {
         {"concat![[1] [2]]", "[1 2]"},
         {"concat![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
     });
+    test.evaluate_types("concat", {
+        {"concat![[] []]", "EMPTY_STACK"},
+        {"concat![[] [2]]", "EMPTY_STACK"}, // TODO
+        {"concat![[1] []]", "[NUMBER]"},
+        {"concat![[1] [2]]", "[NUMBER]"},
+        {"concat![[1] [2 3] [4 5 6]]", "[NUMBER]"},
+    });
     test.evaluate("concat_strings", {
         {R"(concat_strings!["" ""])", R"("")"},
         {R"(concat_strings!["" "b"])", R"("b")"},
