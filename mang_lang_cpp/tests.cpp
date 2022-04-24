@@ -1209,6 +1209,12 @@ int main() {
         {"product![1 2]", "2"},
         {"product![1 2 3]", "6"},
     });
+    test.evaluate_types("product", {
+        {"product![]", "NUMBER"},
+        {"product![1]", "NUMBER"},
+        {"product![1 2]", "NUMBER"},
+        {"product![1 2 3]", "NUMBER"},
+    });
     test.evaluate("put_each", {
         {"put_each!([] [])", "[]"},
         {"put_each!([] [2])", "[2]"},
