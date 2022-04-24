@@ -1223,6 +1223,14 @@ int main() {
         {"put_each!([1 2] [3 4])", "[2 1 3 4]"},
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
     });
+    test.evaluate_types("put_each", {
+        {"put_each!([] [])", "[EMPTY]"},
+        {"put_each!([] [2])", "[EMPTY]"}, // TODO
+        {"put_each!([1] [])", "[NUMBER]"},
+        {"put_each!([1] [2])", "[NUMBER]"},
+        {"put_each!([1 2] [3 4])", "[NUMBER]"},
+        {"put_each!([1 2 3] [4 5 6])", "[NUMBER]"},
+    });
     test.evaluate("put_each string", {
         {R"(put_each!("" ""))", R"("")"},
         {R"(put_each!("" "a"))", R"("a")"},
