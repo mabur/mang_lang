@@ -9,7 +9,11 @@ namespace arithmetic {
 namespace {
 
 double number(Expression expression) {
-    return getNumber(expression).value;
+    switch (expression.type) {
+        case NUMBER : return getNumber(expression).value;
+        case EMPTY : return 0.0 / 0.0;
+        default: throw StaticTypeError(expression.type, "built-in number");
+    }
 }
 
 Expression makeNumber(double x) {
