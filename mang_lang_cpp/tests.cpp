@@ -1239,6 +1239,14 @@ int main() {
         {R"(put_each!("ab" "cd"))", R"("bacd")"},
         {R"(put_each!("abc" "def"))", R"("cbadef")"},
     });
+    test.evaluate_types("put_each string", {
+        {R"(put_each!("" ""))", "EMPTY_STRING"},
+        {R"(put_each!("" "a"))", "STRING"},
+        {R"(put_each!("a" ""))", "STRING"},
+        {R"(put_each!("a" "b"))", "STRING"},
+        {R"(put_each!("ab" "cd"))", "STRING"},
+        {R"(put_each!("abc" "def"))", "STRING"},
+    });
     test.evaluate("concat", {
         {"concat![[] []]", "[]"},
         {"concat![[] [2]]", "[2]"},
