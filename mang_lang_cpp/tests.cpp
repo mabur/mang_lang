@@ -1114,6 +1114,13 @@ int main() {
         {"map!(in x out 2 [0 0])", "[2 2]"},
         {"a@{b=2 f=in x out b a=map!(f [0 0])}", "[2 2]"},
     });
+    test.evaluate_types("map stack", {
+        // TODO {"map!(inc [])", "[]"},
+        {"map!(inc [0])", "[NUMBER]"},
+        {"map!(inc [0 1])", "[NUMBER]"},
+        {"map!(in x out 2 [0 0])", "[NUMBER]"},
+        {"a@{b=2 f=in x out b a=map!(f [0 0])}", "[NUMBER]"},
+    });
     test.evaluate("map_string", {
         {R"(map_string!(to_upper ""))", R"("")"},
         {R"(map_string!(to_upper "abc"))", R"("ABC")"},
