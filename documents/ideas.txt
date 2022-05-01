@@ -1,15 +1,52 @@
 TODO:
-* Type theory
-  - Type checking for [[] [1]] and [[[]] [[1]]].
-    - How to know that type is [[NUMBER]] and [[[NUMBER]]]?
-    - Reduce stacks to exactly 1 element during type evaluation.
+* Current type checking approach:
+  - Never annotate types.
+  - Run type checking as mini-evaluation pass, without loops, that just evaluates the values of everything.
+    - So variables can just store values, and every value has a type, just as in normal evaluation.
+  - Do not support recursion.
+  - No type inference, only evaluation/checking.
+* Type checking and empty stacks problem:
+  - Evaluation of type of [[] [1]] and [[[]] [[1]]] etc.
+  - Reduce stacks to exactly 1 element during type evaluation.
       - Reduce parsed stacks, during type evaluation.
         - Do it in evaluateStack in evaluate_types.cpp
       - Limit stacks to grow beyond 1, during type evaluation.
-    - Force type annotation for empty stack [NUMBER].
-    - Create empty stack using a function: clear![3] empty![3] stack!3, stack!NUMBER
-    - Let NUMBER represent a missing number.
-    - Alternatively allow types like NUMBER and let them represent integer values.
+  - Let top@empty_stack give EMPTY/ANY.
+  - Hope that value will be set after 1 iteration of while loop.
+  - Does not work well for concat![[] [1]] which is type-evaluated to concat![[]]
+* Alternative 1: Type checking and empty stacks.
+  - Accept that type evaluation does not handle all cases.
+* Alternative 2: Type checking and empty stacks.
+  - Somehow type-evaluate:
+    - [[] [1]] to [[1]]
+    - [[[]] [[1]]] to [[[1]]]
+* Alternative 3: Type checking and empty stacks.
+  - Add type annotation for empty stack:
+    - [NUMBER] [[NUMBER]] [[[NUMBER]]]
+    - <0> <<0>> <<<0>>>
+    - <0> <[0]> <[[0]]>
+    - [:0:] [:[:0:]:] [:[:[:0:]:]:]
+    - clear![0] clear![[0]] clear![[[0]]]
+    - stack!0 stack![0] stack![[0]]
+    - Use special syntax for empty stacks with prototype inside it <0> [:0:] [>0<] [<0>]
+    - clear![3] empty![3] stack!3, stack!NUMBER
+  - How to handle type of empty stack,
+    when sent to function that takes top@stack inside while loop?
+    - Let empty stack have type [ANY] or [EMPTY]
+    - Let empty stack have type EMTPY_STACK, but allow top@stack and let it be ANY or EMPTY
+    - Could also let top@stack always return EMPTY also for normal evaluation.
+  - How to define types for higher order functions that are defined as folds on empty stacks:
+    - concat - probably ok
+    - map
+    - zip
+    - consecutive_pairs
+    - range - probably ok
+* Type theory
+  - How to check types for [1 2 \a 4]?
+    - Do type checking at parse-time?
+    - How to set the prototype value for the sentinel empty stack?
+      - Can probably be done.
+  - How to check types for [f!a g!b]?
   - Type checking for folds that transform input with empty stack as input: min, max, map:
     - Can the problem be avoided by not using fold?
     - Allow EMPTY as input for all built-in functions,
@@ -18,39 +55,8 @@ TODO:
       - Numeric built-ins can return nan for EMPTY input.
       - Boolean/less/less_equal built-ins can return false for EMPTY input, similarly as for NAN.
   - Type checking for zip, which now uses a stack with elements of different types.
-  - How to handle type of empty stack,
-    when sent to function that takes top@stack inside while loop?
-    - Add syntax for type annotation.
-    - Create emtpy stack using a function: clear![3] empty![3] stack!3
-    - Let empty stack have type [ANY] or [EMPTY]
-    - Let empty stack have type EMTPY_STACK, but allow top@stack and let it be ANY or EMPTY
-    - Could also let top@stack always return EMPTY also for normal evaluation.
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
-  - Is it simple to check types without any type annotation?
-    - By evaluating/checking the types in the AST?
-    - As long as we don't want to infer concepts of generic functions?
-    - While loops are just iterated once.
-    - Might need to differentiate between homogeneous stacks and tuples.
-    - Is type annotation just making it faster but not simpler?
-    - It should still be much faster to check the AST once, than to evaluate all loops.
-    - Or maybe we cannot lookup symbols without doing full evaluation?
-      - So is type checking like a mini-evaluation that allows symbol lookup?
-        - Where we only store type of most variables,
-          except functions for which we story body as well,
-          so that we can check their types everytime we call them?
-    - How to handle recursion?
-      - Simple for functions with concrete types.
-      - Hard for functions without annotated types.
-      - Might be ok to not handle recursive generic functions, and say that they return Any.
-    - How to avoid duplicating all structs and functions when evaluating values and types?
-    - How to handle empty list [] in generic functions like: map, zip, concat
-      - Might be ok since we always would execute the body of while inside the fold during type checking.
-      - So [] could be handled as not yet specified.
-    - How to handle higher order functions?
-    - How to infer types of variables that refer to functions?
-      - Have type Function or Function<InType, OutType> ?
-      - Would the former work?
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
