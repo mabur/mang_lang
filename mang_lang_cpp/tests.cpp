@@ -899,9 +899,9 @@ int main() {
         {"get_values!{a='a' b='b' c='c'}", "['a' 'b' 'c']"},
     });
     test.evaluate("get_items", {
-        {"get_items!{a=0}", "[['a' 0]]"},
-        {"get_items!{a=0 b=1 c=2}", "[['a' 0] ['b' 1] ['c' 2]]"},
-        {"get_items!{a='a' b='b' c='c'}", "[['a' 'a'] ['b' 'b'] ['c' 'c']]"},
+        {"get_items!{a=0}", "[('a' 0)]"},
+        {"get_items!{a=0 b=1 c=2}", "[('a' 0) ('b' 1) ('c' 2)]"},
+        {"get_items!{a='a' b='b' c='c'}", "[('a' 'a') ('b' 'b') ('c' 'c')]"},
     });
     test.evaluate("inc", {
         {"inc!0", "1"},
@@ -1177,19 +1177,19 @@ int main() {
         {R"(replace_if!(in x out equal?(x \a) \b "ab_ba"))", R"("bb_bb")"},
     });
     test.evaluate_types("enumerate stack", {
-        {"enumerate![]", "[[NUMBER]]"},
-        {"enumerate![4]", "[[NUMBER]]"},
-        {"enumerate![4 3]", "[[NUMBER]]"},
+        {"enumerate![]", "[(NUMBER EMPTY)]"},
+        {"enumerate![4]", "[(NUMBER NUMBER)]"},
+        {"enumerate![4 3]", "[(NUMBER NUMBER)]"},
     });
     test.evaluate("enumerate stack", {
         {"enumerate![]", "[]"},
-        {"enumerate![4]", "[[0 4]]"},
-        {"enumerate![4 3]", "[[0 4] [1 3]]"},
+        {"enumerate![4]", "[(0 4)]"},
+        {"enumerate![4 3]", "[(0 4) (1 3)]"},
     });
     test.evaluate("enumerate string", {
         {R"(enumerate!"")", R"([])"},
-        {R"(enumerate!"a")", R"([[0 \a]])"},
-        {R"(enumerate!"ab")", R"([[0 \a] [1 \b]])"},
+        {R"(enumerate!"a")", R"([(0 \a)])"},
+        {R"(enumerate!"ab")", R"([(0 \a) (1 \b)])"},
     });
     test.evaluate("sum", {
         {"sum![]", "0"},
@@ -1355,10 +1355,10 @@ int main() {
         {"tenth![11 12 13 14 15 16 17 18 19 20]", "20"},
     });
     test.evaluate("zip", {
-        {"zip![[] []]", "[]"},
-        {"zip![[0] [1]]", "[[0 1]]"},
-        {"zip![[0 1] [2 3]]", "[[0 2] [1 3]]"},
-        {"zip![[0 1 2] [3 4 5]]", "[[0 3] [1 4] [2 5]]"},
+        {"zip!([] [])", "[]"},
+        {"zip!([0] [1])", "[(0 1)]"},
+        {"zip!([0 1] [2 3])", "[(0 2) (1 3)]"},
+        {"zip!([0 1 2] [3 4 5])", "[(0 3) (1 4) (2 5)]"},
     });
     test.evaluate("consecutive_pairs", {
         {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},

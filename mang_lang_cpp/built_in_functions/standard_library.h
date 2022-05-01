@@ -57,10 +57,10 @@ const std::string STANDARD_LIBRARY = R"(
         get_names!dictionary
     )
 
-    get_items = in dictionary out zip![
+    get_items = in dictionary out zip!(
         get_names!dictionary
         get_values!dictionary
-    ]
+    )
 
     fold = in (operation stack init) out result@{
         result = init
@@ -119,15 +119,12 @@ const std::string STANDARD_LIBRARY = R"(
         ""
     )
 
-    pick_top = in stack out top@stack
-    pick_rest = in stack out rest@stack
-
-    zip = in stacks out reverse!result@{
+    zip = in (left right) out reverse!result@{
         result = []
-        while top@stacks
-            item = map!(pick_top stacks)
-            result = put!(item result)
-            stacks = map!(pick_rest stacks)
+        while and?[left right]
+            result = put!((top@left top@right) result)
+            left = rest@left
+            right = rest@right
         end
     }
 
@@ -217,7 +214,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in stack out zip![range!count!stack stack]
+    enumerate = in stack out zip!(range!count!stack stack)
 
     drop = in (n stack) out short_stack@{
         short_stack = stack

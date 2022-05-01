@@ -78,7 +78,7 @@ For the following container functions you need to know if you want to use stacks
 <dt>concat_strings</dt><dd><code>concat_strings!strings</code> concatenates multiple strings.</dd>
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.</dd>
 <dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack <code>[[0 7]] [1 9] [2 4]]</code>, where the first item in each inner stack is its index.</dd>
-<dt>zip</dt><dd><code>zip![[1 2 3] [4 5 6]]</code> returns the stack <code>[[1 4] [2 5] [3 6]]</code>, where each inner stack combines the corresponding items from the input stacks.</dd>
+<dt>zip</dt><dd><code>zip!([1 2 3] [4 5 6])</code> returns the stack of tuples <code>[(1 4) (2 5) (3 6)]</code>, where each inner tuple combines the corresponding items from the input tuple of stacks.</dd>
 </dl>
 
 <h2>Boolean Functions</h2>
