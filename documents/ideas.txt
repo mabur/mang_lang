@@ -5,7 +5,10 @@ TODO:
     - So variables can just store values, and every value has a type, just as in normal evaluation.
   - Do not support recursion.
   - No type inference, only evaluation/checking.
-* Type checking and empty stacks problem:
+* Type checking and first empty stacks problem:
+  - Type checking for functions based on fold, when sent in an empty stack, results in crash.
+  - Return ANY instead of EMPTY for top@empty_stack, to make dictionary lookup work properly.
+* Type checking and second empty stacks problem:
   - Evaluation of type of [[] [1]] and [[[]] [[1]]] etc.
   - Reduce stacks to exactly 1 element during type evaluation.
       - Reduce parsed stacks, during type evaluation.
@@ -15,7 +18,8 @@ TODO:
   - Hope that value will be set after 1 iteration of while loop.
   - Does not work well for concat![[] [1]] which is type-evaluated to concat![[]]
 * Alternative 1: Type checking and empty stacks.
-  - Accept that type evaluation does not handle all cases.
+  - Accept that type evaluation does not handle all cases, and sometimes gives EMPTY/ANY.
+  - Just handle so that it does not crash.
 * Alternative 2: Type checking and empty stacks.
   - Somehow type-evaluate:
     - [[] [1]] to [[1]]
