@@ -16,6 +16,14 @@ double number(Expression expression) {
     }
 }
 
+double character(Expression expression) {
+    switch (expression.type) {
+        case CHARACTER : return getCharacter(expression).value;
+        case ANY : return '\0';
+        default: throw StaticTypeError(expression.type, "built-in character");
+    }
+}
+
 Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, Number{x});
 }
@@ -74,11 +82,11 @@ Expression round_down(Expression in) {
 }
 
 Expression ascii_number(Expression in) {
-    return makeNumber(getCharacter(in).value);
+    return makeNumber(character(in));
 }
 
 Expression ascii_character(Expression in) {
-    return makeCharacter(CodeRange{}, Character{static_cast<char>(getNumber(in).value)});
+    return makeCharacter(CodeRange{}, Character{static_cast<char>(number(in))});
 }
 
 }

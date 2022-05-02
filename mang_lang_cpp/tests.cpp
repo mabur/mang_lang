@@ -1125,6 +1125,10 @@ int main() {
         {R"(map_string!(to_upper ""))", R"("")"},
         {R"(map_string!(to_upper "abc"))", R"("ABC")"},
     });
+    test.evaluate_types("map_string", {
+        {R"(map_string!(to_upper ""))", "STRING"},
+        {R"(map_string!(to_upper "abc"))", "STRING"},
+    });
     test.evaluate("clear_if stack", {
         {"clear_if!(in x out 1 [])", "[]"},
         {"clear_if!(in x out 1 [[]])", "[]"},
