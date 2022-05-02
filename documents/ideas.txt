@@ -5,17 +5,10 @@ TODO:
     - So variables can just store values, and every value has a type, just as in normal evaluation.
   - Do not support recursion.
   - No type inference, only evaluation/checking.
-* Type checking and first empty stacks problem:
-  - Type checking for functions based on fold, when sent in an empty stack, results in crash.
-  - Return ANY instead of EMPTY for top@empty_stack, to make dictionary lookup work properly.
+  - top@empty_stack gives type ANY.
+  - Limit stacks to grow beyond 1, during type evaluation.
 * Type checking and second empty stacks problem:
   - Evaluation of type of [[] [1]] and [[[]] [[1]]] etc.
-  - Reduce stacks to exactly 1 element during type evaluation.
-      - Reduce parsed stacks, during type evaluation.
-        - Do it in evaluateStack in evaluate_types.cpp
-      - Limit stacks to grow beyond 1, during type evaluation.
-  - Let top@empty_stack give EMPTY/ANY.
-  - Hope that value will be set after 1 iteration of while loop.
   - Does not work well for concat![[] [1]] which is type-evaluated to concat![[]]
 * Alternative 1: Type checking and empty stacks.
   - Accept that type evaluation does not handle all cases, and sometimes gives EMPTY/ANY.
@@ -34,11 +27,6 @@ TODO:
     - stack!0 stack![0] stack![[0]]
     - Use special syntax for empty stacks with prototype inside it <0> [:0:] [>0<] [<0>]
     - clear![3] empty![3] stack!3, stack!NUMBER
-  - How to handle type of empty stack,
-    when sent to function that takes top@stack inside while loop?
-    - Let empty stack have type [ANY] or [EMPTY]
-    - Let empty stack have type EMTPY_STACK, but allow top@stack and let it be ANY or EMPTY
-    - Could also let top@stack always return EMPTY also for normal evaluation.
   - How to define types for higher order functions that are defined as folds on empty stacks:
     - concat - probably ok
     - map
