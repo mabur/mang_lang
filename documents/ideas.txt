@@ -27,12 +27,6 @@ TODO:
     - stack!0 stack![0] stack![[0]]
     - Use special syntax for empty stacks with prototype inside it <0> [:0:] [>0<] [<0>]
     - clear![3] empty![3] stack!3, stack!NUMBER
-  - How to define types for higher order functions that are defined as folds on empty stacks:
-    - concat - probably ok
-    - map
-    - zip
-    - consecutive_pairs
-    - range - probably ok
 * Type theory
   - How to check types for [1 2 \a 4]?
     - Do type checking at parse-time?

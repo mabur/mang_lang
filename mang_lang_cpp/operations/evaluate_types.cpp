@@ -16,6 +16,7 @@ void boolean(Expression expression) {
         case EMPTY_STACK: return;
         case STRING: return;
         case EMPTY_STRING: return;
+        case ANY: return;
         default: throw StaticTypeError(expression.type, "expected type that can be evaluated to boolean");
     }
 }

@@ -715,6 +715,14 @@ int main() {
         {"all?[0 1]", "no"},
         {"all?[1 1]", "yes"},
     });
+    test.evaluate_types("all", {
+        {"all?[]", "BOOLEAN"},
+        {"all?[0]", "BOOLEAN"},
+        {"all?[1]", "BOOLEAN"},
+        {"all?[0 0]", "BOOLEAN"},
+        {"all?[0 1]", "BOOLEAN"},
+        {"all?[1 1]", "BOOLEAN"},
+    });
     test.evaluate("any", {
         {"any?[]", "no"},
         {"any?[0]", "no"},
@@ -723,6 +731,14 @@ int main() {
         {"any?[0 1]", "yes"},
         {"any?[1 1]", "yes"},
     });
+    test.evaluate_types("any", {
+        {"any?[]", "BOOLEAN"},
+        {"any?[0]", "BOOLEAN"},
+        {"any?[1]", "BOOLEAN"},
+        {"any?[0 0]", "BOOLEAN"},
+        {"any?[0 1]", "BOOLEAN"},
+        {"any?[1 1]", "BOOLEAN"},
+    });
     test.evaluate("none", {
         {"none?[]", "yes"},
         {"none?[0]", "yes"},
@@ -730,6 +746,14 @@ int main() {
         {"none?[0 0]", "yes"},
         {"none?[0 1]", "no"},
         {"none?[1 1]", "no"},
+    });
+    test.evaluate_types("none", {
+        {"none?[]", "BOOLEAN"},
+        {"none?[0]", "BOOLEAN"},
+        {"none?[1]", "BOOLEAN"},
+        {"none?[0 0]", "BOOLEAN"},
+        {"none?[0 1]", "BOOLEAN"},
+        {"none?[1 1]", "BOOLEAN"},
     });
     test.evaluate("equal number", {
         {"equal?(0 0)", "yes"},
