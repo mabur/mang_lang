@@ -761,6 +761,12 @@ int main() {
         {"equal?(1 0)", "no"},
         {"equal?(1 1)", "yes"},
     });
+    test.evaluate_types("equal number", {
+        {"equal?(0 0)", "BOOLEAN"},
+        {"equal?(0 1)", "BOOLEAN"},
+        {"equal?(1 0)", "BOOLEAN"},
+        {"equal?(1 1)", "BOOLEAN"},
+    });
     test.evaluate("unequal number", {
         {"unequal?(0 0)", "no"},
         {"unequal?(0 1)", "yes"},
@@ -798,6 +804,14 @@ int main() {
         {"equal?([0 1] [0 1])", "yes"},
         {"equal?([0 1] [1 1])", "no"},
         {"equal?([0 1] [0])", "no"},
+    });
+    test.evaluate_types("equal stack", {
+        {"equal?([] [])", "BOOLEAN"},
+        {"equal?([1] [1])", "BOOLEAN"},
+        {"equal?([0] [1])", "BOOLEAN"},
+        {"equal?([0 1] [0 1])", "BOOLEAN"},
+        {"equal?([0 1] [1 1])", "BOOLEAN"},
+        {"equal?([0 1] [0])", "BOOLEAN"},
     });
     test.evaluate("unequal stack", {
         {"unequal?([] [])", "no"},
