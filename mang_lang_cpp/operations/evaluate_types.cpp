@@ -31,6 +31,12 @@ Expression evaluateConditional(
     boolean(evaluate_types(conditional.expression_if, environment));
     const auto left = evaluate_types(conditional.expression_then, environment);
     const auto right = evaluate_types(conditional.expression_else, environment);
+    if (left.type == ANY) {
+        return right;
+    }
+    if (right.type == ANY) {
+        return left;
+    }
     if (left.type != right.type) {
         throw StaticTypeError(left.type, "Different types in conditional branches");
     }

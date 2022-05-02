@@ -982,7 +982,7 @@ int main() {
         {R"(parse_digit!\9)", "9"},
     });
     test.evaluate_types("min", {
-        // {"min![]", "NUMBER"},
+        {"min![]", "NUMBER"},
         {"min![0]", "NUMBER"},
         {"min![0 1]", "NUMBER"},
         {"min![1 0]", "NUMBER"},
@@ -998,7 +998,7 @@ int main() {
         {"min![7 -3 8 -9]", "-9"},
     });
     test.evaluate_types("max", {
-        // TODO {"max![]", "NUMBER"},
+        {"max![]", "NUMBER"},
         {"max![0]", "NUMBER"},
         {"max![0 1]", "NUMBER"},
         {"max![1 0]", "NUMBER"},
@@ -1050,7 +1050,7 @@ int main() {
         {R"(count!"ab")", "2"},
     });
     test.evaluate_types("count_item stack", {
-        // TODO: {"count_item!(1 [])", "NUMBER"},
+        {"count_item!(1 [])", "NUMBER"},
         {"count_item!(1 [1])", "NUMBER"},
         {"count_item!(1 [1 1])", "NUMBER"},
         {"count_item!(1 [1 0 1])", "NUMBER"},
@@ -1115,7 +1115,7 @@ int main() {
         {"a@{b=2 f=in x out b a=map!(f [0 0])}", "[2 2]"},
     });
     test.evaluate_types("map stack", {
-        // TODO {"map!(inc [])", "[]"},
+        {"map!(inc [])", "[NUMBER]"},
         {"map!(inc [0])", "[NUMBER]"},
         {"map!(inc [0 1])", "[NUMBER]"},
         {"map!(in x out 2 [0 0])", "[NUMBER]"},
@@ -1205,7 +1205,7 @@ int main() {
         {"sum![1 2 3]", "6"},
     });
     test.evaluate_types("sum", {
-        // TODO: {"sum![]", "NUMBER"},
+        {"sum![]", "NUMBER"},
         {"sum![1]", "NUMBER"},
         {"sum![1 2]", "NUMBER"},
         {"sum![1 2 3]", "NUMBER"},
@@ -1217,7 +1217,7 @@ int main() {
         {"product![1 2 3]", "6"},
     });
     test.evaluate_types("product", {
-        // TODO: {"product![]", "NUMBER"},
+        {"product![]", "NUMBER"},
         {"product![1]", "NUMBER"},
         {"product![1 2]", "NUMBER"},
         {"product![1 2 3]", "NUMBER"},
