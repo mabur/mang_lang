@@ -162,7 +162,8 @@ std::string serialize_types(Expression expression) {
         case BOOLEAN: return NAMES[BOOLEAN];
         case EMPTY_STRING: return NAMES[EMPTY_STRING];
         case STRING: return NAMES[STRING];
+        case ANY: return NAMES[ANY];
         case EMPTY: return NAMES[EMPTY];
-        default: throw UnexpectedExpression(expression.type, "serialize operation");
+        default: throw UnexpectedExpression(expression.type, "serialize types operation");
     }
 }

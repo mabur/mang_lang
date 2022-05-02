@@ -190,8 +190,8 @@ Expression evaluateLookupChild(
         case EVALUATED_STACK: return lookupChildInEvaluatedStack(child, name);
         case EVALUATED_TUPLE: return lookupChildInEvaluatedTuple(getEvaluatedTuple(child), name);
         case STRING: return lookupChildInString(child, name);
-        case EMPTY_STACK: return Expression{};
-        case EMPTY_STRING: return Expression{};
+        case EMPTY_STACK: return Expression{ANY, {}, {}};
+        case EMPTY_STRING: return Expression{ANY, {}, {}};
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
 }
