@@ -1275,6 +1275,13 @@ int main() {
         {R"(concat_strings!["a" "b"])", R"("ab")"},
         {R"(concat_strings!["a" "bc" "def"])", R"("abcdef")"},
     });
+    test.evaluate_types("concat_strings", {
+        {R"(concat_strings!["" ""])", "STRING"},
+        {R"(concat_strings!["" "b"])", "STRING"},
+        {R"(concat_strings!["a" ""])", "STRING"},
+        {R"(concat_strings!["a" "b"])", "STRING"},
+        {R"(concat_strings!["a" "bc" "def"])", "STRING"},
+    });
     test.evaluate("split", {
         {"split!(0 [])", "[[] []]"},
         {"split!(1 [])", "[[] []]"},
