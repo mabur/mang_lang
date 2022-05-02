@@ -1378,6 +1378,12 @@ int main() {
         {"zip!([0 1] [2 3])", "[(0 2) (1 3)]"},
         {"zip!([0 1 2] [3 4 5])", "[(0 3) (1 4) (2 5)]"},
     });
+    test.evaluate_types("zip", {
+        {"zip!([] [])", "[(ANY ANY)]"},
+        {"zip!([0] [1])", "[(NUMBER NUMBER)]"},
+        {"zip!([0 1] [2 3])", "[(NUMBER NUMBER)]"},
+        {"zip!([0 1 2] [3 4 5])", "[(NUMBER NUMBER)]"},
+    });
     test.evaluate("consecutive_pairs", {
         {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},
     });
