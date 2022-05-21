@@ -1,55 +1,14 @@
 TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
-* Current type checking approach:
-  - Never annotate types.
-  - Run type checking as mini-evaluation pass, without loops, that just evaluates the values of everything.
-    - So variables can just store values, and every value has a type, just as in normal evaluation.
-  - Do not support recursion.
-  - No type inference, only evaluation/checking.
-  - top@empty_stack gives type ANY.
-  - Limit stacks to grow beyond 1, during type evaluation.
-* Type checking and second empty stacks problem:
-  - Evaluation of type of [[] [1]] and [[[]] [[1]]] etc.
-  - Does not work well for concat![[] [1]] which is type-evaluated to concat![[]]
-* Alternative 1: Type checking and empty stacks.
-  - Accept that type evaluation does not handle all cases, and sometimes gives EMPTY/ANY.
-  - Just handle so that it does not crash.
-* Alternative 2: Type checking and empty stacks.
-  - Somehow type-evaluate:
-    - [[] [1]] to [[1]]
-    - [[[]] [[1]]] to [[[1]]]
-* Alternative 3: Type checking and empty stacks.
-  - Add type annotation for empty stack:
-    - [NUMBER] [[NUMBER]] [[[NUMBER]]]
-    - <0> <<0>> <<<0>>>
-    - <0> <[0]> <[[0]]>
-    - [:0:] [:[:0:]:] [:[:[:0:]:]:]
-    - clear![0] clear![[0]] clear![[[0]]]
-    - stack!0 stack![0] stack![[0]]
-    - Use special syntax for empty stacks with prototype inside it <0> [:0:] [>0<] [<0>]
-    - clear![3] empty![3] stack!3, stack!NUMBER
-* Type theory
-  - How to check types for [1 2 \a 4]?
-    - Do type checking at parse-time?
-    - How to set the prototype value for the sentinel empty stack?
-      - Can probably be done.
-  - How to check types for [f!a g!b]?
-  - Type checking for folds that transform input with empty stack as input: min, max, map:
-    - Can the problem be avoided by not using fold?
-    - Allow EMPTY as input for all built-in functions,
-      - Only create EMPTY during evaluation of types but not evaluation of values?
-      - Similar to null-pointer and billion-dollar mistake.
-      - Numeric built-ins can return nan for EMPTY input.
-      - Boolean/less/less_equal built-ins can return false for EMPTY input, similarly as for NAN.
-  - Type checking for zip, which now uses a stack with elements of different types.
-  - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
-  - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
 * Type checking and dynamic dictionaries. Add new container for dynamic dictionaries.
   - Enforce homogenous keys and values for type checking.
   - Let the dynamic dictionary be mutable if that is easier to implement.
   - dynamic_dictionary = dynamic_dictionary!()
   - dynamic_dictionary = set!(key value dynamic_dictionary)
   - value = get!(key dynamic_dictionary)
+* Type theory
+  - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
+  - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
