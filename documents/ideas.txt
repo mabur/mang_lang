@@ -1,11 +1,28 @@
 TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
 * Type checking and dynamic dictionaries. Add new container for dynamic dictionaries.
-  - Enforce homogenous keys and values for type checking.
+  - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
   - Let the dynamic dictionary be mutable if that is easier to implement.
-  - dynamic_dictionary = dynamic_dictionary!()
+  - dynamic_dictionary = <>
   - dynamic_dictionary = set!(key value dynamic_dictionary)
   - value = get!(key dynamic_dictionary)
+  - serialization:
+    Alternative < : >
+      <1:5 2:4>
+      <"a":5 "b":7>
+      <(1 2):5 (4 5):7>
+    Alternative <()>
+      <(1 5) (2 4)>
+      <("a" 5) ("b" 7)>
+      <((1 2) 5) ((4 5) 7)>
+    Alternative { : }
+      {1:5 2:4}
+      {"a":5 "b":7}
+      {(1 2):5 (4 5):7}
+    Alternative { = }
+      {1=5 2=4}
+      {"a"=5 "b"=7}
+      {(1 2)=5 (4 5)=7}
 * Type theory
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
