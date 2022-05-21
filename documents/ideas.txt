@@ -1,4 +1,5 @@
 TODO:
+https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
 * Current type checking approach:
   - Never annotate types.
   - Run type checking as mini-evaluation pass, without loops, that just evaluates the values of everything.
@@ -43,6 +44,12 @@ TODO:
   - Type checking for zip, which now uses a stack with elements of different types.
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
+* Type checking and dynamic dictionaries. Add new container for dynamic dictionaries.
+  - Enforce homogenous keys and values for type checking.
+  - Let the dynamic dictionary be mutable if that is easier to implement.
+  - dynamic_dictionary = dynamic_dictionary!()
+  - dynamic_dictionary = set!(key value dynamic_dictionary)
+  - value = get!(key dynamic_dictionary)
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
