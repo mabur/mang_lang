@@ -3,6 +3,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 * Type checking and dynamic dictionaries. Add new container for dynamic dictionaries.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
   - Let the dynamic dictionary be mutable if that is easier to implement.
+  - Can it be made immutable once it has been put inside an evaluated dictionary?
   - dynamic_dictionary = <>
   - dynamic_dictionary = set!(key value dynamic_dictionary)
   - value = get!(key dynamic_dictionary)
