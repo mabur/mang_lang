@@ -8,7 +8,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - dynamic_dictionary = set!(key value dynamic_dictionary)
   - value = get!(key dynamic_dictionary)
   - serialization:
-    Alternative < : >
+    Alternative < : >    Good. Simplest.
       <1:5 2:4>
       <"a":5 "b":7>
       <(1 2):5 (4 5):7>
@@ -16,7 +16,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
       <(1 5) (2 4)>
       <("a" 5) ("b" 7)>
       <((1 2) 5) ((4 5) 7)>
-    Alternative { : }
+    Alternative { : }    Interesting. Could have same syntax for static and dynamic dictionaries and make manglang more similar to json. But leads to many problems...
       {1:5 2:4}
       {"a":5 "b":7}
       {(1 2):5 (4 5):7}
@@ -24,6 +24,14 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
       {1=5 2=4}
       {"a"=5 "b"=7}
       {(1 2)=5 (4 5)=7}
+    Alternative { := }
+      {1:=5 2:=4}
+      {"a":=5 "b":=7}
+      {(1 2):=5 (4 5):=7}
+    Alternative { => }
+      {1=>5 2=>4}
+      {"a"=>5 "b"=>7}
+      {(1 2)=>5 (4 5)=>7}
 * Type theory
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
