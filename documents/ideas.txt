@@ -196,6 +196,8 @@ SIMILAR LANGUAGES
 
 * L1 https://mlajtos.github.io/L1/
 
+* (Cognate read) https://github.com/cognate-lang/cognate
+
 * (Yaml)
 * (TOML) https://github.com/toml-lang/toml
 * (Lua) https://www.lua.org/
