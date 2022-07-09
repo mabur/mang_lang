@@ -1,5 +1,9 @@
 TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
+* Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
+  - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
+  - Serializing: tree -> manglang code. (EBNF?, same as above?)
+  - Evaluation: tree -> tree. (graphical nodes?)
 * Type checking and dynamic dictionaries. Add new container for dynamic dictionaries.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
   - Let the dynamic dictionary be mutable if that is easier to implement.
@@ -12,29 +16,18 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
       <1:5 2:4>
       <"a":5 "b":7>
       <(1 2):5 (4 5):7>
-    Alternative <()>
-      <(1 5) (2 4)>
-      <("a" 5) ("b" 7)>
-      <((1 2) 5) ((4 5) 7)>
-    Alternative { : }    Interesting. Could have same syntax for static and dynamic dictionaries and make manglang more similar to json. But leads to many problems...
-      {1:5 2:4}
-      {"a":5 "b":7}
-      {(1 2):5 (4 5):7}
-    Alternative { = }
-      {1=5 2=4}
-      {"a"=5 "b"=7}
-      {(1 2)=5 (4 5)=7}
-    Alternative { := }
-      {1:=5 2:=4}
-      {"a":=5 "b":=7}
-      {(1 2):=5 (4 5):=7}
-    Alternative { => }
-      {1=>5 2=>4}
-      {"a"=>5 "b"=>7}
-      {(1 2)=>5 (4 5)=>7}
+  - Semantics:
+    - Parsing:
+      <>
+      <1:5 2:4>
+      <add!(1 2) : 3> What to evaluate when parsing?
+      Store data as vector<Element> for parsing.
+    - Evaluating
+      Store data as unordered_map<string, Element> when evaluating.
 * Type theory
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
+* Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
