@@ -1,6 +1,7 @@
 #include "parse.h"
 
 #include <iostream>
+#include <limits>
 
 #include "../factory.h"
 #include "../container.h"
@@ -398,7 +399,7 @@ Expression parseExpression(CodeRange code) {
         if (isalpha(c) or c == '_') {return parseSubstitution(code);}
         throwParseException(code);
         return {};
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error& e) {
         std::cout << "Exception while parsing: " << e.what();
         throw e;
     }

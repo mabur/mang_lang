@@ -1,5 +1,6 @@
 #include "serialize.h"
 
+#include <limits>
 #include <sstream>
 
 #include "../factory.h"
