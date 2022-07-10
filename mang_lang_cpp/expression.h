@@ -12,6 +12,7 @@ enum ExpressionType {
     CHARACTER,
     CONDITIONAL,
     IS,
+    TABLE,
     DICTIONARY,
     EVALUATED_DICTIONARY,
     TUPLE,
@@ -45,6 +46,7 @@ const auto NAMES = std::vector<std::string>{
     "CHARACTER",
     "CONDITIONAL",
     "IS",
+    "TABLE",
     "DICTIONARY",
     "EVALUATED_DICTIONARY",
     "TUPLE",
@@ -244,4 +246,13 @@ struct Dictionary {
 struct EvaluatedDictionary {
     Expression environment;
     Definitions definitions;
+};
+
+struct Row {
+    Expression key;
+    Expression value;
+};
+
+struct Table {
+    std::vector<Row> rows;
 };
