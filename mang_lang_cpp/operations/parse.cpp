@@ -119,25 +119,6 @@ Expression parseNamedElement(CodeRange code) {
     );
 }
 
-Expression parseDynamicNamedElement(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '<');
-    code = parseWhiteSpace(code);
-    auto dynamic_name = parseExpression(code);
-    code.first = end(dynamic_name);
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '>');
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '=');
-    code = parseWhiteSpace(code);
-    auto expression = parseExpression(code);
-    code.first = end(expression);
-    code = parseWhiteSpace(code);
-    return makeDynamicDefinition(
-        CodeRange{first, code.first}, DynamicDefinition{dynamic_name, expression}
-    );
-}
-
 Expression parseWhileStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "while");
@@ -163,9 +144,6 @@ Expression parseDictionaryElement(CodeRange code) {
     }
     if (isKeyword(code, "end")) {
         return parseEndStatement(code);
-    }
-    if (::startsWith(code, '<')) {
-        return parseDynamicNamedElement(code);
     }
     return parseNamedElement(code);
 }
@@ -288,16 +266,6 @@ Expression parseTuple(CodeRange code) {
     return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
 }
 
-Expression parseDynamicLookupSymbol(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '<');
-    const auto expression = parseExpression(code);
-    code.first = end(expression);
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '>');
-    return makeDynamicLookupSymbol(CodeRange{first, code.first}, {expression});
-}
-
 Expression parseSubstitution(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
@@ -382,7 +350,6 @@ Expression parseExpression(CodeRange code) {
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (c == '\'') {return parseLabel(code);}
-        if (c == '<') {return parseDynamicLookupSymbol(code);}
         if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}

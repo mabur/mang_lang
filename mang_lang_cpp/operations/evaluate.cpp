@@ -95,15 +95,6 @@ Expression evaluateDictionary(
             result->definitions.add(label, value);
             i += 1;
         }
-        else if (type == DYNAMIC_DEFINITION) {
-            const auto dynamic_definition = getDynamicDefinition(statement);
-            const auto right_expression = dynamic_definition.expression;
-            const auto value = evaluate(right_expression, result_environment);
-            const auto& name = dynamic_definition.dynamic_name;
-            const auto label = serialize(evaluate(name, result_environment));
-            result->definitions.add(label, value);
-            i += 1;
-        }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWileStatement(statement);
             if (boolean(evaluate(while_statement.expression, result_environment))) {
@@ -300,13 +291,6 @@ Expression evaluateLookupSymbol(
     return lookupDictionary(environment, getNameAsLabel(lookup_symbol.name));
 }
 
-Expression evaluateDynamicLookupSymbol(
-    const DynamicLookupSymbol& lookup_symbol, Expression environment
-) {
-    const auto name = serialize(evaluate(lookup_symbol.expression, environment));
-    return lookupCurrentDictionary(environment, name);
-}
-
 } // namespace
 
 Expression evaluate(Expression expression, Expression environment) {
@@ -336,7 +320,6 @@ Expression evaluate(Expression expression, Expression environment) {
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
-        case DYNAMIC_LOOKUP_SYMBOL: return evaluateDynamicLookupSymbol(getDynamicLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
 }

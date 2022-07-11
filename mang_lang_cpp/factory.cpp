@@ -25,14 +25,12 @@ std::vector<EmptyStack> empty_stacks;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
-std::vector<DynamicLookupSymbol> dynamic_symbol_lookups;
 std::vector<Name> names;
 std::vector<Label> labels;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<EndStatement> end_statements;
 std::vector<Definition> definitions;
-std::vector<DynamicDefinition> dynamic_definitions;
 std::vector<String> strings;
 std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
@@ -46,7 +44,7 @@ std::vector<size_t> whileIndices(const Statements& statements) {
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+        if (type == DEFINITION) {
             while_indices.push_back(1); // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -70,7 +68,7 @@ std::vector<size_t> endIndices(const Statements& statements) {
     auto end_indices = std::vector<size_t>(statements.size());
     for (size_t i = statements.size() - 1; i < statements.size(); --i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+        if (type == DEFINITION) {
             end_indices[i] = 0; // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -155,7 +153,7 @@ Statements setContext(const Statements& statements) {
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
         const auto code = statements[i].range;
-        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+        if (type == DEFINITION) {
             result.push_back(statements[i]);
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
@@ -188,14 +186,12 @@ void clearMemory() {
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
-    dynamic_symbol_lookups.clear();
     names.clear();
     labels.clear();
     numbers.clear();
     while_statements.clear();
     end_statements.clear();
     definitions.clear();
-    dynamic_definitions.clear();
     strings.clear();
     empty_strings.clear();
     booleans.clear();
@@ -284,10 +280,6 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-Expression makeDynamicLookupSymbol(CodeRange code, DynamicLookupSymbol expression) {
-    return makeExpression(code, expression, DYNAMIC_LOOKUP_SYMBOL, dynamic_symbol_lookups);
-}
-
 Expression makeName(CodeRange code, Name expression) {
     return makeExpression(code, expression, NAME, names);
 }
@@ -298,10 +290,6 @@ Expression makeLabel(CodeRange code, Label expression) {
 
 Expression makeDefinition(CodeRange code, Definition expression) {
     return makeExpression(code, expression, DEFINITION, definitions);
-}
-
-Expression makeDynamicDefinition(CodeRange code, DynamicDefinition expression) {
-    return makeExpression(code, expression, DYNAMIC_DEFINITION, dynamic_definitions);
 }
 
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
@@ -328,10 +316,6 @@ Expression makeBoolean(CodeRange code, Boolean expression) {
 
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
-}
-
-DynamicDefinition getDynamicDefinition(Expression expression) {
-    return getExpression(expression, DYNAMIC_DEFINITION, dynamic_definitions);
 }
 
 WhileStatement getWileStatement(Expression expression) {
@@ -413,10 +397,6 @@ FunctionApplication getFunctionApplication(Expression expression) {
 
 LookupSymbol getLookupSymbol(Expression expression) {
     return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
-}
-
-DynamicLookupSymbol getDynamicLookupSymbol(Expression expression) {
-    return getExpression(expression, DYNAMIC_LOOKUP_SYMBOL, dynamic_symbol_lookups);
 }
 
 Name getName(Expression expression) {

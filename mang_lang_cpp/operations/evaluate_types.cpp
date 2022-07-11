@@ -269,13 +269,6 @@ Expression evaluateLookupSymbol(
     return lookupDictionary(environment, getNameAsLabel(lookup_symbol.name));
 }
 
-Expression evaluateDynamicLookupSymbol(
-    const DynamicLookupSymbol& lookup_symbol, Expression environment
-) {
-    const auto name = serialize(evaluate_types(lookup_symbol.expression, environment));
-    return lookupCurrentDictionary(environment, name);
-}
-
 } // namespace
 
 Expression evaluate_types(Expression expression, Expression environment) {
@@ -304,7 +297,6 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
-        case DYNAMIC_LOOKUP_SYMBOL: return evaluateDynamicLookupSymbol(getDynamicLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
 }

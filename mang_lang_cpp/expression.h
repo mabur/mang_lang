@@ -27,11 +27,9 @@ enum ExpressionType {
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
-    DYNAMIC_LOOKUP_SYMBOL,
     NAME,
     LABEL,
     DEFINITION,
-    DYNAMIC_DEFINITION,
     WHILE_STATEMENT,
     END_STATEMENT,
     NUMBER,
@@ -61,11 +59,9 @@ const auto NAMES = std::vector<std::string>{
     "LOOKUP_CHILD",
     "FUNCTION_APPLICATION",
     "LOOKUP_SYMBOL",
-    "DYNAMIC_LOOKUP_SYMBOL",
     "NAME",
     "LABEL",
     "DEFINITION",
-    "DYNAMIC_DEFINITION",
     "WHILE_STATEMENT",
     "END_STATEMENT",
     "NUMBER",
@@ -166,10 +162,6 @@ struct LookupSymbol {
     Expression name;
 };
 
-struct DynamicLookupSymbol {
-    Expression expression;
-};
-
 struct Number {
     double value;
 };
@@ -209,11 +201,6 @@ struct EmptyStack {
 
 struct Definition {
     Expression name;
-    Expression expression;
-};
-
-struct DynamicDefinition {
-    Expression dynamic_name;
     Expression expression;
 };
 
