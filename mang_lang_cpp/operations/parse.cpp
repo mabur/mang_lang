@@ -266,6 +266,27 @@ Expression parseTuple(CodeRange code) {
     return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
 }
 
+Expression parseTable(CodeRange code) {
+    auto first = code.begin();
+    code = parseCharacter(code, '<');
+    code = parseWhiteSpace(code);
+    auto rows = std::vector<Row>{};
+    while (!::startsWith(code, '>')) {
+        throwIfEmpty(code);
+        const auto key = parseExpression(code);
+        code.first = end(key);
+        code = parseWhiteSpace(code);
+        code = parseCharacter(code, ':');
+        code = parseWhiteSpace(code);
+        const auto value = parseExpression(code);
+        code.first = end(value);
+        code = parseWhiteSpace(code);
+        rows.push_back({key, value});
+    }
+    code = parseCharacter(code, '>');
+    return makeTable(CodeRange{first, code.first}, Table{rows});
+}
+
 Expression parseSubstitution(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
@@ -347,6 +368,7 @@ Expression parseExpression(CodeRange code) {
         if (c == '[') {return parseStackNew(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}
+        if (c == '<') {return parseTable(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (c == '\'') {return parseLabel(code);}

@@ -50,6 +50,7 @@ Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression);
 Expression makeStack(CodeRange code, Stack expression);
 Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression);
 Expression makeEmptyStack(CodeRange code, EmptyStack expression);
+Expression makeTable(CodeRange code, Table expression);
 Expression makeLookupChild(CodeRange code, LookupChild expression);
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression);
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression);

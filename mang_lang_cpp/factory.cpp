@@ -22,6 +22,7 @@ std::vector<EvaluatedTuple> evaluated_tuples;
 std::vector<Stack> stacks;
 std::vector<EvaluatedStack> evaluated_stacks;
 std::vector<EmptyStack> empty_stacks;
+std::vector<Table> tables;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
@@ -266,6 +267,10 @@ Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
 
 Expression makeEmptyStack(CodeRange code, EmptyStack expression) {
     return makeExpression(code, expression, EMPTY_STACK, empty_stacks);
+}
+
+Expression makeTable(CodeRange code, Table expression) {
+    return makeExpression(code, expression, TABLE, tables);
 }
 
 Expression makeLookupChild(CodeRange code, LookupChild expression) {
