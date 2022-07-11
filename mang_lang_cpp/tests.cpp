@@ -217,6 +217,9 @@ int main() {
         {"[[] []]", "[EMPTY_STACK]"},
         {"[[[]]]", "[[EMPTY_STACK]]"},
     });
+    test.reformat("table", {
+        {"<>", "<>"},
+    });
     test.reformat("tuple", {
         {"()", "()"},
         {"( )", "()"},
