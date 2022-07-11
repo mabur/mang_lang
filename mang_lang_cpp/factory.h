@@ -17,6 +17,7 @@ Conditional getConditional(Expression expression);
 IsExpression getIs(Expression expression);
 Dictionary getDictionary(Expression expression);
 EvaluatedDictionary getEvaluatedDictionary(Expression expression);
+Table getTable(Expression expression);
 Tuple getTuple(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);
 Function getFunction(Expression expression);

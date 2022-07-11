@@ -355,6 +355,10 @@ EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
     return getMutableExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 
+Table getTable(Expression expression) {
+    return getExpression(expression, TABLE, tables);
+}
+
 Tuple getTuple(Expression expression) {
     return getExpression(expression, TUPLE, tuples);
 }

@@ -124,6 +124,19 @@ std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
     return result;
 }
 
+std::string serializeTable(Expression s) {
+    const auto rows = getTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    auto result = std::string{'<'};
+    for (const auto& row : rows) {
+        result += serialize(row.key) + ':' + serialize(row.value) + ' ';
+    }
+    result.back() = '>';
+    return result;
+}
+
 std::string serializeTuple(Expression s) {
     const auto expressions = getTuple(s).expressions;
     if (expressions.empty()) {
@@ -218,6 +231,7 @@ std::string serialize(Expression expression) {
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
+        case TABLE: return serializeTable(expression);
         case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);
