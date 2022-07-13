@@ -99,10 +99,12 @@ struct Expression {
     CodeRange range;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Name {
     std::string value;
 };
 
+// TODO: make cheaper to copy?
 struct Label {
     std::string value;
 };
@@ -122,6 +124,7 @@ struct Alternative {
     Expression right;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct IsExpression {
     Expression input;
     std::vector<Alternative> alternatives;
@@ -144,7 +147,7 @@ struct FunctionDictionary {
     Expression body;
 };
 
-
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct FunctionTuple {
     Expression environment;
     std::vector<Expression> input_names;
@@ -181,10 +184,12 @@ struct String {
 struct EmptyString {
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
@@ -218,6 +223,7 @@ struct EndStatement {
 
 using Statements = std::vector<Expression>;
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 class Definitions {
 private:
     std::unordered_map<std::string, Expression> definitions;
@@ -229,10 +235,12 @@ public:
     std::vector<std::pair<std::string, Expression>> sorted() const;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Dictionary {
     Statements statements;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedDictionary {
     Expression environment;
     Definitions definitions;
@@ -243,10 +251,12 @@ struct Row {
     Expression value;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Table {
     std::vector<Row> rows;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedTable {
     std::map<std::string, Row> rows;
 };
