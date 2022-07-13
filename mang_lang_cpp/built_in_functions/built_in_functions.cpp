@@ -29,6 +29,6 @@ Expression builtIns() {
     definitions.add("'number'", define(arithmetic::ascii_number));
     definitions.add("'character'", define(arithmetic::ascii_character));
     return makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{Expression{}, definitions}
+        EvaluatedDictionary{Expression{}, definitions}
     );
 }

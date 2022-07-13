@@ -7,7 +7,7 @@
 
 #include "operations/serialize.h"
 
-std::vector<std::shared_ptr<const EvaluatedDictionary>> evaluated_dictionaries;
+std::vector<EvaluatedDictionary> evaluated_dictionaries;
 
 std::vector<Dictionary> dictionaries;
 std::vector<Character> characters;
@@ -113,7 +113,7 @@ Expression makeExpression(
 }
 
 template<typename ArrayType>
-typename ArrayType::value_type::element_type getMutableExpression(
+typename ArrayType::value_type& getMutableExpression(
     Expression expression,
     ExpressionType type,
     ArrayType& array
@@ -125,7 +125,7 @@ typename ArrayType::value_type::element_type getMutableExpression(
         throw std::runtime_error{s.str()};
     }
     assert(expression.type == type);
-    return *array.at(expression.index).get();
+    return array.at(expression.index);
 }
 
 template<typename ArrayType>
@@ -226,12 +226,12 @@ Expression makeIs(CodeRange code, IsExpression expression) {
     return makeExpression(code, expression, IS, is_expressions);
 }
 
-Expression makeDictionary(CodeRange code, const Dictionary expression) {
+Expression makeDictionary(CodeRange code, Dictionary expression) {
     return makeExpression(code, expression, DICTIONARY, dictionaries);
 }
 
-Expression makeEvaluatedDictionary(CodeRange code, const EvaluatedDictionary* expression) {
-    return makeMutableExpression(code, expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
+    return makeExpression(code, expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
@@ -357,6 +357,10 @@ Dictionary getDictionary(Expression expression) {
 }
 
 EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
+    return getExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+}
+
+EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression) {
     return getMutableExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 

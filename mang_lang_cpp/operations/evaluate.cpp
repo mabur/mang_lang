@@ -81,8 +81,9 @@ Expression evaluateIs(
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
-    const auto result = new EvaluatedDictionary{environment, {}};
-    const auto result_environment = makeEvaluatedDictionary(CodeRange{}, result);
+    const auto result_environment = makeEvaluatedDictionary(
+        CodeRange{}, EvaluatedDictionary{environment, {}}
+    );
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
         const auto statement = dictionary.statements[i];
@@ -92,7 +93,8 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result_environment);
             const auto label = getNameAsLabel(definition.name);
-            result->definitions.add(label, value);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            result.definitions.add(label, value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -243,7 +245,7 @@ Expression applyFunction(const Function& function, Expression input) {
     const auto label = getNameAsLabel(function.input_name);
     definitions.add(label, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function.environment, definitions}
+        EvaluatedDictionary{function.environment, definitions}
     );
     return evaluate(function.body, middle);
 }
@@ -276,7 +278,7 @@ Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression in
         definitions.add(label, expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function_stack.environment, definitions}
+        EvaluatedDictionary{function_stack.environment, definitions}
     );
     return evaluate(function_stack.body, middle);
 }
