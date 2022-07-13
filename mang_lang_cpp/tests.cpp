@@ -902,14 +902,12 @@ int main() {
         {R"(put!(\a ""))", R"("a")"},
         {R"(put!(\a "b"))", R"("ab")"},
         {R"(put!(\a "bc"))", R"("abc")"},
-    });/*
-    test.evaluate("get dictionary", {
-        {R"(get!(0 {<0>=1}))", "1"},
-        {R"(get!("a" {<"a">=1}))", "1"},
-        {R"(get!('a' {a=1}))", "1"},
-        {R"(get!('a' {<'a'>=1}))", "1"},
-        {R"(get!('a' {}))", "missing"},
     });
+    test.evaluate("get table", {
+        {R"(get!(0 <0:1>))", "1"},
+        {R"(get!("a" <"a":1>))", "1"},
+        {R"(get!(\a <\a:1>))", "1"},
+    });/*
     test.evaluate("get_names", {
         {"get_names!{}", "[]"},
         {"get_names!{a=1}", "['a']"},

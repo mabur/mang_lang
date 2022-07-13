@@ -12,8 +12,12 @@ namespace dictionary_functions {
 Expression get(Expression in) {
     const auto binary = getBinaryInput(in);
     const auto name = serialize(binary.left);
-    const auto dictionary = getEvaluatedDictionary(binary.right);
-    const auto result = dictionary.definitions.lookup(name);
+    const auto table = getEvaluatedTable(binary.right);
+    const auto iterator = table.rows.find(name);
+    if (iterator == table.rows.end()) {
+        throw MissingSymbol(name, "get");
+    }
+    const auto result = iterator->second.value;
     return result;
 }
 
