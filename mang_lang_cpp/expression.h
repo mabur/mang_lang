@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -13,6 +14,7 @@ enum ExpressionType {
     CONDITIONAL,
     IS,
     TABLE,
+    EVALUATED_TABLE,
     DICTIONARY,
     EVALUATED_DICTIONARY,
     TUPLE,
@@ -45,6 +47,7 @@ const auto NAMES = std::vector<std::string>{
     "CONDITIONAL",
     "IS",
     "TABLE",
+    "EVALUATED_TABLE",
     "DICTIONARY",
     "EVALUATED_DICTIONARY",
     "TUPLE",
@@ -242,4 +245,8 @@ struct Row {
 
 struct Table {
     std::vector<Row> rows;
+};
+
+struct EvaluatedTable {
+    std::map<std::string, Row> rows;
 };

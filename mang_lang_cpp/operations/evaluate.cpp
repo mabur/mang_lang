@@ -158,6 +158,18 @@ Expression evaluateTuple(Tuple tuple, Expression environment) {
     return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
 }
 
+Expression evaluateTable(Table table, Expression environment) {
+    auto rows = std::map<std::string, Row>{};
+    for (const auto& row : table.rows) {
+        const auto key = evaluate(row.key, environment);
+        const auto value = evaluate(row.value, environment);
+        const auto serialized_key = serialize(key);
+        rows[serialized_key] = {key, value};
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTable(code, EvaluatedTable{rows});
+}
+
 Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
@@ -306,6 +318,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case EVALUATED_STACK: return expression;
         case EVALUATED_DICTIONARY: return expression;
         case EVALUATED_TUPLE: return expression;
+        case EVALUATED_TABLE: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(
@@ -317,6 +330,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(expression, environment);
         case TUPLE: return evaluateTuple(getTuple(expression), environment);
+        case TABLE: return evaluateTable(getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
