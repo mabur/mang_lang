@@ -29,14 +29,11 @@ Expression set(Expression in) {
     return table;
 }
 
-Expression get_names(Expression in) {
-    const auto dictionary = getEvaluatedDictionary(in);
-    auto definitions = dictionary.definitions.sorted();
-    std::reverse(definitions.begin(), definitions.end());
+Expression get_keys(Expression in) {
     auto stack = makeEmptyStack({}, {});
-    for (const auto& definition : definitions) {
-        const auto name = makeName({}, Name{definition.first});
-        stack = putEvaluatedStack(stack, name);
+    const auto table = getEvaluatedTable(in);
+    for (auto it = table.rows.rbegin(); it != table.rows.rend(); ++it) {
+        stack = putEvaluatedStack(stack, it->second.key);
     }
     return stack;
 }

@@ -17,7 +17,7 @@ Expression builtIns() {
     definitions.add("put", define(stack_functions::put));
     definitions.add("get", define(table_functions::get));
     definitions.add("set", define(table_functions::set));
-    definitions.add("get_names", define(table_functions::get_names));
+    definitions.add("get_keys", define(table_functions::get_keys));
     definitions.add("add", define(arithmetic::add));
     definitions.add("mul", define(arithmetic::mul));
     definitions.add("sub", define(arithmetic::sub));

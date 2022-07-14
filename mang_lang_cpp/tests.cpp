@@ -903,14 +903,13 @@ int main() {
         {"set!(0 <> 1)", "<0:1>"},
         {"set!(0 <0:2> 1)", "<0:1>"},
         {"set!(0 <2:3 1:2 0:1> 5)", "<0:5 1:2 2:3>"},
-    });/*
-    test.evaluate("get_names", {
-        {"get_names!{}", "[]"},
-        {"get_names!{a=1}", "['a']"},
-        {"get_names!{<0>=1}", "[0]"},
-        {R"(get_names!{<"a">=1})", R"(["a"])"},
-        {"get!(top@get_names!{a=0} {a=1})", "1"},
     });
+    test.evaluate("get_keys", {
+        {"get_keys!<>", "[]"},
+        {"get_keys!<0:1>", "[0]"},
+        {"get_keys!<0:1 2:3>", "[0 2]"},
+        {"get_keys!<2:3 0:1>", "[0 2]"},
+    });/*
     test.evaluate("get_values", {
         {"get_values!{a=0}", "[0]"},
         {"get_values!{a=0 b=1 c=2}", "[0 1 2]"},
