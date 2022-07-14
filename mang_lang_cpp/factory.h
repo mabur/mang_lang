@@ -20,6 +20,7 @@ EvaluatedDictionary getEvaluatedDictionary(Expression expression);
 EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression);
 Table getTable(Expression expression);
 EvaluatedTable getEvaluatedTable(Expression expression);
+EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 Tuple getTuple(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);
 Function getFunction(Expression expression);

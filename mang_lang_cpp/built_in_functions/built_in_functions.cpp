@@ -16,6 +16,7 @@ Expression builtIns() {
     definitions.add("'clear'", define(stack_functions::clear));
     definitions.add("'put'", define(stack_functions::put));
     definitions.add("'get'", define(dictionary_functions::get));
+    definitions.add("'set'", define(dictionary_functions::set));
     definitions.add("'get_names'", define(dictionary_functions::get_names));
     definitions.add("'add'", define(arithmetic::add));
     definitions.add("'mul'", define(arithmetic::mul));

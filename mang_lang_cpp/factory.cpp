@@ -1,7 +1,6 @@
 #include "factory.h"
 
 #include <cassert>
-#include <memory>
 #include <sstream>
 #include <vector>
 
@@ -370,6 +369,10 @@ Table getTable(Expression expression) {
 
 EvaluatedTable getEvaluatedTable(Expression expression) {
     return getExpression(expression, EVALUATED_TABLE, evaluated_tables);
+}
+
+EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
+    return getMutableExpression(expression, EVALUATED_TABLE, evaluated_tables);
 }
 
 Tuple getTuple(Expression expression) {
