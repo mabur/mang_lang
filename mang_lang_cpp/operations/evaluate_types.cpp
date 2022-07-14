@@ -23,7 +23,7 @@ void boolean(Expression expression) {
 
 std::string getNameAsLabel(Expression name)
 {
-    return '\'' + getName(name).value  + '\'';
+    return getName(name).value;
 }
 
 Expression evaluateConditional(

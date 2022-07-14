@@ -68,12 +68,7 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     }
     auto result = std::string{"{"};
     for (const auto& pair : dictionary.definitions.sorted()) {
-        const auto c = pair.first[0];
-        if (c == '\'') {
-            result += pair.first.substr(1, pair.first.size() - 2) + "=" + serialize(pair.second) + " ";
-        } else {
-            result += "<" + pair.first + ">" + "=" + serialize(pair.second) + " ";
-        }
+        result += pair.first + "=" + serialize(pair.second) + " ";
     }
     result.back() = '}';
     return result;
