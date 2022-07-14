@@ -281,5 +281,19 @@ const std::string STANDARD_LIBRARY = R"(
             end
         end
     }
+
+    unique = in stack out reverse!result@{
+        visited = <>
+        result = clear!stack
+        while stack
+            element = top@stack
+            result =
+                if get!(element visited no)
+                then result
+                else put!(element result)
+            visited = set!(element visited yes)
+            stack = rest@stack
+        end
+    }
 }
 )";

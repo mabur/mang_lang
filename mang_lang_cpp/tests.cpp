@@ -1416,13 +1416,13 @@ int main() {
     });
     test.evaluate("consecutive_pairs", {
         {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},
-    });/*
+    });
     test.evaluate("unique", {
         {"unique![]", "[]"},
         {"unique![1]", "[1]"},
         {"unique![1 2]", "[1 2]"},
         {"unique![1 1]", "[1]"},
         {"unique![1 1 2 3 1 4 2 4 0]", "[1 2 3 4 0]"},
-    });*/
+    });
     return test.exitCode();
 }
