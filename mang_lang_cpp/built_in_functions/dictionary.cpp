@@ -23,9 +23,9 @@ Expression get(Expression in) {
 
 Expression set(Expression in) {
     const auto tuple = getEvaluatedTuple(in);
-    const auto value = tuple.expressions.at(0);
-    const auto key = tuple.expressions.at(1);
-    const auto table = tuple.expressions.at(2);
+    const auto key = tuple.expressions.at(0);
+    const auto table = tuple.expressions.at(1);
+    const auto value = tuple.expressions.at(2);
     const auto name = serialize(key);
     auto& mutable_table = getMutableEvaluatedTable(table);
     mutable_table.rows[name] = {key, value};
