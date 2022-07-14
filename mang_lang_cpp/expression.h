@@ -219,8 +219,7 @@ using Statements = std::vector<Expression>;
 // TODO: make cheaper to copy or pass by reference or pointer?
 class Definitions {
 private:
-    std::unordered_map<std::string, Expression> definitions;
-    std::unordered_map<std::string, size_t> order;
+    std::vector<std::pair<std::string, Expression>> definitions;
 public:
     bool empty() const;
     void add(const std::string& key, Expression value);
