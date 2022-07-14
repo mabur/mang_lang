@@ -1,4 +1,4 @@
-#include "dictionary.h"
+#include "table.h"
 
 #include <algorithm>
 
@@ -7,7 +7,7 @@
 #include "../factory.h"
 #include "../operations/serialize.h"
 
-namespace dictionary_functions {
+namespace table_functions {
 
 Expression get(Expression in) {
     const auto tuple = getEvaluatedTuple(in);

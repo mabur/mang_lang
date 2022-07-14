@@ -4,7 +4,7 @@
 
 #include "../factory.h"
 #include "arithmetic.h"
-#include "dictionary.h"
+#include "table.h"
 #include "stack.h"
 
 Expression define(std::function<Expression(Expression)> function) {
@@ -15,9 +15,9 @@ Expression builtIns() {
     auto definitions = Definitions{};
     definitions.add("'clear'", define(stack_functions::clear));
     definitions.add("'put'", define(stack_functions::put));
-    definitions.add("'get'", define(dictionary_functions::get));
-    definitions.add("'set'", define(dictionary_functions::set));
-    definitions.add("'get_names'", define(dictionary_functions::get_names));
+    definitions.add("'get'", define(table_functions::get));
+    definitions.add("'set'", define(table_functions::set));
+    definitions.add("'get_names'", define(table_functions::get_names));
     definitions.add("'add'", define(arithmetic::add));
     definitions.add("'mul'", define(arithmetic::mul));
     definitions.add("'sub'", define(arithmetic::sub));

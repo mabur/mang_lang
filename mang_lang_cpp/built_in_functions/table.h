@@ -2,7 +2,7 @@
 
 struct Expression;
 
-namespace dictionary_functions {
+namespace table_functions {
 
 Expression get(Expression in);
 
