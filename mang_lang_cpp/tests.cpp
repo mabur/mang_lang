@@ -909,12 +909,12 @@ int main() {
         {"get_keys!<0:1>", "[0]"},
         {"get_keys!<0:1 2:3>", "[0 2]"},
         {"get_keys!<2:3 0:1>", "[0 2]"},
-    });/*
-    test.evaluate("get_values", {
-        {"get_values!{a=0}", "[0]"},
-        {"get_values!{a=0 b=1 c=2}", "[0 1 2]"},
-        {"get_values!{a='a' b='b' c='c'}", "['a' 'b' 'c']"},
     });
+    test.evaluate("get_values", {
+        {"get_values!<1:0>", "[0]"},
+        {"get_values!<10:0 11:1 12:2>", "[0 1 2]"},
+        {"get_values!<3:0 2:1 1:2>", "[2 1 0]"},
+    });/*
     test.evaluate("get_items", {
         {"get_items!{a=0}", "[('a' 0)]"},
         {"get_items!{a=0 b=1 c=2}", "[('a' 0) ('b' 1) ('c' 2)]"},

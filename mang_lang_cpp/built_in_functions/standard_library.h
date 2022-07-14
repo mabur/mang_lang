@@ -54,11 +54,11 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_values = in dictionary out map!(
         in name out get!(name dictionary)
-        get_names!dictionary
+        get_keys!dictionary
     )
 
     get_items = in dictionary out zip!(
-        get_names!dictionary
+        get_keys!dictionary
         get_values!dictionary
     )
 
