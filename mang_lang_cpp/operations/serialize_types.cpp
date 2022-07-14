@@ -146,7 +146,6 @@ std::string serialize_types(Expression expression) {
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
-        case LABEL: return NAMES[LABEL];
         case NUMBER: return NAMES[NUMBER];
         case BOOLEAN: return NAMES[BOOLEAN];
         case EMPTY_STRING: return NAMES[EMPTY_STRING];

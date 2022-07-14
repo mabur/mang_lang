@@ -93,17 +93,6 @@ Expression parseName(CodeRange code) {
     );
 }
 
-Expression parseLabel(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '\'');
-    code = parseWhile(code, isNameCharacter);
-    code = parseCharacter(code, '\'');
-    return makeLabel(
-        CodeRange{first, code.first},
-        Label{rawString({first + 1, code.first - 1})}
-    );
-}
-
 Expression parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
@@ -371,7 +360,6 @@ Expression parseExpression(CodeRange code) {
         if (c == '<') {return parseTable(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
-        if (c == '\'') {return parseLabel(code);}
         if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}

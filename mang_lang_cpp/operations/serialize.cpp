@@ -12,10 +12,6 @@ std::string serializeName(Expression name) {
     return getName(name).value;
 }
 
-std::string serializeLabel(Expression name) {
-    return "\'" + getLabel(name).value + "\'";
-}
-
 std::string serializeCharacter(const Character& character) {
     return "\\" + std::string{character.value};
 }
@@ -255,7 +251,6 @@ std::string serialize(Expression expression) {
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
-        case LABEL: return serializeLabel(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);

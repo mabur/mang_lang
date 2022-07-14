@@ -313,7 +313,6 @@ Expression evaluate(Expression expression, Expression environment) {
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case BOOLEAN: return expression;
-        case LABEL: return expression;
         case EMPTY_STRING: return expression;
         case STRING: return expression;
         case EMPTY_STACK: return expression;

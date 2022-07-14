@@ -30,7 +30,6 @@ enum ExpressionType {
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
     NAME,
-    LABEL,
     DEFINITION,
     WHILE_STATEMENT,
     END_STATEMENT,
@@ -63,7 +62,6 @@ const auto NAMES = std::vector<std::string>{
     "FUNCTION_APPLICATION",
     "LOOKUP_SYMBOL",
     "NAME",
-    "LABEL",
     "DEFINITION",
     "WHILE_STATEMENT",
     "END_STATEMENT",
@@ -101,11 +99,6 @@ struct Expression {
 
 // TODO: make cheaper to copy or pass by reference or pointer?
 struct Name {
-    std::string value;
-};
-
-// TODO: make cheaper to copy?
-struct Label {
     std::string value;
 };
 
