@@ -10,15 +10,12 @@
 namespace dictionary_functions {
 
 Expression get(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto name = serialize(binary.left);
-    const auto table = getEvaluatedTable(binary.right);
+    const auto tuple = getEvaluatedTuple(in);
+    const auto name = serialize(tuple.expressions.at(0));
+    const auto table = getEvaluatedTable(tuple.expressions.at(1));
     const auto iterator = table.rows.find(name);
-    if (iterator == table.rows.end()) {
-        throw MissingSymbol(name, "get");
-    }
-    const auto result = iterator->second.value;
-    return result;
+    return iterator == table.rows.end() ?
+        tuple.expressions.at(2) : iterator->second.value;
 }
 
 Expression set(Expression in) {
