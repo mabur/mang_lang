@@ -1,7 +1,6 @@
 #include "factory.h"
 
 #include <cassert>
-#include <sstream>
 #include <vector>
 
 #include "operations/serialize.h"
@@ -118,10 +117,10 @@ typename ArrayType::value_type& getMutableExpression(
     ArrayType& array
 ) {
     if (expression.type != type) {
-        std::stringstream s;
-        s << "getMutableExpression expected " << NAMES[type]
-            << " got " << NAMES[expression.type];
-        throw std::runtime_error{s.str()};
+        throw std::runtime_error{
+            "getMutableExpression expected " + NAMES[type]
+            + " got " + NAMES[expression.type]
+        };
     }
     assert(expression.type == type);
     return array.at(expression.index);
@@ -134,10 +133,10 @@ typename ArrayType::value_type getExpression(
     const ArrayType& array
 ) {
     if (expression.type != type) {
-        std::stringstream s;
-        s << "getExpression expected " << NAMES[type]
-            << " got " << NAMES[expression.type];
-        throw std::runtime_error{s.str()};
+        throw std::runtime_error{
+            "getExpression expected " + NAMES[type]
+            + " got " + NAMES[expression.type]
+        };
     }
     assert(expression.type == type);
     return array.at(expression.index);
