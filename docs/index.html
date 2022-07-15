@@ -434,31 +434,24 @@ What we call Tables in Manglang are sometimes referred to as associative arrays 
 <pre>
 &lt;key1:value1 key2:value2&gt;
 </pre>
-Tables are used for situations where you want to quickly get or set the value in a container based on a dynamic key. We do this using the built-infunctions <code>get!(key table default_value)</code> and <code>set!(key table value)</code>. Consider the following example that takes a stack of numbers and removes duplicates. We use the table <code>visited</code> to keep track of what numbers that we have already seen. It is a table with numbers as keys and booleans as values:
+Tables are used for situations where you want to quickly get or set the value in a container based on a dynamic key. We do this using the built-infunctions <code>get!(key table default_value)</code> and <code>set!(key table value)</code>. The following example takes a stack of numbers and computes a table, where each key is a number and the corresponding value counts how many times the number occurs in the stack:
 <pre>
 {
-  stack = [1 6 4 7 9 0 6 4 3 4 6 7]
-  visited = <>
-  result = []
+  stack = [1 2 1 1 3 4 2]
+  counts = <>
   while stack
-    element = top@stack
-    result =
-      if get!(element visited no)
-      then result
-      else put!(element result)
-    visited = set!(element visited yes)
+    x = get!(top@stack counts 0)
+    counts = set!(top@stack counts inc!x)
     stack = rest@stack
   end
-  result = reverse!result
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
   stack = []
-  visited = <0:yes 1:yes 3:yes 4:yes 6:yes 7:yes 9:yes>
-  result = [1 6 4 7 9 0 3]
-  element = 7
+  counts = <1:3 2:2 4:1>
+  x = 2
 }
 </pre>
 Tables are perhaps the most complicated and least used container in Manglang. But they are handy in some cases.
