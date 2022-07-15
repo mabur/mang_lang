@@ -282,16 +282,10 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    unique = in stack out reverse!result@{
-        visited = <>
-        result = clear!stack
+    unique = in stack out get_keys!result@{
+        result = <>
         while stack
-            element = top@stack
-            result =
-                if get!(element visited no)
-                then result
-                else put!(element result)
-            visited = set!(element visited yes)
+            result = set!(top@stack result 0)
             stack = rest@stack
         end
     }
