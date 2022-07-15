@@ -289,5 +289,14 @@ const std::string STANDARD_LIBRARY = R"(
             stack = rest@stack
         end
     }
+
+    count_elements = in stack out result@{
+        result = <>
+        while stack
+            x = get!(top@stack result 0)
+            result = set!(top@stack result inc!x)
+            stack = rest@stack
+        end
+    }
 }
 )";

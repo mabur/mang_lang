@@ -1411,5 +1411,12 @@ int main() {
         {"unique![1 1]", "[1]"},
         {"unique![1 1 2 3 1 4 2 4 0]", "[0 1 2 3 4]"},
     });
+    test.evaluate("count_elements", {
+        {"count_elements![]", "<>"},
+        {"count_elements![1]", "<1:1>"},
+        {"count_elements![1 2]", "<1:1 2:1>"},
+        {"count_elements![1 1]", "<1:2>"},
+        {"count_elements![1 1 2 3 1 4 2 4 0]", "<0:1 1:3 2:2 3:1 4:2>"},
+    });
     return test.exitCode();
 }
