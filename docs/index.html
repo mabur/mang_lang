@@ -150,7 +150,7 @@ Manglang consists of the following basic building blocks:
 <img src="container2.png" width=48 height=48>
 </td>
 <td>
-<a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#tuples">tuples</a> , <a href="#stacks">stacks</a> and <a href="#strings">strings</a>.
+<a href="#containers">Containers</a> holding data like <a href="#dictionaries">dictionaries</a>, <a href="#tuples">tuples</a> , <a href="#stacks">stacks</a>, <a href="#strings">strings</a> and <a href="#tables">tables</a>.
 </td>
 </tr>
 <tr>
@@ -427,6 +427,48 @@ The input above is evaluated to the output below:
   e = "EManglang"
 }
 </pre>
+
+<h2 id="tables">2.e. Tables</h2>
+<p>
+What we call Tables in Manglang are sometimes referred to as associative arrays in other languages. A table holds pairs of elements: keys and values. We use the syntax:
+<pre>
+&lt;key1:value1 key2:value2&gt;
+</pre>
+Tables are used for situations where you want to quickly get or set the value in a container based on a dynamic key. We do this using the built-infunctions <code>get!(key table default_value)</code> and <code>set!(key table value)</code>. Consider the following example that takes a stack of numbers and removes duplicates. We use the table <code>visited</code> to keep track of what numbers that we have already seen. It is a table with numbers as keys and booleans as values:
+<pre>
+{
+  stack = [1 6 4 7 9 0 6 4 3 4 6 7]
+  visited = <>
+  result = []
+  while stack
+    element = top@stack
+    result =
+      if get!(element visited no)
+      then result
+      else put!(element result)
+    visited = set!(element visited yes)
+    stack = rest@stack
+  end
+  result = reverse!result
+}
+</pre>
+The input above is evaluated to the output below:
+<pre>
+{
+  stack = []
+  visited = <0:yes 1:yes 3:yes 4:yes 6:yes 7:yes 9:yes>
+  result = [1 6 4 7 9 0 3]
+  element = 7
+}
+</pre>
+Tables are perhaps the most complicated and least used container in Manglang. But they are handy in some cases.
+Tables are somewhat similar to dictionaries, but also different:
+<ul>
+<li>Names are used to access values in dictionaries. Keys are used to access values in tables. A key can be of any type.</li>
+<li>The names of a dictionary are static. The keys of a table are dynamic. Dynamic means that they are not known until the program is evaluated.</li>
+<li>The values in a dictionary can be of different types. The values in a table should all have the same type.</li>
+<li>The content of a dictionary can be updated during its constraction phase, but not later on. The content of a table can be updated at any time.</li>
+</ul>
 
 <h1 id="control_flow">4. Control Flow <img src="control_flow.png" width=48 height=48></h1>
 
