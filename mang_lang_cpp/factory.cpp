@@ -182,6 +182,8 @@ void clearMemory() {
     stacks.clear();
     evaluated_stacks.clear();
     empty_stacks.clear();
+    tables.clear();
+    evaluated_tables.clear();
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
