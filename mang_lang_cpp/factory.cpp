@@ -1,13 +1,11 @@
 #include "factory.h"
 
 #include <cassert>
-#include <memory>
-#include <sstream>
 #include <vector>
 
 #include "operations/serialize.h"
 
-std::vector<std::shared_ptr<const EvaluatedDictionary>> evaluated_dictionaries;
+std::vector<EvaluatedDictionary> evaluated_dictionaries;
 
 std::vector<Dictionary> dictionaries;
 std::vector<Character> characters;
@@ -22,17 +20,16 @@ std::vector<EvaluatedTuple> evaluated_tuples;
 std::vector<Stack> stacks;
 std::vector<EvaluatedStack> evaluated_stacks;
 std::vector<EmptyStack> empty_stacks;
+std::vector<Table> tables;
+std::vector<EvaluatedTable> evaluated_tables;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
-std::vector<DynamicLookupSymbol> dynamic_symbol_lookups;
 std::vector<Name> names;
-std::vector<Label> labels;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<EndStatement> end_statements;
 std::vector<Definition> definitions;
-std::vector<DynamicDefinition> dynamic_definitions;
 std::vector<String> strings;
 std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
@@ -46,7 +43,7 @@ std::vector<size_t> whileIndices(const Statements& statements) {
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+        if (type == DEFINITION) {
             while_indices.push_back(1); // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -70,7 +67,7 @@ std::vector<size_t> endIndices(const Statements& statements) {
     auto end_indices = std::vector<size_t>(statements.size());
     for (size_t i = statements.size() - 1; i < statements.size(); --i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+        if (type == DEFINITION) {
             end_indices[i] = 0; // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -113,19 +110,19 @@ Expression makeExpression(
 }
 
 template<typename ArrayType>
-typename ArrayType::value_type::element_type getMutableExpression(
+typename ArrayType::value_type& getMutableExpression(
     Expression expression,
     ExpressionType type,
     ArrayType& array
 ) {
     if (expression.type != type) {
-        std::stringstream s;
-        s << "getMutableExpression expected " << NAMES[type]
-            << " got " << NAMES[expression.type];
-        throw std::runtime_error{s.str()};
+        throw std::runtime_error{
+            "getMutableExpression expected " + NAMES[type]
+            + " got " + NAMES[expression.type]
+        };
     }
     assert(expression.type == type);
-    return *array.at(expression.index).get();
+    return array.at(expression.index);
 }
 
 template<typename ArrayType>
@@ -135,10 +132,10 @@ typename ArrayType::value_type getExpression(
     const ArrayType& array
 ) {
     if (expression.type != type) {
-        std::stringstream s;
-        s << "getExpression expected " << NAMES[type]
-            << " got " << NAMES[expression.type];
-        throw std::runtime_error{s.str()};
+        throw std::runtime_error{
+            "getExpression expected " + NAMES[type]
+            + " got " + NAMES[expression.type]
+        };
     }
     assert(expression.type == type);
     return array.at(expression.index);
@@ -155,7 +152,7 @@ Statements setContext(const Statements& statements) {
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
         const auto code = statements[i].range;
-        if (type == DEFINITION or type == DYNAMIC_DEFINITION) {
+        if (type == DEFINITION) {
             result.push_back(statements[i]);
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
@@ -185,17 +182,16 @@ void clearMemory() {
     stacks.clear();
     evaluated_stacks.clear();
     empty_stacks.clear();
+    tables.clear();
+    evaluated_tables.clear();
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
-    dynamic_symbol_lookups.clear();
     names.clear();
-    labels.clear();
     numbers.clear();
     while_statements.clear();
     end_statements.clear();
     definitions.clear();
-    dynamic_definitions.clear();
     strings.clear();
     empty_strings.clear();
     booleans.clear();
@@ -228,12 +224,12 @@ Expression makeIs(CodeRange code, IsExpression expression) {
     return makeExpression(code, expression, IS, is_expressions);
 }
 
-Expression makeDictionary(CodeRange code, const Dictionary expression) {
+Expression makeDictionary(CodeRange code, Dictionary expression) {
     return makeExpression(code, expression, DICTIONARY, dictionaries);
 }
 
-Expression makeEvaluatedDictionary(CodeRange code, const EvaluatedDictionary* expression) {
-    return makeMutableExpression(code, expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
+    return makeExpression(code, expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
@@ -272,6 +268,14 @@ Expression makeEmptyStack(CodeRange code, EmptyStack expression) {
     return makeExpression(code, expression, EMPTY_STACK, empty_stacks);
 }
 
+Expression makeTable(CodeRange code, Table expression) {
+    return makeExpression(code, expression, TABLE, tables);
+}
+
+Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
+    return makeExpression(code, expression, EVALUATED_TABLE, evaluated_tables);
+}
+
 Expression makeLookupChild(CodeRange code, LookupChild expression) {
     return makeExpression(code, expression, LOOKUP_CHILD, child_lookups);
 }
@@ -284,24 +288,12 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-Expression makeDynamicLookupSymbol(CodeRange code, DynamicLookupSymbol expression) {
-    return makeExpression(code, expression, DYNAMIC_LOOKUP_SYMBOL, dynamic_symbol_lookups);
-}
-
 Expression makeName(CodeRange code, Name expression) {
     return makeExpression(code, expression, NAME, names);
 }
 
-Expression makeLabel(CodeRange code, Label expression) {
-    return makeExpression(code, expression, LABEL, labels);
-}
-
 Expression makeDefinition(CodeRange code, Definition expression) {
     return makeExpression(code, expression, DEFINITION, definitions);
-}
-
-Expression makeDynamicDefinition(CodeRange code, DynamicDefinition expression) {
-    return makeExpression(code, expression, DYNAMIC_DEFINITION, dynamic_definitions);
 }
 
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
@@ -328,10 +320,6 @@ Expression makeBoolean(CodeRange code, Boolean expression) {
 
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
-}
-
-DynamicDefinition getDynamicDefinition(Expression expression) {
-    return getExpression(expression, DYNAMIC_DEFINITION, dynamic_definitions);
 }
 
 WhileStatement getWileStatement(Expression expression) {
@@ -363,7 +351,23 @@ Dictionary getDictionary(Expression expression) {
 }
 
 EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
+    return getExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+}
+
+EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression) {
     return getMutableExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+}
+
+Table getTable(Expression expression) {
+    return getExpression(expression, TABLE, tables);
+}
+
+EvaluatedTable getEvaluatedTable(Expression expression) {
+    return getExpression(expression, EVALUATED_TABLE, evaluated_tables);
+}
+
+EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
+    return getMutableExpression(expression, EVALUATED_TABLE, evaluated_tables);
 }
 
 Tuple getTuple(Expression expression) {
@@ -415,16 +419,8 @@ LookupSymbol getLookupSymbol(Expression expression) {
     return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-DynamicLookupSymbol getDynamicLookupSymbol(Expression expression) {
-    return getExpression(expression, DYNAMIC_LOOKUP_SYMBOL, dynamic_symbol_lookups);
-}
-
 Name getName(Expression expression) {
     return getExpression(expression, NAME, names);
-}
-
-Label getLabel(Expression expression) {
-    return getExpression(expression, LABEL, labels);
 }
 
 String getString(Expression expression) {

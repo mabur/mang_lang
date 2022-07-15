@@ -153,18 +153,6 @@ int main() {
     test.evaluate_types("missing", {
         {"missing", "EMPTY"},
     });
-    test.evaluate("label", {
-        {"'a'", "'a'"},
-        {"'ab'", "'ab'"},
-        {"'a1'", "'a1'"},
-        {"'_'", "'_'"},
-    });
-    test.evaluate_types("label", {
-        {"'a'", "LABEL"},
-        {"'ab'", "LABEL"},
-        {"'a1'", "LABEL"},
-        {"'_'", "LABEL"},
-    });
     test.evaluate("string", {
         {R"("")", R"("")"},
         {R"("a")", R"("a")"},
@@ -216,6 +204,23 @@ int main() {
         {"[[]]", "[EMPTY_STACK]"},
         {"[[] []]", "[EMPTY_STACK]"},
         {"[[[]]]", "[[EMPTY_STACK]]"},
+    });
+    test.reformat("table", {
+        {"<>", "<>"},
+        {"<1:2>", "<1:2>"},
+        {"< 1 : 2 >", "<1:2>"},
+        {"<<>:<>>", "<<>:<>>"},
+        {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
+        {"<inc!0:inc!1>", "<inc!0:inc!1>"},
+    });
+    test.evaluate("table", {
+        {"<>", "<>"},
+        {"<1:2>", "<1:2>"},
+        {"< 1 : 2 >", "<1:2>"},
+        {"<<>:<>>", "<<>:<>>"},
+        {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
+        {"<inc!0:inc!1>", "<1:2>"},
+        {"<3:6 4:8 1:2 2:4>","<1:2 2:4 3:6 4:8>"}
     });
     test.reformat("tuple", {
         {"()", "()"},
@@ -277,14 +282,6 @@ int main() {
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
         {"{i=2 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=3}"},
         {"{i=1000 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=500500}"},
-        {"{i=1 while i i=dec!i end <i>=i}", "{i=0 <0>=0}"},
-        {"{i=2 while i i=dec!i end <i>=i}", "{i=0 <0>=0}"},
-        {"{i=1 while i i=dec!i <i>=i end}", "{i=0 <0>=0}"},
-        {"{<0>=1 i=2 while i i=dec!i end}", "{<0>=1 i=0}"},
-        {"{i=2 while i i=dec!i <i>=i end}", "{i=0 <1>=1 <0>=0}"},
-        {"{i=1 while i <i>=i i=dec!i end}", "{i=0 <1>=1}"},
-        {"{i=2 while i <i>=i i=dec!i end}", "{i=0 <2>=2 <1>=1}"},
-        {"{i=1 <0>=1 while less?(i 3) <i>=<dec!i> i=inc!i end}", "{i=3 <0>=1 <1>=1 <2>=1}"}
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
@@ -306,32 +303,10 @@ int main() {
         {"{a_0=1}", "{a_0=1}"},
         {"{ a = 1 }", "{a=1}"},
         {"{a=1 a=2}", "{a=2}"},
-        {"{a=1 <'a'>=2}", "{a=2}"},
         {"{a=1 b=2}", "{a=1 b=2}"},
         {"{ a = 1  b = 2 }", "{a=1 b=2}"},
-        {"{<1>=2}", "{<1>=2}"},
-        {"{<'a'>=2}", "{a=2}"},
-        {"{a=1 <a>=2}", "{a=1 <1>=2}"},
-        {"{a=1 <a>=2 a=dec!a <a>=3}", "{a=0 <1>=2 <0>=3}"},
         {"{a=1 b=a}", "{a=1 b=1}"},
-        {"{<1>=2 a=<1>}", "{<1>=2 a=2}"},
         {R"({a=1})", R"({a=1})"},
-        {R"({<"a">=1})", R"({<"a">=1})"},
-        {R"({<0>=1 a=0 <a>=2})", R"({<0>=2 a=0})"},
-    });
-    test.reformat("dynamic_lookup", {
-        {"<1>", "<1>"},
-        {R"(<"a">)", R"(<"a">)"},
-        {R"([<"a">])", R"([<"a">])"},
-        {R"({a=<"b">})", R"({a=<"b">})"},
-        {R"({a=1 b=<"a">})", R"({a=1 b=<"a">})"},
-    });
-    test.evaluate("dynamic_lookup", {
-        {"{a=<1>}", "{a=missing}"},
-        {"{a=1 b=<'a'>}", "{a=1 b=1}"},
-    });
-    test.reformat("dictionary", {
-        {"{<1>=2}", "{<1>=2}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
@@ -917,29 +892,33 @@ int main() {
         {R"(put!(\a "b"))", R"("ab")"},
         {R"(put!(\a "bc"))", R"("abc")"},
     });
-    test.evaluate("get dictionary", {
-        {R"(get!(0 {<0>=1}))", "1"},
-        {R"(get!("a" {<"a">=1}))", "1"},
-        {R"(get!('a' {a=1}))", "1"},
-        {R"(get!('a' {<'a'>=1}))", "1"},
-        {R"(get!('a' {}))", "missing"},
+    test.evaluate("get table", {
+        {"get!(0 <> 2)", "2"},
+        {"get!(0 <0:1> 2)", "1"},
+        {"get!(1 <0:1> 2)", "2"},
+        {"get!(0 <0:1 1:2 3:3> 2)", "1"},
+        {"get!((3) <(1):[1] (2):[2] (3):[3]> [])", "[3]"},
     });
-    test.evaluate("get_names", {
-        {"get_names!{}", "[]"},
-        {"get_names!{a=1}", "['a']"},
-        {"get_names!{<0>=1}", "[0]"},
-        {R"(get_names!{<"a">=1})", R"(["a"])"},
-        {"get!(top@get_names!{a=0} {a=1})", "1"},
+    test.evaluate("set table", {
+        {"set!(0 <> 1)", "<0:1>"},
+        {"set!(0 <0:2> 1)", "<0:1>"},
+        {"set!(0 <2:3 1:2 0:1> 5)", "<0:5 1:2 2:3>"},
+    });
+    test.evaluate("get_keys", {
+        {"get_keys!<>", "[]"},
+        {"get_keys!<0:1>", "[0]"},
+        {"get_keys!<0:1 2:3>", "[0 2]"},
+        {"get_keys!<2:3 0:1>", "[0 2]"},
     });
     test.evaluate("get_values", {
-        {"get_values!{a=0}", "[0]"},
-        {"get_values!{a=0 b=1 c=2}", "[0 1 2]"},
-        {"get_values!{a='a' b='b' c='c'}", "['a' 'b' 'c']"},
+        {"get_values!<1:0>", "[0]"},
+        {"get_values!<10:0 11:1 12:2>", "[0 1 2]"},
+        {"get_values!<3:0 2:1 1:2>", "[2 1 0]"},
     });
     test.evaluate("get_items", {
-        {"get_items!{a=0}", "[('a' 0)]"},
-        {"get_items!{a=0 b=1 c=2}", "[('a' 0) ('b' 1) ('c' 2)]"},
-        {"get_items!{a='a' b='b' c='c'}", "[('a' 'a') ('b' 'b') ('c' 'c')]"},
+        {"get_items!<0:1>", "[(0 1)]"},
+        {"get_items!<0:1 2:3 4:5>", "[(0 1) (2 3) (4 5)]"},
+        {"get_items!<4:1 2:3 0:5>", "[(0 5) (2 3) (4 1)]"},
     });
     test.evaluate("inc", {
         {"inc!0", "1"},
@@ -1431,13 +1410,6 @@ int main() {
         {"unique![1 2]", "[1 2]"},
         {"unique![1 1]", "[1]"},
         {"unique![1 1 2 3 1 4 2 4 0]", "[1 2 3 4 0]"},
-    });
-    test.evaluate("duplicate", {
-        {"duplicate![]", "[]"},
-        {"duplicate![1]", "[]"},
-        {"duplicate![1 2]", "[]"},
-        {"duplicate![1 1]", "[1]"},
-        {"duplicate![1 1 2 3 1 4 2 4 0]", "[1 2 4]"},
     });
     return test.exitCode();
 }

@@ -54,11 +54,11 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_values = in dictionary out map!(
         in name out get!(name dictionary)
-        get_names!dictionary
+        get_keys!dictionary
     )
 
     get_items = in dictionary out zip!(
-        get_names!dictionary
+        get_keys!dictionary
         get_values!dictionary
     )
 
@@ -283,22 +283,15 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     unique = in stack out reverse!result@{
+        visited = <>
         result = clear!stack
         while stack
-            result = is <top@stack> missing
-                then put!(top@stack result)
-                else result
-            <top@stack> = yes
-            stack = rest@stack
-        end
-    }
-    duplicate = in stack out reverse!unique!result@{
-        result = clear!stack
-        while stack
-            result = is <top@stack> missing
+            element = top@stack
+            result =
+                if get!(element visited no)
                 then result
-                else put!(top@stack result)
-            <top@stack> = yes
+                else put!(element result)
+            visited = set!(element visited yes)
             stack = rest@stack
         end
     }

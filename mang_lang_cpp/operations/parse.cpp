@@ -1,6 +1,7 @@
 #include "parse.h"
 
 #include <iostream>
+#include <limits>
 
 #include "../factory.h"
 #include "../container.h"
@@ -92,17 +93,6 @@ Expression parseName(CodeRange code) {
     );
 }
 
-Expression parseLabel(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '\'');
-    code = parseWhile(code, isNameCharacter);
-    code = parseCharacter(code, '\'');
-    return makeLabel(
-        CodeRange{first, code.first},
-        Label{rawString({first + 1, code.first - 1})}
-    );
-}
-
 Expression parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
@@ -115,25 +105,6 @@ Expression parseNamedElement(CodeRange code) {
     code = parseWhiteSpace(code);
     return makeDefinition(
         CodeRange{first, code.first}, Definition{std::move(name), expression}
-    );
-}
-
-Expression parseDynamicNamedElement(CodeRange code) {
-    auto first = code.begin();
-    code = parseCharacter(code, '<');
-    code = parseWhiteSpace(code);
-    auto dynamic_name = parseExpression(code);
-    code.first = end(dynamic_name);
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '>');
-    code = parseWhiteSpace(code);
-    code = parseCharacter(code, '=');
-    code = parseWhiteSpace(code);
-    auto expression = parseExpression(code);
-    code.first = end(expression);
-    code = parseWhiteSpace(code);
-    return makeDynamicDefinition(
-        CodeRange{first, code.first}, DynamicDefinition{dynamic_name, expression}
     );
 }
 
@@ -162,9 +133,6 @@ Expression parseDictionaryElement(CodeRange code) {
     }
     if (isKeyword(code, "end")) {
         return parseEndStatement(code);
-    }
-    if (::startsWith(code, '<')) {
-        return parseDynamicNamedElement(code);
     }
     return parseNamedElement(code);
 }
@@ -287,14 +255,25 @@ Expression parseTuple(CodeRange code) {
     return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
 }
 
-Expression parseDynamicLookupSymbol(CodeRange code) {
+Expression parseTable(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '<');
-    const auto expression = parseExpression(code);
-    code.first = end(expression);
     code = parseWhiteSpace(code);
+    auto rows = std::vector<Row>{};
+    while (!::startsWith(code, '>')) {
+        throwIfEmpty(code);
+        const auto key = parseExpression(code);
+        code.first = end(key);
+        code = parseWhiteSpace(code);
+        code = parseCharacter(code, ':');
+        code = parseWhiteSpace(code);
+        const auto value = parseExpression(code);
+        code.first = end(value);
+        code = parseWhiteSpace(code);
+        rows.push_back({key, value});
+    }
     code = parseCharacter(code, '>');
-    return makeDynamicLookupSymbol(CodeRange{first, code.first}, {expression});
+    return makeTable(CodeRange{first, code.first}, Table{rows});
 }
 
 Expression parseSubstitution(CodeRange code) {
@@ -378,10 +357,9 @@ Expression parseExpression(CodeRange code) {
         if (c == '[') {return parseStackNew(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}
+        if (c == '<') {return parseTable(code);}
         if (c == '\\') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
-        if (c == '\'') {return parseLabel(code);}
-        if (c == '<') {return parseDynamicLookupSymbol(code);}
         if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}
@@ -398,7 +376,7 @@ Expression parseExpression(CodeRange code) {
         if (isalpha(c) or c == '_') {return parseSubstitution(code);}
         throwParseException(code);
         return {};
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error& e) {
         std::cout << "Exception while parsing: " << e.what();
         throw e;
     }

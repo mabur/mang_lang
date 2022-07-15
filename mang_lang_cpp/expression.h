@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -12,6 +13,8 @@ enum ExpressionType {
     CHARACTER,
     CONDITIONAL,
     IS,
+    TABLE,
+    EVALUATED_TABLE,
     DICTIONARY,
     EVALUATED_DICTIONARY,
     TUPLE,
@@ -26,11 +29,8 @@ enum ExpressionType {
     LOOKUP_CHILD,
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
-    DYNAMIC_LOOKUP_SYMBOL,
     NAME,
-    LABEL,
     DEFINITION,
-    DYNAMIC_DEFINITION,
     WHILE_STATEMENT,
     END_STATEMENT,
     NUMBER,
@@ -45,6 +45,8 @@ const auto NAMES = std::vector<std::string>{
     "CHARACTER",
     "CONDITIONAL",
     "IS",
+    "TABLE",
+    "EVALUATED_TABLE",
     "DICTIONARY",
     "EVALUATED_DICTIONARY",
     "TUPLE",
@@ -59,11 +61,8 @@ const auto NAMES = std::vector<std::string>{
     "LOOKUP_CHILD",
     "FUNCTION_APPLICATION",
     "LOOKUP_SYMBOL",
-    "DYNAMIC_LOOKUP_SYMBOL",
     "NAME",
-    "LABEL",
     "DEFINITION",
-    "DYNAMIC_DEFINITION",
     "WHILE_STATEMENT",
     "END_STATEMENT",
     "NUMBER",
@@ -98,11 +97,8 @@ struct Expression {
     CodeRange range;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Name {
-    std::string value;
-};
-
-struct Label {
     std::string value;
 };
 
@@ -121,6 +117,7 @@ struct Alternative {
     Expression right;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct IsExpression {
     Expression input;
     std::vector<Alternative> alternatives;
@@ -143,7 +140,7 @@ struct FunctionDictionary {
     Expression body;
 };
 
-
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct FunctionTuple {
     Expression environment;
     std::vector<Expression> input_names;
@@ -164,10 +161,6 @@ struct LookupSymbol {
     Expression name;
 };
 
-struct DynamicLookupSymbol {
-    Expression expression;
-};
-
 struct Number {
     double value;
 };
@@ -184,10 +177,12 @@ struct String {
 struct EmptyString {
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
@@ -210,11 +205,6 @@ struct Definition {
     Expression expression;
 };
 
-struct DynamicDefinition {
-    Expression dynamic_name;
-    Expression expression;
-};
-
 struct WhileStatement {
     Expression expression;
     size_t end_index_;
@@ -226,10 +216,10 @@ struct EndStatement {
 
 using Statements = std::vector<Expression>;
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 class Definitions {
 private:
-    std::unordered_map<std::string, Expression> definitions;
-    std::unordered_map<std::string, size_t> order;
+    std::vector<std::pair<std::string, Expression>> definitions;
 public:
     bool empty() const;
     void add(const std::string& key, Expression value);
@@ -237,11 +227,28 @@ public:
     std::vector<std::pair<std::string, Expression>> sorted() const;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct Dictionary {
     Statements statements;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedDictionary {
     Expression environment;
     Definitions definitions;
+};
+
+struct Row {
+    Expression key;
+    Expression value;
+};
+
+// TODO: make cheaper to copy or pass by reference or pointer?
+struct Table {
+    std::vector<Row> rows;
+};
+
+// TODO: make cheaper to copy or pass by reference or pointer?
+struct EvaluatedTable {
+    std::map<std::string, Row> rows;
 };

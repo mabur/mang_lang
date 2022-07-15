@@ -53,7 +53,7 @@ bool boolean(Expression expression) {
 
 std::string getNameAsLabel(Expression name)
 {
-    return '\'' + getName(name).value  + '\'';
+    return getName(name).value;
 }
 
 Expression evaluateConditional(
@@ -81,8 +81,9 @@ Expression evaluateIs(
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
-    const auto result = new EvaluatedDictionary{environment, {}};
-    const auto result_environment = makeEvaluatedDictionary(CodeRange{}, result);
+    const auto result_environment = makeEvaluatedDictionary(
+        CodeRange{}, EvaluatedDictionary{environment, {}}
+    );
     auto i = size_t{0};
     while (i < dictionary.statements.size()) {
         const auto statement = dictionary.statements[i];
@@ -92,16 +93,8 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result_environment);
             const auto label = getNameAsLabel(definition.name);
-            result->definitions.add(label, value);
-            i += 1;
-        }
-        else if (type == DYNAMIC_DEFINITION) {
-            const auto dynamic_definition = getDynamicDefinition(statement);
-            const auto right_expression = dynamic_definition.expression;
-            const auto value = evaluate(right_expression, result_environment);
-            const auto& name = dynamic_definition.dynamic_name;
-            const auto label = serialize(evaluate(name, result_environment));
-            result->definitions.add(label, value);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            result.definitions.add(label, value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -165,6 +158,18 @@ Expression evaluateTuple(Tuple tuple, Expression environment) {
     }
     const auto code = CodeRange{};
     return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
+}
+
+Expression evaluateTable(Table table, Expression environment) {
+    auto rows = std::map<std::string, Row>{};
+    for (const auto& row : table.rows) {
+        const auto key = evaluate(row.key, environment);
+        const auto value = evaluate(row.value, environment);
+        const auto serialized_key = serialize(key);
+        rows[serialized_key] = {key, value};
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTable(code, EvaluatedTable{rows});
 }
 
 Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
@@ -240,7 +245,7 @@ Expression applyFunction(const Function& function, Expression input) {
     const auto label = getNameAsLabel(function.input_name);
     definitions.add(label, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function.environment, definitions}
+        EvaluatedDictionary{function.environment, definitions}
     );
     return evaluate(function.body, middle);
 }
@@ -273,7 +278,7 @@ Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression in
         definitions.add(label, expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        new EvaluatedDictionary{function_stack.environment, definitions}
+        EvaluatedDictionary{function_stack.environment, definitions}
     );
     return evaluate(function_stack.body, middle);
 }
@@ -300,13 +305,6 @@ Expression evaluateLookupSymbol(
     return lookupDictionary(environment, getNameAsLabel(lookup_symbol.name));
 }
 
-Expression evaluateDynamicLookupSymbol(
-    const DynamicLookupSymbol& lookup_symbol, Expression environment
-) {
-    const auto name = serialize(evaluate(lookup_symbol.expression, environment));
-    return lookupCurrentDictionary(environment, name);
-}
-
 } // namespace
 
 Expression evaluate(Expression expression, Expression environment) {
@@ -315,13 +313,13 @@ Expression evaluate(Expression expression, Expression environment) {
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case BOOLEAN: return expression;
-        case LABEL: return expression;
         case EMPTY_STRING: return expression;
         case STRING: return expression;
         case EMPTY_STACK: return expression;
         case EVALUATED_STACK: return expression;
         case EVALUATED_DICTIONARY: return expression;
         case EVALUATED_TUPLE: return expression;
+        case EVALUATED_TABLE: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(
@@ -333,10 +331,10 @@ Expression evaluate(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(expression, environment);
         case TUPLE: return evaluateTuple(getTuple(expression), environment);
+        case TABLE: return evaluateTable(getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
-        case DYNAMIC_LOOKUP_SYMBOL: return evaluateDynamicLookupSymbol(getDynamicLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
 }

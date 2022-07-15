@@ -1,5 +1,6 @@
 #include "serialize.h"
 
+#include <limits>
 #include <sstream>
 
 #include "../factory.h"
@@ -9,10 +10,6 @@ namespace {
 
 std::string serializeName(Expression name) {
     return getName(name).value;
-}
-
-std::string serializeLabel(Expression name) {
-    return "\'" + getLabel(name).value + "\'";
 }
 
 std::string serializeCharacter(const Character& character) {
@@ -40,11 +37,6 @@ std::string serializeIs(const IsExpression& is_expression) {
 
 std::string serializeDefinition(const Definition& element) {
     return getName(element.name).value + '=' + serialize(element.expression) + ' ';
-}
-
-std::string serializeDynamicDefinition(const DynamicDefinition& element) {
-    return '<' + serialize(element.dynamic_name) + '>' + '=' +
-        serialize(element.expression) + ' ';
 }
 
 std::string serializeWhileStatement(const WhileStatement& element) {
@@ -76,12 +68,7 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     }
     auto result = std::string{"{"};
     for (const auto& pair : dictionary.definitions.sorted()) {
-        const auto c = pair.first[0];
-        if (c == '\'') {
-            result += pair.first.substr(1, pair.first.size() - 2) + "=" + serialize(pair.second) + " ";
-        } else {
-            result += "<" + pair.first + ">" + "=" + serialize(pair.second) + " ";
-        }
+        result += pair.first + "=" + serialize(pair.second) + " ";
     }
     result.back() = '}';
     return result;
@@ -125,6 +112,32 @@ std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
         result.back() = ')';
     }
     result += " out " + serialize(function_stack.body);
+    return result;
+}
+
+std::string serializeTable(Expression s) {
+    const auto rows = getTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    auto result = std::string{'<'};
+    for (const auto& row : rows) {
+        result += serialize(row.key) + ':' + serialize(row.value) + ' ';
+    }
+    result.back() = '>';
+    return result;
+}
+
+std::string serializeEvaluatedTable(Expression s) {
+    const auto rows = getEvaluatedTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    auto result = std::string{'<'};
+    for (const auto& row : rows) {
+        result += row.first + ':' + serialize(row.second.value) + ' ';
+    }
+    result.back() = '>';
     return result;
 }
 
@@ -185,10 +198,6 @@ std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
     return serializeName(lookup_symbol.name);
 }
 
-std::string serializeDynamicLookupSymbol(const DynamicLookupSymbol& dynamic_lookup_symbol) {
-    return "<" + serialize(dynamic_lookup_symbol.expression) + ">";
-}
-
 std::string serializeNumber(const Number& number) {
     std::stringstream s;
     s.precision(std::numeric_limits<double>::digits10 + 1);
@@ -220,13 +229,14 @@ std::string serialize(Expression expression) {
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
-        case DYNAMIC_DEFINITION: return serializeDynamicDefinition(getDynamicDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
+        case TABLE: return serializeTable(expression);
+        case EVALUATED_TABLE: return serializeEvaluatedTable(expression);
         case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(expression);
         case STACK: return serializeStack(expression);
@@ -235,9 +245,7 @@ std::string serialize(Expression expression) {
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
-        case DYNAMIC_LOOKUP_SYMBOL: return serializeDynamicLookupSymbol(getDynamicLookupSymbol(expression));
         case NAME: return serializeName(expression);
-        case LABEL: return serializeLabel(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);

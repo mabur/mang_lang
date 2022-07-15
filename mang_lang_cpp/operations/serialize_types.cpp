@@ -34,11 +34,6 @@ std::string serializeDefinition(const Definition& element) {
     return getName(element.name).value + '=' + serialize_types(element.expression) + ' ';
 }
 
-std::string serializeDynamicDefinition(const DynamicDefinition& element) {
-    return '<' + serialize_types(element.dynamic_name) + '>' + '=' +
-        serialize_types(element.expression) + ' ';
-}
-
 std::string serializeWhileStatement(const WhileStatement& element) {
     return "while " + serialize_types(element.expression) + ' ';
 }
@@ -68,12 +63,7 @@ std::string serializeEvaluatedDictionary(const EvaluatedDictionary& dictionary) 
     }
     auto result = std::string{"{"};
     for (const auto& pair : dictionary.definitions.sorted()) {
-        const auto c = pair.first[0];
-        if (c == '\'') {
-            result += pair.first.substr(1, pair.first.size() - 2) + "=" + serialize_types(pair.second) + " ";
-        } else {
-            result += "<" + pair.first + ">" + "=" + serialize_types(pair.second) + " ";
-        }
+        result += pair.first + "=" + serialize_types(pair.second) + " ";
     }
     result.back() = '}';
     return result;
@@ -126,10 +116,6 @@ std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
     return serializeName(lookup_symbol.name);
 }
 
-std::string serializeDynamicLookupSymbol(const DynamicLookupSymbol& dynamic_lookup_symbol) {
-    return "<" + serialize_types(dynamic_lookup_symbol.expression) + ">";
-}
-
 } // namespace
 
 std::string serialize_types(Expression expression) {
@@ -140,7 +126,6 @@ std::string serialize_types(Expression expression) {
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
-        case DYNAMIC_DEFINITION: return serializeDynamicDefinition(getDynamicDefinition(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
         case FUNCTION: return NAMES[FUNCTION];
@@ -155,9 +140,7 @@ std::string serialize_types(Expression expression) {
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
-        case DYNAMIC_LOOKUP_SYMBOL: return serializeDynamicLookupSymbol(getDynamicLookupSymbol(expression));
         case NAME: return serializeName(expression);
-        case LABEL: return NAMES[LABEL];
         case NUMBER: return NAMES[NUMBER];
         case BOOLEAN: return NAMES[BOOLEAN];
         case EMPTY_STRING: return NAMES[EMPTY_STRING];
