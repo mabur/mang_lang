@@ -3,6 +3,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 * Document table functions.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
+* Interface for containers and tables:
+  - Merge get_index!(n container) for containers and get!(key table default_value) for tables?
 * Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
   - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
   - Let them have the semantics:
