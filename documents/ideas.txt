@@ -3,27 +3,9 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 * Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
   - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
   - Serializing: tree -> manglang code. (EBNF?, same as above?)
-  - Evaluation: tree -> tree. (graphical nodes?)
-* Type checking and dynamic dictionaries. Add new container for dynamic dictionaries.
+  - Evaluation: tree -> tree. (graphical nodes? algebra)
+* Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
-  - Let the dynamic dictionary be mutable if that is easier to implement.
-  - Can it be made immutable once it has been put inside an evaluated dictionary?
-  - dynamic_dictionary = <>
-  - dynamic_dictionary = set!(key value dynamic_dictionary)
-  - value = get!(key dynamic_dictionary)
-  - serialization:
-    Alternative < : >    Good. Simplest.
-      <1:5 2:4>
-      <"a":5 "b":7>
-      <(1 2):5 (4 5):7>
-  - Semantics:
-    - Parsing:
-      <>
-      <1:5 2:4>
-      <add!(1 2) : 3> What to evaluate when parsing?
-      Store data as vector<Element> for parsing.
-    - Evaluating
-      Store data as unordered_map<string, Element> when evaluating.
 * Type theory
   - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
   - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
@@ -45,44 +27,20 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
     - Dynamic lookups of dictionary
     - Dynamic dictionaries/hash-maps/sets for unique-check
   * Dynamic dictionary keys, as a way to model sets and arrays.
-    - Fix hacky implementation of get_names, that is not type safe, since it returns keys as strings Names but with '' inside the string, instead of as Labels.
-    - Naming of dictionary functions:
-      - get_names, get_index, get_keys, index, table of content, get_headings.
-      - get_values
-      - get_items
-    - Built-in functions for checking if name is in dict: has?(name dictionary) contains?
+    - Built-in functions for checking if name is in dict: has?(name dictionary) contains? inside?
     - "Evaluate" function as general solution that can be used to convert strings to names and general code.
     - Labels could be good for getter functions:
       getter = in label out in dictionary out get!(label dictionary)
       output = map!(getter!'member' input)
       - getter!'member' is similar to member@ if seen as a function
     - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
-  {
-      N = 10
-      result = {    
-          i = 1
-          while less?(i N)
-              j = dec!i
-              [i] = [j]
-              i = inc!i
-              key = (1 2)
-              [key] = 1
-              [(1 2)] = 1
-          end
-      }
-      i = i@result
-      j = j@result
-      c = get!(2 result)
-      d = get!(i result)
-      e = get!(dec!N result)
-      f = get!((1 2) result)
-  }
   * Memory
     - 64 bit
     - Use less memory
 * Split structs for evaluated and non-evaluated for:
   - Dictionaries (done)
   - Lists (done)
+  - Tables (done)
   - Functions (todo)
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Example programs:
@@ -90,6 +48,13 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Parsing Manglang
   - Raytracing
 * Code formatting
+  - Indentaiton and line breaks.
+  - Colors and syntax high-lighting.
+  - Implement tool that takes a source file and outputs an html.
+  - Homepage
+* Tools:
+  - Type checking.
+  - Command line interface for reading source from file and piping it to interpretor
 * Error handling:
   - Output logs
   - Make "1 2" throw a parse error
@@ -98,30 +63,17 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Better error messages
   - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
+* Is manglang suitable for numerical computations on arrays?
 * vector math
   - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
   - norms, dot, inner_products
 * Generic programming
-  - Generic container interface
-    - Alternative syntax:
-      - clear!list (bra)
-      - new!list (bra)
-      - remove!list jmf generic algorithms
-      - empty!list
-      - clone!list
-      - copy!list
-      - end@list (Compare end-keyword in while-loop)
-      - last@list
-      - sentinel@list
-      - root@list
+  - Generic container interface.
   - Describe ListBase as a "Concept".
 * Rename to Mangelang?
 * Functions:
   - Math: trigonometry
   - Character: string_from_number, number_from_string
-* Tools:
-  - Command line interface for reading source from file and piping it to interpretor
-  - Reformat to html with syntax high-lighting.
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Implement everything needed to convert between json and manglang in manglang.
@@ -129,11 +81,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Subsets of manglang:
   - Data: number, character, dictionaries, list, string
   - Minimal computation: number, dictionaries, references, child references, function application, function definition
-* Is manglang suitable for numerical computations on arrays?
 * Importing source files.
-* Homepage
-  - Syntax high-lighting.
-  - Implement tool that takes a source file and outputs an html.
+
 
 * Oding keyword "using" for unpacking dictionary into dictionary.
 {
@@ -171,13 +120,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   rest = ...
   result = f(first rest)
 }
-* Describe semantics of evaluation rules formaly as algebra.
-* Meta language for describing semantic rules more formally?
-* How would an implementation in modern c look?
-  - Modern C and What We Can Learn From It - Luca Sas [ ACCU 2021 ]
- https://www.youtube.com/watch?v=QpAhX-gsHMs&t=1775s
-  - https://floooh.github.io/2019/09/27/modern-c-for-cpp-peeps.html
-  - Error handling - have a "valid" member variable in CodeRange to handle parse errors.
 
 
 SIMILAR LANGUAGES
@@ -211,107 +153,6 @@ Languages supported by Github:
 https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
 Candidates:
 HiveQL
-
-
-TODOS: TYPE CHECKING AND COMPILING
-* Type annotation and linter.
-* Generics.
-* How to handle compiled functions. Inlining vs jump.
-
-
-TYPES
-Types start with upper case. Variables start with lower case. (enforce that in syntax?)
-
-FUNKTIONS-DEFINITIONER
-
-Regel   symbol : typ = värde
-
-// Type definition
-Distance := Number
-Distance : Type = Number
-Complex := {re:Number im:Number}
-Complex : Type = {re:Number im:Number}
-x : Distance = 3
-square : Number = mul!(x x)
-
-// primitive to primitive:
-square : in x:Number out Number = mul!(x x)
-square : x : Number -> Number = mul!(x x)
-square : x : -> = mul!(x x)
-square: = x: -> mul!(x x)
-square = in x out mul!(x x)
-
-// record to primitive:
-hyp : in {x:Number y:Number} out Number = sqrt!add!(mul!(x x) mul!(y y))
-
-// list to list:
-conjugate : in x : List Number out List Number = (first@x neg!second!x)
-
-// record to record:
-conjugate : in {r:Number i:Number} out {r:Number i:Number} = {r := r i := neg!i}
-conjugate : in Complex out Complex = {r := r i := neg!i}
-
-// Type alias:
-Complex : Type = {re:Number im:Number}
-complex := {re := 1 im := 1}
-complex : Complex = {re : Number = 1 im : Number = 1}
-re = re@complex
-im = im@complex
-conjugate : in {r:Number i:Number} out {r:Number i:Number} = {r := r i := neg!i}
-conjugate : in Complex out Complex = {r := r i := neg i}
-complex2 = conjugate!complex1
-
-// Generics:
-max_value : in List!Generic out Generic = ...
-max_index : in List!Generic out Number = ...
-max_split : in List!Generic out List!List!Generic = ...
-
-count_if : in {list: List!Generic predicate: in Generic out Boolean} out Number = ...
-map: in {list: List!Generic0 operation: in Generic0 out Generic1} out List!Generic1 = ...
-map2 : in {list0: List!Generic0 list1: List!Generic0 operation: in List!Generic0 out Generic1} out List!Generic1 = ...
-map2heterogeneous : in {list0: List!Generic0 list1: List!Generic1 operation: in {value0: Generic0 value1: Generic1} out Generic2} out List!Generic2 = ...
-
-// Enklare alternativ - annotera bara definitioner av funktioner.
-
-// primitive to primitive:
-in Number : x out Number : mul!(x x)
-
-// record to primitive:
-in {Number : x Number : y} out Number : sqrt!add!(mul!(x x) mul!(y y))
-
-// list to list:
-in List!Number : x out List!Number : (first@x neg!second!x)
-
-// record to record:
-in {Number : r Number : i} out {Number : r Number : i} : {r := r i := neg!i}
-
-// Generics:
-max_value = in : list out ValueType!list : ...
-max_index = in : list out Number : ...
-count_if = in {: list in ValueType!list : item out Boolean : predicate} out Number : ...
-map = in {: list in ValueType!list : item out : operation} out List!OutputType!operation : ...
-
-// Generics:
-max_value = in List : list out : ...
-max_index = in List : list out Number : ...
-count_if = in {List : list Function : predicate} out Number : ...
-map = in {List : list Function : f} out : ...
-
-// Ännu enklare alternativ - annotera ingenting men checka allt.
-
-
-TYPER
-*Number
-*Real/Rational?
-*Integer?
-*Character?
-*String?
-*Bool?
-*Dict / Class:
-Vec2 = (x=Real y=Real)
-*Array?
-*Enum?
-*Type (The type of types. What is the type of Type itself?)
 
 
 LEVELS
