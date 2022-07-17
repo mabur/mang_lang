@@ -282,21 +282,16 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    unique = in stack out get_keys!result@{
-        result = <>
-        while stack
-            result = set!(top@stack result 0)
-            stack = rest@stack
-        end
-    }
+    unique = in stack out get_keys!fold!(
+        in (item table) out set!(item table 0)
+        stack
+        <>
+    )
 
-    count_elements = in stack out result@{
-        result = <>
-        while stack
-            x = get!(top@stack result 0)
-            result = set!(top@stack result inc!x)
-            stack = rest@stack
-        end
-    }
+    count_elements = in stack out fold!(
+        in (item table) out set!(item table inc!get!(item table 0))
+        stack
+        <>
+    )
 }
 )";
