@@ -1,60 +1,43 @@
 TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
-* Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
-  - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
-  - Serializing: tree -> manglang code. (EBNF?, same as above?)
-  - Evaluation: tree -> tree. (graphical nodes? algebra)
+* Document table functions.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
-* Type theory
-  - https://www.reddit.com/r/ProgrammingLanguages/comments/ss3w6n/an_accessible_introduction_to_type_theory_and/
-  - https://mukulrathi.com/create-your-own-programming-language/intro-to-type-checking/
 * Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
   - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
   - Let them have the semantics:
     evaluate preserve expression -> expression
+  - "Evaluate" function as general solution that can be used to convert strings to names and general code, e.g. for parsing json.
+* Tools:
+  - Type checking.
+  - Command line interface for reading source from file and piping it to interpretor
+* Code formatting
+  - Indentaiton and line breaks.
+  - Colors and syntax high-lighting.
+  - Implement tool that takes a source file and outputs an html.
+  - Homepage
+* Advent of code Needs
+  * Look at advent of code 2021 day 10 for example of code with a bit of friction
+    - Try to implement calculation of most common words in a text.
+  * Memory
+    - 64 bit
+    - Use less memory
+* Example programs:
+  - Parsing Json
+  - Parsing Manglang
+  - Raytracing
+* Memory management.
+* Built-in functions for checking if name is in dict: has?(name dictionary) contains? inside?
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
-* Advent of code Needs
-  * Look at advent of code 2021 day 10 for example of code with a bit of friction
-    - Try to implement calculation of most common words in a text.
-  * aoc algorithms in need:
-    - sort
-    - unique
-    - not unique
-    - Dynamic lookups of dictionary
-    - Dynamic dictionaries/hash-maps/sets for unique-check
-  * Dynamic dictionary keys, as a way to model sets and arrays.
-    - Built-in functions for checking if name is in dict: has?(name dictionary) contains? inside?
-    - "Evaluate" function as general solution that can be used to convert strings to names and general code.
-    - Labels could be good for getter functions:
-      getter = in label out in dictionary out get!(label dictionary)
-      output = map!(getter!'member' input)
-      - getter!'member' is similar to member@ if seen as a function
-    - Are stacks still needed if we have dynamic dictionaries? What are they needed for?
-  * Memory
-    - 64 bit
-    - Use less memory
 * Split structs for evaluated and non-evaluated for:
   - Dictionaries (done)
   - Lists (done)
   - Tables (done)
   - Functions (todo)
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
-* Example programs:
-  - Parsing Json
-  - Parsing Manglang
-  - Raytracing
-* Code formatting
-  - Indentaiton and line breaks.
-  - Colors and syntax high-lighting.
-  - Implement tool that takes a source file and outputs an html.
-  - Homepage
-* Tools:
-  - Type checking.
-  - Command line interface for reading source from file and piping it to interpretor
 * Error handling:
   - Output logs
   - Make "1 2" throw a parse error
@@ -82,7 +65,10 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Data: number, character, dictionaries, list, string
   - Minimal computation: number, dictionaries, references, child references, function application, function definition
 * Importing source files.
-
+* Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
+  - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
+  - Serializing: tree -> manglang code. (EBNF?, same as above?)
+  - Evaluation: tree -> tree. (graphical nodes? algebra)
 
 * Oding keyword "using" for unpacking dictionary into dictionary.
 {
