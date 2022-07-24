@@ -5,6 +5,91 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
 * Interface for containers and tables:
   - Merge get_index!(n container) for containers and get!(key table default_value) for tables?
+  - put!(item stack)
+  - set!((key value) table)
+  - add generic map that requires that f has same input and output type,
+    so that it does not change type of the container.
+    Then the same map could be used for stack, string, table.
+    That map could be used instead of replace_*.
+  - Rename find_* to remove/drop until something is found, to work better with tables. 
+  - add higher_order function that takes a unary function and constructs a new binary function
+    that applies identity to first argument, so that it can be used for table pairs of (key value).
+  - add higher_order function that takes a unary predicate and constructs a new binary predicate
+    that ignores the first argument, so that it can be used for table pairs of (key value).
+(
+* top!container
+  - value for stack and string
+  - (key value) for table
+* rest!containers
+  - immutable for stack and strings
+  - mutable for table
+  - imutable view for table
+)
+
+* clear!container
+  - new empty container of same type
+* put/set!(item container)
+  - item = value for stack and strings
+  - item = (key value) for table
+* fold!(operation stack init)
+  - (Alternative 1 operate on value)
+  - Alternative 2 operate on (key value)
+
+* get/get_index!(key table default_value)
+  - O(N) for stack and string
+  - O(1) for table
+* count!containers
+  - O(N) for stack and string
+  - O(1) for table
+
+* Functions that can have shared implementation (folds):
+  - reverse/copy
+  - put_each
+  - map_same
+  - clear_if / filter
+
+  - count_if
+  - sum
+  - product
+  - min
+  - max
+
+* Unresolved folds with early exit:
+  - find_if
+  - find_item
+  - contains
+  - Could resolve by implementing as normal fold and avoiding early exit:
+    - any
+    - all
+    - none
+  - Could resolve by having one of them as built-in.
+  - Could resolve by having find_if as built-in.
+    find_if = in (predicate container) out container@{
+        container = container
+        while if container then not!predicate?top@container else no
+            container = rest@container
+        end
+    }
+
+
+* Stack and table comprehension and fold/reduction?
+* Iterators:
+  - top / *
+    - first element for stack
+    - first element for table
+    - current element for table/view/range
+  - rest / next
+    - imutable rest for stack
+    - imutable view for table
+    - imutable view for view
+  - boolean?rest / != end
+* Add ImmutableTableView
+* Ranges. Store both stacks and tables as ranges.
+  - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
+  - Or at least as long as we do not mutate while iterating.
+  - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
+
+
 * Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
   - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
   - Let them have the semantics:
