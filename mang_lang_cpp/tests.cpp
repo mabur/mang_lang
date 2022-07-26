@@ -1014,14 +1014,6 @@ int main() {
         {"min![3 6 1]", "1"},
         {"min![7 -3 8 -9]", "-9"},
     });
-    test.evaluate("min table", {
-        {"min!<>", "inf"},
-        {"min!<1:0>", "0"},
-        {"min!<1:0 2:1>", "0"},
-        {"min!<1:1 2:0>", "0"},
-        {"min!<1:3 2:6 3:1>", "1"},
-        {"min!<1:7 2:-3 3:8 4:-9>", "-9"},
-    });
     test.evaluate_types("max stack", {
         {"max![]", "NUMBER"},
         {"max![0]", "NUMBER"},
@@ -1245,12 +1237,6 @@ int main() {
         {"sum![1 2]", "NUMBER"},
         {"sum![1 2 3]", "NUMBER"},
     });
-    test.evaluate("sum table", {
-        {"sum!<>", "0"},
-        {"sum!<1:1>", "1"},
-        {"sum!<1:1 2:2>", "3"},
-        {"sum!<1:1 2:2 3:3>", "6"},
-    });
     test.evaluate("product", {
         {"product![]", "1"},
         {"product![1]", "1"},
@@ -1263,13 +1249,21 @@ int main() {
         {"product![1 2]", "NUMBER"},
         {"product![1 2 3]", "NUMBER"},
     });
-    test.evaluate("put_each", {
+    test.evaluate("put_each stack", {
         {"put_each!([] [])", "[]"},
         {"put_each!([] [2])", "[2]"},
         {"put_each!([1] [])", "[1]"},
         {"put_each!([1] [2])", "[1 2]"},
         {"put_each!([1 2] [3 4])", "[2 1 3 4]"},
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
+    });
+    test.evaluate("put_each table", {
+        {"put_each!(<> <>)", "<>"},
+        {"put_each!(<> <1:2>)", "<1:2>"},
+        {"put_each!(<1:2> <>)", "<1:2>"},
+        {"put_each!(<1:2> <1:1>)", "<1:2>"},
+        {"put_each!(<1:11> <2:22>)", "<1:11 2:22>"},
+        {"put_each!(<1:11 3:33> <2:22 4:44>)", "<1:11 2:22 3:33 4:44>"},
     });
     test.evaluate_types("put_each", {
         {"put_each!([] [])", "[ANY]"},

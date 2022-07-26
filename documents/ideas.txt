@@ -89,6 +89,19 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Or at least as long as we do not mutate while iterating.
   - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
 
+* Identity
+  - put!(top@stack rest@stack) == stack
+  - Alternative 1 - Do not keep it for tables. Simplifies generalization of:
+    - sum, prod, all, any, none.
+    - Easy to circumvent by e.g. sum!get_values!table
+  - Alternative 2 - Better? - Keep it for tables. Simplifies generalization of:
+    - put_each, concat, map*, clear_if
+    - Optionally: Implement by having items of table be stored as Manglang tuples?
+      - Pros:
+        - Then we don't need to create tuples on the fly when calling top@table.
+      - Cons:
+        - Then we need to creat new tuples when mutating the table.
+      - Maybe not important for now.
 
 * Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
   - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve

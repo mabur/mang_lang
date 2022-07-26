@@ -3,6 +3,8 @@
 #include "../factory.h"
 #include "../container.h"
 
+#include "table.h"
+
 namespace stack_functions {
 
 Expression clear(Expression in) {
@@ -27,6 +29,7 @@ Expression put(Expression in) {
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return putString(collection, item);
         case EMPTY_STRING: return putString(collection, item);
+        case EVALUATED_TABLE: return table_functions::putTable(collection, item);
         default: throw UnexpectedExpression(in.type, "put operation");
     }
 }

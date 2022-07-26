@@ -29,6 +29,17 @@ Expression set(Expression in) {
     return table;
 }
 
+Expression putTable(Expression rest, Expression top) {
+    const auto tuple = getEvaluatedTuple(top);
+    const auto key = tuple.expressions.at(0);
+    const auto value = tuple.expressions.at(1);
+    const auto table = rest;
+    const auto name = serialize(key);
+    auto& mutable_table = getMutableEvaluatedTable(table);
+    mutable_table.rows[name] = {key, value};
+    return table;
+}
+
 Expression get_keys(Expression in) {
     auto stack = makeEmptyStack({}, {});
     const auto table = getEvaluatedTable(in);
