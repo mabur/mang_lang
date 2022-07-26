@@ -826,6 +826,11 @@ int main() {
         {"clear![1]", "[]"},
         {"clear![1 2]", "[]"},
     });
+    test.evaluate("clear table", {
+        {"clear!<>", "<>"},
+        {"clear!<1:11>", "<>"},
+        {"clear!<1:11 2:22>", "<>"},
+    });
     test.evaluate_types("clear string", {
         {R"(clear!"")", "EMPTY_STRING"},
         {R"(clear!"a")", "EMPTY_STRING"},

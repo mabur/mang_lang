@@ -13,6 +13,7 @@ Expression clear(Expression in) {
         case EMPTY_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
         case STRING: return makeEmptyString(CodeRange{}, EmptyString{});
         case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
+        case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
         default: throw UnexpectedExpression(in.type, "clear operation");
     }
 }
