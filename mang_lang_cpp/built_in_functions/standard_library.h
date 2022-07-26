@@ -289,13 +289,13 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     unique = in stack out get_keys!fold!(
-        in (item table) out set!(item table 0)
+        in (item table) out put!((item 0) table)
         stack
         <>
     )
 
     count_elements = in stack out fold!(
-        in (item table) out set!(item table inc!get!(item table 0))
+        in (item table) out put!((item inc!get!(item table 0)) table)
         stack
         <>
     )
