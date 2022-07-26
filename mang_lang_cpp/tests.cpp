@@ -998,7 +998,7 @@ int main() {
         {R"(parse_digit!\8)", "8"},
         {R"(parse_digit!\9)", "9"},
     });
-    test.evaluate_types("min", {
+    test.evaluate_types("min stack", {
         {"min![]", "NUMBER"},
         {"min![0]", "NUMBER"},
         {"min![0 1]", "NUMBER"},
@@ -1006,7 +1006,7 @@ int main() {
         {"min![3 6 1]", "NUMBER"},
         {"min![7 -3 8 -9]", "NUMBER"},
     });
-    test.evaluate("min", {
+    test.evaluate("min stack", {
         {"min![]", "inf"},
         {"min![0]", "0"},
         {"min![0 1]", "0"},
@@ -1014,7 +1014,15 @@ int main() {
         {"min![3 6 1]", "1"},
         {"min![7 -3 8 -9]", "-9"},
     });
-    test.evaluate_types("max", {
+    test.evaluate("min table", {
+        {"min!<>", "inf"},
+        {"min!<1:0>", "0"},
+        {"min!<1:0 2:1>", "0"},
+        {"min!<1:1 2:0>", "0"},
+        {"min!<1:3 2:6 3:1>", "1"},
+        {"min!<1:7 2:-3 3:8 4:-9>", "-9"},
+    });
+    test.evaluate_types("max stack", {
         {"max![]", "NUMBER"},
         {"max![0]", "NUMBER"},
         {"max![0 1]", "NUMBER"},
@@ -1022,7 +1030,7 @@ int main() {
         {"max![3 6 1]", "NUMBER"},
         {"max![7 -3 8 -9]", "NUMBER"},
     });
-    test.evaluate("max", {
+    test.evaluate("max stack", {
         {"max![]", "-inf"},
         {"max![0]", "0"},
         {"max![0 1]", "1"},
@@ -1055,6 +1063,12 @@ int main() {
         {"count![]", "0"},
         {"count![[]]", "1"},
         {"count![[] []]", "2"},
+    });
+    test.evaluate("count table", {
+        {"count!<>", "0"},
+        {"count!<1:1>", "1"},
+        {"count!<1:1 1:1>", "1"},
+        {"count!<1:1 2:2>", "2"},
     });
     test.evaluate_types("count string", {
         {R"(count!"")", "NUMBER"},
@@ -1219,17 +1233,23 @@ int main() {
         {R"(enumerate!"a")", R"([(0 \a)])"},
         {R"(enumerate!"ab")", R"([(0 \a) (1 \b)])"},
     });
-    test.evaluate("sum", {
+    test.evaluate("sum stack", {
         {"sum![]", "0"},
         {"sum![1]", "1"},
         {"sum![1 2]", "3"},
         {"sum![1 2 3]", "6"},
     });
-    test.evaluate_types("sum", {
+    test.evaluate_types("sum stack", {
         {"sum![]", "NUMBER"},
         {"sum![1]", "NUMBER"},
         {"sum![1 2]", "NUMBER"},
         {"sum![1 2 3]", "NUMBER"},
+    });
+    test.evaluate("sum table", {
+        {"sum!<>", "0"},
+        {"sum!<1:1>", "1"},
+        {"sum!<1:1 2:2>", "3"},
+        {"sum!<1:1 2:2 3:3>", "6"},
     });
     test.evaluate("product", {
         {"product![]", "1"},

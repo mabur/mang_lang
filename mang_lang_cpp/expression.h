@@ -15,6 +15,7 @@ enum ExpressionType {
     IS,
     TABLE,
     EVALUATED_TABLE,
+    EVALUATED_TABLE_VIEW,
     DICTIONARY,
     EVALUATED_DICTIONARY,
     TUPLE,
@@ -47,6 +48,7 @@ const auto NAMES = std::vector<std::string>{
     "IS",
     "TABLE",
     "EVALUATED_TABLE",
+    "EVALUATED_TABLE_VIEW",
     "DICTIONARY",
     "EVALUATED_DICTIONARY",
     "TUPLE",
@@ -251,4 +253,11 @@ struct Table {
 // TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedTable {
     std::map<std::string, Row> rows;
+    bool empty() const {return rows.empty();}
+};
+
+struct EvaluatedTableView {
+    std::map<std::string, Row>::const_iterator first;
+    std::map<std::string, Row>::const_iterator last;
+    bool empty() const {return first == last;}
 };

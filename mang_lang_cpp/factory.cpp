@@ -22,6 +22,7 @@ std::vector<EvaluatedStack> evaluated_stacks;
 std::vector<EmptyStack> empty_stacks;
 std::vector<Table> tables;
 std::vector<EvaluatedTable> evaluated_tables;
+std::vector<EvaluatedTableView> evaluated_table_views;
 std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
@@ -276,6 +277,10 @@ Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
     return makeExpression(code, expression, EVALUATED_TABLE, evaluated_tables);
 }
 
+Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression) {
+    return makeExpression(code, expression, EVALUATED_TABLE_VIEW, evaluated_table_views);
+}
+
 Expression makeLookupChild(CodeRange code, LookupChild expression) {
     return makeExpression(code, expression, LOOKUP_CHILD, child_lookups);
 }
@@ -368,6 +373,10 @@ EvaluatedTable getEvaluatedTable(Expression expression) {
 
 EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
     return getMutableExpression(expression, EVALUATED_TABLE, evaluated_tables);
+}
+
+EvaluatedTableView getEvaluatedTableView(Expression expression) {
+    return getExpression(expression, EVALUATED_TABLE_VIEW, evaluated_table_views);
 }
 
 Tuple getTuple(Expression expression) {
