@@ -30,7 +30,7 @@ Expression put(Expression in) {
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return putString(collection, item);
         case EMPTY_STRING: return putString(collection, item);
-        case EVALUATED_TABLE: return table_functions::putTable(collection, item);
+        case EVALUATED_TABLE: return table_functions::put(collection, item);
         default: throw UnexpectedExpression(in.type, "put operation");
     }
 }

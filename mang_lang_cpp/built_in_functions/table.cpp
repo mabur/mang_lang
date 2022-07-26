@@ -24,7 +24,7 @@ void updateTable(Expression key, Expression value, Expression table) {
     mutable_table.rows[name] = {key, value};
 }
 
-Expression putTable(Expression table, Expression top) {
+Expression put(Expression table, Expression top) {
     const auto tuple = getEvaluatedTuple(top);
     const auto key = tuple.expressions.at(0);
     const auto value = tuple.expressions.at(1);

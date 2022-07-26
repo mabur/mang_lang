@@ -5,7 +5,7 @@ struct Expression;
 namespace table_functions {
 
 Expression get(Expression in);
-Expression putTable(Expression rest, Expression top);
+Expression put(Expression rest, Expression top);
 Expression get_keys(Expression in);
 
 }
