@@ -19,9 +19,7 @@ Expression get(Expression in) {
 }
 
 void updateTable(Expression key, Expression value, Expression table) {
-    const auto name = serialize(key);
-    auto& mutable_table = getMutableEvaluatedTable(table);
-    mutable_table.rows[name] = {key, value};
+    getMutableEvaluatedTable(table).rows[serialize(key)] = {key, value};
 }
 
 Expression put(Expression table, Expression top) {
