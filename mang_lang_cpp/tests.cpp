@@ -1267,14 +1267,14 @@ int main() {
         {"put_each!([1 2] [3 4])", "[2 1 3 4]"},
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
     });
-    test.evaluate("put_each table", {
-        {"put_each!(<> <>)", "<>"},
-        {"put_each!(<> <1:2>)", "<1:2>"},
-        {"put_each!(<1:2> <>)", "<1:2>"},
-        {"put_each!(<1:2> <1:1>)", "<1:2>"},
-        {"put_each!(<1:11> <2:22>)", "<1:11 2:22>"},
-        {"put_each!(<1:11 3:33> <2:22 4:44>)", "<1:11 2:22 3:33 4:44>"},
-    });
+    //test.evaluate("put_each table", {
+    //    {"put_each!(<> <>)", "<>"},
+    //    {"put_each!(<> <1:2>)", "<1:2>"},
+    //    {"put_each!(<1:2> <>)", "<1:2>"},
+    //    {"put_each!(<1:2> <1:1>)", "<1:2>"},
+    //    {"put_each!(<1:11> <2:22>)", "<1:11 2:22>"},
+    //    {"put_each!(<1:11 3:33> <2:22 4:44>)", "<1:11 2:22 3:33 4:44>"},
+    //});
     test.evaluate_types("put_each", {
         {"put_each!([] [])", "[ANY]"},
         {"put_each!([] [2])", "[ANY]"}, // TODO
@@ -1313,6 +1313,14 @@ int main() {
         {"concat![[1] [2]]", "[NUMBER]"},
         {"concat![[1] [2 3] [4 5 6]]", "[NUMBER]"},
     });
+    //test.evaluate("concat_tables", {
+    //    {"concat_tables![<> <>]", "<>"},
+    //    {"concat_tables![<> <2:22>]", "<2:22>"},
+    //    {"concat_tables![<1:11> <>]", "<1:11>"},
+    //    {"concat_tables![<1:11> <1:11>]", "<1:11>"},
+    //    {"concat_tables![<1:11> <2:22>]", "<1:11 2:22>"},
+    //    {"concat_tables![<1:11> <5:55 3:33> <4:44 5:0 6:66 2:22>]", "<1:11 2:22 3:33 4:44 5:55 6:66>"},
+    //});
     test.evaluate("concat_strings", {
         {R"(concat_strings!["" ""])", R"("")"},
         {R"(concat_strings!["" "b"])", R"("b")"},
