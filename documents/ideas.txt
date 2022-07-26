@@ -102,6 +102,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
       - Cons:
         - Then we need to creat new tuples when mutating the table.
       - Maybe not important for now.
+    - Replace set with put for tables.
+      - Does it relate to crashes below?
     - Investigate crashes in current implementation, probably due to bad iterators for TableView and mutations.
 
 * Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
