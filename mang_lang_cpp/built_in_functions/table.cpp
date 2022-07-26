@@ -18,25 +18,26 @@ Expression get(Expression in) {
         tuple.expressions.at(2) : iterator->second.value;
 }
 
+void updateTable(Expression key, Expression value, Expression table) {
+    const auto name = serialize(key);
+    auto& mutable_table = getMutableEvaluatedTable(table);
+    mutable_table.rows[name] = {key, value};
+}
+
 Expression set(Expression in) {
     const auto tuple = getEvaluatedTuple(in);
     const auto key = tuple.expressions.at(0);
     const auto table = tuple.expressions.at(1);
     const auto value = tuple.expressions.at(2);
-    const auto name = serialize(key);
-    auto& mutable_table = getMutableEvaluatedTable(table);
-    mutable_table.rows[name] = {key, value};
+    updateTable(key, value, table);
     return table;
 }
 
-Expression putTable(Expression rest, Expression top) {
+Expression putTable(Expression table, Expression top) {
     const auto tuple = getEvaluatedTuple(top);
     const auto key = tuple.expressions.at(0);
     const auto value = tuple.expressions.at(1);
-    const auto table = rest;
-    const auto name = serialize(key);
-    auto& mutable_table = getMutableEvaluatedTable(table);
-    mutable_table.rows[name] = {key, value};
+    updateTable(key, value, table);
     return table;
 }
 
