@@ -107,6 +107,12 @@ const std::string STANDARD_LIBRARY = R"(
         ""
     )
 
+    concat_tables = in tables out fold!(
+        put_each
+        reverse!tables
+        <>
+    )
+
     map = in (f stack) out reverse!fold!(
         in (item stack) out put!(f!item stack)
         stack
