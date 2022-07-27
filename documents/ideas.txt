@@ -88,6 +88,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
   - Or at least as long as we do not mutate while iterating.
   - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
+  - Investigate crashes in current implementation, probably due to bad iterators for TableView and mutations.
+    - Maybe due to making temporary copies of the Table and then taking iterators for the copy?
 
 * Identity
   - put!(top@stack rest@stack) == stack
@@ -104,7 +106,10 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
       - Maybe not important for now.
     - Replace set with put for tables.
       - Does it relate to crashes below?
-    - Investigate crashes in current implementation, probably due to bad iterators for TableView and mutations.
+    
+* Persistent hash map like in Clojure. Array mapped hash tries (Bagwell: non-persistent, Rich Hickey: persistent).
+  - HAMT - Hash Array Mapped Tries.
+  - When making copies, it creates new nodes for the path from the root to the leaf, and shares the rest.
 
 * Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
   - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
