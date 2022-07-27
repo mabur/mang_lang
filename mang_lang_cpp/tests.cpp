@@ -1181,6 +1181,11 @@ int main() {
         {"clear_if!(in x out 0 [[]])", "[[]]"},
         {"clear_if!(in x out less?(x 5) [7 4 6 1 9 3 2])", "[7 6 9]"},
     });
+    test.evaluate("clear_if table", {
+        {"clear_if!(less <0:0>)", "<0:0>"},
+        {"clear_if!(less <0:1>)", "<>"},
+        {"clear_if!(less <0:0 1:2 2:3 5:4>)", "<0:0 5:4>"},
+    });
     test.evaluate("clear_if string", {
         {R"(clear_if!(in x out 0 ""))", R"("")"},
         {R"(clear_if!(in x out 0 "a"))", R"("a")"},
