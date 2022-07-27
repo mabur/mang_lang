@@ -1126,6 +1126,12 @@ int main() {
         {"reverse![0 1]", "[1 0]"},
         {"reverse![0 1 2]", "[2 1 0]"},
     });
+    test.evaluate("reverse table", {
+        {"reverse!<>", "<>"},
+        {"reverse!<0:0>", "<0:0>"},
+        {"reverse!<0:0 1:1>", "<0:0 1:1>"},
+        {"reverse!<0:0 1:1 2:2>", "<0:0 1:1 2:2>"},
+    });
     test.evaluate_types("reverse string", {
         {R"(reverse!"")", "STRING"},
         {R"(reverse!"a")", "STRING"},
