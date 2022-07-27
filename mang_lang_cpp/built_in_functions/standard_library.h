@@ -119,9 +119,9 @@ const std::string STANDARD_LIBRARY = R"(
         []
     )
 
-    map_string = in (f stack) out reverse!fold!(
-        in (item stack) out put!(f!item stack)
-        stack
+    map_string = in (f string) out reverse!fold!(
+        in (item string) out put!(f!item string)
+        string
         ""
     )
 
