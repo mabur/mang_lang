@@ -14,6 +14,15 @@
 Below you can find all functions included with Manglang. They are either built-in or implemented in the
 <a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
 
+<h2>Container Interface</h2>
+Manglang support containers like: stacks, strings, tables. These all share a common interface of built-in low-level operations:
+<dl>
+<dt>top</dt><dd><code>top@container</code> returns the top/first item in the container.</dd>
+<dt>rest</dt><dd><code>rest@container</code> returns the rest of the container, besides its top/first item.</dd>
+<dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container. </dd>
+<dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input.</dd>
+</dl>
+The relationship of these operations can be expressed as <code>put!(top@container rest@container)</code> gives back just the <code>container</code>. We check if a container is not empty by <code>if container then ... else ...</code>.
 
 <h2>Generic Container Functions</h2>
 These functions work on both stacks and strings, and the type of the output container is the same as the input.
