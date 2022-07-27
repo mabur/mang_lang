@@ -125,6 +125,12 @@ const std::string STANDARD_LIBRARY = R"(
         ""
     )
 
+    map_table = in (f table) out fold!(
+        in (item table) out put!(f!item table)
+        table
+        <>
+    )
+
     zip = in (left right) out reverse!result@{
         result = []
         while and?[left right]

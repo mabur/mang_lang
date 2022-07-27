@@ -1175,6 +1175,10 @@ int main() {
         {R"(map_string!(to_upper ""))", "STRING"},
         {R"(map_string!(to_upper "abc"))", "STRING"},
     });
+    test.evaluate("map table", {
+        {"map_table!(in x out (x x) [1 2])", "<1:1 2:2>"},
+        {"map_table!(in (x y) out (x inc!y) <1:11 2:22>)", "<1:12 2:23>"},
+    });
     test.evaluate("clear_if stack", {
         {"clear_if!(in x out 1 [])", "[]"},
         {"clear_if!(in x out 1 [[]])", "[]"},
