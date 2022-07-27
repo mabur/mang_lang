@@ -8,6 +8,19 @@
 
 namespace {
 
+template<typename Vector, typename Predicate>
+bool allOfVectors(const Vector& left, const Vector& right, Predicate predicate) {
+    if (left.size() != right.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < left.size(); ++i) {
+        if (!predicate(left[i], right[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
@@ -36,17 +49,11 @@ bool isEqual(Expression left, Expression right) {
         return allOfPairs(left, right, isEqual, EMPTY_STRING, getString);
     }
     if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
-        const auto left_expressions = getEvaluatedTuple(left).expressions;
-        const auto right_expressions = getEvaluatedTuple(right).expressions;
-        if (left_expressions.size() != right_expressions.size()) {
-            return false;
-        }
-        for (size_t i = 0; i < left_expressions.size(); ++i) {
-            if (!isEqual(left_expressions[i], right_expressions[i])) {
-                return false;
-            }
-        }
-        return true;
+        return allOfVectors(
+            getEvaluatedTuple(left).expressions,
+            getEvaluatedTuple(right).expressions,
+            isEqual
+        );
     }
     return false;
 }
