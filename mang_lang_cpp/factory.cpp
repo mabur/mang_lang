@@ -111,14 +111,14 @@ Expression makeExpression(
 }
 
 template<typename ArrayType>
-typename ArrayType::value_type& getMutableExpression(
+typename ArrayType::value_type& getMutableExpressionReference(
     Expression expression,
     ExpressionType type,
     ArrayType& array
 ) {
     if (expression.type != type) {
         throw std::runtime_error{
-            "getMutableExpression expected " + NAMES[type]
+            "getMutableExpressionReference expected " + NAMES[type]
             + " got " + NAMES[expression.type]
         };
     }
@@ -360,7 +360,8 @@ EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
 }
 
 EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression) {
-    return getMutableExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+    return getMutableExpressionReference(expression, EVALUATED_DICTIONARY,
+        evaluated_dictionaries);
 }
 
 Table getTable(Expression expression) {
@@ -372,7 +373,8 @@ EvaluatedTable getEvaluatedTable(Expression expression) {
 }
 
 EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
-    return getMutableExpression(expression, EVALUATED_TABLE, evaluated_tables);
+    return getMutableExpressionReference(expression, EVALUATED_TABLE,
+        evaluated_tables);
 }
 
 EvaluatedTableView getEvaluatedTableView(Expression expression) {
