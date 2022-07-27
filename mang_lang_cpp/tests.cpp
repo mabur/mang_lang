@@ -1110,6 +1110,11 @@ int main() {
         {"count_if!(in x out equal?(x 3) [1 2 3])", "1"},
         {"count_if!(in x out equal?(x 3) [3 2 3])", "2"},
     });
+    test.evaluate("count_if table", {
+        {"count_if!(less <0:0>)", "0"},
+        {"count_if!(less <0:1>)", "1"},
+        {"count_if!(less <0:0 1:2 2:3 4:5 7:6>)", "3"},
+    });
     test.evaluate("count_if string", {
         {R"(count_if!(in x out 0 ""))", "0"},
         {R"(count_if!(in x out 0 "a"))", "0"},
