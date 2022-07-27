@@ -350,6 +350,10 @@ int main() {
         {"is missing missing then 1 else 2", "1"},
         {"is missing 0 then 1 else 2", "2"},
         {"is 0 missing then 1 else 2", "2"},
+        {"is (1 2) (1 2) then 1 else 2", "1"},
+        {"is (1 2) (1 3) then 1 else 2", "2"},
+        {"is (1 (2)) (1 (2)) then 1 else 2", "1"},
+        {"is (1 (2)) (1 (3)) then 1 else 2", "2"},
     });
     test.reformat("symbol", {
         {"a", "a"},

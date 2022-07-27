@@ -35,6 +35,19 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == STRING && right_type == STRING) {
         return allOfPairs(left, right, isEqual, EMPTY_STRING, getString);
     }
+    if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
+        const auto left_expressions = getEvaluatedTuple(left).expressions;
+        const auto right_expressions = getEvaluatedTuple(right).expressions;
+        if (left_expressions.size() != right_expressions.size()) {
+            return false;
+        }
+        for (size_t i = 0; i < left_expressions.size(); ++i) {
+            if (!isEqual(left_expressions[i], right_expressions[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
     return false;
 }
 
