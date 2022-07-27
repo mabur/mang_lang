@@ -11,10 +11,12 @@ namespace table_functions {
 
 Expression get(Expression in) {
     const auto tuple = getEvaluatedTuple(in);
-    const auto name = serialize(tuple.expressions.at(0));
-    const auto table = getEvaluatedTable(tuple.expressions.at(1));
-    const auto iterator = table.rows.find(name);
-    return iterator == table.rows.end() ?
+    const auto key = tuple.expressions.at(0);
+    const auto table = tuple.expressions.at(1);
+    const auto name = serialize(key);
+    const auto rows = getEvaluatedTable(table).rows;
+    const auto iterator = rows.find(name);
+    return iterator == rows.end() ?
         tuple.expressions.at(2) : iterator->second.value;
 }
 
