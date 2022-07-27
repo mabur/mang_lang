@@ -19,7 +19,7 @@ Dictionary getDictionary(Expression expression);
 EvaluatedDictionary getEvaluatedDictionary(Expression expression);
 EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression);
 Table getTable(Expression expression);
-EvaluatedTable getEvaluatedTable(Expression expression);
+const EvaluatedTable& getEvaluatedTable(Expression expression);
 EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 EvaluatedTableView getEvaluatedTableView(Expression expression);
 Tuple getTuple(Expression expression);

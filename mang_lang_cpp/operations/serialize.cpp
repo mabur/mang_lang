@@ -129,7 +129,7 @@ std::string serializeTable(Expression s) {
 }
 
 std::string serializeEvaluatedTable(Expression s) {
-    const auto rows = getEvaluatedTable(s).rows;
+    const auto& rows = getEvaluatedTable(s).rows;
     if (rows.empty()) {
         return "<>";
     }

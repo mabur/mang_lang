@@ -127,6 +127,22 @@ typename ArrayType::value_type& getMutableExpressionReference(
 }
 
 template<typename ArrayType>
+const typename ArrayType::value_type& getImmutableExpressionReference(
+    Expression expression,
+    ExpressionType type,
+    ArrayType& array
+) {
+    if (expression.type != type) {
+        throw std::runtime_error{
+            "getMutableExpressionReference expected " + NAMES[type]
+                + " got " + NAMES[expression.type]
+        };
+    }
+    assert(expression.type == type);
+    return array.at(expression.index);
+}
+
+template<typename ArrayType>
 typename ArrayType::value_type getExpression(
     Expression expression,
     ExpressionType type,
@@ -368,13 +384,12 @@ Table getTable(Expression expression) {
     return getExpression(expression, TABLE, tables);
 }
 
-EvaluatedTable getEvaluatedTable(Expression expression) {
-    return getExpression(expression, EVALUATED_TABLE, evaluated_tables);
+const EvaluatedTable& getEvaluatedTable(Expression expression) {
+    return getImmutableExpressionReference(expression, EVALUATED_TABLE, evaluated_tables);
 }
 
 EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
-    return getMutableExpressionReference(expression, EVALUATED_TABLE,
-        evaluated_tables);
+    return getMutableExpressionReference(expression, EVALUATED_TABLE, evaluated_tables);
 }
 
 EvaluatedTableView getEvaluatedTableView(Expression expression) {
