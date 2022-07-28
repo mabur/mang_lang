@@ -98,6 +98,9 @@ You can access the items of a container via <code>top@container</code> and <code
 <h2>Specialized Container Functions</h2>
 For the following container functions you need to know if you want to use stacks or a strings:
 <dl>
+<dt>copy_stack</dt><dd><code>copy_stack!(f container)</code> copies the items in container to a new stack. O(N).</dd>
+<dt>copy_string</dt><dd><code>copy_string!(f container)</code> copies the items in container to a new string. O(N).</dd>
+<dt>copy_table</dt><dd><code>copy_table!(f container)</code> copies the items in container to a new string. O(N).</dd>
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container. O(N).</dd>
 <dt>concat</dt><dd><code>concat!stacks</code> concatenates multiple stacks.</dd>
