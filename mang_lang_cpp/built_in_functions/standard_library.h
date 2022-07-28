@@ -118,7 +118,7 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map = in (f stack) out reverse!fold!(
+    map_stack = in (f stack) out reverse!fold!(
         in (item stack) out put!(f!item stack)
         stack
         []
@@ -313,12 +313,12 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_items = make_stack
 
-    get_keys = in table out map!(
+    get_keys = in table out map_stack!(
         in (key value) out key
         table
     )
 
-    get_values = in table out map!(
+    get_values = in table out map_stack!(
         in (key value) out value
         table
     )

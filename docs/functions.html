@@ -108,7 +108,7 @@ For the following functions you need to know what kind of container you want to 
 <dt>merge_table</dt><dd><code>merge_table![c1 ... cn]</code> merges a stack of containers into a single table. O(N).</dd>
 </dl>
 <dl>
-<dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
+<dt>map_stack</dt><dd><code>map_stack!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container. O(N).</dd>
 <dt>map_table</dt><dd><code>map_table!(f container)</code> returns a table with the function f applied to each item in the container. The function f should return a tuple <code>(key value)</code>. O(N).</dd>
 </dl>

@@ -467,14 +467,14 @@ int main() {
         {"x@{f=in a out 1 g = in b out f!b x = g!2}", "NUMBER"},
         {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "NUMBER"},
         {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "NUMBER"},
-        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[NUMBER]"},
+        {"y@{f=in stack out map_stack!(in y out 2 stack) y=f![0 0]}", "[NUMBER]"},
         {"a@{call=in f out f![] g=in x out 0 a=call!g}", "NUMBER"},
         {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "NUMBER"},
         {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "NUMBER"},
-        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[NUMBER]"},
-        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[NUMBER]"},
+        {"y@{a=1 g=in y out a f=in stack out map_stack!(g stack) y=f![0 0]}", "[NUMBER]"},
+        {"y@{a=1 f=in stack out map_stack!(in y out a stack) y=f![0 0]}", "[NUMBER]"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "NUMBER"},
-        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[NUMBER]"},
+        {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[NUMBER]"},
     });
     test.evaluate("lookup function", {
         {"a@{f=in x out x a=f!0}", "0"},
@@ -487,14 +487,14 @@ int main() {
         {"x@{f=in a out 1 g = in b out f!b x = g!2}", "1"},
         {"y@{apply=in (f x) out f!x y = apply!(inc 2)}", "3"},
         {"y@{apply=in (f x) out f!x id=in x out apply!(in x out x x) y = id!1}", "1"},
-        {"y@{f=in stack out map!(in y out 2 stack) y=f![0 0]}", "[2 2]"},
+        {"y@{f=in stack out map_stack!(in y out 2 stack) y=f![0 0]}", "[2 2]"},
         {"a@{call=in f out f![] g=in x out 0 a=call!g}", "0"},
         {"a@{call=in f out f![] b={a=0 g=in x out a} g=g@b a=call!g}", "0"},
         {"a@{call=in(f)out f!([]) b={a=0 g=in(x)out a} g=g@b a=call!(g)}", "0"},
-        {"y@{a=1 g=in y out a f=in stack out map!(g stack) y=f![0 0]}", "[1 1]"},
-        {"y@{a=1 f=in stack out map!(in y out a stack) y=f![0 0]}", "[1 1]"},
+        {"y@{a=1 g=in y out a f=in stack out map_stack!(g stack) y=f![0 0]}", "[1 1]"},
+        {"y@{a=1 f=in stack out map_stack!(in y out a stack) y=f![0 0]}", "[1 1]"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
-        {"y@{f=in (x stack) out map!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
+        {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
     });
     test.evaluate("recursive function", {
         {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
@@ -1173,19 +1173,19 @@ int main() {
         {"make_table!<>", "<>"},
         {"make_table!<3:33 1:11 2:22>", "<1:11 2:22 3:33>"},
     });
-    test.evaluate("map stack", {
-        {"map!(inc [])", "[]"},
-        {"map!(inc [0])", "[1]"},
-        {"map!(inc [0 1])", "[1 2]"},
-        {"map!(in x out 2 [0 0])", "[2 2]"},
-        {"a@{b=2 f=in x out b a=map!(f [0 0])}", "[2 2]"},
+    test.evaluate("map_stack", {
+        {"map_stack!(inc [])", "[]"},
+        {"map_stack!(inc [0])", "[1]"},
+        {"map_stack!(inc [0 1])", "[1 2]"},
+        {"map_stack!(in x out 2 [0 0])", "[2 2]"},
+        {"a@{b=2 f=in x out b a=map_stack!(f [0 0])}", "[2 2]"},
     });
-    test.evaluate_types("map stack", {
-        {"map!(inc [])", "[NUMBER]"},
-        {"map!(inc [0])", "[NUMBER]"},
-        {"map!(inc [0 1])", "[NUMBER]"},
-        {"map!(in x out 2 [0 0])", "[NUMBER]"},
-        {"a@{b=2 f=in x out b a=map!(f [0 0])}", "[NUMBER]"},
+    test.evaluate_types("map_stack", {
+        {"map_stack!(inc [])", "[NUMBER]"},
+        {"map_stack!(inc [0])", "[NUMBER]"},
+        {"map_stack!(inc [0 1])", "[NUMBER]"},
+        {"map_stack!(in x out 2 [0 0])", "[NUMBER]"},
+        {"a@{b=2 f=in x out b a=map_stack!(f [0 0])}", "[NUMBER]"},
     });
     test.evaluate("map_string", {
         {R"(map_string!(to_upper ""))", R"("")"},
