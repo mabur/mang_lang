@@ -96,15 +96,23 @@ You can access the items of a container via <code>top@container</code> and <code
 </dl>
 
 <h2>Specialized Container Functions</h2>
-For the following container functions you need to know if you want to use stacks or a strings:
+For the following functions you need to know what kind of container you want to use:
 <dl>
-<dt>copy_stack</dt><dd><code>copy_stack!(f container)</code> copies the items in container to a new stack. O(N).</dd>
-<dt>copy_string</dt><dd><code>copy_string!(f container)</code> copies the items in container to a new string. O(N).</dd>
-<dt>copy_table</dt><dd><code>copy_table!(f container)</code> copies the items in container to a new string. O(N).</dd>
+<dt>copy_stack</dt><dd><code>copy_stack!(f container)</code> copies the items in the container to a new stack. O(N).</dd>
+<dt>copy_string</dt><dd><code>copy_string!(f container)</code> copies the items in the container to a new string. O(N).</dd>
+<dt>copy_table</dt><dd><code>copy_table!(f container)</code> copies the items in the container to a new table. The container should contain tuples of <code>(key value)</code>. O(N).</dd>
+</dl>
+<dl>
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container. O(N).</dd>
+<dt>map_table</dt><dd><code>map_table!(f container)</code> returns a table with the function f applied to each item in the container. The function f should return a tuple <code>(key value)</code>. O(N).</dd>
+</dl>
+<dl>
 <dt>concat</dt><dd><code>concat!stacks</code> concatenates multiple stacks.</dd>
 <dt>concat_strings</dt><dd><code>concat_strings!strings</code> concatenates multiple strings.</dd>
+<dt>concat_tables</dt><dd><code>concat_tables!tables</code> concatenates multiple tables.</dd>
+</dl>
+<dl>
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.  O(n).</dd>
 <dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack <code>[[0 7]] [1 9] [2 4]]</code>, where the first item in each inner stack is its index. O(N).</dd>
 <dt>zip</dt><dd><code>zip!([1 2 3] [4 5 6])</code> returns the stack of tuples <code>[(1 4) (2 5) (3 6)]</code>, where each inner tuple combines the corresponding items from the input tuple of stacks.</dd>
