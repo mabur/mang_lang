@@ -98,9 +98,9 @@ You can access the items of a container via <code>top@container</code> and <code
 <h2>Specialized Container Functions</h2>
 For the following functions you need to know what kind of container you want to use:
 <dl>
-<dt>copy_stack</dt><dd><code>copy_stack!container</code> copies the items in the container to a new stack. O(N).</dd>
-<dt>copy_string</dt><dd><code>copy_string!container</code> copies the items in the container to a new string. O(N).</dd>
-<dt>copy_table</dt><dd><code>copy_table!container</code> copies the items in the container to a new table. The container should contain tuples of <code>(key value)</code>. O(N).</dd>
+<dt>make_stack</dt><dd><code>make_stack!container</code> copies the items in the container to a new stack. O(N).</dd>
+<dt>make_string</dt><dd><code>make_string!container</code> copies the items in the container to a new string. O(N).</dd>
+<dt>make_table</dt><dd><code>make_table!container</code> copies the items in the container to a new table. The container should contain tuples of <code>(key value)</code>. O(N).</dd>
 </dl>
 <dl>
 <dt>concat</dt><dd><code>concat![c1 ... cn]</code> concatenates a stack of containers into a stack. O(N).</dd>

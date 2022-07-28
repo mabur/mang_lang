@@ -72,6 +72,25 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
         end
     }
 
+  copy_stack
+  copy_to_stack
+  copy2stack
+  make_stack (!)
+  to_stack
+
+  concat_to_stack
+  concatenate_to_stack
+  concat2stack
+  fuse_stack
+  merge_stack (!)
+  combine_stack
+  join_stack
+  flatten_stack
+
+  map_stack (!)
+  map_to_stack
+  map2stack
+
 
 * Stack and table comprehension and fold/reduction?
 * Iterators:
