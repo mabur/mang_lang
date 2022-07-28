@@ -11,30 +11,42 @@
 
 <h1>Functions</h1>
 
+<p>
 Below you can find all functions included with Manglang. They are either built-in or implemented in the
 <a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
+</p>
+
+<h2>Time Complexity</h2>
+<p>
+For all container functions we specify how the time complexity depends on the number of elements N in the container. So an operation that is marked as O(1) takes the same time for small and large containers. An operation that is marked as O(N) takes twice as long for a container that is twice as big.
+</p>
 
 <h2>Container Interface</h2>
-Manglang support containers like: stacks, strings, tables. These all share a common interface of built-in low-level operations:
+Manglang has containers like: stacks, strings, tables. They share an interface of basic operations:
 <dl>
-<dt>top</dt><dd><code>top@container</code> returns the top/first item in the container.</dd>
-<dt>rest</dt><dd><code>rest@container</code> returns the rest of the container, besides its top/first item.</dd>
-<dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container. </dd>
-<dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input.</dd>
+<dt>top</dt><dd><code>top@container</code> returns the top/first item in the container. O(1).</dd>
+<dt>rest</dt><dd><code>rest@container</code> returns the rest of the container, besides its top/first item. O(1).</dd>
+<dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added on top of the old container. For tables we have that <code>put!((key value) table)</code> sets the value corresponding to the key in the table and returns the table. For stacks and strings the original container is not mutated, but it is mutated for tables so that other references to it are effected as well! O(1).</dd>
+<dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input. O(1).</dd>
 </dl>
-The relationship of these operations can be expressed as <code>put!(top@container rest@container)</code> gives back just the <code>container</code>. We check if a container is not empty by <code>if container then ... else ...</code>.
+The relationship of these operations can be expressed as <code>put!(top@container rest@container)</code> gives back just the <code>container</code>. Furthermore, we check if a container is not empty by <code>if container then ... else ...</code> O(1).
+
+<p>
+The operations can be used as a base for building more container functions. The standard library does that and adds all the functions below.
+</p>
 
 <h2>Generic Container Functions</h2>
-These functions work on both stacks and strings, and the type of the output container is the same as the input.
-We use the word container to represent either a stack or a string.
+These functions work on both stacks, strings, tables, and the type of the output container is the same as the input.
+We use the word container to represent either a stack, string or table.
 <dl>
-<dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the top of the old container.</dd>
-<dt>put_each</dt><dd><code>put_each!(top_container bottom_container)</code> returns a new container with each item from the top_container added to the bottom_container,
+<dt>put_each</dt><dd><code>put_each!(top_container bottom_container)</code> returns a new container with each item from the top_container put on top of the bottom_container,
 such that the bottom of the top_container is the new top item.
 As an example <code>put_each!([1 2 3] [4 5 6])</code> returns <code>[3 2 1 4 5 6]</code> and <code>put_each!("abc" "def")</code> returns <code>"cbadef"</code>.
-So the order of the top_stack gets reversed as it is put on the new stack.</dd>
-<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the items in the reverse order.</dd>
-<dt>fold</dt><dd><code>fold!(binary_operation container init)</code> is mainly used as an algorithmic building block to implement the other container functions.</dd>
+So the order of the top_stack gets reversed as it is put on the new stack.
+For tables we have that <code>put_each!(<1:1 2:1 3:1> <5:2 2:2 4:2>)</code> returns <code><1:1 2:1 3:1 4:2 5:2></code>, so the keys are sorted and if we have duplicated keys then value from the top container over-writes the value from the bottom container. O(N+M).
+</dd>
+<dt>reverse</dt><dd><code>reverse!container</code> returns a container with the items in the reverse order for stacks and string. For tables we just get a copy, since a table is always sorted by its keys. O(N).</dd>
+<dt>fold</dt><dd><code>fold!(binary_operation container init)</code> is mainly used as an algorithmic building block to implement the other container functions. O(N).</dd>
 </dl>
 
 <h2>Generic Container Functions - Family of Triplets</h2>
@@ -45,53 +57,53 @@ The second version take a container and an item as input.
 The third version takes a container and a predicate as input.
 A predicate is what we call a function that takes an item and returns a boolean, e.g. <code>is_digit</code>.
 <dl>
-<dt>count</dt><dd><code>count!container</code> returns the number of items in the container.</dd>
-<dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container.</dd>
-<dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of items for which the predicate says <code>yes</code>.</dd>
+<dt>count</dt><dd><code>count!container</code> returns the number of items in the container. O(N).</dd>
+<dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container. O(N).</dd>
+<dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of items for which the predicate says <code>yes</code>. O(N).</dd>
 </dl>
 <dl>
-<dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input.</dd>
-<dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed.</dd>
-<dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>.</dd>
+<dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input. O(1).</dd>
+<dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed. O(N).</dd>
+<dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>. O(N).</dd>
 </dl>
 <dl>
-<dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each item is replaced with new_item.</dd>
-<dt>replace_item</dt><dd><code>replace_item!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item.</dd>
-<dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each item is replaced if the predicate says <code>yes</code>.</dd>
+<dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each item is replaced with new_item. O(N).</dd>
+<dt>replace_item</dt><dd><code>replace_item!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item. O(N).</dd>
+<dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each item is replaced if the predicate says <code>yes</code>. O(N).</dd>
 </dl>
 <dl>
-<dt>find_item</dt><dd><code>find_item!(item container)</code> returns a container with the top items removed until the query item is found.</dd>
-<dt>find_if</dt><dd><code>find_if!(predicate container)</code> returns a container with the top items removed until the predicate says yes.</dd>
+<dt>find_item</dt><dd><code>find_item!(item container)</code> returns a container with the top items removed until the query item is found. O(N).</dd>
+<dt>find_if</dt><dd><code>find_if!(predicate container)</code> returns a container with the top items removed until the predicate says yes. O(N).</dd>
 </dl>
 
 <h2>Generic Container Functions - Accessing Items</h2>
 You can access the items of a container via <code>top@container</code> and <code>rest@container</code>, or using the following functions:
 <dl>
-<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n items.</dd>
-<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n items removed.</dd>
-<dt>split</dt><dd><code>split!(n container)</code></dd>
-<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container.</dd>
-<dt>first</dt><dd><code>first!container</code> returns the first item in the container.</dd>
-<dt>second</dt><dd><code>second!container</code> returns the second item in the container.</dd>
-<dt>third</dt><dd><code>third!container</code> returns the third item in the container.</dd>
-<dt>fourth</dt><dd><code>fourth!container</code> returns the fourth item in the container.</dd>
-<dt>fifth</dt><dd><code>fifth!container</code> returns the fifth item in the container.</dd>
-<dt>sixth</dt><dd><code>sixth!container</code> returns the sixth item in the container.</dd>
-<dt>seventh</dt><dd><code>seventh!container</code> returns the seventh item in the container.</dd>
-<dt>eighth</dt><dd><code>eighth!container</code> returns the eighth item in the container.</dd>
-<dt>ninth</dt><dd><code>ninth!container</code> returns the ninth item in the container.</dd>
-<dt>tenth</dt><dd><code>tenth!container</code> returns the tenth item in the container.</dd>
+<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n items. O(n).</dd>
+<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n items removed. O(n).</dd>
+<dt>split</dt><dd><code>split!(n container)</code> O(n).</dd>
+<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container. O(n).</dd>
+<dt>first</dt><dd><code>first!container</code> returns the first item in the container. O(1).</dd>
+<dt>second</dt><dd><code>second!container</code> returns the second item in the container. O(1).</dd>
+<dt>third</dt><dd><code>third!container</code> returns the third item in the container. O(1).</dd>
+<dt>fourth</dt><dd><code>fourth!container</code> returns the fourth item in the container. O(1).</dd>
+<dt>fifth</dt><dd><code>fifth!container</code> returns the fifth item in the container. O(1).</dd>
+<dt>sixth</dt><dd><code>sixth!container</code> returns the sixth item in the container. O(1).</dd>
+<dt>seventh</dt><dd><code>seventh!container</code> returns the seventh item in the container. O(1).</dd>
+<dt>eighth</dt><dd><code>eighth!container</code> returns the eighth item in the container. O(1).</dd>
+<dt>ninth</dt><dd><code>ninth!container</code> returns the ninth item in the container. O(1).</dd>
+<dt>tenth</dt><dd><code>tenth!container</code> returns the tenth item in the container. O(1).</dd>
 </dl>
 
 <h2>Specialized Container Functions</h2>
 For the following container functions you need to know if you want to use stacks or a strings:
 <dl>
-<dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container.</dd>
-<dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container.</dd>
+<dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
+<dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container. O(N).</dd>
 <dt>concat</dt><dd><code>concat!stacks</code> concatenates multiple stacks.</dd>
 <dt>concat_strings</dt><dd><code>concat_strings!strings</code> concatenates multiple strings.</dd>
-<dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.</dd>
-<dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack <code>[[0 7]] [1 9] [2 4]]</code>, where the first item in each inner stack is its index.</dd>
+<dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.  O(n).</dd>
+<dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack <code>[[0 7]] [1 9] [2 4]]</code>, where the first item in each inner stack is its index. O(N).</dd>
 <dt>zip</dt><dd><code>zip!([1 2 3] [4 5 6])</code> returns the stack of tuples <code>[(1 4) (2 5) (3 6)]</code>, where each inner tuple combines the corresponding items from the input tuple of stacks.</dd>
 </dl>
 
