@@ -98,19 +98,19 @@ You can access the items of a container via <code>top@container</code> and <code
 <h2>Specialized Container Functions</h2>
 For the following functions you need to know what kind of container you want to use:
 <dl>
-<dt>copy_stack</dt><dd><code>copy_stack!(f container)</code> copies the items in the container to a new stack. O(N).</dd>
-<dt>copy_string</dt><dd><code>copy_string!(f container)</code> copies the items in the container to a new string. O(N).</dd>
-<dt>copy_table</dt><dd><code>copy_table!(f container)</code> copies the items in the container to a new table. The container should contain tuples of <code>(key value)</code>. O(N).</dd>
+<dt>copy_stack</dt><dd><code>copy_stack!container</code> copies the items in the container to a new stack. O(N).</dd>
+<dt>copy_string</dt><dd><code>copy_string!container</code> copies the items in the container to a new string. O(N).</dd>
+<dt>copy_table</dt><dd><code>copy_table!container</code> copies the items in the container to a new table. The container should contain tuples of <code>(key value)</code>. O(N).</dd>
+</dl>
+<dl>
+<dt>concat</dt><dd><code>concat![c1 ... cn]</code> concatenates a stack of containers into a stack. O(N).</dd>
+<dt>concat_strings</dt><dd><code>concat_strings![c1 ... cn]</code> concatenates a stack of containers into a string. O(N).</dd>
+<dt>concat_tables</dt><dd><code>concat_tables![c1 ... cn]</code> concatenates a stack of containers into a table. O(N).</dd>
 </dl>
 <dl>
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container. O(N).</dd>
 <dt>map_table</dt><dd><code>map_table!(f container)</code> returns a table with the function f applied to each item in the container. The function f should return a tuple <code>(key value)</code>. O(N).</dd>
-</dl>
-<dl>
-<dt>concat</dt><dd><code>concat![c1 ... cn]</code> concatenates a stack of containers into a stack.</dd>
-<dt>concat_strings</dt><dd><code>concat_strings![c1 ... cn]</code> concatenates a stack of containers into a string.</dd>
-<dt>concat_tables</dt><dd><code>concat_tables![c1 ... cn]</code> concatenates a stack of containers into a table.</dd>
 </dl>
 <dl>
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.  O(n).</dd>
