@@ -85,6 +85,21 @@ const std::string STANDARD_LIBRARY = R"(
         bottom_stack
     )
 
+    copy_stack = in container out reverse!put_each!(
+        container
+        []
+    )
+
+    copy_string = in container out reverse!put_each!(
+        container
+        ""
+    )
+
+    copy_table = in container out put_each!(
+        container
+        <>
+    )
+
     concat = in stacks out reverse!fold!(
         put_each
         stacks
@@ -296,10 +311,7 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    get_items = in table out reverse!put_each!(
-        table
-        []
-    )
+    get_items = copy_stack
 
     get_keys = in table out map!(
         in (key value) out key

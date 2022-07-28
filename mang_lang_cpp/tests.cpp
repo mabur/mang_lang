@@ -1153,6 +1153,26 @@ int main() {
         {R"(reverse!"ab")", R"("ba")"},
         {R"(reverse!"abc")", R"("cba")"},
     });
+    test.evaluate("copy_stack", {
+        {"copy_stack![]", "[]"},
+        {"copy_stack![3 1 2]", "[3 1 2]"},
+        {"copy_stack!<>", "[]"},
+        {"copy_stack!<3:33 1:11 2:22>", "[(1 11) (2 22) (3 33)]"},
+        {R"(copy_stack!"")", "[]"},
+        {R"(copy_stack!"cab")", R"([\c \a \b])"},
+    });
+    test.evaluate("copy_string", {
+        {R"(copy_string![])", R"("")"},
+        {R"(copy_string![\c \a \b])", R"("cab")"},
+        {R"(copy_string!"")", R"("")"},
+        {R"(copy_string!"cab")", R"("cab")"},
+    });
+    test.evaluate("copy_table", {
+        {"copy_table![]", "<>"},
+        {"copy_table![(3 33) (1 11) (2 22)]", "<1:11 2:22 3:33>"},
+        {"copy_table!<>", "<>"},
+        {"copy_table!<3:33 1:11 2:22>", "<1:11 2:22 3:33>"},
+    });
     test.evaluate("map stack", {
         {"map!(inc [])", "[]"},
         {"map!(inc [0])", "[1]"},
