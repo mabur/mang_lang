@@ -52,16 +52,6 @@ const std::string STANDARD_LIBRARY = R"(
     ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
     tenth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@rest@stack
 
-    get_values = in dictionary out map!(
-        in name out get!(name dictionary)
-        get_keys!dictionary
-    )
-
-    get_items = in dictionary out zip!(
-        get_keys!dictionary
-        get_values!dictionary
-    )
-
     fold = in (operation stack init) out result@{
         result = init
         stack = stack
@@ -304,6 +294,21 @@ const std::string STANDARD_LIBRARY = R"(
         in (item table) out put!((item inc!get!(item table 0)) table)
         stack
         <>
+    )
+
+    get_items = in table out reverse!put_each!(
+        table
+        []
+    )
+
+    get_keys = in table out map!(
+        in (key value) out key
+        table
+    )
+
+    get_values = in table out map!(
+        in (key value) out value
+        table
     )
 }
 )";

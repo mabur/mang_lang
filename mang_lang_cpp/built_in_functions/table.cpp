@@ -32,13 +32,4 @@ Expression put(Expression table, Expression top) {
     return table;
 }
 
-Expression get_keys(Expression in) {
-    auto stack = makeEmptyStack({}, {});
-    const auto& rows = getEvaluatedTable(in).rows;
-    for (auto it = rows.rbegin(); it != rows.rend(); ++it) {
-        stack = putEvaluatedStack(stack, it->second.key);
-    }
-    return stack;
-}
-
 }
