@@ -1347,6 +1347,8 @@ int main() {
         {"concat![[1] []]", "[1]"},
         {"concat![[1] [2]]", "[1 2]"},
         {"concat![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
+        {"concat![[(1 11)] <2:22>]", "[(1 11) (2 22)]"},
+        {R"(concat![[\a] "b"])", R"([\a \b])"},
     });
     test.evaluate_types("concat", {
         {"concat![[] []]", "[ANY]"},
@@ -1362,6 +1364,7 @@ int main() {
         {"concat_tables![<1:11> <1:11>]", "<1:11>"},
         {"concat_tables![<1:11> <2:22>]", "<1:11 2:22>"},
         {"concat_tables![<1:11> <5:55 3:33> <4:44 5:0 6:66 2:22>]", "<1:11 2:22 3:33 4:44 5:55 6:66>"},
+        {"concat_tables![[(1 11)] <2:22>]", "<1:11 2:22>"},
     });
     test.evaluate("concat_strings", {
         {R"(concat_strings!["" ""])", R"("")"},
@@ -1369,6 +1372,7 @@ int main() {
         {R"(concat_strings!["a" ""])", R"("a")"},
         {R"(concat_strings!["a" "b"])", R"("ab")"},
         {R"(concat_strings!["a" "bc" "def"])", R"("abcdef")"},
+        {R"(concat_strings![[\a] "b"])", R"("ab")"},
     });
     test.evaluate_types("concat_strings", {
         {R"(concat_strings!["" ""])", "STRING"},
