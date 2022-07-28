@@ -3,6 +3,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 * Document table functions.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
+* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Interface for containers and tables:
   - Merge get_index!(n container) for containers and get!(key table default_value) for tables?
   - put!(item stack)
