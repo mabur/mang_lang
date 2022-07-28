@@ -103,9 +103,9 @@ For the following functions you need to know what kind of container you want to 
 <dt>make_table</dt><dd><code>make_table!container</code> copies the items in the container to a new table. The container should contain tuples of <code>(key value)</code>. O(N).</dd>
 </dl>
 <dl>
-<dt>concat</dt><dd><code>concat![c1 ... cn]</code> concatenates a stack of containers into a stack. O(N).</dd>
-<dt>concat_strings</dt><dd><code>concat_strings![c1 ... cn]</code> concatenates a stack of containers into a string. O(N).</dd>
-<dt>concat_tables</dt><dd><code>concat_tables![c1 ... cn]</code> concatenates a stack of containers into a table. O(N).</dd>
+<dt>merge_stack</dt><dd><code>merge_stack![c1 ... cn]</code> concatenates a stack of containers into a single stack. O(N).</dd>
+<dt>merge_string</dt><dd><code>merge_string![c1 ... cn]</code> concatenates a stack of containers into a single string. O(N).</dd>
+<dt>merge_table</dt><dd><code>merge_table![c1 ... cn]</code> merges a stack of containers into a single table. O(N).</dd>
 </dl>
 <dl>
 <dt>map</dt><dd><code>map!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>

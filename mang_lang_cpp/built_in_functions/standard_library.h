@@ -100,19 +100,19 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    concat = in stacks out reverse!fold!(
+    merge_stack = in stacks out reverse!fold!(
         put_each
         stacks
         []
     )
 
-    concat_strings = in strings out reverse!fold!(
+    merge_string = in strings out reverse!fold!(
         put_each
         strings
         ""
     )
 
-    concat_tables = in tables out fold!(
+    merge_table = in tables out fold!(
         put_each
         reverse!tables
         <>

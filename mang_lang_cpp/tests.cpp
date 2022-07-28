@@ -1341,45 +1341,45 @@ int main() {
         {R"(put_each!("ab" "cd"))", "STRING"},
         {R"(put_each!("abc" "def"))", "STRING"},
     });
-    test.evaluate("concat", {
-        {"concat![[] []]", "[]"},
-        {"concat![[] [2]]", "[2]"},
-        {"concat![[1] []]", "[1]"},
-        {"concat![[1] [2]]", "[1 2]"},
-        {"concat![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
-        {"concat![[(1 11)] <2:22>]", "[(1 11) (2 22)]"},
-        {R"(concat![[\a] "b"])", R"([\a \b])"},
+    test.evaluate("merge", {
+        {"merge_stack![[] []]", "[]"},
+        {"merge_stack![[] [2]]", "[2]"},
+        {"merge_stack![[1] []]", "[1]"},
+        {"merge_stack![[1] [2]]", "[1 2]"},
+        {"merge_stack![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
+        {"merge_stack![[(1 11)] <2:22>]", "[(1 11) (2 22)]"},
+        {R"(merge_stack![[\a] "b"])", R"([\a \b])"},
     });
-    test.evaluate_types("concat", {
-        {"concat![[] []]", "[ANY]"},
-        {"concat![[] [2]]", "[ANY]"}, // TODO
-        {"concat![[1] []]", "[NUMBER]"},
-        {"concat![[1] [2]]", "[NUMBER]"},
-        {"concat![[1] [2 3] [4 5 6]]", "[NUMBER]"},
+    test.evaluate_types("merge", {
+        {"merge_stack![[] []]", "[ANY]"},
+        {"merge_stack![[] [2]]", "[ANY]"}, // TODO
+        {"merge_stack![[1] []]", "[NUMBER]"},
+        {"merge_stack![[1] [2]]", "[NUMBER]"},
+        {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
     });
-    test.evaluate("concat_tables", {
-        {"concat_tables![<> <>]", "<>"},
-        {"concat_tables![<> <2:22>]", "<2:22>"},
-        {"concat_tables![<1:11> <>]", "<1:11>"},
-        {"concat_tables![<1:11> <1:11>]", "<1:11>"},
-        {"concat_tables![<1:11> <2:22>]", "<1:11 2:22>"},
-        {"concat_tables![<1:11> <5:55 3:33> <4:44 5:0 6:66 2:22>]", "<1:11 2:22 3:33 4:44 5:55 6:66>"},
-        {"concat_tables![[(1 11)] <2:22>]", "<1:11 2:22>"},
+    test.evaluate("merge_table", {
+        {"merge_table![<> <>]", "<>"},
+        {"merge_table![<> <2:22>]", "<2:22>"},
+        {"merge_table![<1:11> <>]", "<1:11>"},
+        {"merge_table![<1:11> <1:11>]", "<1:11>"},
+        {"merge_table![<1:11> <2:22>]", "<1:11 2:22>"},
+        {"merge_table![<1:11> <5:55 3:33> <4:44 5:0 6:66 2:22>]", "<1:11 2:22 3:33 4:44 5:55 6:66>"},
+        {"merge_table![[(1 11)] <2:22>]", "<1:11 2:22>"},
     });
-    test.evaluate("concat_strings", {
-        {R"(concat_strings!["" ""])", R"("")"},
-        {R"(concat_strings!["" "b"])", R"("b")"},
-        {R"(concat_strings!["a" ""])", R"("a")"},
-        {R"(concat_strings!["a" "b"])", R"("ab")"},
-        {R"(concat_strings!["a" "bc" "def"])", R"("abcdef")"},
-        {R"(concat_strings![[\a] "b"])", R"("ab")"},
+    test.evaluate("merge_string", {
+        {R"(merge_string!["" ""])", R"("")"},
+        {R"(merge_string!["" "b"])", R"("b")"},
+        {R"(merge_string!["a" ""])", R"("a")"},
+        {R"(merge_string!["a" "b"])", R"("ab")"},
+        {R"(merge_string!["a" "bc" "def"])", R"("abcdef")"},
+        {R"(merge_string![[\a] "b"])", R"("ab")"},
     });
-    test.evaluate_types("concat_strings", {
-        {R"(concat_strings!["" ""])", "STRING"},
-        {R"(concat_strings!["" "b"])", "STRING"},
-        {R"(concat_strings!["a" ""])", "STRING"},
-        {R"(concat_strings!["a" "b"])", "STRING"},
-        {R"(concat_strings!["a" "bc" "def"])", "STRING"},
+    test.evaluate_types("merge_string", {
+        {R"(merge_string!["" ""])", "STRING"},
+        {R"(merge_string!["" "b"])", "STRING"},
+        {R"(merge_string!["a" ""])", "STRING"},
+        {R"(merge_string!["a" "b"])", "STRING"},
+        {R"(merge_string!["a" "bc" "def"])", "STRING"},
     });
     test.evaluate("split", {
         {"split!(0 [])", "[[] []]"},
