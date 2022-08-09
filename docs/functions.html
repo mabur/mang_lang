@@ -121,7 +121,7 @@ For the following functions you need to know what kind of container you want to 
 <h2>Table Functions</h2>
 <dl>
 <dt>get</dt><dd><code>get!(key table default_value)</code> returns the value corresponding to the key in the table, if it exists, otherwise default_value is returned.</dd>
-<dt>set</dt><dd><code>set!(key table value)</code> set the value corresponding to the key in the table and returns the table. Note that the table is also mutated so that other references to it are effected as well.</dd>
+<dt>put</dt><dd><code>put!((key value) table)</code> set the value corresponding to the key in the table and returns the table. Note that the table is also mutated so that other references to it are effected as well.</dd>
 <dt>get_keys</dt><dd><code>get_keys!table</code> returns a stack of all keys in the table.</dd>
 <dt>get_values</dt><dd><code>get_values!table</code> returns a stack of all values in the table.</dd>
 <dt>get_items</dt><dd><code>get_items!table</code> returns a stack of tuples, of all pairwise keys and values in the table.</dd>

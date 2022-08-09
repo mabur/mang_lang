@@ -210,7 +210,7 @@ In Manglang we see booleans as answers to questions and therefore write them as 
 
 <h1 id="containers">2. Containers<img src="container2.png" width=48 height=48></h1>
 <p>
-Manglang has four different kinds of containers which can store other data inside them: dictionaries, tuples, stacks and strings.
+Manglang has five different kinds of containers which can store other data inside them: dictionaries, tuples, stacks, strings, tables.
 </p>
 
 <h2 id="dictionaries">2.a. Dictionaries</h2>
@@ -434,7 +434,7 @@ What we call Tables in Manglang are sometimes referred to as associative arrays 
 <pre>
 &lt;key1:value1 key2:value2&gt;
 </pre>
-Tables are used for situations where you want to quickly get or set the value in a container based on a dynamic key. We do this using the built-infunctions <code>get!(key table default_value)</code> and <code>set!(key table value)</code>. The following example takes a stack of numbers and computes a table, where each key is a number and the corresponding value counts how many times the number occurs in the stack:
+Tables are used for situations where you want to quickly get or put the value in a container based on a dynamic key. We do this using the built-infunctions <code>get!(key table default_value)</code> and <code>put!((key value) table)</code>. The following example takes a stack of numbers and computes a table, where each key is a number and the corresponding value counts how many times the number occurs in the stack:
 <pre>
 {
   stack = [1 2 1 1 3 4 2]
@@ -462,6 +462,50 @@ Tables are somewhat similar to dictionaries, but also different:
 <li>The values in a dictionary can be of different types. The values in a table should all have the same type.</li>
 <li>The content of a dictionary can be updated during its constraction phase, but not later on. The content of a table can be updated at any time.</li>
 </ul>
+
+<h2 id="container_summary">2.f. Container Summary</h2>
+<pre>
+-----------+---------------+---------+-------------------------------------------
+Container  | Item Type     | Size    | Mutability
+-----------+---------------+---------+-------------------------------------------
+Dictionary | Heterogeneous | Static  | Mutable during constrution, then immutable
+Tuple      | Heterogeneous | Static  | Immutable
+Stack      | Homogeneous   | Dynamic | Immutable
+String     | Homogeneous   | Dynamic | Immutable
+Table      | Homogeneous   | Dynamic | Mutable  
+-----------+---------------+---------+-------------------------------------------
+</pre>
+<p>
+Dictionaries and tuples are both heterogeneous and static containers. They are used when we know exactly how many items we want to store in the container. We use dictionaries if we want to refer to each item by name. We use tuples if we want to refer to each item by position. By heterogeneous we mean that the items in a container can have different type.
+</p>
+<p>
+Stacks, strings and tables are all homogeneous and dynamic containers.
+
+By homogeneous we mean that each item in a container has the same type.
+
+By dynamic we mean that they are suitable for adding and removing items as the program is evaluated.
+
+Stacks and strings are immutable, which means that if we add or remove items we get a new copy of the original container with the updated change, whereas the original container is not modified. Tables on the other hand are mutable, so putting new items in a table actually modifies the original container.
+</p>
+
+<h2 id="generic_programming">2.g. Generic Programming</h2>
+<p>
+Stacks, strings, tables share some basic operations. The following operations can be used to iterate through these dynamic containers:
+<ul>
+<li><code>top@container</code></li> picks an item from the container. Can be seen as dereferencing an iterator.
+<li><code>rest@container</code></li> returns a view of the container with the top item removed. Can be seen as incrementing the iterator so that it points at the next item.
+<li><code>if container then ... else ...</code> can be used to check that the container is not empty. Can be seen as checking whether the iterator has a sucessor or not.
+</ul>
+<p>
+Stacks, strings, tables also share the following operations for creating new containers:
+</p>
+<ul>
+<li><code>put!(item container)</code></li> adds an item to the container. Creates a new container for stacks and strings, but modifies tables.
+<li><code>clear!container</code></li> creates an empty container of the same type.
+</ul>
+</p>
+By relying on this shared interface we can write generic functions that work similarly on both stacks, strings and tables. For some examples of this you can take a look at the <a href="functions.html">standard library documentation</a>,  or look inside the
+<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library implementation</a>. 
 
 <h1 id="control_flow">4. Control Flow <img src="control_flow.png" width=48 height=48></h1>
 
