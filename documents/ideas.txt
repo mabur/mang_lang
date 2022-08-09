@@ -4,9 +4,12 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
 * Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
-* Interface for containers and tables:
+* Interface for containers and tables and iterators:
+  - Interface for containers is very much the same as interface for iterators: !=end/empty/boolean, */dereference/top/first, ++/next/rest/successor/advance
+  - Then containers adds put and clear, besides the iterator interface.
   - Merge get_index!(n container) for containers and get!(key table default_value) for tables?
-  - put!(item stack)
+  - get!container instead of top@container?
+  - put!(item container)
   - set!((key value) table)
   - add generic map that requires that f has same input and output type,
     so that it does not change type of the container.
