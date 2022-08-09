@@ -441,7 +441,7 @@ Tables are used for situations where you want to quickly get or put the value in
   counts = <>
   while stack
     x = get!(top@stack counts 0)
-    counts = set!(top@stack counts inc!x)
+    counts = put!((top@stack inc!x) counts)
     stack = rest@stack
   end
 }
