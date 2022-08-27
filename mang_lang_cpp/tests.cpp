@@ -1388,17 +1388,17 @@ int main() {
         {"split!(1 [1 2])", "[[1] [2]]"},
         {"split!(2 [1 2 3 4])", "[[2 1] [3 4]]"},
     });
-    test.evaluate("drop stack", {
-        {"drop!(0 [3 7 6])", "[3 7 6]"},
-        {"drop!(1 [3 7 6])", "[7 6]"},
-        {"drop!(2 [3 7 6])", "[6]"},
-        {"drop!(3 [3 7 6])", "[]"},
+    test.evaluate("drop_many stack", {
+        {"drop_many!(0 [3 7 6])", "[3 7 6]"},
+        {"drop_many!(1 [3 7 6])", "[7 6]"},
+        {"drop_many!(2 [3 7 6])", "[6]"},
+        {"drop_many!(3 [3 7 6])", "[]"},
     });
-    test.evaluate("drop string", {
-        {R"(drop!(0 "abc"))", R"("abc")"},
-        {R"(drop!(1 "abc"))", R"("bc")"},
-        {R"(drop!(2 "abc"))", R"("c")"},
-        {R"(drop!(3 "abc"))", R"("")"},
+    test.evaluate("drop_many string", {
+        {R"(drop_many!(0 "abc"))", R"("abc")"},
+        {R"(drop_many!(1 "abc"))", R"("bc")"},
+        {R"(drop_many!(2 "abc"))", R"("c")"},
+        {R"(drop_many!(3 "abc"))", R"("")"},
     });
     test.evaluate("find_if string", {
         {R"(find_if!(is_upper ""))", R"("")"},
@@ -1413,17 +1413,17 @@ int main() {
         {R"(find_item!(\a "ab"))", R"("ab")"},
         {R"(find_item!(\a "ba"))", R"("a")"},
     });
-    test.evaluate("take stack", {
-        {"take!(0 [3 7 6])", "[]"},
-        {"take!(1 [3 7 6])", "[3]"},
-        {"take!(2 [3 7 6])", "[3 7]"},
-        {"take!(3 [3 7 6])", "[3 7 6]"},
+    test.evaluate("take_many stack", {
+        {"take_many!(0 [3 7 6])", "[]"},
+        {"take_many!(1 [3 7 6])", "[3]"},
+        {"take_many!(2 [3 7 6])", "[3 7]"},
+        {"take_many!(3 [3 7 6])", "[3 7 6]"},
     });
-    test.evaluate("take string", {
-        {R"(take!(0 "abc"))", R"("")"},
-        {R"(take!(1 "abc"))", R"("a")"},
-        {R"(take!(2 "abc"))", R"("ab")"},
-        {R"(take!(3 "abc"))", R"("abc")"},
+    test.evaluate("take_many string", {
+        {R"(take_many!(0 "abc"))", R"("")"},
+        {R"(take_many!(1 "abc"))", R"("a")"},
+        {R"(take_many!(2 "abc"))", R"("ab")"},
+        {R"(take_many!(3 "abc"))", R"("abc")"},
     });
     test.evaluate("get_index stack", {
         {"get_index!(0 [3 7 6])", "3"},
