@@ -1,14 +1,15 @@
 TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
+* Unify: find_item, find_if, drop, drop_many
+* add empty? function for containers?
 * Document table functions.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
 * Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Interface for containers and tables and iterators:
-  - Interface for containers is very much the same as interface for iterators: !=end/empty/boolean, */dereference/top/first, ++/next/rest/successor/advance
+  - Interface for containers is very much the same as interface for iterators: !=end/empty/boolean, */dereference/take/first, ++/next/drop/successor/advance
   - Then containers adds put and clear, besides the iterator interface.
   - Merge get_index!(n container) for containers and get!(key table default_value) for tables?
-  - get!container instead of top@container?
   - put!(item container)
   - set!((key value) table)
   - add generic map that requires that f has same input and output type,
@@ -21,12 +22,10 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - add higher_order function that takes a unary predicate and constructs a new binary predicate
     that ignores the first argument, so that it can be used for table pairs of (key value).
 (
-* top!container
-  - rename to take!container
+* take!container
   - value for stack and string
   - (key value) for table
-* rest!containers
-  - rename to drop!container
+* drop!containers
   - immutable for stack and strings
   - mutable for table
   - imutable view for table
@@ -72,8 +71,8 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Could resolve by having find_if as built-in.
     find_if = in (predicate container) out container@{
         container = container
-        while if container then not!predicate?top@container else no
-            container = rest@container
+        while if container then not!predicate?take!container else no
+            container = drop!container
         end
     }
 
@@ -98,39 +97,10 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 
 
 * Stack and table comprehension and fold/reduction?
-* Iterators:
-  - top / *
-    - first element for stack
-    - first element for table
-    - current element for table/view/range
-  - rest / next
-    - imutable rest for stack
-    - imutable view for table
-    - imutable view for view
-  - boolean?rest / != end
-* Add ImmutableTableView
 * Ranges. Store both stacks and tables as ranges.
   - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
   - Or at least as long as we do not mutate while iterating.
   - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
-  - Investigate crashes in current implementation, probably due to bad iterators for TableView and mutations.
-    - Maybe due to making temporary copies of the Table and then taking iterators for the copy?
-
-* Identity
-  - put!(top@stack rest@stack) == stack
-  - Alternative 1 - Do not keep it for tables. Simplifies generalization of:
-    - sum, prod, all, any, none.
-    - Easy to circumvent by e.g. sum!get_values!table
-  - Alternative 2 - Better? - Keep it for tables. Simplifies generalization of:
-    - put_each, concat, map*, clear_if
-    - Optionally: Implement by having items of table be stored as Manglang tuples?
-      - Pros:
-        - Then we don't need to create tuples on the fly when calling top@table.
-      - Cons:
-        - Then we need to creat new tuples when mutating the table.
-      - Maybe not important for now.
-    - Replace set with put for tables.
-      - Does it relate to crashes below?
     
 * Persistent hash map like in Clojure. Array mapped hash tries (Bagwell: non-persistent, Rich Hickey: persistent).
   - HAMT - Hash Array Mapped Tries.
@@ -233,11 +203,11 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   unpack max_element!(3 7 6)
 }
 
-* Problem with lookup of first and rest inside list environment 
+* Problem with lookup of first and second inside tuple environment 
 {
   first = ...
-  rest = ...
-  result = f(first rest)
+  second = ...
+  result = f(first second)
 }
 
 

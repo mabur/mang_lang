@@ -35,4 +35,78 @@ Expression put(Expression in) {
     }
 }
 
+Expression lookupChildInEvaluatedTable(const EvaluatedTable& table, const std::string& name) {
+    auto first = table.rows.begin();
+    auto last = table.rows.end();
+    if (name == "top") return makeEvaluatedTuple(
+            {}, EvaluatedTuple{{first->second.key, first->second.value}}
+        );
+    if (name == "rest") return makeEvaluatedTableView(
+            {}, EvaluatedTableView{++first, last}
+        );
+    throw MissingSymbol(name, "evaluated_table");
+}
+
+Expression lookupChildInEvaluatedTableView(const EvaluatedTableView& table, const std::string& name) {
+    auto first = table.first;
+    auto last = table.last;
+    if (name == "top") return makeEvaluatedTuple(
+            {}, EvaluatedTuple{{first->second.key, first->second.value}}
+        );
+    if (name == "rest") return makeEvaluatedTableView(
+            {}, EvaluatedTableView{++first, last}
+        );
+    throw MissingSymbol(name, "evaluated_table_view");
+}
+
+Expression takeEvaluatedTable(const EvaluatedTable& table) {
+    auto first = table.rows.begin();
+    return makeEvaluatedTuple(
+        {}, EvaluatedTuple{{first->second.key, first->second.value}}
+    );
+}
+
+Expression takeEvaluatedTableView(const EvaluatedTableView& table) {
+    auto first = table.first;
+    return makeEvaluatedTuple(
+        {}, EvaluatedTuple{{first->second.key, first->second.value}}
+    );
+}
+
+Expression dropEvaluatedTable(const EvaluatedTable& table) {
+    auto first = table.rows.begin();
+    auto last = table.rows.end();
+    return makeEvaluatedTableView({}, EvaluatedTableView{++first, last});
+}
+
+Expression dropEvaluatedTableView(const EvaluatedTableView& table) {
+    auto first = table.first;
+    auto last = table.last;
+    return makeEvaluatedTableView({}, EvaluatedTableView{++first, last});
+}
+
+Expression take(Expression in) {
+    switch (in.type) {
+        case EVALUATED_STACK: return getEvaluatedStack(in).top;
+        case STRING: return getString(in).top;
+        case EVALUATED_TABLE: return takeEvaluatedTable(getEvaluatedTable(in));
+        case EVALUATED_TABLE_VIEW: return takeEvaluatedTableView(getEvaluatedTableView(in));
+        case EMPTY_STACK: return Expression{ANY, {}, {}};
+        case EMPTY_STRING: return Expression{ANY, {}, {}};
+        default: throw UnexpectedExpression(in.type, "take");
+    }
+}
+
+Expression drop(Expression in) {
+    switch (in.type) {
+        case EVALUATED_STACK: return getEvaluatedStack(in).rest;
+        case STRING: return getString(in).rest;
+        case EVALUATED_TABLE: return dropEvaluatedTable(getEvaluatedTable(in));
+        case EVALUATED_TABLE_VIEW: return dropEvaluatedTableView(getEvaluatedTableView(in));
+        case EMPTY_STACK: return Expression{ANY, {}, {}};
+        case EMPTY_STRING: return Expression{ANY, {}, {}};
+        default: throw UnexpectedExpression(in.type, "drop");
+    }
+}
+
 }

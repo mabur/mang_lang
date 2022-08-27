@@ -41,23 +41,23 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    first = in stack out top@stack
-    second = in stack out top@rest@stack
-    third = in stack out top@rest@rest@stack
-    fourth = in stack out top@rest@rest@rest@stack
-    fifth = in stack out top@rest@rest@rest@rest@stack
-    sixth = in stack out top@rest@rest@rest@rest@rest@stack
-    seventh = in stack out top@rest@rest@rest@rest@rest@rest@stack
-    eighth = in stack out top@rest@rest@rest@rest@rest@rest@rest@stack
-    ninth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@stack
-    tenth = in stack out top@rest@rest@rest@rest@rest@rest@rest@rest@rest@stack
+    first = in stack out take!stack
+    second = in stack out take!drop!stack
+    third = in stack out take!drop!drop!stack
+    fourth = in stack out take!drop!drop!drop!stack
+    fifth = in stack out take!drop!drop!drop!drop!stack
+    sixth = in stack out take!drop!drop!drop!drop!drop!stack
+    seventh = in stack out take!drop!drop!drop!drop!drop!drop!stack
+    eighth = in stack out take!drop!drop!drop!drop!drop!drop!drop!stack
+    ninth = in stack out take!drop!drop!drop!drop!drop!drop!drop!drop!stack
+    tenth = in stack out take!drop!drop!drop!drop!drop!drop!drop!drop!drop!stack
 
     fold = in (operation stack init) out result@{
         result = init
         stack = stack
         while stack
-            result = operation!(top@stack result)
-            stack = rest@stack
+            result = operation!(take!stack result)
+            stack = drop!stack
         end
     }
 
@@ -139,17 +139,17 @@ const std::string STANDARD_LIBRARY = R"(
     zip = in (left right) out reverse!result@{
         result = []
         while and?[left right]
-            result = put!((top@left top@right) result)
-            left = rest@left
-            right = rest@right
+            result = put!((take!left take!right) result)
+            left = drop!left
+            right = drop!right
         end
     }
 
     consecutive_pairs = in stack out reverse!result@{
         result = []
-        while if stack then boolean!rest@stack else no
-            result = put!((top@stack top@rest@stack) result)
-            stack = rest@stack
+        while if stack then boolean!drop!stack else no
+            result = put!((take!stack take!drop!stack) result)
+            stack = drop!stack
         end
     }
 
@@ -180,8 +180,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     find_if = in (predicate stack) out stack@{
         stack = stack
-        while if stack then not!predicate?top@stack else no
-            stack = rest@stack
+        while if stack then not!predicate?take!stack else no
+            stack = drop!stack
         end
     }
 
@@ -238,7 +238,7 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            short_stack = rest@short_stack
+            short_stack = drop!short_stack
         end
     }
 
@@ -248,8 +248,8 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            reversed_result = put!(top@stack reversed_result)
-            stack = rest@stack
+            reversed_result = put!(take!stack reversed_result)
+            stack = drop!stack
         end
         short_stack = reverse!reversed_result
     }
@@ -259,13 +259,13 @@ const std::string STANDARD_LIBRARY = R"(
         bottom_stack = stack
         while and?[n bottom_stack]
             n = dec!n
-            top_stack = put!(top@bottom_stack top_stack)
-            bottom_stack = rest@bottom_stack
+            top_stack = put!(take!bottom_stack top_stack)
+            bottom_stack = drop!bottom_stack
         end
         stacks = [top_stack bottom_stack]
     }
 
-    get_index = in (index stack) out top@drop_many!(index stack)
+    get_index = in (index stack) out take!drop_many!(index stack)
 
     all = in stack out not?find_if!(not stack)
     none = in stack out not?find_if!(boolean stack)
@@ -279,7 +279,7 @@ const std::string STANDARD_LIBRARY = R"(
     less_or_equal_top = in (left right) out
         if left then
             if right then
-                is_increasing?[top@left top@right]
+                is_increasing?[take!left take!right]
             else
                 yes
         else
@@ -289,12 +289,12 @@ const std::string STANDARD_LIBRARY = R"(
         stack = []
         while or?[left right]
             while less_or_equal_top?(left right)
-                stack = put!(top@left stack)
-                left = rest@left
+                stack = put!(take!left stack)
+                left = drop!left
             end
             while less_or_equal_top?(right left)
-                stack = put!(top@right stack)
-                right = rest@right
+                stack = put!(take!right stack)
+                right = drop!right
             end
         end
     }

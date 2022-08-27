@@ -24,12 +24,12 @@ For all container functions we specify how the time complexity depends on the nu
 <h2>Container Interface</h2>
 Manglang has containers like: stacks, strings, tables. They share an interface of basic operations:
 <dl>
-<dt>top</dt><dd><code>top@container</code> returns the top/first item in the container. O(1).</dd>
-<dt>rest</dt><dd><code>rest@container</code> returns the rest of the container, besides its top/first item. O(1).</dd>
-<dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added on top of the old container. For tables we have that <code>put!((key value) table)</code> sets the value corresponding to the key in the table and returns the table. For stacks and strings the original container is not mutated, but it is mutated for tables so that other references to it are effected as well! O(1).</dd>
+<dt>take</dt><dd><code>take!container</code> returns a single item from the container. O(1).</dd>
+<dt>drop</dt><dd><code>drop!container</code> returns the container with a single item dropped from it. O(1).</dd>
+<dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the old container. For tables we have that <code>put!((key value) table)</code> sets the value corresponding to the key in the table and returns the table. For stacks and strings the original container is not mutated, but it is mutated for tables so that other references to it are effected as well! O(1).</dd>
 <dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input. O(1).</dd>
 </dl>
-The relationship of these operations can be expressed as <code>put!(top@container rest@container)</code> gives back just the <code>container</code>. Furthermore, we check if a container is not empty by <code>if container then ... else ...</code> O(1).
+The relationship of these functions can be expressed as <code>put!(take!container drop!container)</code> gives back just the <code>container</code>. Furthermore, we check if a container is not empty by <code>if container then ... else ...</code> O(1).
 
 <p>
 The operations can be used as a base for building more container functions. The standard library does that and adds all the functions below.
@@ -77,10 +77,10 @@ A predicate is what we call a function that takes an item and returns a boolean,
 </dl>
 
 <h2>Generic Container Functions - Accessing Items</h2>
-You can access the items of a container via <code>top@container</code> and <code>rest@container</code>, or using the following functions:
+You can access the items of a container via <code>take!container</code> and <code>drop!container</code>, or using the following functions:
 <dl>
-<dt>take</dt><dd><code>take!(n container)</code> returns a containers with the top n items. O(n).</dd>
-<dt>drop</dt><dd><code>drop!(n container)</code> returns a container with the top n items removed. O(n).</dd>
+<dt>take_many</dt><dd><code>take_many!(n container)</code> returns a containers with the top n items. O(n).</dd>
+<dt>drop_many</dt><dd><code>drop_many!(n container)</code> returns a container with the top n items removed. O(n).</dd>
 <dt>split</dt><dd><code>split!(n container)</code> O(n).</dd>
 <dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container. O(n).</dd>
 <dt>first</dt><dd><code>first!container</code> returns the first item in the container. O(1).</dd>
