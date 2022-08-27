@@ -22,9 +22,11 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
     that ignores the first argument, so that it can be used for table pairs of (key value).
 (
 * top!container
+  - rename to take!container
   - value for stack and string
   - (key value) for table
 * rest!containers
+  - rename to drop!container
   - immutable for stack and strings
   - mutable for table
   - imutable view for table
