@@ -35,30 +35,6 @@ Expression put(Expression in) {
     }
 }
 
-Expression lookupChildInEvaluatedTable(const EvaluatedTable& table, const std::string& name) {
-    auto first = table.rows.begin();
-    auto last = table.rows.end();
-    if (name == "top") return makeEvaluatedTuple(
-            {}, EvaluatedTuple{{first->second.key, first->second.value}}
-        );
-    if (name == "rest") return makeEvaluatedTableView(
-            {}, EvaluatedTableView{++first, last}
-        );
-    throw MissingSymbol(name, "evaluated_table");
-}
-
-Expression lookupChildInEvaluatedTableView(const EvaluatedTableView& table, const std::string& name) {
-    auto first = table.first;
-    auto last = table.last;
-    if (name == "top") return makeEvaluatedTuple(
-            {}, EvaluatedTuple{{first->second.key, first->second.value}}
-        );
-    if (name == "rest") return makeEvaluatedTableView(
-            {}, EvaluatedTableView{++first, last}
-        );
-    throw MissingSymbol(name, "evaluated_table_view");
-}
-
 Expression takeEvaluatedTable(const EvaluatedTable& table) {
     auto first = table.rows.begin();
     return makeEvaluatedTuple(
