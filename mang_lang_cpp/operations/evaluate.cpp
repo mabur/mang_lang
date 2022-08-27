@@ -220,42 +220,6 @@ Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionar
     throw MissingSymbol(label, "dictionary");
 }
 
-Expression lookupChildInString(const String& string, const std::string& name) {
-    if (name == "top") return string.top;
-    if (name == "rest") return string.rest;
-    throw MissingSymbol(name, "string");
-}
-
-Expression lookupChildInEvaluatedStack(const EvaluatedStack& stack, const std::string& name) {
-    if (name == "top") return stack.top;
-    if (name == "rest") return stack.rest;
-    throw MissingSymbol(name, "evaluated_stack");
-}
-
-Expression lookupChildInEvaluatedTable(const EvaluatedTable& table, const std::string& name) {
-    auto first = table.rows.begin();
-    auto last = table.rows.end();
-    if (name == "top") return makeEvaluatedTuple(
-        {}, EvaluatedTuple{{first->second.key, first->second.value}}
-    );
-    if (name == "rest") return makeEvaluatedTableView(
-        {}, EvaluatedTableView{++first, last}
-    );
-    throw MissingSymbol(name, "evaluated_table");
-}
-
-Expression lookupChildInEvaluatedTableView(const EvaluatedTableView& table, const std::string& name) {
-    auto first = table.first;
-    auto last = table.last;
-    if (name == "top") return makeEvaluatedTuple(
-        {}, EvaluatedTuple{{first->second.key, first->second.value}}
-    );
-    if (name == "rest") return makeEvaluatedTableView(
-        {}, EvaluatedTableView{++first, last}
-    );
-    throw MissingSymbol(name, "evaluated_table_view");
-}
-
 Expression lookupChildInEvaluatedTuple(const EvaluatedTuple& stack, const std::string& name) {
     const auto& expressions = stack.expressions;
     if (name == "first") return expressions.at(0);
@@ -278,11 +242,7 @@ Expression evaluateLookupChild(
     const auto name = getName(lookup_child.name).value;
     switch (child.type) {
         case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
-        case EVALUATED_STACK: return lookupChildInEvaluatedStack(getEvaluatedStack(child), name);
         case EVALUATED_TUPLE: return lookupChildInEvaluatedTuple(getEvaluatedTuple(child), name);
-        case STRING: return lookupChildInString(getString(child), name);
-        case EVALUATED_TABLE: return lookupChildInEvaluatedTable(getEvaluatedTable(child), name);
-        case EVALUATED_TABLE_VIEW: return lookupChildInEvaluatedTableView(getEvaluatedTableView(child), name);
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
 }

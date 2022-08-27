@@ -159,20 +159,6 @@ Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionar
     throw MissingSymbol(label, "dictionary");
 }
 
-Expression lookupChildInString(Expression expression, const std::string& name) {
-    const auto string = getString(expression);
-    if (name == "top") return string.top;
-    if (name == "rest") return expression;
-    throw MissingSymbol(name, "string");
-}
-
-Expression lookupChildInEvaluatedStack(Expression expression, const std::string& name) {
-    const auto stack = getEvaluatedStack(expression);
-    if (name == "top") return stack.top;
-    if (name == "rest") return expression;
-    throw MissingSymbol(name, "evaluated_stack");
-}
-
 Expression lookupChildInEvaluatedTuple(const EvaluatedTuple& stack, const std::string& name) {
     const auto& expressions = stack.expressions;
     if (name == "first") return expressions.at(0);
@@ -195,11 +181,7 @@ Expression evaluateLookupChild(
     const auto name = getName(lookup_child.name).value;
     switch (child.type) {
         case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
-        case EVALUATED_STACK: return lookupChildInEvaluatedStack(child, name);
         case EVALUATED_TUPLE: return lookupChildInEvaluatedTuple(getEvaluatedTuple(child), name);
-        case STRING: return lookupChildInString(child, name);
-        case EMPTY_STACK: return Expression{ANY, {}, {}};
-        case EMPTY_STRING: return Expression{ANY, {}, {}};
         default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
     }
 }
