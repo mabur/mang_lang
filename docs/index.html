@@ -350,26 +350,14 @@ and we can access the data in the tuple as if it was such a dictionary via <code
 <pre>
 [3 6 4]
 </pre>
-A stack can be seen as a dictionary containing two things <code>top</code> and <code>rest</code>.
-Consider this example:
-<pre>
-{
-  stack = [3 6 4]
-  dictionary = {top=3 rest={top=6 rest={top=4 rest={}}}}
-}
-</pre>
-<p>
-These are two different ways of storing the same data.
-Stacks in Manglang can be seen as syntactic sugar sprinkled on dictionaries so that we can use the first more concise notation instead of the second more verbose notation.
-Conceptually we can think of a stack as a dictionary having the members <code>top</code> and <code>rest</code>,
-and we access the data in the stack as if it was such a dictionary via <code>top@stack</code> and <code>rest@stack</code>. There are two differences between tuples and stacks:
+There are two differences between tuples and stacks:
 <ul>
 <li>All elements of a stack should have the same type. The elements of a tuple can have different types.</li>
 <li>We can generate a new stack from a base stack by adding or removing elements from it. A tuple is static.</li>
 </ul>
 </p>
 <p>
-If we have a <code>stack</code> we can the stack with all elements except the first via <code>rest@stack</code>. The function <code>put</code> is used to construct a new stack by putting a new item on top of the stack:
+If we have a <code>stack</code> we can get the stack with all elements except the first via <code>drop!stack</code>. The function <code>put</code> is used to construct a new stack by putting a new item on top of the stack:
 </p>
 <pre>
 put!(7 [4 5 2])
@@ -382,8 +370,8 @@ The input above is evaluated to the output below:
 <pre>
 {
   a = [3 6 4]
-  b = top@a
-  c = rest@a
+  b = take!a
+  c = drop!a
   d = put!(b c) 
 }
 </pre>
@@ -396,7 +384,7 @@ The input above is evaluated to the output below:
   d = [3 6 4]
 }
 </pre>
-In summary, we interact with stacks by accessing the members <code>top</code> and <code>rest</code> and via the function <code>put</code>. The standard library of Manglang provides more functions that works on stacks but they are all built on top of this basic interface.
+In summary, we interact with stacks by accessing its members using <code>take</code> and <code>drop</code> and via the function <code>put</code>. The standard library of Manglang provides more functions that works on stacks but they are all built on top of this basic interface.
 
 <h2 id="strings">2.d. Strings</h2>
 <p>
@@ -411,8 +399,8 @@ They can be seen as stacks of characters. Example of a program using functions o
 <pre>
 {
   a = "Manglang"
-  b = top@a
-  c = rest@a
+  b = take!a
+  c = drop!a
   d = reverse!a
   e = put!(\E a)
 }
@@ -440,9 +428,9 @@ Tables are used for situations where you want to quickly get or put the value in
   stack = [1 2 1 1 3 4 2]
   counts = <>
   while stack
-    x = get!(top@stack counts 0)
-    counts = put!((top@stack inc!x) counts)
-    stack = rest@stack
+    x = get!(take!stack counts 0)
+    counts = put!((take!stack inc!x) counts)
+    stack = drop!stack
   end
 }
 </pre>
@@ -492,8 +480,8 @@ Stacks and strings are immutable, which means that if we add or remove items we 
 <p>
 Stacks, strings, tables share some basic operations. The following operations can be used to iterate through these dynamic containers:
 <ul>
-<li><code>top@container</code></li> picks an item from the container. Can be seen as dereferencing an iterator.
-<li><code>rest@container</code></li> returns a view of the container with the top item removed. Can be seen as incrementing the iterator so that it points at the next item.
+<li><code>take!container</code></li> takes an item from the container. Can be seen as dereferencing an iterator.
+<li><code>drop!container</code></li> returns a view of the container with one item removed. Can be seen as incrementing the iterator so that it points at the next item.
 <li><code>if container then ... else ...</code> can be used to check that the container is not empty. Can be seen as checking whether the iterator has a successor or not.
 </ul>
 <p>
@@ -533,7 +521,7 @@ Consider this example:
 {
   a = [0 1]
   b = if a then
-      top@a
+      take!a
     else
       2
   c = if b then "hello" else "world"
@@ -697,7 +685,7 @@ Here are some examples of defining and calling functions:
   count = in stack
     out
       if stack then
-        inc!count!rest@stack
+        inc!count!drop!stack
       else
         0
   a = square!3
@@ -718,7 +706,7 @@ This program is evaluated to:
   count = in stack
     out
       if stack then
-        inc!count!rest@stack
+        inc!count!drop!stack
       else
         0
   a = 9
