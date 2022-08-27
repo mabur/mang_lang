@@ -15,6 +15,7 @@ Expression builtIns() {
     auto definitions = Definitions{};
     definitions.add("clear", define(stack_functions::clear));
     definitions.add("put", define(stack_functions::put));
+    definitions.add("take", define(stack_functions::take));
     definitions.add("get", define(table_functions::get));
     definitions.add("add", define(arithmetic::add));
     definitions.add("mul", define(arithmetic::mul));

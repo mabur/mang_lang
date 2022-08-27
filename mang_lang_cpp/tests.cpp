@@ -845,21 +845,21 @@ int main() {
         {R"(clear!"a")", R"("")"},
         {R"(clear!"ab")", R"("")"},
     });
-    test.evaluate_types("top stack", {
-        {"top@[4]", "NUMBER"},
-        {"top@[3 4]", "NUMBER"},
+    test.evaluate_types("take stack", {
+        {"take![4]", "NUMBER"},
+        {"take![3 4]", "NUMBER"},
     });
-    test.evaluate("top stack", {
-        {"top@[4]", "4"},
-        {"top@[3 4]", "3"},
+    test.evaluate("take stack", {
+        {"take![4]", "4"},
+        {"take![3 4]", "3"},
     });
-    test.evaluate_types("top string", {
-        {R"(top@"b")", "CHARACTER"},
-        {R"(top@"ab")", "CHARACTER"},
+    test.evaluate_types("take string", {
+        {R"(take!"b")", "CHARACTER"},
+        {R"(take!"ab")", "CHARACTER"},
     });
-    test.evaluate("top string", {
-        {R"(top@"b")", R"(\b)"},
-        {R"(top@"ab")", R"(\a)"},
+    test.evaluate("take string", {
+        {R"(take!"b")", R"(\b)"},
+        {R"(take!"ab")", R"(\a)"},
     });
     test.evaluate_types("rest stack", {
         {"rest@[4]", "[NUMBER]"},
