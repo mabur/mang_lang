@@ -861,25 +861,25 @@ int main() {
         {R"(take!"b")", R"(\b)"},
         {R"(take!"ab")", R"(\a)"},
     });
-    test.evaluate_types("rest stack", {
-        {"rest@[4]", "[NUMBER]"},
-        {"rest@[4 3]", "[NUMBER]"},
-        {"rest@[4 3 7]", "[NUMBER]"},
+    test.evaluate_types("drop stack", {
+        {"drop![4]", "EMPTY_STACK"}, // TODO: is this good?
+        {"drop![4 3]", "[NUMBER]"},
+        {"drop![4 3 7]", "[NUMBER]"},
     });
-    test.evaluate("rest stack", {
-        {"rest@[4]", "[]"},
-        {"rest@[4 3]", "[3]"},
-        {"rest@[4 3 7]", "[3 7]"},
+    test.evaluate("drop stack", {
+        {"drop![4]", "[]"},
+        {"drop![4 3]", "[3]"},
+        {"drop![4 3 7]", "[3 7]"},
     });
-    test.evaluate_types("rest string", {
-        {R"(rest@"a")", "STRING"},
-        {R"(rest@"ab")", "STRING"},
-        {R"(rest@"abc")", "STRING"},
+    test.evaluate_types("drop string", {
+        {R"(drop!"a")", "EMPTY_STRING"}, // TODO: is this good?
+        {R"(drop!"ab")", "STRING"},
+        {R"(drop!"abc")", "STRING"},
     });
-    test.evaluate("rest string", {
-        {R"(rest@"a")", R"("")"},
-        {R"(rest@"ab")", R"("b")"},
-        {R"(rest@"abc")", R"("bc")"},
+    test.evaluate("drop string", {
+        {R"(drop!"a")", R"("")"},
+        {R"(drop!"ab")", R"("b")"},
+        {R"(drop!"abc")", R"("bc")"},
     });
     test.evaluate_types("put stack", {
         {"put!(3 [])", "[NUMBER]"},

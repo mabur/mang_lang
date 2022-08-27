@@ -42,22 +42,22 @@ const std::string STANDARD_LIBRARY = R"(
             c
 
     first = in stack out take!stack
-    second = in stack out take!rest@stack
-    third = in stack out take!rest@rest@stack
-    fourth = in stack out take!rest@rest@rest@stack
-    fifth = in stack out take!rest@rest@rest@rest@stack
-    sixth = in stack out take!rest@rest@rest@rest@rest@stack
-    seventh = in stack out take!rest@rest@rest@rest@rest@rest@stack
-    eighth = in stack out take!rest@rest@rest@rest@rest@rest@rest@stack
-    ninth = in stack out take!rest@rest@rest@rest@rest@rest@rest@rest@stack
-    tenth = in stack out take!rest@rest@rest@rest@rest@rest@rest@rest@rest@stack
+    second = in stack out take!drop!stack
+    third = in stack out take!drop!drop!stack
+    fourth = in stack out take!drop!drop!drop!stack
+    fifth = in stack out take!drop!drop!drop!drop!stack
+    sixth = in stack out take!drop!drop!drop!drop!drop!stack
+    seventh = in stack out take!drop!drop!drop!drop!drop!drop!stack
+    eighth = in stack out take!drop!drop!drop!drop!drop!drop!drop!stack
+    ninth = in stack out take!drop!drop!drop!drop!drop!drop!drop!drop!stack
+    tenth = in stack out take!drop!drop!drop!drop!drop!drop!drop!drop!drop!stack
 
     fold = in (operation stack init) out result@{
         result = init
         stack = stack
         while stack
             result = operation!(take!stack result)
-            stack = rest@stack
+            stack = drop!stack
         end
     }
 
@@ -140,16 +140,16 @@ const std::string STANDARD_LIBRARY = R"(
         result = []
         while and?[left right]
             result = put!((take!left take!right) result)
-            left = rest@left
-            right = rest@right
+            left = drop!left
+            right = drop!right
         end
     }
 
     consecutive_pairs = in stack out reverse!result@{
         result = []
-        while if stack then boolean!rest@stack else no
-            result = put!((take!stack take!rest@stack) result)
-            stack = rest@stack
+        while if stack then boolean!drop!stack else no
+            result = put!((take!stack take!drop!stack) result)
+            stack = drop!stack
         end
     }
 
@@ -181,7 +181,7 @@ const std::string STANDARD_LIBRARY = R"(
     find_if = in (predicate stack) out stack@{
         stack = stack
         while if stack then not!predicate?take!stack else no
-            stack = rest@stack
+            stack = drop!stack
         end
     }
 
@@ -238,7 +238,7 @@ const std::string STANDARD_LIBRARY = R"(
         i = n
         while i
             i = dec!i
-            short_stack = rest@short_stack
+            short_stack = drop!short_stack
         end
     }
 
@@ -249,7 +249,7 @@ const std::string STANDARD_LIBRARY = R"(
         while i
             i = dec!i
             reversed_result = put!(take!stack reversed_result)
-            stack = rest@stack
+            stack = drop!stack
         end
         short_stack = reverse!reversed_result
     }
@@ -260,7 +260,7 @@ const std::string STANDARD_LIBRARY = R"(
         while and?[n bottom_stack]
             n = dec!n
             top_stack = put!(take!bottom_stack top_stack)
-            bottom_stack = rest@bottom_stack
+            bottom_stack = drop!bottom_stack
         end
         stacks = [top_stack bottom_stack]
     }
@@ -290,11 +290,11 @@ const std::string STANDARD_LIBRARY = R"(
         while or?[left right]
             while less_or_equal_top?(left right)
                 stack = put!(take!left stack)
-                left = rest@left
+                left = drop!left
             end
             while less_or_equal_top?(right left)
                 stack = put!(take!right stack)
-                right = rest@right
+                right = drop!right
             end
         end
     }

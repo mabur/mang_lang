@@ -73,6 +73,18 @@ Expression takeEvaluatedTableView(const EvaluatedTableView& table) {
     );
 }
 
+Expression dropEvaluatedTable(const EvaluatedTable& table) {
+    auto first = table.rows.begin();
+    auto last = table.rows.end();
+    return makeEvaluatedTableView({}, EvaluatedTableView{++first, last});
+}
+
+Expression dropEvaluatedTableView(const EvaluatedTableView& table) {
+    auto first = table.first;
+    auto last = table.last;
+    return makeEvaluatedTableView({}, EvaluatedTableView{++first, last});
+}
+
 Expression take(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return getEvaluatedStack(in).top;
@@ -82,6 +94,18 @@ Expression take(Expression in) {
         case EMPTY_STACK: return Expression{ANY, {}, {}};
         case EMPTY_STRING: return Expression{ANY, {}, {}};
         default: throw UnexpectedExpression(in.type, "take");
+    }
+}
+
+Expression drop(Expression in) {
+    switch (in.type) {
+        case EVALUATED_STACK: return getEvaluatedStack(in).rest;
+        case STRING: return getString(in).rest;
+        case EVALUATED_TABLE: return dropEvaluatedTable(getEvaluatedTable(in));
+        case EVALUATED_TABLE_VIEW: return dropEvaluatedTableView(getEvaluatedTableView(in));
+        case EMPTY_STACK: return Expression{ANY, {}, {}};
+        case EMPTY_STRING: return Expression{ANY, {}, {}};
+        default: throw UnexpectedExpression(in.type, "drop");
     }
 }
 
