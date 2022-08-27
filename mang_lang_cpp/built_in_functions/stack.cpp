@@ -35,38 +35,23 @@ Expression put(Expression in) {
     }
 }
 
-Expression takeEvaluatedTable(const EvaluatedTable& table) {
-    auto first = table.rows.begin();
-    return makeEvaluatedTuple(
-        {}, EvaluatedTuple{{first->second.key, first->second.value}}
-    );
+template<typename T>
+Expression takeTable(const T& table) {
+    const auto& pair = table.begin()->second;
+    return makeEvaluatedTuple({}, EvaluatedTuple{{pair.key, pair.value}});
 }
 
-Expression takeEvaluatedTableView(const EvaluatedTableView& table) {
-    auto first = table.first;
-    return makeEvaluatedTuple(
-        {}, EvaluatedTuple{{first->second.key, first->second.value}}
-    );
-}
-
-Expression dropEvaluatedTable(const EvaluatedTable& table) {
-    auto first = table.rows.begin();
-    auto last = table.rows.end();
-    return makeEvaluatedTableView({}, EvaluatedTableView{++first, last});
-}
-
-Expression dropEvaluatedTableView(const EvaluatedTableView& table) {
-    auto first = table.first;
-    auto last = table.last;
-    return makeEvaluatedTableView({}, EvaluatedTableView{++first, last});
+template<typename T>
+Expression dropTable(const T& table) {
+    return makeEvaluatedTableView({}, EvaluatedTableView{++table.begin(), table.end()});
 }
 
 Expression take(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return getEvaluatedStack(in).top;
         case STRING: return getString(in).top;
-        case EVALUATED_TABLE: return takeEvaluatedTable(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return takeEvaluatedTableView(getEvaluatedTableView(in));
+        case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
+        case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
         case EMPTY_STACK: return Expression{ANY, {}, {}};
         case EMPTY_STRING: return Expression{ANY, {}, {}};
         default: throw UnexpectedExpression(in.type, "take");
@@ -77,8 +62,8 @@ Expression drop(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return getEvaluatedStack(in).rest;
         case STRING: return getString(in).rest;
-        case EVALUATED_TABLE: return dropEvaluatedTable(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return dropEvaluatedTableView(getEvaluatedTableView(in));
+        case EVALUATED_TABLE: return dropTable(getEvaluatedTable(in));
+        case EVALUATED_TABLE_VIEW: return dropTable(getEvaluatedTableView(in));
         case EMPTY_STACK: return Expression{ANY, {}, {}};
         case EMPTY_STRING: return Expression{ANY, {}, {}};
         default: throw UnexpectedExpression(in.type, "drop");

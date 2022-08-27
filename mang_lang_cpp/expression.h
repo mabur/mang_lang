@@ -252,12 +252,18 @@ struct Table {
 
 // TODO: make cheaper to copy or pass by reference or pointer?
 struct EvaluatedTable {
+    using Iterator = std::map<std::string, Row>::const_iterator;
     std::map<std::string, Row> rows;
+    Iterator begin() const {return rows.begin();}
+    Iterator end() const {return rows.end();}
     bool empty() const {return rows.empty();}
 };
 
 struct EvaluatedTableView {
-    std::map<std::string, Row>::const_iterator first;
-    std::map<std::string, Row>::const_iterator last;
+    using Iterator = std::map<std::string, Row>::const_iterator;
+    Iterator first;
+    Iterator last;
+    Iterator begin() const {return first;}
+    Iterator end() const {return last;}
     bool empty() const {return first == last;}
 };
