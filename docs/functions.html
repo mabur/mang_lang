@@ -49,18 +49,7 @@ For tables we have that <code>put_each!(<1:1 2:1 3:1> <5:2 2:2 4:2>)</code> retu
 <dt>fold</dt><dd><code>fold!(binary_operation container init)</code> is mainly used as an algorithmic building block to implement the other container functions. O(N).</dd>
 </dl>
 
-<h2>Generic Container Functions - Family of Triplets</h2>
-The following family of container functions follow a similar pattern.
-They come in three different versions.
-The first version takes a container as input.
-The second version take a container and an item as input.
-The third version takes a container and a predicate as input.
-A predicate is what we call a function that takes an item and returns a boolean, e.g. <code>is_digit</code>.
-<dl>
-<dt>count</dt><dd><code>count!container</code> returns the number of items in the container. O(N).</dd>
-<dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container. O(N).</dd>
-<dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of items for which the predicate says <code>yes</code>. O(N).</dd>
-</dl>
+<h2>Generic Container Functions</h2>
 <dl>
 <dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input. O(1).</dd>
 <dt>clear_item</dt><dd><code>clear_item!(item container)</code> returns a container with all occurances of the specified item removed. O(N).</dd>
@@ -81,6 +70,11 @@ A predicate is what we call a function that takes an item and returns a boolean,
 <dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each item is replaced with new_item. O(N).</dd>
 <dt>replace_item</dt><dd><code>replace_item!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item. O(N).</dd>
 <dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each item is replaced if the predicate says <code>yes</code>. O(N).</dd>
+</dl>
+<dl>
+<dt>count</dt><dd><code>count!container</code> returns the number of items in the container. O(N).</dd>
+<dt>count_item</dt><dd><code>count!(item container)</code> counts the number of occurances of an item in the container. O(N).</dd>
+<dt>count_if</dt><dd><code>count_if!(predicate container)</code> counts the number of items for which the predicate says <code>yes</code>. O(N).</dd>
 </dl>
 
 <h2>Generic Container Functions - Accessing Items</h2>
