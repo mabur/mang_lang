@@ -254,6 +254,16 @@ const std::string STANDARD_LIBRARY = R"(
         short_stack = reverse!reversed_result
     }
 
+    take_while = in (predicate stack) out short_stack@{
+        reversed_result = clear!stack
+        stack = stack
+        while if stack then predicate?take!stack else no
+            reversed_result = put!(take!stack reversed_result)
+            stack = drop!stack
+        end
+        short_stack = reverse!reversed_result
+    }
+
     split = in (n stack) out stacks@{
         top_stack = clear!stack
         bottom_stack = stack

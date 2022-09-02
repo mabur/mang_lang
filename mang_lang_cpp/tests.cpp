@@ -1425,6 +1425,12 @@ int main() {
         {R"(take_many!(2 "abc"))", R"("ab")"},
         {R"(take_many!(3 "abc"))", R"("abc")"},
     });
+    test.evaluate("take_while string", {
+        {R"(take_while!(is_upper ""))", R"("")"},
+        {R"(take_while!(is_upper "a"))", R"("")"},
+        {R"(take_while!(is_upper "A"))", R"("A")"},
+        {R"(take_while!(is_upper "ABcd"))", R"("AB")"},
+    });
     test.evaluate("get_index stack", {
         {"get_index!(0 [3 7 6])", "3"},
         {"get_index!(1 [3 7 6])", "7"},

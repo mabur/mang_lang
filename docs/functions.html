@@ -74,7 +74,8 @@ A predicate is what we call a function that takes an item and returns a boolean,
 </dl>
 <dl>
 <dt>take</dt><dd><code>take!container</code> returns a single item from the container. O(1).</dd>
-<dt>take_many</dt><dd><code>take_many!(n container)</code> returns a containers with the top n items. O(n).</dd>
+<dt>take_many</dt><dd><code>take_many!(n container)</code> returns a new containers with n items taken from the input container. O(n).</dd>
+<dt>take_while</dt><dd><code>take_while!(predicate container)</code> returns a new containers with items taken from the input container as long as the predicate says yes. O(N).</dd>
 </dl>
 <dl>
 <dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each item is replaced with new_item. O(N).</dd>
