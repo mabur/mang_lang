@@ -1406,12 +1406,12 @@ int main() {
         {R"(drop_while!(is_upper "A"))", R"("")"},
         {R"(drop_while!(is_upper "ABcd"))", R"("cd")"},
     });
-    test.evaluate("find_item string", {
-        {R"(find_item!(\a ""))", R"("")"},
-        {R"(find_item!(\a "a"))", R"("a")"},
-        {R"(find_item!(\a "b"))", R"("")"},
-        {R"(find_item!(\a "ab"))", R"("ab")"},
-        {R"(find_item!(\a "ba"))", R"("a")"},
+    test.evaluate("drop_until_item string", {
+        {R"(drop_until_item!(\a ""))", R"("")"},
+        {R"(drop_until_item!(\a "a"))", R"("a")"},
+        {R"(drop_until_item!(\a "b"))", R"("")"},
+        {R"(drop_until_item!(\a "ab"))", R"("ab")"},
+        {R"(drop_until_item!(\a "ba"))", R"("a")"},
     });
     test.evaluate("take_many stack", {
         {"take_many!(0 [3 7 6])", "[]"},

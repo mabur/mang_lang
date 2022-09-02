@@ -185,7 +185,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    find_item = in (item stack) out
+    drop_until_item = in (item stack) out
         drop_while?(in x out unequal?(x item) stack)
 
     replace = in (new_item stack) out fold!(

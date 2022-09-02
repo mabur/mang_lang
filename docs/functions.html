@@ -69,8 +69,8 @@ A predicate is what we call a function that takes an item and returns a boolean,
 <dl>
 <dt>drop</dt><dd><code>drop!container</code> returns the container with a single item dropped from it. O(1).</dd>
 <dt>drop_many</dt><dd><code>drop_many!(n container)</code> returns the container with n items dropped from it. O(n).</dd>
-<dt>find_item</dt><dd><code>find_item!(item container)</code> returns a container with the top items removed until the query item is found. O(N).</dd>
 <dt>drop_while</dt><dd><code>drop_while!(predicate container)</code> returns the container with items dropped from it as long as the predicate says yes. O(N).</dd>
+<dt>drop_until_item</dt><dd><code>drop_until_item!(item container)</code> returns a container with items dropped until the query item is found. O(N).</dd>
 </dl>
 <dl>
 <dt>take</dt><dd><code>take!container</code> returns a single item from the container. O(1).</dd>
