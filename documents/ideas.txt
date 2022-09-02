@@ -2,6 +2,8 @@ TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
 * Unify: find_item, find_if, drop, drop_many
 * add empty? function for containers?
+  - nonempty, populated, inhabited
+* Change syntax for characters back from \a to 'a'.
 * Document table functions.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
