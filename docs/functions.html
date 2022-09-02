@@ -67,20 +67,24 @@ A predicate is what we call a function that takes an item and returns a boolean,
 <dt>clear_if</dt><dd><code>clear_if!(predicate container)</code> returns a container without the items for which the predicate says <code>yes</code>. O(N).</dd>
 </dl>
 <dl>
+<dt>drop</dt><dd><code>drop!container</code> returns the container with a single item dropped from it. O(1).</dd>
+<dt>drop_many</dt><dd><code>drop_many!(n container)</code> returns the container with n items dropped from it. O(n).</dd>
+<dt>find_item</dt><dd><code>find_item!(item container)</code> returns a container with the top items removed until the query item is found. O(N).</dd>
+<dt>drop_while</dt><dd><code>drop_while!(predicate container)</code> returns the container with items dropped from it as long as the predicate says yes. O(N).</dd>
+</dl>
+<dl>
+<dt>take</dt><dd><code>take!container</code> returns a single item from the container. O(1).</dd>
+<dt>take_many</dt><dd><code>take_many!(n container)</code> returns a containers with the top n items. O(n).</dd>
+</dl>
+<dl>
 <dt>replace</dt><dd><code>replace!(new_item container)</code> returns a container where each item is replaced with new_item. O(N).</dd>
 <dt>replace_item</dt><dd><code>replace_item!(old_item new_item container)</code> returns a container with occurances of old_item replaced with new_item. O(N).</dd>
 <dt>replace_if</dt><dd><code>replace_if!(predicate new_item container)</code> returns a container where each item is replaced if the predicate says <code>yes</code>. O(N).</dd>
-</dl>
-<dl>
-<dt>find_item</dt><dd><code>find_item!(item container)</code> returns a container with the top items removed until the query item is found. O(N).</dd>
-<dt>find_if</dt><dd><code>find_if!(predicate container)</code> returns a container with the top items removed until the predicate says yes. O(N).</dd>
 </dl>
 
 <h2>Generic Container Functions - Accessing Items</h2>
 You can access the items of a container via <code>take!container</code> and <code>drop!container</code>, or using the following functions:
 <dl>
-<dt>take_many</dt><dd><code>take_many!(n container)</code> returns a containers with the top n items. O(n).</dd>
-<dt>drop_many</dt><dd><code>drop_many!(n container)</code> returns a container with the top n items removed. O(n).</dd>
 <dt>split</dt><dd><code>split!(n container)</code> O(n).</dd>
 <dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container. O(n).</dd>
 <dt>first</dt><dd><code>first!container</code> returns the first item in the container. O(1).</dd>

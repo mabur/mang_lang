@@ -1400,11 +1400,11 @@ int main() {
         {R"(drop_many!(2 "abc"))", R"("c")"},
         {R"(drop_many!(3 "abc"))", R"("")"},
     });
-    test.evaluate("find_if string", {
-        {R"(find_if!(is_upper ""))", R"("")"},
-        {R"(find_if!(is_upper "a"))", R"("")"},
-        {R"(find_if!(is_upper "A"))", R"("A")"},
-        {R"(find_if!(is_upper "abCD"))", R"("CD")"},
+    test.evaluate("drop_while string", {
+        {R"(drop_while!(is_upper ""))", R"("")"},
+        {R"(drop_while!(is_upper "a"))", R"("a")"},
+        {R"(drop_while!(is_upper "A"))", R"("")"},
+        {R"(drop_while!(is_upper "ABcd"))", R"("cd")"},
     });
     test.evaluate("find_item string", {
         {R"(find_item!(\a ""))", R"("")"},

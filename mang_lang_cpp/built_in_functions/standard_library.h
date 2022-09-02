@@ -10,7 +10,7 @@ const std::string STANDARD_LIBRARY = R"(
     equal = in (left right) out is left right then yes else no
     unequal = in (left right) out is left right then no else yes
 
-    greater = in (left right) out less?(right left)
+    less_or_equal = in (left right) out not?less?(right left)
 
     inf = div!(1 0)
     nan = div!(0 0)
@@ -178,15 +178,15 @@ const std::string STANDARD_LIBRARY = R"(
     clear_item = in (item stack) out
         clear_if?(in x out equal?(x item) stack)
 
-    find_if = in (predicate stack) out stack@{
+    drop_while = in (predicate stack) out stack@{
         stack = stack
-        while if stack then not!predicate?take!stack else no
+        while if stack then predicate?take!stack else no
             stack = drop!stack
         end
     }
 
     find_item = in (item stack) out
-        find_if?(in x out equal?(x item) stack)
+        drop_while?(in x out unequal?(x item) stack)
 
     replace = in (new_item stack) out fold!(
         in (item stack) out put!(new_item stack)
@@ -267,11 +267,14 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_index = in (index stack) out take!drop_many!(index stack)
 
-    all = in stack out not?find_if!(not stack)
-    none = in stack out not?find_if!(boolean stack)
-    any = in stack out boolean?find_if!(boolean stack)
+    all = in stack out not?drop_while!(boolean stack)
+    none = in stack out not?drop_while!(not stack)
+    any = in stack out boolean?drop_while!(not stack)
 
-    is_increasing = in stack out not?find_if!(greater consecutive_pairs!stack)
+    is_increasing = in stack out not?drop_while!(
+        less_or_equal
+        consecutive_pairs!stack
+    )
 
     and = in stack out all?stack
     or = in stack out any?stack
