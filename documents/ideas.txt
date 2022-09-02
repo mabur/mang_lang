@@ -4,6 +4,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
 * add empty? function for containers?
   - nonempty, populated, inhabited
 * Change syntax for characters back from \a to 'a'.
+* Add short-circuit "and" to while statement.
 * Document table functions.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
