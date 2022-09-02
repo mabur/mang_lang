@@ -242,26 +242,24 @@ const std::string STANDARD_LIBRARY = R"(
 
     enumerate = in stack out zip!(range!count!stack stack)
 
-    take_many = in (n stack) out short_stack@{
-        reversed_result = clear!stack
+    take_many = in (n stack) out reverse!short_stack@{
+        stack_out = clear!stack
         stack = stack
-        i = n
-        while i
-            i = dec!i
-            reversed_result = put!(take!stack reversed_result)
+        n = n
+        while n
+            n = dec!n
+            stack_out = put!(take!stack stack_out)
             stack = drop!stack
         end
-        short_stack = reverse!reversed_result
     }
 
-    take_while = in (predicate stack) out short_stack@{
-        reversed_result = clear!stack
+    take_while = in (predicate stack) out reverse!stack_out@{
+        stack_out = clear!stack
         stack = stack
         while if stack then predicate?take!stack else no
-            reversed_result = put!(take!stack reversed_result)
+            stack_out = put!(take!stack stack_out)
             stack = drop!stack
         end
-        short_stack = reverse!reversed_result
     }
 
     split = in (n stack) out stacks@{
