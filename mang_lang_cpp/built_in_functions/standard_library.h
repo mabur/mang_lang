@@ -178,6 +178,29 @@ const std::string STANDARD_LIBRARY = R"(
     clear_item = in (item stack) out
         clear_if?(in x out equal?(x item) stack)
 
+    take_many = in (n stack) out reverse!stack_out@{
+        stack_out = clear!stack
+        stack = stack
+        n = n
+        while n
+            n = dec!n
+            stack_out = put!(take!stack stack_out)
+            stack = drop!stack
+        end
+    }
+
+    take_while = in (predicate stack) out reverse!stack_out@{
+        stack_out = clear!stack
+        stack = stack
+        while if stack then predicate?take!stack else no
+            stack_out = put!(take!stack stack_out)
+            stack = drop!stack
+        end
+    }
+
+    take_until_item = in (item stack) out
+        take_while!(in x out unequal?(x item) stack)
+
     drop_many = in (n stack) out stack@{
         n = n
         stack = stack
@@ -241,29 +264,6 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     enumerate = in stack out zip!(range!count!stack stack)
-
-    take_many = in (n stack) out reverse!stack_out@{
-        stack_out = clear!stack
-        stack = stack
-        n = n
-        while n
-            n = dec!n
-            stack_out = put!(take!stack stack_out)
-            stack = drop!stack
-        end
-    }
-
-    take_while = in (predicate stack) out reverse!stack_out@{
-        stack_out = clear!stack
-        stack = stack
-        while if stack then predicate?take!stack else no
-            stack_out = put!(take!stack stack_out)
-            stack = drop!stack
-        end
-    }
-
-    take_until_item = in (item stack) out
-        take_while!(in x out unequal?(x item) stack)
 
     split = in (n stack) out stacks@{
         top_stack = clear!stack
