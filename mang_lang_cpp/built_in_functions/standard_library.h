@@ -265,17 +265,6 @@ const std::string STANDARD_LIBRARY = R"(
 
     enumerate = in stack out zip!(range!count!stack stack)
 
-    split = in (n stack) out stacks@{
-        top_stack = clear!stack
-        bottom_stack = stack
-        while and?[n bottom_stack]
-            n = dec!n
-            top_stack = put!(take!bottom_stack top_stack)
-            bottom_stack = drop!bottom_stack
-        end
-        stacks = [top_stack bottom_stack]
-    }
-
     get_index = in (index stack) out take!drop_many!(index stack)
 
     all = in stack out not?drop_while!(boolean stack)
