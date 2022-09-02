@@ -242,7 +242,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     enumerate = in stack out zip!(range!count!stack stack)
 
-    take_many = in (n stack) out reverse!short_stack@{
+    take_many = in (n stack) out reverse!stack_out@{
         stack_out = clear!stack
         stack = stack
         n = n
@@ -261,6 +261,9 @@ const std::string STANDARD_LIBRARY = R"(
             stack = drop!stack
         end
     }
+
+    take_until_item = in (item stack) out
+        take_while!(in x out unequal?(x item) stack)
 
     split = in (n stack) out stacks@{
         top_stack = clear!stack
