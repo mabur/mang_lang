@@ -1,7 +1,7 @@
 TODO:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
 * Unify: find_item, find_if, drop, drop_many
-* Add different versions of min and max.
+* Add different versions of min and max: min, min_item, min_key, min_predicate
 * add empty? function for containers?
   - nonempty, populated, inhabited
 * Change syntax for characters back from \a to 'a'.
