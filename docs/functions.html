@@ -159,6 +159,10 @@ For the following functions you need to know what kind of container you want to 
 <dt>product</dt><dd>Multiplies a stack of numbers to a single number. Returns <code>1</code> if the stack is empty.</dd>
 <dt>min_item</dt><dd>Minimum of a stack of numbers. Returns <code>inf</code> if the stack is empty.</dd>
 <dt>max_item</dt><dd>Maximum of a stack of numbers. Returns <code>-inf</code> if the stack is empty.</dd>
+<dt>min_key</dt><dd><code>min_key!(key stack)</code> returns the item in the stack for which the the result of the function application <code>key!item</code> is smallest. Requires the stack to be non-empty.</dd>
+<dt>max_key</dt><dd><code>max_key!(key stack)</code> returns the item in the stack for which the result of the function application <code>key!item</code> is largest. Requires the stack to be non-empty..</dd>
+<dt>min_predicate</dt><dd> <code>min_predicate!(predicate stack)</code> compares all items in the stack and returns the item that is smallest according to the binary predicate. <code>predicate!(left right)</code> checks if left is smaller than right and returns a boolean. Requires the stack to be non-empty.</dd>
+<dt>max_predicate</dt><dd> <code>max_predicate!(predicate stack)</code> compares all items in the stack and returns the item that is largest according to the binary predicate. <code>predicate!(left right)</code> checks if left is smaller than right and returns a boolean. Requires the stack to be non-empty.</dd>
 </dl>
 
 <h2>Character Functions</h2>
