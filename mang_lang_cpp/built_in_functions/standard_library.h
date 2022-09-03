@@ -148,6 +148,18 @@ const std::string STANDARD_LIBRARY = R"(
 
     max_item = in stack out fold!(max stack -inf)
 
+    min_predicate = in (predicate stack) out fold!(
+        in (left right) out if predicate?(left right) then left else right
+        drop!stack
+        take!stack
+    )
+
+    max_predicate = in (predicate stack) out fold!(
+        in (left right) out if predicate?(left right) then right else left
+        drop!stack
+        take!stack
+    )
+
     min_key = in (key stack) out fold!(
         in (left right) out if less?(key!left key!right) then left else right
         drop!stack

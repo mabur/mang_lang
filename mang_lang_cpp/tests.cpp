@@ -1048,6 +1048,12 @@ int main() {
     test.evaluate("max_key stack", {
         {"max_key!(in (w h) out mul!(w h) [(1 2) (2 2) (3 1)])", "(2 2)"},
     });
+    test.evaluate("min_predicate stack", {
+        {"min_predicate!(in (a b) out less?(mul!a mul!b) [(1 2) (2 2) (3 1)])", "(1 2)"},
+    });
+    test.evaluate("max_predicate stack", {
+        {"max_predicate!(in (a b) out less?(mul!a mul!b) [(1 2) (2 2) (3 1)])", "(2 2)"},
+    });
     test.evaluate_types("range", {
         {"range!0", "[NUMBER]"},
         {"range!1", "[NUMBER]"},
