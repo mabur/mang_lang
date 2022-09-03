@@ -20,7 +20,6 @@ TODO Standard Library:
     that applies identity to first argument, so that it can be used for table pairs of (key value).
   - add higher_order function that takes a unary predicate and constructs a new binary predicate
     that ignores the first argument, so that it can be used for table pairs of (key value).
-* Add different versions of min and max: min, min_item, min_key, min_predicate
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
   - Let unordered be default since it makes sense for both stacks and tables.
   - clear_if_ordered, map_ordered.
