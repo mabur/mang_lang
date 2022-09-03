@@ -1,139 +1,74 @@
-TODO:
-https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
-* Unify: find_item, find_if, drop, drop_many
-* Add different versions of min and max: min, min_item, min_key, min_predicate
-* add empty? function for containers?
-  - nonempty, populated, inhabited
-* Add short-circuit "and" to while statement.
-* Document table functions.
-* Type checking for tables.
-  - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
-* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
-* Interface for containers and tables and iterators:
-  - Interface for containers is very much the same as interface for iterators: !=end/empty/boolean, */dereference/take/first, ++/next/drop/successor/advance
-  - Then containers adds put and clear, besides the iterator interface.
+TODO Standard Library:
+* Interface for containers:
+  - add empty? function for containers?
+    - nonempty, populated, inhabited
   - Merge get_index!(n container) for containers and get!(key table default_value) for tables?
-  - put!(item container)
-  - set!((key value) table)
   - add generic map that requires that f has same input and output type,
     so that it does not change type of the container.
     Then the same map could be used for stack, string, table.
     That map could be used instead of replace_*.
-  - Rename find_* to remove/drop until something is found, to work better with tables. 
   - add higher_order function that takes a unary function and constructs a new binary function
     that applies identity to first argument, so that it can be used for table pairs of (key value).
   - add higher_order function that takes a unary predicate and constructs a new binary predicate
     that ignores the first argument, so that it can be used for table pairs of (key value).
-(
-* take!container
-  - value for stack and string
-  - (key value) for table
-* drop!containers
-  - immutable for stack and strings
-  - mutable for table
-  - imutable view for table
-)
+  - get/get_index!(key table default_value)
+    - O(N) for stack and string
+    - O(1) for table
+  - count!containers
+    - O(N) for stack and string
+    - O(1) for table
+  - Built-in functions for checking if name is in dict: has?(name dictionary) contains? inside?
+* Add different versions of min and max: min, min_item, min_key, min_predicate
+* Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
+* Vector math. Is manglang suitable for numerical computations on arrays?
+  - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
+  - norms, dot, inner_products
+* Functions:
+  - Math: trigonometry
+  - Character: string_from_number, number_from_string
 
-* clear!container
-  - new empty container of same type
-* put/set!(item container)
-  - item = value for stack and strings
-  - item = (key value) for table
-* fold!(operation stack init)
-  - (Alternative 1 operate on value)
-  - Alternative 2 operate on (key value)
-
-* get/get_index!(key table default_value)
-  - O(N) for stack and string
-  - O(1) for table
-* count!containers
-  - O(N) for stack and string
-  - O(1) for table
-
-* Functions that can have shared implementation (folds):
-  - reverse/copy
-  - put_each
-  - map_same
-  - clear_if / filter
-
-  - count_if
-  - sum
-  - product
-  - min
-  - max
-
-* Unresolved folds with early exit:
-  - find_if
-  - find_item
-  - contains
-  - Could resolve by implementing as normal fold and avoiding early exit:
-    - any
-    - all
-    - none
-  - Could resolve by having one of them as built-in.
-  - Could resolve by having find_if as built-in.
-    find_if = in (predicate container) out container@{
-        container = container
-        while if container then not!predicate?take!container else no
-            container = drop!container
-        end
-    }
-
-  copy_stack
-  copy_to_stack
-  copy2stack
-  make_stack (!)
-  to_stack
-
-  concat_to_stack
-  concatenate_to_stack
-  concat2stack
-  fuse_stack
-  merge_stack (!)
-  combine_stack
-  join_stack
-  flatten_stack
-
-  map_stack (!)
-  map_to_stack
-  map2stack
-
-
-* Stack and table comprehension and fold/reduction?
-* Ranges. Store both stacks and tables as ranges.
-  - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
-  - Or at least as long as we do not mutate while iterating.
-  - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
-    
-* Persistent hash map like in Clojure. Array mapped hash tries (Bagwell: non-persistent, Rich Hickey: persistent).
-  - HAMT - Hash Array Mapped Tries.
-  - When making copies, it creates new nodes for the path from the root to the leaf, and shares the rest.
-
-* Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
-  - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
-  - Let them have the semantics:
-    evaluate preserve expression -> expression
-  - "Evaluate" function as general solution that can be used to convert strings to names and general code, e.g. for parsing json.
-* Tools:
-  - Type checking.
-  - Command line interface for reading source from file and piping it to interpretor
+TODO Tools:
+* Type checking from command line.
+* Command line interface for reading source from file and piping it to interpretor
 * Code formatting
   - Indentaiton and line breaks.
   - Colors and syntax high-lighting.
   - Implement tool that takes a source file and outputs an html.
   - Homepage
+* Web interpreter using wasm.
+
+TODO example programs:
+* Raytracing
+* Parsing Json
+* Parsing Manglang
+* Advent of code
+
+TODO Language:
+https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
+* Add short-circuit "and" to while statement.
+* Type checking for tables.
+  - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
+* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
+* Stack and table comprehension and fold/reduction?
+* Ranges. Store both stacks and tables as ranges.
+  - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
+  - Or at least as long as we do not mutate while iterating.
+  - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
+* Persistent hash map like in Clojure. Array mapped hash tries (Bagwell: non-persistent, Rich Hickey: persistent).
+  - HAMT - Hash Array Mapped Tries.
+  - When making copies, it creates new nodes for the path from the root to the leaf, and shares the rest.
+* Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
+  - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
+  - Let them have the semantics:
+    evaluate preserve expression -> expression
+  - "Evaluate" function as general solution that can be used to convert strings to names and general code, e.g. for parsing json.
 * Advent of code Needs
   * Look at advent of code 2021 day 10 for example of code with a bit of friction
     - Try to implement calculation of most common words in a text.
   * Memory
     - 64 bit
     - Use less memory
-* Example programs:
-  - Parsing Json
-  - Parsing Manglang
-  - Raytracing
 * Memory management.
-* Built-in functions for checking if name is in dict: has?(name dictionary) contains? inside?
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
@@ -143,7 +78,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Lists (done)
   - Tables (done)
   - Functions (todo)
-* Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
 * Error handling:
   - Output logs
   - Make "1 2" throw a parse error
@@ -152,17 +86,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_languag
   - Better error messages
   - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
-* Is manglang suitable for numerical computations on arrays?
-* vector math
-  - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
-  - norms, dot, inner_products
-* Generic programming
-  - Generic container interface.
-  - Describe ListBase as a "Concept".
 * Rename to Mangelang?
-* Functions:
-  - Math: trigonometry
-  - Character: string_from_number, number_from_string
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
 https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
 * Implement everything needed to convert between json and manglang in manglang.
@@ -218,6 +142,7 @@ SIMILAR LANGUAGES
 * Lisp family: https://en.wikipedia.org/wiki/Lisp_(programming_language)
 * Json: https://www.json.org/
 
+* Nix https://nixos.wiki/wiki/Overview_of_the_Nix_Language
 * HCL / Terraform language https://github.com/hashicorp/hcl https://www.terraform.io/language
 * Jsonnet https://jsonnet.org/
 * Dhall https://dhall-lang.org/
