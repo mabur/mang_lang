@@ -153,14 +153,17 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    min = in stack out fold!(
-        in (item value) out if less?(item value) then item else value
+    min = in (left right) out if less?(left right) then left else right
+    max = in (left right) out if less?(left right) then right else left
+
+    min_item = in stack out fold!(
+        min
         stack
         inf
     )
 
-    max = in stack out fold!(
-        in (item value) out if less?(item value) then value else item
+    max_item = in stack out fold!(
+        max
         stack
         -inf
     )

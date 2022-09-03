@@ -1010,37 +1010,37 @@ int main() {
         {"parse_digit!'8'", "8"},
         {"parse_digit!'9'", "9"},
     });
-    test.evaluate_types("min stack", {
-        {"min![]", "NUMBER"},
-        {"min![0]", "NUMBER"},
-        {"min![0 1]", "NUMBER"},
-        {"min![1 0]", "NUMBER"},
-        {"min![3 6 1]", "NUMBER"},
-        {"min![7 -3 8 -9]", "NUMBER"},
+    test.evaluate_types("min_item stack", {
+        {"min_item![]", "NUMBER"},
+        {"min_item![0]", "NUMBER"},
+        {"min_item![0 1]", "NUMBER"},
+        {"min_item![1 0]", "NUMBER"},
+        {"min_item![3 6 1]", "NUMBER"},
+        {"min_item![7 -3 8 -9]", "NUMBER"},
     });
-    test.evaluate("min stack", {
-        {"min![]", "inf"},
-        {"min![0]", "0"},
-        {"min![0 1]", "0"},
-        {"min![1 0]", "0"},
-        {"min![3 6 1]", "1"},
-        {"min![7 -3 8 -9]", "-9"},
+    test.evaluate("min_item stack", {
+        {"min_item![]", "inf"},
+        {"min_item![0]", "0"},
+        {"min_item![0 1]", "0"},
+        {"min_item![1 0]", "0"},
+        {"min_item![3 6 1]", "1"},
+        {"min_item![7 -3 8 -9]", "-9"},
     });
-    test.evaluate_types("max stack", {
-        {"max![]", "NUMBER"},
-        {"max![0]", "NUMBER"},
-        {"max![0 1]", "NUMBER"},
-        {"max![1 0]", "NUMBER"},
-        {"max![3 6 1]", "NUMBER"},
-        {"max![7 -3 8 -9]", "NUMBER"},
+    test.evaluate_types("max_item stack", {
+        {"max_item![]", "NUMBER"},
+        {"max_item![0]", "NUMBER"},
+        {"max_item![0 1]", "NUMBER"},
+        {"max_item![1 0]", "NUMBER"},
+        {"max_item![3 6 1]", "NUMBER"},
+        {"max_item![7 -3 8 -9]", "NUMBER"},
     });
-    test.evaluate("max stack", {
-        {"max![]", "-inf"},
-        {"max![0]", "0"},
-        {"max![0 1]", "1"},
-        {"max![1 0]", "1"},
-        {"max![3 6 1]", "6"},
-        {"max![7 -3 8 -9]", "8"},
+    test.evaluate("max_item stack", {
+        {"max_item![]", "-inf"},
+        {"max_item![0]", "0"},
+        {"max_item![0 1]", "1"},
+        {"max_item![1 0]", "1"},
+        {"max_item![3 6 1]", "6"},
+        {"max_item![7 -3 8 -9]", "8"},
     });
     test.evaluate_types("range", {
         {"range!0", "[NUMBER]"},
