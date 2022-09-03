@@ -61,18 +61,6 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    sum = in stack out fold!(
-        add
-        stack
-        0
-    )
-
-    product = in stack out fold!(
-        mul
-        stack
-        1
-    )
-
     reverse = in stack out fold!(
         put
         stack
@@ -156,17 +144,13 @@ const std::string STANDARD_LIBRARY = R"(
     min = in (left right) out if less?(left right) then left else right
     max = in (left right) out if less?(left right) then right else left
 
-    min_item = in stack out fold!(
-        min
-        stack
-        inf
-    )
+    min_item = in stack out fold!(min stack inf)
 
-    max_item = in stack out fold!(
-        max
-        stack
-        -inf
-    )
+    max_item = in stack out fold!(max stack -inf)
+
+    sum = in stack out fold!(add stack 0)
+
+    product = in stack out fold!(mul stack 1)
 
     clear_if = in (predicate stack) out reverse!fold!(
         in (item stack) out
