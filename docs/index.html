@@ -189,10 +189,10 @@ Manglang has a single number type which is a 64 bit float:
 
 <h2 id="characters">1.b. Characters</h2>
 <p>
-A single ascii character is written with <code>\</code> as prefix:
+A single ascii character is written as:
 </p>
 <pre>
-\a
+'a'
 </pre>
 
 <h2 id="booleans">1.c. Booleans</h2>
@@ -218,7 +218,7 @@ Manglang has five different kinds of containers which can store other data insid
 Dictionaries are used to associate names / symbols with expressions:
 </p>
 <pre>
-{pi=3.14 first_letter=\A}
+{pi=3.14 first_letter='A'}
 </pre>
 <p>
 Manglang doesn't care about extra whitespace so the program above can also be written as:
@@ -226,7 +226,7 @@ Manglang doesn't care about extra whitespace so the program above can also be wr
 <pre>
 {
   pi = 1
-  first_letter = \A
+  first_letter = 'A'
 }
 </pre>
 <p>
@@ -329,15 +329,15 @@ We will see that each of them can be seen as syntactic sugar sprinkled on dictio
 <h2 id="tuples">2.b. Tuples</h2>
 <p>Tuples of values are written as:</p>
 <pre>
-(3 17.5 yes \A)
+(3 17.5 yes 'A')
 </pre>
 <p>
 We use tuples to group different atomics as an ordered collection. The elements of the tuple can have different types, just as the elements of a dictionary can have different types. To see the similarity consider this example:
 </p>
 <pre>
 {
-  tuple = (3 17.5 yes \A)
-  dictionary = {first=3 second=17.5 third=yes fourth=\A}
+  tuple = (3 17.5 yes 'A')
+  dictionary = {first=3 second=17.5 third=yes fourth='A'}
 }
 </pre>
 These are two different ways of storing the same data.
@@ -402,14 +402,14 @@ They can be seen as stacks of characters. Example of a program using functions o
   b = take!a
   c = drop!a
   d = reverse!a
-  e = put!(\E a)
+  e = put!('E' a)
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
   a = "Manglang"
-  b = \M
+  b = 'M'
   c = "anglang"
   d = "gnalgnaM"
   e = "EManglang"
@@ -544,31 +544,31 @@ The <code>is</code> operator is used to check for equality among many alternativ
 </p>
 <pre>
 {
-  opening = \{
+  opening = '{'
   closing = is opening
-    \( then \)
-    \[ then \]
-    \{ then \}
-    \< then \>
-    else  \.
+    '(' then ')'
+    '[' then ']'
+    '{' then '}'
+    '<' then '>'
+    else  '.'
 }
 </pre>
 The input above is evaluated to the output below:
 <pre>
 {
-  opening = \{
-  closing = \}
+  opening = '{'
+  closing = '}'
 }
 </pre>
 The <code>is</code> operator can be seen as syntactic sugar for a more verbose combination of the <code>if</code> operator and the <code>equal</code> function:
 <pre>
 {
-  opening = \{
-  closing = if equal?(opening \() then \)
-    else if equal?(opening \{) then \}
-    else if equal?(opening \[) then \]
-    else if equal?(opening \<) then \>
-    else \.
+  opening = '{'
+  closing = if equal?(opening '(') then ')'
+    else if equal?(opening '{') then '}'
+    else if equal?(opening '[') then ']'
+    else if equal?(opening '<') then '>'
+    else '.'
 }
 </pre>
 

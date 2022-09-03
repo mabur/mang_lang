@@ -13,7 +13,7 @@ std::string serializeName(Expression name) {
 }
 
 std::string serializeCharacter(const Character& character) {
-    return "\\" + std::string{character.value};
+    return '\'' + std::string{character.value} + '\'';
 }
 
 std::string serializeConditional(const Conditional& conditional) {

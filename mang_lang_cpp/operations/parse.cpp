@@ -14,10 +14,11 @@ const CodeCharacter* end(Expression expression) {
 
 Expression parseCharacterExpression(CodeRange code) {
     auto first = code.begin();
-    code = parseCharacter(code, '\\');
+    code = parseCharacter(code, '\'');
     const auto it = code.begin();
     code = parseCharacter(code);
     const auto value = it->character;
+    code = parseCharacter(code, '\'');
     return makeCharacter(CodeRange{first, code.begin()}, {value});
 }
 
@@ -358,7 +359,7 @@ Expression parseExpression(CodeRange code) {
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}
         if (c == '<') {return parseTable(code);}
-        if (c == '\\') {return parseCharacterExpression(code);}
+        if (c == '\'') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
         if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
