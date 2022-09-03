@@ -1042,6 +1042,12 @@ int main() {
         {"max_item![3 6 1]", "6"},
         {"max_item![7 -3 8 -9]", "8"},
     });
+    test.evaluate("min_key stack", {
+        {"min_key!(in (w h) out mul!(w h) [(1 2) (2 2) (3 1)])", "(1 2)"},
+    });
+    test.evaluate("max_key stack", {
+        {"max_key!(in (w h) out mul!(w h) [(1 2) (2 2) (3 1)])", "(2 2)"},
+    });
     test.evaluate_types("range", {
         {"range!0", "[NUMBER]"},
         {"range!1", "[NUMBER]"},

@@ -148,6 +148,18 @@ const std::string STANDARD_LIBRARY = R"(
 
     max_item = in stack out fold!(max stack -inf)
 
+    min_key = in (key stack) out fold!(
+        in (left right) out if less?(key!left key!right) then left else right
+        drop!stack
+        take!stack
+    )
+
+    max_key = in (key stack) out fold!(
+        in (left right) out if less?(key!left key!right) then right else left
+        drop!stack
+        take!stack
+    )
+
     sum = in stack out fold!(add stack 0)
 
     product = in stack out fold!(mul stack 1)
