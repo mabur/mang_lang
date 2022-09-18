@@ -1,4 +1,7 @@
 TODO Standard Library:
+* James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
+  - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
+  - Compare iterators over an array.
 * Interface for containers:
   - add empty? function for containers?
     - nonempty, populated, inhabited
