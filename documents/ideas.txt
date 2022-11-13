@@ -5,6 +5,31 @@ TODO Standard Library:
 * Interface for containers:
   - add empty? function for containers?
     - nonempty, populated, inhabited
+    - empty = in container out is container
+        [] then true
+        "" then true
+        <> then true
+        0 then true
+        else false
+  - Compare interface for iterating over containers and numbers:
+    - take!container, 1, ?
+    - drop!container, dec!number
+    - put!(item container), add!(1 number), inc!number
+    - empty
+    - clear!container, [], "", <>, 0
+    - put!(take!x drop!x) == x, add!(1 dec!x) == x
+    - ett positivt heltal är ekvivalent med en stack, där bara längden på stacken spelar roll, men inte innehållet.
+    - sub!(a b) == take_n!(count!b a)
+    - mul!(a b) == cartesian product?
+    - div?
+    - inc?
+    - reverse!number == number
+    - put_each!(a b) == add!(a b)
+    - make_number!container == count!container
+    - merge_stack!(a b) == sum_stack!(a b)
+    - map_number!(f number) == sum_N f(n)
+    - sum![numbers] == merge_stacks![stacks]
+    - product![numbers] == cartesian product?
   - get/get_index!(key table default_value)
     - Merge get_index!(index container default_value) for containers and get!(key table default_value) for tables?
     - O(N) for stack and string
@@ -51,7 +76,10 @@ TODO example programs:
 
 TODO Language:
 https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
-* Add short-circuit "and" to while statement.
+* Data & code in multiple files:
+  - Importing source files.
+  - Reading text file. Interpret text file as manglang source, but surround it with "" to make a string.
+* Add short-circuit "and" "or" to while statement.
 * Type checking for tables.
   - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
 * Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
@@ -100,7 +128,7 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 * Subsets of manglang:
   - Data: number, character, dictionaries, list, string
   - Minimal computation: number, dictionaries, references, child references, function application, function definition
-* Importing source files.
+
 * Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
   - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
   - Serializing: tree -> manglang code. (EBNF?, same as above?)
