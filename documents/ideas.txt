@@ -3,8 +3,8 @@ TODO Standard Library:
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
 * Interface for containers:
-  - add empty? function for containers?
-    - nonempty, populated, inhabited
+  - add empty? is_empty? function for containers?
+    - nonempty, is_not_empty? populated, inhabited
     - empty = in container out is container
         [] then true
         "" then true
@@ -48,6 +48,7 @@ TODO Standard Library:
     that applies identity to first argument, so that it can be used for table pairs of (key value).
   - add higher_order function that takes a unary predicate and constructs a new binary predicate
     that ignores the first argument, so that it can be used for table pairs of (key value).
+  - Compare algorithms with those in libraries like: https://github.com/samber/lo
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
   - Let unordered be default since it makes sense for both stacks and tables.
   - clear_if_ordered, map_ordered.
