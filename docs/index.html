@@ -798,9 +798,50 @@ Description of all <a href="functions.html">functions</a> that come with Manglan
 
 <h1>Setup</h1>
 
-Manglang is implemented in C++. It is built from source using <code>src/CMakeLists.txt</code>, which produces the executable <code>interpreter</code>.
-You can then evaluate a program with the command <code>interpreter input_file_path output_file_path</code>, which takes the source code in <code>input_file_path</code> and evaluates it and writes the result to <code>output_file_path</code>. Manglang can also be embedded in another C++ program by including <code>src/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
+Manglang is implemented in C++ and does not depend on any external libraries. You can build it in different ways.
 
+
+<h2>Setup via CMake and Make</h2>
+You can build Manglang from a terminal on a system that has a C++ compiler and Cmake and make.
+First go to the directory where you want to install manglang and then follow these steps:
+<ol>
+<li><code>git clone git@github.com:mabur/mang_lang.git</code></li>
+<li><code>mkdir mang_lang/src/build</code></li>
+<li><code>cd mang_lang/src/build</code></li>
+<li><code>cmake -DCMAKE_BUILD_TYPE=Release ..</code></li>
+<li><code>make</code></li>
+</ol>
+This should produce two programs:
+<ol>
+<li>The Manglang unit tests which you can try by running <code>./tests</code></li>
+<li>The Manglang interpreter which you use to run a program written in manglang.
+   You can try running the programs found in the examples directory:
+<code>./manglang ../../examples/hello_world.txt</code></li>
+</ol>
+
+<h2>Setup via CLion</h2>
+You can also build Manglang using CLion:
+<ol>
+<li><code>git clone git@github.com:mabur/mang_lang.git</code></li>
+<li>Open <code>mang_lang/src/CMakeLists.txt</code> in CLion and build.</li>
+</ol>
+
+<h2>Setup via Visual Studio and CMake</h2>
+<ol>
+<li><code>git clone git@github.com:mabur/mang_lang.git</code></li>
+<li>Open <code>mang_lang/src/CMakeLists.txt</code> in CMake and generate a Visual Studio project.</li>
+<li>Open the Visual Studio project and build it.</li>
+</ol>
+
+<h2>Setup via Visual Studio</h2>
+<ol>
+<li><code>git clone git@github.com:mabur/mang_lang.git</code></li>
+<li>Create a new Visual Studio project and add the header and source files in <code>mang_lang/src/</code> to it and.</li>
+<li>Build the Visual Studio project.</li>
+</ol>
+
+<h2>Embed Manglang</h2>
+Manglang can also be embedded in another C++ program by including <code>src/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
 
 </body>
 </html>
