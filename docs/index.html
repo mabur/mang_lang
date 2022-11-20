@@ -129,7 +129,7 @@ It can for instance be used as a programmable configuration language.
 </p>
 <p>
 For more code examples continue reading below, or look inside the
-<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>. There is also <a href="functions.html">documentation for all functions</a>.
+<a href="https://github.com/mabur/mang_lang/blob/master/src/built_in_functions/standard_library.h">standard library</a>. There is also <a href="functions.html">documentation for all functions</a>.
 </p>
 
 <h1>Building Blocks</h1>
@@ -493,7 +493,7 @@ Stacks, strings, tables also share the following operations for creating new con
 </ul>
 </p>
 By relying on this shared interface we can write generic functions that work similarly on both stacks, strings and tables. For some examples of this you can take a look at the <a href="functions.html">standard library documentation</a>,  or look inside the
-<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library implementation</a>. 
+<a href="https://github.com/mabur/mang_lang/blob/master/src/built_in_functions/standard_library.h">standard library implementation</a>.
 
 <h1 id="control_flow">4. Control Flow <img src="control_flow.png" width=48 height=48></h1>
 
@@ -788,7 +788,7 @@ by unpacking the elements of the input dictionary.
 <h1>More Code Examples</h1>
 <p>
 For more code examples look inside the
-<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
+<a href="https://github.com/mabur/mang_lang/blob/master/src/built_in_functions/standard_library.h">standard library</a>.
 </p>
 
 <h1>Function Documentation</h1>
@@ -798,8 +798,8 @@ Description of all <a href="functions.html">functions</a> that come with Manglan
 
 <h1>Setup</h1>
 
-Manglang is implemented in C++. It is built from source using <code>mang_lang_cpp/CMakeLists.txt</code>, which produces the executable <code>interpreter</code>. 
-You can then evaluate a program with the command <code>interpreter input_file_path output_file_path</code>, which takes the source code in <code>input_file_path</code> and evaluates it and writes the result to <code>output_file_path</code>. Manglang can also be embedded in another C++ program by including <code>mang_lang_cpp/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
+Manglang is implemented in C++. It is built from source using <code>src/CMakeLists.txt</code>, which produces the executable <code>interpreter</code>.
+You can then evaluate a program with the command <code>interpreter input_file_path output_file_path</code>, which takes the source code in <code>input_file_path</code> and evaluates it and writes the result to <code>output_file_path</code>. Manglang can also be embedded in another C++ program by including <code>src/mang_lang.h</code> and using the function <code>std::string evaluate(std::string code);</code>
 
 
 </body>
