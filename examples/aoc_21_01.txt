@@ -1,5 +1,5 @@
 result@{
-    depths = (
+    depths = [
         199
         200
         208
@@ -10,17 +10,17 @@ result@{
         269
         260
         263
-    )
+    ]
     result = 0
     previous = inf
     list = depths
     while list
         result =
-            if less?(previous top@list) then
+            if less?(previous take!list) then
                 inc!result
             else
                 result
-        previous = top@list
-        list = rest@list
+        previous = take!list
+        list = drop!list
     end
 }
