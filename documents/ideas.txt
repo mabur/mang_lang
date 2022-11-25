@@ -75,10 +75,18 @@ TODO example programs:
 TODO Language:
 * Type "assertions".
   - For what cases?
-    - any concrete function
+    - any concrete function (simple and pretty)
     - any function
+    - any concrete symbol
     - any symbol
+    - any concrete expression
     - any expression
+  - TypePredicates:
+    - number, function, container, 
+    - TypeFunctions can take a function and return another function
+      - optional!number, variant![number character], container!number, function!(a b), tuple!(number character)
+      - How to handle lazy evaluation for optional and variant?
+        - Add general lazy/shortcut or operator?
   - Type annotations vs simple inference from code?
     - Could let the type checker/inferer automatically add it to the code or to the editor.
     - Could support both options and gradual typing.
@@ -99,8 +107,8 @@ TODO Language:
         is_container?(c)
       }
       square = in x out mul!(x x)
+      square = in number : x out number : mul!(x x)    (bra)
       square = in x out number : mul!(number : x x)
-      square = in number : x out number : mul!(x x)
       square = in x out check!(number mul!(check!(number x) x))
       square = in x out check!(number result@{
           x = check!(number x)
