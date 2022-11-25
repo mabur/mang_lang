@@ -74,7 +74,11 @@ TODO example programs:
 
 TODO Language:
 * Type "assertions".
-  - Just for input and output of functions, or any symbol or any expression?
+  - For what cases?
+    - any concrete function
+    - any function
+    - any symbol
+    - any expression
   - Type annotations vs simple inference from code?
     - Could let the type checker/inferer automatically add it to the code or to the editor.
     - Could support both options and gradual typing.
