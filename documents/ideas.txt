@@ -74,11 +74,27 @@ TODO example programs:
 
 TODO Language:
 * Type "assertions".
+  - Just for input and output of functions, or any symbol or any expression?
+  - Type annotations vs simple inference from code?
+    - Could let the type checker/inferer automatically add it to the code or to the editor.
+    - Could support both options and gradual typing.
   - static assertions
   - static_assert!equal?(x Number)
   - static_assert!any?[equal?(x Number) equal?(x Character)]
   - is_string = in s out equal?(take!name@d Character)
   - in d out all?[is_string?name@d is_number?age@d]
+  - Assert as general expression or statement in dict?
+    - Just for input and output of functions, or any symbol or any expression?
+    - Expression:
+      - x = check!(x is_number)
+    - Statement:
+      in (a b c) out {
+        is_number?x
+        is_variant3?(b [is_number is_character is_boolean])
+        is_number?(take!c is_number)
+        is_container?(c)
+      }
+      square = in x out mul!(x x)
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
