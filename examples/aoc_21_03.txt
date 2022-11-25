@@ -1,5 +1,5 @@
 result@{
-    numbers = (
+    numbers = [
         "00100"
         "11110"
         "10110"
@@ -12,29 +12,29 @@ result@{
         "11001"
         "00010"
         "01010"
-    )
-    NUM_BITS = count!top@numbers
+    ]
+    NUM_BITS = count!take!numbers
 
     get_column = in index out
-        map!(
+        map_stack!(
             in number out get_index!(index number)
             numbers
         )
     count0 = in stack out
-        count_item!(\0 stack)
+        count_item!('0' stack)
     count1 = in stack out
-        count_item!(\1 stack)
+        count_item!('1' stack)
     pick_most_common_bit = in counts out
         if less?counts then 1 else 0
     pick_least_common_bit = in counts out
         if less?counts then 0 else 1
 
-    dec_from_bin = in binary out add!map!(mul zip!(binary (16 8 4 2 1)))
+    dec_from_bin = in binary out sum!map_stack!(mul zip!(binary [16 8 4 2 1]))
 
-    columns = map!(get_column range!NUM_BITS)
-    counts0 = map!(count0 columns)
-    counts1 = map!(count1 columns)
-    gamma = map!(pick_most_common_bit zip!(counts0 counts1))
-    epsilon = map!(pick_least_common_bit zip!(counts0 counts1))
+    columns = map_stack!(get_column range!NUM_BITS)
+    counts0 = map_stack!(count0 columns)
+    counts1 = map_stack!(count1 columns)
+    gamma = map_stack!(pick_most_common_bit zip!(counts0 counts1))
+    epsilon = map_stack!(pick_least_common_bit zip!(counts0 counts1))
     result = mul!(dec_from_bin!gamma dec_from_bin!epsilon)
 }

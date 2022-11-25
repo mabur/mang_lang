@@ -1,5 +1,5 @@
 risk_levels@{
-    map = (
+    map = [
         "bbbbbbbbbbbb"
         "b2199943210b"
         "b3987894921b"
@@ -7,13 +7,13 @@ risk_levels@{
         "b8767896789b"
         "b9899965678b"
         "bbbbbbbbbbbb"
-    )
+    ]
     parse_height = in character out
         is character
-            \b then 10
+            'b' then 10
             else parse_digit!character
     height = count!map
-    width = count!top@map
+    width = count!take!map
     num_low_points = 0
     risk_levels = 0
     y = 0
@@ -24,13 +24,13 @@ risk_levels@{
         x = 0
         while less?(x sub!(width 2))
             point = parse_height!second!row_middle
-            neighbours = (
+            neighbours = [
                 parse_height!second!row_above
                 parse_height!first!row_middle
                 parse_height!third!row_middle
                 parse_height!second!row_below
-            )
-            is_low_point = less?(point min!neighbours)
+            ]
+            is_low_point = less?(point min_item!neighbours)
             num_low_points =
                 if is_low_point then
                     inc!num_low_points
@@ -38,15 +38,15 @@ risk_levels@{
                     num_low_points
             risk_levels =
                 if is_low_point then
-                    add!(risk_levels point 1)
+                    sum![risk_levels point 1]
                 else
                     risk_levels
-            row_above = rest@row_above
-            row_middle = rest@row_middle
-            row_below = rest@row_below
+            row_above = drop!row_above
+            row_middle = drop!row_middle
+            row_below = drop!row_below
             x = inc!x
         end
-        map = rest@map
+        map = drop!map
         y = inc!y
     end
 }

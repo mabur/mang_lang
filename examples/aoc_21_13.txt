@@ -1,5 +1,5 @@
 folded_points@{
-    points = (
+    points = [
         (6 10)
         (0 14)
         (9 10)
@@ -18,7 +18,7 @@ folded_points@{
         (2 14)
         (8 10)
         (9 0)
-    )
+    ]
     fold_y = in (x y) out
         if less?(y 7) then
             (x y)
@@ -29,5 +29,5 @@ folded_points@{
             (x y)
         else
             (sub!(mul!(2 5) x) y)
-    folded_points = map!(fold_x points)
+    folded_points = map_stack!(fold_x points)
 }

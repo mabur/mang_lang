@@ -13,7 +13,7 @@
 
 <p>
 Below you can find all functions included with Manglang. They are either built-in or implemented in the
-<a href="https://github.com/mabur/mang_lang/blob/master/mang_lang_cpp/built_in_functions/standard_library.h">standard library</a>.
+<a href="https://github.com/mabur/mang_lang/blob/master/src/built_in_functions/standard_library.h">standard library</a>.
 </p>
 
 <h2>Time Complexity</h2>
@@ -116,6 +116,8 @@ For the following functions you need to know what kind of container you want to 
 <dt>get_keys</dt><dd><code>get_keys!table</code> returns a stack of all keys in the table.</dd>
 <dt>get_values</dt><dd><code>get_values!table</code> returns a stack of all values in the table.</dd>
 <dt>get_items</dt><dd><code>get_items!table</code> returns a stack of tuples, of all pairwise keys and values in the table.</dd>
+<dt>count_elements</dt><dd><code>count_elements!container</code> returns a table where the keys are elements from the input container and the values are the number of times they occur in the input container.</dd>
+<dt>unique</dt><dd><code>unique!container</code> returns a stack with the unique elements of the input container.</dd>
 </dl>
 
 <h2>Boolean Functions</h2>

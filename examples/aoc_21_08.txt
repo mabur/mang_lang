@@ -1,5 +1,5 @@
 result@{
-    strings = (
+    strings = [
         "fdgacbe" "cefdb" "cefbgd" "gcbe"
         "fcgedb" "cgb" "dgebacf" "gc"
         "cg" "cg" "fdcagb" "cbg"
@@ -10,7 +10,7 @@ result@{
         "ed" "bcgafe" "cdgba" "cbgef"
         "gbdfcae" "bgc" "cg" "cgb"
         "fgae" "cfgab" "fg" "bagce"
-    )
+    ]
     is_easy_digit = in string out
         is count!string
             2 then yes
