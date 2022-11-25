@@ -95,6 +95,14 @@ TODO Language:
         is_container?(c)
       }
       square = in x out mul!(x x)
+      square = in x out number : mul!(number : x x)
+      square = in number : x out number : mul!(x x)
+      square = in x out check!(number mul!(check!(number x) x))
+      square = in x out check!(number result@{
+          x = check!(number x)
+          result = mul!(x x)
+        }
+      )
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
