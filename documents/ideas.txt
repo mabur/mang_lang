@@ -1,7 +1,4 @@
 TODO Standard Library:
-* James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
-  - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
-  - Compare iterators over an array.
 * Interface for containers:
   - add empty? is_empty? function for containers?
     - nonempty, is_not_empty? populated, inhabited
@@ -76,7 +73,16 @@ TODO example programs:
 * Advent of code
 
 TODO Language:
-https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
+* Type "assertions".
+  - static assertions
+  - static_assert!equal?(x Number)
+  - static_assert!any?[equal?(x Number) equal?(x Character)]
+  - is_string = in s out equal?(take!name@d Character)
+  - in d out all?[is_string?name@d is_number?age@d]
+* James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
+  - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
+  - Compare iterators over an array.
+* https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
 * Data & code in multiple files:
   - Importing source files.
   - Reading text file. Interpret text file as manglang source, but surround it with "" to make a string.
