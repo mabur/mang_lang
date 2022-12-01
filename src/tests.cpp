@@ -1309,6 +1309,13 @@ int main() {
         {"split!(0 [1 2 0])", "[[1 2] []]"},
         {"split!(0 [1 0 2])", "[[1] [2]]"},
     });
+    test.evaluate("split string", {
+        {R"(split!(',' ""))", R"([""])"},
+        {R"(split!(',' "a"))", R"(["a"])"},
+        {R"(split!(',' ",a"))", R"(["" "a"])"},
+        {R"(split!(',' "a,"))", R"(["a" ""])"},
+        {R"(split!(',' "a,b,cd"))", R"(["a" "b" "cd"])"},
+    });
     test.evaluate("sum stack", {
         {"sum![]", "0"},
         {"sum![1]", "1"},
