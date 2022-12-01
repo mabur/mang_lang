@@ -1010,6 +1010,16 @@ int main() {
         {"parse_digit!'8'", "8"},
         {"parse_digit!'9'", "9"},
     });
+    test.evaluate("parse_natural_number", {
+        {R"(parse_natural_number!"0")", "0"},
+        {R"(parse_natural_number!"1")", "1"},
+        {R"(parse_natural_number!"2")", "2"},
+        {R"(parse_natural_number!"10")", "10"},
+        {R"(parse_natural_number!"11")", "11"},
+        {R"(parse_natural_number!"12")", "12"},
+        {R"(parse_natural_number!"20")", "20"},
+        {R"(parse_natural_number!"123")", "123"},
+    });
     test.evaluate_types("min_item stack", {
         {"min_item![]", "NUMBER"},
         {"min_item![0]", "NUMBER"},

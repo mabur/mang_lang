@@ -29,6 +29,18 @@ const std::string STANDARD_LIBRARY = R"(
 
     parse_digit = in c out sub!(number!c 48)
 
+    parse_natural_number = in string out number@{
+        string = reverse!string
+        number = 0
+        x = 1
+        while string
+            digit = parse_digit!take!string
+            number = add!(number mul!(x digit))
+            x = mul!(x 10)
+            string = drop!string
+        end
+    }
+
     to_upper = in c out
         if is_lower?c then
             character!sub!(number!c 32)
