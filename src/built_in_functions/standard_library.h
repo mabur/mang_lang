@@ -290,6 +290,18 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_index = in (index stack) out take!drop_many!(index stack)
 
+    split = in (delimiter container) out reverse!result@{
+        word = take_until_item!(delimiter container)
+        container = drop_until_item!(delimiter container)
+        result = [word]
+        while container
+            container = drop!container
+            word = take_until_item!(delimiter container)
+            container = drop_until_item!(delimiter container)
+            result = put!(word result)
+        end
+    }
+
     all = in stack out not?drop_while!(boolean stack)
     none = in stack out not?drop_while!(not stack)
     any = in stack out boolean?drop_while!(not stack)
