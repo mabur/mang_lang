@@ -106,19 +106,19 @@ For the following functions you need to know what kind of container you want to 
 <dl>
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.  O(n).</dd>
 <dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack of tuples <code>[(0 7) (1 9) (2 4)]</code>, where the first item in each tuple is its index. O(N).</dd>
-<dt>zip</dt><dd><code>zip!([1 2 3] [4 5 6])</code> returns the stack of tuples <code>[(1 4) (2 5) (3 6)]</code>, where each inner tuple combines the corresponding items from the input tuple of stacks.</dd>
-<dt>split</dt><dd><code>split!(' ' "hey hey, ok")</code> returns <code>["hey" "hey," "ok"]</code> and <code>split!(1 [1 2 3 1 1 4])</code> returns <code>[[] [2 3] [] [4]]</code>. </dd>
+<dt>zip</dt><dd><code>zip!([1 2 3] [4 5 6])</code> returns the stack of tuples <code>[(1 4) (2 5) (3 6)]</code>, where each inner tuple combines the corresponding items from the input tuple of stacks. O(N).</dd>
+<dt>split</dt><dd><code>split!(' ' "hey hey, ok")</code> returns <code>["hey" "hey," "ok"]</code> and <code>split!(1 [1 2 3 1 1 4])</code> returns <code>[[] [2 3] [] [4]]</code>. O(N).</dd>
 </dl>
 
 <h2>Table Functions</h2>
 <dl>
-<dt>get</dt><dd><code>get!(key table default_value)</code> returns the value corresponding to the key in the table, if it exists, otherwise default_value is returned.</dd>
-<dt>put</dt><dd><code>put!((key value) table)</code> set the value corresponding to the key in the table and returns the table. Note that the table is also mutated so that other references to it are effected as well.</dd>
-<dt>get_keys</dt><dd><code>get_keys!table</code> returns a stack of all keys in the table.</dd>
-<dt>get_values</dt><dd><code>get_values!table</code> returns a stack of all values in the table.</dd>
-<dt>get_items</dt><dd><code>get_items!table</code> returns a stack of tuples, of all pairwise keys and values in the table.</dd>
-<dt>count_elements</dt><dd><code>count_elements!container</code> returns a table where the keys are elements from the input container and the values are the number of times they occur in the input container.</dd>
-<dt>unique</dt><dd><code>unique!container</code> returns a stack with the unique elements of the input container.</dd>
+<dt>get</dt><dd><code>get!(key table default_value)</code> returns the value corresponding to the key in the table, if it exists, otherwise default_value is returned. O(log N).</dd>
+<dt>put</dt><dd><code>put!((key value) table)</code> set the value corresponding to the key in the table and returns the table. Note that the table is also mutated so that other references to it are effected as well. O(log N).</dd>
+<dt>get_keys</dt><dd><code>get_keys!table</code> returns a stack of all keys in the table. O(N).</dd>
+<dt>get_values</dt><dd><code>get_values!table</code> returns a stack of all values in the table. O(N).</dd>
+<dt>get_items</dt><dd><code>get_items!table</code> returns a stack of tuples, of all pairwise keys and values in the table. O(N).</dd>
+<dt>count_elements</dt><dd><code>count_elements!container</code> returns a table where the keys are elements from the input container and the values are the number of times they occur in the input container. O(N log N).</dd>
+<dt>unique</dt><dd><code>unique!container</code> returns a stack with the unique elements of the input container. O(N log N).</dd>
 </dl>
 
 <h2>Boolean Functions</h2>
