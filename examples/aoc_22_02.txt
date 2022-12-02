@@ -18,7 +18,6 @@ C Z"
         YOU_SCISSORS then
             is opponent OPPONENT_ROCK then 3 OPPONENT_PAPER then 9 OPPONENT_SCISSORS then 6 else -inf
         else -inf
-    magnus = 0
     rounds = map_stack!(parse_round split!(newline input))
     scores = map_stack!(score_round rounds)
     result = sum!scores
