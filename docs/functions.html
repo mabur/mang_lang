@@ -107,6 +107,7 @@ For the following functions you need to know what kind of container you want to 
 <dt>range</dt><dd><code>range!n</code> returns the stack <code>[0 1 2 ... n-1]</code>.  O(n).</dd>
 <dt>enumerate</dt><dd><code>enumerate![7 9 4]</code> returns the stack of tuples <code>[(0 7) (1 9) (2 4)]</code>, where the first item in each tuple is its index. O(N).</dd>
 <dt>zip</dt><dd><code>zip!([1 2 3] [4 5 6])</code> returns the stack of tuples <code>[(1 4) (2 5) (3 6)]</code>, where each inner tuple combines the corresponding items from the input tuple of stacks.</dd>
+<dt>split</dt><dd><code>split!(' ' "hey hey, ok")</code> returns <code>["hey" "hey," "ok"]</code> and <code>split!(1 [1 2 3 1 1 4])</code> returns <code>[[] [2 3] [] [4]]</code>. </dd>
 </dl>
 
 <h2>Table Functions</h2>
