@@ -12,24 +12,13 @@ C Z"
     YOU_PAPER = 'Y'
     YOU_SCISSORS = 'Z'
 
+    SCORE_TABLE = <
+        YOU_ROCK: <OPPONENT_ROCK:4 OPPONENT_PAPER:1 OPPONENT_SCISSORS:7>
+        YOU_PAPER: <OPPONENT_ROCK:8 OPPONENT_PAPER:5 OPPONENT_SCISSORS:2>
+        YOU_SCISSORS: <OPPONENT_ROCK:3 OPPONENT_PAPER:9 OPPONENT_SCISSORS:6>
+    >
     parse_round = in round out (first!round third!round)
-    score_round = in (opponent you) out is you
-        YOU_ROCK then is opponent
-            OPPONENT_ROCK then 4
-            OPPONENT_PAPER then 1
-            OPPONENT_SCISSORS then 7
-            else -inf
-        YOU_PAPER then is opponent
-            OPPONENT_ROCK then 8
-            OPPONENT_PAPER then 5
-            OPPONENT_SCISSORS then 2
-            else -inf
-        YOU_SCISSORS then is opponent
-            OPPONENT_ROCK then 3
-            OPPONENT_PAPER then 9
-            OPPONENT_SCISSORS then 6
-            else -inf
-        else -inf
+    score_round = in (opponent you) out get!(opponent get!(you SCORE_TABLE <>) -inf)
     rounds = map_stack!(parse_round split!(newline input))
     scores = map_stack!(score_round rounds)
     result = sum!scores
