@@ -17,6 +17,8 @@ const std::string STANDARD_LIBRARY = R"(
     pi = 3.14159265359
     tau = 6.28318530718
 
+    newline = character!10
+
     inc = in x out add!(x 1)
     dec = in x out sub!(x 1)
     neg = in x out sub!(0 x)
