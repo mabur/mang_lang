@@ -304,6 +304,18 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    cartesian_product2 = in (a b) out result@{
+        result = []
+        while b
+            c = a
+            while c
+                result = put!((take!c take!b) result)
+                c = drop!c
+            end
+            b = drop!b
+        end
+    }
+
     all = in stack out not?drop_while!(boolean stack)
     none = in stack out not?drop_while!(not stack)
     any = in stack out boolean?drop_while!(not stack)
