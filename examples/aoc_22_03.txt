@@ -12,22 +12,12 @@ CrZsJsPPZsGzwwsLwLmpwMDw"
         half_size = div!(size 2)
         first_string = take_many!(half_size string)
         second_string = drop_many!(half_size string)
-        result = 0
-        while first_string
-            third_string = second_string
-            while third_string
-                result = if equal?(take!first_string take!third_string)
-                    then
-                        take!first_string
-                    else
-                        result
-                third_string = drop!third_string
-            end
-            first_string = drop!first_string
-        end
+        products = cartesian_product2!(first_string second_string)
+        pick_first = in (a b) out a
+        result = pick_first!take!drop_while!(unequal products)
     }
-    priority = in c out if is_lower?c
-        then
+    priority = in c out
+        if is_lower?c then
             add!(sub!(number!c number!'a') 1)
         else
             add!(sub!(number!c number!'A') 27)
