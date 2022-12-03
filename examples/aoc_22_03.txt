@@ -1,0 +1,37 @@
+result@{
+    input =
+"vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw"
+
+    common_item = in string out result@{
+        size = count!string
+        half_size = div!(size 2)
+        first_string = take_many!(half_size string)
+        second_string = drop_many!(half_size string)
+        result = 0
+        while first_string
+            third_string = second_string
+            while third_string
+                result = if equal?(take!first_string take!third_string)
+                    then
+                        take!first_string
+                    else
+                        result
+                third_string = drop!third_string
+            end
+            first_string = drop!first_string
+        end
+    }
+    priority = in c out if is_lower?c
+        then
+            add!(sub!(number!c number!'a') 1)
+        else
+            add!(sub!(number!c number!'A') 27)
+    common_items = map_stack!(common_item split!(newline input))
+    priorities = map_stack!(priority common_items)
+    result = sum!priorities
+}
