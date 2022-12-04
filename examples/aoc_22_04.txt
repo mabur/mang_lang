@@ -1,0 +1,27 @@
+result@{
+    input =
+"2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8"
+    parse_section = in string out map_stack!(
+        parse_natural_number split!('-' string)
+    )
+    parse_row = in row out map_stack!(
+        parse_section split!(',' row)
+    )
+    does_contain = in sections out result@{
+        a = first!first!sections
+        b = second!first!sections
+        c = first!second!sections
+        d = second!second!sections
+        result = or?[
+            and?[less_or_equal?(a c) less_or_equal?(d b)]
+            and?[less_or_equal?(c a) less_or_equal?(b d)]
+        ]
+    }
+    sections = map_stack!(parse_row split!(newline input))
+    result = count_if!(does_contain sections)
+}
