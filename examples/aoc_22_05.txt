@@ -20,7 +20,10 @@ move 1 from 1 to 2"
     stacks = map_stack!(strip_characters stacks)
     stacks = clear_if!(is_empty stacks)
     parse_movement = in string out {
-        
+        words = split!(' ' string)
+        n = parse_natural_number!second!words
+        source = dec!parse_natural_number!fourth!words
+        target = dec!parse_natural_number!sixth!words
     }
     movements = map_stack!(parse_movement movements)
     stacks = make_table!enumerate!stacks
