@@ -1316,6 +1316,9 @@ int main() {
         {R"(split!(',' "a,"))", R"(["a" ""])"},
         {R"(split!(',' "a,b,cd"))", R"(["a" "b" "cd"])"},
     });
+    test.evaluate("cartesian_product2 stack", {
+        {"cartesian_product2!([1 2] [3 4])", "[(2 4) (1 4) (2 3) (1 3)]"},
+    });
     test.evaluate("sum stack", {
         {"sum![]", "0"},
         {"sum![1]", "1"},
