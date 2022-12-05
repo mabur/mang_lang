@@ -19,19 +19,13 @@ move 1 from 1 to 2"
     strip_characters = in row out clear_if!(is_not_upper_case row)
     stacks = map_stack!(strip_characters stacks)
     stacks = clear_if!(is_empty stacks)
-    parse_movement = in string out {
-        words = split!(' ' string)
-        n = parse_natural_number!second!words
-        source = dec!parse_natural_number!fourth!words
-        target = dec!parse_natural_number!sixth!words
-    }
-    movements = map_stack!(parse_movement movements)
     stacks = make_table!enumerate!stacks
     while movements
         movement = take!movements
-        n = n@movement
-        source = source@movement
-        target = target@movement
+        words = split!(' ' movement)
+        n = parse_natural_number!second!words
+        source = dec!parse_natural_number!fourth!words
+        target = dec!parse_natural_number!sixth!words
         while n
             source_stack = get!(source stacks [])
             item = take!source_stack
