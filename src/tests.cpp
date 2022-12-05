@@ -1319,6 +1319,15 @@ int main() {
     test.evaluate("cartesian_product2 stack", {
         {"cartesian_product2!([1 2] [3 4])", "[(2 4) (1 4) (2 3) (1 3)]"},
     });
+    test.evaluate("put_column stack", {
+        {"put_column!([1 2] [[3] [4]])", "[[1 3] [2 4]]"},
+    });
+    test.evaluate("transpose stack", {
+        {"transpose![[]]", "[]"},
+        {"transpose![[1]]", "[[1]]"},
+        {"transpose![[1] [2]]", "[[1 2]]"},
+        {"transpose![[1 2] [3 4]]", "[[1 3] [2 4]]"},
+    });
     test.evaluate("sum stack", {
         {"sum![]", "0"},
         {"sum![1]", "1"},

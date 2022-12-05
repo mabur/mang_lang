@@ -316,6 +316,27 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    put_column = in (column rows) out reverse!new_rows@{
+        new_rows = []
+        while column
+            item = take!column
+            old_row = take!rows
+            new_row = put!(item old_row)
+            new_rows = put!(new_row new_rows)
+            column = drop!column
+            rows = drop!rows
+        end
+    }
+
+    transpose = in rows out map_stack!(reverse columns@{
+        columns = replace!([] take!rows)
+        while rows
+            row = take!rows
+            columns = put_column!(row columns)
+            rows = drop!rows
+        end
+    })
+
     all = in stack out not?drop_while!(boolean stack)
     none = in stack out not?drop_while!(not stack)
     any = in stack out boolean?drop_while!(not stack)
