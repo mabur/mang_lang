@@ -1,0 +1,45 @@
+result@{
+    input =
+"    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2"
+    lines = split!(newline input)
+    groups = split!("" lines)
+    stacks = first!groups
+    movements = second!groups
+    stacks = transpose!stacks
+    is_not_upper_case = in c out not?is_upper?c
+    is_empty = in container out not?container
+    strip_characters = in row out clear_if!(is_not_upper_case row)
+    stacks = map_stack!(strip_characters stacks)
+    stacks = clear_if!(is_empty stacks)
+    parse_movement = in string out {
+        
+    }
+    movements = map_stack!(parse_movement movements)
+    stacks = make_table!enumerate!stacks
+    while movements
+        movement = take!movements
+        n = n@movement
+        source = source@movement
+        target = target@movement
+        while n
+            source_stack = get!(source stacks [])
+            item = take!source_stack
+            source_stack = drop!source_stack
+            target_stack = get!(target stacks [])
+            target_stack = put!(item target_stack)
+            stacks = put!((source source_stack) stacks)
+            stacks = put!((target target_stack) stacks)
+            n = dec!n        
+        end
+        movements = drop!movements
+    end
+    result = map_string!(first get_values!stacks)
+}
