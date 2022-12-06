@@ -1,0 +1,9 @@
+result@{
+    input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
+    n = 4
+    while less?(count!unique!take_many!(4 input) 4)
+        input = drop!input
+        n = inc!n
+    end
+    result = n
+}
