@@ -1,7 +1,8 @@
 result@{
     input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
-    n = 4
-    while less?(count!unique!take_many!(4 input) 4)
+    N = 4
+    n = N
+    while less?(count!unique!take_many!(N input) N)
         input = drop!input
         n = inc!n
     end
