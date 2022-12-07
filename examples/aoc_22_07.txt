@@ -1,0 +1,62 @@
+result@{
+    input = "$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k"
+    
+    parse_command_string = in command_string out
+        clear_item!("" split!(newline drop!command_string))
+    command_strings = drop!split!('$' input)
+    commands = map_stack!(parse_command_string command_strings)
+
+    state = {
+        current_directory = ""
+        file_and_parent = <"/": "">
+        file_and_size = <>
+    }
+    handle_ls = in (command state) out {
+        current_directory = current_directory@state
+        file_and_parent = file_and_parent@state
+        file_and_size = file_and_size@state
+        command = drop!command
+        while command
+            parts = split!(' ' take!command)
+            size = first!parts
+            file = second!parts
+            file_and_parent = put!((file current_directory) file_and_parent)
+            file_and_size = is take!size
+                'd' then file_and_size
+                else put!((file size) file_and_size)
+            command = drop!command
+        end
+    }
+    handle_cd = in (command state) out {
+        current_directory = drop_many!(3 take!command)
+        file_and_parent = file_and_parent@state
+        file_and_size = file_and_size@state
+    }
+    handle_command = in (command state) out is take!take!command
+        'c' then handle_cd!(command state)
+        'l' then handle_ls!(command state)
+        else state
+    result = fold!(handle_command commands state)
+}
