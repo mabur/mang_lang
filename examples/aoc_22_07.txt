@@ -45,7 +45,7 @@ $ ls
             file_and_parent = put!((file current_directory) file_and_parent)
             file_and_size = is take!size
                 'd' then file_and_size
-                else put!((file size) file_and_size)
+                else put!((file parse_natural_number!size) file_and_size)
             command = drop!command
         end
     }
@@ -62,5 +62,40 @@ $ ls
         'c' then handle_cd!(command state)
         'l' then handle_ls!(command state)
         else state
-    result = fold!(handle_command commands state)
+    state = fold!(handle_command commands state)
+    
+    get_parents_and_size = in (file_and_size file_and_parent) out parents_and_size@{
+        children = get_keys!file_and_size
+        parents_and_size = <>
+        while children
+            child = take!children
+            parent = get!(child file_and_parent "/")
+            parent_size = get!(parent parents_and_size 0)
+            child_size = get!(child file_and_size 0)
+            total_size = add!(parent_size child_size)
+            parents_and_size = is child
+                "/" then parents_and_size
+                else put!((parent total_size) parents_and_size)
+            children = drop!children
+        end
+    }
+    
+    file_and_parent = file_and_parent@state
+    file_and_size = file_and_size@state
+    total_file_and_size = make_table!file_and_size 
+    
+    while file_and_size
+        file_and_size = get_parents_and_size!(file_and_size file_and_parent)        
+        parents = get_keys!file_and_size
+        while parents
+            parent = take!parents
+            old_parent_size = get!(parent total_file_and_size 0)
+            parent_increment = get!(parent file_and_size 0)
+            new_parent_size = add!(old_parent_size parent_increment)
+            total_file_and_size = put!((parent new_parent_size) total_file_and_size)
+            parents = drop!parents
+        end
+    end
+    
+    result = total_file_and_size
 }
