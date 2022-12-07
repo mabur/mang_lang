@@ -82,7 +82,7 @@ $ ls
     
     file_and_parent = file_and_parent@state
     file_and_size = file_and_size@state
-    total_file_and_size = make_table!file_and_size 
+    total_file_and_size = <> 
     
     while file_and_size
         file_and_size = get_parents_and_size!(file_and_size file_and_parent)        
@@ -97,5 +97,6 @@ $ ls
         end
     end
     
-    result = total_file_and_size
+    is_large_directory = in size out less?(100000 size)
+    result = sum!clear_if!(is_large_directory get_values!total_file_and_size)
 }
