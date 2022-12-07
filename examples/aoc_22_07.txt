@@ -50,9 +50,13 @@ $ ls
         end
     }
     handle_cd = in (command state) out {
-        current_directory = drop_many!(3 take!command)
+        current_directory = current_directory@state
         file_and_parent = file_and_parent@state
         file_and_size = file_and_size@state
+        new_directory = drop_many!(3 take!command)
+        current_directory = is new_directory
+            ".." then get!(current_directory file_and_parent "/")
+            else new_directory
     }
     handle_command = in (command state) out is take!take!command
         'c' then handle_cd!(command state)
