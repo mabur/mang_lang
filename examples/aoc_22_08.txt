@@ -1,0 +1,41 @@
+result@{
+    input = "30373
+25512
+65332
+33549
+35390"
+    
+    parse_line = in string out map_stack!(parse_digit string)
+    lines = split!(newline input)
+    array = map_stack!(parse_line lines)
+
+    is_max_so_far = in numbers out reverse!result@{
+        maximum = neg!inf
+        result = []
+        while numbers
+            number = take!numbers
+            result = put!(less?(maximum number) result)
+            maximum = max!(maximum number)
+            numbers = drop!numbers
+        end
+    }
+    
+    get0 = in array out array
+    get1 = in array out transpose!array
+    get2 = in array out map_stack!(reverse array)
+    get3 = in array out map_stack!(reverse transpose!array)
+    
+    array0 = get0!array
+    array1 = get1!array
+    array2 = get2!array
+    array3 = get3!array
+    
+    mask0 = merge_stack!get0!map_stack!(is_max_so_far array0)
+    mask1 = merge_stack!get1!map_stack!(is_max_so_far array1)
+    mask2 = merge_stack!get2!map_stack!(is_max_so_far array2)
+    mask3 = merge_stack!get3!map_stack!(is_max_so_far array3)
+    
+    is_visible = in (a b c d) out any?[a b c d]
+    
+    result = count_if!(is_visible zip4!(mask0 mask1 mask2 mask3))
+}
