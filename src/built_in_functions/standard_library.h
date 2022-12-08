@@ -138,12 +138,33 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    zip = in (left right) out reverse!result@{
+    zip2 = in (a b) out reverse!result@{
         result = []
-        while and?[left right]
-            result = put!((take!left take!right) result)
-            left = drop!left
-            right = drop!right
+        while and?[a b]
+            result = put!((take!a take!b) result)
+            a = drop!a
+            b = drop!b
+        end
+    }
+
+    zip3 = in (a b c) out reverse!result@{
+        result = []
+        while and?[a b c]
+            result = put!((take!a take!b take!c) result)
+            a = drop!a
+            b = drop!b
+            c = drop!c
+        end
+    }
+
+    zip4 = in (a b c d) out reverse!result@{
+        result = []
+        while and?[a b c d]
+            result = put!((take!a take!b take!c take!d) result)
+            a = drop!a
+            b = drop!b
+            c = drop!c
+            d = drop!d
         end
     }
 
@@ -288,7 +309,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in stack out zip!(range!count!stack stack)
+    enumerate = in stack out zip2!(range!count!stack stack)
 
     get_index = in (index stack) out take!drop_many!(index stack)
 

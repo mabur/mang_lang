@@ -1,7 +1,6 @@
 TODO Standard Library:
 * Interface for containers:
   - Define and & or on tuples/pairs instead of stacks.
-  - rename zip to zip2 and add zip3, zip4.
   - add empty? is_empty? function for containers?
     - nonempty, is_not_empty? populated, inhabited
     - empty = in container out is container

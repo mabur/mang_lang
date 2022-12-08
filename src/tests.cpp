@@ -1523,17 +1523,23 @@ int main() {
         {"ninth![11 12 13 14 15 16 17 18 19]", "19"},
         {"tenth![11 12 13 14 15 16 17 18 19 20]", "20"},
     });
-    test.evaluate("zip", {
-        {"zip!([] [])", "[]"},
-        {"zip!([0] [1])", "[(0 1)]"},
-        {"zip!([0 1] [2 3])", "[(0 2) (1 3)]"},
-        {"zip!([0 1 2] [3 4 5])", "[(0 3) (1 4) (2 5)]"},
+    test.evaluate("zip2", {
+        {"zip2!([] [])", "[]"},
+        {"zip2!([0] [1])", "[(0 1)]"},
+        {"zip2!([0 1] [2 3])", "[(0 2) (1 3)]"},
+        {"zip2!([0 1 2] [3 4 5])", "[(0 3) (1 4) (2 5)]"},
     });
-    test.evaluate_types("zip", {
-        {"zip!([] [])", "[(ANY ANY)]"},
-        {"zip!([0] [1])", "[(NUMBER NUMBER)]"},
-        {"zip!([0 1] [2 3])", "[(NUMBER NUMBER)]"},
-        {"zip!([0 1 2] [3 4 5])", "[(NUMBER NUMBER)]"},
+    test.evaluate_types("zip2", {
+        {"zip2!([] [])", "[(ANY ANY)]"},
+        {"zip2!([0] [1])", "[(NUMBER NUMBER)]"},
+        {"zip2!([0 1] [2 3])", "[(NUMBER NUMBER)]"},
+        {"zip2!([0 1 2] [3 4 5])", "[(NUMBER NUMBER)]"},
+    });
+    test.evaluate("zip3", {
+        {"zip3!([0 1 2] [3 4 5] [6 7 8])", "[(0 3 6) (1 4 7) (2 5 8)]"},
+    });
+    test.evaluate("zip4", {
+        {"zip4!([0 1] [2 3] [4 5] [6 7])", "[(0 2 4 6) (1 3 5 7)]"},
     });
     test.evaluate("consecutive_pairs", {
         {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},
