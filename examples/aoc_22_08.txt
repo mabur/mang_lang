@@ -30,17 +30,11 @@ result@{
     get2inv = in array out map_stack!(reverse array)
     get3inv = in array out transpose!map_stack!(reverse array)
     
-    array0 = get0!array
-    array1 = get1!array
-    array2 = get2!array
-    array3 = get3!array
-    
-    mask0 = merge_stack!get0inv!map_stack!(is_max_so_far array0)
-    mask1 = merge_stack!get1inv!map_stack!(is_max_so_far array1)
-    mask2 = merge_stack!get2inv!map_stack!(is_max_so_far array2)
-    mask3 = merge_stack!get3inv!map_stack!(is_max_so_far array3)
+    mask0 = merge_stack!get0inv!map_stack!(is_max_so_far get0!array)
+    mask1 = merge_stack!get1inv!map_stack!(is_max_so_far get1!array)
+    mask2 = merge_stack!get2inv!map_stack!(is_max_so_far get2!array)
+    mask3 = merge_stack!get3inv!map_stack!(is_max_so_far get3!array)
     
     is_visible = in (a b c d) out any?[a b c d]
-    
     result = count_if!(is_visible zip4!(mask0 mask1 mask2 mask3))
 }
