@@ -25,15 +25,20 @@ result@{
     get2 = in array out map_stack!(reverse array)
     get3 = in array out map_stack!(reverse transpose!array)
     
+    get0inv = in array out array
+    get1inv = in array out transpose!array
+    get2inv = in array out map_stack!(reverse array)
+    get3inv = in array out transpose!map_stack!(reverse array)
+    
     array0 = get0!array
     array1 = get1!array
     array2 = get2!array
     array3 = get3!array
     
-    mask0 = merge_stack!get0!map_stack!(is_max_so_far array0)
-    mask1 = merge_stack!get1!map_stack!(is_max_so_far array1)
-    mask2 = merge_stack!get2!map_stack!(is_max_so_far array2)
-    mask3 = merge_stack!get3!map_stack!(is_max_so_far array3)
+    mask0 = merge_stack!get0inv!map_stack!(is_max_so_far array0)
+    mask1 = merge_stack!get1inv!map_stack!(is_max_so_far array1)
+    mask2 = merge_stack!get2inv!map_stack!(is_max_so_far array2)
+    mask3 = merge_stack!get3inv!map_stack!(is_max_so_far array3)
     
     is_visible = in (a b c d) out any?[a b c d]
     
