@@ -1,5 +1,6 @@
 TODO Standard Library:
 * Interface for containers:
+  - Define and & or on tuples/pairs instead of stacks.
   - add empty? is_empty? function for containers?
     - nonempty, is_not_empty? populated, inhabited
     - empty = in container out is container
