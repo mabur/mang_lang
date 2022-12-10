@@ -60,18 +60,13 @@ $ ls
         'l' then handle_ls!(command state)
         else {}
     state = fold!(handle_command commands state)
-    
-    path_and_size = path_and_size@state
-    
+        
     get_first = in (a b) out a
     get_second = in (a b) out b
-    
-    directory_sizes = <>
-    
-    while path_and_size
-        item = take!path_and_size
-        path = get_first!item
-        size = get_second!item
+   
+    update_directory_sizes = in (path_and_size directory_sizes) out directory_sizes@{
+        path = get_first!path_and_size
+        size = get_second!path_and_size
         path = drop!path
         while path
             directory_size = get!(path directory_sizes 0)
@@ -79,8 +74,8 @@ $ ls
             directory_sizes = put!((path directory_size) directory_sizes)
             path = drop!path
         end
-        path_and_size = drop!path_and_size
-    end
+    }
+    directory_sizes = fold!(update_directory_sizes path_and_size@state <>)
     sizes = get_values!directory_sizes
     is_big_size = in size out less?(100000 size)
     result = sum!clear_if!(is_big_size sizes)
