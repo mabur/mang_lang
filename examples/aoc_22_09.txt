@@ -37,7 +37,6 @@ R 2"
     
     heads = []    
     tails = []
-    visited = <>
     
     heads = put!(head heads)
     tails = put!(tail tails)
@@ -59,7 +58,6 @@ R 2"
             tail = addv!(tail tail_movement)
             tails = put!(tail tails)
             heads = put!(head heads)
-            visited = put!((tail yes) visited)
             steps = dec!steps
         end
         lines = drop!lines
@@ -68,5 +66,5 @@ R 2"
         heads = reverse!heads
         tails = reverse!tails
     }
-    result = count!visited
+    result = count!unique!tails
 }
