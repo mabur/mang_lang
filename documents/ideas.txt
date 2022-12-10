@@ -75,6 +75,8 @@ TODO example programs:
 
 TODO Language:
 * Extend while statements with for statements and if statements.
+* Better error messages:
+  - Always run type checking for better error messages.
 * Type "assertions".
   - For what cases?
     - any concrete function (simple and pretty)
