@@ -29,74 +29,59 @@ $ ls
     commands = map_stack!(parse_command_string command_strings)
 
     state = {
-        current_directory = ""
-        file_and_parent = <"/": "">
-        file_and_size = <>
+        current_path = []
+        path_and_size = <>
+    }
+    handle_cd = in (command state) out {
+        current_path = current_path@state
+        path_and_size = path_and_size@state
+        new_directory = drop_many!(3 take!command)
+        current_path = is new_directory
+            ".." then drop!current_path
+            else put!(new_directory current_path)
     }
     handle_ls = in (command state) out {
-        current_directory = current_directory@state
-        file_and_parent = file_and_parent@state
-        file_and_size = file_and_size@state
+        current_path = current_path@state
+        path_and_size = path_and_size@state
         command = drop!command
         while command
             parts = split!(' ' take!command)
             size = first!parts
             file = second!parts
-            file_and_parent = put!((file current_directory) file_and_parent)
-            file_and_size = is take!size
-                'd' then file_and_size
-                else put!((file parse_natural_number!size) file_and_size)
+            file_path = put!(file current_path)
+            path_and_size = is take!size
+                'd' then path_and_size
+                else put!((file_path parse_natural_number!size) path_and_size)
             command = drop!command
         end
-    }
-    handle_cd = in (command state) out {
-        current_directory = current_directory@state
-        file_and_parent = file_and_parent@state
-        file_and_size = file_and_size@state
-        new_directory = drop_many!(3 take!command)
-        current_directory = is new_directory
-            ".." then get!(current_directory file_and_parent "/")
-            else new_directory
     }
     handle_command = in (command state) out is take!take!command
         'c' then handle_cd!(command state)
         'l' then handle_ls!(command state)
-        else state
+        else {}
     state = fold!(handle_command commands state)
     
-    get_parents_and_size = in (file_and_size file_and_parent) out parents_and_size@{
-        children = get_keys!file_and_size
-        parents_and_size = <>
-        while children
-            child = take!children
-            parent = get!(child file_and_parent "/")
-            parent_size = get!(parent parents_and_size 0)
-            child_size = get!(child file_and_size 0)
-            total_size = add!(parent_size child_size)
-            parents_and_size = is child
-                "/" then parents_and_size
-                else put!((parent total_size) parents_and_size)
-            children = drop!children
-        end
-    }
+    path_and_size = path_and_size@state
     
-    file_and_parent = file_and_parent@state
-    file_and_size = file_and_size@state
-    total_file_and_size = <> 
+    get_first = in (a b) out a
+    get_second = in (a b) out b
     
-    while file_and_size
-        file_and_size = get_parents_and_size!(file_and_size file_and_parent)        
-        parents = get_keys!file_and_size
-        while parents
-            parent = take!parents
-            old_parent_size = get!(parent total_file_and_size 0)
-            parent_increment = get!(parent file_and_size 0)
-            new_parent_size = add!(old_parent_size parent_increment)
-            total_file_and_size = put!((parent new_parent_size) total_file_and_size)
-            parents = drop!parents
+    directory_sizes = <>
+    
+    while path_and_size
+        item = take!path_and_size
+        path = get_first!item
+        size = get_second!item
+        path = drop!path
+        while path
+            directory_size = get!(path directory_sizes 0)
+            directory_size = add!(directory_size size)
+            directory_sizes = put!((path directory_size) directory_sizes)
+            path = drop!path
         end
+        path_and_size = drop!path_and_size
     end
-    
-    is_large_directory = in size out less?(100000 size)
-    result = sum!clear_if!(is_large_directory get_values!total_file_and_size)
+    sizes = get_values!directory_sizes
+    is_big_size = in size out less?(100000 size)
+    result = sum!clear_if!(is_big_size sizes)
 }
