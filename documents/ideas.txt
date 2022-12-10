@@ -1,5 +1,13 @@
 TODO Standard Library:
-* functions to get first & second from tuples.
+* first, second, third
+  - Have for both stacks and tuples.
+  - Shorter names/syntax for more convenient vector math.
+    - 1st, 2nd, 3rd, 4th
+    - _0, _1, _2
+    - s0, s1, s2
+    - t0, t1, t2
+    - c0, c1, c2
+* Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * Interface for containers:
   - Define and & or on tuples/pairs instead of stacks.
   - add empty? is_empty? function for containers?
