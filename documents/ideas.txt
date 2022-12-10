@@ -74,6 +74,7 @@ TODO example programs:
 * Advent of code
 
 TODO Language:
+* Extend while statements with for statements and if statements.
 * Type "assertions".
   - For what cases?
     - any concrete function (simple and pretty)
