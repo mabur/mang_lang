@@ -35,7 +35,6 @@ R 2"
     head = [0 0]
     tail = [0 0]
     
-    
     heads = []    
     tails = []
     visited = <>
@@ -69,4 +68,5 @@ R 2"
         heads = reverse!heads
         tails = reverse!tails
     }
+    result = count!visited
 }
