@@ -1,0 +1,78 @@
+result@{
+    input = "R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2"
+    
+    tail = [0 0]
+    head = [0 0]
+    
+    visited = <>    
+    tails = []
+    heads = []
+    
+    head_movements = <
+        'L':[-1 0]
+        'R':[+1 0]
+        'U':[0 +1]
+        'D':[0 -1]
+    >
+    tail_movements = <
+        [-1 +2]:[-1 +1]
+        [+0 +2]:[+0 +1]
+        [+1 +2]:[+1 +1]
+        
+        [-1 -2]:[-1 -1]
+        [+0 -2]:[+0 -1]
+        [+1 -2]:[+1 -1]
+        
+        [+2 -1]:[+1 -1]
+        [+2 +0]:[+1 +0]
+        [+2 +1]:[+1 +1]
+        
+        [-2 -1]:[-1 -1]
+        [-2 +0]:[-1 +0]
+        [-2 +1]:[-1 +1]
+    >
+    
+    visited = put!((tail yes) visited)
+    tails = put!(tail tails)
+    heads = put!(head heads)
+    
+    lines = split!(newline input)
+    while lines
+        line = take!lines
+        direction = first!line
+        steps = parse_digit!third!line
+        while steps
+            head_movement = get!(direction head_movements [0 0])
+            head = [
+                add!(first!head first!head_movement)
+                add!(second!head second!head_movement)
+            ]
+            offset = [
+                 sub!(first!head first!tail)
+                 sub!(second!head second!tail)
+            ]
+            tail_movement = get!(offset tail_movements [0 0])
+            tail = [
+                add!(first!tail first!tail_movement)
+                add!(second!tail second!tail_movement)
+            ]
+            tails = put!(tail tails)
+            heads = put!(head heads)
+            visited = put!((tail yes) visited)
+            steps = dec!steps
+        end
+        lines = drop!lines
+    end
+    result = {
+        heads = reverse!heads
+        tails = reverse!tails
+    }
+    result = count!visited
+}
