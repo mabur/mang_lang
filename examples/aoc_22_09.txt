@@ -30,16 +30,10 @@ R 2"
         [-2 -1]:[-1 -1]
         [-2 +0]:[-1 +0]
         [-2 +1]:[-1 +1]
-    >
-
-    head = [0 0]
-    tail = [0 0]
+    > 
     
-    heads = []    
-    tails = []
-    
-    heads = put!(head heads)
-    tails = put!(tail tails)
+    heads = [[0 0]]    
+    tails = [[0 0]]
     
     addv = in (a b) out map_stack!(add zip2!(a b))
     subv = in (a b) out map_stack!(sub zip2!(a b))
@@ -50,6 +44,8 @@ R 2"
         direction = first!line
         steps = parse_digit!third!line
         while steps
+            head = take!heads
+            tail = take!tails
             head_movement = get!(direction head_movements [nan nan])
             head = addv!(head head_movement)
             offset = subv!(head tail)
