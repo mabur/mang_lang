@@ -8,13 +8,6 @@ D 1
 L 5
 R 2"
     
-    tail = [0 0]
-    head = [0 0]
-    
-    visited = <>    
-    tails = []
-    heads = []
-    
     head_movements = <
         'L':[-1 0]
         'R':[+1 0]
@@ -38,10 +31,21 @@ R 2"
         [-2 +0]:[-1 +0]
         [-2 +1]:[-1 +1]
     >
+
+    head = [0 0]
+    tail = [0 0]
     
-    visited = put!((tail yes) visited)
-    tails = put!(tail tails)
+    
+    heads = []    
+    tails = []
+    visited = <>
+    
     heads = put!(head heads)
+    tails = put!(tail tails)
+    visited = put!((tail yes) visited)
+    
+    addv = in (a b) out map_stack!(add zip2!(a b))
+    subv = in (a b) out map_stack!(sub zip2!(a b))
     
     lines = split!(newline input)
     while lines
@@ -49,20 +53,11 @@ R 2"
         direction = first!line
         steps = parse_digit!third!line
         while steps
-            head_movement = get!(direction head_movements [0 0])
-            head = [
-                add!(first!head first!head_movement)
-                add!(second!head second!head_movement)
-            ]
-            offset = [
-                 sub!(first!head first!tail)
-                 sub!(second!head second!tail)
-            ]
+            head_movement = get!(direction head_movements [nan nan])
+            head = addv!(head head_movement)
+            offset = subv!(head tail)
             tail_movement = get!(offset tail_movements [0 0])
-            tail = [
-                add!(first!tail first!tail_movement)
-                add!(second!tail second!tail_movement)
-            ]
+            tail = addv!(tail tail_movement)
             tails = put!(tail tails)
             heads = put!(head heads)
             visited = put!((tail yes) visited)
@@ -74,5 +69,4 @@ R 2"
         heads = reverse!heads
         tails = reverse!tails
     }
-    result = count!visited
 }
