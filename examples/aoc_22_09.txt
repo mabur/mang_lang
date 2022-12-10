@@ -40,7 +40,6 @@ R 2"
     
     heads = put!(head heads)
     tails = put!(tail tails)
-    visited = put!((tail yes) visited)
     
     addv = in (a b) out map_stack!(add zip2!(a b))
     subv = in (a b) out map_stack!(sub zip2!(a b))
