@@ -416,5 +416,8 @@ const std::string STANDARD_LIBRARY = R"(
         in (key value) out value
         table
     )
+
+    addv = in (a b) out map_stack!(add zip2!(a b))
+    subv = in (a b) out map_stack!(sub zip2!(a b))
 }
 )";
