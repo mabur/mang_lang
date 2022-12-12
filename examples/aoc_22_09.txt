@@ -35,9 +35,6 @@ R 2"
     heads = [[0 0]]    
     tails = [[0 0]]
     
-    addv = in (a b) out map_stack!(add zip2!(a b))
-    subv = in (a b) out map_stack!(sub zip2!(a b))
-    
     lines = split!(newline input)
     while lines
         line = take!lines
