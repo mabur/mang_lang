@@ -8,9 +8,11 @@ TODO Standard Library:
     - t0, t1, t2
     - c0, c1, c2
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
+* all_of, any_of, none_of
 * Interface for containers:
   - Define and & or on tuples/pairs instead of stacks.
   - add empty? is_empty? function for containers?
+    - Makes even more sense after for-loops are added.
     - nonempty, is_not_empty? populated, inhabited
     - empty = in container out is container
         [] then true
@@ -89,6 +91,7 @@ TODO Language:
     for i in 10 -> 10,9,8,7,6,5,4,3,2,1
 * Better error messages:
   - Always run type checking for better error messages.
+* How to solve aoc_22_13 if type checking would enforce homogeneous stacks?
 * Type "assertions".
   - For what cases?
     - any concrete function (simple and pretty)
