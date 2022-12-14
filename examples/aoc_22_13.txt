@@ -1,0 +1,63 @@
+result@{
+    input =
+"[1,2]
+[1,2]"
+
+    parse_number = in string out {
+        value = parse_natural_number!take_while!(is_digit string)
+        rest = drop_while!(is_digit string)
+        type = 'N'
+    }
+    parse_list = in string out result@{
+        rest = drop!string
+        value = []
+        while unequal?(take!rest ']')
+            item = parse_expression!rest
+            value = put!(item value)
+            rest = rest@item
+            next = take!rest
+            rest = is next ',' then drop!rest else rest
+        end
+        rest = drop!rest
+        value = reverse!value
+        result = {value = value rest = rest type = 'L'}
+    }
+    parse_expression = in string out is take!string
+        '[' then parse_list!string
+        else parse_number!string
+
+    is_order_number = in (a b) out
+        less_or_equal?(a b)
+    is_order_list = in (a b) out
+        not!drop_while!(is_order zip2!(a b))
+    is_order = in (a b) out
+        is type@a
+            'N' then is type@b
+                'N' then is_order_number?(value@a value@b)
+                'L' then is_order_list?([value@a] value@b)
+                else nan
+            'L' then is type@b
+                'N' then is_order_list?(value@a [value@b])
+                'L' then is_order_list?(value@a value@b)
+                else nan
+            else nan
+
+    i = 1
+    sum_indices = 0
+    while input
+        a = parse_expression!input
+        input = rest@a
+        input = drop!input
+        b = parse_expression!input
+        input = rest@b
+        input = if input then drop!drop!input else input
+        sum_indices =
+            if is_order?(a b) then
+                add!(sum_indices i)
+            else
+                sum_indices
+        i = inc!i
+    end
+    result = sum_indices
+    result = sum_indices
+}
