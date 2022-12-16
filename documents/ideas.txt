@@ -89,9 +89,22 @@ TODO Language:
   - If drop is implemented for numbers then we can do both:
     for item in range!10 -> 0,1,2,3,4,5,6,7,8,9
     for i in 10 -> 10,9,8,7,6,5,4,3,2,1
+* Add syntactic sugar for put:
+  container += item
+  container << item
+  table += (k v)
+  table << (k v)
+* (Add syntactic sugar for drop):
+  container -=
+  container >>
+  container--
 * Better error messages:
   - Always run type checking for better error messages.
 * How to solve aoc_22_13 if type checking would enforce homogeneous stacks?
+  - Isinstance
+  - Inheritance/polymorphism
+  - Run-time-dispatch
+  - Sum-type/choice-type
 * Type "assertions".
   - For what cases?
     - any concrete function (simple and pretty)
