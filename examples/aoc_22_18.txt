@@ -1,0 +1,51 @@
+result@{
+    input =
+"2,2,2
+1,2,2
+3,2,2
+2,1,2
+2,3,2
+2,2,1
+2,2,3
+2,2,4
+2,2,6
+1,2,5
+3,2,5
+2,1,5
+2,3,5"
+
+    X_PLANE = 0
+    Y_PLANE = 1
+    Z_PLANE = 2
+
+    parse_point = in string out map_stack!(parse_natural_number split!(',' string))
+    points = map_stack!(parse_point split!(newline input))
+    
+    plane_counts = <>
+    while points
+        point = take!points
+        x = first!point
+        y = second!point
+        z = third!point
+        
+        p0 = [x y z X_PLANE]
+        p1 = [x y z Y_PLANE]
+        p2 = [x y z Z_PLANE]
+        p3 = [inc!x y z X_PLANE]
+        p4 = [x inc!y z Y_PLANE]
+        p5 = [x y inc!z Z_PLANE]
+        
+        planes = [p0 p1 p2 p3 p4 p5]
+        while planes
+            plane = take!planes
+            n = get!(plane plane_counts 0)
+            plane_counts = put!((plane inc!n) plane_counts)
+            planes = drop!planes
+        end
+        
+        points = drop!points
+    end
+    
+    is_surface_plane = in (plane counts) out equal?(counts 1)
+    result = count_if!(is_surface_plane plane_counts)
+}
