@@ -1,63 +1,69 @@
 result@{
     input =
-"[1,2]
-[1,2]"
+"[1,1,3,1,1]
+[1,1,5,1,1]
 
-    parse_number = in string out {
-        value = parse_natural_number!take_while!(is_digit string)
-        rest = drop_while!(is_digit string)
-        type = 'N'
-    }
-    parse_list = in string out result@{
-        rest = drop!string
-        value = []
-        while unequal?(take!rest ']')
-            item = parse_expression!rest
-            value = put!(item value)
-            rest = rest@item
-            next = take!rest
-            rest = is next ',' then drop!rest else rest
+[[1],[2,3,4]]
+[[1],4]
+
+[9]
+[[8,7,6]]
+
+[[4,4],4,4]
+[[4,4],4,4,4]
+
+[7,7,7,7]
+[7,7,7]
+
+[]
+[3]
+
+[[[]]]
+[[]]
+
+[1,[2,[3,[4,[5,6,7]]]],8,9]
+[1,[2,[3,[4,[5,6,0]]]],8,9]"
+
+    pairs = split!("" split!(newline input))
+
+    is_right_order_integers = in pair out 
+        less?(
+            parse_natural_number!first!pair
+            parse_natural_number!second!pair
+        )
+    is_right_order_lists = in pair out result@{
+        left = first!pair
+        right = second!pair
+        is_right_order_so_far = yes
+        while and?[left right is_right_order_so_far]
+            is_right_order_so_far = and?[
+                is_right_order_so_far
+                is_right_order?[left right]
+            ]
+            left = drop!left
+            right = drop!right
         end
-        rest = drop!rest
-        value = reverse!value
-        result = {value = value rest = rest type = 'L'}
+        is_right_order_so_far = and?[
+            is_right_order_so_far less_or_equal?(count!left count!right)
+        ]
     }
-    parse_expression = in string out is take!string
-        '[' then parse_list!string
-        else parse_number!string
+    is_right_order = in pair out result@{
+        left = first!pair
+        right = second!pair
+        result = yes
+    }
 
-    is_order_number = in (a b) out
-        less_or_equal?(a b)
-    is_order_list = in (a b) out
-        not!drop_while!(is_order zip2!(a b))
-    is_order = in (a b) out
-        is type@a
-            'N' then is type@b
-                'N' then is_order_number?(value@a value@b)
-                'L' then is_order_list?([value@a] value@b)
-                else nan
-            'L' then is type@b
-                'N' then is_order_list?(value@a [value@b])
-                'L' then is_order_list?(value@a value@b)
-                else nan
-            else nan
-
-    i = 1
-    sum_indices = 0
-    while input
-        a = parse_expression!input
-        input = rest@a
-        input = drop!input
-        b = parse_expression!input
-        input = rest@b
-        input = if input then drop!drop!input else input
-        sum_indices =
-            if is_order?(a b) then
-                add!(sum_indices i)
+    index = 1
+    index_sum = 0
+    while pairs
+        pair = take!pairs
+        index_sum =
+            if is_right_order?pair then
+                add!(index index_sum)
             else
-                sum_indices
-        i = inc!i
+                index_sum
+        pairs = drop!pairs
+        index = inc!index
     end
-    result = sum_indices
-    result = sum_indices
+    result = index_sum
 }
