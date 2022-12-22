@@ -45,7 +45,7 @@ std::vector<size_t> whileIndices(const Statements& statements) {
     auto while_indices = std::vector<size_t>{};
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION || type == PUT_ASSIGNMENT) {
             while_indices.push_back(1); // dummy
         }
         if (type == WHILE_STATEMENT) {
@@ -69,7 +69,7 @@ std::vector<size_t> endIndices(const Statements& statements) {
     auto end_indices = std::vector<size_t>(statements.size());
     for (size_t i = statements.size() - 1; i < statements.size(); --i) {
         const auto type = statements[i].type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION ||type == PUT_ASSIGNMENT) {
             end_indices[i] = 0; // dummy
         }
         if (type == WHILE_STATEMENT) {

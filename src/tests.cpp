@@ -282,6 +282,7 @@ int main() {
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
         {"{i=2 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=3}"},
         {"{i=1000 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=500500}"},
+        {"{i=2 c=[] while i c+=i i=dec!i end}", "{i=0 c=[1 2]}"},
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
