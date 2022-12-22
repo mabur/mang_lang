@@ -9,6 +9,10 @@ TODO Standard Library:
     - c0, c1, c2
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
+  - add generic map that requires that f has same input and output type,
+    so that it does not change type of the container.
+    Then the same map could be used for stack, string, table.
+    That map could be used instead of replace_*.
 * Interface for containers:
   - Define and & or on tuples/pairs instead of stacks.
   - add empty? is_empty? function for containers?
@@ -49,10 +53,6 @@ TODO Standard Library:
   - Built-in functions for checking if name is in dict: has?(name dictionary) contains? inside?
     - O(N) for stack and string
     - O(1) for table
-  - add generic map that requires that f has same input and output type,
-    so that it does not change type of the container.
-    Then the same map could be used for stack, string, table.
-    That map could be used instead of replace_*.
   - add higher_order function that takes a unary function and constructs a new binary function
     that applies identity to first argument, so that it can be used for table pairs of (key value).
   - add higher_order function that takes a unary predicate and constructs a new binary predicate
@@ -94,6 +94,8 @@ TODO Language:
   container << item
   table += (k v)
   table << (k v)
+* Add syntactic sugar for numbers +=, -=.
+  += could potentially be implemented by extending "put" to numbers.
 * (Add syntactic sugar for drop):
   container -=
   container >>
