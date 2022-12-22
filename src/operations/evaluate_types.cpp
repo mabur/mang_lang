@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "../built_in_functions/stack.h"
 #include "../factory.h"
 #include "serialize.h"
 #include "../container.h"
@@ -77,6 +78,19 @@ Expression evaluateDictionary(
             const auto label = getNameAsLabel(definition.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             result.definitions.add(label, value);
+        }
+        else if (type == PUT_ASSIGNMENT) {
+            const auto put_assignment = getPutAssignment(statement);
+            const auto& right_expression = put_assignment.expression;
+            const auto value = evaluate_types(right_expression, result_environment);
+            const auto label = getNameAsLabel(put_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto current = result.definitions.lookup(label);
+            const auto tuple = makeEvaluatedTuple(
+                {}, EvaluatedTuple{{value, current}}
+            );
+            const auto new_value = stack_functions::put(tuple);
+            result.definitions.add(label, new_value);
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWileStatement(statement);

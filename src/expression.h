@@ -32,6 +32,7 @@ enum ExpressionType {
     LOOKUP_SYMBOL,
     NAME,
     DEFINITION,
+    PUT_ASSIGNMENT,
     WHILE_STATEMENT,
     END_STATEMENT,
     NUMBER,
@@ -65,6 +66,7 @@ const auto NAMES = std::vector<std::string>{
     "LOOKUP_SYMBOL",
     "NAME",
     "DEFINITION",
+    "PUT_ASSIGNMENT",
     "WHILE_STATEMENT",
     "END_STATEMENT",
     "NUMBER",
@@ -203,6 +205,11 @@ struct EmptyStack {
 };
 
 struct Definition {
+    Expression name;
+    Expression expression;
+};
+
+struct PutAssignment {
     Expression name;
     Expression expression;
 };

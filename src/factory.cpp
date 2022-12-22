@@ -31,6 +31,7 @@ std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<EndStatement> end_statements;
 std::vector<Definition> definitions;
+std::vector<PutAssignment> put_assignments;
 std::vector<String> strings;
 std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
@@ -169,7 +170,7 @@ Statements setContext(const Statements& statements) {
     for (size_t i = 0; i < statements.size(); ++i) {
         const auto type = statements[i].type;
         const auto code = statements[i].range;
-        if (type == DEFINITION) {
+        if (type == DEFINITION || type == PUT_ASSIGNMENT) {
             result.push_back(statements[i]);
         } else if (type == WHILE_STATEMENT) {
             const auto statement = getWileStatement(statements[i]);
@@ -317,6 +318,10 @@ Expression makeDefinition(CodeRange code, Definition expression) {
     return makeExpression(code, expression, DEFINITION, definitions);
 }
 
+Expression makePutAssignment(CodeRange code, PutAssignment expression) {
+    return makeExpression(code, expression, PUT_ASSIGNMENT, put_assignments);
+}
+
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
     return makeExpression(code, expression, WHILE_STATEMENT, while_statements);
 }
@@ -341,6 +346,10 @@ Expression makeBoolean(CodeRange code, Boolean expression) {
 
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, definitions);
+}
+
+PutAssignment getPutAssignment(Expression expression) {
+    return getExpression(expression, PUT_ASSIGNMENT, put_assignments);
 }
 
 WhileStatement getWileStatement(Expression expression) {

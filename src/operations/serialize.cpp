@@ -39,6 +39,10 @@ std::string serializeDefinition(const Definition& element) {
     return getName(element.name).value + '=' + serialize(element.expression) + ' ';
 }
 
+std::string serializePutAssignment(const PutAssignment& element) {
+    return getName(element.name).value + "+=" + serialize(element.expression) + ' ';
+}
+
 std::string serializeWhileStatement(const WhileStatement& element) {
     return "while " + serialize(element.expression) + ' ';
 }
@@ -229,6 +233,7 @@ std::string serialize(Expression expression) {
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
+        case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
         case FUNCTION: return serializeFunction(getFunction(expression));

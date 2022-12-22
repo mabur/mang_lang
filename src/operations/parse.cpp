@@ -99,14 +99,30 @@ Expression parseNamedElement(CodeRange code) {
     auto name = parseName(code);
     code.first = end(name);
     code = parseWhiteSpace(code);
-    code = parseCharacter(code, '=');
+    auto is_definition = true;
+    if (startsWith(code, '=')) {
+        code = parseCharacter(code, '=');    
+    }
+    else {
+        code = parseKeyword(code, "+=");
+        is_definition = false;
+    }
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    return makeDefinition(
-        CodeRange{first, code.first}, Definition{std::move(name), expression}
-    );
+    if (is_definition) {
+        return makeDefinition(
+            CodeRange{first, code.first},
+            Definition{std::move(name), expression}
+        );
+    }
+    else {
+        return makePutAssignment(
+            CodeRange{first, code.first},
+            PutAssignment{std::move(name), expression}
+        );
+    }
 }
 
 Expression parseWhileStatement(CodeRange code) {
