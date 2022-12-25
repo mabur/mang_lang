@@ -28,7 +28,7 @@ result@{
         while unequal?(take!positions point1)
             x = add!(x dx)
             y = add!(y dy)
-            positions = put!([x y] positions)
+            positions += [x y]
         end
     }
     has_many_overlaps = in (point num_overlaps) out less?(1 num_overlaps)

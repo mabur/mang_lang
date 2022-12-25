@@ -14,7 +14,7 @@ result@{
         result = []
         while numbers
             number = take!numbers
-            result = put!(less?(maximum number) result)
+            result += less?(maximum number)
             maximum = max!(maximum number)
             numbers = drop!numbers
         end

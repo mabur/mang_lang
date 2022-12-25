@@ -31,9 +31,9 @@ move 1 from 1 to 2"
             item = take!source_stack
             source_stack = drop!source_stack
             target_stack = get!(target stacks [])
-            target_stack = put!(item target_stack)
-            stacks = put!((source source_stack) stacks)
-            stacks = put!((target target_stack) stacks)
+            target_stack += item
+            stacks += (source source_stack)
+            stacks += (target target_stack)
             n = dec!n        
         end
         movements = drop!movements

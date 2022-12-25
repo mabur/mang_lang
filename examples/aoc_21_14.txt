@@ -39,12 +39,12 @@ result@{
                 remaining_rules = drop!remaining_rules
             end
             while drop!prefix
-                result = put!(take!prefix result)
+                result += take!prefix
                 prefix = drop!prefix
             end
             polymer = drop!polymer
         end
-        result = put!(take!polymer result)
+        result += take!polymer
         polymer = reverse!result
         n = dec!n
     end

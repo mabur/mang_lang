@@ -28,10 +28,10 @@ result@{
             delta = get_direction!(source target)
             point = source
             while unequal?(point target)
-                filled = put!((point yes) filled)
+                filled += (point yes)
                 point = addv!(point delta)
             end
-            filled = put!((point yes) filled)
+            filled += (point yes)
             path = drop!path
         end
         paths = drop!paths

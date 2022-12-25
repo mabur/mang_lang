@@ -39,7 +39,7 @@ result@{
         while planes
             plane = take!planes
             n = get!(plane plane_counts 0)
-            plane_counts = put!((plane inc!n) plane_counts)
+            plane_counts += (plane inc!n)
             planes = drop!planes
         end
         

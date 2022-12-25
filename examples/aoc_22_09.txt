@@ -48,8 +48,8 @@ R 2"
             offset = subv!(head tail)
             tail_movement = get!(offset tail_movements [0 0])
             tail = addv!(tail tail_movement)
-            tails = put!(tail tails)
-            heads = put!(head heads)
+            tails += tail
+            heads += head
             steps = dec!steps
         end
         lines = drop!lines

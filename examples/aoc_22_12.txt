@@ -24,7 +24,7 @@ abdefghi"
                 'S' then count_alphabet!'a'
                 'E' then count_alphabet!'z'
                 else count_alphabet!c
-            heights = put!(([x y] height) heights)
+            heights += ([x y] height)
             line = drop!line
             x = inc!x
         end
