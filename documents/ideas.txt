@@ -89,11 +89,22 @@ TODO Language:
   - If drop is implemented for numbers then we can do both:
     for item in range!10 -> 0,1,2,3,4,5,6,7,8,9
     for i in 10 -> 10,9,8,7,6,5,4,3,2,1
+  - Could have syntax that shows that both the name of the item and the container is added to the dictionary:
+    for item in container as expression
+    for item in container from expression
+    for item, container in expression
+    for item in container = expression
+    container = expression for item in container
+  - Could alternatively require that item is a new name and container is an existing name:
+    for item in container
 * Add syntactic sugar for put:
-  container += item
-  container << item
   table += (k v)
-  table << (k v)
+  container += item
+  container << item Ruby
+  container ..= item Lua
+  container .= item Perl PHP
+  container ,= item
+* Does not work for aoc22_12_07, since then the name is first used for the input and then shadowed by usage in the dictionary.
 * Add syntactic sugar for numbers +=, -=.
   += could potentially be implemented by extending "put" to numbers.
 * (Add syntactic sugar for drop):
