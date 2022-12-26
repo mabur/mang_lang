@@ -97,6 +97,8 @@ TODO Language:
     container = expression for item in container
   - Could alternatively require that item is a new name and container is an existing name:
     for item in container
+  - Implement more control structures like for & if by first refactoring dictionary statements,
+    so that we can have hierarchical groups of statements corresponding to "scope".
 * Add syntactic sugar for put:
   table += (k v)
   container += item
