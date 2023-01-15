@@ -46,9 +46,10 @@ std::string serializePutAssignment(const PutAssignment& element) {
 std::string serializeWhileStatement(const WhileStatement& element) {
     return "while " + serialize(element.expression) + ' ';
 }
-
-std::string serializeEndStatement(const EndStatement&) {
-    return "end ";
+    
+std::string serializeForStatement(const ForStatement& element) {
+    return "for " + serialize(element.name_item) + " in " +
+        serialize(element.name_container) + " ";
 }
 
 std::string serializeDictionary(const Dictionary& dictionary) {
@@ -235,7 +236,9 @@ std::string serialize(Expression expression) {
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
-        case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
+        case FOR_STATEMENT: return serializeForStatement(getForStatement(expression));
+        case WHILE_END_STATEMENT: return "end ";
+        case FOR_END_STATEMENT: return "end ";
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));

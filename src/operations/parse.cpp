@@ -135,11 +135,51 @@ Expression parseWhileStatement(CodeRange code) {
     return makeWhileStatement(CodeRange{first, code.first}, {expression, 0});
 }
 
-Expression parseEndStatement(CodeRange code, size_t while_index) {
+Expression parseForStatement(CodeRange code) {
+    auto first = code.begin();
+    code = parseKeyword(code, "for");
+    code = parseWhiteSpace(code);
+    auto name_item = parseName(code);
+    code.first = end(name_item);
+    code = parseWhiteSpace(code);
+    code = parseKeyword(code, "in");
+    code = parseWhiteSpace(code);
+    auto name_container = parseName(code);
+    code.first = end(name_container);
+    return makeForStatement(CodeRange{first, code.first},
+        ForStatement{name_item, name_container, 0}
+    );
+}
+
+Expression parseWhileEndStatement(CodeRange code, size_t while_index) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeEndStatement(CodeRange{first, code.first}, {while_index});
+    return makeWhileEndStatement(CodeRange{first, code.first}, {while_index});
+}
+
+Expression parseForEndStatement(CodeRange code, size_t for_index) {
+    auto first = code.begin();
+    code = parseKeyword(code, "end");
+    code = parseWhiteSpace(code);
+    return makeForEndStatement(CodeRange{first, code.first}, {for_index});
+}
+    
+bool isEndMatchingWhile(
+    const std::vector<size_t>& while_indices,
+    const std::vector<size_t>& for_indices,
+    CodeRange code
+) {
+    if (while_indices.empty() && for_indices.empty()) {
+        throw ParseException("end not matching while or for", code.begin());
+    }
+    if (while_indices.empty()) {
+        return false;
+    }
+    if (for_indices.empty()) {
+        return true;
+    }
+    return while_indices.back() > for_indices.back();
 }
 
 Expression parseDictionary(CodeRange code) {
@@ -148,6 +188,7 @@ Expression parseDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     auto statements = Statements{};
     auto while_indices = std::vector<size_t>{};
+    auto for_indices = std::vector<size_t>{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
@@ -155,17 +196,28 @@ Expression parseDictionary(CodeRange code) {
             while_indices.push_back(statements.size());
             statements.push_back(parseWhileStatement(code));
         }
+        else if (isKeyword(code, "for")) {
+            for_indices.push_back(statements.size());
+            statements.push_back(parseForStatement(code));
+        }
         else if (isKeyword(code, "end")) {
-            if (while_indices.empty()) {
-                throw ParseException("end not matching while", code.begin());
+            if (isEndMatchingWhile(while_indices, for_indices, code)) {
+                const auto end_index = statements.size();
+                const auto while_index = while_indices.back();
+                while_indices.pop_back();
+                const auto while_statement_pointer = statements.at(while_index);
+                auto& while_statement = getMutableWhileStatement(while_statement_pointer);
+                while_statement.end_index_ = end_index;
+                statements.push_back(parseWhileEndStatement(code, while_index));
+            } else {
+                const auto end_index = statements.size();
+                const auto for_index = for_indices.back();
+                for_indices.pop_back();
+                const auto for_statement_pointer = statements.at(for_index);
+                auto& for_statement = getMutableForStatement(for_statement_pointer);
+                for_statement.end_index_ = end_index;
+                statements.push_back(parseForEndStatement(code, for_index));
             }
-            const auto end_index = statements.size();
-            const auto while_index = while_indices.back();
-            while_indices.pop_back();
-            const auto while_statement_pointer = statements.at(while_index);
-            auto& while_statement = getMutableWhileStatement(while_statement_pointer);
-            while_statement.end_index_ = end_index;
-            statements.push_back(parseEndStatement(code, while_index));
         }
         else {
             statements.push_back(parseNamedElement(code));

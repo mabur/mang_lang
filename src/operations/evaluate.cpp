@@ -107,9 +107,10 @@ Expression evaluateDictionary(
     const auto result_environment = makeEvaluatedDictionary(
         CodeRange{}, EvaluatedDictionary{environment, {}}
     );
+    const auto& statements = dictionary.statements;
     auto i = size_t{0};
-    while (i < dictionary.statements.size()) {
-        const auto statement = dictionary.statements[i];
+    while (i < statements.size()) {
+        const auto statement = statements[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
@@ -142,9 +143,33 @@ Expression evaluateDictionary(
                 i = while_statement.end_index_ + 1;
             }
         }
-        else if (type == END_STATEMENT) {
-            const auto end_statement = getEndStatement(statement);
+        else if (type == FOR_STATEMENT) {
+            const auto for_statement = getForStatement(statement);
+            const auto label_container = getNameAsLabel(for_statement.name_container);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto container = result.definitions.lookup(label_container);
+            if (boolean(container)) {
+                const auto label_item = getNameAsLabel(for_statement.name_item);
+                const auto item = stack_functions::take(container);
+                result.definitions.add(label_item, item);
+                i += 1;
+            } else {
+                i = for_statement.end_index_ + 1;
+            }
+        }
+        else if (type == WHILE_END_STATEMENT) {
+            const auto end_statement = getWhileEndStatement(statement);
             i = end_statement.while_index_;
+        }
+        else if (type == FOR_END_STATEMENT) {
+            const auto end_statement = getForEndStatement(statement);
+            i = end_statement.for_index_;
+            const auto for_statement = getForStatement(statements.at(i));
+            const auto label_container = getNameAsLabel(for_statement.name_container);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto old_container = result.definitions.lookup(label_container);
+            const auto new_container = stack_functions::drop(old_container);
+            result.definitions.add(label_container, new_container);
         }
     }
     return result_environment;

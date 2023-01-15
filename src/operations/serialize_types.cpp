@@ -42,7 +42,7 @@ std::string serializeWhileStatement(const WhileStatement& element) {
     return "while " + serialize_types(element.expression) + ' ';
 }
 
-std::string serializeEndStatement(const EndStatement&) {
+std::string serializeWhileEndStatement(const WhileEndStatement&) {
     return "end ";
 }
 
@@ -132,7 +132,7 @@ std::string serialize_types(Expression expression) {
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
-        case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
+        case WHILE_END_STATEMENT: return serializeWhileEndStatement(getWhileEndStatement(expression));
         case FUNCTION: return NAMES[FUNCTION];
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return NAMES[FUNCTION_DICTIONARY];

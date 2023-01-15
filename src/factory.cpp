@@ -29,7 +29,9 @@ std::vector<LookupSymbol> symbol_lookups;
 std::vector<Name> names;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
-std::vector<EndStatement> end_statements;
+std::vector<ForStatement> for_statements;
+std::vector<WhileEndStatement> while_end_statements;
+std::vector<ForEndStatement> for_end_statements;
 std::vector<Definition> definitions;
 std::vector<PutAssignment> put_assignments;
 std::vector<String> strings;
@@ -122,7 +124,7 @@ void clearMemory() {
     names.clear();
     numbers.clear();
     while_statements.clear();
-    end_statements.clear();
+    while_end_statements.clear();
     definitions.clear();
     strings.clear();
     empty_strings.clear();
@@ -240,8 +242,16 @@ Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
     return makeExpression(code, expression, WHILE_STATEMENT, while_statements);
 }
 
-Expression makeEndStatement(CodeRange code, EndStatement expression) {
-    return makeExpression(code, expression, END_STATEMENT, end_statements);
+Expression makeForStatement(CodeRange code, ForStatement expression) {
+    return makeExpression(code, expression, FOR_STATEMENT, for_statements);
+}
+
+Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression) {
+    return makeExpression(code, expression, WHILE_END_STATEMENT, while_end_statements);
+}
+
+Expression makeForEndStatement(CodeRange code, ForEndStatement expression) {
+    return makeExpression(code, expression, FOR_END_STATEMENT, for_end_statements);
 }
 
 Expression makeString(CodeRange code, String expression) {
@@ -274,8 +284,20 @@ WhileStatement& getMutableWhileStatement(Expression expression) {
     return getMutableExpressionReference(expression, WHILE_STATEMENT, while_statements);
 }
 
-EndStatement getEndStatement(Expression expression) {
-    return getExpression(expression, END_STATEMENT, end_statements);
+ForStatement getForStatement(Expression expression) {
+    return getExpression(expression, FOR_STATEMENT, for_statements);
+}
+
+ForStatement& getMutableForStatement(Expression expression) {
+    return getMutableExpressionReference(expression, FOR_STATEMENT, for_statements);
+}
+
+WhileEndStatement getWhileEndStatement(Expression expression) {
+    return getExpression(expression, WHILE_END_STATEMENT, while_end_statements);
+}
+
+ForEndStatement getForEndStatement(Expression expression) {
+    return getExpression(expression, FOR_END_STATEMENT, for_end_statements);
 }
 
 Number getNumber(Expression expression) {

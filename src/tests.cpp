@@ -272,6 +272,9 @@ int main() {
         {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
     });
+    test.reformat("dictionary for", {
+        {"{for i in c end}", "{for i in c end}"},
+    });
     test.evaluate_types("dictionary iteration", {
         {"{while 1 end}", "{}"},
         {"{i=2 while i i=dec!i end}", "{i=NUMBER}"},
@@ -283,6 +286,12 @@ int main() {
         {"{i=2 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=3}"},
         {"{i=1000 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=500500}"},
         {"{i=2 c=[] while i c+=i i=dec!i end}", "{i=0 c=[1 2]}"},
+    });
+    test.evaluate("dictionary for", {
+        {"{c=[] for i in c end}", "{c=[]}"},
+        {"{c=[1] for i in c end}", "{c=[] i=1}"},
+        {"{c=[1 2] for i in c end}", "{c=[] i=2}"},
+        {"{a=[] c=[1 2 3] for i in c a+=i end}", "{a=[3 2 1] c=[] i=3}"},
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},

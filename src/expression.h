@@ -34,7 +34,9 @@ enum ExpressionType {
     DEFINITION,
     PUT_ASSIGNMENT,
     WHILE_STATEMENT,
-    END_STATEMENT,
+    FOR_STATEMENT,
+    WHILE_END_STATEMENT,
+    FOR_END_STATEMENT,
     NUMBER,
     STRING,
     EMPTY_STRING,
@@ -68,7 +70,9 @@ const auto NAMES = std::vector<std::string>{
     "DEFINITION",
     "PUT_ASSIGNMENT",
     "WHILE_STATEMENT",
-    "END_STATEMENT",
+    "FOR_STATEMENT",
+    "WHILE_END_STATEMENT",
+    "FOR_END_STATEMENT",
     "NUMBER",
     "STRING",
     "EMPTY_STRING",
@@ -219,8 +223,18 @@ struct WhileStatement {
     size_t end_index_;
 };
 
-struct EndStatement {
+struct ForStatement {
+    Expression name_item;
+    Expression name_container;
+    size_t end_index_;
+};
+
+struct WhileEndStatement {
     size_t while_index_;
+};
+
+struct ForEndStatement {
+    size_t for_index_;
 };
 
 using Statements = std::vector<Expression>;
