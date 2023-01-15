@@ -39,66 +39,6 @@ std::vector<Expression> expressions;
 
 namespace {
 
-std::vector<size_t> whileIndices(const Statements& statements) {
-    // Forward pass to set backward jumps:
-    auto while_positions = std::vector<size_t>{};
-    auto while_indices = std::vector<size_t>{};
-    for (size_t i = 0; i < statements.size(); ++i) {
-        const auto type = statements[i].type;
-        if (type == DEFINITION || type == PUT_ASSIGNMENT) {
-            while_indices.push_back(1); // dummy
-        }
-        if (type == WHILE_STATEMENT) {
-            while_positions.push_back(i);
-            while_indices.push_back(1); // dummy
-        }
-        if (type == END_STATEMENT) {
-            while_indices.push_back(while_positions.back());
-            while_positions.pop_back();
-        }
-    }
-    if (!while_positions.empty()) {
-        throw ParseException("More while than end", statements.front().range.first);
-    }
-    return while_indices;
-}
-
-std::vector<size_t> endIndices(const Statements& statements) {
-    // Backward pass to set forward jumps:
-    auto end_positions = std::vector<size_t>{};
-    auto end_indices = std::vector<size_t>(statements.size());
-    for (size_t i = statements.size() - 1; i < statements.size(); --i) {
-        const auto type = statements[i].type;
-        if (type == DEFINITION ||type == PUT_ASSIGNMENT) {
-            end_indices[i] = 0; // dummy
-        }
-        if (type == WHILE_STATEMENT) {
-            end_indices[i] = end_positions.back();
-            end_positions.pop_back();
-        }
-        if (type == END_STATEMENT) {
-            end_indices[i] = 0; // dummy
-            end_positions.push_back(i);
-        }
-    }
-    if (!end_positions.empty()) {
-        throw ParseException("Fewer while than end", statements.front().range.first);
-    }
-    return end_indices;
-}
-
-template<typename ElementType, typename ArrayType>
-Expression makeMutableExpression(
-    CodeRange code,
-    const ElementType* expression,
-    ExpressionType type,
-    ArrayType& array
-) {
-    array.emplace_back(expression);
-    expressions.push_back(Expression{type, array.size() - 1, code});
-    return expressions.back();
-}
-
 template<typename ElementType, typename ArrayType>
 Expression makeExpression(
     CodeRange code,
@@ -160,32 +100,6 @@ typename ArrayType::value_type getExpression(
 }
 
 } // namespace
-
-Statements setContext(const Statements& statements) {
-    const auto while_indices = whileIndices(statements);
-    const auto end_indices = endIndices(statements);
-
-    auto result = Statements{};
-
-    for (size_t i = 0; i < statements.size(); ++i) {
-        const auto type = statements[i].type;
-        const auto code = statements[i].range;
-        if (type == DEFINITION || type == PUT_ASSIGNMENT) {
-            result.push_back(statements[i]);
-        } else if (type == WHILE_STATEMENT) {
-            const auto statement = getWileStatement(statements[i]);
-            result.push_back(makeWhileStatement(code, {
-                statement.expression,
-                end_indices[i],
-            }));
-        } else if (type == END_STATEMENT) {
-            result.push_back(makeEndStatement(code, {while_indices[i]}));
-        } else {
-            assert("Unexpected type");
-        }
-    }
-    return result;
-}
 
 void clearMemory() {
     evaluated_dictionaries.clear();

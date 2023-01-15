@@ -135,23 +135,11 @@ Expression parseWhileStatement(CodeRange code) {
     return makeWhileStatement(CodeRange{first, code.first}, {expression, 0});
 }
 
-Expression parseEndStatement(CodeRange code) {
+Expression parseEndStatement(CodeRange code, size_t while_index) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeEndStatement(CodeRange{first, code.first}, {1});
-}
-
-Expression parseDictionaryElement(CodeRange code) {
-    code = parseWhiteSpace(code);
-    throwIfEmpty(code);
-    if (isKeyword(code, "while")) {
-        return parseWhileStatement(code);
-    }
-    if (isKeyword(code, "end")) {
-        return parseEndStatement(code);
-    }
-    return parseNamedElement(code);
+    return makeEndStatement(CodeRange{first, code.first}, {while_index});
 }
 
 Expression parseDictionary(CodeRange code) {
@@ -159,16 +147,39 @@ Expression parseDictionary(CodeRange code) {
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = Statements{};
+    auto while_indices = std::vector<size_t>{};
     while (!::startsWith(code, '}')) {
+        code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        auto statement = parseDictionaryElement(code);
+        auto statement = Expression{};
+        if (isKeyword(code, "while")) {
+            statement = parseWhileStatement(code);
+            while_indices.push_back(statements.size());
+        }
+        else if (isKeyword(code, "end")) {
+            if (while_indices.empty()) {
+                throw ParseException("end not matching while", code.begin());
+            }
+            const auto end_index = statements.size();
+            const auto while_index = while_indices.back();
+            while_indices.pop_back();
+            statement = parseEndStatement(code, while_index);
+            const auto while_statement_pointer = statements.at(while_index);
+            const auto while_statement = getWileStatement(while_statement_pointer);
+            statements.at(while_index) = makeWhileStatement(
+                while_statement_pointer.range,
+                WhileStatement{while_statement.expression, end_index}
+            );
+        }
+        else {
+            statement = parseNamedElement(code);    
+        }
         code.first = end(statement);
         statements.push_back(statement);
     }
     code = parseCharacter(code, '}');
     return makeDictionary(
-        CodeRange{first, code.begin()},
-        Dictionary{setContext(statements)}
+        CodeRange{first, code.begin()}, Dictionary{statements}
     );
 }
 
