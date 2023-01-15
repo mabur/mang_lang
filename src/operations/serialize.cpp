@@ -234,7 +234,7 @@ std::string serialize(Expression expression) {
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
-        case WHILE_STATEMENT: return serializeWhileStatement(getWileStatement(expression));
+        case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
         case END_STATEMENT: return serializeEndStatement(getEndStatement(expression));
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_BUILT_IN: return "built_in_function";

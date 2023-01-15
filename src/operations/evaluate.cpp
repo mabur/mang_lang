@@ -135,7 +135,7 @@ Expression evaluateDictionary(
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = getWileStatement(statement);
+            const auto while_statement = getWhileStatement(statement);
             if (boolean(evaluate(while_statement.expression, result_environment))) {
                 i += 1;
             } else {

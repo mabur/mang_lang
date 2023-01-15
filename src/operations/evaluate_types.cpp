@@ -93,7 +93,7 @@ Expression evaluateDictionary(
             result.definitions.add(label, new_value);
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = getWileStatement(statement);
+            const auto while_statement = getWhileStatement(statement);
             boolean(evaluate_types(while_statement.expression, result_environment));
         }
     }

@@ -10,7 +10,8 @@ std::string getLog();
 
 Definition getDefinition(Expression expression);
 PutAssignment getPutAssignment(Expression expression);
-WhileStatement getWileStatement(Expression expression);
+WhileStatement getWhileStatement(Expression expression);
+WhileStatement& getMutableWhileStatement(Expression expression);
 EndStatement getEndStatement(Expression expression);
 Number getNumber(Expression expression);
 Character getCharacter(Expression expression);

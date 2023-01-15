@@ -266,8 +266,12 @@ PutAssignment getPutAssignment(Expression expression) {
     return getExpression(expression, PUT_ASSIGNMENT, put_assignments);
 }
 
-WhileStatement getWileStatement(Expression expression) {
+WhileStatement getWhileStatement(Expression expression) {
     return getExpression(expression, WHILE_STATEMENT, while_statements);
+}
+
+WhileStatement& getMutableWhileStatement(Expression expression) {
+    return getMutableExpressionReference(expression, WHILE_STATEMENT, while_statements);
 }
 
 EndStatement getEndStatement(Expression expression) {

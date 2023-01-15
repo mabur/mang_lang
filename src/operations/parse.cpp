@@ -151,10 +151,9 @@ Expression parseDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        auto statement = Expression{};
         if (isKeyword(code, "while")) {
-            statement = parseWhileStatement(code);
             while_indices.push_back(statements.size());
+            statements.push_back(parseWhileStatement(code));
         }
         else if (isKeyword(code, "end")) {
             if (while_indices.empty()) {
@@ -163,19 +162,15 @@ Expression parseDictionary(CodeRange code) {
             const auto end_index = statements.size();
             const auto while_index = while_indices.back();
             while_indices.pop_back();
-            statement = parseEndStatement(code, while_index);
             const auto while_statement_pointer = statements.at(while_index);
-            const auto while_statement = getWileStatement(while_statement_pointer);
-            statements.at(while_index) = makeWhileStatement(
-                while_statement_pointer.range,
-                WhileStatement{while_statement.expression, end_index}
-            );
+            auto& while_statement = getMutableWhileStatement(while_statement_pointer);
+            while_statement.end_index_ = end_index;
+            statements.push_back(parseEndStatement(code, while_index));
         }
         else {
-            statement = parseNamedElement(code);    
+            statements.push_back(parseNamedElement(code));
         }
-        code.first = end(statement);
-        statements.push_back(statement);
+        code.first = end(statements.back());
     }
     code = parseCharacter(code, '}');
     return makeDictionary(
