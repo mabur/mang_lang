@@ -345,7 +345,7 @@ Expression evaluateDictionary(
             const auto for_statement = getForStatement(statements.at(i));
             const auto label_container = getNameAsLabel(for_statement.name_container);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto old_container = result.definitions.lookup(label_container);
+            const auto old_container = lookupDictionary(result_environment, label_container);
             const auto new_container = stack_functions::drop(old_container);
             result.definitions.add(label_container, new_container);
         }
