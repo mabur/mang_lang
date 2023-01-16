@@ -292,6 +292,7 @@ int main() {
         {"{c=[1] for i in c end}", "{c=[] i=1}"},
         {"{c=[1 2] for i in c end}", "{c=[] i=2}"},
         {"{a=[] c=[1 2 3] for i in c a+=i end}", "{a=[3 2 1] c=[] i=3}"},
+        {"{c=[1 2] for i in c d=[2 3] for j in d end end}", "{c=[] i=2 d=[] j=3}"},
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
