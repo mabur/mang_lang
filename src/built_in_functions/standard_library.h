@@ -326,13 +326,11 @@ const std::string STANDARD_LIBRARY = R"(
 
     cartesian_product2 = in (a b) out result@{
         result = []
-        while b
+        for item_b in b
             c = a
-            while c
-                result += (take!c take!b)
-                c = drop!c
+            for item_c in c
+                result += (item_c item_b)
             end
-            b = drop!b
         end
     }
 
@@ -350,10 +348,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     transpose = in rows out map_stack!(reverse columns@{
         columns = replace!([] take!rows)
-        while rows
-            row = take!rows
+        for row in rows
             columns = put_column!(row columns)
-            rows = drop!rows
         end
     })
 
