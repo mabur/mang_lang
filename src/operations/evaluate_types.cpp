@@ -62,44 +62,6 @@ Expression evaluateIs(
     return else_expression;
 }
 
-Expression evaluateDictionary(
-    const Dictionary& dictionary, Expression environment
-) {
-    const auto result_environment = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, {}}
-    );
-    for (size_t i = 0; i < dictionary.statements.size(); ++i) {
-        const auto statement = dictionary.statements[i];
-        const auto type = statement.type;
-        if (type == DEFINITION) {
-            const auto definition = getDefinition(statement);
-            const auto& right_expression = definition.expression;
-            const auto value = evaluate_types(right_expression, result_environment);
-            const auto label = getNameAsLabel(definition.name);
-            auto& result = getMutableEvaluatedDictionary(result_environment);
-            result.definitions.add(label, value);
-        }
-        else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = getPutAssignment(statement);
-            const auto& right_expression = put_assignment.expression;
-            const auto value = evaluate_types(right_expression, result_environment);
-            const auto label = getNameAsLabel(put_assignment.name);
-            auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions.lookup(label);
-            const auto tuple = makeEvaluatedTuple(
-                {}, EvaluatedTuple{{value, current}}
-            );
-            const auto new_value = stack_functions::put(tuple);
-            result.definitions.add(label, new_value);
-        }
-        else if (type == WHILE_STATEMENT) {
-            const auto while_statement = getWhileStatement(statement);
-            boolean(evaluate_types(while_statement.expression, result_environment));
-        }
-    }
-    return result_environment;
-}
-
 Expression evaluateFunction(const Function& function, Expression environment) {
     return makeFunction(CodeRange{}, {
         environment, function.input_name, function.body
@@ -264,6 +226,55 @@ Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment
 ) {
     return lookupDictionary(environment, getNameAsLabel(lookup_symbol.name));
+}
+
+Expression evaluateDictionary(
+    const Dictionary& dictionary, Expression environment
+) {
+    const auto result_environment = makeEvaluatedDictionary(
+        CodeRange{}, EvaluatedDictionary{environment, {}}
+    );
+    const auto& statements = dictionary.statements;
+    for (size_t i = 0; i < dictionary.statements.size(); ++i) {
+        const auto statement = statements[i];
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            const auto definition = getDefinition(statement);
+            const auto& right_expression = definition.expression;
+            const auto value = evaluate_types(right_expression, result_environment);
+            const auto label = getNameAsLabel(definition.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            result.definitions.add(label, value);
+        }
+        else if (type == PUT_ASSIGNMENT) {
+            const auto put_assignment = getPutAssignment(statement);
+            const auto& right_expression = put_assignment.expression;
+            const auto value = evaluate_types(right_expression, result_environment);
+            const auto label = getNameAsLabel(put_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto current = result.definitions.lookup(label);
+            const auto tuple = makeEvaluatedTuple(
+                {}, EvaluatedTuple{{value, current}}
+            );
+            const auto new_value = stack_functions::put(tuple);
+            result.definitions.add(label, new_value);
+        }
+        else if (type == WHILE_STATEMENT) {
+            const auto while_statement = getWhileStatement(statement);
+            boolean(evaluate_types(while_statement.expression, result_environment));
+        }
+        else if (type == FOR_STATEMENT) {
+            const auto for_statement = getForStatement(statement);
+            const auto label_container = getNameAsLabel(for_statement.name_container);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto container = lookupDictionary(result_environment, label_container);
+            boolean(container);
+            const auto label_item = getNameAsLabel(for_statement.name_item);
+            const auto item = stack_functions::take(container);
+            result.definitions.add(label_item, item);
+        }
+    }
+    return result_environment;
 }
 
 } // namespace
