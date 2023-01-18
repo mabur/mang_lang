@@ -22,8 +22,7 @@ result@{
     points = map_stack!(parse_point split!(newline input))
     
     plane_counts = <>
-    while points
-        point = take!points
+    for point in points
         x = first!point
         y = second!point
         z = third!point
@@ -36,14 +35,10 @@ result@{
         p5 = [x y inc!z Z_PLANE]
         
         planes = [p0 p1 p2 p3 p4 p5]
-        while planes
-            plane = take!planes
+        for plane in planes
             n = get!(plane plane_counts 0)
             plane_counts += (plane inc!n)
-            planes = drop!planes
         end
-        
-        points = drop!points
     end
     
     is_surface_plane = in (plane counts) out equal?(counts 1)

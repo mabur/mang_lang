@@ -12,11 +12,9 @@ result@{
     is_max_so_far = in numbers out reverse!result@{
         maximum = neg!inf
         result = []
-        while numbers
-            number = take!numbers
+        for number in numbers
             result += less?(maximum number)
             maximum = max!(maximum number)
-            numbers = drop!numbers
         end
     }
     

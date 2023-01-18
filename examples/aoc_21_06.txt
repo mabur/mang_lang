@@ -2,9 +2,7 @@ num_fishes@{
     fishes = [3 4 3 1 2]
     simulate = in input out output@{
         output = []
-        while input
-            fish = take!input
-            input = drop!input
+        for fish in input
             output =
                 if fish then
                     put!(dec!fish output)

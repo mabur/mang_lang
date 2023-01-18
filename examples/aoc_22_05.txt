@@ -20,8 +20,7 @@ move 1 from 1 to 2"
     stacks = map_stack!(strip_characters stacks)
     stacks = clear_if!(is_empty stacks)
     stacks = make_table!enumerate!stacks
-    while movements
-        movement = take!movements
+    for movement in movements
         words = split!(' ' movement)
         n = parse_natural_number!second!words
         source = dec!parse_natural_number!fourth!words
@@ -36,7 +35,6 @@ move 1 from 1 to 2"
             stacks += (target target_stack)
             n = dec!n        
         end
-        movements = drop!movements
     end
     result = map_string!(first get_values!stacks)
 }

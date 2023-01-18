@@ -55,14 +55,12 @@ result@{
 
     index = 1
     index_sum = 0
-    while pairs
-        pair = take!pairs
+    for pair in pairs
         index_sum =
             if is_right_order?pair then
                 add!(index index_sum)
             else
                 index_sum
-        pairs = drop!pairs
         index = inc!index
     end
     result = index_sum

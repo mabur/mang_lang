@@ -44,15 +44,14 @@ $ ls
         current_path = current_path@state
         path_and_size = path_and_size@state
         command = drop!command
-        while command
-            parts = split!(' ' take!command)
+        for item in command
+            parts = split!(' ' item)
             size = first!parts
             file = second!parts
             file_path = put!(file current_path)
             path_and_size = is take!size
                 'd' then path_and_size
                 else put!((file_path parse_natural_number!size) path_and_size)
-            command = drop!command
         end
     }
     handle_command = in (command state) out is take!take!command

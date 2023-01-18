@@ -36,8 +36,7 @@ R 2"
     tails = [[0 0]]
     
     lines = split!(newline input)
-    while lines
-        line = take!lines
+    for line in lines
         direction = first!line
         steps = parse_digit!third!line
         while steps
@@ -52,7 +51,6 @@ R 2"
             heads += head
             steps = dec!steps
         end
-        lines = drop!lines
     end
     result = {
         heads = reverse!heads

@@ -13,11 +13,9 @@ abdefghi"
     goal = [nan nan]
     lines = split!(newline input)
     y = 0
-    while lines
-        line = take!lines
+    for line in lines
         x = 0
-        while line
-            c = take!line
+        for c in line
             start = is c 'S' then [x y] else start
             goal = is c 'E' then [x y] else goal
             height = is c
@@ -25,10 +23,8 @@ abdefghi"
                 'E' then count_alphabet!'z'
                 else count_alphabet!c
             heights += ([x y] height)
-            line = drop!line
             x = inc!x
         end
-        lines = drop!lines
         y = inc!y
     end
     
@@ -37,14 +33,12 @@ abdefghi"
     steps = 0
     while not!get!(goal visited no)
         next_frontier = []
-        while active_frontier
-            position = take!active_frontier
+        for position in active_frontier
             height = get!(position heights nan)                        
             x = first!position
             y = second!position
             neighbours = [[x inc!y] [x dec!y] [inc!x y] [dec!x y]]
-            while neighbours
-                neighbour = take!neighbours
+            for neighbour in neighbours
                 neighbour_height = get!(neighbour heights inf)
                 height_difference = sub!(neighbour_height height)
                 ok_neighbour = and?[
@@ -55,9 +49,7 @@ abdefghi"
                     else next_frontier
                 visited = if ok_neighbour then put!((neighbour yes) visited)
                     else visited
-                neighbours = drop!neighbours
             end
-            active_frontier = drop!active_frontier
         end
         steps = inc!steps
         active_frontier = next_frontier
