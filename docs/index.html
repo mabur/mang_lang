@@ -158,7 +158,7 @@ Manglang consists of the following basic building blocks:
 <img src="control_flow.png" width=48 height=48>
 </td>
 <td>
-<a href="#control_flow">Control flow</a> like <a href="#if">if</a>,  <a href="#is">is</a> and <a href="#while">while</a>.
+<a href="#control_flow">Control flow</a> like <a href="#if">if</a>,  <a href="#is">is</a>, <a href="#while">while</a> and <a href="#for">for</a>.
 </td>
 </tr>
 <tr>
@@ -597,6 +597,44 @@ The input above is evaluated to the output below:
 The loop decrements x until it is zero and then finishes.
 Definitions in a dictionary can only be updated / mutated while the dictionary is constructed.
 Once it has been constructed it is immutable and cannot be updated.
+</p>
+
+<h2 id="for">4.d. For</h2>
+<p>
+You can use a for-each-loop to visit each item in a container:
+</p>
+<pre>
+{
+  tot = 0
+  numbers = [1 2 3]
+  for number in numbers
+    tot = add!(tot number)
+  end
+}
+</pre>
+This is syntactic sugar for the equivalent while loop:
+<pre>
+{
+  tot = 0
+  numbers = [1 2 3]
+  while numbers
+    number = take!number
+    tot = add!(tot number)
+    numbers = drop!number
+  end
+}
+</pre>
+Both versions above evaluate to the output below:
+<pre>
+{
+  tot=6
+  numbers=[]
+  number=3
+}
+</pre>
+
+<p>
+There are two things to note about for-loops in Manglang. The first thing is that in the expression <code>for item in name</code> both <code>item</code> and <code>name</code> are names. This means that a container needs to first be given a name before it can be used in a for-loop. The container CANNOT be inlined directly like <code>for item in [1 2 3]</code>. Another thing to note is that the for loop rebinds these names for each iteration of the loop and leave them in their final state after the loop. So in this sense a for-loop consumes the name of the container. If you want to refer to the full container also after the loop then you need to assign a different name to it before entering the for-loop.
 </p>
 
 <h1 id="functions">5. Functions <img src="function.png" width=48 height=48></h1>
