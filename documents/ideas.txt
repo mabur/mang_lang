@@ -118,6 +118,8 @@ end
     for item in container
   - Implement more control structures like for & if by first refactoring dictionary statements,
     so that we can have hierarchical groups of statements corresponding to "scope".
+  - Support index in for loop:
+    for index, item in container
 * Add syntactic sugar for put:
   table += (k v)
   container += item
