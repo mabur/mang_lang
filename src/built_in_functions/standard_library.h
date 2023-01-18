@@ -35,11 +35,10 @@ const std::string STANDARD_LIBRARY = R"(
         string = reverse!string
         number = 0
         x = 1
-        while string
-            digit = parse_digit!take!string
+        for c in string
+            digit = parse_digit!c
             number = add!(number mul!(x digit))
             x = mul!(x 10)
-            string = drop!string
         end
     }
 
@@ -68,10 +67,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     fold = in (operation stack init) out result@{
         result = init
-        stack = stack
-        while stack
-            result = operation!(take!stack result)
-            stack = drop!stack
+        for item in stack
+            result = operation!(item result)
         end
     }
 
@@ -336,12 +333,10 @@ const std::string STANDARD_LIBRARY = R"(
 
     put_column = in (column rows) out reverse!new_rows@{
         new_rows = []
-        while column
-            item = take!column
+        for item in column
             row = take!rows
             row += item
             new_rows += row
-            column = drop!column
             rows = drop!rows
         end
     }
