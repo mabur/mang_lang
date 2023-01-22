@@ -1,12 +1,9 @@
 #include "serialize_types.h"
 
 #include "serialize_generic.h"
+#include "../container.h"
 
 namespace {
-
-std::string serializeStack(Expression s) {
-    return '[' + serialize_types(getStack(s).top) + ']';
-}
 
 std::string serializeEvaluatedStack(Expression s) {
     return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
@@ -33,7 +30,7 @@ std::string serialize_types(Expression expression) {
         case FUNCTION_TUPLE: return NAMES[FUNCTION_TUPLE];
         case TUPLE: return serializeTuple(serialize_types, expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
-        case STACK: return serializeStack(expression);
+        case STACK: return serializeStack(serialize_types, expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return NAMES[EMPTY_STACK];
         case LOOKUP_CHILD: return serializeLookupChild(serialize_types, getLookupChild(expression));

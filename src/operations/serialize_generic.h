@@ -122,3 +122,15 @@ inline
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
     return serializeName(lookup_symbol.name);
 }
+
+template<typename Serializer>
+std::string serializeStack(Serializer serializer, Expression s) {
+    const auto appendElement = [=](const std::string& s, Expression element) {
+        return s + serializer(element) + ' ';
+    };
+    auto result = leftFold(
+        std::string{"["}, s, appendElement, EMPTY_STACK, getStack
+    );
+    result.back() = ']';
+    return result;
+}

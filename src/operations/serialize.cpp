@@ -84,13 +84,6 @@ std::string appendElement(const std::string& s, Expression element) {
     return s + serialize(element) + ' ';
 }
 
-std::string serializeStack(Expression s) {
-    auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
-        getStack);
-    result.back() = ']';
-    return result;
-}
-
 std::string serializeEvaluatedStack(Expression s) {
     auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
         getEvaluatedStack);
@@ -142,7 +135,7 @@ std::string serialize(Expression expression) {
         case EVALUATED_TABLE: return serializeEvaluatedTable(expression);
         case TUPLE: return serializeTuple(serialize, expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize, expression);
-        case STACK: return serializeStack(expression);
+        case STACK: return serializeStack(serialize, expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return "[]";
         case LOOKUP_CHILD: return serializeLookupChild(serialize, getLookupChild(expression));
