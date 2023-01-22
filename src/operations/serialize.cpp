@@ -8,6 +8,45 @@
 #include "../container.h"
 
 namespace {
+    
+std::string serializeDictionary(const Dictionary& dictionary) {
+    auto result = std::string{};
+    result += '{';
+    for (const auto& statement : dictionary.statements) {
+        result += serialize(statement);
+    }
+    if (dictionary.statements.empty()) {
+        result += '}';
+    }
+    else {
+        result.back() = '}';
+    }
+    return result;
+}
+
+std::string serializeTuple(Expression s) {
+    const auto expressions = getTuple(s).expressions;
+    if (expressions.empty()) {
+        return "()";
+    }
+    auto result = std::string{'('};
+    for (const auto& expression : expressions) {
+        result += serialize(expression) + ' ';
+    }
+    result.back() = ')';
+    return result;
+}
+
+std::string serializeStack(Expression s) {
+    const auto appendElement = [=](const std::string& s, Expression element) {
+        return s + serialize(element) + ' ';
+    };
+    auto result = leftFold(
+        std::string{"["}, s, appendElement, EMPTY_STACK, getStack
+    );
+    result.back() = ']';
+    return result;
+}
 
 std::string serializeCharacter(const Character& character) {
     return '\'' + std::string{character.value} + '\'';
@@ -119,7 +158,7 @@ std::string serialize(Expression expression) {
         case CHARACTER: return serializeCharacter(getCharacter(expression));
         case CONDITIONAL: return serializeConditional(serialize, getConditional(expression));
         case IS: return serializeIs(serialize, getIs(expression));
-        case DICTIONARY: return serializeDictionary(serialize, getDictionary(expression));
+        case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize, getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(serialize, getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(serialize, getPutAssignment(expression));
@@ -133,9 +172,9 @@ std::string serialize(Expression expression) {
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
         case TABLE: return serializeTable(expression);
         case EVALUATED_TABLE: return serializeEvaluatedTable(expression);
-        case TUPLE: return serializeTuple(serialize, expression);
+        case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize, expression);
-        case STACK: return serializeStack(serialize, expression);
+        case STACK: return serializeStack(expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return "[]";
         case LOOKUP_CHILD: return serializeLookupChild(serialize, getLookupChild(expression));

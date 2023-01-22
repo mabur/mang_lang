@@ -51,22 +51,6 @@ std::string serializeForStatement(Serializer serializer, const ForStatement& ele
 }
 
 template<typename Serializer>
-std::string serializeDictionary(Serializer serializer, const Dictionary& dictionary) {
-    auto result = std::string{};
-    result += '{';
-    for (const auto& statement : dictionary.statements) {
-        result += serializer(statement);
-    }
-    if (dictionary.statements.empty()) {
-        result += '}';
-    }
-    else {
-        result.back() = '}';
-    }
-    return result;
-}
-
-template<typename Serializer>
 std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedDictionary& dictionary) {
     if (dictionary.definitions.empty()) {
         return "{}";
@@ -76,20 +60,6 @@ std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedD
         result += pair.first + "=" + serializer(pair.second) + " ";
     }
     result.back() = '}';
-    return result;
-}
-
-template<typename Serializer>
-std::string serializeTuple(Serializer serializer, Expression s) {
-    const auto expressions = getTuple(s).expressions;
-    if (expressions.empty()) {
-        return "()";
-    }
-    auto result = std::string{'('};
-    for (const auto& expression : expressions) {
-        result += serializer(expression) + ' ';
-    }
-    result.back() = ')';
     return result;
 }
 
@@ -121,16 +91,4 @@ std::string serializeFunctionApplication(Serializer serializer, const FunctionAp
 inline
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
     return serializeName(lookup_symbol.name);
-}
-
-template<typename Serializer>
-std::string serializeStack(Serializer serializer, Expression s) {
-    const auto appendElement = [=](const std::string& s, Expression element) {
-        return s + serializer(element) + ' ';
-    };
-    auto result = leftFold(
-        std::string{"["}, s, appendElement, EMPTY_STACK, getStack
-    );
-    result.back() = ']';
-    return result;
 }

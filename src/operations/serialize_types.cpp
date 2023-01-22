@@ -16,7 +16,6 @@ std::string serialize_types(Expression expression) {
         case CHARACTER: return NAMES[CHARACTER];
         case CONDITIONAL: return serializeConditional(serialize_types, getConditional(expression));
         case IS: return serializeIs(serialize_types, getIs(expression));
-        case DICTIONARY: return serializeDictionary(serialize_types, getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize_types, getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(serialize_types, getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(serialize_types, getPutAssignment(expression));
@@ -28,9 +27,7 @@ std::string serialize_types(Expression expression) {
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return NAMES[FUNCTION_DICTIONARY];
         case FUNCTION_TUPLE: return NAMES[FUNCTION_TUPLE];
-        case TUPLE: return serializeTuple(serialize_types, expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
-        case STACK: return serializeStack(serialize_types, expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return NAMES[EMPTY_STACK];
         case LOOKUP_CHILD: return serializeLookupChild(serialize_types, getLookupChild(expression));
