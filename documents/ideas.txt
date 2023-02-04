@@ -7,6 +7,10 @@ TODO Standard Library:
     - s0, s1, s2
     - t0, t1, t2
     - c0, c1, c2
+    - 1@ be interpretable as stand-alone-functions.
+    - containers be interpretable as functions
+      - point!1
+      - Could this work? What downsides could it have?
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
   - add generic map that requires that f has same input and output type,
@@ -313,6 +317,7 @@ SIMILAR LANGUAGES
 * GCL https://gcl.readthedocs.io/
 
 * L1 https://mlajtos.github.io/L1/
+* Sprylang http://sprylang.se/manual.html#composites
 
 * (Cognate read) https://github.com/cognate-lang/cognate
 
