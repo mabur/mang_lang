@@ -7,7 +7,7 @@ TODO Standard Library:
     - s0, s1, s2
     - t0, t1, t2
     - c0, c1, c2
-    - get0, get1, get2
+    - get0, get1, get2 (bra!)
     - 1@ be interpretable as stand-alone-functions.
     - containers be interpretable as functions
       - point!1
@@ -303,13 +303,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   index = index@result
   // Alternative
   unpack max_element!(3 7 6)
-}
-
-* Problem with lookup of first and second inside tuple environment 
-{
-  first = ...
-  second = ...
-  result = f(first second)
 }
 
 
