@@ -18,17 +18,17 @@ risk_levels@{
     risk_levels = 0
     y = 0
     while less?(y sub!(height 2))
-        row_above = first!map
-        row_middle = second!map
-        row_below = third!map
+        row_above = map!0
+        row_middle = map!1
+        row_below = map!2
         x = 0
         while less?(x sub!(width 2))
             point = parse_height!second!row_middle
             neighbours = [
-                parse_height!second!row_above
-                parse_height!first!row_middle
-                parse_height!third!row_middle
-                parse_height!second!row_below
+                parse_height!row_above!1
+                parse_height!row_middle!0
+                parse_height!row_middle!2
+                parse_height!row_below!1
             ]
             is_low_point = less?(point min_item!neighbours)
             num_low_points =
