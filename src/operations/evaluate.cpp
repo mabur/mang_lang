@@ -257,6 +257,12 @@ Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression in
     return evaluate(function_stack.body, middle);
 }
 
+Expression applyTupleIndexing(
+    const EvaluatedTuple& tuple, const Number& number
+) {
+    return tuple.expressions.at(number.value);
+}
+
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment
 ) {
@@ -267,8 +273,8 @@ Expression evaluateFunctionApplication(
         case FUNCTION: return applyFunction(getFunction(function), input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(
-                getFunctionTuple(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(getFunctionTuple(function), input);
+        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }

@@ -534,6 +534,12 @@ int main() {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
+    test.evaluate("lookup tuple indexing", {
+        {"a@{t=(3 2 1) a=t!0}", "3"},
+        {"a@{t=(3 2 1) a=t!1}", "2"},
+        {"a@{t=(3 2 1) a=t!2}", "1"},
+        {"a@{i=1 t=(3 2 1) a=t!i}", "2"},
+    });
     test.evaluate("add", {
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},
