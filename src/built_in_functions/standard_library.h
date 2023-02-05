@@ -24,12 +24,12 @@ const std::string STANDARD_LIBRARY = R"(
 
     newline = character!10
 
-    is_upper = in c out is_increasing?[65 number!c 90]
-    is_lower = in c out is_increasing?[97 number!c 122]
+    is_digit = in c out is_increasing?[number!'0' number!c number!'9']
+    is_upper = in c out is_increasing?[number!'A' number!c number!'Z']
+    is_lower = in c out is_increasing?[number!'a' number!c number!'z']
     is_letter = in c out any?[is_upper?c is_lower?c]
-    is_digit = in c out is_increasing?[48 number!c 57]
 
-    parse_digit = in c out sub!(number!c 48)
+    parse_digit = in c out sub!(number!c number!'0')
 
     parse_natural_number = in string out number@{
         string = reverse!string
