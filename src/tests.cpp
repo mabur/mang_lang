@@ -540,6 +540,12 @@ int main() {
         {"a@{t=(3 2 1) a=t!2}", "1"},
         {"a@{i=1 t=(3 2 1) a=t!i}", "2"},
     });
+    test.evaluate("lookup stack indexing", {
+        {"a@{t=[3 2 1] a=t!0}", "3"},
+        {"a@{t=[3 2 1] a=t!1}", "2"},
+        {"a@{t=[3 2 1] a=t!2}", "1"},
+        {"a@{i=1 t=[3 2 1] a=t!i}", "2"},
+    });
     test.evaluate("add", {
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},
