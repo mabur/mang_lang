@@ -46,8 +46,8 @@ $ ls
         command = drop!command
         for item in command
             parts = split!(' ' item)
-            size = first!parts
-            file = second!parts
+            size = parts!0
+            file = parts!1
             file_path = put!(file current_path)
             path_and_size = is take!size
                 'd' then path_and_size
