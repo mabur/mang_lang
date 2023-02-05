@@ -37,8 +37,8 @@ R 2"
     
     lines = split!(newline input)
     for line in lines
-        direction = first!line
-        steps = parse_digit!third!line
+        direction = line!0
+        steps = parse_digit!line!2
         while steps
             head = take!heads
             tail = take!tails
