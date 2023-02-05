@@ -535,17 +535,23 @@ int main() {
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
     test.evaluate("lookup tuple indexing", {
-        {"a@{t=(3 2 1) a=t!0}", "3"},
-        {"a@{t=(3 2 1) a=t!1}", "2"},
-        {"a@{t=(3 2 1) a=t!2}", "1"},
-        {"a@{i=1 t=(3 2 1) a=t!i}", "2"},
+        {"a@{c=(3 2 1) a=c!0}", "3"},
+        {"a@{c=(3 2 1) a=c!1}", "2"},
+        {"a@{c=(3 2 1) a=c!2}", "1"},
+        {"a@{i=1 c=(3 2 1) a=c!i}", "2"},
     });
     test.evaluate("lookup stack indexing", {
-        {"a@{t=[3 2 1] a=t!0}", "3"},
-        {"a@{t=[3 2 1] a=t!1}", "2"},
-        {"a@{t=[3 2 1] a=t!2}", "1"},
-        {"a@{i=1 t=[3 2 1] a=t!i}", "2"},
-        {"a@{t=range!100 a=t!99}", "99"},
+        {"a@{c=[3 2 1] a=c!0}", "3"},
+        {"a@{c=[3 2 1] a=c!1}", "2"},
+        {"a@{c=[3 2 1] a=c!2}", "1"},
+        {"a@{i=1 c=[3 2 1] a=c!i}", "2"},
+        {"a@{c=range!100 a=c!99}", "99"},
+    });
+    test.evaluate("lookup string indexing", {
+        {R"(a@{c="abc" a=c!0})", "'a'"},
+        {R"(a@{c="abc" a=c!1})", "'b'"},
+        {R"(a@{c="abc" a=c!2})", "'c'"},
+        {R"(a@{i=1 c="abc" a=c!i})", "'b'"},
     });
     test.evaluate("add", {
         {"add!(1 0)", "1"},

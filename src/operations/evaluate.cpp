@@ -276,6 +276,14 @@ Expression applyStackIndexing(EvaluatedStack stack, const Number& number) {
     }
     return stack.top;
 }
+
+Expression applyStringIndexing(String string, const Number& number) {
+    const auto index = getIndex(number);
+    for (size_t i = 0; i < index; ++i) {
+        string = getString(string.rest);
+    }
+    return string.top;
+}
     
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application, Expression environment
@@ -290,6 +298,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION_TUPLE: return applyFunctionTuple(getFunctionTuple(function), input);
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
+        case STRING: return applyStringIndexing(getString(function), getNumber(input));
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
