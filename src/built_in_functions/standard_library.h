@@ -351,13 +351,13 @@ const std::string STANDARD_LIBRARY = R"(
     none = in stack out not?drop_while!(not stack)
     any = in stack out boolean?drop_while!(not stack)
 
+    and = in stack out all?stack
+    or = in stack out any?stack
+
     is_increasing = in stack out not?drop_while!(
         less_or_equal
         consecutive_pairs!stack
     )
-
-    and = in stack out all?stack
-    or = in stack out any?stack
 
     less_or_equal_top = in (left right) out
         if left then
