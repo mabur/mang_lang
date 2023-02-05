@@ -28,12 +28,12 @@ result@{
 
     is_right_order_integers = in pair out 
         less?(
-            parse_natural_number!first!pair
-            parse_natural_number!second!pair
+            parse_natural_number!pair!0
+            parse_natural_number!pair!1
         )
     is_right_order_lists = in pair out result@{
-        left = first!pair
-        right = second!pair
+        left = pair!0
+        right = pair!1
         is_right_order_so_far = yes
         while and?[left right is_right_order_so_far]
             is_right_order_so_far = and?[
@@ -48,8 +48,8 @@ result@{
         ]
     }
     is_right_order = in pair out result@{
-        left = first!pair
-        right = second!pair
+        left = pair!0
+        right = pair!1
         result = yes
     }
 
