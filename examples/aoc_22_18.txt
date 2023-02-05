@@ -23,9 +23,9 @@ result@{
     
     plane_counts = <>
     for point in points
-        x = first!point
-        y = second!point
-        z = third!point
+        x = point!0
+        y = point!1
+        z = point!2
         
         p0 = [x y z X_PLANE]
         p1 = [x y z Y_PLANE]
