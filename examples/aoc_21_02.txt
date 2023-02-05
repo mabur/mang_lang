@@ -8,8 +8,8 @@ result@{
         "forward 2"
     ]
     move = in (command position) out new_position@{
-        x = first!position
-        y = second!position
+        x = position!0
+        y = position!1
         steps = parse_digit!take!reverse!command
         new_position = is take!command
             'u' then [x sub!(y steps)]
