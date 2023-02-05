@@ -152,9 +152,9 @@ noop"
     update_state_add = in (state n) out 
         merge_stack![[add!(n take!state) take!state] state]
     update_state = in (line state) out
-        if equal?(first!line 'n') then
+        if equal?(line!0 'n') then
             update_state_noop!state
-        else if equal?(sixth!line '-') then
+        else if equal?(line!5 '-') then
             update_state_add!(state neg!parse_natural_number!drop_many!(6 line))
         else
             update_state_add!(state parse_natural_number!drop_many!(5 line))
