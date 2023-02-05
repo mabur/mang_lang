@@ -7,14 +7,18 @@ TODO Standard Library:
     - s0, s1, s2
     - t0, t1, t2
     - c0, c1, c2
+    - get0, get1, get2
     - 1@ be interpretable as stand-alone-functions.
     - containers be interpretable as functions
       - point!1
       - Could this work? What downsides could it have?
         - Nested indices requires multiple lines and names.
+      - This should automatically generalize getters-functions to tuples.
     - What about tables? When to return key-value-tuple and when to just return value?
       - table!index (make constant or logN?)
       - get!(key table default_value) (logN)
+      - first,..., can already be used for tables. Mirror that behaviour.
+
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
   - add generic map that requires that f has same input and output type,
