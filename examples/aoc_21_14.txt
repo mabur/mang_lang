@@ -1,30 +1,30 @@
 result@{
     start = "NNCB"
     rules = [
-        ["CH" 'B']
-        ["HH" 'N']
-        ["CB" 'H']
-        ["NH" 'C']
-        ["HB" 'C']
-        ["HC" 'B']
-        ["HN" 'C']
-        ["NN" 'C']
-        ["BH" 'H']
-        ["NC" 'B']
-        ["NB" 'B']
-        ["BN" 'B']
-        ["BB" 'N']
-        ["BC" 'B']
-        ["CC" 'N']
-        ["CN" 'C']
+        ("CH" 'B')
+        ("HH" 'N')
+        ("CB" 'H')
+        ("NH" 'C')
+        ("HB" 'C')
+        ("HC" 'B')
+        ("HN" 'C')
+        ("NN" 'C')
+        ("BH" 'H')
+        ("NC" 'B')
+        ("NB" 'B')
+        ("BN" 'B')
+        ("BB" 'N')
+        ("BC" 'B')
+        ("CC" 'N')
+        ("CN" 'C')
     ]
     polymer = start
     n = 10
     while n
         result = ""
         while drop!polymer
-            a = first!polymer
-            b = second!polymer
+            a = polymer!0
+            b = polymer!1
             prefix = put_each!([b a] "")
             remaining_rules = rules
             while remaining_rules
@@ -32,8 +32,8 @@ result@{
                 prefix =
                     if drop!drop!prefix then
                         prefix
-                    else if equal?(first!rule prefix) then
-                        put_each!([b second!rule a] "")
+                    else if equal?(rule!0 prefix) then
+                        put_each!([b rule!1 a] "")
                     else
                         prefix
                 remaining_rules = drop!remaining_rules
