@@ -11,6 +11,9 @@ TODO Standard Library:
     - containers be interpretable as functions
       - point!1
       - Could this work? What downsides could it have?
+    - What about tables? When to return key-value-tuple and when to just return value?
+      - table!index (make constant or logN?)
+      - get!(key table default_value) (logN)
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
   - add generic map that requires that f has same input and output type,
