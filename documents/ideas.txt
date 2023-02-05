@@ -11,6 +11,7 @@ TODO Standard Library:
     - containers be interpretable as functions
       - point!1
       - Could this work? What downsides could it have?
+        - Nested indices requires multiple lines and names.
     - What about tables? When to return key-value-tuple and when to just return value?
       - table!index (make constant or logN?)
       - get!(key table default_value) (logN)
