@@ -22,9 +22,9 @@ move 1 from 1 to 2"
     stacks = make_table!enumerate!stacks
     for movement in movements
         words = split!(' ' movement)
-        n = parse_natural_number!second!words
-        source = dec!parse_natural_number!fourth!words
-        target = dec!parse_natural_number!sixth!words
+        n = parse_natural_number!words!1
+        source = dec!parse_natural_number!words!3
+        target = dec!parse_natural_number!words!5
         while n
             source_stack = get!(source stacks [])
             item = take!source_stack
