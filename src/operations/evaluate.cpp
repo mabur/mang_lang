@@ -257,15 +257,22 @@ Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression in
     return evaluate(function_stack.body, middle);
 }
 
+size_t getIndex(const Number& number) {
+    if (number.value < 0) {
+        using namespace std;
+        throw runtime_error("Cannot have negative index: " + to_string(number.value));
+    }
+    return static_cast<size_t>(number.value);
+}
+
 Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number) {
-    return tuple.expressions.at(number.value);
+    return tuple.expressions.at(getIndex(number));
 }
 
 Expression applyStackIndexing(EvaluatedStack stack, const Number& number) {
-    auto index = number.value;
-    while (index > 0) {
+    const auto index = getIndex(number);
+    for (size_t i = 0; i < index; ++i) {
         stack = getEvaluatedStack(stack.rest);
-        --index;
     }
     return stack.top;
 }
