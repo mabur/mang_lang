@@ -54,18 +54,6 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    get_index = in (index container) out container!index
-    first = in container out get_index!(0 container)
-    second = in container out get_index!(1 container)
-    third = in container out get_index!(2 container)
-    fourth = in container out get_index!(3 container)
-    fifth = in container out get_index!(4 container)
-    sixth = in container out get_index!(5 container)
-    seventh = in container out get_index!(6 container)
-    eighth = in container out get_index!(7 container)
-    ninth = in container out get_index!(8 container)
-    tenth = in container out get_index!(9 container)
-
     fold = in (operation stack init) out result@{
         result = init
         for item in stack
@@ -307,6 +295,18 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     enumerate = in stack out zip2!(range!count!stack stack)
+
+    get_index = in (index container) out container!index
+    first = in container out get_index!(0 container)
+    second = in container out get_index!(1 container)
+    third = in container out get_index!(2 container)
+    fourth = in container out get_index!(3 container)
+    fifth = in container out get_index!(4 container)
+    sixth = in container out get_index!(5 container)
+    seventh = in container out get_index!(6 container)
+    eighth = in container out get_index!(7 container)
+    ninth = in container out get_index!(8 container)
+    tenth = in container out get_index!(9 container)
 
     split = in (delimiter container) out reverse!result@{
         word = take_until_item!(delimiter container)
