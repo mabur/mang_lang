@@ -11,8 +11,8 @@ result@{
     
     get_direction = in (source target) out direction@{
         delta = subv!(target source)
-        dx = first!delta
-        dy = second!delta
+        dx = delta!0
+        dy = delta!1
         direction = [
             if less?(dx 0) then -1 else if less?(0 dx) then 1 else 0
             if less?(dy 0) then -1 else if less?(0 dy) then 1 else 0
@@ -22,8 +22,8 @@ result@{
     filled = <>
     for path in paths
         while drop!path
-            source = first!path
-            target = second!path
+            source = path!0
+            target = path!1
             delta = get_direction!(source target)
             point = source
             while unequal?(point target)
@@ -42,7 +42,7 @@ result@{
     while continue_spawning
         point = [500 0]
         continue_moving = yes
-        while and?[continue_moving less?(second!point maxy)]
+        while and?[continue_moving less?(point!1 maxy)]
             targets = [
                 addv!(point [0 1])
                 addv!(point [-1 1])
@@ -54,9 +54,9 @@ result@{
             point = if continue_moving then take!targets else point
             filled = if continue_moving then filled else put!((point yes) filled)
         end
-        continue_spawning = less?(second!point maxy)
+        continue_spawning = less?(point!1 maxy)
         n = inc!n
     end
     
-    result = dec!n 
+    result = dec!n
 }
