@@ -12,14 +12,14 @@ result@{
         ([5 5] [8 2])
     ]
     is_line_diagonal = in (point0 point1) out none?[
-        equal?(first!point0 first!point1)
-        equal?(second!point0 second!point1)
+        equal?(point0!0 point1!0)
+        equal?(point0!1 point1!1)
     ]
     fill_line = in (point0 point1) out positions@{
-        x0 = first!point0
-        x1 = first!point1
-        y0 = second!point0
-        y1 = second!point1
+        x0 = point0!0
+        x1 = point1!0
+        y0 = point0!1
+        y1 = point1!1
         dx = if less?(x0 x1) then 1 else if less?(x1 x0) then -1 else 0
         dy = if less?(y0 y1) then 1 else if less?(y1 y0) then -1 else 0
         x = x0
