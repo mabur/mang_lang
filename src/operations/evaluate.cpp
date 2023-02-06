@@ -177,40 +177,18 @@ Expression lookupDictionary(Expression expression, const std::string& name) {
     return lookupDictionary(d.environment, name);
 }
 
-Expression lookupChildInEvaluatedDictionary(const EvaluatedDictionary& dictionary, Expression name) {
-    const auto label = getNameAsLabel(name);
-    const auto result = dictionary.definitions.lookup(label);
-    if (result.type != EMPTY) {
-        return result;
-    }
-    throw MissingSymbol(label, "dictionary");
-}
-
-Expression lookupChildInEvaluatedTuple(const EvaluatedTuple& stack, const std::string& name) {
-    const auto& expressions = stack.expressions;
-    if (name == "first") return expressions.at(0);
-    if (name == "second") return expressions.at(1);
-    if (name == "third") return expressions.at(2);
-    if (name == "fourth") return expressions.at(3);
-    if (name == "fifth") return expressions.at(4);
-    if (name == "sixth") return expressions.at(5);
-    if (name == "seventh") return expressions.at(6);
-    if (name == "eighth") return expressions.at(7);
-    if (name == "ninth") return expressions.at(8);
-    if (name == "tenth") return expressions.at(9);
-    throw MissingSymbol(name, "evaluated_tuple");
-}
-
 Expression evaluateLookupChild(
     const LookupChild& lookup_child, Expression environment
 ) {
     const auto child = evaluate(lookup_child.child, environment);
     const auto name = getName(lookup_child.name).value;
-    switch (child.type) {
-        case EVALUATED_DICTIONARY: return lookupChildInEvaluatedDictionary(getEvaluatedDictionary(child), lookup_child.name);
-        case EVALUATED_TUPLE: return lookupChildInEvaluatedTuple(getEvaluatedTuple(child), name);
-        default: throw UnexpectedExpression(child.type, "evaluateLookupChild");
+    const auto dictionary = getEvaluatedDictionary(child);
+    const auto label = getNameAsLabel(lookup_child.name);
+    const auto result = dictionary.definitions.lookup(label);
+    if (result.type == EMPTY) {
+        throw MissingSymbol(label, "dictionary");
     }
+    return result;
 }
 
 Expression applyFunction(const Function& function, Expression input) {
