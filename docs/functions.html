@@ -28,6 +28,7 @@ Manglang has containers like: stacks, strings, tables. They share an interface o
 <dt>drop</dt><dd><code>drop!container</code> returns the container with a single item dropped from it. O(1).</dd>
 <dt>put</dt><dd><code>put!(item container)</code> returns a new container with item added to the old container. For tables we have that <code>put!((key value) table)</code> sets the value corresponding to the key in the table and returns the table. For stacks and strings the original container is not mutated, but it is mutated for tables so that other references to it are effected as well! O(1).</dd>
 <dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input. O(1).</dd>
+<dt>indexing</dt><dd><code>container!index</code> can be used to get the item at the specified index. The container is interpreted as a function which takes an index as input and outputs an item. O(N).</dd>
 </dl>
 The relationship of these functions can be expressed as <code>put!(take!container drop!container)</code> gives back just the <code>container</code>. Furthermore, we check if a container is not empty by <code>if container then ... else ...</code> O(1).
 
@@ -71,20 +72,20 @@ We use the word container to represent either a stack, string or table.
 </dl>
 
 <h2>Generic Container Functions - Accessing Items</h2>
-You can access the items of a container via <code>take!container</code> and <code>drop!container</code>, or using the following functions:
+You can access the items of a container via <code>take!container</code> and <code>drop!container</code> and <code>container!index</code>, or using the following functions:
 <dl>
-<dt>get_index</dt><dd><code>get_index!(n container)</code> returns the nth item in the container. O(n).</dd>
-<dt>first</dt><dd><code>first!container</code> returns the first item in the container. O(1).</dd>
-<dt>second</dt><dd><code>second!container</code> returns the second item in the container. O(1).</dd>
-<dt>third</dt><dd><code>third!container</code> returns the third item in the container. O(1).</dd>
-<dt>fourth</dt><dd><code>fourth!container</code> returns the fourth item in the container. O(1).</dd>
-<dt>fifth</dt><dd><code>fifth!container</code> returns the fifth item in the container. O(1).</dd>
-<dt>sixth</dt><dd><code>sixth!container</code> returns the sixth item in the container. O(1).</dd>
-<dt>seventh</dt><dd><code>seventh!container</code> returns the seventh item in the container. O(1).</dd>
-<dt>eighth</dt><dd><code>eighth!container</code> returns the eighth item in the container. O(1).</dd>
-<dt>ninth</dt><dd><code>ninth!container</code> returns the ninth item in the container. O(1).</dd>
-<dt>tenth</dt><dd><code>tenth!container</code> returns the tenth item in the container. O(1).</dd>
+<dt>get0</dt><dd><code>get0!container</code> returns the item with index 0 in the container. O(1).</dd>
+<dt>get1</dt><dd><code>get1!container</code> returns the item with index 1 in the container. O(1).</dd>
+<dt>get2</dt><dd><code>get2!container</code> returns the item with index 2 in the container. O(1).</dd>
+<dt>get3</dt><dd><code>get3!container</code> returns the item with index 3 in the container. O(1).</dd>
+<dt>get4</dt><dd><code>get4!container</code> returns the item with index 4 in the container. O(1).</dd>
+<dt>get5</dt><dd><code>get5!container</code> returns the item with index 5 in the container. O(1).</dd>
+<dt>get6</dt><dd><code>get6!container</code> returns the item with index 6 in the container. O(1).</dd>
+<dt>get7</dt><dd><code>get7!container</code> returns the item with index 7 in the container. O(1).</dd>
+<dt>get8</dt><dd><code>get8!container</code> returns the item with index 8 in the container. O(1).</dd>
+<dt>get9</dt><dd><code>get9!container</code> returns the item with index 9 in the container. O(1).</dd>
 </dl>
+These fixed getters are useful in two situations. Firstly, for passing to a higher order function like <code>xs=map_stack!(get0 points)</code>. Secondly, when using multiple indices to index containers of containers like <code>scalar=get3!get2!matrix</code>. Otherwise, the easiest option is <code>container!index</code>, which works well in most other situations.
 
 <h2>Specialized Container Functions</h2>
 For the following functions you need to know what kind of container you want to use:
