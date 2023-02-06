@@ -50,8 +50,8 @@ TODO Standard Library:
     - map_number!(f number) == sum_N f(n)
     - sum![numbers] == merge_stacks![stacks]
     - product![numbers] == cartesian product?
-  - get/get_index!(key table default_value)
-    - Merge get_index!(index container default_value) for containers and get!(key table default_value) for tables?
+  - get vs indexing
+    - Replace get!(key table default_value) for tables with container!key?
     - O(N) for stack and string
     - O(1) for table
   - count!containers
