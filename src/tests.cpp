@@ -1517,16 +1517,6 @@ int main() {
         {R"(take_until_item!('a' "a"))", R"("")"},
         {R"(take_until_item!('c' "ABcd"))", R"("AB")"},
     });
-    test.evaluate("get_index stack", {
-        {"get_index!(0 [3 7 6])", "3"},
-        {"get_index!(1 [3 7 6])", "7"},
-        {"get_index!(2 [3 7 6])", "6"},
-    });
-    test.evaluate("get_index string", {
-        {R"(get_index!(0 "abc"))", R"('a')"},
-        {R"(get_index!(1 "abc"))", R"('b')"},
-        {R"(get_index!(2 "abc"))", R"('c')"},
-    });
     test.evaluate("merge_sorted", {
         {"merge_sorted!([] [])", "[]"},
         {"merge_sorted!([0] [])", "[0]"},
@@ -1558,6 +1548,18 @@ int main() {
         {"get7![11 12 13 14 15 16 17 18 19]", "18"},
         {"get8![11 12 13 14 15 16 17 18 19]", "19"},
         {"get9![11 12 13 14 15 16 17 18 19 20]", "20"},
+    });
+    test.evaluate("indexing string", {
+        {R"(get0!"abcdefghijklmnopqrstuvwxyz")", "'a'"},
+        {R"(get1!"abcdefghijklmnopqrstuvwxyz")", "'b'"},
+        {R"(get2!"abcdefghijklmnopqrstuvwxyz")", "'c'"},
+        {R"(get3!"abcdefghijklmnopqrstuvwxyz")", "'d'"},
+        {R"(get4!"abcdefghijklmnopqrstuvwxyz")", "'e'"},
+        {R"(get5!"abcdefghijklmnopqrstuvwxyz")", "'f'"},
+        {R"(get6!"abcdefghijklmnopqrstuvwxyz")", "'g'"},
+        {R"(get7!"abcdefghijklmnopqrstuvwxyz")", "'h'"},
+        {R"(get8!"abcdefghijklmnopqrstuvwxyz")", "'i'"},
+        {R"(get9!"abcdefghijklmnopqrstuvwxyz")", "'j'"},
     });
     test.evaluate("zip2", {
         {"zip2!([] [])", "[]"},

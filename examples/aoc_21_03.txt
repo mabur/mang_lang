@@ -17,7 +17,7 @@ result@{
 
     get_column = in index out
         map_stack!(
-            in number out get_index!(index number)
+            in number out number!index
             numbers
         )
     count0 = in stack out
@@ -29,12 +29,12 @@ result@{
     pick_least_common_bit = in counts out
         if less?counts then 0 else 1
 
-    dec_from_bin = in binary out sum!map_stack!(mul zip!(binary [16 8 4 2 1]))
+    dec_from_bin = in binary out sum!map_stack!(mul zip2!(binary [16 8 4 2 1]))
 
     columns = map_stack!(get_column range!NUM_BITS)
     counts0 = map_stack!(count0 columns)
     counts1 = map_stack!(count1 columns)
-    gamma = map_stack!(pick_most_common_bit zip!(counts0 counts1))
-    epsilon = map_stack!(pick_least_common_bit zip!(counts0 counts1))
+    gamma = map_stack!(pick_most_common_bit zip2!(counts0 counts1))
+    epsilon = map_stack!(pick_least_common_bit zip2!(counts0 counts1))
     result = mul!(dec_from_bin!gamma dec_from_bin!epsilon)
 }

@@ -163,6 +163,6 @@ noop"
     state = reverse!fold!(update_state lines state)
     signal_strengths = map_stack!(mul enumerate!state)
     indices = [20 60 100 140 180 220]
-    get_signal_strength = in index out get_index!(index signal_strengths) 
+    get_signal_strength = in i out signal_strengths!i
     result = sum!map_stack!(get_signal_strength indices)
 }
