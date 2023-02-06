@@ -36,5 +36,5 @@ move 1 from 1 to 2"
             n = dec!n        
         end
     end
-    result = map_string!(first get_values!stacks)
+    result = map_string!(get0 get_values!stacks)
 }

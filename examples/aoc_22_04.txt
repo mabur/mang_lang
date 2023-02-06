@@ -13,10 +13,10 @@ result@{
         parse_section split!(',' row)
     )
     does_contain = in sections out result@{
-        a = first!first!sections
-        b = second!first!sections
-        c = first!second!sections
-        d = second!second!sections
+        a = get0!get0!sections
+        b = get1!get0!sections
+        c = get0!get1!sections
+        d = get1!get1!sections
         result = or?[
             and?[less_or_equal?(a c) less_or_equal?(d b)]
             and?[less_or_equal?(c a) less_or_equal?(b d)]

@@ -2,11 +2,6 @@ TODO Standard Library:
 * first, second, third
   - Have for both stacks and tuples.
   - Shorter names/syntax for more convenient vector math.
-    - 1st, 2nd, 3rd, 4th
-    - _0, _1, _2
-    - s0, s1, s2
-    - t0, t1, t2
-    - c0, c1, c2
     - get0, get1, get2 (bra!)
     - 1@ be interpretable as stand-alone-functions.
     - containers be interpretable as functions
@@ -17,7 +12,7 @@ TODO Standard Library:
     - What about tables? When to return key-value-tuple and when to just return value?
       - table!index (make constant or logN?)
       - get!(key table default_value) (logN)
-      - first,..., can already be used for tables. Mirror that behaviour.
+      - get0,..., can already be used for tables. Mirror that behaviour.
 
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
@@ -441,7 +436,7 @@ SUB LANGUAGES
 ║     square = in x out mul!(x x)                   ║                                 ║                                            ║
 ║     nine = square 3                               ║ {                               ║                                            ║
 ║     square_norm2 = in vec out                     ║     square_norm2 = in (x y) out ║                                            ║
-║         add!(square!first!vec, square!second!vec) ║         add!(square!x square!y) ║                                            ║
+║         add!(square!vec!0, square!vec!1)          ║         add!(square!x square!y) ║                                            ║
 ║     n = square_norm2!(3 4)                        ║     n = square_norm2!(3 4)      ║ {                                          ║
 ║     get_area = in shape out                       ║     conj = in (re im) out       ║     get_area = in {width height} out       ║
 ║         mul!(width@shape height@shape)            ║         (re neg!im)             ║         mul!(width height)                 ║

@@ -35,7 +35,7 @@ result@{
         end
     end
     
-    maxy = max_item!map_stack!(first get_keys!filled)
+    maxy = max_item!map_stack!(get0 get_keys!filled)
     
     continue_spawning = yes
     n = 0

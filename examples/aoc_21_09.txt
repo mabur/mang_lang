@@ -23,7 +23,7 @@ risk_levels@{
         row_below = map!2
         x = 0
         while less?(x sub!(width 2))
-            point = parse_height!second!row_middle
+            point = parse_height!row_middle!1
             neighbours = [
                 parse_height!row_above!1
                 parse_height!row_middle!0
