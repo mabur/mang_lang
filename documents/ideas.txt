@@ -1,19 +1,9 @@
 TODO Standard Library:
-* first, second, third
-  - Have for both stacks and tuples.
-  - Shorter names/syntax for more convenient vector math.
-    - get0, get1, get2 (bra!)
-    - 1@ be interpretable as stand-alone-functions.
-    - containers be interpretable as functions
-      - point!1
-      - Could this work? What downsides could it have?
-        - Nested indices requires multiple lines and names.
-      - This should automatically generalize getters-functions to tuples.
-    - What about tables? When to return key-value-tuple and when to just return value?
-      - table!index (make constant or logN?)
-      - get!(key table default_value) (logN)
-      - get0,..., can already be used for tables. Mirror that behaviour.
-
+* Indexing
+  - What about tables? When to return key-value-tuple and when to just return value?
+    - get0,..., can already be used for tables. Mirror that behaviour.
+    - table!index (make constant or logN?)
+    - get!(key table default_value) (logN)
 * Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
   - add generic map that requires that f has same input and output type,
