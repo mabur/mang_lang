@@ -553,6 +553,10 @@ int main() {
         {R"(a@{c="abc" a=c!2})", "'c'"},
         {R"(a@{i=1 c="abc" a=c!i})", "'b'"},
     });
+    test.evaluate("lookup table indexing", {
+        {"a@{c=<2:3 4:5> a=c!2}", "3"},
+        {"a@{c=<2:3 4:5> a=c!4}", "5"},
+    });
     test.evaluate("add", {
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},

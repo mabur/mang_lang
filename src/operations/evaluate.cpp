@@ -247,6 +247,16 @@ Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number)
     return tuple.expressions.at(getIndex(number));
 }
 
+Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
+    const auto k = serialize(key);
+    try {
+        return table.rows.at(k).value;    
+    }
+    catch (const std::out_of_range&) {
+        throw std::runtime_error("Table does not have key: " + k);
+    }
+}
+    
 Expression applyStackIndexing(EvaluatedStack stack, const Number& number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
@@ -274,6 +284,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
         case FUNCTION_TUPLE: return applyFunctionTuple(getFunctionTuple(function), input);
+        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function), input);
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
         case STRING: return applyStringIndexing(getString(function), getNumber(input));
