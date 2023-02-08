@@ -22,11 +22,11 @@ hmdt: 32"
     evaluate_operation = in string out result@{
         left = evaluate_node!take_many!(4 string)
         right = evaluate_node!drop_many!(7 string)
-        operation = get!(string!5 operations add)
+        operation = operations!string!5
         result = operation!(left right)
     }
     evaluate_node = in key out result@{
-        string = get!(key monkey_strings "")
+        string = monkey_strings!key
         result =
             if is_digit?take!string then
                 parse_natural_number!string

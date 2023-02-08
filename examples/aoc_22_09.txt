@@ -42,7 +42,7 @@ R 2"
         while steps
             head = take!heads
             tail = take!tails
-            head_movement = get!(direction head_movements [nan nan])
+            head_movement = head_movements!direction
             head = addv!(head head_movement)
             offset = subv!(head tail)
             tail_movement = get!(offset tail_movements [0 0])

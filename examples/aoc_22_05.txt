@@ -26,10 +26,10 @@ move 1 from 1 to 2"
         source = dec!parse_natural_number!words!3
         target = dec!parse_natural_number!words!5
         while n
-            source_stack = get!(source stacks [])
+            source_stack = stacks!source
             item = take!source_stack
             source_stack = drop!source_stack
-            target_stack = get!(target stacks [])
+            target_stack = stacks!target
             target_stack += item
             stacks += (source source_stack)
             stacks += (target target_stack)

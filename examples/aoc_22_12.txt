@@ -34,7 +34,7 @@ abdefghi"
     while not!get!(goal visited no)
         next_frontier = []
         for position in active_frontier
-            height = get!(position heights nan)                        
+            height = heights!position                        
             x = position!0
             y = position!1
             neighbours = [[x inc!y] [x dec!y] [inc!x y] [dec!x y]]
