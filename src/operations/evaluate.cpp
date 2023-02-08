@@ -244,7 +244,16 @@ size_t getIndex(const Number& number) {
 }
 
 Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number) {
-    return tuple.expressions.at(getIndex(number));
+    const auto i = getIndex(number);
+    try {
+        return tuple.expressions.at(i);
+    }
+    catch (const std::out_of_range&) {
+        throw std::runtime_error(
+            "Tuple of size " + std::to_string(tuple.expressions.size()) +
+            " indexed with " + std::to_string(i)
+        );
+    }
 }
 
 Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
