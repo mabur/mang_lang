@@ -36,7 +36,7 @@ bool isEqual(Expression left, Expression right) {
         return getCharacter(left) == getCharacter(right);
     }
     if (left_type == BOOLEAN && right_type == BOOLEAN) {
-        return getBoolean(left).value == getBoolean(right).value;
+        return getBoolean(left) == getBoolean(right);
     }
     if (left_type == EMPTY_STACK && right_type == EMPTY_STACK) {
         return true;
@@ -66,7 +66,7 @@ bool boolean(Expression expression) {
         case EVALUATED_TABLE: return !getEvaluatedTable(expression).empty();
         case EVALUATED_TABLE_VIEW: return !getEvaluatedTableView(expression).empty();
         case NUMBER: return static_cast<bool>(getNumber(expression));
-        case BOOLEAN: return getBoolean(expression).value;
+        case BOOLEAN: return getBoolean(expression);
         case EVALUATED_STACK: return true;
         case EMPTY_STACK: return false;
         case STRING: return true;

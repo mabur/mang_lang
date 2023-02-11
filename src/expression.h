@@ -165,10 +165,7 @@ struct LookupSymbol {
 };
 
 using Number = double;
-
-struct Boolean {
-    bool value;
-};
+using Boolean = bool;
 
 struct String {
     Expression top;
