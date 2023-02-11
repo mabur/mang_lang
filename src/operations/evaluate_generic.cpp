@@ -31,22 +31,17 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupCurrentDictionary(Expression name, Expression expression) {
+Expression lookupDictionary(Expression name, Expression expression) {
     const auto label = getNameAsLabel(name);
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(label, "environment of type " + NAMES[expression.type]);
     }
-    const auto d = getEvaluatedDictionary(expression);
-    return d.definitions.lookup(label);
-}
-
-Expression lookupDictionary(Expression name, Expression expression) {
-    const auto result = lookupCurrentDictionary(name, expression);
-    if (result.type != EMPTY) {
-        return result;
+    const auto dictionary = getEvaluatedDictionary(expression);
+    const auto value = dictionary.definitions.lookup(label);
+    if (value.type != EMPTY) {
+        return value;
     }
-    const auto d = getEvaluatedDictionary(expression);
-    return lookupDictionary(name, d.environment);
+    return lookupDictionary(name, dictionary.environment);
 }
 
 Expression applyFunctionBuiltIn(
