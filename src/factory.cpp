@@ -6,7 +6,6 @@
 #include "operations/serialize.h"
 
 std::vector<EvaluatedDictionary> evaluated_dictionaries;
-
 std::vector<Dictionary> dictionaries;
 std::vector<Character> characters;
 std::vector<Conditional> conditionals;
@@ -113,19 +112,25 @@ void clearMemory() {
     built_in_functions.clear();
     dictionary_functions.clear();
     tuple_functions.clear();
+    tuples.clear();
+    evaluated_tuples.clear();
     stacks.clear();
     evaluated_stacks.clear();
     empty_stacks.clear();
     tables.clear();
     evaluated_tables.clear();
+    evaluated_table_views.clear();
     child_lookups.clear();
     function_applications.clear();
     symbol_lookups.clear();
     names.clear();
     numbers.clear();
     while_statements.clear();
+    for_statements.clear();
     while_end_statements.clear();
+    for_end_statements.clear();
     definitions.clear();
+    put_assignments.clear();
     strings.clear();
     empty_strings.clear();
     booleans.clear();
