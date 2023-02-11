@@ -90,7 +90,7 @@ Expression parseName(CodeRange code) {
     code = parseWhile(code, isNameCharacter);
     return makeName(
         CodeRange{first, code.first},
-        Name{rawString({first, code.first})}
+        rawString({first, code.first})
     );
 }
 
