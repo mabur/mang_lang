@@ -679,7 +679,7 @@ int main() {
         {"pi", "3.14159265359"},
         {"tau", "6.28318530718"},
     });
-    test.evaluate("boolean", { // TODO: support type checking
+    test.evaluate_all("boolean", {
         {"boolean!-2", "yes"},
         {"boolean!-1", "yes"},
         {"boolean!-0", "no"},
@@ -690,16 +690,13 @@ int main() {
         {"boolean![]", "no"},
         {"boolean![0]", "yes"},
         {"boolean![0 1]", "yes"},
-        {"boolean!{}", "no"},
-        {"boolean!{x=0}", "yes"},
-        {"boolean!{x=0 y=1}", "yes"},
         {R"(boolean!"")", "no"},
         {R"(boolean!"0")", "yes"},
         {R"(boolean!"1")", "yes"},
         {R"(boolean!"a")", "yes"},
         {R"(boolean!"ab")", "yes"},
     });
-    test.evaluate("not", { // TODO: support type checking
+    test.evaluate_all("not", {
         {"not?-2", "no"},
         {"not?-1", "no"},
         {"not?-0", "yes"},
@@ -710,9 +707,6 @@ int main() {
         {"not?[]", "yes"},
         {"not?[0]", "no"},
         {"not?[0 1]", "no"},
-        {"not?{}", "yes"},
-        {"not?{x=0}", "no"},
-        {"not?{x=0 y=1}", "no"},
         {R"(not?"")", "yes"},
         {R"(not?"0")", "no"},
         {R"(not?"1")", "no"},

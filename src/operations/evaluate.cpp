@@ -62,7 +62,6 @@ bool isEqual(Expression left, Expression right) {
 
 bool boolean(Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: return !getEvaluatedDictionary(expression).definitions.empty();
         case EVALUATED_TABLE: return !getEvaluatedTable(expression).empty();
         case EVALUATED_TABLE_VIEW: return !getEvaluatedTableView(expression).empty();
         case NUMBER: return static_cast<bool>(getNumber(expression));
