@@ -85,6 +85,11 @@ struct MangLangTest : public Test {
             ::evaluate, "evaluate", case_name, data
         );
     }
+    void evaluate_all(std::string case_name, InputOutputList data) {
+        parameterizedTest<std::string, std::string>(
+            ::evaluate_all, "evaluate_all", case_name, data
+        );
+    }
 };
 
 int main() {

@@ -34,3 +34,17 @@ std::string evaluate(std::string code) {
     clearMemory();
     return result;
 }
+
+std::string evaluate_all(std::string code) {
+    const auto built_ins = builtIns();
+    const auto std_ast = parse(STANDARD_LIBRARY);
+    const auto code_ast = parse(code);
+    const auto std_checked = evaluate_types(std_ast, built_ins);
+    const auto code_checked = evaluate_types(code_ast, std_checked);
+    const auto std_evaluated = evaluate(std_ast, built_ins);
+    const auto code_evaluated = evaluate(code_ast, std_evaluated);
+    const auto result = serialize(code_evaluated);
+    clearMemory();
+    std::ignore = code_checked;
+    return result;
+}
