@@ -31,7 +31,7 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
+Expression lookupCurrentDictionary(const std::string& name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
     }
@@ -39,19 +39,19 @@ Expression lookupCurrentDictionary(Expression expression, const std::string& nam
     return d.definitions.lookup(name);
 }
 
-Expression lookupDictionary(Expression expression, const std::string& name) {
-    const auto result = lookupCurrentDictionary(expression, name);
+Expression lookupDictionary(const std::string& name, Expression expression) {
+    const auto result = lookupCurrentDictionary(name, expression);
     if (result.type != EMPTY) {
         return result;
     }
     const auto d = getEvaluatedDictionary(expression);
-    return lookupDictionary(d.environment, name);
+    return lookupDictionary(name, d.environment);
 }
 
 Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment
 ) {
-    return lookupDictionary(environment, getNameAsLabel(lookup_symbol.name));
+    return lookupDictionary(getNameAsLabel(lookup_symbol.name), environment);
 }
 
 Expression applyFunctionBuiltIn(

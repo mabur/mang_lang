@@ -96,7 +96,7 @@ Expression evaluateDictionary(
             const auto for_statement = getForStatement(statement);
             const auto label_container = getNameAsLabel(for_statement.name_container);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = lookupDictionary(result_environment, label_container);
+            const auto container = lookupDictionary(label_container, result_environment);
             boolean(container);
             const auto label_item = getNameAsLabel(for_statement.name_item);
             const auto item = stack_functions::take(container);
