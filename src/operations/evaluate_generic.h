@@ -48,10 +48,9 @@ Expression evaluateLookupChild(
     const auto child = evaluator(lookup_child.child, environment);
     const auto name = getName(lookup_child.name);
     const auto dictionary = getEvaluatedDictionary(child);
-    const auto label = getName(lookup_child.name);
-    const auto result = dictionary.definitions.lookup(label);
+    const auto result = dictionary.definitions.lookup(name);
     if (result.type == EMPTY) {
-        throw MissingSymbol(label, "dictionary");
+        throw MissingSymbol(name, "dictionary");
     }
     return result;
 }
@@ -65,8 +64,8 @@ Expression applyFunction(
     Expression input
 ) {
     auto definitions = Definitions{};
-    const auto label = getName(function.input_name);
-    definitions.add(label, input);
+    const auto name = getName(function.input_name);
+    definitions.add(name, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
     );
@@ -101,9 +100,9 @@ Expression applyFunctionTuple(
     auto definitions = Definitions{};
     const auto num_inputs = input_names.size();
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto label = getName(input_names[i]);
+        const auto name = getName(input_names[i]);
         const auto expression = tuple.expressions[i];
-        definitions.add(label, expression);
+        definitions.add(name, expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function_stack.environment, definitions}

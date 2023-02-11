@@ -27,12 +27,12 @@ Expression evaluateFunctionTuple(
 }
 
 Expression lookupDictionary(Expression name, Expression expression) {
-    const auto label = getName(name);
+    const auto s = getName(name);
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(label, "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(s, "environment of type " + NAMES[expression.type]);
     }
     const auto dictionary = getEvaluatedDictionary(expression);
-    const auto value = dictionary.definitions.lookup(label);
+    const auto value = dictionary.definitions.lookup(s);
     if (value.type != EMPTY) {
         return value;
     }
