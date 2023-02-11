@@ -6,7 +6,6 @@
 #include "../container.h"
 #include "../factory.h"
 #include "evaluate_generic.h"
-#include "serialize.h"
 
 namespace {
 
