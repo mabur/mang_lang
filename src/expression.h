@@ -108,7 +108,11 @@ struct Expression {
 using Number = double;
 using Boolean = bool;
 using Character = char;
-using Name = std::string; // TODO: consider pointer for cheap copy. 
+// TODO: Consider pointer for cheap copy.
+// Unlike the other atoms Names are just created during parsing.
+// After that the std::vector of Names is static, which makes it easier to pass
+// around references or pointers.
+using Name = std::string; 
 
 struct Conditional {
     Expression expression_if;
