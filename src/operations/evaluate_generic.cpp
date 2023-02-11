@@ -49,12 +49,6 @@ Expression lookupDictionary(Expression name, Expression expression) {
     return lookupDictionary(name, d.environment);
 }
 
-Expression evaluateLookupSymbol(
-    const LookupSymbol& lookup_symbol, Expression environment
-) {
-    return lookupDictionary(lookup_symbol.name, environment);
-}
-
 Expression applyFunctionBuiltIn(
     const FunctionBuiltIn& function_built_in, Expression input
 ) {

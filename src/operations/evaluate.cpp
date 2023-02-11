@@ -212,7 +212,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TABLE: return evaluateTable(getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate, getFunctionApplication(expression), environment);
-        case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
 }

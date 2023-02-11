@@ -60,10 +60,6 @@ Expression evaluateLookupChild(
 
 Expression lookupDictionary(Expression name, Expression expression);
 
-Expression evaluateLookupSymbol(
-    const LookupSymbol& lookup_symbol, Expression environment
-);
-
 template<typename Evaluator>
 Expression applyFunction(
     Evaluator evaluator,

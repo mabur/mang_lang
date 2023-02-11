@@ -131,7 +131,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate_types, getFunctionApplication(expression), environment);
-        case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
 }
