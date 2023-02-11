@@ -48,7 +48,7 @@ Expression evaluateLookupChild(
     Evaluator evaluator, const LookupChild& lookup_child, Expression environment
 ) {
     const auto child = evaluator(lookup_child.child, environment);
-    const auto name = getName(lookup_child.name).value;
+    const auto name = getName(lookup_child.name);
     const auto dictionary = getEvaluatedDictionary(child);
     const auto label = getNameAsString(lookup_child.name);
     const auto result = dictionary.definitions.lookup(label);

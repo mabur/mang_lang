@@ -5,7 +5,7 @@
 
 inline 
 std::string serializeName(Expression name) {
-    return getName(name).value;
+    return getName(name);
 }
 
 template<typename Serializer>
@@ -31,12 +31,12 @@ std::string serializeIs(Serializer serializer, const IsExpression& is_expression
 
 template<typename Serializer>
 std::string serializeDefinition(Serializer serializer, const Definition& element) {
-    return getName(element.name).value + '=' + serializer(element.expression) + ' ';
+    return getName(element.name) + '=' + serializer(element.expression) + ' ';
 }
 
 template<typename Serializer>
 std::string serializePutAssignment(Serializer serializer, const PutAssignment& element) {
-    return getName(element.name).value + "+=" + serializer(element.expression) + ' ';
+    return getName(element.name) + "+=" + serializer(element.expression) + ' ';
 }
 
 template<typename Serializer>

@@ -105,10 +105,7 @@ struct Expression {
     CodeRange range;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
-struct Name {
-    std::string value;
-};
+using Name = std::string;
 
 struct Character {
     char value;

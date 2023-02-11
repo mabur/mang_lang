@@ -3,7 +3,7 @@
 #include "serialize.h"
 
 std::string getNameAsString(Expression name) {
-    return getName(name).value;
+    return getName(name);
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
