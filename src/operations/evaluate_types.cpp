@@ -58,19 +58,6 @@ Expression evaluateIs(
     return else_expression;
 }
 
-Expression evaluateStack(
-    Expression stack, Expression environment
-) {
-    const auto op = [&](Expression rest, Expression top) -> Expression {
-        const auto evaluated_top = evaluate_types(top, environment);
-        return putEvaluatedStack(rest, evaluated_top);
-    };
-    const auto code = CodeRange{};
-    const auto init = makeEmptyStack(code, {});
-    const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
-    return reverseEvaluatedStack(code, output);
-}
-
 Expression evaluateTuple(Tuple tuple, Expression environment) {
     auto evaluated_expressions = std::vector<Expression>{};
     evaluated_expressions.reserve(tuple.expressions.size());
@@ -249,7 +236,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
-        case STACK: return evaluateStack(expression, environment);
+        case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(getTuple(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
