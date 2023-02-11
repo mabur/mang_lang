@@ -26,13 +26,12 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(Expression name, Expression expression) {
-    const auto s = getName(name);
+Expression lookupDictionary(const Name& name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(s, "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
     }
     const auto dictionary = getEvaluatedDictionary(expression);
-    const auto value = dictionary.definitions.lookup(s);
+    const auto value = dictionary.definitions.lookup(name);
     if (value.type != EMPTY) {
         return value;
     }

@@ -154,11 +154,12 @@ Expression evaluateDictionary(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = lookupDictionary(for_statement.name_container, result_environment);
+            const auto name_container = getName(for_statement.name_container);
+            const auto container = lookupDictionary(name_container, result_environment);
             if (boolean(container)) {
-                const auto name = getName(for_statement.name_item);
+                const auto name_item = getName(for_statement.name_item);
                 const auto value = stack_functions::take(container);
-                result.definitions.add(name, value);
+                result.definitions.add(name_item, value);
                 i += 1;
             } else {
                 i = for_statement.end_index_ + 1;
@@ -174,7 +175,7 @@ Expression evaluateDictionary(
             const auto for_statement = getForStatement(statements.at(i));
             const auto name = getName(for_statement.name_container);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto old_container = lookupDictionary(for_statement.name_container, result_environment);
+            const auto old_container = lookupDictionary(name, result_environment);
             const auto new_container = stack_functions::drop(old_container);
             result.definitions.add(name, new_container);
         }
@@ -212,7 +213,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TABLE: return evaluateTable(getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate, getFunctionApplication(expression), environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
 }

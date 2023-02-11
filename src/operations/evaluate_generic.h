@@ -55,7 +55,7 @@ Expression evaluateLookupChild(
     return result;
 }
 
-Expression lookupDictionary(Expression name, Expression expression);
+Expression lookupDictionary(const Name& name, Expression expression);
 
 template<typename Evaluator>
 Expression applyFunction(
@@ -121,7 +121,7 @@ Expression evaluateFunctionApplication(
     const FunctionApplication& function_application,
     Expression environment
 ) {
-    const auto function = lookupDictionary(function_application.name, environment);
+    const auto function = lookupDictionary(getName(function_application.name), environment);
     const auto input = evaluator(function_application.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluator, getFunction(function), input);

@@ -95,7 +95,9 @@ Expression evaluateDictionary(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = lookupDictionary(for_statement.name_container, result_environment);
+            const auto container = lookupDictionary(
+                getName(for_statement.name_container), result_environment
+            );
             boolean(container);
             const auto name = getName(for_statement.name_item);
             const auto value = stack_functions::take(container);
@@ -131,7 +133,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate_types, getFunctionApplication(expression), environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
 }
