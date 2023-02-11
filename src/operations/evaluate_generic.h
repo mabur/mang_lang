@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../factory.h"
+#include <string>
 
-inline std::string getNameAsLabel(Expression name) {
-    return getName(name).value;
-}
+struct Expression;
+
+std::string getNameAsLabel(Expression name);
