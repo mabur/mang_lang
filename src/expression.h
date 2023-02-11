@@ -107,9 +107,7 @@ struct Expression {
 
 using Name = std::string;
 
-struct Character {
-    char value;
-};
+using Character = char;
 
 struct Conditional {
     Expression expression_if;

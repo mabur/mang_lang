@@ -18,7 +18,7 @@ double number(Expression expression) {
 
 double character(Expression expression) {
     switch (expression.type) {
-        case CHARACTER : return getCharacter(expression).value;
+        case CHARACTER : return getCharacter(expression);
         case ANY : return '\0';
         default: throw StaticTypeError(expression.type, "built-in character");
     }

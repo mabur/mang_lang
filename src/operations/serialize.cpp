@@ -49,7 +49,7 @@ std::string serializeStack(Expression s) {
 }
 
 std::string serializeCharacter(const Character& character) {
-    return '\'' + std::string{character.value} + '\'';
+    return '\'' + std::string{character} + '\'';
 }
 
 std::string serializeFunction(const Function& function) {
@@ -142,7 +142,7 @@ std::string serializeBoolean(const Boolean& boolean) {
 }
 
 std::string appendCharacter(const std::string& s, Expression character) {
-    return s + getCharacter(character).value;
+    return s + getCharacter(character);
 }
 
 std::string serializeString(Expression string) {

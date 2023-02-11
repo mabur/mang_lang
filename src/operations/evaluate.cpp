@@ -33,7 +33,7 @@ bool isEqual(Expression left, Expression right) {
         return getNumber(left).value == getNumber(right).value;
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
-        return getCharacter(left).value == getCharacter(right).value;
+        return getCharacter(left) == getCharacter(right);
     }
     if (left_type == BOOLEAN && right_type == BOOLEAN) {
         return getBoolean(left).value == getBoolean(right).value;
