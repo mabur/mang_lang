@@ -545,7 +545,7 @@ int main() {
         {"a@{c=(3 2 1) a=c!2}", "1"},
         {"a@{i=1 c=(3 2 1) a=c!i}", "2"},
     });
-    test.evaluate("lookup stack indexing", { // TODO: support type checking
+    test.evaluate_all("lookup stack indexing", {
         {"a@{c=[3 2 1] a=c!0}", "3"},
         {"a@{c=[3 2 1] a=c!1}", "2"},
         {"a@{c=[3 2 1] a=c!2}", "1"},

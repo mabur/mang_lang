@@ -78,7 +78,12 @@ Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
 Expression applyStackIndexing(EvaluatedStack stack, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
-        stack = getEvaluatedStack(stack.rest);
+        if (stack.rest.type != EMPTY_STACK) {
+            stack = getEvaluatedStack(stack.rest);
+        }
+        else {
+            return Expression{ANY, {}, {}};   
+        }
     }
     return stack.top;
 }
@@ -86,7 +91,12 @@ Expression applyStackIndexing(EvaluatedStack stack, Number number) {
 Expression applyStringIndexing(String string, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
-        string = getString(string.rest);
+        if (string.rest.type != EMPTY_STACK) {
+            string = getString(string.rest);
+        }
+        else {
+            return Expression{ANY, {}, {}};
+        }
     }
     return string.top;
 }
