@@ -58,7 +58,7 @@ Expression evaluateLookupChild(
     return result;
 }
 
-Expression lookupDictionary(const std::string& name, Expression expression);
+Expression lookupDictionary(Expression name, Expression expression);
 
 Expression evaluateLookupSymbol(
     const LookupSymbol& lookup_symbol, Expression environment
@@ -128,8 +128,7 @@ Expression evaluateFunctionApplication(
     const FunctionApplication& function_application,
     Expression environment
 ) {
-    const auto label = getNameAsLabel(function_application.name);
-    const auto function = lookupDictionary(label, environment);
+    const auto function = lookupDictionary(function_application.name, environment);
     const auto input = evaluator(function_application.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluator, getFunction(function), input);
