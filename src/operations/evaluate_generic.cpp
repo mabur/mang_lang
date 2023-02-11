@@ -2,7 +2,7 @@
 
 #include "serialize.h"
 
-std::string getNameAsLabel(Expression name) {
+std::string getNameAsString(Expression name) {
     return getName(name).value;
 }
 
@@ -31,7 +31,7 @@ Expression evaluateFunctionTuple(
 }
 
 Expression lookupDictionary(Expression name, Expression expression) {
-    const auto label = getNameAsLabel(name);
+    const auto label = getNameAsString(name);
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(label, "environment of type " + NAMES[expression.type]);
     }
