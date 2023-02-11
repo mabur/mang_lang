@@ -1,6 +1,5 @@
 #include "evaluate_generic.h"
 
-#include "../factory.h"
 #include "serialize.h"
 
 std::string getNameAsLabel(Expression name) {
