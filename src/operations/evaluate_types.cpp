@@ -95,13 +95,12 @@ Expression evaluateDictionary(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = lookupDictionary(
-                getName(for_statement.name_container), result_environment
-            );
+            const auto name_container = getName(for_statement.name_container);
+            const auto container = lookupDictionary(name_container, result_environment);
             boolean(container);
-            const auto name = getName(for_statement.name_item);
+            const auto name_item = getName(for_statement.name_item);
             const auto value = stack_functions::take(container);
-            result.definitions.add(name, value);
+            result.definitions.add(name_item, value);
         }
     }
     return result_environment;
