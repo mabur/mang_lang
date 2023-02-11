@@ -124,7 +124,7 @@ Expression evaluateDictionary(
             const auto definition = getDefinition(statement);
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result_environment);
-            const auto label = getNameAsString(definition.name);
+            const auto label = getName(definition.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             result.definitions.add(label, value);
             i += 1;
@@ -133,7 +133,7 @@ Expression evaluateDictionary(
             const auto put_assignment = getPutAssignment(statement);
             const auto& right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result_environment);
-            const auto label = getNameAsString(put_assignment.name);
+            const auto label = getName(put_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = result.definitions.lookup(label);
             const auto tuple = makeEvaluatedTuple(
@@ -156,7 +156,7 @@ Expression evaluateDictionary(
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto container = lookupDictionary(for_statement.name_container, result_environment);
             if (boolean(container)) {
-                const auto label_item = getNameAsString(for_statement.name_item);
+                const auto label_item = getName(for_statement.name_item);
                 const auto item = stack_functions::take(container);
                 result.definitions.add(label_item, item);
                 i += 1;
@@ -172,7 +172,7 @@ Expression evaluateDictionary(
             const auto end_statement = getForEndStatement(statement);
             i = end_statement.for_index_;
             const auto for_statement = getForStatement(statements.at(i));
-            const auto label_container = getNameAsString(
+            const auto label_container = getName(
                 for_statement.name_container);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto old_container = lookupDictionary(for_statement.name_container, result_environment);

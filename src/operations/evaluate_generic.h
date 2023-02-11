@@ -6,8 +6,6 @@
 #include "../expression.h"
 #include "../factory.h"
 
-std::string getNameAsString(Expression name);
-
 Expression evaluateFunction(const Function& function, Expression environment);
 
 Expression evaluateFunctionDictionary(
@@ -50,7 +48,7 @@ Expression evaluateLookupChild(
     const auto child = evaluator(lookup_child.child, environment);
     const auto name = getName(lookup_child.name);
     const auto dictionary = getEvaluatedDictionary(child);
-    const auto label = getNameAsString(lookup_child.name);
+    const auto label = getName(lookup_child.name);
     const auto result = dictionary.definitions.lookup(label);
     if (result.type == EMPTY) {
         throw MissingSymbol(label, "dictionary");
@@ -67,7 +65,7 @@ Expression applyFunction(
     Expression input
 ) {
     auto definitions = Definitions{};
-    const auto label = getNameAsString(function.input_name);
+    const auto label = getName(function.input_name);
     definitions.add(label, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
@@ -103,7 +101,7 @@ Expression applyFunctionTuple(
     auto definitions = Definitions{};
     const auto num_inputs = input_names.size();
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto label = getNameAsString(input_names[i]);
+        const auto label = getName(input_names[i]);
         const auto expression = tuple.expressions[i];
         definitions.add(label, expression);
     }

@@ -2,10 +2,6 @@
 
 #include "serialize.h"
 
-std::string getNameAsString(Expression name) {
-    return getName(name);
-}
-
 Expression evaluateFunction(const Function& function, Expression environment) {
     return makeFunction(CodeRange{}, {
         environment, function.input_name, function.body
@@ -31,7 +27,7 @@ Expression evaluateFunctionTuple(
 }
 
 Expression lookupDictionary(Expression name, Expression expression) {
-    const auto label = getNameAsString(name);
+    const auto label = getName(name);
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(label, "environment of type " + NAMES[expression.type]);
     }
