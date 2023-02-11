@@ -109,116 +109,6 @@ Expression evaluateTable(Table table, Expression environment) {
     return makeEvaluatedTable(code, EvaluatedTable{rows});
 }
 
-Expression applyFunction(const Function& function, Expression input) {
-
-    auto definitions = Definitions{};
-    const auto label = getNameAsLabel(function.input_name);
-    definitions.add(label, input);
-    const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function.environment, definitions}
-    );
-    return evaluate(function.body, middle);
-}
-
-Expression applyFunctionBuiltIn(
-    const FunctionBuiltIn& function_built_in, Expression input
-) {
-    return function_built_in.function(input);
-}
-
-Expression applyFunctionDictionary(
-    const FunctionDictionary& function_dictionary, Expression input
-) {
-    // TODO: pass along environment? Is some use case missing now?
-    return evaluate(function_dictionary.body, input);
-}
-
-Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression input
-) {
-    auto tuple = getEvaluatedTuple(input);
-    const auto& input_names = function_stack.input_names;
-    if (input_names.size() != tuple.expressions.size()) {
-        throw std::runtime_error{"Wrong number of input to function"};
-    }
-    auto definitions = Definitions{};
-    const auto num_inputs = input_names.size();
-    for (size_t i = 0; i < num_inputs; ++i) {
-        const auto label = getNameAsLabel(input_names[i]);
-        const auto expression = tuple.expressions[i];
-        definitions.add(label, expression);
-    }
-    const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function_stack.environment, definitions}
-    );
-    return evaluate(function_stack.body, middle);
-}
-
-size_t getIndex(const Number& number) {
-    if (number.value < 0) {
-        using namespace std;
-        throw runtime_error("Cannot have negative index: " + to_string(number.value));
-    }
-    return static_cast<size_t>(number.value);
-}
-
-Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number) {
-    const auto i = getIndex(number);
-    try {
-        return tuple.expressions.at(i);
-    }
-    catch (const std::out_of_range&) {
-        throw std::runtime_error(
-            "Tuple of size " + std::to_string(tuple.expressions.size()) +
-            " indexed with " + std::to_string(i)
-        );
-    }
-}
-
-Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
-    const auto k = serialize(key);
-    try {
-        return table.rows.at(k).value;    
-    }
-    catch (const std::out_of_range&) {
-        throw std::runtime_error("Table does not have key: " + k);
-    }
-}
-    
-Expression applyStackIndexing(EvaluatedStack stack, const Number& number) {
-    const auto index = getIndex(number);
-    for (size_t i = 0; i < index; ++i) {
-        stack = getEvaluatedStack(stack.rest);
-    }
-    return stack.top;
-}
-
-Expression applyStringIndexing(String string, const Number& number) {
-    const auto index = getIndex(number);
-    for (size_t i = 0; i < index; ++i) {
-        string = getString(string.rest);
-    }
-    return string.top;
-}
-    
-Expression evaluateFunctionApplication(
-    const FunctionApplication& function_application, Expression environment
-) {
-    const auto label = getNameAsLabel(function_application.name);
-    const auto function = lookupDictionary(environment, label);
-    const auto input = evaluate(function_application.child, environment);
-    switch (function.type) {
-        case FUNCTION: return applyFunction(getFunction(function), input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(getFunctionTuple(function), input);
-        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function), input);
-        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
-        case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
-        case STRING: return applyStringIndexing(getString(function), getNumber(input));
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
-    }
-}
-
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -322,7 +212,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate, getTuple(expression), environment);
         case TABLE: return evaluateTable(getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate, getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }

@@ -58,66 +58,6 @@ Expression evaluateIs(
     return else_expression;
 }
 
-Expression applyFunction(const Function& function, Expression input) {
-
-    auto definitions = Definitions{};
-    const auto label = getNameAsLabel(function.input_name);
-    definitions.add(label, input);
-    const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function.environment, definitions}
-    );
-    return evaluate_types(function.body, middle);
-}
-
-Expression applyFunctionBuiltIn(
-    const FunctionBuiltIn& function_built_in, Expression input
-) {
-    return function_built_in.function(input);
-}
-
-Expression applyFunctionDictionary(
-    const FunctionDictionary& function_dictionary, Expression input
-) {
-    // TODO: pass along environment? Is some use case missing now?
-    return evaluate_types(function_dictionary.body, input);
-}
-
-Expression applyFunctionTuple(const FunctionTuple& function_stack, Expression input
-) {
-    auto tuple = getEvaluatedTuple(input);
-    const auto& input_names = function_stack.input_names;
-    if (input_names.size() != tuple.expressions.size()) {
-        throw std::runtime_error{"Wrong number of input to function"};
-    }
-    auto definitions = Definitions{};
-    const auto num_inputs = input_names.size();
-    for (size_t i = 0; i < num_inputs; ++i) {
-        const auto label = getNameAsLabel(input_names[i]);
-        const auto expression = tuple.expressions[i];
-        definitions.add(label, expression);
-    }
-    const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function_stack.environment, definitions}
-    );
-    return evaluate_types(function_stack.body, middle);
-}
-
-Expression evaluateFunctionApplication(
-    const FunctionApplication& function_application, Expression environment
-) {
-    const auto label = getNameAsLabel(function_application.name);
-    const auto function = lookupDictionary(environment, label);
-    const auto input = evaluate_types(function_application.child, environment);
-    switch (function.type) {
-        case FUNCTION: return applyFunction(getFunction(function), input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(getFunctionDictionary(function), input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(
-                getFunctionTuple(function), input);
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
-    }
-}
-
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -192,7 +132,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate_types, getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
