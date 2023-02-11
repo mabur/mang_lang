@@ -58,16 +58,6 @@ Expression evaluateIs(
     return else_expression;
 }
 
-Expression evaluateTuple(Tuple tuple, Expression environment) {
-    auto evaluated_expressions = std::vector<Expression>{};
-    evaluated_expressions.reserve(tuple.expressions.size());
-    for (const auto& expression : tuple.expressions) {
-        evaluated_expressions.push_back(evaluate_types(expression, environment));
-    }
-    const auto code = CodeRange{};
-    return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
-}
-
 Expression lookupCurrentDictionary(Expression expression, const std::string& name) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
@@ -237,7 +227,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate_types, expression, environment);
-        case TUPLE: return evaluateTuple(getTuple(expression), environment);
+        case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);

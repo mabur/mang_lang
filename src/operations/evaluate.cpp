@@ -97,16 +97,6 @@ Expression evaluateIs(
     return evaluate(is_expression.expression_else, environment);
 }
 
-Expression evaluateTuple(Tuple tuple, Expression environment) {
-    auto evaluated_expressions = std::vector<Expression>{};
-    evaluated_expressions.reserve(tuple.expressions.size());
-    for (const auto& expression : tuple.expressions) {
-        evaluated_expressions.push_back(evaluate(expression, environment));
-    }
-    const auto code = CodeRange{};
-    return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
-}
-
 Expression evaluateTable(Table table, Expression environment) {
     auto rows = std::map<std::string, Row>{};
     for (const auto& row : table.rows) {
@@ -366,7 +356,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate, expression, environment);
-        case TUPLE: return evaluateTuple(getTuple(expression), environment);
+        case TUPLE: return evaluateTuple(evaluate, getTuple(expression), environment);
         case TABLE: return evaluateTable(getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);

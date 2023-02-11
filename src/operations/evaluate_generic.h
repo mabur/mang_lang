@@ -31,3 +31,14 @@ Expression evaluateStack(Evaluator evaluator,
     const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
     return reverseEvaluatedStack(code, output);
 }
+
+template<typename Evaluator>
+Expression evaluateTuple(Evaluator evaluator, Tuple tuple, Expression environment) {
+    auto evaluated_expressions = std::vector<Expression>{};
+    evaluated_expressions.reserve(tuple.expressions.size());
+    for (const auto& expression : tuple.expressions) {
+        evaluated_expressions.push_back(evaluator(expression, environment));
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
+}
