@@ -25,11 +25,11 @@ double character(Expression expression) {
 }
 
 Expression makeNumber(double x) {
-    return makeNumber(CodeRange{}, Number{x});
+    return makeNumber(CodeRange{}, x);
 }
 
 Expression makeBoolean(bool x) {
-    return makeBoolean(CodeRange{}, Boolean{x});
+    return makeBoolean(CodeRange{}, x);
 }
 
 template <typename BinaryOperation>

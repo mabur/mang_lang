@@ -130,7 +130,7 @@ std::string serializeEvaluatedStack(Expression s) {
     return result;
 }
 
-std::string serializeNumber(const Number& number) {
+std::string serializeNumber(Number number) {
     std::stringstream s;
     s.precision(std::numeric_limits<double>::digits10 + 1);
     s << number;

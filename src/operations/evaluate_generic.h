@@ -113,10 +113,10 @@ Expression applyFunctionTuple(
     return evaluator(function_stack.body, middle);
 }
 
-Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number);
+Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number);
 Expression applyTableIndexing(const EvaluatedTable& table, Expression key);
-Expression applyStackIndexing(EvaluatedStack stack, const Number& number);
-Expression applyStringIndexing(String string, const Number& number);
+Expression applyStackIndexing(EvaluatedStack stack, Number number);
+Expression applyStringIndexing(String string, Number number);
 
 template<typename Evaluator>
 Expression evaluateFunctionApplication(

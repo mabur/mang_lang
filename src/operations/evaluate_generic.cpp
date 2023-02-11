@@ -49,7 +49,7 @@ Expression applyFunctionBuiltIn(
     return function_built_in.function(input);
 }
 
-size_t getIndex(const Number& number) {
+size_t getIndex(Number number) {
     if (number < 0) {
         using namespace std;
         throw runtime_error("Cannot have negative index: " + to_string(number));
@@ -57,7 +57,7 @@ size_t getIndex(const Number& number) {
     return static_cast<size_t>(number);
 }
 
-Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number) {
+Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number) {
     const auto i = getIndex(number);
     try {
         return tuple.expressions.at(i);
@@ -80,7 +80,7 @@ Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
     }
 }
 
-Expression applyStackIndexing(EvaluatedStack stack, const Number& number) {
+Expression applyStackIndexing(EvaluatedStack stack, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
         stack = getEvaluatedStack(stack.rest);
@@ -88,7 +88,7 @@ Expression applyStackIndexing(EvaluatedStack stack, const Number& number) {
     return stack.top;
 }
 
-Expression applyStringIndexing(String string, const Number& number) {
+Expression applyStringIndexing(String string, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
         string = getString(string.rest);
