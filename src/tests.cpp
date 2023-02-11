@@ -94,7 +94,7 @@ struct MangLangTest : public Test {
 
 int main() {
     MangLangTest test;
-    test.evaluate("number", {
+    test.evaluate_all("number", {
         {"-1", "-1"},
         {"-1.0", "-1"},
         {"-0", "-0"},
@@ -122,7 +122,7 @@ int main() {
         {"+1", "NUMBER"},
         {"+1.0", "NUMBER"},
     });
-    test.evaluate("character", {
+    test.evaluate_all("character", {
         {"'a'", "'a'"},
         {"'1'", "'1'"},
         {"'+'", "'+'"},
@@ -144,7 +144,7 @@ int main() {
         {"'{'", "CHARACTER"},
         {"'}'", "CHARACTER"},
     });
-    test.evaluate("boolean", {
+    test.evaluate_all("boolean", {
         {"yes", "yes"},
         {"no", "no"},
     });
@@ -152,13 +152,13 @@ int main() {
         {"yes", "BOOLEAN"},
         {"no", "BOOLEAN"},
     });
-    test.evaluate("missing", {
+    test.evaluate_all("missing", {
         {"missing", "missing"},
     });
     test.evaluate_types("missing", {
         {"missing", "EMPTY"},
     });
-    test.evaluate("string", {
+    test.evaluate_all("string", {
         {R"("")", R"("")"},
         {R"("a")", R"("a")"},
         {R"("ab")", R"("ab")"},
@@ -180,7 +180,7 @@ int main() {
         {R"#("()")#", "STRING"},
         {R"("{}")", "STRING"},
     });
-    test.evaluate("stack", {
+    test.evaluate_all("stack", {
         {"[]", "[]"},
         {"[ ]", "[]"},
         {"[  ]", "[]"},
@@ -218,7 +218,7 @@ int main() {
         {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
         {"<inc!0:inc!1>", "<inc!0:inc!1>"},
     });
-    test.evaluate("table", {
+    test.evaluate("table", { // TODO: support type checking
         {"<>", "<>"},
         {"<1:2>", "<1:2>"},
         {"< 1 : 2 >", "<1:2>"},
@@ -257,7 +257,7 @@ int main() {
         {"(() ())", "(() ())"},
         {"((()))", "((()))"},
     });
-    test.evaluate("tuple", {
+    test.evaluate_all("tuple", {
         {"()", "()"},
         {"( )", "()"},
         {"(  )", "()"},
@@ -285,14 +285,14 @@ int main() {
         {"{i=2 while i i=dec!i end}", "{i=NUMBER}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=NUMBER j=NUMBER}"},
     });
-    test.evaluate("dictionary iterations", {
+    test.evaluate_all("dictionary iterations", {
         {"{i=2 while i i=dec!i end}", "{i=0}"},
         {"{i=2 while i i=dec!i end j=1}", "{i=0 j=1}"},
         {"{i=2 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=3}"},
         {"{i=1000 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=500500}"},
         {"{i=2 c=[] while i c+=i i=dec!i end}", "{i=0 c=[1 2]}"},
     });
-    test.evaluate("dictionary for", {
+    test.evaluate_all("dictionary for", {
         {"{c=[] for i in c end}", "{c=[]}"},
         {"{c=[1] for i in c end}", "{c=[] i=1}"},
         {"{c=[1 2] for i in c end}", "{c=[] i=2}"},
@@ -315,7 +315,7 @@ int main() {
         {"{a=[] a+=1}", "{a=[NUMBER]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[NUMBER]}"},
     });
-    test.evaluate("dictionary", {
+    test.evaluate_all("dictionary", {
         {"{}", "{}"},
         {"{ }", "{}"},
         {"{a=1}", "{a=1}"},
@@ -341,7 +341,7 @@ int main() {
         {"if [0] then 2 else 3", "NUMBER"},
         {"if [] then 2 else 3", "NUMBER"},
     });
-    test.evaluate("conditional", {
+    test.evaluate_all("conditional", {
         {"if 1 then 2 else 3", "2"},
         {"if 0 then 2 else 3", "3"},
         {"if [0] then 2 else 3", "2"},
@@ -362,7 +362,7 @@ int main() {
         {"is missing 0 then 1 else 2", "NUMBER"},
         {"is 0 missing then 1 else 2", "NUMBER"},
     });
-    test.evaluate("is", {
+    test.evaluate_all("is", {
         {"is 0 0 then 1 else 2", "1"},
         {"is 1 0 then 1 else 2", "2"},
         {"is 0 0 then 0 1 then 1 2 then 4 else 5", "0"},
@@ -392,7 +392,7 @@ int main() {
         {"{a=1 b=add!(a a)}", "{a=NUMBER b=NUMBER}"},
         {"{a=1 b=if a then a else 2}", "{a=NUMBER b=NUMBER}"},
     });
-    test.evaluate("symbol", {
+    test.evaluate_all("symbol", {
         {"{a=1 b=a}", "{a=1 b=1}"},
         {"{a=1 b_0=a}", "{a=1 b_0=1}"},
         {"{a=1 b={c=a}}", "{a=1 b={c=1}}"},
@@ -423,7 +423,7 @@ int main() {
         {"ABBA@{ABBA = 1}", "NUMBER"},
         {"ABBA@{ABBA = 1 PADDA = no}", "NUMBER"},
     });
-    test.evaluate("child_symbol", {
+    test.evaluate_all("child_symbol", {
         {"a@{a=1}", "1"},
         {"A_0@{A_0=1}", "1"},
         {"_0@{_0=1}", "1"},
@@ -439,7 +439,7 @@ int main() {
         {"ABBA@{ABBA = 1}", "1"},
         {"ABBA@{ABBA = 1 PADDA = 2}", "1"},
     });
-    test.evaluate("child_symbol_keyword_confusion", {
+    test.evaluate_all("child_symbol_keyword_confusion", {
         {"input@{input=5}", "5"},
         {"output@{output=5}", "5"},
         {"iffy@{iffy=5}", "5"},
@@ -454,7 +454,7 @@ int main() {
     test.evaluate_types("function", {
         {"in x out x",       "FUNCTION"},
     });
-    test.evaluate("function", {
+    test.evaluate_all("function", {
         {"in x out x",       "in x out x"},
         {"f@{f=in x out x}", "in x out x"},
     });
@@ -463,7 +463,7 @@ int main() {
         {"in {x y} out x", "FUNCTION_DICTIONARY"},
         {"in  {  x    y  }  out  x", "FUNCTION_DICTIONARY"},
     });
-    test.evaluate("function dictionary", {
+    test.evaluate_all("function dictionary", {
         {"in {x} out x", "in {x} out x"},
         {"in {x y} out x", "in {x y} out x"},
         {"in  {  x    y  }  out  x", "in {x y} out x"},
@@ -473,7 +473,7 @@ int main() {
         {"in (x y) out x", "FUNCTION_TUPLE"},
         {"in  (  x    y  )  out  x", "FUNCTION_TUPLE"},
     });
-    test.evaluate("function tuple", {
+    test.evaluate_all("function tuple", {
         {"in (x) out x", "in (x) out x"},
         {"in (x y) out x", "in (x y) out x"},
         {"in  (  x    y  )  out  x", "in (x y) out x"},
@@ -498,7 +498,7 @@ int main() {
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "NUMBER"},
         {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[NUMBER]"},
     });
-    test.evaluate("lookup function", {
+    test.evaluate_all("lookup function", {
         {"a@{f=in x out x a=f!0}", "0"},
         {"a@{f=in x out x a=f![]}", "[]"},
         {"a@{f=in x out 1 a=f!0}", "1"},
@@ -518,7 +518,7 @@ int main() {
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
         {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
     });
-    test.evaluate("recursive function", {
+    test.evaluate("recursive function", { // TODO: support type checking
         {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     });
     test.evaluate_types("lookup function dictionary", {
@@ -526,7 +526,7 @@ int main() {
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "NUMBER"},
         {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "NUMBER"},
     });
-    test.evaluate("lookup function dictionary", {
+    test.evaluate_all("lookup function dictionary", {
         {"a@{f=in {x} out x a=f!{x=0}}", "0"},
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
         {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
@@ -535,55 +535,55 @@ int main() {
         {"a@{f=in (x) out x a=f!(0)}", "NUMBER"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "NUMBER"},
     });
-    test.evaluate("lookup function tuple", {
+    test.evaluate_all("lookup function tuple", {
         {"a@{f=in (x) out x a=f!(0)}", "0"},
         {"a@{f=in (x y) out add!(x y) a=f!(2 3)}", "5"},
     });
-    test.evaluate("lookup tuple indexing", {
+    test.evaluate_all("lookup tuple indexing", {
         {"a@{c=(3 2 1) a=c!0}", "3"},
         {"a@{c=(3 2 1) a=c!1}", "2"},
         {"a@{c=(3 2 1) a=c!2}", "1"},
         {"a@{i=1 c=(3 2 1) a=c!i}", "2"},
     });
-    test.evaluate("lookup stack indexing", {
+    test.evaluate("lookup stack indexing", { // TODO: support type checking
         {"a@{c=[3 2 1] a=c!0}", "3"},
         {"a@{c=[3 2 1] a=c!1}", "2"},
         {"a@{c=[3 2 1] a=c!2}", "1"},
         {"a@{i=1 c=[3 2 1] a=c!i}", "2"},
         {"a@{c=range!100 a=c!99}", "99"},
     });
-    test.evaluate("lookup string indexing", {
+    test.evaluate_all("lookup string indexing", {
         {R"(a@{c="abc" a=c!0})", "'a'"},
         {R"(a@{c="abc" a=c!1})", "'b'"},
         {R"(a@{c="abc" a=c!2})", "'c'"},
         {R"(a@{i=1 c="abc" a=c!i})", "'b'"},
     });
-    test.evaluate("lookup table indexing", {
+    test.evaluate("lookup table indexing", { // TODO: support type checking
         {"a@{c=<2:3 4:5> a=c!2}", "3"},
         {"a@{c=<2:3 4:5> a=c!4}", "5"},
     });
-    test.evaluate("add", {
+    test.evaluate_all("add", {
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},
         {"add!(-1 +1)", "0"},
     });
-    test.evaluate("mul", {
+    test.evaluate_all("mul", {
         {"mul!(0 1)", "0"},
         {"mul!(1 2)", "2"},
         {"mul!(2 3)", "6"},
         {"mul!(-1 +1)", "-1"},
     });
-    test.evaluate("sub", {
+    test.evaluate_all("sub", {
         {"sub!(0 0)", "0"},
         {"sub!(6 3)", "3"},
         {"sub!(4 8)", "-4"},
     });
-    test.evaluate("div", {
+    test.evaluate_all("div", {
         {"div!(0 1)", "0"},
         {"div!(2 1)", "2"},
         {"div!(9 3)", "3"},
     });
-    test.evaluate("less", {
+    test.evaluate_all("less", {
         {"less?(0 0)", "no"},
         {"less?(0 1)", "yes"},
         {"less?(-1 0)", "yes"},
@@ -592,7 +592,7 @@ int main() {
         {"less?(1 1)", "no"},
         {"less?(-1 -1)", "no"},
     });
-    test.evaluate("is_increasing", {
+    test.evaluate("is_increasing", { // TODO: support type checking
         {"is_increasing?[0 0]", "yes"},
         {"is_increasing?[0 1]", "yes"},
         {"is_increasing?[-1 0]", "yes"},
@@ -606,7 +606,7 @@ int main() {
         {"is_increasing?[0 1 2 3]", "yes"},
         {"is_increasing?[0 1 2 3 3]", "yes"},
     });
-    test.evaluate("round", {
+    test.evaluate_all("round", {
         {"round!-0.9", "-1"},
         {"round!-0.6", "-1"},
         {"round!-0.4", "-0"},
@@ -617,7 +617,7 @@ int main() {
         {"round!0.6", "1"},
         {"round!0.9", "1"},
     });
-    test.evaluate("round_up", {
+    test.evaluate_all("round_up", {
         {"round_up!-0.9", "-0"},
         {"round_up!-0.6", "-0"},
         {"round_up!-0.4", "-0"},
@@ -628,7 +628,7 @@ int main() {
         {"round_up!0.6", "1"},
         {"round_up!0.9", "1"},
     });
-    test.evaluate("round_down", {
+    test.evaluate_all("round_down", {
         {"round_down!-0.9", "-1"},
         {"round_down!-0.6", "-1"},
         {"round_down!-0.4", "-1"},
@@ -639,17 +639,17 @@ int main() {
         {"round_down!0.6", "0"},
         {"round_down!0.9", "0"},
     });
-    test.evaluate("abs", {
+    test.evaluate_all("abs", {
         {"abs!-1", "1"},
         {"abs!0", "0"},
         {"abs!1", "1"},
     });
-    test.evaluate("sqrt", {
+    test.evaluate_all("sqrt", {
         {"sqrt!0", "0"},
         {"sqrt!1", "1"},
         {"sqrt!4", "2"},
     });
-    test.evaluate("number", {
+    test.evaluate_all("number", {
         {"number!'0'", "48"},
         {"number!'9'", "57"},
         {"number!'A'", "65"},
@@ -657,7 +657,7 @@ int main() {
         {"number!'a'", "97"},
         {"number!'z'", "122"},
     });
-    test.evaluate("character", {
+    test.evaluate_all("character", {
         {"character!48", "'0'"},
         {"character!57", "'9'"},
         {"character!65", "'A'"},
@@ -672,14 +672,14 @@ int main() {
         {"pi", "NUMBER"},
         {"tau", "NUMBER"},
     });
-    test.evaluate("number constants", {
+    test.evaluate_all("number constants", {
         {"inf", "inf"},
         {"-inf", "-inf"},
         {"nan", "nan"},
         {"pi", "3.14159265359"},
         {"tau", "6.28318530718"},
     });
-    test.evaluate("boolean", {
+    test.evaluate("boolean", { // TODO: support type checking
         {"boolean!-2", "yes"},
         {"boolean!-1", "yes"},
         {"boolean!-0", "no"},
@@ -699,7 +699,7 @@ int main() {
         {R"(boolean!"a")", "yes"},
         {R"(boolean!"ab")", "yes"},
     });
-    test.evaluate("not", {
+    test.evaluate("not", { // TODO: support type checking
         {"not?-2", "no"},
         {"not?-1", "no"},
         {"not?-0", "yes"},
@@ -719,19 +719,19 @@ int main() {
         {R"(not?"a")", "no"},
         {R"(not?"ab")", "no"},
     });
-    test.evaluate("and", {
+    test.evaluate_all("and", {
         {"and?[no no]", "no"},
         {"and?[no yes]", "no"},
         {"and?[yes no]", "no"},
         {"and?[yes yes]", "yes"},
     });
-    test.evaluate("or", {
+    test.evaluate_all("or", {
         {"or?[no no]", "no"},
         {"or?[no yes]", "yes"},
         {"or?[yes no]", "yes"},
         {"or?[yes yes]", "yes"},
     });
-    test.evaluate("all", {
+    test.evaluate_all("all", {
         {"all?[]", "yes"},
         {"all?[0]", "no"},
         {"all?[1]", "yes"},
@@ -747,7 +747,7 @@ int main() {
         {"all?[0 1]", "BOOLEAN"},
         {"all?[1 1]", "BOOLEAN"},
     });
-    test.evaluate("any", {
+    test.evaluate_all("any", {
         {"any?[]", "no"},
         {"any?[0]", "no"},
         {"any?[1]", "yes"},
@@ -763,7 +763,7 @@ int main() {
         {"any?[0 1]", "BOOLEAN"},
         {"any?[1 1]", "BOOLEAN"},
     });
-    test.evaluate("none", {
+    test.evaluate_all("none", {
         {"none?[]", "yes"},
         {"none?[0]", "yes"},
         {"none?[1]", "no"},
@@ -779,7 +779,7 @@ int main() {
         {"none?[0 1]", "BOOLEAN"},
         {"none?[1 1]", "BOOLEAN"},
     });
-    test.evaluate("equal number", {
+    test.evaluate_all("equal number", {
         {"equal?(0 0)", "yes"},
         {"equal?(0 1)", "no"},
         {"equal?(1 0)", "no"},
@@ -791,37 +791,37 @@ int main() {
         {"equal?(1 0)", "BOOLEAN"},
         {"equal?(1 1)", "BOOLEAN"},
     });
-    test.evaluate("unequal number", {
+    test.evaluate_all("unequal number", {
         {"unequal?(0 0)", "no"},
         {"unequal?(0 1)", "yes"},
         {"unequal?(1 0)", "yes"},
         {"unequal?(1 1)", "no"},
     });
-    test.evaluate("equal character", {
+    test.evaluate_all("equal character", {
         {"equal?('a' 'a')", "yes"},
         {"equal?('a' 'b')", "no"},
         {"equal?('b' 'a')", "no"},
         {"equal?('b' 'b')", "yes"},
     });
-    test.evaluate("unequal character", {
+    test.evaluate_all("unequal character", {
         {"unequal?('a' 'a')", "no"},
         {"unequal?('a' 'b')", "yes"},
         {"unequal?('b' 'a')", "yes"},
         {"unequal?('b' 'b')", "no"},
     });
-    test.evaluate("equal boolean", {
+    test.evaluate_all("equal boolean", {
         {"equal?(yes yes)", "yes"},
         {"equal?(yes no)", "no"},
         {"equal?(no yes)", "no"},
         {"equal?(no no)", "yes"},
     });
-    test.evaluate("unequal boolean", {
+    test.evaluate_all("unequal boolean", {
         {"unequal?(yes yes)", "no"},
         {"unequal?(yes no)", "yes"},
         {"unequal?(no yes)", "yes"},
         {"unequal?(no no)", "no"},
     });
-    test.evaluate("equal stack", {
+    test.evaluate_all("equal stack", {
         {"equal?([] [])", "yes"},
         {"equal?([1] [1])", "yes"},
         {"equal?([0] [1])", "no"},
@@ -837,7 +837,7 @@ int main() {
         {"equal?([0 1] [1 1])", "BOOLEAN"},
         {"equal?([0 1] [0])", "BOOLEAN"},
     });
-    test.evaluate("unequal stack", {
+    test.evaluate_all("unequal stack", {
         {"unequal?([] [])", "no"},
         {"unequal?([1] [1])", "no"},
         {"unequal?([0] [1])", "yes"},
@@ -845,7 +845,7 @@ int main() {
         {"unequal?([0 1] [1 1])", "yes"},
         {"unequal?([0 1] [0])", "yes"},
     });
-    test.evaluate("equal string", {
+    test.evaluate_all("equal string", {
         {R"(equal?("" ""))", "yes"},
         {R"(equal?("a" ""))", "no"},
         {R"(equal?("" "a"))", "no"},
@@ -855,7 +855,7 @@ int main() {
         {R"(equal?("abc" "ab"))", "no"},
         {R"(equal?("ab" "abc"))", "no"},
     });
-    test.evaluate("unequal string", {
+    test.evaluate_all("unequal string", {
         {R"(unequal?("" ""))", "no"},
         {R"(unequal?("a" ""))", "yes"},
         {R"(unequal?("" "a"))", "yes"},
@@ -870,12 +870,12 @@ int main() {
         {"clear![1]", "EMPTY_STACK"},
         {"clear![1 2]", "EMPTY_STACK"},
     });
-    test.evaluate("clear stack", {
+    test.evaluate_all("clear stack", {
         {"clear![]", "[]"},
         {"clear![1]", "[]"},
         {"clear![1 2]", "[]"},
     });
-    test.evaluate("clear table", {
+    test.evaluate("clear table", { // TODO: support type checking
         {"clear!<>", "<>"},
         {"clear!<1:11>", "<>"},
         {"clear!<1:11 2:22>", "<>"},
@@ -885,7 +885,7 @@ int main() {
         {R"(clear!"a")", "EMPTY_STRING"},
         {R"(clear!"ab")", "EMPTY_STRING"},
     });
-    test.evaluate("clear string", {
+    test.evaluate_all("clear string", {
         {R"(clear!"")", R"("")"},
         {R"(clear!"a")", R"("")"},
         {R"(clear!"ab")", R"("")"},
@@ -894,7 +894,7 @@ int main() {
         {"take![4]", "NUMBER"},
         {"take![3 4]", "NUMBER"},
     });
-    test.evaluate("take stack", {
+    test.evaluate_all("take stack", {
         {"take![4]", "4"},
         {"take![3 4]", "3"},
     });
@@ -902,7 +902,7 @@ int main() {
         {R"(take!"b")", "CHARACTER"},
         {R"(take!"ab")", "CHARACTER"},
     });
-    test.evaluate("take string", {
+    test.evaluate_all("take string", {
         {R"(take!"b")", "'b'"},
         {R"(take!"ab")", "'a'"},
     });
@@ -911,7 +911,7 @@ int main() {
         {"drop![4 3]", "[NUMBER]"},
         {"drop![4 3 7]", "[NUMBER]"},
     });
-    test.evaluate("drop stack", {
+    test.evaluate_all("drop stack", {
         {"drop![4]", "[]"},
         {"drop![4 3]", "[3]"},
         {"drop![4 3 7]", "[3 7]"},
@@ -921,7 +921,7 @@ int main() {
         {R"(drop!"ab")", "STRING"},
         {R"(drop!"abc")", "STRING"},
     });
-    test.evaluate("drop string", {
+    test.evaluate_all("drop string", {
         {R"(drop!"a")", R"("")"},
         {R"(drop!"ab")", R"("b")"},
         {R"(drop!"abc")", R"("bc")"},
@@ -931,7 +931,7 @@ int main() {
         {"put!(4 [5])", "[NUMBER]"},
         {"put!(4 [6 8])", "[NUMBER]"},
     });
-    test.evaluate("put stack", {
+    test.evaluate_all("put stack", {
         {"put!(3 [])", "[3]"},
         {"put!(4 [5])", "[4 5]"},
         {"put!(4 [6 8])", "[4 6 8]"},
@@ -941,12 +941,12 @@ int main() {
         {R"(put!('a' "b"))", "STRING"},
         {R"(put!('a' "bc"))", "STRING"},
     });
-    test.evaluate("put string", {
+    test.evaluate_all("put string", {
         {R"(put!('a' ""))", R"("a")"},
         {R"(put!('a' "b"))", R"("ab")"},
         {R"(put!('a' "bc"))", R"("abc")"},
     });
-    test.evaluate("put table", {
+    test.evaluate("put table", { // TODO: support type checking
         {"put!((1 11) <>)", "<1:11>"},
         {"put!((4 44) <5:55>)", "<4:44 5:55>"},
         {"put!((4 44) <6:66 8:88>)", "<4:44 6:66 8:88>"},
@@ -954,39 +954,39 @@ int main() {
         {"put!((0 1) <0:2>)", "<0:1>"},
         {"put!((0 5) <2:3 1:2 0:1>)", "<0:5 1:2 2:3>"},
     });
-    test.evaluate("get table", {
+    test.evaluate("get table", { // TODO: support type checking
         {"get!(0 <> 2)", "2"},
         {"get!(0 <0:1> 2)", "1"},
         {"get!(1 <0:1> 2)", "2"},
         {"get!(0 <0:1 1:2 3:3> 2)", "1"},
         {"get!((3) <(1):[1] (2):[2] (3):[3]> [])", "[3]"},
     });
-    test.evaluate("get_keys", {
+    test.evaluate("get_keys", { // TODO: support type checking
         {"get_keys!<>", "[]"},
         {"get_keys!<0:1>", "[0]"},
         {"get_keys!<0:1 2:3>", "[0 2]"},
         {"get_keys!<2:3 0:1>", "[0 2]"},
     });
-    test.evaluate("get_values", {
+    test.evaluate("get_values", { // TODO: support type checking
         {"get_values!<1:0>", "[0]"},
         {"get_values!<10:0 11:1 12:2>", "[0 1 2]"},
         {"get_values!<3:0 2:1 1:2>", "[2 1 0]"},
     });
-    test.evaluate("get_items", {
+    test.evaluate("get_items", { // TODO: support type checking
         {"get_items!<0:1>", "[(0 1)]"},
         {"get_items!<0:1 2:3 4:5>", "[(0 1) (2 3) (4 5)]"},
         {"get_items!<4:1 2:3 0:5>", "[(0 5) (2 3) (4 1)]"},
     });
-    test.evaluate("inc", {
+    test.evaluate_all("inc", {
         {"inc!0", "1"},
     });
-    test.evaluate("dec", {
+    test.evaluate_all("dec", {
         {"dec!0", "-1"},
     });
     test.evaluate_types("is_digit", {
         {"is_digit?'A'", "BOOLEAN"},
     });
-    test.evaluate("is_digit", {
+    test.evaluate_all("is_digit", {
         {"is_digit?'A'", "no"},
         {"is_digit?'Z'", "no"},
         {"is_digit?'a'", "no"},
@@ -997,7 +997,7 @@ int main() {
     test.evaluate_types("is_upper", {
         {"is_upper?'A')", "BOOLEAN"},
     });
-    test.evaluate("is_upper", {
+    test.evaluate_all("is_upper", {
         {"is_upper?'A'", "yes"},
         {"is_upper?'Z'", "yes"},
         {"is_upper?'a'", "no"},
@@ -1008,7 +1008,7 @@ int main() {
     test.evaluate_types("is_lower", {
         {"is_lower?'A'", "BOOLEAN"},
     });
-    test.evaluate("is_lower", {
+    test.evaluate_all("is_lower", {
         {"is_lower?'A')", "no"},
         {"is_lower?'Z')", "no"},
         {"is_lower?'a')", "yes"},
@@ -1019,7 +1019,7 @@ int main() {
     test.evaluate_types("is_letter", {
         {"is_letter?'A'", "BOOLEAN"},
     });
-    test.evaluate("is_letter", {
+    test.evaluate_all("is_letter", {
         {"is_letter?'A'", "yes"},
         {"is_letter?'Z'", "yes"},
         {"is_letter?'a'", "yes"},
@@ -1027,7 +1027,7 @@ int main() {
         {"is_letter?'0'", "no"},
         {"is_letter?'9'", "no"},
     });
-    test.evaluate("to_upper", {
+    test.evaluate_all("to_upper", {
         {"to_upper!'A'", "'A'"},
         {"to_upper!'Z'", "'Z'"},
         {"to_upper!'a'", "'A'"},
@@ -1035,7 +1035,7 @@ int main() {
         {"to_upper!'0'", "'0'"},
         {"to_upper!'9'", "'9'"},
     });
-    test.evaluate("to_lower", {
+    test.evaluate_all("to_lower", {
         {"to_lower!'A'", "'a'"},
         {"to_lower!'Z'", "'z'"},
         {"to_lower!'a'", "'a'"},
@@ -1043,7 +1043,7 @@ int main() {
         {"to_lower!'0'", "'0'"},
         {"to_lower!'9'", "'9'"},
     });
-    test.evaluate("parse_digit", {
+    test.evaluate_all("parse_digit", {
         {"parse_digit!'0'", "0"},
         {"parse_digit!'1'", "1"},
         {"parse_digit!'2'", "2"},
@@ -1055,7 +1055,7 @@ int main() {
         {"parse_digit!'8'", "8"},
         {"parse_digit!'9'", "9"},
     });
-    test.evaluate("parse_natural_number", {
+    test.evaluate_all("parse_natural_number", {
         {R"(parse_natural_number!"0")", "0"},
         {R"(parse_natural_number!"1")", "1"},
         {R"(parse_natural_number!"2")", "2"},
@@ -1073,7 +1073,7 @@ int main() {
         {"min_item![3 6 1]", "NUMBER"},
         {"min_item![7 -3 8 -9]", "NUMBER"},
     });
-    test.evaluate("min_item stack", {
+    test.evaluate_all("min_item stack", {
         {"min_item![]", "inf"},
         {"min_item![0]", "0"},
         {"min_item![0 1]", "0"},
@@ -1089,7 +1089,7 @@ int main() {
         {"max_item![3 6 1]", "NUMBER"},
         {"max_item![7 -3 8 -9]", "NUMBER"},
     });
-    test.evaluate("max_item stack", {
+    test.evaluate_all("max_item stack", {
         {"max_item![]", "-inf"},
         {"max_item![0]", "0"},
         {"max_item![0 1]", "1"},
@@ -1097,16 +1097,16 @@ int main() {
         {"max_item![3 6 1]", "6"},
         {"max_item![7 -3 8 -9]", "8"},
     });
-    test.evaluate("min_key stack", {
+    test.evaluate_all("min_key stack", {
         {"min_key!(in (w h) out mul!(w h) [(1 2) (2 2) (3 1)])", "(1 2)"},
     });
-    test.evaluate("max_key stack", {
+    test.evaluate_all("max_key stack", {
         {"max_key!(in (w h) out mul!(w h) [(1 2) (2 2) (3 1)])", "(2 2)"},
     });
-    test.evaluate("min_predicate stack", {
+    test.evaluate_all("min_predicate stack", {
         {"min_predicate!(in (a b) out less?(mul!a mul!b) [(1 2) (2 2) (3 1)])", "(1 2)"},
     });
-    test.evaluate("max_predicate stack", {
+    test.evaluate_all("max_predicate stack", {
         {"max_predicate!(in (a b) out less?(mul!a mul!b) [(1 2) (2 2) (3 1)])", "(2 2)"},
     });
     test.evaluate_types("range", {
@@ -1115,13 +1115,13 @@ int main() {
         {"range!2", "[NUMBER]"},
         {"range!3", "[NUMBER]"},
     });
-    test.evaluate("range", {
+    test.evaluate_all("range", {
         {"range!0", "[]"},
         {"range!1", "[0]"},
         {"range!2", "[0 1]"},
         {"range!3", "[0 1 2]"},
     });
-    test.evaluate("iteration", {
+    test.evaluate_all("iteration", {
         {"count!range!100", "100"},
         {"sum!range!100", "4950"},
     });
@@ -1130,12 +1130,12 @@ int main() {
         {"count![[]]", "NUMBER"},
         {"count![[] []]", "NUMBER"},
     });
-    test.evaluate("count stack", {
+    test.evaluate_all("count stack", {
         {"count![]", "0"},
         {"count![[]]", "1"},
         {"count![[] []]", "2"},
     });
-    test.evaluate("count table", {
+    test.evaluate("count table", { // TODO: support type checking
         {"count!<>", "0"},
         {"count!<1:1>", "1"},
         {"count!<1:1 1:1>", "1"},
@@ -1146,7 +1146,7 @@ int main() {
         {R"(count!"a")", "NUMBER"},
         {R"(count!"ab")", "NUMBER"},
     });
-    test.evaluate("count string", {
+    test.evaluate_all("count string", {
         {R"(count!"")", "0"},
         {R"(count!"a")", "1"},
         {R"(count!"ab")", "2"},
@@ -1157,19 +1157,19 @@ int main() {
         {"count_item!(1 [1 1])", "NUMBER"},
         {"count_item!(1 [1 0 1])", "NUMBER"},
     });
-    test.evaluate("count_item stack", {
+    test.evaluate_all("count_item stack", {
         {"count_item!(1 [])", "0"},
         {"count_item!(1 [1])", "1"},
         {"count_item!(1 [1 1])", "2"},
         {"count_item!(1 [1 0 1])", "2"},
     });
-    test.evaluate("count_item string", {
+    test.evaluate_all("count_item string", {
         {R"(count_item!('a' ""))", "0"},
         {R"(count_item!('a' "a"))", "1"},
         {R"(count_item!('a' "aa"))", "2"},
         {R"(count_item!('a' "aba"))", "2"},
     });
-    test.evaluate("count_if stack", {
+    test.evaluate_all("count_if stack", {
         {"count_if!(in x out 0 [])", "0"},
         {"count_if!(in x out 0 [1])", "0"},
         {"count_if!(in x out 1 [])", "0"},
@@ -1177,12 +1177,12 @@ int main() {
         {"count_if!(in x out equal?(x 3) [1 2 3])", "1"},
         {"count_if!(in x out equal?(x 3) [3 2 3])", "2"},
     });
-    test.evaluate("count_if table", {
+    test.evaluate("count_if table", { // TODO: support type checking
         {"count_if!(less <0:0>)", "0"},
         {"count_if!(less <0:1>)", "1"},
         {"count_if!(less <0:0 1:2 2:3 4:5 7:6>)", "3"},
     });
-    test.evaluate("count_if string", {
+    test.evaluate_all("count_if string", {
         {R"(count_if!(in x out 0 ""))", "0"},
         {R"(count_if!(in x out 0 "a"))", "0"},
         {R"(count_if!(in x out 1 ""))", "0"},
@@ -1196,13 +1196,13 @@ int main() {
         {"reverse![0 1]", "[NUMBER]"},
         {"reverse![0 1 2]", "[NUMBER]"},
     });
-    test.evaluate("reverse stack", {
+    test.evaluate_all("reverse stack", {
         {"reverse![]", "[]"},
         {"reverse![0]", "[0]"},
         {"reverse![0 1]", "[1 0]"},
         {"reverse![0 1 2]", "[2 1 0]"},
     });
-    test.evaluate("reverse table", {
+    test.evaluate("reverse table", { // TODO: support type checking
         {"reverse!<>", "<>"},
         {"reverse!<0:0>", "<0:0>"},
         {"reverse!<0:0 1:1>", "<0:0 1:1>"},
@@ -1214,13 +1214,13 @@ int main() {
         {R"(reverse!"ab")", "STRING"},
         {R"(reverse!"abc")", "STRING"},
     });
-    test.evaluate("reverse string", {
+    test.evaluate_all("reverse string", {
         {R"(reverse!"")", R"("")"},
         {R"(reverse!"a")", R"("a")"},
         {R"(reverse!"ab")", R"("ba")"},
         {R"(reverse!"abc")", R"("cba")"},
     });
-    test.evaluate("make_stack", {
+    test.evaluate("make_stack", { // TODO: support type checking
         {"make_stack![]", "[]"},
         {"make_stack![3 1 2]", "[3 1 2]"},
         {"make_stack!<>", "[]"},
@@ -1228,19 +1228,19 @@ int main() {
         {R"(make_stack!"")", "[]"},
         {R"(make_stack!"cab")", "['c' 'a' 'b']"},
     });
-    test.evaluate("make_string", {
+    test.evaluate_all("make_string", {
         {R"(make_string![])", R"("")"},
         {R"(make_string!['c' 'a' 'b'])", R"("cab")"},
         {R"(make_string!"")", R"("")"},
         {R"(make_string!"cab")", R"("cab")"},
     });
-    test.evaluate("make_table", {
+    test.evaluate("make_table", { // TODO: support type checking
         {"make_table![]", "<>"},
         {"make_table![(3 33) (1 11) (2 22)]", "<1:11 2:22 3:33>"},
         {"make_table!<>", "<>"},
         {"make_table!<3:33 1:11 2:22>", "<1:11 2:22 3:33>"},
     });
-    test.evaluate("map_stack", {
+    test.evaluate_all("map_stack", {
         {"map_stack!(inc [])", "[]"},
         {"map_stack!(inc [0])", "[1]"},
         {"map_stack!(inc [0 1])", "[1 2]"},
@@ -1254,7 +1254,7 @@ int main() {
         {"map_stack!(in x out 2 [0 0])", "[NUMBER]"},
         {"a@{b=2 f=in x out b a=map_stack!(f [0 0])}", "[NUMBER]"},
     });
-    test.evaluate("map_string", {
+    test.evaluate_all("map_string", {
         {R"(map_string!(to_upper ""))", R"("")"},
         {R"(map_string!(to_upper "abc"))", R"("ABC")"},
     });
@@ -1262,22 +1262,22 @@ int main() {
         {R"(map_string!(to_upper ""))", "STRING"},
         {R"(map_string!(to_upper "abc"))", "STRING"},
     });
-    test.evaluate("map table", {
+    test.evaluate("map table", { // TODO: support type checking
         {"map_table!(in x out (x x) [1 2])", "<1:1 2:2>"},
         {"map_table!(in (x y) out (x inc!y) <1:11 2:22>)", "<1:12 2:23>"},
     });
-    test.evaluate("clear_if stack", {
+    test.evaluate("clear_if stack", { // TODO: support type checking
         {"clear_if!(in x out 1 [])", "[]"},
         {"clear_if!(in x out 1 [[]])", "[]"},
         {"clear_if!(in x out 0 [[]])", "[[]]"},
         {"clear_if!(in x out less?(x 5) [7 4 6 1 9 3 2])", "[7 6 9]"},
     });
-    test.evaluate("clear_if table", {
+    test.evaluate("clear_if table", { // TODO: support type checking
         {"clear_if!(less <0:0>)", "<0:0>"},
         {"clear_if!(less <0:1>)", "<>"},
         {"clear_if!(less <0:0 1:2 2:3 5:4>)", "<0:0 5:4>"},
     });
-    test.evaluate("clear_if string", {
+    test.evaluate("clear_if string", { // TODO: support type checking
         {R"(clear_if!(in x out 0 ""))", R"("")"},
         {R"(clear_if!(in x out 0 "a"))", R"("a")"},
         {R"(clear_if!(in x out 1 ""))", R"("")"},
@@ -1287,43 +1287,43 @@ int main() {
         {R"(clear_if!(in x out equal?(x 'a') "ba"))", R"("b")"},
         {R"(clear_if!(in x out equal?(x 'a') "bab"))", R"("bb")"},
     });
-    test.evaluate("clear_item stack", {
+    test.evaluate("clear_item stack", { // TODO: support type checking
         {"clear_item!(1 [])", "[]"},
         {"clear_item!(1 [0])", "[0]"},
         {"clear_item!(1 [1])", "[]"},
         {"clear_item!(1 [1 7 1 2 7 1 1])", "[7 2 7]"},
     });
-    test.evaluate("replace stack", {
+    test.evaluate_all("replace stack", {
         {"replace!(1 [])", "[]"},
         {"replace!(1 [1])", "[1]"},
         {"replace!(1 [2])", "[1]"},
         {"replace!(1 [0 1 0 1 1])", "[1 1 1 1 1]"},
     });
-    test.evaluate("replace string", {
+    test.evaluate_all("replace string", {
         {R"(replace!('a' ""))", R"("")"},
         {R"(replace!('a' "a"))", R"("a")"},
         {R"(replace!('a' "c"))", R"("a")"},
         {R"(replace!('a' "ab_ba"))", R"("aaaaa")"},
     });
-    test.evaluate("replace_item stack", {
+    test.evaluate_all("replace_item stack", {
         {"replace_item!(1 2 [])", "[]"},
         {"replace_item!(1 2 [1])", "[2]"},
         {"replace_item!(1 2 [2])", "[2]"},
         {"replace_item!(1 2 [0 1 0 1 1])", "[0 2 0 2 2]"},
     });
-    test.evaluate("replace_item string", {
+    test.evaluate_all("replace_item string", {
         {R"(replace_item!('a' 'b' ""))", R"("")"},
         {R"(replace_item!('a' 'b' "a"))", R"("b")"},
         {R"(replace_item!('a' 'b' "c"))", R"("c")"},
         {R"(replace_item!('a' 'b' "ab_ba"))", R"("bb_bb")"},
     });
-    test.evaluate("replace_if stack", {
+    test.evaluate_all("replace_if stack", {
         {"replace_if!(in x out equal?(x 1) 2 [])", "[]"},
         {"replace_if!(in x out equal?(x 1) 2 [1])", "[2]"},
         {"replace_if!(in x out equal?(x 1) 2 [2])", "[2]"},
         {"replace_if!(in x out equal?(x 1) 2 [0 1 0 1 1])", "[0 2 0 2 2]"},
     });
-    test.evaluate("replace_if string", {
+    test.evaluate_all("replace_if string", {
         {R"(replace_if!(in x out equal?(x 'a') 'b' ""))", R"("")"},
         {R"(replace_if!(in x out equal?(x 'a') 'b' "a"))", R"("b")"},
         {R"(replace_if!(in x out equal?(x 'a') 'b' "c"))", R"("c")"},
@@ -1334,17 +1334,17 @@ int main() {
         {"enumerate![4]", "[(NUMBER NUMBER)]"},
         {"enumerate![4 3]", "[(NUMBER NUMBER)]"},
     });
-    test.evaluate("enumerate stack", {
+    test.evaluate_all("enumerate stack", {
         {"enumerate![]", "[]"},
         {"enumerate![4]", "[(0 4)]"},
         {"enumerate![4 3]", "[(0 4) (1 3)]"},
     });
-    test.evaluate("enumerate string", {
+    test.evaluate_all("enumerate string", {
         {R"(enumerate!"")", "[]"},
         {R"(enumerate!"a")", "[(0 'a')]"},
         {R"(enumerate!"ab")", "[(0 'a') (1 'b')]"},
     });
-    test.evaluate("split stack", {
+    test.evaluate("split stack", { // TODO: support type checking
         {"split!(0 [])", "[[]]"},
         {"split!(0 [1])", "[[1]]"},
         {"split!(0 [1 2])", "[[1 2]]"},
@@ -1354,26 +1354,26 @@ int main() {
         {"split!(0 [1 2 0])", "[[1 2] []]"},
         {"split!(0 [1 0 2])", "[[1] [2]]"},
     });
-    test.evaluate("split string", {
+    test.evaluate("split string", { // TODO: support type checking
         {R"(split!(',' ""))", R"([""])"},
         {R"(split!(',' "a"))", R"(["a"])"},
         {R"(split!(',' ",a"))", R"(["" "a"])"},
         {R"(split!(',' "a,"))", R"(["a" ""])"},
         {R"(split!(',' "a,b,cd"))", R"(["a" "b" "cd"])"},
     });
-    test.evaluate("cartesian_product2 stack", {
+    test.evaluate_all("cartesian_product2 stack", {
         {"cartesian_product2!([1 2] [3 4])", "[(2 4) (1 4) (2 3) (1 3)]"},
     });
-    test.evaluate("put_column stack", {
+    test.evaluate_all("put_column stack", {
         {"put_column!([1 2] [[3] [4]])", "[[1 3] [2 4]]"},
     });
-    test.evaluate("transpose stack", {
+    test.evaluate_all("transpose stack", {
         {"transpose![[]]", "[]"},
         {"transpose![[1]]", "[[1]]"},
         {"transpose![[1] [2]]", "[[1 2]]"},
         {"transpose![[1 2] [3 4]]", "[[1 3] [2 4]]"},
     });
-    test.evaluate("sum stack", {
+    test.evaluate_all("sum stack", {
         {"sum![]", "0"},
         {"sum![1]", "1"},
         {"sum![1 2]", "3"},
@@ -1385,7 +1385,7 @@ int main() {
         {"sum![1 2]", "NUMBER"},
         {"sum![1 2 3]", "NUMBER"},
     });
-    test.evaluate("product", {
+    test.evaluate_all("product", {
         {"product![]", "1"},
         {"product![1]", "1"},
         {"product![1 2]", "2"},
@@ -1397,7 +1397,7 @@ int main() {
         {"product![1 2]", "NUMBER"},
         {"product![1 2 3]", "NUMBER"},
     });
-    test.evaluate("put_each stack", {
+    test.evaluate_all("put_each stack", {
         {"put_each!([] [])", "[]"},
         {"put_each!([] [2])", "[2]"},
         {"put_each!([1] [])", "[1]"},
@@ -1405,7 +1405,7 @@ int main() {
         {"put_each!([1 2] [3 4])", "[2 1 3 4]"},
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
     });
-    test.evaluate("put_each table", {
+    test.evaluate("put_each table", { // TODO: support type checking
         {"put_each!(<> <>)", "<>"},
         {"put_each!(<> <1:2>)", "<1:2>"},
         {"put_each!(<1:2> <>)", "<1:2>"},
@@ -1421,7 +1421,7 @@ int main() {
         {"put_each!([1 2] [3 4])", "[NUMBER]"},
         {"put_each!([1 2 3] [4 5 6])", "[NUMBER]"},
     });
-    test.evaluate("put_each string", {
+    test.evaluate_all("put_each string", {
         {R"(put_each!("" ""))", R"("")"},
         {R"(put_each!("" "a"))", R"("a")"},
         {R"(put_each!("a" ""))", R"("a")"},
@@ -1437,7 +1437,7 @@ int main() {
         {R"(put_each!("ab" "cd"))", "STRING"},
         {R"(put_each!("abc" "def"))", "STRING"},
     });
-    test.evaluate("merge", {
+    test.evaluate("merge", { // TODO: support type checking
         {"merge_stack![[] []]", "[]"},
         {"merge_stack![[] [2]]", "[2]"},
         {"merge_stack![[1] []]", "[1]"},
@@ -1453,7 +1453,7 @@ int main() {
         {"merge_stack![[1] [2]]", "[NUMBER]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
     });
-    test.evaluate("merge_table", {
+    test.evaluate("merge table", { // TODO: support type checking
         {"merge_table![<> <>]", "<>"},
         {"merge_table![<> <2:22>]", "<2:22>"},
         {"merge_table![<1:11> <>]", "<1:11>"},
@@ -1462,7 +1462,7 @@ int main() {
         {"merge_table![<1:11> <5:55 3:33> <4:44 5:0 6:66 2:22>]", "<1:11 2:22 3:33 4:44 5:55 6:66>"},
         {"merge_table![[(1 11)] <2:22>]", "<1:11 2:22>"},
     });
-    test.evaluate("merge_string", {
+    test.evaluate_all("merge_string", {
         {R"(merge_string!["" ""])", R"("")"},
         {R"(merge_string!["" "b"])", R"("b")"},
         {R"(merge_string!["a" ""])", R"("a")"},
@@ -1477,56 +1477,56 @@ int main() {
         {R"(merge_string!["a" "b"])", "STRING"},
         {R"(merge_string!["a" "bc" "def"])", "STRING"},
     });
-    test.evaluate("drop_many stack", {
+    test.evaluate_all("drop_many stack", {
         {"drop_many!(0 [3 7 6])", "[3 7 6]"},
         {"drop_many!(1 [3 7 6])", "[7 6]"},
         {"drop_many!(2 [3 7 6])", "[6]"},
         {"drop_many!(3 [3 7 6])", "[]"},
     });
-    test.evaluate("drop_many string", {
+    test.evaluate_all("drop_many string", {
         {R"(drop_many!(0 "abc"))", R"("abc")"},
         {R"(drop_many!(1 "abc"))", R"("bc")"},
         {R"(drop_many!(2 "abc"))", R"("c")"},
         {R"(drop_many!(3 "abc"))", R"("")"},
     });
-    test.evaluate("drop_while string", {
+    test.evaluate_all("drop_while string", {
         {R"(drop_while!(is_upper ""))", R"("")"},
         {R"(drop_while!(is_upper "a"))", R"("a")"},
         {R"(drop_while!(is_upper "A"))", R"("")"},
         {R"(drop_while!(is_upper "ABcd"))", R"("cd")"},
     });
-    test.evaluate("drop_until_item string", {
+    test.evaluate_all("drop_until_item string", {
         {R"(drop_until_item!('a' ""))", R"("")"},
         {R"(drop_until_item!('a' "a"))", R"("a")"},
         {R"(drop_until_item!('a' "b"))", R"("")"},
         {R"(drop_until_item!('a' "ab"))", R"("ab")"},
         {R"(drop_until_item!('a' "ba"))", R"("a")"},
     });
-    test.evaluate("take_many stack", {
+    test.evaluate_all("take_many stack", {
         {"take_many!(0 [3 7 6])", "[]"},
         {"take_many!(1 [3 7 6])", "[3]"},
         {"take_many!(2 [3 7 6])", "[3 7]"},
         {"take_many!(3 [3 7 6])", "[3 7 6]"},
     });
-    test.evaluate("take_many string", {
+    test.evaluate_all("take_many string", {
         {R"(take_many!(0 "abc"))", R"("")"},
         {R"(take_many!(1 "abc"))", R"("a")"},
         {R"(take_many!(2 "abc"))", R"("ab")"},
         {R"(take_many!(3 "abc"))", R"("abc")"},
     });
-    test.evaluate("take_while string", {
+    test.evaluate_all("take_while string", {
         {R"(take_while!(is_upper ""))", R"("")"},
         {R"(take_while!(is_upper "a"))", R"("")"},
         {R"(take_while!(is_upper "A"))", R"("A")"},
         {R"(take_while!(is_upper "ABcd"))", R"("AB")"},
     });
-    test.evaluate("take_until_item string", {
+    test.evaluate_all("take_until_item string", {
         {R"(take_until_item!('a' ""))", R"("")"},
         {R"(take_until_item!('b' "a"))", R"("a")"},
         {R"(take_until_item!('a' "a"))", R"("")"},
         {R"(take_until_item!('c' "ABcd"))", R"("AB")"},
     });
-    test.evaluate("merge_sorted", {
+    test.evaluate("merge_sorted", { // TODO: support type checking
         {"merge_sorted!([] [])", "[]"},
         {"merge_sorted!([0] [])", "[0]"},
         {"merge_sorted!([] [0])", "[0]"},
@@ -1534,7 +1534,7 @@ int main() {
         {"merge_sorted!([0 2] [1 3])", "[0 1 2 3]"},
         {"merge_sorted!([0 1 2 5 8 9] [0 2 4 6 7])", "[0 0 1 2 2 4 5 6 7 8 9]"},
     });
-    test.evaluate("indexing tuple", {
+    test.evaluate_all("indexing tuple", {
         {"get0!(11 12 13 14 15 16 17 18 19 20)", "11"},
         {"get1!(11 12 13 14 15 16 17 18 19 20)", "12"},
         {"get2!(11 12 13 14 15 16 17 18 19 20)", "13"},
@@ -1546,7 +1546,7 @@ int main() {
         {"get8!(11 12 13 14 15 16 17 18 19 20)", "19"},
         {"get9!(11 12 13 14 15 16 17 18 19 20)", "20"},
     });
-    test.evaluate("indexing stack", {
+    test.evaluate_all("indexing stack", {
         {"get0![11 12 13 14 15 16 17 18 19]", "11"},
         {"get1![11 12 13 14 15 16 17 18 19]", "12"},
         {"get2![11 12 13 14 15 16 17 18 19]", "13"},
@@ -1558,7 +1558,7 @@ int main() {
         {"get8![11 12 13 14 15 16 17 18 19]", "19"},
         {"get9![11 12 13 14 15 16 17 18 19 20]", "20"},
     });
-    test.evaluate("indexing string", {
+    test.evaluate_all("indexing string", {
         {R"(get0!"abcdefghijklmnopqrstuvwxyz")", "'a'"},
         {R"(get1!"abcdefghijklmnopqrstuvwxyz")", "'b'"},
         {R"(get2!"abcdefghijklmnopqrstuvwxyz")", "'c'"},
@@ -1570,7 +1570,7 @@ int main() {
         {R"(get8!"abcdefghijklmnopqrstuvwxyz")", "'i'"},
         {R"(get9!"abcdefghijklmnopqrstuvwxyz")", "'j'"},
     });
-    test.evaluate("zip2", {
+    test.evaluate_all("zip2", {
         {"zip2!([] [])", "[]"},
         {"zip2!([0] [1])", "[(0 1)]"},
         {"zip2!([0 1] [2 3])", "[(0 2) (1 3)]"},
@@ -1582,23 +1582,23 @@ int main() {
         {"zip2!([0 1] [2 3])", "[(NUMBER NUMBER)]"},
         {"zip2!([0 1 2] [3 4 5])", "[(NUMBER NUMBER)]"},
     });
-    test.evaluate("zip3", {
+    test.evaluate_all("zip3", {
         {"zip3!([0 1 2] [3 4 5] [6 7 8])", "[(0 3 6) (1 4 7) (2 5 8)]"},
     });
-    test.evaluate("zip4", {
+    test.evaluate_all("zip4", {
         {"zip4!([0 1] [2 3] [4 5] [6 7])", "[(0 2 4 6) (1 3 5 7)]"},
     });
-    test.evaluate("consecutive_pairs", {
+    test.evaluate_all("consecutive_pairs", {
         {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},
     });
-    test.evaluate("unique", {
+    test.evaluate("unique", { // TODO: support type checking
         {"unique![]", "[]"},
         {"unique![1]", "[1]"},
         {"unique![1 2]", "[1 2]"},
         {"unique![1 1]", "[1]"},
         {"unique![1 1 2 3 1 4 2 4 0]", "[0 1 2 3 4]"},
     });
-    test.evaluate("count_elements", {
+    test.evaluate("count_elements", { // TODO: support type checking
         {"count_elements![]", "<>"},
         {"count_elements![1]", "<1:1>"},
         {"count_elements![1 2]", "<1:1 2:1>"},
