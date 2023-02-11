@@ -137,7 +137,7 @@ std::string serializeNumber(Number number) {
     return s.str();
 }
 
-std::string serializeBoolean(const Boolean& boolean) {
+std::string serializeBoolean(Boolean boolean) {
     return boolean ? "yes" : "no";
 }
 
