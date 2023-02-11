@@ -1,3 +1,4 @@
+* Add type checking gradually, by addint it to the tests gradually, by adding test.check_and_evaluate and gradually replace test.evaluate.
 TODO Standard Library:
 * Indexing
   - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
