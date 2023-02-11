@@ -57,3 +57,9 @@ Expression evaluateLookupChild(
     }
     return result;
 }
+
+Expression lookupDictionary(Expression expression, const std::string& name);
+
+Expression evaluateLookupSymbol(
+    const LookupSymbol& lookup_symbol, Expression environment
+);
