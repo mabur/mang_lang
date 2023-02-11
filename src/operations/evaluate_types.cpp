@@ -3,9 +3,10 @@
 #include <cassert>
 
 #include "../built_in_functions/stack.h"
-#include "../factory.h"
-#include "serialize.h"
 #include "../container.h"
+#include "../factory.h"
+#include "evaluate_generic.h"
+#include "serialize.h"
 
 namespace {
 
@@ -20,11 +21,6 @@ void boolean(Expression expression) {
         case ANY: return;
         default: throw StaticTypeError(expression.type, "expected type that can be evaluated to boolean");
     }
-}
-
-std::string getNameAsLabel(Expression name)
-{
-    return getName(name).value;
 }
 
 Expression evaluateConditional(

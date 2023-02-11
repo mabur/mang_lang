@@ -3,9 +3,10 @@
 #include <cassert>
 
 #include "../built_in_functions/stack.h"
-#include "../factory.h"
-#include "serialize.h"
 #include "../container.h"
+#include "../factory.h"
+#include "evaluate_generic.h"
+#include "serialize.h"
 
 namespace {
 
@@ -72,11 +73,6 @@ bool boolean(Expression expression) {
         case EMPTY_STRING: return false;
         default: throw UnexpectedExpression(expression.type, "boolean operation");
     }
-}
-
-std::string getNameAsLabel(Expression name)
-{
-    return getName(name).value;
 }
 
 Expression evaluateConditional(
