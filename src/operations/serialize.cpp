@@ -48,8 +48,8 @@ std::string serializeStack(Expression s) {
     return result;
 }
 
-std::string serializeCharacter(const Character& character) {
-    return '\'' + std::string{character} + '\'';
+std::string serializeCharacter(Character character) {
+    return {'\'', character, '\''};
 }
 
 std::string serializeFunction(const Function& function) {

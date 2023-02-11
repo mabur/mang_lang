@@ -86,7 +86,7 @@ Expression ascii_number(Expression in) {
 }
 
 Expression ascii_character(Expression in) {
-    return makeCharacter(CodeRange{}, Character{static_cast<char>(number(in))});
+    return makeCharacter(CodeRange{}, static_cast<char>(number(in)));
 }
 
 }
