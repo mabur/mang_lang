@@ -42,3 +42,18 @@ Expression evaluateTuple(Evaluator evaluator, Tuple tuple, Expression environmen
     const auto code = CodeRange{};
     return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
 }
+
+template<typename Evaluator>
+Expression evaluateLookupChild(
+    Evaluator evaluator, const LookupChild& lookup_child, Expression environment
+) {
+    const auto child = evaluator(lookup_child.child, environment);
+    const auto name = getName(lookup_child.name).value;
+    const auto dictionary = getEvaluatedDictionary(child);
+    const auto label = getNameAsLabel(lookup_child.name);
+    const auto result = dictionary.definitions.lookup(label);
+    if (result.type == EMPTY) {
+        throw MissingSymbol(label, "dictionary");
+    }
+    return result;
+}

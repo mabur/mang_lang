@@ -75,20 +75,6 @@ Expression lookupDictionary(Expression expression, const std::string& name) {
     return lookupDictionary(d.environment, name);
 }
 
-Expression evaluateLookupChild(
-    const LookupChild& lookup_child, Expression environment
-) {
-    const auto child = evaluate_types(lookup_child.child, environment);
-    const auto name = getName(lookup_child.name).value;
-    const auto dictionary = getEvaluatedDictionary(child);
-    const auto label = getNameAsLabel(lookup_child.name);
-    const auto result = dictionary.definitions.lookup(label);
-    if (result.type == EMPTY) {
-        throw MissingSymbol(label, "dictionary");
-    }
-    return result;
-}
-
 Expression applyFunction(const Function& function, Expression input) {
 
     auto definitions = Definitions{};
@@ -228,7 +214,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
-        case LOOKUP_CHILD: return evaluateLookupChild(getLookupChild(expression), environment);
+        case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return evaluateLookupSymbol(getLookupSymbol(expression), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
