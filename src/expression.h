@@ -105,9 +105,10 @@ struct Expression {
     CodeRange range;
 };
 
-using Name = std::string;
-
+using Number = double;
+using Boolean = bool;
 using Character = char;
+using Name = std::string; // TODO: consider pointer for cheap copy. 
 
 struct Conditional {
     Expression expression_if;
@@ -163,9 +164,6 @@ struct FunctionApplication {
 struct LookupSymbol {
     Expression name;
 };
-
-using Number = double;
-using Boolean = bool;
 
 struct String {
     Expression top;
