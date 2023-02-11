@@ -164,9 +164,7 @@ struct LookupSymbol {
     Expression name;
 };
 
-struct Number {
-    double value;
-};
+using Number = double;
 
 struct Boolean {
     bool value;

@@ -10,7 +10,7 @@ namespace {
 
 double number(Expression expression) {
     switch (expression.type) {
-        case NUMBER : return getNumber(expression).value;
+        case NUMBER : return getNumber(expression);
         case ANY : return 0.0 / 0.0;
         default: throw StaticTypeError(expression.type, "built-in number");
     }

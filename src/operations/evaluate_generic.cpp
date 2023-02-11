@@ -50,11 +50,11 @@ Expression applyFunctionBuiltIn(
 }
 
 size_t getIndex(const Number& number) {
-    if (number.value < 0) {
+    if (number < 0) {
         using namespace std;
-        throw runtime_error("Cannot have negative index: " + to_string(number.value));
+        throw runtime_error("Cannot have negative index: " + to_string(number));
     }
-    return static_cast<size_t>(number.value);
+    return static_cast<size_t>(number);
 }
 
 Expression applyTupleIndexing(const EvaluatedTuple& tuple, const Number& number) {
