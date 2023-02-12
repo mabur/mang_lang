@@ -908,11 +908,13 @@ int main() {
         {"drop![4]", "EMPTY_STACK"}, // TODO: is this good?
         {"drop![4 3]", "[NUMBER]"},
         {"drop![4 3 7]", "[NUMBER]"},
+        {"drop![[]]", "EMPTY_STACK"},
     });
     test.evaluate_all("drop stack", {
         {"drop![4]", "[]"},
         {"drop![4 3]", "[3]"},
         {"drop![4 3 7]", "[3 7]"},
+        {"drop![[]]", "[]"},
     });
     test.evaluate_types("drop string", {
         {R"(drop!"a")", "EMPTY_STRING"}, // TODO: is this good?
