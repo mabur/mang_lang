@@ -1349,7 +1349,7 @@ int main() {
         {R"(enumerate!"a")", "[(0 'a')]"},
         {R"(enumerate!"ab")", "[(0 'a') (1 'b')]"},
     });
-    test.evaluate("split stack", { // TODO: support type checking
+    test.evaluate_all("split stack", {
         {"split!(0 [])", "[[]]"},
         {"split!(0 [1])", "[[1]]"},
         {"split!(0 [1 2])", "[[1 2]]"},
@@ -1359,7 +1359,7 @@ int main() {
         {"split!(0 [1 2 0])", "[[1 2] []]"},
         {"split!(0 [1 0 2])", "[[1] [2]]"},
     });
-    test.evaluate("split string", { // TODO: support type checking
+    test.evaluate_all("split string", {
         {R"(split!(',' ""))", R"([""])"},
         {R"(split!(',' "a"))", R"(["a"])"},
         {R"(split!(',' ",a"))", R"(["" "a"])"},
