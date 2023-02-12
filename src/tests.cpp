@@ -1550,7 +1550,7 @@ int main() {
         {R"(take_until_item!('a' "a"))", R"("")"},
         {R"(take_until_item!('c' "ABcd"))", R"("AB")"},
     });
-    test.evaluate("merge_sorted", { // TODO: support type checking
+    test.evaluate_all("merge_sorted", {
         {"merge_sorted!([] [])", "[]"},
         {"merge_sorted!([0] [])", "[0]"},
         {"merge_sorted!([] [0])", "[0]"},
