@@ -1217,13 +1217,13 @@ int main() {
         {"reverse![0 1]", "[1 0]"},
         {"reverse![0 1 2]", "[2 1 0]"},
     });
-    test.evaluate_types("reverse table", { // TODO: support type checking
-        //{"reverse!<>", "<>"},
+    test.evaluate_types("reverse table", {
+        {"reverse!<>", "<ANY:ANY>"},
         {"reverse!<0:0>", "<0:NUMBER>"},
         {"reverse!<0:0 1:1>", "<1:NUMBER>"},
         {"reverse!<0:0 1:1 2:2>", "<2:NUMBER>"},
     });
-    test.evaluate("reverse table", { // TODO: support type checking
+    test.evaluate_all("reverse table", {
         {"reverse!<>", "<>"},
         {"reverse!<0:0>", "<0:0>"},
         {"reverse!<0:0 1:1>", "<0:0 1:1>"},
@@ -1489,7 +1489,7 @@ int main() {
         {"merge_stack![[1] [2]]", "[NUMBER]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
     });
-    test.evaluate("merge_table", { // TODO: support type checking
+    test.evaluate_all("merge_table", {
         {"merge_table![<> <>]", "<>"},
         {"merge_table![<> <2:22>]", "<2:22>"},
         {"merge_table![<1:11> <>]", "<1:11>"},
