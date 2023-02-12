@@ -71,7 +71,7 @@ Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
         return table.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
-        throw std::runtime_error("Table does not have key: " + k);
+        return Expression{ANY, {}, {}};
     }
 }
 

@@ -571,7 +571,7 @@ int main() {
         {R"(a@{c="abc" a=c!2})", "'c'"},
         {R"(a@{i=1 c="abc" a=c!i})", "'b'"},
     });
-    test.evaluate("lookup table indexing", { // TODO: support type checking
+    test.evaluate_all("lookup table indexing", {
         {"a@{c=<2:3 4:5> a=c!2}", "3"},
         {"a@{c=<2:3 4:5> a=c!4}", "5"},
     });
@@ -1145,7 +1145,7 @@ int main() {
         {"count![[]]", "1"},
         {"count![[] []]", "2"},
     });
-    test.evaluate("count table", { // TODO: support type checking
+    test.evaluate_all("count table", {
         {"count!<>", "0"},
         {"count!<1:1>", "1"},
         {"count!<1:1 1:1>", "1"},
@@ -1187,7 +1187,7 @@ int main() {
         {"count_if!(in x out equal?(x 3) [1 2 3])", "1"},
         {"count_if!(in x out equal?(x 3) [3 2 3])", "2"},
     });
-    test.evaluate("count_if table", { // TODO: support type checking
+    test.evaluate_all("count_if table", {
         {"count_if!(less <0:0>)", "0"},
         {"count_if!(less <0:1>)", "1"},
         {"count_if!(less <0:0 1:2 2:3 4:5 7:6>)", "3"},
@@ -1244,7 +1244,7 @@ int main() {
         {R"(make_stack!"")", "[]"},
         {R"(make_stack!"cab")", "['c' 'a' 'b']"},
     });
-    test.evaluate("make_stack table", { // TODO: support type checking
+    test.evaluate_all("make_stack table", {
         {"make_stack!<>", "[]"},
         {"make_stack!<3:33 1:11 2:22>", "[(1 11) (2 22) (3 33)]"},
     });
@@ -1282,7 +1282,7 @@ int main() {
         {R"(map_string!(to_upper ""))", "STRING"},
         {R"(map_string!(to_upper "abc"))", "STRING"},
     });
-    test.evaluate("map table", { // TODO: support type checking
+    test.evaluate_all("map table", {
         {"map_table!(in x out (x x) [1 2])", "<1:1 2:2>"},
         {"map_table!(in (x y) out (x inc!y) <1:11 2:22>)", "<1:12 2:23>"},
     });
