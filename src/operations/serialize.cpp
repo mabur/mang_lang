@@ -185,6 +185,7 @@ std::string serialize(Expression expression) {
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
+        case ANY: return NAMES[ANY];
         case EMPTY: return "missing";
         default: throw UnexpectedExpression(expression.type, "serialize operation");
     }
