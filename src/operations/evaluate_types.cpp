@@ -14,6 +14,7 @@ void boolean(Expression expression) {
     switch (expression.type) {
         case NUMBER: return;
         case BOOLEAN: return;
+        case EVALUATED_TABLE: return;
         case EVALUATED_STACK: return;
         case EMPTY_STACK: return;
         case STRING: return;
