@@ -1497,6 +1497,12 @@ int main() {
         {R"(drop_while!(is_upper "A"))", R"("")"},
         {R"(drop_while!(is_upper "ABcd"))", R"("cd")"},
     });
+    test.evaluate_all("drop_until_item stack", {
+        {"drop_until_item!(1 [])", "[]"},
+        {"drop_until_item!(2 [1])", "[]"},
+        {"drop_until_item!(1 [1])", "[1]"},
+        {"drop_until_item!(3 [1 2 3 4])", "[3 4]"},
+    });
     test.evaluate_all("drop_until_item string", {
         {R"(drop_until_item!('a' ""))", R"("")"},
         {R"(drop_until_item!('a' "a"))", R"("a")"},
