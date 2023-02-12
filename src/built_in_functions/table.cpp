@@ -24,8 +24,8 @@ void updateTable(Expression key, Expression value, Expression table) {
     getMutableEvaluatedTable(table).rows[serialize(key)] = {key, value};
 }
 
-Expression put(Expression table, Expression top) {
-    const auto tuple = getEvaluatedTuple(top);
+Expression put(Expression table, Expression item) {
+    const auto tuple = getEvaluatedTuple(item);
     const auto key = tuple.expressions.at(0);
     const auto value = tuple.expressions.at(1);
     updateTable(key, value, table);

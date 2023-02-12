@@ -310,6 +310,11 @@ int main() {
         {"r@{f=in c out {for i in c end} r=f![]}", "{}"},
         {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"}
     });
+    test.evaluate_types("dictionary for", {
+        {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
+        {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
+        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<ANY:ANY> i=(ANY ANY)}"}, 
+    });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
         {"{ }", "{}"},

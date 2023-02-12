@@ -37,6 +37,12 @@ Expression put(Expression in) {
 
 template<typename T>
 Expression takeTable(const T& table) {
+    if (table.empty()) {
+        return makeEvaluatedTuple(
+            {},
+            EvaluatedTuple{{Expression{ANY, {}, {}}, Expression{ANY, {}, {}}}}
+        );    
+    }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple({}, EvaluatedTuple{{pair.key, pair.value}});
 }
