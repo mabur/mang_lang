@@ -1268,7 +1268,7 @@ int main() {
         {"map_table!(in x out (x x) [1 2])", "<1:1 2:2>"},
         {"map_table!(in (x y) out (x inc!y) <1:11 2:22>)", "<1:12 2:23>"},
     });
-    test.evaluate("clear_if stack", { // TODO: support type checking
+    test.evaluate_all("clear_if stack", {
         {"clear_if!(in x out 1 [])", "[]"},
         {"clear_if!(in x out 1 [[]])", "[]"},
         {"clear_if!(in x out 0 [[]])", "[[]]"},
@@ -1279,7 +1279,7 @@ int main() {
         {"clear_if!(less <0:1>)", "<>"},
         {"clear_if!(less <0:0 1:2 2:3 5:4>)", "<0:0 5:4>"},
     });
-    test.evaluate("clear_if string", { // TODO: support type checking
+    test.evaluate_all("clear_if string", {
         {R"(clear_if!(in x out 0 ""))", R"("")"},
         {R"(clear_if!(in x out 0 "a"))", R"("a")"},
         {R"(clear_if!(in x out 1 ""))", R"("")"},
@@ -1289,7 +1289,7 @@ int main() {
         {R"(clear_if!(in x out equal?(x 'a') "ba"))", R"("b")"},
         {R"(clear_if!(in x out equal?(x 'a') "bab"))", R"("bb")"},
     });
-    test.evaluate("clear_item stack", { // TODO: support type checking
+    test.evaluate_all("clear_item stack", {
         {"clear_item!(1 [])", "[]"},
         {"clear_item!(1 [0])", "[0]"},
         {"clear_item!(1 [1])", "[]"},
