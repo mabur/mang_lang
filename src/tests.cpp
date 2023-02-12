@@ -218,7 +218,7 @@ int main() {
         {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
         {"<inc!0:inc!1>", "<inc!0:inc!1>"},
     });
-    test.evaluate_types("table", { // TODO: support type checking
+    test.evaluate_types("table", {
         {"<>", "<>"},
         {"<1:2>", "<NUMBER:NUMBER>"},
         {"< 1 : 2 >", "<NUMBER:NUMBER>"},
@@ -227,7 +227,7 @@ int main() {
         {"<inc!0:inc!1>", "<NUMBER:NUMBER>"},
         {"<3:6 4:8 1:2 2:4>","<NUMBER:NUMBER>"}
     });
-    test.evaluate("table", { // TODO: support type checking
+    test.evaluate_all("table", {
         {"<>", "<>"},
         {"<1:2>", "<1:2>"},
         {"< 1 : 2 >", "<1:2>"},
@@ -605,7 +605,7 @@ int main() {
         {"less?(1 1)", "no"},
         {"less?(-1 -1)", "no"},
     });
-    test.evaluate("is_increasing", { // TODO: support type checking
+    test.evaluate_all("is_increasing", {
         {"is_increasing?[0 0]", "yes"},
         {"is_increasing?[0 1]", "yes"},
         {"is_increasing?[-1 0]", "yes"},
@@ -882,7 +882,7 @@ int main() {
         {"clear![1]", "[]"},
         {"clear![1 2]", "[]"},
     });
-    test.evaluate("clear table", { // TODO: support type checking
+    test.evaluate_all("clear table", {
         {"clear!<>", "<>"},
         {"clear!<1:11>", "<>"},
         {"clear!<1:11 2:22>", "<>"},
@@ -956,7 +956,7 @@ int main() {
         {R"(put!('a' "b"))", R"("ab")"},
         {R"(put!('a' "bc"))", R"("abc")"},
     });
-    test.evaluate("put table", { // TODO: support type checking
+    test.evaluate_all("put table", {
         {"put!((1 11) <>)", "<1:11>"},
         {"put!((4 44) <5:55>)", "<4:44 5:55>"},
         {"put!((4 44) <6:66 8:88>)", "<4:44 6:66 8:88>"},
@@ -964,7 +964,7 @@ int main() {
         {"put!((0 1) <0:2>)", "<0:1>"},
         {"put!((0 5) <2:3 1:2 0:1>)", "<0:5 1:2 2:3>"},
     });
-    test.evaluate("get table", { // TODO: support type checking
+    test.evaluate_all("get table", {
         {"get!(0 <> 2)", "2"},
         {"get!(0 <0:1> 2)", "1"},
         {"get!(1 <0:1> 2)", "2"},
@@ -1211,6 +1211,12 @@ int main() {
         {"reverse![0]", "[0]"},
         {"reverse![0 1]", "[1 0]"},
         {"reverse![0 1 2]", "[2 1 0]"},
+    });
+    test.evaluate_types("reverse table", { // TODO: support type checking
+        //{"reverse!<>", "<>"},
+        {"reverse!<0:0>", "<0:NUMBER>"},
+        {"reverse!<0:0 1:1>", "<1:NUMBER>"},
+        {"reverse!<0:0 1:1 2:2>", "<2:NUMBER>"},
     });
     test.evaluate("reverse table", { // TODO: support type checking
         {"reverse!<>", "<>"},
