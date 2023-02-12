@@ -346,6 +346,10 @@ int main() {
         {"if 0 then 2 else 3", "3"},
         {"if [0] then 2 else 3", "2"},
         {"if [] then 2 else 3", "3"},
+        {"if yes then [] else [1]", "[]"},
+        {"if yes then [1] else []", "[1]"},
+        {R"(if yes then "" else "a")", R"("")"},
+        {R"(if yes then "a" else "")", R"("a")"},
     });
     test.reformat("is", {
         {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},

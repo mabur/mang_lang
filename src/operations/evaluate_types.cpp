@@ -28,10 +28,10 @@ Expression evaluateConditional(
     boolean(evaluate_types(conditional.expression_if, environment));
     const auto left = evaluate_types(conditional.expression_then, environment);
     const auto right = evaluate_types(conditional.expression_else, environment);
-    if (left.type == ANY) {
+    if (left.type == ANY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
         return right;
     }
-    if (right.type == ANY) {
+    if (right.type == ANY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
         return left;
     }
     if (left.type != right.type) {
