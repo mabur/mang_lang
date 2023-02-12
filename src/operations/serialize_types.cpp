@@ -9,6 +9,32 @@ std::string serializeEvaluatedStack(Expression s) {
     return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
 }
 
+std::string serializeTable(Expression s) {
+    const auto rows = getTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    auto result = std::string{'<'};
+    for (const auto& row : rows) {
+        result += serialize_types(row.key) + ':' + serialize_types(row.value) + ' ';
+    }
+    result.back() = '>';
+    return result;
+}
+
+std::string serializeEvaluatedTable(Expression s) {
+    const auto& rows = getEvaluatedTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    auto result = std::string{'<'};
+    for (const auto& row : rows) {
+        result += row.first + ':' + serialize_types(row.second.value) + ' ';
+    }
+    result.back() = '>';
+    return result;
+}
+
 } // namespace
 
 std::string serialize_types(Expression expression) {
@@ -27,6 +53,8 @@ std::string serialize_types(Expression expression) {
         case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return NAMES[FUNCTION_DICTIONARY];
         case FUNCTION_TUPLE: return NAMES[FUNCTION_TUPLE];
+        case TABLE: return serializeTable(expression);
+        case EVALUATED_TABLE: return serializeEvaluatedTable(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return NAMES[EMPTY_STACK];

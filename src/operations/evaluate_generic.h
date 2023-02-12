@@ -41,6 +41,24 @@ Expression evaluateTuple(Evaluator evaluator, Tuple tuple, Expression environmen
     return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
 }
 
+template<typename Evaluator, typename Serializer>
+Expression evaluateTable(
+    Evaluator evaluator,
+    Serializer serializer,
+    Table table,
+    Expression environment
+) {
+    auto rows = std::map<std::string, Row>{};
+    for (const auto& row : table.rows) {
+        const auto key = evaluator(row.key, environment);
+        const auto value = evaluator(row.value, environment);
+        const auto serialized_key = serializer(key);
+        rows[serialized_key] = {key, value};
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTable(code, EvaluatedTable{rows});
+}
+
 template<typename Evaluator>
 Expression evaluateLookupChild(
     Evaluator evaluator, const LookupChild& lookup_child, Expression environment

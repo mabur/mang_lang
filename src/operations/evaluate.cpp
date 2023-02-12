@@ -96,18 +96,6 @@ Expression evaluateIs(
     return evaluate(is_expression.expression_else, environment);
 }
 
-Expression evaluateTable(Table table, Expression environment) {
-    auto rows = std::map<std::string, Row>{};
-    for (const auto& row : table.rows) {
-        const auto key = evaluate(row.key, environment);
-        const auto value = evaluate(row.value, environment);
-        const auto serialized_key = serialize(key);
-        rows[serialized_key] = {key, value};
-    }
-    const auto code = CodeRange{};
-    return makeEvaluatedTable(code, EvaluatedTable{rows});
-}
-
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -200,8 +188,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case EVALUATED_TABLE_VIEW: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
-        case FUNCTION_TUPLE: return evaluateFunctionTuple(
-                getFunctionTuple(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
@@ -209,7 +196,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate, expression, environment);
         case TUPLE: return evaluateTuple(evaluate, getTuple(expression), environment);
-        case TABLE: return evaluateTable(getTable(expression), environment);
+        case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate, getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);

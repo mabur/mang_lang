@@ -6,6 +6,7 @@
 #include "../container.h"
 #include "../factory.h"
 #include "evaluate_generic.h"
+#include "serialize_types.h"
 
 namespace {
 
@@ -124,6 +125,8 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case EVALUATED_STACK: return expression;
         case EVALUATED_DICTIONARY: return expression;
         case EVALUATED_TUPLE: return expression;
+        case EVALUATED_TABLE: return expression;
+        case EVALUATED_TABLE_VIEW: return expression;
 
         case FUNCTION: return evaluateFunction(getFunction(expression), environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
@@ -134,6 +137,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
+        case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate_types, getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);

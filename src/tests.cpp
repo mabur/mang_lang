@@ -218,6 +218,15 @@ int main() {
         {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
         {"<inc!0:inc!1>", "<inc!0:inc!1>"},
     });
+    test.evaluate_types("table", { // TODO: support type checking
+        {"<>", "<>"},
+        {"<1:2>", "<NUMBER:NUMBER>"},
+        {"< 1 : 2 >", "<NUMBER:NUMBER>"},
+        {"<<>:<>>", "<<>:<>>"},
+        {"<(0 0):(1 1)>", "<(NUMBER NUMBER):(NUMBER NUMBER)>"},
+        {"<inc!0:inc!1>", "<NUMBER:NUMBER>"},
+        {"<3:6 4:8 1:2 2:4>","<NUMBER:NUMBER>"}
+    });
     test.evaluate("table", { // TODO: support type checking
         {"<>", "<>"},
         {"<1:2>", "<1:2>"},
