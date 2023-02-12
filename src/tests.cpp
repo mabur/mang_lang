@@ -1214,13 +1214,17 @@ int main() {
         {R"(reverse!"ab")", R"("ba")"},
         {R"(reverse!"abc")", R"("cba")"},
     });
-    test.evaluate("make_stack", { // TODO: support type checking
+    test.evaluate_all("make_stack stack", {
         {"make_stack![]", "[]"},
         {"make_stack![3 1 2]", "[3 1 2]"},
-        {"make_stack!<>", "[]"},
-        {"make_stack!<3:33 1:11 2:22>", "[(1 11) (2 22) (3 33)]"},
+    });
+    test.evaluate_all("make_stack string", {
         {R"(make_stack!"")", "[]"},
         {R"(make_stack!"cab")", "['c' 'a' 'b']"},
+    });
+    test.evaluate("make_stack table", { // TODO: support type checking
+        {"make_stack!<>", "[]"},
+        {"make_stack!<3:33 1:11 2:22>", "[(1 11) (2 22) (3 33)]"},
     });
     test.evaluate_all("make_string", {
         {R"(make_string![])", R"("")"},
