@@ -1437,7 +1437,7 @@ int main() {
         {"put_each!([1 2] [3 4])", "[2 1 3 4]"},
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
     });
-    test.evaluate("put_each table", { // TODO: support type checking
+    test.evaluate_all("put_each table", {
         {"put_each!(<> <>)", "<>"},
         {"put_each!(<> <1:2>)", "<1:2>"},
         {"put_each!(<1:2> <>)", "<1:2>"},
