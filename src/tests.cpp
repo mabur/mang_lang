@@ -1359,6 +1359,13 @@ int main() {
         {"split!(0 [1 2 0])", "[[1 2] []]"},
         {"split!(0 [1 0 2])", "[[1] [2]]"},
     });
+    test.evaluate_types("split stack", {
+        {"split!(0 [])", "[[ANY]]"},
+        {"split!(0 [0])", "[[ANY]]"},
+        {"split!(0 [0 0])", "[[ANY]]"},
+        {"split!(0 [0 0 0])", "[[NUMBER]]"},
+        {"split!(0 [0 0 0 0])", "[[NUMBER]]"},
+    });
     test.evaluate_all("split string", {
         {R"(split!(',' ""))", R"([""])"},
         {R"(split!(',' "a"))", R"(["a"])"},
