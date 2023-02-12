@@ -64,8 +64,8 @@ Expression drop(Expression in) {
         case STRING: return getString(in).rest;
         case EVALUATED_TABLE: return dropTable(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return dropTable(getEvaluatedTableView(in));
-        case EMPTY_STACK: return Expression{ANY, {}, {}};
-        case EMPTY_STRING: return Expression{ANY, {}, {}};
+        case EMPTY_STACK: return in;
+        case EMPTY_STRING: return in;
         default: throw UnexpectedExpression(in.type, "drop");
     }
 }

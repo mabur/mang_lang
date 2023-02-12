@@ -909,6 +909,7 @@ int main() {
         {"drop![4 3]", "[NUMBER]"},
         {"drop![4 3 7]", "[NUMBER]"},
         {"drop![[]]", "EMPTY_STACK"},
+        {"drop![]", "EMPTY_STACK"},
     });
     test.evaluate_all("drop stack", {
         {"drop![4]", "[]"},
