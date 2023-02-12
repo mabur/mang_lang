@@ -19,7 +19,10 @@ void boolean(Expression expression) {
         case STRING: return;
         case EMPTY_STRING: return;
         case ANY: return;
-        default: throw StaticTypeError(expression.type, "expected type that can be evaluated to boolean");
+        default: throw std::runtime_error(
+            std::string{"Static type error.\n"} +
+            "Cannot convert type " + NAMES[expression.type] + " to boolean."
+        );
     }
 }
 
