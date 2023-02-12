@@ -971,18 +971,18 @@ int main() {
         {"get!(0 <0:1 1:2 3:3> 2)", "1"},
         {"get!((3) <(1):[1] (2):[2] (3):[3]> [])", "[3]"},
     });
-    test.evaluate("get_keys", { // TODO: support type checking
+    test.evaluate_all("get_keys", {
         {"get_keys!<>", "[]"},
         {"get_keys!<0:1>", "[0]"},
         {"get_keys!<0:1 2:3>", "[0 2]"},
         {"get_keys!<2:3 0:1>", "[0 2]"},
     });
-    test.evaluate("get_values", { // TODO: support type checking
+    test.evaluate_all("get_values", {
         {"get_values!<1:0>", "[0]"},
         {"get_values!<10:0 11:1 12:2>", "[0 1 2]"},
         {"get_values!<3:0 2:1 1:2>", "[2 1 0]"},
     });
-    test.evaluate("get_items", { // TODO: support type checking
+    test.evaluate_all("get_items", {
         {"get_items!<0:1>", "[(0 1)]"},
         {"get_items!<0:1 2:3 4:5>", "[(0 1) (2 3) (4 5)]"},
         {"get_items!<4:1 2:3 0:5>", "[(0 5) (2 3) (4 1)]"},
@@ -1292,7 +1292,7 @@ int main() {
         {"clear_if!(in x out 0 [[]])", "[[]]"},
         {"clear_if!(in x out less?(x 5) [7 4 6 1 9 3 2])", "[7 6 9]"},
     });
-    test.evaluate("clear_if table", { // TODO: support type checking
+    test.evaluate_all("clear_if table", {
         {"clear_if!(less <0:0>)", "<0:0>"},
         {"clear_if!(less <0:1>)", "<>"},
         {"clear_if!(less <0:0 1:2 2:3 5:4>)", "<0:0 5:4>"},
@@ -1471,7 +1471,7 @@ int main() {
         {"merge_stack![[1] [2]]", "[1 2]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
     });
-    test.evaluate("merge_stack table", { // TODO: support type checking
+    test.evaluate_all("merge_stack table", {
         {"merge_stack![[(1 11)] <2:22>]", "[(1 11) (2 22)]"},
     });
     test.evaluate_all("merge_stack string", {
@@ -1634,14 +1634,14 @@ int main() {
     test.evaluate_all("consecutive_pairs", {
         {"consecutive_pairs![6 4 8]", "[(6 4) (4 8)]"},
     });
-    test.evaluate("unique", { // TODO: support type checking
+    test.evaluate_all("unique", {
         {"unique![]", "[]"},
         {"unique![1]", "[1]"},
         {"unique![1 2]", "[1 2]"},
         {"unique![1 1]", "[1]"},
         {"unique![1 1 2 3 1 4 2 4 0]", "[0 1 2 3 4]"},
     });
-    test.evaluate("count_elements", { // TODO: support type checking
+    test.evaluate_all("count_elements", {
         {"count_elements![]", "<>"},
         {"count_elements![1]", "<1:1>"},
         {"count_elements![1 2]", "<1:1 2:1>"},
