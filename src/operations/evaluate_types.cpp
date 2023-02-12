@@ -35,7 +35,11 @@ Expression evaluateConditional(
         return left;
     }
     if (left.type != right.type) {
-        throw StaticTypeError(left.type, "Different types in conditional branches");
+        throw std::runtime_error(
+            std::string{"Static type error.\n"} +
+            "Cannot return two different types for if-then-else:\n" + 
+            NAMES[left.type] + " and " + NAMES[right.type] 
+        );
     }
     return left;
 }
