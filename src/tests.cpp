@@ -1522,6 +1522,12 @@ int main() {
         {R"(take_while!(is_upper "A"))", R"("A")"},
         {R"(take_while!(is_upper "ABcd"))", R"("AB")"},
     });
+    test.evaluate_all("take_until_item stack", {
+        {"take_until_item!(1 [])", "[]"},
+        {"take_until_item!(2 [1])", "[1]"},
+        {"take_until_item!(1 [1])", "[]"},
+        {"take_until_item!(3 [1 2 3 4])", "[1 2]"},
+    });
     test.evaluate_all("take_until_item string", {
         {R"(take_until_item!('a' ""))", R"("")"},
         {R"(take_until_item!('b' "a"))", R"("a")"},
