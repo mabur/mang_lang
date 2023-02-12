@@ -1449,23 +1449,27 @@ int main() {
         {R"(put_each!("ab" "cd"))", "STRING"},
         {R"(put_each!("abc" "def"))", "STRING"},
     });
-    test.evaluate("merge", { // TODO: support type checking
+    test.evaluate_all("merge_stack stack", {
         {"merge_stack![[] []]", "[]"},
         {"merge_stack![[] [2]]", "[2]"},
         {"merge_stack![[1] []]", "[1]"},
         {"merge_stack![[1] [2]]", "[1 2]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
+    });
+    test.evaluate("merge_stack table", { // TODO: support type checking
         {"merge_stack![[(1 11)] <2:22>]", "[(1 11) (2 22)]"},
+    });
+    test.evaluate_all("merge_stack string", {
         {R"(merge_stack![['a'] "b"])", "['a' 'b']"},
     });
-    test.evaluate_types("merge", {
+    test.evaluate_types("merge_stack", {
         {"merge_stack![[] []]", "[ANY]"},
         {"merge_stack![[] [2]]", "[ANY]"}, // TODO
         {"merge_stack![[1] []]", "[NUMBER]"},
         {"merge_stack![[1] [2]]", "[NUMBER]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
     });
-    test.evaluate("merge table", { // TODO: support type checking
+    test.evaluate("merge_table", { // TODO: support type checking
         {"merge_table![<> <>]", "<>"},
         {"merge_table![<> <2:22>]", "<2:22>"},
         {"merge_table![<1:11> <>]", "<1:11>"},
