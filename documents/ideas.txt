@@ -24,10 +24,10 @@ TODO Standard Library:
         0 then true
         else false
   - Compare interface for iterating over containers and numbers:
-    - take!container, 1, ?
-    - drop!container, dec!number
-    - put!(item container), add!(1 number), inc!number
-    - empty
+    - take!container, 1
+    - drop!container, dec!number, --
+    - put!(item container), add!(1 number), inc!number, +=
+    - empty, 0
     - clear!container, [], "", <>, 0
     - put!(take!x drop!x) == x, add!(1 dec!x) == x
     - ett positivt heltal är ekvivalent med en stack, där bara längden på stacken spelar roll, men inte innehållet.
