@@ -124,6 +124,12 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
+    map = in (f container) out reverse!fold!(
+        in (item container) out put!(f!item container)
+        container
+        clear!container
+    )
+
     zip2 = in (a b) out reverse!result@{
         result = []
         while and?[a b]
@@ -339,7 +345,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    transpose = in rows out map_stack!(reverse columns@{
+    transpose = in rows out map!(reverse columns@{
         columns = replace!([] take!rows)
         for row in rows
             columns = put_column!(row columns)
@@ -405,7 +411,7 @@ const std::string STANDARD_LIBRARY = R"(
         table
     )
 
-    addv = in (a b) out map_stack!(add zip2!(a b))
-    subv = in (a b) out map_stack!(sub zip2!(a b))
+    addv = in (a b) out map!(add zip2!(a b))
+    subv = in (a b) out map!(sub zip2!(a b))
 }
 )";
