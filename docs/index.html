@@ -96,7 +96,7 @@ Consider the following input program:
   ]
   get_area = in {width height}
     out mul!(width height)
-  areas = map_stack!(get_area rectangles)
+  areas = map!(get_area rectangles)
   total_area = add!areas
   num_rectangles = count!rectangles
   average_area = div!(total_area num_rectangles)

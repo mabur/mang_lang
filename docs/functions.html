@@ -85,7 +85,7 @@ You can access the items of a container via <code>take!container</code> and <cod
 <dt>get8</dt><dd><code>get8!container</code> returns the item with index 8 in the container. O(1).</dd>
 <dt>get9</dt><dd><code>get9!container</code> returns the item with index 9 in the container. O(1).</dd>
 </dl>
-These fixed getters are useful in two situations. Firstly, for passing to a higher order function like <code>xs=map_stack!(get0 points)</code>. Secondly, when using multiple indices to index containers of containers like <code>scalar=get3!get2!matrix</code>. Otherwise, the easiest option is <code>container!index</code>, which works well in most other situations.
+These fixed getters are useful in two situations. Firstly, for passing to a higher order function like <code>xs=map!(get0 points)</code>. Secondly, when using multiple indices to index containers of containers like <code>scalar=get3!get2!matrix</code>. Otherwise, the easiest option is <code>container!index</code>, which works well in most other situations.
 
 <h2>Specialized Container Functions</h2>
 For the following functions you need to know what kind of container you want to use:
@@ -100,6 +100,7 @@ For the following functions you need to know what kind of container you want to 
 <dt>merge_table</dt><dd><code>merge_table![c1 ... cn]</code> merges a stack of containers into a single table. O(N).</dd>
 </dl>
 <dl>
+<dt>map</dt><dd><code>map!(f container)</code> returns a new container with the function f applied to each item in the input container. The type of the output container is the same as the type of the input container. O(N).</dd>
 <dt>map_stack</dt><dd><code>map_stack!(f container)</code> returns a stack with the function f applied to each item in the container. O(N).</dd>
 <dt>map_string</dt><dd><code>map_string!(f container)</code> returns a string with the function f applied to each item in the container. O(N).</dd>
 <dt>map_table</dt><dd><code>map_table!(f container)</code> returns a table with the function f applied to each item in the container. The function f should return a tuple <code>(key value)</code>. O(N).</dd>
