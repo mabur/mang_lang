@@ -33,7 +33,13 @@ Expression put(Expression table, Expression item) {
         return table;
     }
     catch (std::runtime_error&) {
-        return table;
+        const auto rows = std::map<std::string, Row>{
+            {NAMES[ANY], {Expression{ANY, {},{}}, Expression{ANY, {}, {}}}}
+        };
+        return makeEvaluatedTable(
+            {},
+            EvaluatedTable{rows}
+        );
     }
 }
 

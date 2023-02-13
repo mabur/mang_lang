@@ -1260,7 +1260,7 @@ int main() {
         {R"(make_string!"cab")", R"("cab")"},
     });
     test.evaluate_types("make_table", {
-        {"make_table![]", "<>"},
+        {"make_table![]", "<ANY:ANY>"},
         {"make_table![(3 33) (1 11) (2 22)]", "<3:NUMBER>"},
         {"make_table!<>", "<ANY:ANY>"},
         {"make_table!<3:33 1:11 2:22>", "<2:NUMBER>"},
