@@ -1219,9 +1219,9 @@ int main() {
     });
     test.evaluate_types("reverse table", {
         {"reverse!<>", "<ANY:ANY>"},
-        {"reverse!<0:0>", "<0:NUMBER>"},
-        {"reverse!<0:0 1:1>", "<1:NUMBER>"},
-        {"reverse!<0:0 1:1 2:2>", "<2:NUMBER>"},
+        {"reverse!<0:0>", "<NUMBER:NUMBER>"},
+        {"reverse!<0:0 1:1>", "<NUMBER:NUMBER>"},
+        {"reverse!<0:0 1:1 2:2>", "<NUMBER:NUMBER>"},
     });
     test.evaluate_all("reverse table", {
         {"reverse!<>", "<>"},
@@ -1261,9 +1261,9 @@ int main() {
     });
     test.evaluate_types("make_table", {
         {"make_table![]", "<ANY:ANY>"},
-        {"make_table![(3 33) (1 11) (2 22)]", "<3:NUMBER>"},
+        {"make_table![(3 33) (1 11) (2 22)]", "<NUMBER:NUMBER>"},
         {"make_table!<>", "<ANY:ANY>"},
-        {"make_table!<3:33 1:11 2:22>", "<2:NUMBER>"},
+        {"make_table!<3:33 1:11 2:22>", "<NUMBER:NUMBER>"},
     });
     test.evaluate_all("make_table", {
         {"make_table![]", "<>"},

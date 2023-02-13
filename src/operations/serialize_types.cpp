@@ -29,7 +29,7 @@ std::string serializeEvaluatedTable(Expression s) {
     }
     auto result = std::string{'<'};
     for (const auto& row : rows) {
-        result += row.first + ':' + serialize_types(row.second.value) + ' ';
+        result += serialize_types(row.second.key) + ':' + serialize_types(row.second.value) + ' ';
     }
     result.back() = '>';
     return result;
