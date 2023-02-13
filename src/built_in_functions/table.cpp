@@ -25,11 +25,16 @@ void updateTable(Expression key, Expression value, Expression table) {
 }
 
 Expression put(Expression table, Expression item) {
-    const auto tuple = getEvaluatedTuple(item);
-    const auto key = tuple.expressions.at(0);
-    const auto value = tuple.expressions.at(1);
-    updateTable(key, value, table);
-    return table;
+    try {
+        const auto tuple = getEvaluatedTuple(item);
+        const auto key = tuple.expressions.at(0);
+        const auto value = tuple.expressions.at(1);
+        updateTable(key, value, table);
+        return table;
+    }
+    catch (std::runtime_error&) {
+        return table;
+    }
 }
 
 }
