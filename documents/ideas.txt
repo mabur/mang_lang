@@ -2,6 +2,7 @@
 * Add bottom type and/or top type, never/undefined and/or any
   - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.
   - Can never/undefined help resolving some anys during type evaluation?
+  - Tag never/undefined with an error message.
 TODO Standard Library:
 * Indexing
   - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
