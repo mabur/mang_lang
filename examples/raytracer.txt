@@ -1,0 +1,97 @@
+result@{
+muls = in (scalar vector) out map!(in x out mul!(scalar x) vector)
+dotv = in (a b) out map!(mul zip2!(a b))
+
+makeIntersection = {
+	position = []
+    normal = []
+    distance = inf
+    color = []
+}
+
+make_world = world@{
+	R = 100000.0
+	MAX_C = 1.0
+	MIN_C = 0.1
+	world = {
+		spheres = [
+			{position=[-2 0 6] squaredRadius=1 color=[MAX_C MAX_C MIN_C]}
+			{position=[0 0 5] squaredRadius=1 color=[MAX_C MIN_C MIN_C]}
+			{position=[2 0 4] squaredRadius=1 color=[mul!(2 MIN_C) mul!(4 MIN_C) MAX_C]}
+			{position=[0 add!(1 R) 0] squaredRadius=mul!(R R) color=[MIN_C MAX_C MIN_C]}
+			{position=[0 sub!(-1 R) 0] squaredRadius=mul!(R R) color=[MAX_C MAX_C MAX_C]}
+		]
+		lights = [
+			{direction=[+1 +1 +2] color=muls!(0.4 [1 0.8 0.5])}
+			{direction=[-1 -1 -2] color=muls!(0.4 [0.5 0.5 1])}
+		]
+		atmosphere_color= muls!(0.3 [0.5 0.5 1])
+	}
+}
+
+findSingleIntersection = in (start direction sphere) out intersection@{
+	intersection = makeIntersection
+	offset = subv!(position@sphere start)
+	c = dotv!(direction offset)
+	intersection = 
+	    if less?(c 0.0) then
+		    makeIntersection
+	    else intersection@{	
+            discriminant = sub!(mul!(c c) add!(squaredNorm!offset squaredRadius@sphere))
+            intersection =
+                if less?(discriminant 0.0) then
+                    makeIntersection
+                else {
+                    distance = sub!(c sqrt!discriminant)
+                    position = addv!(start muls!(distance direction))
+                    normal = normalize!(subv!(position position@sphere))
+                    color = color@sphere
+                }
+        }
+}
+
+findIntersection = in (start direction spheres) out i1@{
+	i1 = makeIntersection
+	for sphere in spheres
+		i2 = findSingleIntersection!(start direction sphere)
+		i1 = if less?(distance@i2 distance@i1) then i2 else i1
+	end
+}
+
+shadeSingleLight = in (intersection light) out result@{
+	geometry = max!(neg!dotv!(direction@light normal@intersection) 0.0)
+	result = muls!(geometry mulv!(color@intersection color@light))
+}
+
+shadeAtmosphere = in (intersection atmosphere_color) out 
+	muls!(sqrt!(z@position@intersection) atmosphere_color)
+
+shade = in (intersection world) out
+	if IsInf?distance@intersection then
+		[1 1 1]
+	else color@{
+        color = shadeAtmosphere!(intersection atmosphere_color@world)
+        lights = lights@world
+        for light in lights
+            color = add!(color shadeSingleLight!(intersection light))
+        end
+    }
+
+colorU8fromF64 = in c out round!(min!(mul!(255 c) 255))
+
+writePixel = in (x y width height world) out result@{
+	start = [0 0 0]
+	xd = sub!(x div!(width 2))
+	yd = sub!(y div!(height 2))
+	zd = div!(height 2)
+	direction = normalize!([xd yd zd])
+	intersection = findIntersection!(start direction spheres@world)
+	color = shade!(intersection world)
+	r = colorU8fromF64!(x@color)
+	g = colorU8fromF64!(y@color)
+	b = colorU8fromF64!(z@color)
+	result = "r g b "
+}
+
+result = make_world
+}
