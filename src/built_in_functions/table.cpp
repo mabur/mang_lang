@@ -25,22 +25,14 @@ void updateTable(Expression key, Expression value, Expression table) {
 }
 
 Expression put(Expression table, Expression item) {
-    try {
-        const auto tuple = getEvaluatedTuple(item);
-        const auto key = tuple.expressions.at(0);
-        const auto value = tuple.expressions.at(1);
-        updateTable(key, value, table);
+    if (item.type == EMPTY) {
         return table;
     }
-    catch (std::runtime_error&) {
-        const auto rows = std::map<std::string, Row>{
-            {NAMES[EMPTY], {Expression{}, Expression{}}}
-        };
-        return makeEvaluatedTable(
-            {},
-            EvaluatedTable{rows}
-        );
-    }
+    const auto tuple = getEvaluatedTuple(item);
+    const auto key = tuple.expressions.at(0);
+    const auto value = tuple.expressions.at(1);
+    updateTable(key, value, table);
+    return table;
 }
 
 }
