@@ -3,7 +3,8 @@
   - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.
   - Can never/undefined help resolving some anys during type evaluation?
   - Tag never/undefined with an error message.
-  - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED
+  - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED.
+  - Difference in bottom type NEVER/EMPTY for type-evaluation and value-evaluation.
 TODO Standard Library:
 * Indexing
   - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.

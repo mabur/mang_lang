@@ -6,6 +6,7 @@
 #include "../container.h"
 #include "../factory.h"
 #include "evaluate_generic.h"
+#include "serialize.h"
 #include "serialize_types.h"
 
 namespace {
@@ -19,7 +20,7 @@ void boolean(Expression expression) {
         case EMPTY_STACK: return;
         case STRING: return;
         case EMPTY_STRING: return;
-        case ANY: return;
+        case EMPTY: return;
         default: throw std::runtime_error(
             std::string{"Static type error.\n"} +
             "Cannot convert type " + NAMES[expression.type] + " to boolean."
@@ -33,10 +34,10 @@ Expression evaluateConditional(
     boolean(evaluate_types(conditional.expression_if, environment));
     const auto left = evaluate_types(conditional.expression_then, environment);
     const auto right = evaluate_types(conditional.expression_else, environment);
-    if (left.type == ANY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
+    if (left.type == EMPTY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
         return right;
     }
-    if (right.type == ANY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
+    if (right.type == EMPTY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
         return left;
     }
     if (left.type != right.type) {
@@ -82,7 +83,9 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            result.definitions.add(name, value);
+            if (value.type != EMPTY) {
+                result.definitions.add(name, value);
+            }
         }
         else if (type == PUT_ASSIGNMENT) {
             const auto put_assignment = getPutAssignment(statement);
@@ -115,6 +118,63 @@ Expression evaluateDictionary(
     return result_environment;
 }
 
+size_t getIndex(Number number) {
+    if (number < 0) {
+        using namespace std;
+        throw runtime_error("Cannot have negative index: " + to_string(number));
+    }
+    return static_cast<size_t>(number);
+}
+
+Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number) {
+    const auto i = getIndex(number);
+    try {
+        return tuple.expressions.at(i);
+    }
+    catch (const std::out_of_range&) {
+        throw std::runtime_error(
+            "Tuple of size " + std::to_string(tuple.expressions.size()) +
+                " indexed with " + std::to_string(i)
+        );
+    }
+}
+
+Expression applyTableIndexing(const EvaluatedTable& table) {
+    if (table.rows.empty()) {
+        return Expression{EMPTY, {}, {}};
+    }
+    return table.begin()->second.value;
+}
+
+Expression applyStackIndexing(EvaluatedStack stack) {
+    return stack.top;
+}
+
+Expression applyStringIndexing(String string) {
+    return string.top;
+}
+
+
+Expression evaluateFunctionApplication(
+    const FunctionApplication& function_application,
+    Expression environment
+) {
+    const auto function = lookupDictionary(getName(function_application.name), environment);
+    const auto input = evaluate_types(function_application.child, environment);
+    switch (function.type) {
+        case FUNCTION: return applyFunction(evaluate_types, getFunction(function), input);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, getFunctionDictionary(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, getFunctionTuple(function), input);
+        
+        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function));
+        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
+        case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function));
+        case STRING: return applyStringIndexing(getString(function));
+        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
+    }
+}
+    
 } // namespace
 
 Expression evaluate_types(Expression expression, Expression environment) {
@@ -142,7 +202,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(evaluate_types, getFunctionApplication(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }

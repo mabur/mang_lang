@@ -41,7 +41,6 @@ enum ExpressionType {
     STRING,
     EMPTY_STRING,
     BOOLEAN,
-    ANY,
     EMPTY,
 };
 
@@ -77,7 +76,6 @@ const auto NAMES = std::vector<std::string>{
     "STRING",
     "EMPTY_STRING",
     "BOOLEAN",
-    "ANY",
     "EMPTY",
 };
 

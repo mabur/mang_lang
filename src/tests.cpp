@@ -305,9 +305,9 @@ int main() {
         {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"}
     });
     test.evaluate_types("dictionary for", {
-        {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
-        {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
-        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<ANY:ANY> i=(ANY ANY)}"}, 
+        {"{c=[] for i in c end}", "{c=EMPTY_STACK i=EMPTY}"},
+        {"{c=<> for i in c end}", "{c=<> i=(EMPTY EMPTY)}"},
+        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<EMPTY:EMPTY> i=(EMPTY EMPTY)}"}, // TODO 
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
@@ -1194,7 +1194,7 @@ int main() {
         {R"(count_if!(in x out equal?(x 'c') "cbc"))", "2"},
     });
     test.evaluate_types("reverse stack", {
-        {"reverse![]", "[ANY]"},
+        {"reverse![]", "[EMPTY]"}, // TODO
         {"reverse![0]", "[NUMBER]"},
         {"reverse![0 1]", "[NUMBER]"},
         {"reverse![0 1 2]", "[NUMBER]"},
@@ -1206,7 +1206,7 @@ int main() {
         {"reverse![0 1 2]", "[2 1 0]"},
     });
     test.evaluate_types("reverse table", {
-        {"reverse!<>", "<ANY:ANY>"},
+        {"reverse!<>", "<EMPTY:EMPTY>"}, // TODO
         {"reverse!<0:0>", "<NUMBER:NUMBER>"},
         {"reverse!<0:0 1:1>", "<NUMBER:NUMBER>"},
         {"reverse!<0:0 1:1 2:2>", "<NUMBER:NUMBER>"},
@@ -1248,9 +1248,9 @@ int main() {
         {R"(make_string!"cab")", R"("cab")"},
     });
     test.evaluate_types("make_table", {
-        {"make_table![]", "<ANY:ANY>"},
+        {"make_table![]", "<EMPTY:EMPTY>"}, // TODO
         {"make_table![(3 33) (1 11) (2 22)]", "<NUMBER:NUMBER>"},
-        {"make_table!<>", "<ANY:ANY>"},
+        {"make_table!<>", "<EMPTY:EMPTY>"}, // TODO
         {"make_table!<3:33 1:11 2:22>", "<NUMBER:NUMBER>"},
     });
     test.evaluate_all("make_table", {
@@ -1349,7 +1349,7 @@ int main() {
         {R"(replace_if!(in x out equal?(x 'a') 'b' "ab_ba"))", R"("bb_bb")"},
     });
     test.evaluate_types("enumerate stack", {
-        {"enumerate![]", "[(NUMBER ANY)]"},
+        {"enumerate![]", "[(NUMBER EMPTY)]"}, // TODO
         {"enumerate![4]", "[(NUMBER NUMBER)]"},
         {"enumerate![4 3]", "[(NUMBER NUMBER)]"},
     });
@@ -1374,9 +1374,9 @@ int main() {
         {"split!(0 [1 0 2])", "[[1] [2]]"},
     });
     test.evaluate_types("split stack", {
-        {"split!(0 [])", "[[ANY]]"},
-        {"split!(0 [0])", "[[ANY]]"},
-        {"split!(0 [0 0])", "[[ANY]]"},
+        {"split!(0 [])", "[[EMPTY]]"}, // TODO
+        {"split!(0 [0])", "[[EMPTY]]"}, // TODO
+        {"split!(0 [0 0])", "[[EMPTY]]"}, // TODO
         {"split!(0 [0 0 0])", "[[NUMBER]]"},
         {"split!(0 [0 0 0 0])", "[[NUMBER]]"},
     });
@@ -1440,8 +1440,8 @@ int main() {
         {"put_each!(<1:11 3:33> <2:22 4:44>)", "<1:11 2:22 3:33 4:44>"},
     });
     test.evaluate_types("put_each", {
-        {"put_each!([] [])", "[ANY]"},
-        {"put_each!([] [2])", "[ANY]"}, // TODO
+        {"put_each!([] [])", "[EMPTY]"}, // TODO
+        {"put_each!([] [2])", "[EMPTY]"}, // TODO
         {"put_each!([1] [])", "[NUMBER]"},
         {"put_each!([1] [2])", "[NUMBER]"},
         {"put_each!([1 2] [3 4])", "[NUMBER]"},
@@ -1477,8 +1477,8 @@ int main() {
         {R"(merge_stack![['a'] "b"])", "['a' 'b']"},
     });
     test.evaluate_types("merge_stack", {
-        {"merge_stack![[] []]", "[ANY]"},
-        {"merge_stack![[] [2]]", "[ANY]"}, // TODO
+        {"merge_stack![[] []]", "[EMPTY]"}, // TODO
+        {"merge_stack![[] [2]]", "[EMPTY]"}, // TODO
         {"merge_stack![[1] []]", "[NUMBER]"},
         {"merge_stack![[1] [2]]", "[NUMBER]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
@@ -1619,7 +1619,7 @@ int main() {
         {"zip2!([0 1 2] [3 4 5])", "[(0 3) (1 4) (2 5)]"},
     });
     test.evaluate_types("zip2", {
-        {"zip2!([] [])", "[(ANY ANY)]"},
+        {"zip2!([] [])", "[(EMPTY EMPTY)]"}, // TODO
         {"zip2!([0] [1])", "[(NUMBER NUMBER)]"},
         {"zip2!([0 1] [2 3])", "[(NUMBER NUMBER)]"},
         {"zip2!([0 1 2] [3 4 5])", "[(NUMBER NUMBER)]"},

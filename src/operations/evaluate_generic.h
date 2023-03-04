@@ -123,29 +123,3 @@ Expression applyFunctionTuple(
     );
     return evaluator(function_stack.body, middle);
 }
-
-Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number);
-Expression applyTableIndexing(const EvaluatedTable& table, Expression key);
-Expression applyStackIndexing(EvaluatedStack stack, Number number);
-Expression applyStringIndexing(String string, Number number);
-
-template<typename Evaluator>
-Expression evaluateFunctionApplication(
-    Evaluator evaluator,
-    const FunctionApplication& function_application,
-    Expression environment
-) {
-    const auto function = lookupDictionary(getName(function_application.name), environment);
-    const auto input = evaluator(function_application.child, environment);
-    switch (function.type) {
-        case FUNCTION: return applyFunction(evaluator, getFunction(function), input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluator, getFunctionDictionary(function), input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(evaluator, getFunctionTuple(function), input);
-        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function), input);
-        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
-        case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
-        case STRING: return applyStringIndexing(getString(function), getNumber(input));
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
-    }
-}

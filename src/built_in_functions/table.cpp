@@ -34,7 +34,7 @@ Expression put(Expression table, Expression item) {
     }
     catch (std::runtime_error&) {
         const auto rows = std::map<std::string, Row>{
-            {NAMES[ANY], {Expression{ANY, {},{}}, Expression{ANY, {}, {}}}}
+            {NAMES[EMPTY], {Expression{EMPTY, {},{}}, Expression{EMPTY, {}, {}}}}
         };
         return makeEvaluatedTable(
             {},
