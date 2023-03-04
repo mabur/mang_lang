@@ -551,12 +551,18 @@ int main() {
         {"a@{c=(3 2 1) a=c!2}", "1"},
         {"a@{i=1 c=(3 2 1) a=c!i}", "2"},
     });
+    test.evaluate_types("lookup stack indexing", {
+        {"a@{a=1 c=[] a=c!0}", "NUMBER"},
+    });
     test.evaluate_all("lookup stack indexing", {
         {"a@{c=[3 2 1] a=c!0}", "3"},
         {"a@{c=[3 2 1] a=c!1}", "2"},
         {"a@{c=[3 2 1] a=c!2}", "1"},
         {"a@{i=1 c=[3 2 1] a=c!i}", "2"},
         {"a@{c=range!100 a=c!99}", "99"},
+    });
+    test.evaluate_types("lookup string indexing", {
+        {R"(a@{c="" a=c!0})", "CHARACTER"},
     });
     test.evaluate_all("lookup string indexing", {
         {R"(a@{c="abc" a=c!0})", "'a'"},

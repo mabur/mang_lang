@@ -154,7 +154,6 @@ Expression applyStringIndexing(String string) {
     return string.top;
 }
 
-
 Expression evaluateFunctionApplication(
     const FunctionApplication& function_application,
     Expression environment
@@ -171,6 +170,10 @@ Expression evaluateFunctionApplication(
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function));
         case STRING: return applyStringIndexing(getString(function));
+
+        case EMPTY_STACK: return Expression{};
+        case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
+        
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
