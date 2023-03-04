@@ -1653,5 +1653,11 @@ int main() {
         {"count_elements![1 1]", "<1:2>"},
         {"count_elements![1 1 2 3 1 4 2 4 0]", "<0:1 1:3 2:2 3:1 4:2>"},
     });
+    test.evaluate_all("vector math", {
+        {"addv!([1 2] [3 4])", "[4 6]"},
+        {"subv!([1 2] [3 4])", "[-2 -2]"},
+        {"mulv!([1 2] [3 4])", "[3 8]"},
+        {"divv!([6 8] [3 2])", "[2 4]"},
+    });
     return test.exitCode();
 }

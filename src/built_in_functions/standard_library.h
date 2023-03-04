@@ -413,5 +413,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     addv = in (a b) out map!(add zip2!(a b))
     subv = in (a b) out map!(sub zip2!(a b))
+    mulv = in (a b) out map!(mul zip2!(a b))
+    divv = in (a b) out map!(div zip2!(a b))
 }
 )";
