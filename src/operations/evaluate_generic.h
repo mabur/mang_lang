@@ -66,11 +66,7 @@ Expression evaluateLookupChild(
     const auto child = evaluator(lookup_child.child, environment);
     const auto name = getName(lookup_child.name);
     const auto dictionary = getEvaluatedDictionary(child);
-    const auto result = dictionary.definitions.lookup(name);
-    if (result.type == EMPTY) {
-        throw MissingSymbol(name, "dictionary");
-    }
-    return result;
+    return dictionary.definitions.lookup(name);
 }
 
 Expression lookupDictionary(const Name& name, Expression expression);

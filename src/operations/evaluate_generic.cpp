@@ -31,11 +31,10 @@ Expression lookupDictionary(const Name& name, Expression expression) {
         throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
     }
     const auto dictionary = getEvaluatedDictionary(expression);
-    const auto value = dictionary.definitions.lookup(name);
-    if (value.type != EMPTY) {
-        return value;
+    if (!dictionary.definitions.has(name)) {
+        return lookupDictionary(name, dictionary.environment);    
     }
-    return lookupDictionary(name, dictionary.environment);
+    return dictionary.definitions.lookup(name);
 }
 
 Expression applyFunctionBuiltIn(

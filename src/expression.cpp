@@ -29,13 +29,23 @@ void Definitions::add(const std::string& key, Expression value) {
     definitions.push_back({key, value});
 }
 
+bool Definitions::has(const std::string& key) const {
+    for (const auto& definition: definitions) {
+        if (definition.first == key) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 Expression Definitions::lookup(const std::string& key) const {
     for (const auto& definition: definitions) {
         if (definition.first == key) {
             return definition.second;
         }
     }
-    return Expression{};
+    throw MissingSymbol(key, "dictionary");
 }
 
 std::vector<std::pair<std::string, Expression>> Definitions::sorted() const {

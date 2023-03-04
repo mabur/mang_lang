@@ -238,6 +238,7 @@ private:
 public:
     bool empty() const;
     void add(const std::string& key, Expression value);
+    bool has(const std::string& key) const;
     Expression lookup(const std::string& key) const;
     std::vector<std::pair<std::string, Expression>> sorted() const;
 };
