@@ -1,6 +1,5 @@
 result@{
 muls = in (scalar vector) out map!(in x out mul!(scalar x) vector)
-dotv = in (a b) out map!(mul zip2!(a b))
 
 makeIntersection = {
 	position = []
@@ -32,12 +31,12 @@ make_world = world@{
 findSingleIntersection = in (start direction sphere) out intersection@{
 	intersection = makeIntersection
 	offset = subv!(position@sphere start)
-	c = dotv!(direction offset)
+	c = dot!(direction offset)
 	intersection = 
 	    if less?(c 0.0) then
 		    makeIntersection
 	    else intersection@{	
-            discriminant = sub!(mul!(c c) add!(squaredNorm!offset squaredRadius@sphere))
+            discriminant = sub!(mul!(c c) add!(squared_norm!offset squaredRadius@sphere))
             intersection =
                 if less?(discriminant 0.0) then
                     makeIntersection
@@ -59,7 +58,7 @@ findIntersection = in (start direction spheres) out i1@{
 }
 
 shadeSingleLight = in (intersection light) out result@{
-	geometry = max!(neg!dotv!(direction@light normal@intersection) 0.0)
+	geometry = max!(neg!dot!(direction@light normal@intersection) 0.0)
 	result = muls!(geometry mulv!(color@intersection color@light))
 }
 
