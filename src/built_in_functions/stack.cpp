@@ -22,6 +22,9 @@ Expression put(Expression in) {
     const auto binary = getBinaryInput(in);
     const auto item = binary.left;
     const auto collection = binary.right;
+    if (item.type == EMPTY) {
+        return collection;
+    }
     switch (collection.type) {
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);

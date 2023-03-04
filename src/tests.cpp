@@ -1200,7 +1200,7 @@ int main() {
         {R"(count_if!(in x out equal?(x 'c') "cbc"))", "2"},
     });
     test.evaluate_types("reverse stack", {
-        {"reverse![]", "[EMPTY]"}, // TODO
+        {"reverse![]", "EMPTY_STACK"},
         {"reverse![0]", "[NUMBER]"},
         {"reverse![0 1]", "[NUMBER]"},
         {"reverse![0 1 2]", "[NUMBER]"},
@@ -1380,11 +1380,11 @@ int main() {
         {"split!(0 [1 0 2])", "[[1] [2]]"},
     });
     test.evaluate_types("split stack", {
-        {"split!(0 [])", "[[EMPTY]]"}, // TODO
-        {"split!(0 [0])", "[[EMPTY]]"}, // TODO
-        {"split!(0 [0 0])", "[[EMPTY]]"}, // TODO
-        {"split!(0 [0 0 0])", "[[NUMBER]]"},
-        {"split!(0 [0 0 0 0])", "[[NUMBER]]"},
+        {"split!(0 [])", "[EMPTY_STACK]"},
+        {"split!(0 [0])", "[EMPTY_STACK]"},
+        {"split!(0 [0 0])", "[EMPTY_STACK]"},
+        {"split!(0 [0 0 0])", "[[NUMBER]]"},  // TODO
+        {"split!(0 [0 0 0 0])", "[[NUMBER]]"},  // TODO
     });
     test.evaluate_all("split string", {
         {R"(split!(',' ""))", R"([""])"},
@@ -1446,8 +1446,8 @@ int main() {
         {"put_each!(<1:11 3:33> <2:22 4:44>)", "<1:11 2:22 3:33 4:44>"},
     });
     test.evaluate_types("put_each", {
-        {"put_each!([] [])", "[EMPTY]"}, // TODO
-        {"put_each!([] [2])", "[EMPTY]"}, // TODO
+        {"put_each!([] [])", "EMPTY_STACK"},
+        {"put_each!([] [2])", "[NUMBER]"},
         {"put_each!([1] [])", "[NUMBER]"},
         {"put_each!([1] [2])", "[NUMBER]"},
         {"put_each!([1 2] [3 4])", "[NUMBER]"},
@@ -1483,8 +1483,8 @@ int main() {
         {R"(merge_stack![['a'] "b"])", "['a' 'b']"},
     });
     test.evaluate_types("merge_stack", {
-        {"merge_stack![[] []]", "[EMPTY]"}, // TODO
-        {"merge_stack![[] [2]]", "[EMPTY]"}, // TODO
+        {"merge_stack![[] []]", "EMPTY_STACK"},
+        {"merge_stack![[] [2]]", "EMPTY_STACK"}, // TODO
         {"merge_stack![[1] []]", "[NUMBER]"},
         {"merge_stack![[1] [2]]", "[NUMBER]"},
         {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
