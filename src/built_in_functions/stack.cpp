@@ -37,7 +37,7 @@ Expression takeTable(const T& table) {
     if (table.empty()) {
         return makeEvaluatedTuple(
             {},
-            EvaluatedTuple{{Expression{EMPTY, {}, {}}, Expression{EMPTY, {}, {}}}}
+            EvaluatedTuple{{Expression{}, Expression{}}}
         );    
     }
     const auto& pair = table.begin()->second;
@@ -55,8 +55,8 @@ Expression take(Expression in) {
         case STRING: return getString(in).top;
         case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
-        case EMPTY_STACK: return Expression{EMPTY, {}, {}};
-        case EMPTY_STRING: return Expression{EMPTY, {}, {}};
+        case EMPTY_STACK: return Expression{};
+        case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
         default: throw UnexpectedExpression(in.type, "take");
     }
 }

@@ -141,7 +141,7 @@ Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number) {
 
 Expression applyTableIndexing(const EvaluatedTable& table) {
     if (table.rows.empty()) {
-        return Expression{EMPTY, {}, {}};
+        return Expression{};
     }
     return table.begin()->second.value;
 }

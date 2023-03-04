@@ -194,7 +194,7 @@ Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
         return table.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
-        return Expression{EMPTY, {}, {}};
+        return Expression{};
     }
 }
 
@@ -202,7 +202,7 @@ Expression applyStackIndexing(EvaluatedStack stack, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
         if (stack.rest.type == EMPTY_STACK) {
-            return Expression{EMPTY, {}, {}};
+            return Expression{};
         }
         stack = getEvaluatedStack(stack.rest);
     }
@@ -213,7 +213,7 @@ Expression applyStringIndexing(String string, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
         if (string.rest.type == EMPTY_STACK) {
-            return Expression{EMPTY, {}, {}};
+            return Expression{};
         }
         string = getString(string.rest);
     }
