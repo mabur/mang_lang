@@ -415,8 +415,8 @@ const std::string STANDARD_LIBRARY = R"(
     subv = in (a b) out map!(sub zip2!(a b))
     mulv = in (a b) out map!(mul zip2!(a b))
     divv = in (a b) out map!(div zip2!(a b))
-    dotv = in (a b) out sum!mulv!(a b)
-    squared_norm = in a out dotv!(a a)
+    dot = in (a b) out sum!mulv!(a b)
+    squared_norm = in a out dot!(a a)
     norm = in a out sqrt!squared_norm!a
 }
 )";
