@@ -152,12 +152,6 @@ int main() {
         {"yes", "BOOLEAN"},
         {"no", "BOOLEAN"},
     });
-    test.evaluate_all("missing", {
-        {"missing", "missing"},
-    });
-    test.evaluate_types("missing", {
-        {"missing", "EMPTY"},
-    });
     test.evaluate_all("string", {
         {R"("")", R"("")"},
         {R"("a")", R"("a")"},
@@ -376,9 +370,6 @@ int main() {
         {"is 1 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
         {"is 2 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
         {"is 3 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
-        {"is missing missing then 1 else 2", "NUMBER"},
-        {"is missing 0 then 1 else 2", "NUMBER"},
-        {"is 0 missing then 1 else 2", "NUMBER"},
     });
     test.evaluate_all("is", {
         {"is 0 0 then 1 else 2", "1"},
@@ -387,9 +378,6 @@ int main() {
         {"is 1 0 then 0 1 then 1 2 then 4 else 5", "1"},
         {"is 2 0 then 0 1 then 1 2 then 4 else 5", "4"},
         {"is 3 0 then 0 1 then 1 2 then 4 else 5", "5"},
-        {"is missing missing then 1 else 2", "1"},
-        {"is missing 0 then 1 else 2", "2"},
-        {"is 0 missing then 1 else 2", "2"},
         {"is (1 2) (1 2) then 1 else 2", "1"},
         {"is (1 2) (1 3) then 1 else 2", "2"},
         {"is (1 (2)) (1 (2)) then 1 else 2", "1"},

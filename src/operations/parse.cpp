@@ -402,10 +402,6 @@ Expression parseNegInf(CodeRange code) {
     );
 }
 
-Expression parseMissing(CodeRange code) {
-    return Expression{EMPTY, 0, parseKeyWordContent(code, "missing")};
-}
-
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
@@ -435,7 +431,6 @@ Expression parseExpression(CodeRange code) {
         if (c == '<') {return parseTable(code);}
         if (c == '\'') {return parseCharacterExpression(code);}
         if (c == '\"') {return parseString(code);}
-        if (isKeyword(code, "missing")) {return parseMissing(code);}
         if (isKeyword(code, "yes")) {return parseYes(code);}
         if (isKeyword(code, "no")) {return parseNo(code);}
         if (isKeyword(code, "-inf")) {return parseNegInf(code);}

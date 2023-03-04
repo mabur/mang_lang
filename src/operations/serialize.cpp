@@ -167,7 +167,6 @@ std::string serialize(Expression expression) {
         case WHILE_END_STATEMENT: return "end ";
         case FOR_END_STATEMENT: return "end ";
         case FUNCTION: return serializeFunction(getFunction(expression));
-        case FUNCTION_BUILT_IN: return "built_in_function";
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
         case TABLE: return serializeTable(expression);
@@ -185,8 +184,6 @@ std::string serialize(Expression expression) {
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
-        case ANY: return NAMES[ANY];
-        case EMPTY: return "missing";
-        default: throw UnexpectedExpression(expression.type, "serialize operation");
+        default: return NAMES[expression.type];
     }
 }
