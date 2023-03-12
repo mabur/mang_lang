@@ -202,7 +202,7 @@ Expression applyStackIndexing(EvaluatedStack stack, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
         if (stack.rest.type == EMPTY_STACK) {
-            return Expression{};
+            throw std::runtime_error("Stack index out of range");
         }
         stack = getEvaluatedStack(stack.rest);
     }
