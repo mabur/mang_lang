@@ -112,7 +112,7 @@ Expression dropTyped(Expression in) {
         case EVALUATED_TABLE_VIEW: return in;
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
-        default: throw UnexpectedExpression(in.type, "drop");
+        default: throw UnexpectedExpression(in.type, "drop typed");
     }
 }
 
