@@ -8,10 +8,6 @@
 namespace arithmetic {
 namespace {
 
-Expression makeNan() {
-    return makeNumber(CodeRange{}, 1.0 / 1.0);
-}
-
 Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, x);
 }
@@ -25,9 +21,6 @@ Expression binaryOperation(Expression in, BinaryOperation operation) {
     const auto expressions = getEvaluatedTuple(in).expressions;
     const auto left = expressions.at(0);
     const auto right = expressions.at(1);
-    if (left.type == EMPTY || right.type == EMPTY) {
-        return makeNan();
-    }
     return makeNumber(operation(getNumber(left), getNumber(right)));
 }
 
@@ -53,52 +46,78 @@ Expression less(Expression in) {
     const auto expressions = getEvaluatedTuple(in).expressions;
     const auto left = expressions.at(0);
     const auto right = expressions.at(1);
-    if (left.type == EMPTY || right.type == EMPTY) {
-        return makeNan();
-    }
     return makeBoolean(getNumber(left) < getNumber(right));
 }
 
 Expression sqrt(Expression in) {
-    if (in.type == EMPTY) {
-        return makeNan();
-    }
     return makeNumber(std::sqrt(getNumber(in)));
 }
 
 Expression round(Expression in) {
-    if (in.type == EMPTY) {
-        return makeNan();
-    }
     return makeNumber(std::round(getNumber(in)));
 }
 
 Expression round_up(Expression in) {
-    if (in.type == EMPTY) {
-        return makeNan();
-    }
     return makeNumber(std::ceil(getNumber(in)));
 }
 
 Expression round_down(Expression in) {
-    if (in.type == EMPTY) {
-        return makeNan();
-    }
     return makeNumber(std::floor(getNumber(in)));
 }
 
 Expression ascii_number(Expression in) {
-    if (in.type == EMPTY) {
-        return makeNan();
-    }
     return makeNumber(getCharacter(in));
 }
 
 Expression ascii_character(Expression in) {
-    if (in.type == EMPTY) {
-        return makeNan();
-    }
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
+}
+
+Expression checkTypesNumberToNumber(Expression in) {
+    if (in.type != EMPTY && in.type != NUMBER) {
+        throw StaticTypeError(in.type, "checkTypesNumberToNumber");
+    }
+    return makeNumber(1);
+}
+
+Expression checkTypesNumberToCharacter(Expression in) {
+    if (in.type != EMPTY && in.type != NUMBER) {
+        throw StaticTypeError(in.type, "checkTypesNumberToCharacter");
+    }
+    return makeCharacter(CodeRange{}, 'a');
+}
+
+Expression checkTypesCharacterToNumber(Expression in) {
+    if (in.type != EMPTY && in.type != CHARACTER) {
+        throw StaticTypeError(in.type, "checkTypesCharacterToNumber");
+    }
+    return makeNumber(1);
+}
+
+Expression checkTypesNumberNumberToNumber(Expression in) {
+    const auto expressions = getEvaluatedTuple(in).expressions;
+    const auto left = expressions.at(0).type;
+    const auto right = expressions.at(1).type;
+    if (left != EMPTY && left != NUMBER) {
+        throw StaticTypeError(left, "left checkTypesNumberNumberToNumber");
+    }
+    if (right != EMPTY && right != NUMBER) {
+        throw StaticTypeError(right, "right checkTypesNumberNumberToNumber");
+    }
+    return makeNumber(1);
+}
+
+Expression checkTypesNumberNumberToBoolean(Expression in) {
+    const auto expressions = getEvaluatedTuple(in).expressions;
+    const auto left = expressions.at(0).type;
+    const auto right = expressions.at(1).type;
+    if (left != EMPTY && left != NUMBER) {
+        throw StaticTypeError(left, "left checkTypesNumberNumberToBoolean");
+    }
+    if (right != EMPTY && right != NUMBER) {
+        throw StaticTypeError(right, "right checkTypesNumberNumberToBoolean");
+    }
+    return makeBoolean(true);
 }
 
 }

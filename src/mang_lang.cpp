@@ -20,7 +20,7 @@ std::string reformat(std::string code) {
 }
 
 std::string evaluate_types(std::string code) {
-    const auto built_ins = builtIns();
+    const auto built_ins = builtInsTypes();
     const auto standard_library = evaluate_types(parse(STANDARD_LIBRARY), built_ins);
     const auto result = serialize_types(evaluate_types(parse(code), standard_library));
     clearMemory();
@@ -37,9 +37,10 @@ std::string evaluate(std::string code) {
 
 std::string evaluate_all(std::string code) {
     const auto built_ins = builtIns();
+    const auto built_ins_types = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);
     const auto code_ast = parse(code);
-    const auto std_checked = evaluate_types(std_ast, built_ins);
+    const auto std_checked = evaluate_types(std_ast, built_ins_types);
     const auto code_checked = evaluate_types(code_ast, std_checked);
     const auto std_evaluated = evaluate(std_ast, built_ins);
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
