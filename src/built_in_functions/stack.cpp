@@ -25,7 +25,7 @@ Expression clearTyped(Expression in) {
         case STRING: return in;
         case EMPTY_STRING: return in;
         case EVALUATED_TABLE: return in;
-        default: throw UnexpectedExpression(in.type, "clear operation");
+        default: throw UnexpectedExpression(in.type, "clearTyped operation");
     }
 }
 
@@ -43,6 +43,23 @@ Expression put(Expression in) {
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return table_functions::put(collection, item);
         default: throw UnexpectedExpression(in.type, "put operation");
+    }
+}
+
+Expression putTyped(Expression in) {
+    const auto binary = getBinaryInput(in);
+    const auto item = binary.left;
+    const auto collection = binary.right;
+    if (item.type == EMPTY) {
+        return collection;
+    }
+    switch (collection.type) {
+        case EVALUATED_STACK: return putEvaluatedStack(collection, item);
+        case EMPTY_STACK: return putEvaluatedStack(collection, item);
+        case STRING: return collection;
+        case EMPTY_STRING: return putString(collection, item);
+        case EVALUATED_TABLE: return table_functions::put(collection, item);
+        default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
 }
 
