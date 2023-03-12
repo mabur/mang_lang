@@ -15,6 +15,11 @@ MissingSymbol::MissingSymbol(
     : std::runtime_error("Cannot find symbol " + symbol + " in " + location)
 {}
 
+MissingKey::MissingKey(
+    const std::string& key)
+    : std::runtime_error("Cannot find key " + key + " in table")
+{}
+
 bool Definitions::empty() const {
     return definitions.empty();
 }

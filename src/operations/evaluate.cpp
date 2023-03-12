@@ -194,7 +194,7 @@ Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
         return table.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
-        return Expression{};
+        throw MissingKey(k);
     }
 }
 

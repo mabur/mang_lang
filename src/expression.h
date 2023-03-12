@@ -97,6 +97,12 @@ struct MissingSymbol : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
+struct MissingKey : public std::runtime_error
+{
+    MissingKey(const std::string& key);
+    using runtime_error::runtime_error;
+};
+
 struct Expression {
     ExpressionType type = EMPTY;
     size_t index = 0;
