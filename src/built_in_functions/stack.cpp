@@ -86,6 +86,16 @@ Expression take(Expression in) {
         case STRING: return getString(in).top;
         case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
+        default: throw UnexpectedExpression(in.type, "take");
+    }
+}
+
+Expression takeTyped(Expression in) {
+    switch (in.type) {
+        case EVALUATED_STACK: return getEvaluatedStack(in).top;
+        case STRING: return getString(in).top;
+        case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
+        case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
         case EMPTY_STACK: return Expression{};
         case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
         default: throw UnexpectedExpression(in.type, "take");

@@ -111,7 +111,7 @@ Expression evaluateDictionary(
             const auto container = lookupDictionary(name_container, result_environment);
             boolean(container);
             const auto name_item = getName(for_statement.name_item);
-            const auto value = stack_functions::take(container);
+            const auto value = stack_functions::takeTyped(container);
             result.definitions.add(name_item, value);
         }
     }

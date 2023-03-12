@@ -9,6 +9,7 @@ Expression clearTyped(Expression in);
 Expression put(Expression in);
 Expression putTyped(Expression in);
 Expression take(Expression in);
+Expression takeTyped(Expression in);
 Expression drop(Expression in);
 Expression dropTyped(Expression in);
 
