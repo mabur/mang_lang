@@ -913,10 +913,10 @@ int main() {
         {R"(take!"ab")", "'a'"},
     });
     test.evaluate_types("drop stack", {
-        {"drop![4]", "EMPTY_STACK"}, // TODO: is this good?
+        {"drop![4]", "[NUMBER]"},
         {"drop![4 3]", "[NUMBER]"},
         {"drop![4 3 7]", "[NUMBER]"},
-        {"drop![[]]", "EMPTY_STACK"},
+        {"drop![[]]", "[EMPTY_STACK]"},
         {"drop![]", "EMPTY_STACK"},
     });
     test.evaluate_all("drop stack", {
@@ -926,7 +926,7 @@ int main() {
         {"drop![[]]", "[]"},
     });
     test.evaluate_types("drop string", {
-        {R"(drop!"a")", "EMPTY_STRING"}, // TODO: is this good?
+        {R"(drop!"a")", "STRING"},
         {R"(drop!"ab")", "STRING"},
         {R"(drop!"abc")", "STRING"},
     });
@@ -1381,10 +1381,10 @@ int main() {
     });
     test.evaluate_types("split stack", {
         {"split!(0 [])", "[EMPTY_STACK]"},
-        {"split!(0 [0])", "[EMPTY_STACK]"},
-        {"split!(0 [0 0])", "[EMPTY_STACK]"},
-        {"split!(0 [0 0 0])", "[[NUMBER]]"},  // TODO
-        {"split!(0 [0 0 0 0])", "[[NUMBER]]"},  // TODO
+        {"split!(0 [0])", "[[NUMBER]]"},
+        {"split!(0 [0 0])", "[[NUMBER]]"},
+        {"split!(0 [0 0 0])", "[[NUMBER]]"},
+        {"split!(0 [0 0 0 0])", "[[NUMBER]]"},
     });
     test.evaluate_all("split string", {
         {R"(split!(',' ""))", R"([""])"},

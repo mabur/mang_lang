@@ -44,7 +44,7 @@ Expression builtInsTypes() {
     definitions.add("clear", define(stack_functions::clearTyped));
     definitions.add("put", define(stack_functions::putTyped));
     definitions.add("take", define(stack_functions::take));
-    definitions.add("drop", define(stack_functions::drop));
+    definitions.add("drop", define(stack_functions::dropTyped));
     definitions.add("get", define(table_functions::get));
 
     definitions.add("add", define(arithmetic::checkTypesNumberNumberToNumber));

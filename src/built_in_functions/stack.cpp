@@ -104,4 +104,16 @@ Expression drop(Expression in) {
     }
 }
 
+Expression dropTyped(Expression in) {
+    switch (in.type) {
+        case EVALUATED_STACK: return in;
+        case STRING: return in;
+        case EVALUATED_TABLE: return in;
+        case EVALUATED_TABLE_VIEW: return in;
+        case EMPTY_STACK: return in;
+        case EMPTY_STRING: return in;
+        default: throw UnexpectedExpression(in.type, "drop");
+    }
+}
+
 }

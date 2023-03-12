@@ -10,5 +10,6 @@ Expression put(Expression in);
 Expression putTyped(Expression in);
 Expression take(Expression in);
 Expression drop(Expression in);
+Expression dropTyped(Expression in);
 
 }
