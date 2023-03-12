@@ -16,6 +16,6 @@ result@{
 10000"
     groups = split!("" split!(newline input))
     aggregate_group = in strings out
-        sum!map_stack!(parse_natural_number strings)
-    result = max_item!map_stack!(aggregate_group groups)
+        sum!map!(parse_natural_number strings)
+    result = max_item!map!(aggregate_group groups)
 }
