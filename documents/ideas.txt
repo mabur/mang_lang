@@ -1,5 +1,4 @@
 * Add type checking gradually, by addint it to the tests gradually, by adding test.check_and_evaluate and gradually replace test.evaluate.
-  - Have different definition of built-in functions for type-checking-pass.
   - Failing type checking on aoc:
     - aoc_22_01 fails
     - aoc_22_03 fails
@@ -19,12 +18,7 @@ TODO Standard Library:
     - get0,..., can already be used for tables. Mirror that behaviour.
     - table!index (make constant or logN?)
     - get!(key table default_value) (logN)
-* Elementwise arithmetic for more convenient vector math. See aoc_22_09.
 * all_of, any_of, none_of
-  - add generic map that requires that f has same input and output type,
-    so that it does not change type of the container.
-    Then the same map could be used for stack, string, table.
-    That map could be used instead of replace_*.
 * Interface for containers:
   - Define and & or on tuples/pairs instead of stacks.
   - add empty? is_empty? function for containers?
@@ -73,9 +67,6 @@ TODO Standard Library:
 * Add unordered/reversed versions of algorithms like map, clear_if, replace_if etc.
   - Let unordered be default since it makes sense for both stacks and tables.
   - clear_if_ordered, map_ordered.
-* Vector math. Is manglang suitable for numerical computations on arrays?
-  - Define add, sub, mul, div so that they only take two inputs that could be either list of numbers or number.
-  - norms, dot, inner_products
 * Functions:
   - Math: trigonometry
   - Character: string_from_number, number_from_string
