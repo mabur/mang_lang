@@ -8,14 +8,6 @@
 namespace arithmetic {
 namespace {
 
-double number(Expression expression) {
-    switch (expression.type) {
-        case NUMBER : return getNumber(expression);
-        //case ANY : return 0.0 / 0.0;
-        default: throw StaticTypeError(expression.type, "built-in number");
-    }
-}
-
 double character(Expression expression) {
     switch (expression.type) {
         case CHARACTER : return getCharacter(expression);
@@ -44,7 +36,7 @@ Expression binaryOperation(Expression in, BinaryOperation operation) {
     if (left.type == EMPTY || right.type == EMPTY) {
         return makeNan();
     }
-    return makeNumber(operation(number(left), number(right)));
+    return makeNumber(operation(getNumber(left), getNumber(right)));
 }
 
 } // namespace
@@ -72,35 +64,35 @@ Expression less(Expression in) {
     if (left.type == EMPTY || right.type == EMPTY) {
         return makeNan();
     }
-    return makeBoolean(number(left) < number(right));
+    return makeBoolean(getNumber(left) < getNumber(right));
 }
 
 Expression sqrt(Expression in) {
     if (in.type == EMPTY) {
         return makeNan();
     }
-    return makeNumber(std::sqrt(number(in)));
+    return makeNumber(std::sqrt(getNumber(in)));
 }
 
 Expression round(Expression in) {
     if (in.type == EMPTY) {
         return makeNan();
     }
-    return makeNumber(std::round(number(in)));
+    return makeNumber(std::round(getNumber(in)));
 }
 
 Expression round_up(Expression in) {
     if (in.type == EMPTY) {
         return makeNan();
     }
-    return makeNumber(std::ceil(number(in)));
+    return makeNumber(std::ceil(getNumber(in)));
 }
 
 Expression round_down(Expression in) {
     if (in.type == EMPTY) {
         return makeNan();
     }
-    return makeNumber(std::floor(number(in)));
+    return makeNumber(std::floor(getNumber(in)));
 }
 
 Expression ascii_number(Expression in) {
@@ -114,7 +106,7 @@ Expression ascii_character(Expression in) {
     if (in.type == EMPTY) {
         return makeNan();
     }
-    return makeCharacter(CodeRange{}, static_cast<char>(number(in)));
+    return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
 }
 
 }
