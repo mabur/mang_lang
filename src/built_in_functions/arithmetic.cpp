@@ -7,6 +7,18 @@
 
 namespace arithmetic {
 namespace {
+    
+struct BinaryTuple {
+    Expression left;
+    Expression right;
+};
+
+BinaryTuple getBinaryTuple(Expression in) {
+    const auto expressions = getEvaluatedTuple(in).expressions;
+    const auto left = expressions.at(0);
+    const auto right = expressions.at(1);
+    return BinaryTuple{left, right};
+}
 
 Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, x);
@@ -18,10 +30,8 @@ Expression makeBoolean(bool x) {
 
 template <typename BinaryOperation>
 Expression binaryOperation(Expression in, BinaryOperation operation) {
-    const auto expressions = getEvaluatedTuple(in).expressions;
-    const auto left = expressions.at(0);
-    const auto right = expressions.at(1);
-    return makeNumber(operation(getNumber(left), getNumber(right)));
+    const auto tuple = getBinaryTuple(in);
+    return makeNumber(operation(getNumber(tuple.left), getNumber(tuple.right)));
 }
 
 } // namespace
@@ -43,10 +53,8 @@ Expression div(Expression in) {
 }
 
 Expression less(Expression in) {
-    const auto expressions = getEvaluatedTuple(in).expressions;
-    const auto left = expressions.at(0);
-    const auto right = expressions.at(1);
-    return makeBoolean(getNumber(left) < getNumber(right));
+    const auto tuple = getBinaryTuple(in);
+    return makeBoolean(getNumber(tuple.left) < getNumber(tuple.right));
 }
 
 Expression sqrt(Expression in) {
@@ -95,9 +103,9 @@ Expression checkTypesCharacterToNumber(Expression in) {
 }
 
 Expression checkTypesNumberNumberToNumber(Expression in) {
-    const auto expressions = getEvaluatedTuple(in).expressions;
-    const auto left = expressions.at(0).type;
-    const auto right = expressions.at(1).type;
+    const auto tuple = getBinaryTuple(in);
+    const auto left = tuple.left.type;
+    const auto right = tuple.right.type;
     if (left != EMPTY && left != NUMBER) {
         throw StaticTypeError(left, "left checkTypesNumberNumberToNumber");
     }
@@ -108,9 +116,9 @@ Expression checkTypesNumberNumberToNumber(Expression in) {
 }
 
 Expression checkTypesNumberNumberToBoolean(Expression in) {
-    const auto expressions = getEvaluatedTuple(in).expressions;
-    const auto left = expressions.at(0).type;
-    const auto right = expressions.at(1).type;
+    const auto tuple = getBinaryTuple(in);
+    const auto left = tuple.left.type;
+    const auto right = tuple.right.type;
     if (left != EMPTY && left != NUMBER) {
         throw StaticTypeError(left, "left checkTypesNumberNumberToBoolean");
     }
