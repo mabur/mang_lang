@@ -4,6 +4,12 @@
 
 #include "expression.h"
 
+struct BinaryTuple {
+    Expression left;
+    Expression right;
+};
+
+BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
 
@@ -74,10 +80,3 @@ Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
 Expression makeString(CodeRange code, String expression);
 Expression makeEmptyString(CodeRange code, EmptyString expression);
 Expression makeBoolean(CodeRange code, Boolean expression);
-
-struct BinaryTuple {
-    Expression left;
-    Expression right;
-};
-
-BinaryTuple getBinaryTuple(Expression in);

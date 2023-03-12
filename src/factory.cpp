@@ -102,6 +102,13 @@ typename ArrayType::value_type getExpression(
 
 } // namespace
 
+BinaryTuple getBinaryTuple(Expression in) {
+    const auto tuple = getEvaluatedTuple(in);
+    const auto left = tuple.expressions.at(0);
+    const auto right = tuple.expressions.at(1);
+    return BinaryTuple{left, right};
+}
+
 void clearMemory() {
     evaluated_dictionaries.clear();
     dictionaries.clear();
@@ -413,11 +420,4 @@ EmptyString getEmptyString(Expression expression) {
 
 Boolean getBoolean(Expression expression) {
     return getExpression(expression, BOOLEAN, booleans);
-}
-
-BinaryTuple getBinaryTuple(Expression in) {
-    const auto tuple = getEvaluatedTuple(in);
-    const auto left = tuple.expressions.at(0);
-    const auto right = tuple.expressions.at(1);
-    return BinaryTuple{left, right};
 }
