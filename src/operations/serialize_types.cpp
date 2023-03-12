@@ -14,12 +14,8 @@ std::string serializeTable(Expression s) {
     if (rows.empty()) {
         return "<>";
     }
-    auto result = std::string{'<'};
-    for (const auto& row : rows) {
-        result += serialize_types(row.key) + ':' + serialize_types(row.value) + ' ';
-    }
-    result.back() = '>';
-    return result;
+    const auto& row = *rows.begin();
+    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
 }
 
 std::string serializeEvaluatedTable(Expression s) {
@@ -27,12 +23,8 @@ std::string serializeEvaluatedTable(Expression s) {
     if (rows.empty()) {
         return "<>";
     }
-    auto result = std::string{'<'};
-    for (const auto& row : rows) {
-        result += serialize_types(row.second.key) + ':' + serialize_types(row.second.value) + ' ';
-    }
-    result.back() = '>';
-    return result;
+    const auto& row = rows.begin()->second;
+    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
 }
 
 } // namespace

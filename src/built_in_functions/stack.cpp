@@ -18,6 +18,17 @@ Expression clear(Expression in) {
     }
 }
 
+Expression clearTyped(Expression in) {
+    switch (in.type) {
+        case EVALUATED_STACK: return in;
+        case EMPTY_STACK: return in;
+        case STRING: return in;
+        case EMPTY_STRING: return in;
+        case EVALUATED_TABLE: return in;
+        default: throw UnexpectedExpression(in.type, "clear operation");
+    }
+}
+
 Expression put(Expression in) {
     const auto binary = getBinaryInput(in);
     const auto item = binary.left;

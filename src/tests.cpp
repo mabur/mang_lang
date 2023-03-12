@@ -873,8 +873,8 @@ int main() {
     });
     test.evaluate_types("clear stack", {
         {"clear![]", "EMPTY_STACK"},
-        {"clear![1]", "EMPTY_STACK"},
-        {"clear![1 2]", "EMPTY_STACK"},
+        {"clear![1]", "[NUMBER]"},
+        {"clear![1 2]", "[NUMBER]"},
     });
     test.evaluate_all("clear stack", {
         {"clear![]", "[]"},
@@ -888,8 +888,8 @@ int main() {
     });
     test.evaluate_types("clear string", {
         {R"(clear!"")", "EMPTY_STRING"},
-        {R"(clear!"a")", "EMPTY_STRING"},
-        {R"(clear!"ab")", "EMPTY_STRING"},
+        {R"(clear!"a")", "STRING"},
+        {R"(clear!"ab")", "STRING"},
     });
     test.evaluate_all("clear string", {
         {R"(clear!"")", R"("")"},

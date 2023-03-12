@@ -41,7 +41,7 @@ Expression builtIns() {
 
 Expression builtInsTypes() {
     auto definitions = Definitions{};
-    definitions.add("clear", define(stack_functions::clear));
+    definitions.add("clear", define(stack_functions::clearTyped));
     definitions.add("put", define(stack_functions::put));
     definitions.add("take", define(stack_functions::take));
     definitions.add("drop", define(stack_functions::drop));
