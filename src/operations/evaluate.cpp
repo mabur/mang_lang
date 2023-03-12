@@ -213,7 +213,7 @@ Expression applyStringIndexing(String string, Number number) {
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
         if (string.rest.type == EMPTY_STACK) {
-            return Expression{};
+            throw std::runtime_error("String index out of range");
         }
         string = getString(string.rest);
     }
