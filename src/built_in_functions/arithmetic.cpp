@@ -8,14 +8,6 @@
 namespace arithmetic {
 namespace {
 
-double character(Expression expression) {
-    switch (expression.type) {
-        case CHARACTER : return getCharacter(expression);
-        //case ANY : return '\0';
-        default: throw StaticTypeError(expression.type, "built-in character");
-    }
-}
-
 Expression makeNan() {
     return makeNumber(CodeRange{}, 1.0 / 1.0);
 }
@@ -99,7 +91,7 @@ Expression ascii_number(Expression in) {
     if (in.type == EMPTY) {
         return makeNan();
     }
-    return makeNumber(character(in));
+    return makeNumber(getCharacter(in));
 }
 
 Expression ascii_character(Expression in) {
