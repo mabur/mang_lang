@@ -97,7 +97,7 @@ Expression evaluateDictionary(
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
-            const auto new_value = stack_functions::put(tuple);
+            const auto new_value = stack_functions::putTyped(tuple);
             result.definitions.add(name, new_value);
         }
         else if (type == WHILE_STATEMENT) {
