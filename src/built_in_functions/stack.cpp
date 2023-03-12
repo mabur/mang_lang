@@ -55,7 +55,7 @@ Expression putTyped(Expression in) {
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return collection;
         case EMPTY_STRING: return putString(collection, item);
-        case EVALUATED_TABLE: return table_functions::put(collection, item);
+        case EVALUATED_TABLE: return table_functions::putTyped(collection, item);
         default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
 }
