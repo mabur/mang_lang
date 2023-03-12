@@ -12,7 +12,7 @@
 namespace {
 
 bool areTypesConsistent(ExpressionType left, ExpressionType right) {
-    if (left == EMPTY || right == EMPTY) return true;
+    if (left == ANY || right == ANY) return true;
     if (left == EMPTY_STACK && right == EVALUATED_STACK) return true;
     if (left == EVALUATED_STACK && right == EMPTY_STACK) return true;
     if (left == EMPTY_STRING && right == STRING) return true;
@@ -29,7 +29,7 @@ void boolean(Expression expression) {
         case EMPTY_STACK: return;
         case STRING: return;
         case EMPTY_STRING: return;
-        case EMPTY: return;
+        case ANY: return;
         default: throw std::runtime_error(
             std::string{"Static type error.\n"} +
             "Cannot convert type " + NAMES[expression.type] + " to boolean."
@@ -43,10 +43,10 @@ Expression evaluateConditional(
     boolean(evaluate_types(conditional.expression_if, environment));
     const auto left = evaluate_types(conditional.expression_then, environment);
     const auto right = evaluate_types(conditional.expression_else, environment);
-    if (left.type == EMPTY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
+    if (left.type == ANY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
         return right;
     }
-    if (right.type == EMPTY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
+    if (right.type == ANY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
         return left;
     }
     if (left.type != right.type) {
@@ -96,7 +96,7 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            if (value.type != EMPTY) {
+            if (value.type != ANY) {
                 result.definitions.add(name, value);
             }
         }

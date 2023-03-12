@@ -47,7 +47,7 @@ Expression putTyped(Expression in) {
     const auto tuple = getBinaryTuple(in);
     const auto item = tuple.left;
     const auto collection = tuple.right;
-    if (item.type == EMPTY) {
+    if (item.type == ANY) {
         return collection;
     }
     switch (collection.type) {

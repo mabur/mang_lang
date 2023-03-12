@@ -31,7 +31,7 @@ Expression put(Expression table, Expression item) {
 }
 
 Expression putTyped(Expression table, Expression item) {
-    if (item.type == EMPTY) {
+    if (item.type == ANY) {
         return table;
     }
     const auto tuple = getBinaryTuple(item);

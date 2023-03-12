@@ -41,7 +41,7 @@ enum ExpressionType {
     STRING,
     EMPTY_STRING,
     BOOLEAN,
-    EMPTY,
+    ANY,
 };
 
 const auto NAMES = std::vector<std::string>{
@@ -76,7 +76,7 @@ const auto NAMES = std::vector<std::string>{
     "STRING",
     "EMPTY_STRING",
     "BOOLEAN",
-    "EMPTY",
+    "ANY",
 };
 
 struct StaticTypeError : public std::runtime_error
@@ -104,7 +104,7 @@ struct MissingKey : public std::runtime_error
 };
 
 struct Expression {
-    ExpressionType type = EMPTY;
+    ExpressionType type = ANY;
     size_t index = 0;
     CodeRange range;
 };

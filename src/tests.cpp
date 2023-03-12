@@ -305,9 +305,9 @@ int main() {
         {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"}
     });
     test.evaluate_types("dictionary for", {
-        {"{c=[] for i in c end}", "{c=EMPTY_STACK i=EMPTY}"},
-        {"{c=<> for i in c end}", "{c=<> i=(EMPTY EMPTY)}"},
-        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<EMPTY:EMPTY> i=(EMPTY EMPTY)}"}, // TODO 
+        {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
+        {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
+        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<ANY:ANY> i=(ANY ANY)}"}, // TODO 
     });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
@@ -1216,7 +1216,7 @@ int main() {
         {"reverse![0 1 2]", "[2 1 0]"},
     });
     test.evaluate_types("reverse table", {
-        {"reverse!<>", "<EMPTY:EMPTY>"}, // TODO
+        {"reverse!<>", "<ANY:ANY>"}, // TODO
         {"reverse!<0:0>", "<NUMBER:NUMBER>"},
         {"reverse!<0:0 1:1>", "<NUMBER:NUMBER>"},
         {"reverse!<0:0 1:1 2:2>", "<NUMBER:NUMBER>"},
@@ -1260,7 +1260,7 @@ int main() {
     test.evaluate_types("make_table", {
         {"make_table![]", "<>"},
         {"make_table![(3 33) (1 11) (2 22)]", "<NUMBER:NUMBER>"},
-        {"make_table!<>", "<EMPTY:EMPTY>"}, // TODO
+        {"make_table!<>", "<ANY:ANY>"}, // TODO
         {"make_table!<3:33 1:11 2:22>", "<NUMBER:NUMBER>"},
     });
     test.evaluate_all("make_table", {
@@ -1359,7 +1359,7 @@ int main() {
         {R"(replace_if!(in x out equal?(x 'a') 'b' "ab_ba"))", R"("bb_bb")"},
     });
     test.evaluate_types("enumerate stack", {
-        {"enumerate![]", "[(NUMBER EMPTY)]"}, // TODO
+        {"enumerate![]", "[(NUMBER ANY)]"}, // TODO
         {"enumerate![4]", "[(NUMBER NUMBER)]"},
         {"enumerate![4 3]", "[(NUMBER NUMBER)]"},
     });
@@ -1629,7 +1629,7 @@ int main() {
         {"zip2!([0 1 2] [3 4 5])", "[(0 3) (1 4) (2 5)]"},
     });
     test.evaluate_types("zip2", {
-        {"zip2!([] [])", "[(EMPTY EMPTY)]"}, // TODO
+        {"zip2!([] [])", "[(ANY ANY)]"}, // TODO
         {"zip2!([0] [1])", "[(NUMBER NUMBER)]"},
         {"zip2!([0 1] [2 3])", "[(NUMBER NUMBER)]"},
         {"zip2!([0 1 2] [3 4 5])", "[(NUMBER NUMBER)]"},

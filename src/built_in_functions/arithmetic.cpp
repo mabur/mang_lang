@@ -70,21 +70,21 @@ Expression ascii_character(Expression in) {
 }
 
 Expression checkTypesNumberToNumber(Expression in) {
-    if (in.type != EMPTY && in.type != NUMBER) {
+    if (in.type != ANY && in.type != NUMBER) {
         throw StaticTypeError(in.type, "checkTypesNumberToNumber");
     }
     return makeNumber(1);
 }
 
 Expression checkTypesNumberToCharacter(Expression in) {
-    if (in.type != EMPTY && in.type != NUMBER) {
+    if (in.type != ANY && in.type != NUMBER) {
         throw StaticTypeError(in.type, "checkTypesNumberToCharacter");
     }
     return makeCharacter(CodeRange{}, 'a');
 }
 
 Expression checkTypesCharacterToNumber(Expression in) {
-    if (in.type != EMPTY && in.type != CHARACTER) {
+    if (in.type != ANY && in.type != CHARACTER) {
         throw StaticTypeError(in.type, "checkTypesCharacterToNumber");
     }
     return makeNumber(1);
@@ -94,10 +94,10 @@ Expression checkTypesNumberNumberToNumber(Expression in) {
     const auto tuple = getBinaryTuple(in);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
-    if (left != EMPTY && left != NUMBER) {
+    if (left != ANY && left != NUMBER) {
         throw StaticTypeError(left, "left checkTypesNumberNumberToNumber");
     }
-    if (right != EMPTY && right != NUMBER) {
+    if (right != ANY && right != NUMBER) {
         throw StaticTypeError(right, "right checkTypesNumberNumberToNumber");
     }
     return makeNumber(1);
@@ -107,10 +107,10 @@ Expression checkTypesNumberNumberToBoolean(Expression in) {
     const auto tuple = getBinaryTuple(in);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
-    if (left != EMPTY && left != NUMBER) {
+    if (left != ANY && left != NUMBER) {
         throw StaticTypeError(left, "left checkTypesNumberNumberToBoolean");
     }
-    if (right != EMPTY && right != NUMBER) {
+    if (right != ANY && right != NUMBER) {
         throw StaticTypeError(right, "right checkTypesNumberNumberToBoolean");
     }
     return makeBoolean(true);
