@@ -26,13 +26,6 @@ bool allOfPairs(Expression left, Expression right, Predicate predicate, int empt
     return left.type == empty_type && right.type == empty_type;
 }
 
-struct BinaryInput {
-    Expression left;
-    Expression right;
-};
-
-BinaryInput getBinaryInput(Expression list);
-
 Expression putString(Expression rest, Expression top);
 Expression putStack(Expression rest, Expression top);
 Expression putEvaluatedStack(Expression rest, Expression top);

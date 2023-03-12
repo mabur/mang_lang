@@ -30,9 +30,9 @@ Expression clearTyped(Expression in) {
 }
 
 Expression put(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto item = binary.left;
-    const auto collection = binary.right;
+    const auto tuple = getBinaryTuple(in);
+    const auto item = tuple.left;
+    const auto collection = tuple.right;
     switch (collection.type) {
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
@@ -44,9 +44,9 @@ Expression put(Expression in) {
 }
 
 Expression putTyped(Expression in) {
-    const auto binary = getBinaryInput(in);
-    const auto item = binary.left;
-    const auto collection = binary.right;
+    const auto tuple = getBinaryTuple(in);
+    const auto item = tuple.left;
+    const auto collection = tuple.right;
     if (item.type == EMPTY) {
         return collection;
     }

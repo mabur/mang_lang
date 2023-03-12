@@ -9,11 +9,6 @@ CodeRange addCodeRanges(Expression rest, Expression top) {
     return CodeRange{first_character, last_character};
 }
 
-BinaryInput getBinaryInput(Expression expression) {
-    const auto tuple = getEvaluatedTuple(expression);
-    return BinaryInput{tuple.expressions.at(0), tuple.expressions.at(1)};
-}
-
 Expression putString(Expression rest, Expression top) {
     return makeString(addCodeRanges(top, rest), String{top, rest});
 }

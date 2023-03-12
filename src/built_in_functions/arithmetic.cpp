@@ -7,18 +7,6 @@
 
 namespace arithmetic {
 namespace {
-    
-struct BinaryTuple {
-    Expression left;
-    Expression right;
-};
-
-BinaryTuple getBinaryTuple(Expression in) {
-    const auto expressions = getEvaluatedTuple(in).expressions;
-    const auto left = expressions.at(0);
-    const auto right = expressions.at(1);
-    return BinaryTuple{left, right};
-}
 
 Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, x);
