@@ -370,6 +370,10 @@ int main() {
         {"is 1 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
         {"is 2 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
         {"is 3 0 then 0 1 then 1 2 then 4 else 5", "NUMBER"},
+        {"is 0 0 then [] else [1]", "[NUMBER]"},
+        {"is 0 0 then [1] else []", "EMPTY_STACK"},
+        {R"(is 0 0 then "" else "a")", "STRING"},
+        {R"(is 0 0 then "a" else "")", "EMPTY_STRING"},
     });
     test.evaluate_all("is", {
         {"is 0 0 then 1 else 2", "1"},

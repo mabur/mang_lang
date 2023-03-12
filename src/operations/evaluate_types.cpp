@@ -11,6 +11,15 @@
 
 namespace {
 
+bool areTypesConsistent(ExpressionType left, ExpressionType right) {
+    if (left == EMPTY || right == EMPTY) return true;
+    if (left == EMPTY_STACK && right == EVALUATED_STACK) return true;
+    if (left == EVALUATED_STACK && right == EMPTY_STACK) return true;
+    if (left == EMPTY_STRING && right == STRING) return true;
+    if (left == STRING && right == EMPTY_STRING) return true;
+    return left == right;
+}
+    
 void boolean(Expression expression) {
     switch (expression.type) {
         case NUMBER: return;
@@ -60,8 +69,12 @@ Expression evaluateIs(
     const auto else_expression = evaluate_types(is_expression.expression_else, environment);
     for (const auto alternative : is_expression.alternatives) {
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        if (else_expression.type != alternative_expression.type) {
-            throw StaticTypeError(else_expression.type, "Different types in is-alternatives");
+        if (!areTypesConsistent(alternative_expression.type, else_expression.type)) {
+            throw std::runtime_error(
+                "Static type error. Different output types in is-alternatives " +
+                NAMES[alternative_expression.type] + " & " +
+                NAMES[else_expression.type]
+            );
         }
     }
     return else_expression;
