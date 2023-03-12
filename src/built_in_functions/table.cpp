@@ -6,6 +6,7 @@
 #include "../expression.h"
 #include "../factory.h"
 #include "../operations/serialize.h"
+#include "../operations/serialize_types.h"
 
 namespace table_functions {
 
@@ -20,15 +21,12 @@ Expression get(Expression in) {
         tuple.expressions.at(2) : iterator->second.value;
 }
 
-void updateTable(Expression key, Expression value, Expression table) {
-    getMutableEvaluatedTable(table).rows[serialize(key)] = {key, value};
-}
-
 Expression put(Expression table, Expression item) {
     const auto tuple = getBinaryTuple(item);
     const auto key = tuple.left;
     const auto value = tuple.right;
-    updateTable(key, value, table);
+    auto& rows = getMutableEvaluatedTable(table).rows;
+    rows[serialize(key)] = {key, value};
     return table;
 }
 
@@ -39,7 +37,8 @@ Expression putTyped(Expression table, Expression item) {
     const auto tuple = getBinaryTuple(item);
     const auto key = tuple.left;
     const auto value = tuple.right;
-    updateTable(key, value, table);
+    auto& rows = getMutableEvaluatedTable(table).rows; 
+    rows[serialize_types(key)] = {key, value};
     return table;
 }
 
