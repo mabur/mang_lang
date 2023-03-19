@@ -211,6 +211,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
+        case DYNAMIC_EXPRESSION: return Expression{};
         case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);

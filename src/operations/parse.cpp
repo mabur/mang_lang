@@ -402,6 +402,16 @@ Expression parseNegInf(CodeRange code) {
     );
 }
 
+Expression parseDynamicExpression(CodeRange code) {
+    auto first = code.begin();
+    code = parseKeyword(code, "dynamic");
+    auto inner_expression = parseExpression(code);
+    code.first = end(inner_expression);
+    return makeDynamicExpression(
+        CodeRange{first, code.begin()}, DynamicExpression{inner_expression}
+    );
+}
+
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
@@ -437,6 +447,7 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "if")) {return parseConditional(code);}
         if (isKeyword(code, "is")) {return parseIs(code);}
         if (isKeyword(code, "in")) {return parseAnyFunction(code);}
+        if (isKeyword(code, "dynamic")) {return parseDynamicExpression(code);}
         if (isKeyword(code, "out")) {throwParseException(code);}
         if (isKeyword(code, "then")) {throwParseException(code);}
         if (isKeyword(code, "else")) {throwParseException(code);}

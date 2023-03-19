@@ -9,6 +9,13 @@ std::string serializeName(Expression name) {
 }
 
 template<typename Serializer>
+std::string serializeDynamicExpression(
+    Serializer serializer, const DynamicExpression& dynamic_expression
+) {
+    return "dynamic " + serializer(dynamic_expression.expression);
+}
+
+template<typename Serializer>
 std::string serializeConditional(Serializer serializer, const Conditional& conditional) {
     return "if " + serializer(conditional.expression_if) +
         " then " + serializer(conditional.expression_then) +

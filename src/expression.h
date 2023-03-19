@@ -41,6 +41,7 @@ enum ExpressionType {
     STRING,
     EMPTY_STRING,
     BOOLEAN,
+    DYNAMIC_EXPRESSION,
     ANY,
 };
 
@@ -76,6 +77,7 @@ const auto NAMES = std::vector<std::string>{
     "STRING",
     "EMPTY_STRING",
     "BOOLEAN",
+    "DYNAMIC_EXPRESSION",
     "ANY",
 };
 
@@ -116,7 +118,11 @@ using Character = char;
 // Unlike the other atoms Names are just created during parsing.
 // After that the std::vector of Names is static, which makes it easier to pass
 // around references or pointers.
-using Name = std::string; 
+using Name = std::string;
+
+struct DynamicExpression {
+    Expression expression;
+};
 
 struct Conditional {
     Expression expression_if;

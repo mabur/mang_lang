@@ -48,6 +48,7 @@ std::string serialize_types(Expression expression) {
         case FUNCTION_APPLICATION: return serializeFunctionApplication(serialize_types, getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
+        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(serialize_types, getDynamicExpression(expression));
         default: return NAMES[expression.type];
     }
 }

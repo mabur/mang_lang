@@ -531,6 +531,15 @@ int main() {
     test.evaluate("recursive function", { // TODO: support type checking
         {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     });
+    test.reformat("dynamic", {
+        {"dynamic 1", "dynamic 1"},
+    });
+    test.evaluate_types("dynamic", {
+        {"dynamic 1", "ANY"},
+    });
+    test.evaluate_all("dynamic", {
+        {"dynamic 1", "1"},
+    });
     test.evaluate_types("lookup function dictionary", {
         {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "NUMBER"},

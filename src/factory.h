@@ -13,6 +13,7 @@ BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
 
+DynamicExpression getDynamicExpression(Expression expression);
 Definition getDefinition(Expression expression);
 PutAssignment getPutAssignment(Expression expression);
 WhileStatement getWhileStatement(Expression expression);
@@ -51,6 +52,7 @@ Boolean getBoolean(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeCharacter(CodeRange code, Character expression);
+Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);
 Expression makeConditional(CodeRange code, Conditional expression);
 Expression makeIs(CodeRange code, IsExpression expression);
 Expression makeDictionary(CodeRange code, Dictionary expression);
