@@ -27,14 +27,6 @@ std::string evaluate_types(std::string code) {
     return result;
 }
 
-std::string evaluate(std::string code) {
-    const auto built_ins = builtIns();
-    const auto standard_library = evaluate(parse(STANDARD_LIBRARY), built_ins);
-    const auto result = serialize(evaluate(parse(code), standard_library));
-    clearMemory();
-    return result;
-}
-
 std::string evaluate_all(std::string code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();

@@ -33,7 +33,7 @@ int main(int argc,  char **argv) {
 
     try {
         cout << "Evaluating program ... ";
-        const auto result = evaluate(code);
+        const auto result = evaluate_all(code);
         cout << "Done." << endl;
 
 
