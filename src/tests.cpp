@@ -309,6 +309,10 @@ int main() {
         {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
         {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<ANY:ANY> i=(ANY ANY)}"}, // TODO 
     });
+    test.evaluate_types("ANY in dictionary", {
+        {"y@{y=take![]}", "ANY"},
+        {"y@{y=1 y=take![]}", "NUMBER"},
+    });
     test.evaluate_types("dictionary", {
         {"{}", "{}"},
         {"{ }", "{}"},
@@ -528,14 +532,20 @@ int main() {
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
         {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
     });
-    test.evaluate("recursive function", { // TODO: support type checking
-        {"y@{f=in x out if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
+    test.evaluate_types("recursive function", {
+        {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 y=f!3}", "ANY"},
+    });
+    test.evaluate_all("recursive function", {
+        {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     });
     test.reformat("dynamic", {
         {"dynamic 1", "dynamic 1"},
     });
     test.evaluate_types("dynamic", {
         {"dynamic 1", "ANY"},
+    });
+    test.evaluate_types("dynamic", {
+        {"dynamic if x then add!(x f!dec!x) else 0", "ANY"},
     });
     test.evaluate_all("dynamic", {
         {"dynamic 1", "1"},

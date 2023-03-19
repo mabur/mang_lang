@@ -96,7 +96,8 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            if (value.type != ANY) {
+            // TODO: is this a principled approach?
+            if (value.type != ANY || !result.definitions.has(name)) {
                 result.definitions.add(name, value);
             }
         }
