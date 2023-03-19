@@ -158,7 +158,7 @@ Manglang consists of the following basic building blocks:
 <img src="control_flow.png" width=48 height=48>
 </td>
 <td>
-<a href="#control_flow">Control flow</a> like <a href="#if">if</a>,  <a href="#is">is</a>, <a href="#while">while</a> and <a href="#for">for</a>.
+<a href="#control_flow">Control flow</a> like <a href="#if">if</a>,  <a href="#is">is</a>, <a href="#while">while</a>, <a href="#for">for</a> and <a href="#dynamic">dynamic</a>.
 </td>
 </tr>
 <tr>
@@ -637,6 +637,16 @@ Both versions above evaluate to the output below:
 There are two things to note about for-loops in Manglang. The first thing is that in the expression <code>for item in name</code> both <code>item</code> and <code>name</code> are names. This means that a container needs to first be given a name before it can be used in a for-loop. The container CANNOT be inlined directly like <code>for item in [1 2 3]</code>. Another thing to note is that the for loop rebinds these names for each iteration of the loop and leave them in their final state after the loop. So in this sense a for-loop consumes the name of the container. If you want to refer to the full container also after the loop then you need to assign a different name to it before entering the for-loop.
 </p>
 
+<h2 id="dynamic">4.d. Dynamic</h2>
+<p>
+Manglang is statically typed but provides an escape hatch. The dynamic-operator can be used to skip static type checking for the expression that follows it like: <code>dynamic expression</code>. The static type checker considers the type of this to be the top-type \ any-type. But run-time dynamic type-checks are still happening. The dynamic-operator is useful in some rare situations:
+<ul>
+    <li>To deal with situations that the static type checker cannot (yet) analyze, like recursive functions.</li>
+    <li>To disregard the static type checker, even for situations that it can handle but where you want looser more dynamic types.</li>
+</ul>
+Manglang considers the dynamic-operator as an escape hatch that should almost never be used.
+</p>
+
 <h1 id="functions">5. Functions <img src="function.png" width=48 height=48></h1>
 
 <h2 id="function_application">5.a. Function Application</h2>
@@ -723,7 +733,7 @@ Here are some examples of defining and calling functions:
   count = in stack
     out
       if stack then
-        inc!count!drop!stack
+        dynamic inc!count!drop!stack
       else
         0
   a = square!3
@@ -744,7 +754,7 @@ This program is evaluated to:
   count = in stack
     out
       if stack then
-        inc!count!drop!stack
+        dynamic inc!count!drop!stack
       else
         0
   a = 9
@@ -756,7 +766,11 @@ This program is evaluated to:
 </pre>
 <p>
 The if-then-else operator is used to choose what value to return based on a condition.
-Functions can be recursive like the <code>count</code> example above.
+</p>
+<p>
+Functions can be recursive like the <code>count</code> example above. However, the static type checker of Manglang does not (yet) support recursion so if we want recursion then we need to disable static type checking for the recursive expression by using the <code>dynamic</code> type operator.
+</p>
+<p>
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
 </p>
 <pre>
