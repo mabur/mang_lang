@@ -1,6 +1,5 @@
 * Add type checking gradually, by addint it to the tests gradually, by adding test.check_and_evaluate and gradually replace test.evaluate.
   - Failing type checking on aoc:
-    - aoc_22_07 fails: Due to dynamic dictionaries. Cannot find symbol path_and_size in dictionary.
     - aoc_22_21 fails: Due to recursion.
 * Add bottom type and/or top type, never/undefined and/or any
   - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.

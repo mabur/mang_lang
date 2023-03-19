@@ -57,7 +57,7 @@ $ ls
     handle_command = in (command state) out is take!take!command
         'c' then handle_cd!(command state)
         'l' then handle_ls!(command state)
-        else {}
+        else state
     state = fold!(handle_command commands state)
    
     update_directory_sizes = in (path_and_size directory_sizes) out directory_sizes@{
