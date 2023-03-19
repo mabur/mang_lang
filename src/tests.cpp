@@ -1409,6 +1409,11 @@ int main() {
         {"transpose![[1] [2]]", "[[1 2]]"},
         {"transpose![[1 2] [3 4]]", "[[1 3] [2 4]]"},
     });
+    test.evaluate_all("transpose container", {
+        //{R"(transpose![<>])", "[[]]"}, // TODO: fix type checking
+        {R"(transpose![""])", "[]"},  // TODO: is this good?
+        //{R"(transpose!["a"])", "[['a']]"}, // TODO: fix type checking
+    });
     test.evaluate_all("sum stack", {
         {"sum![]", "0"},
         {"sum![1]", "1"},
