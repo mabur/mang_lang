@@ -19,7 +19,7 @@ hmdt: 32"
     parse_line = in string out (take_many!(4 string) drop_many!(6 string))    
     monkey_strings = map_table!(parse_line split!(newline input))
     operations = <'+':add '-':sub '*':mul '/':div>
-    evaluate_operation = in string out result@{
+    evaluate_operation = in string out dynamic result@{
         left = evaluate_node!take_many!(4 string)
         right = evaluate_node!drop_many!(7 string)
         operation = operations!string!5
