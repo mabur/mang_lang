@@ -1,6 +1,36 @@
 * Add type checking gradually, by addint it to the tests gradually, by adding test.check_and_evaluate and gradually replace test.evaluate.
   - Failing type checking on aoc:
     - aoc_22_21 fails: Due to recursion.
+* Recursion and type checking alternatives:
+  - Do not support recursion.
+  - Add a recursive keyword for functions that shortcuts and returns ANY during type checking.
+    - Does not compose well over the different kind of function .
+  - Add a general built-in operator that shortcuts and returns ANY during type checking, and identity during for normal evaluation.
+* Similarities between:
+  - Type annotation, dealing with recursion, type asserts, value asserts.
+  - Could have:
+    - dynamic expression // Bra. Operator that shortcuts during type pass and returns ANY. Can be used for recursion or dynamic situations.
+    - assume NUMBER expression // Shortcut during first pass and just return the type. Check equal types during second pass.
+    - type NUMBER expression // Operator that checks equal types in both first pass and second pass.
+    - check NUMBER expression
+    - require NUMBER expressionn
+    - assert 1 expression // Operator that checks equal types in first pass and equal values in second pass.
+    - assert_equal 1 expression // Operator that checks equal types in first pass and equal values in second pass.
+    - assert_equal_types!(NUMBER expression) // Check equal types in both first pass and second pass.
+    - assert_equal_values!(1 expression) // Check equal types in first pass and equal values in second pass.
+  - Annotating types for functions:
+    in x out type NUMBER mul!(x type NUMBER x)
+    in x out assume NUMBER mul!(x x)
+    in NUMBER:x out NUMBER:mul!(x x) (Bra)
+
+    addv = in (a b) out type [NUMBER] map!(add zip2!(a b))
+    addv = in ([NUMBER]:a [NUMBER]:b) out [NUMBER]:map!(add zip2!(a b))
+    Bra. Optional type annotation for functions:
+    Numbers = [Number]
+    addv = in (Numbers:a Numbers:b) out Numbers:map!(add zip2!(a b))
+    Person = {age=0}
+    update = in (Person:person Numbers:age) out Person:...
+
 * Add bottom type and/or top type, never/undefined and/or any
   - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.
   - Can never/undefined help resolving some anys during type evaluation?
