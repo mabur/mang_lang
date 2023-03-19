@@ -1,11 +1,3 @@
-* Add type checking gradually, by addint it to the tests gradually, by adding test.check_and_evaluate and gradually replace test.evaluate.
-  - Failing type checking on aoc:
-    - aoc_22_21 fails: Due to recursion.
-* Recursion and type checking alternatives:
-  - Do not support recursion.
-  - Add a recursive keyword for functions that shortcuts and returns ANY during type checking.
-    - Does not compose well over the different kind of function .
-  - Add a general built-in operator that shortcuts and returns ANY during type checking, and identity during for normal evaluation.
 * Similarities between:
   - Type annotation, dealing with recursion, type asserts, value asserts.
   - Could have:
