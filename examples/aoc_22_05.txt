@@ -13,6 +13,7 @@ move 1 from 1 to 2"
     groups = split!("" lines)
     stacks = groups!0
     movements = groups!1
+    stacks = map!(make_stack stacks)
     stacks = transpose!stacks
     is_not_upper_case = in c out not?is_upper?c
     is_empty = in container out not?container
