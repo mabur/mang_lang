@@ -106,66 +106,33 @@ TODO example programs:
 * Advent of code
 
 TODO Language:
-* Extend while statements with for statements and if statements.
-
-container = ...
-while container
-  item = take!container
-  ...
-  container = drop!container
-end
-
-// Most convenient for programmer, but extra complexity to implement initialization before loop starts running the first time.
-for item in [1 2 3]
-  ...
-end
-
-// Less convenient, but no special initialization needed.
-container = [1 2 3]
-for item in container
-  ...
-end
-
+* Control structures for dictionaries.
   - If drop is implemented for numbers then we can do both:
-    for item in range!10 -> 0,1,2,3,4,5,6,7,8,9
-    for i in 10 -> 10,9,8,7,6,5,4,3,2,1
-  - Could have syntax that shows that both the name of the item and the container is added to the dictionary:
-    for item in container as expression
-    for item in container from expression
-    for item, container in expression
-    for item in container = expression
-    container = expression for item in container
-  - Could alternatively require that item is a new name and container is an existing name:
-    for item in container
-  - Implement more control structures like for & if by first refactoring dictionary statements,
+    N=10 stack=range!N for i in stack -> 0,1,2,3,4,5,6,7,8,9 which creates explicit stack.
+    N=10 for i in N -> 10,9,8,7,6,5,4,3,2,1 which just use numbers.
+  - Implement more control structures like if by first refactoring dictionary statements,
     so that we can have hierarchical groups of statements corresponding to "scope".
   - Support index in for loop:
     for index, item in container
-* Add syntactic sugar for put:
-  table += (k v)
-  container += item
-  container << item Ruby
-  container ..= item Lua
-  container .= item Perl PHP
-  container ,= item
-* Does not work for aoc22_12_07, since then the name is first used for the input and then shadowed by usage in the dictionary.
-* Add syntactic sugar for numbers +=, -=.
-  += could potentially be implemented by extending "put" to numbers.
-* (Add syntactic sugar for drop):
-  container -=
-  container >>
-  container--
+    container2 = enumerate!container for pair in container2
+  - Add syntactic sugar for numbers +=, -=.
+    += could potentially be implemented by extending "put" to numbers.
+  - Add syntactic sugar for drop:
+    container--
+  - Conditional return statements for dictionary
+      return if a
+  - If statements for dictionaries.
+      if a
+        b = c
+      end
 * If-expression with multiple branches without "else if" nesting:
-    if
-      a then b
-      c then e
-      else f
-* Conditional return statements for dictinary
-    return if a
-* If statements for dictionaries.
-    if a
-      b = c
-    end
+  - if a then b
+    else if c then e
+    else f
+  - if
+    a then b
+    c then e
+    else f
 * Nodes & Passes:
   - Parse
     - serialize
