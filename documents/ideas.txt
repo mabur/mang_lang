@@ -1,3 +1,10 @@
+TYPE SYSTEM
+* Add bottom type and/or top type, never/undefined and/or any
+  - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.
+  - Can never/undefined help resolving some anys during type evaluation?
+  - Tag never/undefined with an error message.
+  - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED.
+  - Difference in bottom type NEVER/EMPTY for type-evaluation and value-evaluation.
 * Similarities between:
   - Type annotation, dealing with recursion, type asserts, value asserts.
   - Could have:
@@ -22,20 +29,51 @@
     addv = in (Numbers:a Numbers:b) out Numbers:map!(add zip2!(a b))
     Person = {age=0}
     update = in (Person:person Numbers:age) out Person:...
+* Type "assertions".
+  - For what cases?
+    - any concrete function (simple and pretty)
+    - any function
+    - any concrete symbol
+    - any symbol
+    - any concrete expression
+    - any expression
+  - TypePredicates:
+    - number, function, container, 
+    - TypeFunctions can take a function and return another function
+      - optional!number, variant![number character], container!number, function!(a b), tuple!(number character)
+      - How to handle lazy evaluation for optional and variant?
+        - Add general lazy/shortcut or operator?
+  - Type annotations vs simple inference from code?
+    - Could let the type checker/inferer automatically add it to the code or to the editor.
+    - Could support both options and gradual typing.
+  - static assertions
+  - static_assert!equal?(x Number)
+  - static_assert!any?[equal?(x Number) equal?(x Character)]
+  - is_string = in s out equal?(take!name@d Character)
+  - in d out all?[is_string?name@d is_number?age@d]
+  - Assert as general expression or statement in dict?
+    - Just for input and output of functions, or any symbol or any expression?
+    - Expression:
+      - x = check!(x is_number)
+    - Statement:
+      in (a b c) out {
+        is_number?x
+        is_variant3?(b [is_number is_character is_boolean])
+        is_number?(take!c is_number)
+        is_container?(c)
+      }
+      square = in x out mul!(x x)
+      square = in number : x out number : mul!(x x)    (bra)
+      square = in x out number : mul!(number : x x)
+      square = in x out check!(number mul!(check!(number x) x))
+      square = in x out check!(number result@{
+          x = check!(number x)
+          result = mul!(x x)
+        }
+      )
 
-* Add bottom type and/or top type, never/undefined and/or any
-  - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.
-  - Can never/undefined help resolving some anys during type evaluation?
-  - Tag never/undefined with an error message.
-  - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED.
-  - Difference in bottom type NEVER/EMPTY for type-evaluation and value-evaluation.
-TODO Standard Library:
-* Indexing
-  - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
-  - What about tables? When to return key-value-tuple and when to just return value?
-    - get0,..., can already be used for tables. Mirror that behaviour.
-    - table!index (make constant or logN?)
-    - get!(key table default_value) (logN)
+
+STANDARD LIBRARY
 * all_of, any_of, none_of
 * Interface for containers:
   - Define and & or on tuples/pairs instead of stacks.
@@ -89,23 +127,14 @@ TODO Standard Library:
   - Math: trigonometry
   - Character: string_from_number, number_from_string
 
-TODO Tools:
-* Type checking from command line.
-* Command line interface for reading source from file and piping it to interpretor
-* Code formatting
-  - Indentaiton and line breaks.
-  - Colors and syntax high-lighting.
-  - Implement tool that takes a source file and outputs an html.
-  - Homepage
-* Web interpreter using wasm.
 
-TODO example programs:
-* Raytracing
-* Parsing Json
-* Parsing Manglang
-* Advent of code
-
-TODO Language:
+LANGUAGE SYNTAX & SEMANTICS
+* Indexing
+  - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
+  - What about tables? When to return key-value-tuple and when to just return value?
+    - get0,..., can already be used for tables. Mirror that behaviour.
+    - table!index (make constant or logN?)
+    - get!(key table default_value) (logN)
 * Control structures for dictionaries.
   - If drop is implemented for numbers then we can do both:
     N=10 stack=range!N for i in stack -> 0,1,2,3,4,5,6,7,8,9 which creates explicit stack.
@@ -133,124 +162,17 @@ TODO Language:
     a then b
     c then e
     else f
-* Nodes & Passes:
-  - Parse
-    - serialize
-    - evaluate_types
-      - serialize_types
-    - evaluate
-      - serialize
-* Better error messages:
-  - Always run type checking for better error messages.
+* Add short-circuit "and" "or" to while statement.
+* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * How to solve aoc_22_13 if type checking would enforce homogeneous stacks?
   - Isinstance
   - Inheritance/polymorphism
   - Run-time-dispatch
   - Sum-type/choice-type
-* Type "assertions".
-  - For what cases?
-    - any concrete function (simple and pretty)
-    - any function
-    - any concrete symbol
-    - any symbol
-    - any concrete expression
-    - any expression
-  - TypePredicates:
-    - number, function, container, 
-    - TypeFunctions can take a function and return another function
-      - optional!number, variant![number character], container!number, function!(a b), tuple!(number character)
-      - How to handle lazy evaluation for optional and variant?
-        - Add general lazy/shortcut or operator?
-  - Type annotations vs simple inference from code?
-    - Could let the type checker/inferer automatically add it to the code or to the editor.
-    - Could support both options and gradual typing.
-  - static assertions
-  - static_assert!equal?(x Number)
-  - static_assert!any?[equal?(x Number) equal?(x Character)]
-  - is_string = in s out equal?(take!name@d Character)
-  - in d out all?[is_string?name@d is_number?age@d]
-  - Assert as general expression or statement in dict?
-    - Just for input and output of functions, or any symbol or any expression?
-    - Expression:
-      - x = check!(x is_number)
-    - Statement:
-      in (a b c) out {
-        is_number?x
-        is_variant3?(b [is_number is_character is_boolean])
-        is_number?(take!c is_number)
-        is_container?(c)
-      }
-      square = in x out mul!(x x)
-      square = in number : x out number : mul!(x x)    (bra)
-      square = in x out number : mul!(number : x x)
-      square = in x out check!(number mul!(check!(number x) x))
-      square = in x out check!(number result@{
-          x = check!(number x)
-          result = mul!(x x)
-        }
-      )
-* James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
-  - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
-  - Compare iterators over an array.
-* https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
-* Data & code in multiple files:
-  - Importing source files.
-  - Reading text file. Interpret text file as manglang source, but surround it with "" to make a string.
-* Add short-circuit "and" "or" to while statement.
-* Type checking for tables.
-  - Enforce homogenous keys and values for type checking. Unlike dictionaries that have homogeneous keys/labels but heterogenous values.
-* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
-* Stack and table comprehension and fold/reduction?
-* Ranges. Store both stacks and tables as ranges.
-  - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
-  - Or at least as long as we do not mutate while iterating.
-  - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
-* Persistent hash map like in Clojure. Array mapped hash tries (Bagwell: non-persistent, Rich Hickey: persistent).
-  - HAMT - Hash Array Mapped Tries.
-  - When making copies, it creates new nodes for the path from the root to the leaf, and shares the rest.
-* Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
-  - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
-  - Let them have the semantics:
-    evaluate preserve expression -> expression
-  - "Evaluate" function as general solution that can be used to convert strings to names and general code, e.g. for parsing json.
-* Advent of code Needs
-  * Look at advent of code 2021 day 10 for example of code with a bit of friction
-    - Try to implement calculation of most common words in a text.
-  * Memory
-    - 64 bit
-    - Use less memory
-* Memory management.
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
-* Split structs for evaluated and non-evaluated for:
-  - Dictionaries (done)
-  - Lists (done)
-  - Tables (done)
-  - Functions (todo)
-* Error handling:
-  - Output logs
-  - Make "1 2" throw a parse error
-  - c++ add systematic error messages when parsing fails
-    - Print all sub-expressions that it parsed
-  - Better error messages
-  - Tests for syntax error and run-time error.
-* Fix FunctionDictionary closure
-* Rename to Mangelang?
-* Can expression trees be implemented more like values and less like pointers? More like lisp?
-https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
-* Implement everything needed to convert between json and manglang in manglang.
-  - Dynamic creation of dictionaries.
-* Subsets of manglang:
-  - Data: number, character, dictionaries, list, string
-  - Minimal computation: number, dictionaries, references, child references, function application, function definition
-
-* Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
-  - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
-  - Serializing: tree -> manglang code. (EBNF?, same as above?)
-  - Evaluation: tree -> tree. (graphical nodes? algebra)
-
 * Oding keyword "using" for unpacking dictionary into dictionary.
 {
   size = {width=320 height=240}
@@ -282,6 +204,89 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 }
 
 
+SYSTEM IMPLEMENTATION
+* Nodes & Passes:
+  - Parse
+    - serialize
+    - evaluate_types
+      - serialize_types
+    - evaluate
+      - serialize
+* Better error messages:
+  - Always run type checking for better error messages.
+* James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
+  - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
+  - Compare iterators over an array.
+* https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
+* Data & code in multiple files:
+  - Importing source files.
+  - Reading text file. Interpret text file as manglang source, but surround it with "" to make a string.
+
+* Ranges. Store both stacks and tables as ranges.
+  - Is it safe for stacks and tables, as long as we only do insertion but not erasure of the shared storage?
+  - Or at least as long as we do not mutate while iterating.
+  - https://stackoverflow.com/questions/6438086/iterator-invalidation-rules-for-c-containers
+* Persistent hash map like in Clojure. Array mapped hash tries (Bagwell: non-persistent, Rich Hickey: persistent).
+  - HAMT - Hash Array Mapped Tries.
+  - When making copies, it creates new nodes for the path from the root to the leaf, and shares the rest.
+* Nils says that quasiquote and unquote and quote in racket could be a nice fit for manglang and vice versa, for macros and meta-programming.
+  - Could add two operations and keywords: evaluate and anti-evaluate/devaluate/integrate/pass/ignore/skip/preserve
+  - Let them have the semantics:
+    evaluate preserve expression -> expression
+  - "Evaluate" function as general solution that can be used to convert strings to names and general code, e.g. for parsing json.
+* Advent of code Needs
+  * Look at advent of code 2021 day 10 for example of code with a bit of friction
+    - Try to implement calculation of most common words in a text.
+  * Memory
+    - 64 bit
+    - Use less memory
+* Memory management.
+* Split structs for evaluated and non-evaluated for:
+  - Dictionaries (done)
+  - Lists (done)
+  - Tables (done)
+  - Functions (todo)
+* Error handling:
+  - Output logs
+  - Make "1 2" throw a parse error
+  - c++ add systematic error messages when parsing fails
+    - Print all sub-expressions that it parsed
+  - Better error messages
+  - Tests for syntax error and run-time error.
+* Fix FunctionDictionary closure
+* Rename to Mangelang?
+* Can expression trees be implemented more like values and less like pointers? More like lisp?
+https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_and_scopes/
+* Implement everything needed to convert between json and manglang in manglang.
+  - Dynamic creation of dictionaries.
+* Subsets of manglang:
+  - Data: number, character, dictionaries, list, string
+  - Minimal computation: number, dictionaries, references, child references, function application, function definition
+
+* Documentation and specification. Describe the steps and rules more formally, in metalanguage or graphical.
+  - Parsing: manglang code -> tree. (EBNF, railroad diagrams)
+  - Serializing: tree -> manglang code. (EBNF?, same as above?)
+  - Evaluation: tree -> tree. (graphical nodes? algebra)
+
+
+TOOLS:
+* Type checking from command line.
+* Command line interface for reading source from file and piping it to interpretor
+* Code formatting
+  - Indentaiton and line breaks.
+  - Colors and syntax high-lighting.
+  - Implement tool that takes a source file and outputs an html.
+  - Homepage
+* Web interpreter using wasm.
+
+
+EXAMPLE PROGRAMS:
+* Raytracing
+* Parsing Json
+* Parsing Manglang
+* Advent of code
+
+
 SIMILAR LANGUAGES
 * Lisp family: https://en.wikipedia.org/wiki/Lisp_(programming_language)
 * Json: https://www.json.org/
@@ -304,12 +309,14 @@ SIMILAR LANGUAGES
 * (Pico) http://pico.vub.ac.be/
 * (Azor) https://github.com/cstuartroe/azor
 
+
 WEBPAGE
 https://www.passerine.io/
 https://nim-lang.org/
 https://github.com/tuqqu/oxide-lang
 https://www.pyret.org/
 https://docs.scala-lang.org/tour/tour-of-scala.html
+
 
 Languages supported by Github:
 https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
