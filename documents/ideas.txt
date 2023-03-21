@@ -9,24 +9,24 @@ TYPE SYSTEM
   - Type annotation, dealing with recursion, type asserts, value asserts.
   - Could have:
     - dynamic expression // Bra. Operator that shortcuts during type pass and returns ANY. Can be used for recursion or dynamic situations.
-    - assume NUMBER expression // Shortcut during first pass and just return the type. Check equal types during second pass.
-    - type NUMBER expression // Operator that checks equal types in both first pass and second pass.
-    - check NUMBER expression
-    - require NUMBER expressionn
+    - assume Number expression // Shortcut during first pass and just return the type. Check equal types during second pass.
+    - type Number expression // Operator that checks equal types in both first pass and second pass.
+    - check Number expression
+    - require Number expressionn
     - assert 1 expression // Operator that checks equal types in first pass and equal values in second pass.
     - assert_equal 1 expression // Operator that checks equal types in first pass and equal values in second pass.
-    - assert_equal_types!(NUMBER expression) // Check equal types in both first pass and second pass.
+    - assert_equal_types!(Number expression) // Check equal types in both first pass and second pass.
     - assert_equal_values!(1 expression) // Check equal types in first pass and equal values in second pass.
   - Annotating types for functions:
-    in x out type NUMBER mul!(x type NUMBER x)
-    in x out assume NUMBER mul!(x x)
-    in NUMBER:x out NUMBER:mul!(x x) (Bra)
+    in x out type Number mul!(x type Number x)
+    in x out assume Number mul!(x x)
+    in Number:x out Number:mul!(x x) (Bra)
 
-    addv = in (a b) out type [NUMBER] map!(add zip2!(a b))
-    addv = in ([NUMBER]:a [NUMBER]:b) out [NUMBER]:map!(add zip2!(a b))
+    addv = in (a b) out type [Number] map!(add zip2!(a b))
+    addv = in ([Number]:a [Number]:b) out [Number]:map!(add zip2!(a b))
     Bra. Optional type annotation for functions:
     Numbers = [Number]
-    addv = in (Numbers:a Numbers:b) out Numbers:map!(add zip2!(a b))
+    addv = in (Numbers : a Numbers : b) out Numbers : map!(add zip2!(a b)) (bra, enforce that type is name for simpler syntax and readability)
     Person = {age=0}
     update = in (Person:person Numbers:age) out Person:...
 * Type "assertions".
