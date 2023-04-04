@@ -22,11 +22,11 @@ TYPE SYSTEM
     in x out assume Number mul!(x x)
     in Number:x out Number:mul!(x x) (Bra)
 
-    addv = in (a b) out type [Number] map!(add zip2!(a b))
-    addv = in ([Number]:a [Number]:b) out [Number]:map!(add zip2!(a b))
     Bra. Optional type annotation for functions:
     Numbers = [Number]
+    PairOfNumbers = (Numbers Numbers)
     addv = in (Numbers : a Numbers : b) out Numbers : map!(add zip2!(a b)) (bra, enforce that type is name for simpler syntax and readability)
+    addv = in PairOfNumbers : x out Numbers : map!(add zip2!x)
     Person = {age=0}
     update = in (Person:person Numbers:age) out Person:...
 * Type "assertions".
@@ -71,7 +71,13 @@ TYPE SYSTEM
           result = mul!(x x)
         }
       )
-
+* Added version of "is" that checks that the type is equal instead of the value. "is_type_of":
+  * How to solve aoc_22_13 if type checking would enforce homogeneous stacks?
+    - Isinstance
+    - Inheritance/polymorphism
+    - Run-time-dispatch
+    - Sum-type/choice-type
+    - dynamic keyword
 
 STANDARD LIBRARY
 * all_of, any_of, none_of
@@ -162,12 +168,6 @@ LANGUAGE SYNTAX & SEMANTICS
     a then b
     c then e
     else f
-* Added version of "is" that checks that the type is equal instead of the value. "is_type":
-  * How to solve aoc_22_13 if type checking would enforce homogeneous stacks?
-    - Isinstance
-    - Inheritance/polymorphism
-    - Run-time-dispatch
-    - Sum-type/choice-type
 * Add short-circuit "and" "or" to while statement.
 * Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Empty tuple () for MISSING, NULL.
