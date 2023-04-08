@@ -143,15 +143,14 @@ LANGUAGE SYNTAX & SEMANTICS
     - get!(key table default_value) (logN)
 * Control structures for dictionaries.
   - If drop is implemented for numbers then we can do both:
-    N=10 stack=range!N for i in stack -> 0,1,2,3,4,5,6,7,8,9 which creates explicit stack.
-    N=10 for i in N -> 10,9,8,7,6,5,4,3,2,1 which just use numbers.
+    N=10 stack=range!N for i in stack -> i=0,1,2,3,4,5,6,7,8,9 which creates explicit stack.
+    N=10 for i in N -> N=10,9,8,7,6,5,4,3,2,1 i=1,1,1,1,1,1,1,1,1,1 which just use numbers.
   - Implement more control structures like if by first refactoring dictionary statements,
     so that we can have hierarchical groups of statements corresponding to "scope".
   - Support index in for loop:
     for index, item in container
     container2 = enumerate!container for pair in container2
-  - Add syntactic sugar for numbers +=, -=.
-    += could potentially be implemented by extending "put" to numbers.
+  - Add syntactic sugar for numbers besides += like -=.
   - Add syntactic sugar for drop:
     container--
   - Conditional return statements for dictionary
