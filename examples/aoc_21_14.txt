@@ -29,13 +29,10 @@ result@{
             remaining_rules = rules
             while remaining_rules
                 rule = take!remaining_rules
-                prefix =
-                    if drop!drop!prefix then
-                        prefix
-                    else if equal?(rule!0 prefix) then
-                        put_each!([b rule!1 a] "")
-                    else
-                        prefix
+                prefix = if
+                    drop!drop!prefix then prefix
+                    equal?(rule!0 prefix) then put_each!([b rule!1 a] "")
+                    else prefix
                 remaining_rules = drop!remaining_rules
             end
             while drop!prefix
