@@ -160,14 +160,6 @@ LANGUAGE SYNTAX & SEMANTICS
       if a
         b = c
       end
-* If-expression with multiple branches without "else if" nesting:
-  - if a then b
-    else if c then e
-    else f
-  - if
-    a then b
-    c then e
-    else f
 * Add short-circuit "and" "or" to while statement.
 * Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Empty tuple () for MISSING, NULL.
