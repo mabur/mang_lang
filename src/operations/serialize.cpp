@@ -222,6 +222,19 @@ std::string serializeEvaluatedTable(Expression s) {
     return result;
 }
 
+std::string serializeEvaluatedTableView(Expression s) {
+    const auto table = getEvaluatedTableView(s);
+    if (table.empty()) {
+        return "<>";
+    }
+    auto result = std::string{'<'};
+    for (auto i = table.first; i != table.last; ++i) {
+        result += i->first + ':' + serialize(i->second.value) + ' ';
+    }
+    result.back() = '>';
+    return result;
+}
+
 std::string serializeTypesEvaluatedStack(Expression s) {
     return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
 }
@@ -289,6 +302,7 @@ std::string serialize(Expression expression) {
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
         case TABLE: return serializeTable(expression);
         case EVALUATED_TABLE: return serializeEvaluatedTable(expression);
+        case EVALUATED_TABLE_VIEW: return serializeEvaluatedTableView(expression);
         case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize, expression);
         case STACK: return serializeStack(expression);
