@@ -115,6 +115,14 @@ Expression parseNamedElement(CodeRange code) {
             Definition{std::move(name), expression}
         );
     }
+    else if (startsWith(code, '-')) {
+        code = parseKeyword(code, "--");
+        code = parseWhiteSpace(code);
+        return makeDecrementAssignment(
+            CodeRange{first, code.first},
+            DecrementAssignment{std::move(name)}
+        );
+    }
     else {
         code = parseKeyword(code, "+=");
         code = parseWhiteSpace(code);

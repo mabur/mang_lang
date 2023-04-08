@@ -34,6 +34,7 @@ std::vector<WhileEndStatement> while_end_statements;
 std::vector<ForEndStatement> for_end_statements;
 std::vector<Definition> definitions;
 std::vector<PutAssignment> put_assignments;
+std::vector<DecrementAssignment> decrement_assignments;
 std::vector<String> strings;
 std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
@@ -255,6 +256,10 @@ Expression makePutAssignment(CodeRange code, PutAssignment expression) {
     return makeExpression(code, expression, PUT_ASSIGNMENT, put_assignments);
 }
 
+Expression makeDecrementAssignment(CodeRange code, DecrementAssignment expression) {
+    return makeExpression(code, expression, DECREMENT_ASSIGNMENT, decrement_assignments);
+}
+
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
     return makeExpression(code, expression, WHILE_STATEMENT, while_statements);
 }
@@ -295,6 +300,10 @@ Definition getDefinition(Expression expression) {
 
 PutAssignment getPutAssignment(Expression expression) {
     return getExpression(expression, PUT_ASSIGNMENT, put_assignments);
+}
+
+DecrementAssignment getDecrementAssignment(Expression expression) {
+    return getExpression(expression, DECREMENT_ASSIGNMENT, decrement_assignments);
 }
 
 WhileStatement getWhileStatement(Expression expression) {

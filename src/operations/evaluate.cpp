@@ -391,6 +391,14 @@ Expression evaluateDictionaryTypes(
             const auto new_value = stack_functions::putTyped(tuple);
             result.definitions.add(name, new_value);
         }
+        else if (type == DECREMENT_ASSIGNMENT) {
+            const auto decrement_assignment = getDecrementAssignment(statement);
+            const auto name = getName(decrement_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto current = result.definitions.lookup(name);
+            const auto new_value = stack_functions::dropTyped(current);
+            result.definitions.add(name, new_value);
+        }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWhileStatement(statement);
             booleanTypes(evaluate_types(while_statement.expression, result_environment));
@@ -440,6 +448,15 @@ Expression evaluateDictionary(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = stack_functions::put(tuple);
+            result.definitions.add(name, new_value);
+            i += 1;
+        }
+        else if (type == DECREMENT_ASSIGNMENT) {
+            const auto decrement_assignment = getDecrementAssignment(statement);
+            const auto name = getName(decrement_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto current = result.definitions.lookup(name);
+            const auto new_value = stack_functions::drop(current);
             result.definitions.add(name, new_value);
             i += 1;
         }

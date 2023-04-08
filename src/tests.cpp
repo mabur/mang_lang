@@ -341,6 +341,21 @@ int main() {
         {"{a=<> a+=(1 2)}", "{a=<1:2>}"},
         {"{a=3 a+=4}", "{a=7}"},
     });
+    test.reformat("decrement assignment", {
+        {"{c=1 c--}", "{c=1 c--}"},
+    });
+    test.evaluate_types("decrement assignment", {
+        {"{c=1 c--}", "{c=NUMBER}"},
+        {"{c=[1] c--}", "{c=[NUMBER]}"},
+        {"{c=<1:2> c--}", "{c=<NUMBER:NUMBER>}"},
+    });
+    test.evaluate_all("decrement assignment", {
+        {"{c=1 c--}", "{c=0}"},
+        {"{c=[1] c--}", "{c=[]}"},
+        {"{c=[1 2] c--}", "{c=[2]}"},
+        //{"{c=<1:2> c--}", "{c=<>}"}, // TODO
+        //{"{c=<1:2 3:4> c--}", "{c=<3:4>}"}, // TODO
+    });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
         {"if  1  then  2  else  3", "if 1 then 2 else 3"},
