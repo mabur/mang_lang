@@ -38,9 +38,8 @@ std::string serializeIs(const IsExpression& is_expression) {
     return result;
 }
 
-template<typename Serializer>
-std::string serializeDefinition(Serializer serializer, const Definition& element) {
-    return getName(element.name) + '=' + serializer(element.expression) + ' ';
+std::string serializeDefinition(const Definition& element) {
+    return getName(element.name) + '=' + serialize(element.expression) + ' ';
 }
 
 template<typename Serializer>
@@ -275,7 +274,7 @@ std::string serialize(Expression expression) {
         case IS: return serializeIs(getIs(expression));
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize, getEvaluatedDictionary(expression));
-        case DEFINITION: return serializeDefinition(serialize, getDefinition(expression));
+        case DEFINITION: return serializeDefinition(getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(serialize, getPutAssignment(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(serialize, getWhileStatement(expression));
         case FOR_STATEMENT: return serializeForStatement(serialize, getForStatement(expression));
