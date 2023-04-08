@@ -124,15 +124,15 @@ struct DynamicExpression {
     Expression expression;
 };
 
-struct Conditional {
-    Expression expression_if;
-    Expression expression_then;
-    Expression expression_else;
-};
-
 struct Alternative {
     Expression left;
     Expression right;
+};
+
+// TODO: make cheaper to copy or pass by reference or pointer?
+struct Conditional {
+    std::vector<Alternative> alternatives;
+    Expression expression_else;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?

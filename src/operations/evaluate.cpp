@@ -294,32 +294,33 @@ bool isEqual(Expression left, Expression right) {
 Expression evaluateConditionalTypes(
     const Conditional& conditional, Expression environment
 ) {
-    booleanTypes(evaluate_types(conditional.expression_if, environment));
-    const auto left = evaluate_types(conditional.expression_then, environment);
-    const auto right = evaluate_types(conditional.expression_else, environment);
-    if (left.type == ANY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
-        return right;
+    for (const auto alternative : conditional.alternatives) {
+        evaluate_types(alternative.left, environment);
     }
-    if (right.type == ANY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
-        return left;
+    const auto else_expression = evaluate_types(conditional.expression_else, environment);
+    for (const auto alternative : conditional.alternatives) {
+        const auto alternative_expression = evaluate_types(alternative.right, environment);
+        if (!areTypesConsistent(alternative_expression.type, else_expression.type)) {
+            throw std::runtime_error(
+                "Static type error. Different output types in is-alternatives " +
+                    NAMES[alternative_expression.type] + " & " +
+                    NAMES[else_expression.type]
+            );
+        }
     }
-    if (left.type != right.type) {
-        throw std::runtime_error(
-            std::string{"Static type error.\n"} +
-                "Cannot return two different types for if-then-else:\n" +
-                NAMES[left.type] + " and " + NAMES[right.type]
-        );
-    }
-    return left;
+    return else_expression;
 }
 
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment
 ) {
-    return
-        boolean(evaluate(conditional.expression_if, environment)) ?
-        evaluate(conditional.expression_then, environment) :
-        evaluate(conditional.expression_else, environment);
+    for (const auto alternative : conditional.alternatives) {
+        const auto left_value = evaluate(alternative.left, environment);
+        if (boolean(left_value)) {
+            return evaluate(alternative.right, environment);
+        }
+    }
+    return evaluate(conditional.expression_else, environment);
 }
 
 Expression evaluateIsTypes(

@@ -17,9 +17,16 @@ std::string serializeDynamicExpression(const DynamicExpression& dynamic_expressi
 }
 
 std::string serializeConditional(const Conditional& conditional) {
-    return "if " + serialize(conditional.expression_if) +
-        " then " + serialize(conditional.expression_then) +
-        " else " + serialize(conditional.expression_else);
+    auto result = std::string{"if "};
+    for (const auto& alternative : conditional.alternatives) {
+        result += serialize(alternative.left);
+        result += " then ";
+        result += serialize(alternative.right);
+        result += " ";
+    }
+    result += "else ";
+    result += serialize(conditional.expression_else);
+    return result;
 }
 
 std::string serializeIs(const IsExpression& is_expression) {

@@ -27,15 +27,20 @@ Expression parseConditional(CodeRange code) {
 
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
-    auto expression_if = parseExpression(code);
-    code.first = end(expression_if);
-    code = parseWhiteSpace(code);
+    
+    auto alternatives = std::vector<Alternative>{};
 
-    code = parseKeyword(code, "then");
-    code = parseWhiteSpace(code);
-    auto expression_then = parseExpression(code);
-    code.first = end(expression_then);
-    code = parseWhiteSpace(code);
+    while (!isKeyword(code, "else")) {
+        auto left = parseExpression(code);
+        code.first = end(left);
+        code = parseWhiteSpace(code);
+        code = parseKeyword(code, "then");
+        code = parseWhiteSpace(code);
+        auto right = parseExpression(code);
+        code.first = end(right);
+        code = parseWhiteSpace(code);
+        alternatives.push_back(Alternative{left, right});
+    }
 
     code = parseKeyword(code, "else");
     code = parseWhiteSpace(code);
@@ -43,11 +48,10 @@ Expression parseConditional(CodeRange code) {
     code.first = end(expression_else);
     code = parseWhiteSpace(code);
 
-    return makeConditional(CodeRange{first, code.begin()}, {
-        expression_if,
-        expression_then,
-        expression_else
-    });
+    return makeConditional(
+        CodeRange{first, code.begin()},
+        Conditional{alternatives, expression_else}
+    );
 }
 
 Expression parseIs(CodeRange code) {
