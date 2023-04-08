@@ -102,28 +102,6 @@ std::string serializeFunctionApplication(Serializer serializer, const FunctionAp
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
     return serializeName(lookup_symbol.name);
 }
-
-std::string serializeTypesEvaluatedStack(Expression s) {
-    return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
-}
-
-std::string serializeTypesTable(Expression s) {
-    const auto rows = getTable(s).rows;
-    if (rows.empty()) {
-        return "<>";
-    }
-    const auto& row = *rows.begin();
-    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
-}
-
-std::string serializeTypesEvaluatedTable(Expression s) {
-    const auto& rows = getEvaluatedTable(s).rows;
-    if (rows.empty()) {
-        return "<>";
-    }
-    const auto& row = rows.begin()->second;
-    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
-}
     
 std::string serializeDictionary(const Dictionary& dictionary) {
     auto result = std::string{};
@@ -209,6 +187,15 @@ std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
     return result;
 }
 
+std::string serializeTypesTable(Expression s) {
+    const auto rows = getTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    const auto& row = *rows.begin();
+    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
+}
+    
 std::string serializeTable(Expression s) {
     const auto rows = getTable(s).rows;
     if (rows.empty()) {
@@ -220,6 +207,15 @@ std::string serializeTable(Expression s) {
     }
     result.back() = '>';
     return result;
+}
+
+std::string serializeTypesEvaluatedTable(Expression s) {
+    const auto& rows = getEvaluatedTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    const auto& row = rows.begin()->second;
+    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
 }
 
 std::string serializeEvaluatedTable(Expression s) {
@@ -235,6 +231,10 @@ std::string serializeEvaluatedTable(Expression s) {
     return result;
 }
 
+std::string serializeTypesEvaluatedStack(Expression s) {
+    return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
+}
+    
 std::string appendElement(const std::string& s, Expression element) {
     return s + serialize(element) + ' ';
 }
