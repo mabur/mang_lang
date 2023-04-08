@@ -96,6 +96,7 @@ Expression take(Expression in) {
         case STRING: return getString(in).top;
         case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
+        case NUMBER: return makeNumber({}, 1);
         default: throw UnexpectedExpression(in.type, "take");
     }
 }
@@ -108,6 +109,7 @@ Expression takeTyped(Expression in) {
         case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in));
         case EMPTY_STACK: return Expression{};
         case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
+        case NUMBER: return in;
         default: throw UnexpectedExpression(in.type, "take");
     }
 }

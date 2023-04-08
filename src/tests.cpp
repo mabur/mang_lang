@@ -926,6 +926,14 @@ int main() {
         {"take![4]", "4"},
         {"take![3 4]", "3"},
     });
+    test.evaluate_types("take number", {
+        {"take!1", "NUMBER"},
+        {"take!2", "NUMBER"},
+    });
+    test.evaluate_all("take number", {
+        {"take!1", "1"},
+        {"take!2", "1"},
+    });
     test.evaluate_types("take string", {
         {R"(take!"b")", "CHARACTER"},
         {R"(take!"ab")", "CHARACTER"},
