@@ -36,7 +36,7 @@ void boolean(Expression expression) {
     }
 }
 
-Expression evaluateConditional(
+Expression evaluateConditionalTypes(
     const Conditional& conditional, Expression environment
 ) {
     boolean(evaluate_types(conditional.expression_if, environment));
@@ -58,7 +58,7 @@ Expression evaluateConditional(
     return left;
 }
 
-Expression evaluateIs(
+Expression evaluateIsTypes(
     const IsExpression& is_expression, Expression environment
 ) {
     evaluate_types(is_expression.input, environment);
@@ -79,7 +79,7 @@ Expression evaluateIs(
     return else_expression;
 }
 
-Expression evaluateDictionary(
+Expression evaluateDictionaryTypes(
     const Dictionary& dictionary, Expression environment
 ) {
     const auto result_environment = makeEvaluatedDictionary(
@@ -167,7 +167,7 @@ Expression applyStringIndexing(String string) {
     return string.top;
 }
 
-Expression evaluateFunctionApplication(
+Expression evaluateFunctionApplicationTypes(
     const FunctionApplication& function_application,
     Expression environment
 ) {
@@ -187,7 +187,7 @@ Expression evaluateFunctionApplication(
         case EMPTY_STACK: return Expression{};
         case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
         
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
+        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplicationTypes");
     }
 }
     
@@ -212,14 +212,14 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case DYNAMIC_EXPRESSION: return Expression{};
-        case CONDITIONAL: return evaluateConditional(getConditional(expression), environment);
-        case IS: return evaluateIs(getIs(expression), environment);
-        case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
+        case CONDITIONAL: return evaluateConditionalTypes(getConditional(expression), environment);
+        case IS: return evaluateIsTypes(getIs(expression), environment);
+        case DICTIONARY: return evaluateDictionaryTypes(getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
