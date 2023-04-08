@@ -321,6 +321,8 @@ int main() {
         {"{a=1 b=a}", "{a=NUMBER b=NUMBER}"},
         {"{a=[] a+=1}", "{a=[NUMBER]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[NUMBER]}"},
+        {"{a=<> a+=(1 2)}", "{a=<NUMBER:NUMBER>}"},
+        {"{a=0 a+=1}", "{a=NUMBER}"},
     });
     test.evaluate_all("dictionary", {
         {"{}", "{}"},
@@ -336,6 +338,8 @@ int main() {
         {R"({a=1})", R"({a=1})"},
         {"{a=[] a+=1}", "{a=[1]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[3 2 1]}"},
+        {"{a=<> a+=(1 2)}", "{a=<1:2>}"},
+        {"{a=3 a+=4}", "{a=7}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
