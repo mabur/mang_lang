@@ -272,6 +272,8 @@ std::string serializeString(Expression string) {
 std::string serialize_types(Expression expression) {
     // TODO: increase test coverage for all cases.
     // Do we need to add functions for serializing non-evaluated containers?
+    // I guess they can occur in function bodies? Or maybe not?
+    // In that case can we remove all things that disappear when evaluated?
     switch (expression.type) {
         case CONDITIONAL: return serializeConditional(serialize_types, getConditional(expression));
         case IS: return serializeIs(serialize_types, getIs(expression));
