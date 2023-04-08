@@ -86,10 +86,9 @@ std::string serializeLookupChild(const LookupChild& lookup_child) {
     return serializeName(lookup_child.name) + "@" + serialize(lookup_child.child);
 }
 
-template<typename Serializer>
-std::string serializeFunctionApplication(Serializer serializer, const FunctionApplication& function_application) {
+std::string serializeFunctionApplication(const FunctionApplication& function_application) {
     return serializeName(function_application.name) + "!" +
-        serializer(function_application.child);
+        serialize(function_application.child);
 }
 
 std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
@@ -287,7 +286,7 @@ std::string serialize(Expression expression) {
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return "[]";
         case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
-        case FUNCTION_APPLICATION: return serializeFunctionApplication(serialize, getFunctionApplication(expression));
+        case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
