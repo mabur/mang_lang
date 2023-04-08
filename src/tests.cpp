@@ -908,6 +908,11 @@ int main() {
         {"clear!<1:11>", "<>"},
         {"clear!<1:11 2:22>", "<>"},
     });
+    test.evaluate_all("clear number", {
+        {"clear!0", "0"},
+        {"clear!1", "0"},
+        {"clear!2", "0"},
+    });
     test.evaluate_types("clear string", {
         {R"(clear!"")", "EMPTY_STRING"},
         {R"(clear!"a")", "STRING"},

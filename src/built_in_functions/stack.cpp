@@ -14,6 +14,7 @@ Expression clear(Expression in) {
         case STRING: return makeEmptyString(CodeRange{}, EmptyString{});
         case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
+        case NUMBER: return makeNumber(CodeRange{}, 0);
         default: throw UnexpectedExpression(in.type, "clear operation");
     }
 }
@@ -25,6 +26,7 @@ Expression clearTyped(Expression in) {
         case STRING: return in;
         case EMPTY_STRING: return in;
         case EVALUATED_TABLE: return in;
+        case NUMBER: return in;
         default: throw UnexpectedExpression(in.type, "clearTyped operation");
     }
 }
