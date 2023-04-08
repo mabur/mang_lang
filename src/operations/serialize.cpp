@@ -209,27 +209,14 @@ std::string serializeTypesEvaluatedTable(Expression s) {
     return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
 }
 
-std::string serializeEvaluatedTable(Expression s) {
-    const auto& rows = getEvaluatedTable(s).rows;
-    if (rows.empty()) {
-        return "<>";
-    }
-    auto result = std::string{'<'};
-    for (const auto& row : rows) {
-        result += row.first + ':' + serialize(row.second.value) + ' ';
-    }
-    result.back() = '>';
-    return result;
-}
-
-std::string serializeEvaluatedTableView(Expression s) {
-    const auto table = getEvaluatedTableView(s);
+template<typename Table>
+std::string serializeEvaluatedTable(const Table& table) {
     if (table.empty()) {
         return "<>";
     }
     auto result = std::string{'<'};
-    for (auto i = table.first; i != table.last; ++i) {
-        result += i->first + ':' + serialize(i->second.value) + ' ';
+    for (const auto& row : table) {
+        result += row.first + ':' + serialize(row.second.value) + ' ';
     }
     result.back() = '>';
     return result;
@@ -279,6 +266,7 @@ std::string serialize_types(Expression expression) {
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(expression);
         case EVALUATED_TABLE: return serializeTypesEvaluatedTable(expression);
+        // TODO: EVALUATED_TABLE_VIEW?
         default: return NAMES[expression.type];
     }
 }
@@ -301,8 +289,8 @@ std::string serialize(Expression expression) {
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
         case TABLE: return serializeTable(expression);
-        case EVALUATED_TABLE: return serializeEvaluatedTable(expression);
-        case EVALUATED_TABLE_VIEW: return serializeEvaluatedTableView(expression);
+        case EVALUATED_TABLE: return serializeEvaluatedTable(getEvaluatedTable(expression).rows);
+        case EVALUATED_TABLE_VIEW: return serializeEvaluatedTable(getEvaluatedTableView(expression));
         case TUPLE: return serializeTuple(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize, expression);
         case STACK: return serializeStack(expression);
