@@ -537,6 +537,20 @@ This program is evaluated to:
   c = "world"
 }
 </pre>
+An if-expression can look at more than two alternatives. In many languages this is achieved by adding another if after the else as "else if". In Manglang the "else if" can be skipped. Instead we just list all alternatives:
+<pre>
+{
+  opening = '{'
+  closing = if
+    equal?(opening '(') then ')'
+    equal?(opening '{') then '}'
+    equal?(opening '[') then ']'
+    equal?(opening '<') then '>'
+    else '.'
+}
+</pre>
+This goes through each alternative until it finds one where the answer is yes. So an if-expression consists of one or more alternatives and then a mandatory fall-back else.
+
 
 <h2 id="is">4.b. Is</h2>
 <p>
@@ -564,10 +578,11 @@ The <code>is</code> operator can be seen as syntactic sugar for a more verbose c
 <pre>
 {
   opening = '{'
-  closing = if equal?(opening '(') then ')'
-    else if equal?(opening '{') then '}'
-    else if equal?(opening '[') then ']'
-    else if equal?(opening '<') then '>'
+  closing = if
+    equal?(opening '(') then ')'
+    equal?(opening '{') then '}'
+    equal?(opening '[') then ']'
+    equal?(opening '<') then '>'
     else '.'
 }
 </pre>
