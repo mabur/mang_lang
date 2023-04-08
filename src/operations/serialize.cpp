@@ -186,15 +186,6 @@ std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
     result += " out " + serialize(function_stack.body);
     return result;
 }
-
-std::string serializeTypesTable(Expression s) {
-    const auto rows = getTable(s).rows;
-    if (rows.empty()) {
-        return "<>";
-    }
-    const auto& row = *rows.begin();
-    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
-}
     
 std::string serializeTable(Expression s) {
     const auto rows = getTable(s).rows;
@@ -270,29 +261,11 @@ std::string serializeString(Expression string) {
 } // namespace
 
 std::string serialize_types(Expression expression) {
-    // TODO: increase test coverage for all cases.
-    // Do we need to add functions for serializing non-evaluated containers?
-    // I guess they can occur in function bodies? Or maybe not?
-    // In that case can we remove all things that disappear when evaluated?
     switch (expression.type) {
-        case CONDITIONAL: return serializeConditional(serialize_types, getConditional(expression));
-        case IS: return serializeIs(serialize_types, getIs(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize_types, getEvaluatedDictionary(expression));
-        case DEFINITION: return serializeDefinition(serialize_types, getDefinition(expression));
-        case PUT_ASSIGNMENT: return serializePutAssignment(serialize_types, getPutAssignment(expression));
-        case WHILE_STATEMENT: return serializeWhileStatement(serialize_types, getWhileStatement(expression));
-        case FOR_STATEMENT: return serializeForStatement(serialize_types, getForStatement(expression));
-        case WHILE_END_STATEMENT: return "end ";
-        case FOR_END_STATEMENT: return "end ";
-        case TABLE: return serializeTypesTable(expression);
-        case EVALUATED_TABLE: return serializeTypesEvaluatedTable(expression);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(expression);
-        case LOOKUP_CHILD: return serializeLookupChild(serialize_types, getLookupChild(expression));
-        case FUNCTION_APPLICATION: return serializeFunctionApplication(serialize_types, getFunctionApplication(expression));
-        case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
-        case NAME: return serializeName(expression);
-        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(serialize_types, getDynamicExpression(expression));
+        case EVALUATED_TABLE: return serializeTypesEvaluatedTable(expression);
         default: return NAMES[expression.type];
     }
 }
