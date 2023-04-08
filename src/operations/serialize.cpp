@@ -42,20 +42,17 @@ std::string serializeDefinition(const Definition& element) {
     return getName(element.name) + '=' + serialize(element.expression) + ' ';
 }
 
-template<typename Serializer>
-std::string serializePutAssignment(Serializer serializer, const PutAssignment& element) {
-    return getName(element.name) + "+=" + serializer(element.expression) + ' ';
+std::string serializePutAssignment(const PutAssignment& element) {
+    return getName(element.name) + "+=" + serialize(element.expression) + ' ';
 }
 
-template<typename Serializer>
-std::string serializeWhileStatement(Serializer serializer, const WhileStatement& element) {
-    return "while " + serializer(element.expression) + ' ';
+std::string serializeWhileStatement(const WhileStatement& element) {
+    return "while " + serialize(element.expression) + ' ';
 }
 
-template<typename Serializer>
-std::string serializeForStatement(Serializer serializer, const ForStatement& element) {
-    return "for " + serializer(element.name_item) + " in " +
-        serializer(element.name_container) + " ";
+std::string serializeForStatement(const ForStatement& element) {
+    return "for " + serialize(element.name_item) + " in " +
+        serialize(element.name_container) + " ";
 }
 
 template<typename Serializer>
@@ -275,9 +272,9 @@ std::string serialize(Expression expression) {
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize, getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
-        case PUT_ASSIGNMENT: return serializePutAssignment(serialize, getPutAssignment(expression));
-        case WHILE_STATEMENT: return serializeWhileStatement(serialize, getWhileStatement(expression));
-        case FOR_STATEMENT: return serializeForStatement(serialize, getForStatement(expression));
+        case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
+        case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
+        case FOR_STATEMENT: return serializeForStatement(getForStatement(expression));
         case WHILE_END_STATEMENT: return "end ";
         case FOR_END_STATEMENT: return "end ";
         case FUNCTION: return serializeFunction(getFunction(expression));
