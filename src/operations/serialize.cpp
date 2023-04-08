@@ -82,9 +82,8 @@ std::string serializeEvaluatedTuple(Serializer serializer, Expression s) {
     return result;
 }
 
-template<typename Serializer>
-std::string serializeLookupChild(Serializer serializer, const LookupChild& lookup_child) {
-    return serializeName(lookup_child.name) + "@" + serializer(lookup_child.child);
+std::string serializeLookupChild(const LookupChild& lookup_child) {
+    return serializeName(lookup_child.name) + "@" + serialize(lookup_child.child);
 }
 
 template<typename Serializer>
@@ -287,7 +286,7 @@ std::string serialize(Expression expression) {
         case STACK: return serializeStack(expression);
         case EVALUATED_STACK: return serializeEvaluatedStack(expression);
         case EMPTY_STACK: return "[]";
-        case LOOKUP_CHILD: return serializeLookupChild(serialize, getLookupChild(expression));
+        case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
         case FUNCTION_APPLICATION: return serializeFunctionApplication(serialize, getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
