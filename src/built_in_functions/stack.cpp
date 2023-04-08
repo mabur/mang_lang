@@ -31,6 +31,10 @@ Expression clearTyped(Expression in) {
     }
 }
 
+Expression putNumber(Expression collection, Expression item) {
+    return makeNumber({}, getNumber(collection) + getNumber(item));
+}
+
 Expression put(Expression in) {
     const auto tuple = getBinaryTuple(in);
     const auto item = tuple.left;
@@ -41,6 +45,7 @@ Expression put(Expression in) {
         case STRING: return putString(collection, item);
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return table_functions::put(collection, item);
+        case NUMBER: return putNumber(collection, item);
         default: throw UnexpectedExpression(in.type, "put operation");
     }
 }
@@ -58,6 +63,7 @@ Expression putTyped(Expression in) {
         case STRING: return collection;
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return table_functions::putTyped(collection, item);
+        case NUMBER: return putNumber(collection, item);
         default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
 }

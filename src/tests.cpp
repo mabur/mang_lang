@@ -984,6 +984,12 @@ int main() {
         {"put!(4 [5])", "[4 5]"},
         {"put!(4 [6 8])", "[4 6 8]"},
     });
+    test.evaluate_all("put number", {
+        {"put!(1 0)", "1"},
+        {"put!(2 0)", "2"},
+        {"put!(1 1)", "2"},
+        {"put!(2 1)", "3"},
+    });
     test.evaluate_types("put string", {
         {R"(put!('a' ""))", "STRING"},
         {R"(put!('a' "b"))", "STRING"},
