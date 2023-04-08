@@ -19,11 +19,10 @@ std::string serializeDynamicExpression(
     return "dynamic " + serializer(dynamic_expression.expression);
 }
 
-template<typename Serializer>
-std::string serializeConditional(Serializer serializer, const Conditional& conditional) {
-    return "if " + serializer(conditional.expression_if) +
-        " then " + serializer(conditional.expression_then) +
-        " else " + serializer(conditional.expression_else);
+std::string serializeConditional(const Conditional& conditional) {
+    return "if " + serialize(conditional.expression_if) +
+        " then " + serialize(conditional.expression_then) +
+        " else " + serialize(conditional.expression_else);
 }
 
 template<typename Serializer>
@@ -273,7 +272,7 @@ std::string serialize_types(Expression expression) {
 std::string serialize(Expression expression) {
     switch (expression.type) {
         case CHARACTER: return serializeCharacter(getCharacter(expression));
-        case CONDITIONAL: return serializeConditional(serialize, getConditional(expression));
+        case CONDITIONAL: return serializeConditional(getConditional(expression));
         case IS: return serializeIs(serialize, getIs(expression));
         case DICTIONARY: return serializeDictionary(getDictionary(expression));
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize, getEvaluatedDictionary(expression));
