@@ -86,6 +86,10 @@ Expression dropTable(const T& table) {
     return makeEvaluatedTableView({}, EvaluatedTableView{++table.begin(), table.end()});
 }
 
+Expression dropNumber(Expression in) {
+    return makeNumber({}, getNumber(in) - 1);
+}
+
 Expression take(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return getEvaluatedStack(in).top;
@@ -116,6 +120,7 @@ Expression drop(Expression in) {
         case EVALUATED_TABLE_VIEW: return dropTable(getEvaluatedTableView(in));
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
+        case NUMBER: return dropNumber(in);
         default: throw UnexpectedExpression(in.type, "drop");
     }
 }
@@ -128,6 +133,7 @@ Expression dropTyped(Expression in) {
         case EVALUATED_TABLE_VIEW: return in;
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
+        case NUMBER: return in;
         default: throw UnexpectedExpression(in.type, "drop typed");
     }
 }

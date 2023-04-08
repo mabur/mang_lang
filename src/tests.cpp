@@ -947,6 +947,10 @@ int main() {
         {"drop![4 3 7]", "[3 7]"},
         {"drop![[]]", "[]"},
     });
+    test.evaluate_all("drop number", {
+        {"drop!1", "0"},
+        {"drop!2", "1"},
+    });
     test.evaluate_types("drop string", {
         {R"(drop!"a")", "STRING"},
         {R"(drop!"ab")", "STRING"},
