@@ -6,7 +6,6 @@
 #include "operations/evaluate_types.h"
 #include "operations/parse.h"
 #include "operations/serialize.h"
-#include "operations/serialize_types.h"
 
 Expression parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);

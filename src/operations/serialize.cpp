@@ -3,11 +3,127 @@
 #include <limits>
 #include <sstream>
 
-#include "serialize_generic.h"
 #include "../factory.h"
 #include "../container.h"
 
 namespace {
+
+std::string serializeName(Expression name) {
+    return getName(name);
+}
+
+template<typename Serializer>
+std::string serializeDynamicExpression(
+    Serializer serializer, const DynamicExpression& dynamic_expression
+) {
+    return "dynamic " + serializer(dynamic_expression.expression);
+}
+
+template<typename Serializer>
+std::string serializeConditional(Serializer serializer, const Conditional& conditional) {
+    return "if " + serializer(conditional.expression_if) +
+        " then " + serializer(conditional.expression_then) +
+        " else " + serializer(conditional.expression_else);
+}
+
+template<typename Serializer>
+std::string serializeIs(Serializer serializer, const IsExpression& is_expression) {
+    auto result = "is " + serializer(is_expression.input) + " ";
+    for (const auto& alternative : is_expression.alternatives) {
+        result += serializer(alternative.left);
+        result += " then ";
+        result += serializer(alternative.right);
+        result += " ";
+    }
+    result += "else ";
+    result += serializer(is_expression.expression_else);
+    return result;
+}
+
+template<typename Serializer>
+std::string serializeDefinition(Serializer serializer, const Definition& element) {
+    return getName(element.name) + '=' + serializer(element.expression) + ' ';
+}
+
+template<typename Serializer>
+std::string serializePutAssignment(Serializer serializer, const PutAssignment& element) {
+    return getName(element.name) + "+=" + serializer(element.expression) + ' ';
+}
+
+template<typename Serializer>
+std::string serializeWhileStatement(Serializer serializer, const WhileStatement& element) {
+    return "while " + serializer(element.expression) + ' ';
+}
+
+template<typename Serializer>
+std::string serializeForStatement(Serializer serializer, const ForStatement& element) {
+    return "for " + serializer(element.name_item) + " in " +
+        serializer(element.name_container) + " ";
+}
+
+template<typename Serializer>
+std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedDictionary& dictionary) {
+    if (dictionary.definitions.empty()) {
+        return "{}";
+    }
+    auto result = std::string{"{"};
+    for (const auto& pair : dictionary.definitions.sorted()) {
+        result += pair.first + "=" + serializer(pair.second) + " ";
+    }
+    result.back() = '}';
+    return result;
+}
+
+template<typename Serializer>
+std::string serializeEvaluatedTuple(Serializer serializer, Expression s) {
+    const auto expressions = getEvaluatedTuple(s).expressions;
+    if (expressions.empty()) {
+        return "()";
+    }
+    auto result = std::string{'('};
+    for (const auto& expression : expressions) {
+        result += serializer(expression) + ' ';
+    }
+    result.back() = ')';
+    return result;
+}
+
+template<typename Serializer>
+std::string serializeLookupChild(Serializer serializer, const LookupChild& lookup_child) {
+    return serializeName(lookup_child.name) + "@" + serializer(lookup_child.child);
+}
+
+template<typename Serializer>
+std::string serializeFunctionApplication(Serializer serializer, const FunctionApplication& function_application) {
+    return serializeName(function_application.name) + "!" +
+        serializer(function_application.child);
+}
+
+std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
+    return serializeName(lookup_symbol.name);
+}
+
+std::string serializeTypesEvaluatedStack(Expression s) {
+    return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
+}
+
+std::string serializeTypesTable(Expression s) {
+    const auto rows = getTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    const auto& row = *rows.begin();
+    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
+}
+
+std::string serializeTypesEvaluatedTable(Expression s) {
+    const auto& rows = getEvaluatedTable(s).rows;
+    if (rows.empty()) {
+        return "<>";
+    }
+    const auto& row = rows.begin()->second;
+    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
+}
     
 std::string serializeDictionary(const Dictionary& dictionary) {
     auto result = std::string{};
@@ -152,6 +268,30 @@ std::string serializeString(Expression string) {
 }
 
 } // namespace
+
+std::string serialize_types(Expression expression) {
+    switch (expression.type) {
+        case CONDITIONAL: return serializeConditional(serialize_types, getConditional(expression));
+        case IS: return serializeIs(serialize_types, getIs(expression));
+        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize_types, getEvaluatedDictionary(expression));
+        case DEFINITION: return serializeDefinition(serialize_types, getDefinition(expression));
+        case PUT_ASSIGNMENT: return serializePutAssignment(serialize_types, getPutAssignment(expression));
+        case WHILE_STATEMENT: return serializeWhileStatement(serialize_types, getWhileStatement(expression));
+        case FOR_STATEMENT: return serializeForStatement(serialize_types, getForStatement(expression));
+        case WHILE_END_STATEMENT: return "end ";
+        case FOR_END_STATEMENT: return "end ";
+        case TABLE: return serializeTypesTable(expression);
+        case EVALUATED_TABLE: return serializeTypesEvaluatedTable(expression);
+        case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
+        case EVALUATED_STACK: return serializeTypesEvaluatedStack(expression);
+        case LOOKUP_CHILD: return serializeLookupChild(serialize_types, getLookupChild(expression));
+        case FUNCTION_APPLICATION: return serializeFunctionApplication(serialize_types, getFunctionApplication(expression));
+        case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
+        case NAME: return serializeName(expression);
+        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(serialize_types, getDynamicExpression(expression));
+        default: return NAMES[expression.type];
+    }
+}
 
 std::string serialize(Expression expression) {
     switch (expression.type) {

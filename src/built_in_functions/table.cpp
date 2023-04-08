@@ -6,7 +6,6 @@
 #include "../expression.h"
 #include "../factory.h"
 #include "../operations/serialize.h"
-#include "../operations/serialize_types.h"
 
 namespace table_functions {
 
