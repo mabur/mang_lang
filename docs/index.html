@@ -726,53 +726,7 @@ Functions are defined using they keywords <code>in</code> and <code>out</code> l
 A function definition is on the form <code>in x out expression</code>
 where x is the name of the input and expression is the output.
 Functions are first class values and can be given a name by putting them inside a dictionary.
-Here are some examples of defining and calling functions:
-</p>
-<pre>
-{
-  square = in x out mul!(x x)
-  inc = in x out add!(x 1)
-  dec = in x out sub!(x 1)
-  count = in stack
-    out
-      if stack then
-        dynamic inc!count!drop!stack
-      else
-        0
-  a = square!3
-  b = inc!3
-  c = dec!3
-  d = count![3 7 3 8 2]
-  e = count!"apple"        
-}
-</pre>
-<p>
-This program is evaluated to:
-</p>
-<pre>
-{
-  square = in x out mul!(x x)
-  inc = in x out add!(x 1)
-  dec = in x out sub!(x 1)
-  count = in stack
-    out
-      if stack then
-        dynamic inc!count!drop!stack
-      else
-        0
-  a = 9
-  b = 4
-  c = 2
-  d = 5
-  e = 5        
-}
-</pre>
-<p>
-The if-then-else operator is used to choose what value to return based on a condition.
-</p>
-<p>
-Functions can be recursive like the <code>count</code> example above. However, the static type checker of Manglang does not (yet) support recursion so if we want recursion then we need to disable static type checking for the recursive expression by using the <code>dynamic</code> type operator.
-</p>
+
 <p>
 Function definitions and computations can be broken up into smaller parts by using dictionaries:
 </p>
@@ -789,6 +743,57 @@ Function definitions and computations can be broken up into smaller parts by usi
   result = square_norm!vector
 }
 </pre>
+We can implement functions that loops/iterates either by having explicit loops or by using recursive functions:
+</p>
+<pre>
+{
+  count_imperative = in stack out result@{
+      result = 0
+      for item in stack
+        result = inc!result
+      end  
+    }
+  count_recursive = in stack out
+    if stack then
+      dynamic inc!count_recursive!drop!stack
+    else
+      0
+  a = count_imperative![3 7 8]
+  b = count_recursive![3 7 8]
+  c = count_imperative!"apple"
+  d = count_recursive!"apple"
+}
+</pre>
+<p>
+This program is evaluated to:
+</p>
+<pre>
+{
+  count_imperative = in stack out result@{
+      result = 0
+      for item in stack
+        result = inc!result
+      end  
+    }
+  count_recursive = in stack out
+    if stack then
+      dynamic inc!count_recursive!drop!stack
+    else
+      0
+  a = 3
+  b = 3
+  c = 5
+  d = 5
+}
+</pre>
+Manglang encourages for and while loops instead of recursive functions for most use-cases. This is similar to most imperative languages but unlike many functional languages. There are three reasons why Manglang encourages loops instead of recursion:
+<ol>
+<li>Loops are subjectively easier to follow for most people.</li>
+<li>Loops are easier to implement efficiently for me as the language implementor.</li>
+<li>Loops are easier to type check for me as a the language implementor.</li>
+</ol>
+Recursive functions are still allowed, since they can be handy in some particular situations. When using recursive functions in Manglang you currently need to use the <code>dynamic</code> operator to tell the static type checker to not check the types for it.
+</p>
 
 <h2 id="function_tuple_definition">5.c. Function of Tuple Definition</h2>
 <p>
