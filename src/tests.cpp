@@ -343,11 +343,13 @@ int main() {
     });
     test.reformat("decrement assignment", {
         {"{c=1 c--}", "{c=1 c--}"},
+        {"{a=[1] while a a-- end}", "{a=[1] while a a-- end}"},
     });
     test.evaluate_types("decrement assignment", {
         {"{c=1 c--}", "{c=NUMBER}"},
         {"{c=[1] c--}", "{c=[NUMBER]}"},
         {"{c=<1:2> c--}", "{c=<NUMBER:NUMBER>}"},
+        {"{a=[1] while a a-- end}", "{a=[NUMBER]}"},
     });
     test.evaluate_all("decrement assignment", {
         {"{c=1 c--}", "{c=0}"},
@@ -355,6 +357,7 @@ int main() {
         {"{c=[1 2] c--}", "{c=[2]}"},
         {"{c=<1:2> c--}", "{c=<>}"},
         {"{c=<1:2 3:4> c--}", "{c=<3:4>}"},
+        {"{a=[1] while a a-- end}", "{a=[]}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
