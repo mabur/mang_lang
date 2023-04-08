@@ -5,10 +5,349 @@
 #include "../built_in_functions/stack.h"
 #include "../container.h"
 #include "../factory.h"
-#include "evaluate_generic.h"
 #include "serialize.h"
 
 namespace {
+
+Expression evaluateFunction(const Function& function, Expression environment);
+
+Expression evaluateFunctionDictionary(
+    const FunctionDictionary& function_dictionary, Expression environment
+);
+
+Expression evaluateFunctionTuple(
+    const FunctionTuple& function_stack, Expression environment
+);
+
+template<typename Evaluator>
+Expression evaluateStack(Evaluator evaluator,
+    Expression stack, Expression environment
+) {
+    const auto op = [&](Expression rest, Expression top) -> Expression {
+        const auto evaluated_top = evaluator(top, environment);
+        return putEvaluatedStack(rest, evaluated_top);
+    };
+    const auto code = CodeRange{};
+    const auto init = makeEmptyStack(code, {});
+    const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
+    return reverseEvaluatedStack(code, output);
+}
+
+template<typename Evaluator>
+Expression evaluateTuple(Evaluator evaluator, Tuple tuple, Expression environment) {
+    auto evaluated_expressions = std::vector<Expression>{};
+    evaluated_expressions.reserve(tuple.expressions.size());
+    for (const auto& expression : tuple.expressions) {
+        evaluated_expressions.push_back(evaluator(expression, environment));
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
+}
+
+template<typename Evaluator, typename Serializer>
+Expression evaluateTable(
+    Evaluator evaluator,
+    Serializer serializer,
+    Table table,
+    Expression environment
+) {
+    auto rows = std::map<std::string, Row>{};
+    for (const auto& row : table.rows) {
+        const auto key = evaluator(row.key, environment);
+        const auto value = evaluator(row.value, environment);
+        const auto serialized_key = serializer(key);
+        rows[serialized_key] = {key, value};
+    }
+    const auto code = CodeRange{};
+    return makeEvaluatedTable(code, EvaluatedTable{rows});
+}
+
+template<typename Evaluator>
+Expression evaluateLookupChild(
+    Evaluator evaluator, const LookupChild& lookup_child, Expression environment
+) {
+    const auto child = evaluator(lookup_child.child, environment);
+    const auto name = getName(lookup_child.name);
+    const auto dictionary = getEvaluatedDictionary(child);
+    return dictionary.definitions.lookup(name);
+}
+
+Expression lookupDictionary(const Name& name, Expression expression);
+
+template<typename Evaluator>
+Expression applyFunction(
+    Evaluator evaluator,
+    const Function& function,
+    Expression input
+) {
+    auto definitions = Definitions{};
+    const auto name = getName(function.input_name);
+    definitions.add(name, input);
+    const auto middle = makeEvaluatedDictionary(CodeRange{},
+        EvaluatedDictionary{function.environment, definitions}
+    );
+    return evaluator(function.body, middle);
+}
+
+Expression applyFunctionBuiltIn(
+    const FunctionBuiltIn& function_built_in, Expression input
+);
+
+template<typename Evaluator>
+Expression applyFunctionDictionary(
+    Evaluator evaluator,
+    const FunctionDictionary& function_dictionary,
+    Expression input
+) {
+    // TODO: pass along environment? Is some use case missing now?
+    return evaluator(function_dictionary.body, input);
+}
+
+template<typename Evaluator>
+Expression applyFunctionTuple(
+    Evaluator evaluator,
+    const FunctionTuple& function_stack,
+    Expression input
+) {
+    auto tuple = getEvaluatedTuple(input);
+    const auto& input_names = function_stack.input_names;
+    if (input_names.size() != tuple.expressions.size()) {
+        throw std::runtime_error{"Wrong number of input to function"};
+    }
+    auto definitions = Definitions{};
+    const auto num_inputs = input_names.size();
+    for (size_t i = 0; i < num_inputs; ++i) {
+        const auto name = getName(input_names[i]);
+        const auto expression = tuple.expressions[i];
+        definitions.add(name, expression);
+    }
+    const auto middle = makeEvaluatedDictionary(CodeRange{},
+        EvaluatedDictionary{function_stack.environment, definitions}
+    );
+    return evaluator(function_stack.body, middle);
+}
+
+Expression evaluateFunction(const Function& function, Expression environment) {
+    return makeFunction(CodeRange{}, {
+        environment, function.input_name, function.body
+    });
+}
+
+Expression evaluateFunctionDictionary(
+    const FunctionDictionary& function_dictionary, Expression environment
+) {
+    return makeFunctionDictionary(CodeRange{}, {
+        environment,
+        function_dictionary.input_names,
+        function_dictionary.body
+    });
+}
+
+Expression evaluateFunctionTuple(
+    const FunctionTuple& function_stack, Expression environment
+) {
+    return makeFunctionTuple(CodeRange{}, {
+        environment, function_stack.input_names, function_stack.body
+    });
+}
+
+Expression lookupDictionary(const Name& name, Expression expression) {
+    if (expression.type != EVALUATED_DICTIONARY) {
+        throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
+    }
+    const auto dictionary = getEvaluatedDictionary(expression);
+    if (!dictionary.definitions.has(name)) {
+        return lookupDictionary(name, dictionary.environment);
+    }
+    return dictionary.definitions.lookup(name);
+}
+
+Expression applyFunctionBuiltIn(
+    const FunctionBuiltIn& function_built_in, Expression input
+) {
+    return function_built_in.function(input);
+}
+
+bool areTypesConsistent(ExpressionType left, ExpressionType right) {
+    if (left == ANY || right == ANY) return true;
+    if (left == EMPTY_STACK && right == EVALUATED_STACK) return true;
+    if (left == EVALUATED_STACK && right == EMPTY_STACK) return true;
+    if (left == EMPTY_STRING && right == STRING) return true;
+    if (left == STRING && right == EMPTY_STRING) return true;
+    return left == right;
+}
+
+void booleanTypes(Expression expression) {
+    switch (expression.type) {
+        case NUMBER: return;
+        case BOOLEAN: return;
+        case EVALUATED_TABLE: return;
+        case EVALUATED_STACK: return;
+        case EMPTY_STACK: return;
+        case STRING: return;
+        case EMPTY_STRING: return;
+        case ANY: return;
+        default: throw std::runtime_error(
+                std::string{"Static type error.\n"} +
+                    "Cannot convert type " + NAMES[expression.type] + " to boolean."
+            );
+    }
+}
+
+Expression evaluateConditionalTypes(
+    const Conditional& conditional, Expression environment
+) {
+    booleanTypes(evaluate_types(conditional.expression_if, environment));
+    const auto left = evaluate_types(conditional.expression_then, environment);
+    const auto right = evaluate_types(conditional.expression_else, environment);
+    if (left.type == ANY || left.type == EMPTY_STACK ||left.type == EMPTY_STRING) {
+        return right;
+    }
+    if (right.type == ANY || right.type == EMPTY_STACK ||right.type == EMPTY_STRING) {
+        return left;
+    }
+    if (left.type != right.type) {
+        throw std::runtime_error(
+            std::string{"Static type error.\n"} +
+                "Cannot return two different types for if-then-else:\n" +
+                NAMES[left.type] + " and " + NAMES[right.type]
+        );
+    }
+    return left;
+}
+
+Expression evaluateIsTypes(
+    const IsExpression& is_expression, Expression environment
+) {
+    evaluate_types(is_expression.input, environment);
+    for (const auto alternative : is_expression.alternatives) {
+        evaluate_types(alternative.left, environment);
+    }
+    const auto else_expression = evaluate_types(is_expression.expression_else, environment);
+    for (const auto alternative : is_expression.alternatives) {
+        const auto alternative_expression = evaluate_types(alternative.right, environment);
+        if (!areTypesConsistent(alternative_expression.type, else_expression.type)) {
+            throw std::runtime_error(
+                "Static type error. Different output types in is-alternatives " +
+                    NAMES[alternative_expression.type] + " & " +
+                    NAMES[else_expression.type]
+            );
+        }
+    }
+    return else_expression;
+}
+
+Expression evaluateDictionaryTypes(
+    const Dictionary& dictionary, Expression environment
+) {
+    const auto result_environment = makeEvaluatedDictionary(
+        CodeRange{}, EvaluatedDictionary{environment, {}}
+    );
+    const auto& statements = dictionary.statements;
+    for (size_t i = 0; i < dictionary.statements.size(); ++i) {
+        const auto statement = statements[i];
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            const auto definition = getDefinition(statement);
+            const auto name = getName(definition.name);
+            const auto& right_expression = definition.expression;
+            const auto value = evaluate_types(right_expression, result_environment);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            // TODO: is this a principled approach?
+            if (value.type != ANY || !result.definitions.has(name)) {
+                result.definitions.add(name, value);
+            }
+        }
+        else if (type == PUT_ASSIGNMENT) {
+            const auto put_assignment = getPutAssignment(statement);
+            const auto& right_expression = put_assignment.expression;
+            const auto value = evaluate_types(right_expression, result_environment);
+            const auto name = getName(put_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto current = result.definitions.lookup(name);
+            const auto tuple = makeEvaluatedTuple(
+                {}, EvaluatedTuple{{value, current}}
+            );
+            const auto new_value = stack_functions::putTyped(tuple);
+            result.definitions.add(name, new_value);
+        }
+        else if (type == WHILE_STATEMENT) {
+            const auto while_statement = getWhileStatement(statement);
+            booleanTypes(evaluate_types(while_statement.expression, result_environment));
+        }
+        else if (type == FOR_STATEMENT) {
+            const auto for_statement = getForStatement(statement);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto name_container = getName(for_statement.name_container);
+            const auto container = lookupDictionary(name_container, result_environment);
+            booleanTypes(container);
+            const auto name_item = getName(for_statement.name_item);
+            const auto value = stack_functions::takeTyped(container);
+            result.definitions.add(name_item, value);
+        }
+    }
+    return result_environment;
+}
+
+size_t getIndex(Number number) {
+    if (number < 0) {
+        using namespace std;
+        throw runtime_error("Cannot have negative index: " + to_string(number));
+    }
+    return static_cast<size_t>(number);
+}
+
+Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number) {
+    const auto i = getIndex(number);
+    try {
+        return tuple.expressions.at(i);
+    }
+    catch (const std::out_of_range&) {
+        throw std::runtime_error(
+            "Tuple of size " + std::to_string(tuple.expressions.size()) +
+                " indexed with " + std::to_string(i)
+        );
+    }
+}
+
+Expression applyTableIndexing(const EvaluatedTable& table) {
+    if (table.rows.empty()) {
+        return Expression{};
+    }
+    return table.begin()->second.value;
+}
+
+Expression applyStackIndexing(EvaluatedStack stack) {
+    return stack.top;
+}
+
+Expression applyStringIndexing(String string) {
+    return string.top;
+}
+
+Expression evaluateFunctionApplicationTypes(
+    const FunctionApplication& function_application,
+    Expression environment
+) {
+    const auto function = lookupDictionary(getName(function_application.name), environment);
+    const auto input = evaluate_types(function_application.child, environment);
+    switch (function.type) {
+        case FUNCTION: return applyFunction(evaluate_types, getFunction(function), input);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, getFunctionDictionary(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, getFunctionTuple(function), input);
+
+        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function));
+        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
+        case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function));
+        case STRING: return applyStringIndexing(getString(function));
+
+        case EMPTY_STACK: return Expression{};
+        case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
+
+        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplicationTypes");
+    }
+}
 
 template<typename Vector, typename Predicate>
 bool allOfVectors(const Vector& left, const Vector& right, Predicate predicate) {
@@ -71,7 +410,7 @@ bool boolean(Expression expression) {
     }
 }
 
-Expression evaluateConditionalTypes(
+Expression evaluateConditional(
     const Conditional& conditional, Expression environment
 ) {
     return
@@ -80,7 +419,7 @@ Expression evaluateConditionalTypes(
         evaluate(conditional.expression_else, environment);
 }
 
-Expression evaluateIsTypes(
+Expression evaluateIs(
     const IsExpression& is_expression, Expression environment
 ) {
     const auto value = evaluate(is_expression.input, environment);
@@ -93,7 +432,7 @@ Expression evaluateIsTypes(
     return evaluate(is_expression.expression_else, environment);
 }
 
-Expression evaluateDictionaryTypes(
+Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
     const auto result_environment = makeEvaluatedDictionary(
@@ -167,27 +506,6 @@ Expression evaluateDictionaryTypes(
     return result_environment;
 }
 
-size_t getIndex(Number number) {
-    if (number < 0) {
-        using namespace std;
-        throw runtime_error("Cannot have negative index: " + to_string(number));
-    }
-    return static_cast<size_t>(number);
-}
-
-Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number) {
-    const auto i = getIndex(number);
-    try {
-        return tuple.expressions.at(i);
-    }
-    catch (const std::out_of_range&) {
-        throw std::runtime_error(
-            "Tuple of size " + std::to_string(tuple.expressions.size()) +
-                " indexed with " + std::to_string(i)
-        );
-    }
-}
-
 Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
     const auto k = serialize(key);
     try {
@@ -221,7 +539,7 @@ Expression applyStringIndexing(String string, Number number) {
 }
 
 
-Expression evaluateFunctionApplicationTypes(
+Expression evaluateFunctionApplication(
     const FunctionApplication& function_application,
     Expression environment
 ) {
@@ -243,6 +561,38 @@ Expression evaluateFunctionApplicationTypes(
 
 } // namespace
 
+Expression evaluate_types(Expression expression, Expression environment) {
+    switch (expression.type) {
+        case NUMBER: return expression;
+        case CHARACTER: return expression;
+        case BOOLEAN: return expression;
+        case EMPTY_STRING: return expression;
+        case STRING: return expression;
+        case EMPTY_STACK: return expression;
+        case EVALUATED_STACK: return expression;
+        case EVALUATED_DICTIONARY: return expression;
+        case EVALUATED_TUPLE: return expression;
+        case EVALUATED_TABLE: return expression;
+        case EVALUATED_TABLE_VIEW: return expression;
+
+        case FUNCTION: return evaluateFunction(getFunction(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
+
+        case DYNAMIC_EXPRESSION: return Expression{};
+        case CONDITIONAL: return evaluateConditionalTypes(getConditional(expression), environment);
+        case IS: return evaluateIsTypes(getIs(expression), environment);
+        case DICTIONARY: return evaluateDictionaryTypes(getDictionary(expression), environment);
+        case STACK: return evaluateStack(evaluate_types, expression, environment);
+        case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
+        case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
+        case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(getFunctionApplication(expression), environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);
+        default: throw UnexpectedExpression(expression.type, "evaluate types operation");
+    }
+}
+
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
         case NUMBER: return expression;
@@ -262,16 +612,16 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
 
         case DYNAMIC_EXPRESSION: return evaluate(getDynamicExpression(expression).expression, environment);
-        case CONDITIONAL: return evaluateConditionalTypes(
+        case CONDITIONAL: return evaluateConditional(
                 getConditional(expression), environment);
-        case IS: return evaluateIsTypes(getIs(expression), environment);
-        case DICTIONARY: return evaluateDictionaryTypes(
+        case IS: return evaluateIs(getIs(expression), environment);
+        case DICTIONARY: return evaluateDictionary(
                 getDictionary(expression), environment);
         case STACK: return evaluateStack(evaluate, expression, environment);
         case TUPLE: return evaluateTuple(evaluate, getTuple(expression), environment);
         case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(
+        case FUNCTION_APPLICATION: return evaluateFunctionApplication(
                 getFunctionApplication(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getName(getLookupSymbol(expression).name), environment);
         default: throw UnexpectedExpression(expression.type, "evaluate operation");

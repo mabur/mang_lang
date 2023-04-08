@@ -3,7 +3,6 @@
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
 #include "operations/evaluate.h"
-#include "operations/evaluate_types.h"
 #include "operations/parse.h"
 #include "operations/serialize.h"
 
