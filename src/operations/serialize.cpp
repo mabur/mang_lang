@@ -12,11 +12,8 @@ std::string serializeName(Expression name) {
     return getName(name);
 }
 
-template<typename Serializer>
-std::string serializeDynamicExpression(
-    Serializer serializer, const DynamicExpression& dynamic_expression
-) {
-    return "dynamic " + serializer(dynamic_expression.expression);
+std::string serializeDynamicExpression(const DynamicExpression& dynamic_expression) {
+    return "dynamic " + serialize(dynamic_expression.expression);
 }
 
 std::string serializeConditional(const Conditional& conditional) {
@@ -293,7 +290,7 @@ std::string serialize(Expression expression) {
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
-        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(serialize, getDynamicExpression(expression));
+        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(getDynamicExpression(expression));
         default: return NAMES[expression.type];
     }
 }
