@@ -549,12 +549,19 @@ An if-expression can look at more than two alternatives. In many languages this 
     else '.'
 }
 </pre>
-This goes through each alternative until it finds one where the answer is yes. So an if-expression consists of one or more alternatives and then a mandatory fall-back else.
-
+This goes through each alternative until it finds one where the answer is yes. The input above is evaluated to the output below:
+<pre>
+{
+  opening = '{'
+  closing = '}'
+}
+</pre>
+So an if-expression consists of one or more alternatives and then a mandatory fall-back else.
 
 <h2 id="is">4.b. Is</h2>
 <p>
-The <code>is</code> operator is used to check for equality among many alternatives. It is similar to switch-case or pattern matching in other languages. Consider this example where we use the is operator to find the corresponding characters:
+The <code>is</code> operator is used to check for equality among many alternatives. It is similar to switch-case or pattern matching in other languages.
+This provides syntactic sugar instead of a more verbose combination of the <code>if</code> operator and the <code>equal</code> function. Consider this example where we use the is operator to find the corresponding characters:
 </p>
 <pre>
 {
@@ -565,25 +572,6 @@ The <code>is</code> operator is used to check for equality among many alternativ
     '{' then '}'
     '<' then '>'
     else  '.'
-}
-</pre>
-The input above is evaluated to the output below:
-<pre>
-{
-  opening = '{'
-  closing = '}'
-}
-</pre>
-The <code>is</code> operator can be seen as syntactic sugar for a more verbose combination of the <code>if</code> operator and the <code>equal</code> function:
-<pre>
-{
-  opening = '{'
-  closing = if
-    equal?(opening '(') then ')'
-    equal?(opening '{') then '}'
-    equal?(opening '[') then ']'
-    equal?(opening '<') then '>'
-    else '.'
 }
 </pre>
 
