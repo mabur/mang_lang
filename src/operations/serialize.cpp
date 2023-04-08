@@ -270,6 +270,8 @@ std::string serializeString(Expression string) {
 } // namespace
 
 std::string serialize_types(Expression expression) {
+    // TODO: increase test coverage for all cases.
+    // Do we need to add functions for serializing non-evaluated containers?
     switch (expression.type) {
         case CONDITIONAL: return serializeConditional(serialize_types, getConditional(expression));
         case IS: return serializeIs(serialize_types, getIs(expression));
