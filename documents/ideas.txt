@@ -305,6 +305,7 @@ SIMILAR LANGUAGES
 
 WEBPAGE
 https://www.passerine.io/
+https://gleam.run/
 https://nim-lang.org/
 https://github.com/tuqqu/oxide-lang
 https://www.pyret.org/
