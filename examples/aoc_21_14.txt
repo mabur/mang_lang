@@ -20,7 +20,7 @@ result@{
     ]
     polymer = start
     n = 10
-    while n
+    for _ in n
         result = ""
         while drop!polymer
             a = polymer!0
@@ -43,7 +43,6 @@ result@{
         end
         result += take!polymer
         polymer = reverse!result
-        n = dec!n
     end
     result = polymer
 
