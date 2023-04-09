@@ -26,15 +26,14 @@ move 1 from 1 to 2"
         n = parse_natural_number!words!1
         source = dec!parse_natural_number!words!3
         target = dec!parse_natural_number!words!5
-        while n
+        for _ in n
             source_stack = stacks!source
             item = take!source_stack
             source_stack = drop!source_stack
             target_stack = stacks!target
             target_stack += item
             stacks += (source source_stack)
-            stacks += (target target_stack)
-            n = dec!n        
+            stacks += (target target_stack)        
         end
     end
     result = map_string!(get0 get_values!stacks)
