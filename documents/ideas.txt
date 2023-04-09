@@ -151,6 +151,7 @@ LANGUAGE SYNTAX & SEMANTICS
     for index, item in container
     container2 = enumerate!container for pair in container2
   - Add syntactic sugar for numbers besides += like -=.
+  - Use -= to remove item from table?
   - Add syntactic sugar for drop:
     container--
   - Conditional return statements for dictionary
