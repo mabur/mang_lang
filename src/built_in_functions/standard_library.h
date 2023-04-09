@@ -54,17 +54,17 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    fold = in (operation stack init) out result@{
+    fold = in (operation container init) out result@{
         result = init
-        for item in stack
+        for item in container
             result = operation!(item result)
         end
     }
 
-    reverse = in stack out fold!(
+    reverse = in container out fold!(
         put
-        stack
-        clear!stack
+        container
+        clear!container
     )
 
     put_each = in (top_stack bottom_stack) out fold!(
@@ -106,9 +106,9 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map_stack = in (f stack) out reverse!fold!(
-        in (item stack) out put!(f!item stack)
-        stack
+    map_stack = in (f container) out reverse!fold!(
+        in (item container) out put!(f!item container)
+        container
         []
     )
 
@@ -160,141 +160,141 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    consecutive_pairs = in stack out reverse!result@{
+    consecutive_pairs = in container out reverse!result@{
         result = []
-        while if stack then boolean!drop!stack else no
-            result += (take!stack take!drop!stack)
-            stack--
+        while if container then boolean!drop!container else no
+            result += (take!container take!drop!container)
+            container--
         end
     }
 
     min = in (left right) out if less?(left right) then left else right
     max = in (left right) out if less?(left right) then right else left
 
-    min_item = in stack out fold!(min stack inf)
+    min_item = in container out fold!(min container inf)
 
-    max_item = in stack out fold!(max stack -inf)
+    max_item = in container out fold!(max container -inf)
 
-    min_predicate = in (predicate stack) out fold!(
+    min_predicate = in (predicate container) out fold!(
         in (left right) out if predicate?(left right) then left else right
-        drop!stack
-        take!stack
+        drop!container
+        take!container
     )
 
-    max_predicate = in (predicate stack) out fold!(
+    max_predicate = in (predicate container) out fold!(
         in (left right) out if predicate?(left right) then right else left
-        drop!stack
-        take!stack
+        drop!container
+        take!container
     )
 
-    min_key = in (key stack) out fold!(
+    min_key = in (key container) out fold!(
         in (left right) out if less?(key!left key!right) then left else right
-        drop!stack
-        take!stack
+        drop!container
+        take!container
     )
 
-    max_key = in (key stack) out fold!(
+    max_key = in (key container) out fold!(
         in (left right) out if less?(key!left key!right) then right else left
-        drop!stack
-        take!stack
+        drop!container
+        take!container
     )
 
-    sum = in stack out fold!(add stack 0)
+    sum = in container out fold!(add container 0)
 
-    product = in stack out fold!(mul stack 1)
+    product = in container out fold!(mul container 1)
 
-    clear_if = in (predicate stack) out reverse!fold!(
-        in (item stack) out
+    clear_if = in (predicate container) out reverse!fold!(
+        in (item container) out
             if predicate?item then
-                stack
+                container
             else
-                put!(item stack)
-        stack
-        clear!stack
+                put!(item container)
+        container
+        clear!container
     )
 
-    clear_item = in (item stack) out
-        clear_if?(in x out equal?(x item) stack)
+    clear_item = in (item container) out
+        clear_if?(in x out equal?(x item) container)
 
-    take_many = in (n stack) out reverse!stack_out@{
-        stack_out = clear!stack
+    take_many = in (n container) out reverse!stack_out@{
+        stack_out = clear!container
         for _ in n
-            stack_out += take!stack
-            stack--
+            stack_out += take!container
+            container--
         end
     }
 
-    take_while = in (predicate stack) out reverse!stack_out@{
-        stack_out = clear!stack
-        while if stack then predicate?take!stack else no
-            stack_out += take!stack
-            stack--
+    take_while = in (predicate container) out reverse!stack_out@{
+        stack_out = clear!container
+        while if container then predicate?take!container else no
+            stack_out += take!container
+            container--
         end
     }
 
-    take_until_item = in (item stack) out
-        take_while!(in x out unequal?(x item) stack)
+    take_until_item = in (item container) out
+        take_while!(in x out unequal?(x item) container)
 
-    drop_many = in (n stack) out stack@{
-        stack = stack
+    drop_many = in (n container) out container@{
+        container = container
         for _ in n
-            stack--
+            container--
         end
     }
 
-    drop_while = in (predicate stack) out stack@{
-        stack = stack
-        while if stack then predicate?take!stack else no
-            stack--
+    drop_while = in (predicate container) out container@{
+        container = container
+        while if container then predicate?take!container else no
+            container--
         end
     }
 
-    drop_until_item = in (item stack) out
-        drop_while?(in x out unequal?(x item) stack)
+    drop_until_item = in (item container) out
+        drop_while?(in x out unequal?(x item) container)
 
-    replace = in (new_item stack) out fold!(
-        in (item stack) out put!(new_item stack)
-        stack
-        clear!stack
+    replace = in (new_item container) out fold!(
+        in (item container) out put!(new_item container)
+        container
+        clear!container
     )
 
-    replace_if = in (predicate new_item stack) out reverse!fold!(
-        in (item stack) out
+    replace_if = in (predicate new_item container) out reverse!fold!(
+        in (item container) out
             if predicate?item then
-                put!(new_item stack)
+                put!(new_item container)
             else
-                put!(item stack)
-        stack
-        clear!stack
+                put!(item container)
+        container
+        clear!container
     )
 
-    replace_item = in (old_item new_item stack) out
-        replace_if?(in x out equal?(x old_item) new_item stack)
+    replace_item = in (old_item new_item container) out
+        replace_if?(in x out equal?(x old_item) new_item container)
 
-    count = in stack out fold!(
+    count = in container out fold!(
         in (item n) out inc!n
-        stack
+        container
         0
     )
 
-    count_if = in (predicate stack) out fold!(
+    count_if = in (predicate container) out fold!(
         in (item n) out if predicate?item then inc!n else n
-        stack
+        container
         0
     )
 
-    count_item = in (item stack) out
-        count_if!(in x out equal?(x item) stack)
+    count_item = in (item container) out
+        count_if!(in x out equal?(x item) container)
 
-    range = in n out stack@{
-        stack = []
+    range = in n out container@{
+        container = []
         while n
             n--
-            stack += n
+            container += n
         end
     }
 
-    enumerate = in stack out zip2!(range!count!stack stack)
+    enumerate = in container out zip2!(range!count!container container)
 
     get0 = in container out container!0
     get1 = in container out container!1
@@ -346,16 +346,16 @@ const std::string STANDARD_LIBRARY = R"(
         end
     })
 
-    all = in stack out not?drop_while!(boolean stack)
-    none = in stack out not?drop_while!(not stack)
-    any = in stack out boolean?drop_while!(not stack)
+    all = in container out not?drop_while!(boolean container)
+    none = in container out not?drop_while!(not container)
+    any = in container out boolean?drop_while!(not container)
 
-    and = in stack out all?stack
-    or = in stack out any?stack
+    and = in container out all?container
+    or = in container out any?container
 
-    is_increasing = in stack out not?drop_while!(
+    is_increasing = in container out not?drop_while!(
         less_or_equal
-        consecutive_pairs!stack
+        consecutive_pairs!container
     )
 
     less_or_equal_top = in (left right) out
@@ -367,29 +367,29 @@ const std::string STANDARD_LIBRARY = R"(
         else
             no
 
-    merge_sorted = in (left right) out reverse!stack@{
-        stack = []
+    merge_sorted = in (left right) out reverse!container@{
+        container = []
         while or?[left right]
             while less_or_equal_top?(left right)
-                stack += take!left
+                container += take!left
                 left--
             end
             while less_or_equal_top?(right left)
-                stack += take!right
+                container += take!right
                 right--
             end
         end
     }
 
-    unique = in stack out get_keys!fold!(
+    unique = in container out get_keys!fold!(
         in (item table) out put!((item 0) table)
-        stack
+        container
         <>
     )
 
-    count_elements = in stack out fold!(
+    count_elements = in container out fold!(
         in (item table) out put!((item inc!get!(item table 0)) table)
-        stack
+        container
         <>
     )
 
