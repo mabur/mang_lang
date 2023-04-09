@@ -101,7 +101,7 @@ STANDARD LIBRARY
     - clear!container, [], "", <>, 0
     - put!(take!x drop!x) == x, add!(1 dec!x) == x
     - ett positivt heltal är ekvivalent med en stack, där bara längden på stacken spelar roll, men inte innehållet.
-    - sub!(a b) == take_n!(count!b a)
+    - sub!(a b) == drop_n!(count!b a)
     - mul!(a b) == cartesian product?
     - div?
     - inc?
@@ -158,7 +158,7 @@ LANGUAGE SYNTAX & SEMANTICS
       if a
         b = c
       end
-* Add short-circuit "and" "or" to while statement.
+  - Add short-circuit "and" "or" to while statement.
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
