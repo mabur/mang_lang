@@ -11,9 +11,8 @@ num_fishes@{
         end
     }
     days = 80
-    while days
+    for _ in days
         fishes = simulate!fishes
-        days = dec!days
     end
     num_fishes = count!fishes
 }
