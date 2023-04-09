@@ -134,8 +134,8 @@ const std::string STANDARD_LIBRARY = R"(
         result = []
         while and?[a b]
             result += (take!a take!b)
-            a = drop!a
-            b = drop!b
+            a--
+            b--
         end
     }
 
@@ -143,9 +143,9 @@ const std::string STANDARD_LIBRARY = R"(
         result = []
         while and?[a b c]
             result += (take!a take!b take!c)
-            a = drop!a
-            b = drop!b
-            c = drop!c
+            a--
+            b--
+            c--
         end
     }
 
@@ -153,10 +153,10 @@ const std::string STANDARD_LIBRARY = R"(
         result = []
         while and?[a b c d]
             result += (take!a take!b take!c take!d)
-            a = drop!a
-            b = drop!b
-            c = drop!c
-            d = drop!d
+            a--
+            b--
+            c--
+            d--
         end
     }
 
@@ -164,7 +164,7 @@ const std::string STANDARD_LIBRARY = R"(
         result = []
         while if stack then boolean!drop!stack else no
             result += (take!stack take!drop!stack)
-            stack = drop!stack
+            stack--
         end
     }
 
@@ -218,21 +218,17 @@ const std::string STANDARD_LIBRARY = R"(
 
     take_many = in (n stack) out reverse!stack_out@{
         stack_out = clear!stack
-        stack = stack
-        n = n
-        while n
-            n = dec!n
+        for _ in n
             stack_out += take!stack
-            stack = drop!stack
+            stack--
         end
     }
 
     take_while = in (predicate stack) out reverse!stack_out@{
         stack_out = clear!stack
-        stack = stack
         while if stack then predicate?take!stack else no
             stack_out += take!stack
-            stack = drop!stack
+            stack--
         end
     }
 
@@ -240,18 +236,16 @@ const std::string STANDARD_LIBRARY = R"(
         take_while!(in x out unequal?(x item) stack)
 
     drop_many = in (n stack) out stack@{
-        n = n
         stack = stack
-        while n
-            n = dec!n
-            stack = drop!stack
+        for _ in n
+            stack--
         end
     }
 
     drop_while = in (predicate stack) out stack@{
         stack = stack
         while if stack then predicate?take!stack else no
-            stack = drop!stack
+            stack--
         end
     }
 
@@ -295,7 +289,7 @@ const std::string STANDARD_LIBRARY = R"(
     range = in n out stack@{
         stack = []
         while n
-            n = dec!n
+            n--
             stack += n
         end
     }
@@ -318,7 +312,7 @@ const std::string STANDARD_LIBRARY = R"(
         container = drop_until_item!(delimiter container)
         result = [word]
         while container
-            container = drop!container
+            container--
             word = take_until_item!(delimiter container)
             container = drop_until_item!(delimiter container)
             result += word
@@ -341,7 +335,7 @@ const std::string STANDARD_LIBRARY = R"(
             row = take!rows
             row += item
             new_rows += row
-            rows = drop!rows
+            rows--
         end
     }
 
@@ -378,11 +372,11 @@ const std::string STANDARD_LIBRARY = R"(
         while or?[left right]
             while less_or_equal_top?(left right)
                 stack += take!left
-                left = drop!left
+                left--
             end
             while less_or_equal_top?(right left)
                 stack += take!right
-                right = drop!right
+                right--
             end
         end
     }
