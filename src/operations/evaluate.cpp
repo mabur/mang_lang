@@ -384,7 +384,7 @@ Expression evaluateDictionaryTypes(
             const auto value = evaluate_types(right_expression, result_environment);
             const auto name = getName(put_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions.lookup(name);
+            const auto current = lookupDictionary(name, result_environment);
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
@@ -395,7 +395,7 @@ Expression evaluateDictionaryTypes(
             const auto decrement_assignment = getDecrementAssignment(statement);
             const auto name = getName(decrement_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions.lookup(name);
+            const auto current = lookupDictionary(name, result_environment);
             const auto new_value = stack_functions::dropTyped(current);
             result.definitions.add(name, new_value);
         }
@@ -443,7 +443,7 @@ Expression evaluateDictionary(
             const auto value = evaluate(right_expression, result_environment);
             const auto name = getName(put_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions.lookup(name);
+            const auto current = lookupDictionary(name, result_environment);
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
@@ -455,7 +455,7 @@ Expression evaluateDictionary(
             const auto decrement_assignment = getDecrementAssignment(statement);
             const auto name = getName(decrement_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions.lookup(name);
+            const auto current = lookupDictionary(name, result_environment);
             const auto new_value = stack_functions::drop(current);
             result.definitions.add(name, new_value);
             i += 1;
