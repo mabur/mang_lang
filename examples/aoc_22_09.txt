@@ -39,7 +39,7 @@ R 2"
     for line in lines
         direction = line!0
         steps = parse_digit!line!2
-        while steps
+        for _ in steps
             head = take!heads
             tail = take!tails
             head_movement = head_movements!direction
@@ -49,7 +49,6 @@ R 2"
             tail = addv!(tail tail_movement)
             tails += tail
             heads += head
-            steps = dec!steps
         end
     end
     result = {
