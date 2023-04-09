@@ -5,6 +5,7 @@ TYPE SYSTEM
   - Tag never/undefined with an error message.
   - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED.
   - Difference in bottom type NEVER/EMPTY for type-evaluation and value-evaluation.
+* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Similarities between:
   - Type annotation, dealing with recursion, type asserts, value asserts.
   - Could have:
@@ -148,7 +149,9 @@ LANGUAGE SYNTAX & SEMANTICS
     for index, item in container
     container2 = enumerate!container for pair in container2
   - Add syntactic sugar for numbers besides += like -=.
-  - Use -= to remove item from table?
+    - Use -= to subtract from number?
+    - Use -= to remove a specific item from a table?
+    - Use -= to drop N items from a container?
   - Conditional return statements for dictionary
       return if a
   - If statements for dictionaries.
@@ -156,7 +159,6 @@ LANGUAGE SYNTAX & SEMANTICS
         b = c
       end
 * Add short-circuit "and" "or" to while statement.
-* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Empty tuple () for MISSING, NULL.
 * kebab-case
   - Numbers and -inf constant.
