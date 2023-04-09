@@ -341,17 +341,17 @@ int main() {
         {"{a=<> a+=(1 2)}", "{a=<1:2>}"},
         {"{a=3 a+=4}", "{a=7}"},
     });
-    test.reformat("decrement assignment", {
+    test.reformat("drop assignment", {
         {"{c=1 c--}", "{c=1 c--}"},
         {"{a=[1] while a a-- end}", "{a=[1] while a a-- end}"},
     });
-    test.evaluate_types("decrement assignment", {
+    test.evaluate_types("drop assignment", {
         {"{c=1 c--}", "{c=NUMBER}"},
         {"{c=[1] c--}", "{c=[NUMBER]}"},
         {"{c=<1:2> c--}", "{c=<NUMBER:NUMBER>}"},
         {"{a=[1] while a a-- end}", "{a=[NUMBER]}"},
     });
-    test.evaluate_all("decrement assignment", {
+    test.evaluate_all("drop assignment", {
         {"{c=1 c--}", "{c=0}"},
         {"{c=[1] c--}", "{c=[]}"},
         {"{c=[1 2] c--}", "{c=[2]}"},

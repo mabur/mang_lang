@@ -391,9 +391,9 @@ Expression evaluateDictionaryTypes(
             const auto new_value = stack_functions::putTyped(tuple);
             result.definitions.add(name, new_value);
         }
-        else if (type == DECREMENT_ASSIGNMENT) {
-            const auto decrement_assignment = getDecrementAssignment(statement);
-            const auto name = getName(decrement_assignment.name);
+        else if (type == DROP_ASSIGNMENT) {
+            const auto drop_assignment = getDropAssignment(statement);
+            const auto name = getName(drop_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = lookupDictionary(name, result_environment);
             const auto new_value = stack_functions::dropTyped(current);
@@ -451,9 +451,9 @@ Expression evaluateDictionary(
             result.definitions.add(name, new_value);
             i += 1;
         }
-        else if (type == DECREMENT_ASSIGNMENT) {
-            const auto decrement_assignment = getDecrementAssignment(statement);
-            const auto name = getName(decrement_assignment.name);
+        else if (type == DROP_ASSIGNMENT) {
+            const auto drop_assignment = getDropAssignment(statement);
+            const auto name = getName(drop_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = lookupDictionary(name, result_environment);
             const auto new_value = stack_functions::drop(current);

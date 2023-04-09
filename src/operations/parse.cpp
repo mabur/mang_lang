@@ -118,9 +118,9 @@ Expression parseNamedElement(CodeRange code) {
     else if (startsWith(code, '-')) {
         code = parseKeyword(code, "--");
         code = parseWhiteSpace(code);
-        return makeDecrementAssignment(
+        return makeDropAssignment(
             CodeRange{first, code.first},
-            DecrementAssignment{std::move(name)}
+            DropAssignment{std::move(name)}
         );
     }
     else {
