@@ -13,14 +13,12 @@ result@{
     ]
     result = 0
     previous = inf
-    list = depths
-    while list
+    for item in depths
         result =
-            if less?(previous take!list) then
+            if less?(previous item) then
                 inc!result
             else
                 result
-        previous = take!list
-        list = drop!list
+        previous = item
     end
 }
