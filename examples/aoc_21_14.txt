@@ -27,13 +27,11 @@ result@{
             b = polymer!1
             prefix = put_each!([b a] "")
             remaining_rules = rules
-            while remaining_rules
-                rule = take!remaining_rules
+            for rule in remaining_rules
                 prefix = if
                     drop!drop!prefix then prefix
                     equal?(rule!0 prefix) then put_each!([b rule!1 a] "")
                     else prefix
-                remaining_rules = drop!remaining_rules
             end
             while drop!prefix
                 result += take!prefix
