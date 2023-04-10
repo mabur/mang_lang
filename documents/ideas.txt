@@ -135,6 +135,10 @@ STANDARD LIBRARY
 
 
 LANGUAGE SYNTAX & SEMANTICS
+* Generic container interface. Make operations like inc,dec,drop,put,+=,--,get0,take consistent with serialization.
+  - What do we refer to as first and last of a stack?
+  - Should "take" give first or last?
+  - Should we index from front or back?
 * Indexing
   - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
   - What about tables? When to return key-value-tuple and when to just return value?
