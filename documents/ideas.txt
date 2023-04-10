@@ -5,7 +5,6 @@ TYPE SYSTEM
   - Tag never/undefined with an error message.
   - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED.
   - Difference in bottom type NEVER/EMPTY for type-evaluation and value-evaluation.
-* Change syntax for tables from <a:b c:d> to <(a b) (c d)>.
 * Similarities between:
   - Type annotation, dealing with recursion, type asserts, value asserts.
   - Could have:
