@@ -7,6 +7,7 @@ TYPE SYSTEM
   in {x y} out ...
   in {Number:x Number:y} out ...
   - Implement by adding a concept of "OptionallyTypedArgument".
+  - Could also just deal with it during the parsing phase and just set it to any if not present.
 * Annotating types for functions:
   in Number:x out Number:mul!(x x) (Bra)
   Bra. Optional type annotation for functions:
