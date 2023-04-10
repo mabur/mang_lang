@@ -28,7 +28,7 @@ abdefghi"
         y = inc!y
     end
     
-    visited = <start:yes>
+    visited = <(start yes)>
     active_frontier = [start]
     steps = 0
     while not!get!(goal visited no)
