@@ -12,6 +12,10 @@ std::string serializeName(Expression name) {
     return getName(name);
 }
 
+std::string serializeArgument(Expression name) {
+    return getArgument(name);
+}
+
 std::string serializeDynamicExpression(const DynamicExpression& dynamic_expression) {
     return "dynamic " + serialize(dynamic_expression.expression);
 }
@@ -151,7 +155,7 @@ std::string serializeCharacter(Character character) {
 }
 
 std::string serializeFunction(const Function& function) {
-    return "in " + serializeName(function.input_name)
+    return "in " + serializeArgument(function.input_name)
         + " out " + serialize(function.body);
 }
 
@@ -160,7 +164,7 @@ std::string serializeFunctionDictionary(const FunctionDictionary& function_dicti
     result += "in ";
     result += "{";
     for (const auto& name : function_dictionary.input_names) {
-        result += serializeName(name);
+        result += serializeArgument(name);
         result += " ";
     }
     if (function_dictionary.input_names.empty()) {
@@ -178,7 +182,7 @@ std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
     result += "in ";
     result += "(";
     for (const auto& name : function_stack.input_names) {
-        result += serializeName(name);
+        result += serializeArgument(name);
         result += " ";
     }
     if (function_stack.input_names.empty()) {
@@ -304,6 +308,7 @@ std::string serialize(Expression expression) {
         case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
         case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
         case NAME: return serializeName(expression);
+        case ARGUMENT: return serializeArgument(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
         case BOOLEAN: return serializeBoolean(getBoolean(expression));
         case EMPTY_STRING: return serializeString(expression);

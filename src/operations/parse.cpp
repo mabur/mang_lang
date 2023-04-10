@@ -98,6 +98,15 @@ Expression parseName(CodeRange code) {
     );
 }
 
+Expression parseArgument(CodeRange code) {
+    auto first = code.begin();
+    code = parseWhile(code, isNameCharacter);
+    return makeArgument(
+        CodeRange{first, code.first},
+        rawString({first, code.first})
+    );
+}
+
 Expression parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
@@ -244,7 +253,7 @@ Expression parseDictionary(CodeRange code) {
 
 Expression parseFunction(CodeRange code) {
     auto first = code.begin();
-    auto input_name = parseName(code);
+    auto input_name = parseArgument(code);
     code.first = end(input_name);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
@@ -263,7 +272,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     auto input_names = std::vector<Expression>{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
-        const auto name = parseName(code);
+        const auto name = parseArgument(code);
         code.first = end(name);
         input_names.push_back(name);
         code = parseWhiteSpace(code);
@@ -286,7 +295,7 @@ Expression parseFunctionTuple(CodeRange code) {
     auto input_names = std::vector<Expression>{};
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
-        const auto name = parseName(code);
+        const auto name = parseArgument(code);
         code.first = end(name);
         input_names.push_back(name);
         code = parseWhiteSpace(code);

@@ -31,6 +31,7 @@ enum ExpressionType {
     FUNCTION_APPLICATION,
     LOOKUP_SYMBOL,
     NAME,
+    ARGUMENT,
     DEFINITION,
     PUT_ASSIGNMENT,
     DROP_ASSIGNMENT,
@@ -69,6 +70,7 @@ const auto NAMES = std::vector<std::string>{
     "FUNCTION_APPLICATION",
     "LOOKUP_SYMBOL",
     "NAME",
+    "ARGUMENT",
     "DEFINITION",
     "PUT_ASSIGNMENT",
     "DROP_ASSIGNMENT",
@@ -123,6 +125,7 @@ using Character = char;
 // After that the std::vector of Names is static, which makes it easier to pass
 // around references or pointers.
 using Name = std::string;
+using Argument = std::string;
 
 struct DynamicExpression {
     Expression expression;

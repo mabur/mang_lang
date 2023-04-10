@@ -28,6 +28,7 @@ std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
 std::vector<Name> names;
+std::vector<Argument> arguments;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<ForStatement> for_statements;
@@ -253,6 +254,10 @@ Expression makeName(CodeRange code, Name expression) {
     return makeExpression(code, expression, NAME, names);
 }
 
+Expression makeArgument(CodeRange code, Argument expression) {
+    return makeExpression(code, expression, ARGUMENT, arguments);
+}
+
 Expression makeDefinition(CodeRange code, Definition expression) {
     return makeExpression(code, expression, DEFINITION, definitions);
 }
@@ -435,6 +440,10 @@ LookupSymbol getLookupSymbol(Expression expression) {
 
 Name getName(Expression expression) {
     return getExpression(expression, NAME, names);
+}
+
+Argument getArgument(Expression expression) {
+    return getExpression(expression, ARGUMENT, arguments);
 }
 
 String getString(Expression expression) {
