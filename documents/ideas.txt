@@ -11,6 +11,8 @@ TYPE SYSTEM
   Person = {age=0}
   update = in (Person:person Numbers:age) out Person:...
 * How to add type annotation for:
+  - any
+  - never?
   - optionals
   - variants / sum-types
   - items of generic containers
@@ -25,6 +27,7 @@ TYPE SYSTEM
   - Run-time-dispatch
   - Sum-type/choice-type
   - dynamic keyword
+* Rename serialized types from NUMBER to Number.
 
 STANDARD LIBRARY
 * all_of, any_of, none_of
