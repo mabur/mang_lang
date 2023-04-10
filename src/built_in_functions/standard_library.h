@@ -69,13 +69,13 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    reverse = in container out fold!(
+    reverse = in container out container : fold!(
         put
         container
         clear!container
     )
 
-    put_each = in (top_stack bottom_stack) out fold!(
+    put_each = in (top_stack bottom_stack) out bottom_stack : fold!(
         put
         top_stack
         bottom_stack
@@ -132,7 +132,7 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map = in (f container) out reverse!fold!(
+    map = in (f container) out container : reverse!fold!(
         in (item container) out put!(f!item container)
         container
         clear!container
@@ -211,7 +211,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     product = in container out Number : fold!(mul container 1)
 
-    clear_if = in (predicate container) out reverse!fold!(
+    clear_if = in (predicate container) out container : reverse!fold!(
         in (item container) out
             if predicate?item then
                 container
@@ -221,10 +221,10 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    clear_item = in (item container) out
+    clear_item = in (item container) out container :
         clear_if?(in x out equal?(x item) container)
 
-    take_many = in (n container) out reverse!stack_out@{
+    take_many = in (n container) out container : reverse!stack_out@{
         stack_out = clear!container
         for _ in n
             stack_out += take!container
@@ -232,7 +232,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_while = in (predicate container) out reverse!stack_out@{
+    take_while = in (predicate container) out container : reverse!stack_out@{
         stack_out = clear!container
         while if container then predicate?take!container else no
             stack_out += take!container
@@ -240,33 +240,33 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_until_item = in (item container) out
+    take_until_item = in (item container) out container :
         take_while!(in x out unequal?(x item) container)
 
-    drop_many = in (n container) out container@{
+    drop_many = in (n container) out container : container@{
         container = container
         for _ in n
             container--
         end
     }
 
-    drop_while = in (predicate container) out container@{
+    drop_while = in (predicate container) out container : container@{
         container = container
         while if container then predicate?take!container else no
             container--
         end
     }
 
-    drop_until_item = in (item container) out
+    drop_until_item = in (item container) out container :
         drop_while?(in x out unequal?(x item) container)
 
-    replace = in (new_item container) out fold!(
+    replace = in (new_item container) out container : fold!(
         in (item container) out put!(new_item container)
         container
         clear!container
     )
 
-    replace_if = in (predicate new_item container) out reverse!fold!(
+    replace_if = in (predicate new_item container) out container : reverse!fold!(
         in (item container) out
             if predicate?item then
                 put!(new_item container)
@@ -276,7 +276,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    replace_item = in (old_item new_item container) out
+    replace_item = in (old_item new_item container) out container :
         replace_if?(in x out equal?(x old_item) new_item container)
 
     count = in container out Number : fold!(
@@ -294,11 +294,11 @@ const std::string STANDARD_LIBRARY = R"(
     count_item = in (item container) out Number :
         count_if!(in x out equal?(x item) container)
 
-    range = in n out container@{
-        container = []
+    range = in n out Vector : vector@{
+        vector = []
         while n
             n--
-            container += n
+            vector += n
         end
     }
 
