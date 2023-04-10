@@ -13,13 +13,13 @@ C Z"
     YOU_SCISSORS = 'Z'
 
     SCORE_TABLE = <
-        YOU_ROCK: <OPPONENT_ROCK:4 OPPONENT_PAPER:1 OPPONENT_SCISSORS:7>
-        YOU_PAPER: <OPPONENT_ROCK:8 OPPONENT_PAPER:5 OPPONENT_SCISSORS:2>
-        YOU_SCISSORS: <OPPONENT_ROCK:3 OPPONENT_PAPER:9 OPPONENT_SCISSORS:6>
+        (YOU_ROCK <(OPPONENT_ROCK 4) (OPPONENT_PAPER 1) (OPPONENT_SCISSORS 7)>)
+        (YOU_PAPER <(OPPONENT_ROCK 8) (OPPONENT_PAPER 5) (OPPONENT_SCISSORS 2)>)
+        (YOU_SCISSORS <(OPPONENT_ROCK 3) (OPPONENT_PAPER 9) (OPPONENT_SCISSORS 6)>)
     >
     parse_round = in round out (round!0 round!2)
     score_round = in (opponent you) out get!(opponent get!(you SCORE_TABLE <>) -inf)
-    rounds = map_stack!(parse_round split!(newline input))
-    scores = map_stack!(score_round rounds)
+    rounds = map!(parse_round split!(newline input))
+    scores = map!(score_round rounds)
     result = sum!scores
 }
