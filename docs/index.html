@@ -419,17 +419,16 @@ The input above is evaluated to the output below:
 <p>
 What we call Tables in Manglang are sometimes referred to as associative arrays in other languages. A table holds pairs of elements: keys and values. We use the syntax:
 <pre>
-&lt;key1:value1 key2:value2&gt;
+&lt;(key1 value1) (key2 value2)&gt;
 </pre>
 Tables are used for situations where you want to quickly get or put the value in a container based on a dynamic key. We do this using the built-infunctions <code>get!(key table default_value)</code> and <code>put!((key value) table)</code>. The following example takes a stack of numbers and computes a table, where each key is a number and the corresponding value counts how many times the number occurs in the stack:
 <pre>
 {
   stack = [1 2 1 1 3 4 2]
   counts = <>
-  while stack
-    x = get!(take!stack counts 0)
-    counts = put!((take!stack inc!x) counts)
-    stack = drop!stack
+  for item in stack
+    count = inc!get!(item counts 0)
+    counts = put!((item count) counts)
   end
 }
 </pre>
@@ -437,8 +436,8 @@ The input above is evaluated to the output below:
 <pre>
 {
   stack = []
-  counts = <1:3 2:2 4:1>
-  x = 2
+  counts = <(1 3) (2 2) (4 1)>
+  count = 2
 }
 </pre>
 Tables are perhaps the most complicated and least used container in Manglang. But they are handy in some cases.
