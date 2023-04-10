@@ -349,13 +349,15 @@ Expression parseTable(CodeRange code) {
     auto rows = std::vector<Row>{};
     while (!::startsWith(code, '>')) {
         throwIfEmpty(code);
+        code = parseCharacter(code, '(');
+        code = parseWhiteSpace(code);
         const auto key = parseExpression(code);
         code.first = end(key);
         code = parseWhiteSpace(code);
-        code = parseCharacter(code, ':');
-        code = parseWhiteSpace(code);
         const auto value = parseExpression(code);
         code.first = end(value);
+        code = parseWhiteSpace(code);
+        code = parseCharacter(code, ')');
         code = parseWhiteSpace(code);
         rows.push_back({key, value});
     }

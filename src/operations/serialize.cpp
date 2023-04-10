@@ -194,7 +194,7 @@ std::string serializeTable(Expression s) {
     }
     auto result = std::string{'<'};
     for (const auto& row : rows) {
-        result += serialize(row.key) + ':' + serialize(row.value) + ' ';
+        result += '(' + serialize(row.key) + ' ' + serialize(row.value) + ") ";
     }
     result.back() = '>';
     return result;
@@ -206,7 +206,7 @@ std::string serializeTypesEvaluatedTable(Expression s) {
         return "<>";
     }
     const auto& row = rows.begin()->second;
-    return '<' + serialize_types(row.key) + ':' + serialize_types(row.value) + '>';
+    return "<(" + serialize_types(row.key) + ' ' + serialize_types(row.value) + ")>";
 }
 
 template<typename Table>
@@ -216,7 +216,7 @@ std::string serializeEvaluatedTable(const Table& table) {
     }
     auto result = std::string{'<'};
     for (const auto& row : table) {
-        result += row.first + ':' + serialize(row.second.value) + ' ';
+        result += '(' + row.first + ' ' + serialize(row.second.value) + ") ";
     }
     result.back() = '>';
     return result;

@@ -201,29 +201,29 @@ int main() {
     });
     test.reformat("table", {
         {"<>", "<>"},
-        {"<1:2>", "<1:2>"},
-        {"< 1 : 2 >", "<1:2>"},
-        {"<<>:<>>", "<<>:<>>"},
-        {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
-        {"<inc!0:inc!1>", "<inc!0:inc!1>"},
+        {"<(1 2)>", "<(1 2)>"},
+        {"< (1  2 ) >", "<(1 2)>"},
+        {"<(<> <>)>", "<(<> <>)>"},
+        {"<((0 0) (1 1))>", "<((0 0) (1 1))>"},
+        {"<(inc!0 inc!1)>", "<(inc!0 inc!1)>"},
     });
     test.evaluate_types("table", {
         {"<>", "<>"},
-        {"<1:2>", "<NUMBER:NUMBER>"},
-        {"< 1 : 2 >", "<NUMBER:NUMBER>"},
-        {"<<>:<>>", "<<>:<>>"},
-        {"<(0 0):(1 1)>", "<(NUMBER NUMBER):(NUMBER NUMBER)>"},
-        {"<inc!0:inc!1>", "<NUMBER:NUMBER>"},
-        {"<3:6 4:8 1:2 2:4>","<NUMBER:NUMBER>"}
+        {"<(1 2)>", "<(NUMBER NUMBER)>"},
+        {"< (1  2 ) >", "<(NUMBER NUMBER)>"},
+        {"<(<> <>)>", "<(<> <>)>"},
+        {"<((0 0) (1 1))>", "<((NUMBER NUMBER) (NUMBER NUMBER))>"},
+        {"<(inc!0 inc!1)>", "<(NUMBER NUMBER)>"},
+        {"<(3 6) (4 8) (1 2) (2 4)>","<(NUMBER NUMBER)>"}
     });
     test.evaluate_all("table", {
         {"<>", "<>"},
-        {"<1:2>", "<1:2>"},
-        {"< 1 : 2 >", "<1:2>"},
-        {"<<>:<>>", "<<>:<>>"},
-        {"<(0 0):(1 1)>", "<(0 0):(1 1)>"},
-        {"<inc!0:inc!1>", "<1:2>"},
-        {"<3:6 4:8 1:2 2:4>","<1:2 2:4 3:6 4:8>"}
+        {"<(1 2)>", "<(1 2)>"},
+        {"< (1  2 ) >", "<(1 2)>"},
+        {"<(<> <>)>", "<(<> <>)>"},
+        {"<((0 0) (1 1))>", "<((0 0) (1 1))>"},
+        {"<(inc!0 inc!1)>", "<(1 2)>"},
+        {"<(3 6) (4 8) (1 2) (2 4)>","<(1 2) (2 4) (3 6) (4 8)>"}
     });
     test.reformat("tuple", {
         {"()", "()"},
@@ -302,7 +302,7 @@ int main() {
     test.evaluate_types("dictionary for", {
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
         {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
-        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<ANY:ANY> i=(ANY ANY)}"}, // TODO 
+        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<(ANY ANY)> i=(ANY ANY)}"}, // TODO 
     });
     test.evaluate_types("ANY in dictionary", {
         {"y@{y=take![]}", "ANY"},
@@ -321,7 +321,7 @@ int main() {
         {"{a=1 b=a}", "{a=NUMBER b=NUMBER}"},
         {"{a=[] a+=1}", "{a=[NUMBER]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[NUMBER]}"},
-        {"{a=<> a+=(1 2)}", "{a=<NUMBER:NUMBER>}"},
+        {"{a=<> a+=(1 2)}", "{a=<(NUMBER NUMBER)>}"},
         {"{a=0 a+=1}", "{a=NUMBER}"},
     });
     test.evaluate_all("dictionary", {
@@ -338,7 +338,7 @@ int main() {
         {R"({a=1})", R"({a=1})"},
         {"{a=[] a+=1}", "{a=[1]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[3 2 1]}"},
-        {"{a=<> a+=(1 2)}", "{a=<1:2>}"},
+        {"{a=<> a+=(1 2)}", "{a=<(1 2)>}"},
         {"{a=3 a+=4}", "{a=7}"},
     });
     test.reformat("drop assignment", {
@@ -348,15 +348,15 @@ int main() {
     test.evaluate_types("drop assignment", {
         {"{c=1 c--}", "{c=NUMBER}"},
         {"{c=[1] c--}", "{c=[NUMBER]}"},
-        {"{c=<1:2> c--}", "{c=<NUMBER:NUMBER>}"},
+        {"{c=<(1 2)> c--}", "{c=<(NUMBER NUMBER)>}"},
         {"{a=[1] while a a-- end}", "{a=[NUMBER]}"},
     });
     test.evaluate_all("drop assignment", {
         {"{c=1 c--}", "{c=0}"},
         {"{c=[1] c--}", "{c=[]}"},
         {"{c=[1 2] c--}", "{c=[2]}"},
-        {"{c=<1:2> c--}", "{c=<>}"},
-        {"{c=<1:2 3:4> c--}", "{c=<3:4>}"},
+        {"{c=<(1 2)> c--}", "{c=<>}"},
+        {"{c=<(1 2) (3 4)> c--}", "{c=<(3 4)>}"},
         {"{a=[1] while a a-- end}", "{a=[]}"},
     });
     test.reformat("conditional", {
@@ -615,8 +615,8 @@ int main() {
         {R"(a@{i=1 c="abc" a=c!i})", "'b'"},
     });
     test.evaluate_all("lookup table indexing", {
-        {"a@{c=<2:3 4:5> a=c!2}", "3"},
-        {"a@{c=<2:3 4:5> a=c!4}", "5"},
+        {"a@{c=<(2 3) (4 5)> a=c!2}", "3"},
+        {"a@{c=<(2 3) (4 5)> a=c!4}", "5"},
     });
     test.evaluate_all("add", {
         {"add!(1 0)", "1"},
@@ -927,8 +927,8 @@ int main() {
     });
     test.evaluate_all("clear table", {
         {"clear!<>", "<>"},
-        {"clear!<1:11>", "<>"},
-        {"clear!<1:11 2:22>", "<>"},
+        {"clear!<(1 11)>", "<>"},
+        {"clear!<(1 11) (2 22)>", "<>"},
     });
     test.evaluate_all("clear number", {
         {"clear!0", "0"},
@@ -1023,35 +1023,35 @@ int main() {
         {R"(put!('a' "bc"))", R"("abc")"},
     });
     test.evaluate_all("put table", {
-        {"put!((1 11) <>)", "<1:11>"},
-        {"put!((4 44) <5:55>)", "<4:44 5:55>"},
-        {"put!((4 44) <6:66 8:88>)", "<4:44 6:66 8:88>"},
-        {"put!((0 1) <>)", "<0:1>"},
-        {"put!((0 1) <0:2>)", "<0:1>"},
-        {"put!((0 5) <2:3 1:2 0:1>)", "<0:5 1:2 2:3>"},
+        {"put!((1 11) <>)", "<(1 11)>"},
+        {"put!((4 44) <(5 55)>)", "<(4 44) (5 55)>"},
+        {"put!((4 44) <(6 66) (8 88)>)", "<(4 44) (6 66) (8 88)>"},
+        {"put!((0 1) <>)", "<(0 1)>"},
+        {"put!((0 1) <(0 2)>)", "<(0 1)>"},
+        {"put!((0 5) <(2 3) (1 2) (0 1)>)", "<(0 5) (1 2) (2 3)>"},
     });
     test.evaluate_all("get table", {
         {"get!(0 <> 2)", "2"},
-        {"get!(0 <0:1> 2)", "1"},
-        {"get!(1 <0:1> 2)", "2"},
-        {"get!(0 <0:1 1:2 3:3> 2)", "1"},
-        {"get!((3) <(1):[1] (2):[2] (3):[3]> [])", "[3]"},
+        {"get!(0 <(0 1)> 2)", "1"},
+        {"get!(1 <(0 1)> 2)", "2"},
+        {"get!(0 <(0 1) (1 2) (3 3)> 2)", "1"},
+        {"get!((3) <((1) [1]) ((2) [2]) ((3) [3])> [])", "[3]"},
     });
     test.evaluate_all("get_keys", {
         {"get_keys!<>", "[]"},
-        {"get_keys!<0:1>", "[0]"},
-        {"get_keys!<0:1 2:3>", "[0 2]"},
-        {"get_keys!<2:3 0:1>", "[0 2]"},
+        {"get_keys!<(0 1)>", "[0]"},
+        {"get_keys!<(0 1) (2 3)>", "[0 2]"},
+        {"get_keys!<(2 3) (0 1)>", "[0 2]"},
     });
     test.evaluate_all("get_values", {
-        {"get_values!<1:0>", "[0]"},
-        {"get_values!<10:0 11:1 12:2>", "[0 1 2]"},
-        {"get_values!<3:0 2:1 1:2>", "[2 1 0]"},
+        {"get_values!<(1 0)>", "[0]"},
+        {"get_values!<(10 0) (11 1) (12 2)>", "[0 1 2]"},
+        {"get_values!<(3 0) (2 1) (1 2)>", "[2 1 0]"},
     });
     test.evaluate_all("get_items", {
-        {"get_items!<0:1>", "[(0 1)]"},
-        {"get_items!<0:1 2:3 4:5>", "[(0 1) (2 3) (4 5)]"},
-        {"get_items!<4:1 2:3 0:5>", "[(0 5) (2 3) (4 1)]"},
+        {"get_items!<(0 1)>", "[(0 1)]"},
+        {"get_items!<(0 1) (2 3) (4 5)>", "[(0 1) (2 3) (4 5)]"},
+        {"get_items!<(4 1) (2 3) (0 5)>", "[(0 5) (2 3) (4 1)]"},
     });
     test.evaluate_all("inc", {
         {"inc!0", "1"},
@@ -1213,9 +1213,9 @@ int main() {
     });
     test.evaluate_all("count table", {
         {"count!<>", "0"},
-        {"count!<1:1>", "1"},
-        {"count!<1:1 1:1>", "1"},
-        {"count!<1:1 2:2>", "2"},
+        {"count!<(1 1)>", "1"},
+        {"count!<(1 1) (1 1)>", "1"},
+        {"count!<(1 1) (2 2)>", "2"},
     });
     test.evaluate_types("count string", {
         {R"(count!"")", "NUMBER"},
@@ -1254,9 +1254,9 @@ int main() {
         {"count_if!(in x out equal?(x 3) [3 2 3])", "2"},
     });
     test.evaluate_all("count_if table", {
-        {"count_if!(less <0:0>)", "0"},
-        {"count_if!(less <0:1>)", "1"},
-        {"count_if!(less <0:0 1:2 2:3 4:5 7:6>)", "3"},
+        {"count_if!(less <(0 0)>)", "0"},
+        {"count_if!(less <(0 1)>)", "1"},
+        {"count_if!(less <(0 0) (1 2) (2 3) (4 5) (7 6)>)", "3"},
     });
     test.evaluate_all("count_if string", {
         {R"(count_if!(in x out 0 ""))", "0"},
@@ -1279,16 +1279,16 @@ int main() {
         {"reverse![0 1 2]", "[2 1 0]"},
     });
     test.evaluate_types("reverse table", {
-        {"reverse!<>", "<ANY:ANY>"}, // TODO
-        {"reverse!<0:0>", "<NUMBER:NUMBER>"},
-        {"reverse!<0:0 1:1>", "<NUMBER:NUMBER>"},
-        {"reverse!<0:0 1:1 2:2>", "<NUMBER:NUMBER>"},
+        {"reverse!<>", "<(ANY ANY)>"}, // TODO
+        {"reverse!<(0 0)>", "<(NUMBER NUMBER)>"},
+        {"reverse!<(0 0) (1 1)>", "<(NUMBER NUMBER)>"},
+        {"reverse!<(0 0) (1 1) (2 2)>", "<(NUMBER NUMBER)>"},
     });
     test.evaluate_all("reverse table", {
         {"reverse!<>", "<>"},
-        {"reverse!<0:0>", "<0:0>"},
-        {"reverse!<0:0 1:1>", "<0:0 1:1>"},
-        {"reverse!<0:0 1:1 2:2>", "<0:0 1:1 2:2>"},
+        {"reverse!<(0 0)>", "<(0 0)>"},
+        {"reverse!<(0 0) (1 1)>", "<(0 0) (1 1)>"},
+        {"reverse!<(0 0) (1 1) (2 2)>", "<(0 0) (1 1) (2 2)>"},
     });
     test.evaluate_types("reverse string", {
         {R"(reverse!"")", "STRING"},
@@ -1312,7 +1312,7 @@ int main() {
     });
     test.evaluate_all("make_stack table", {
         {"make_stack!<>", "[]"},
-        {"make_stack!<3:33 1:11 2:22>", "[(1 11) (2 22) (3 33)]"},
+        {"make_stack!<(3 33) (1 11) (2 22)>", "[(1 11) (2 22) (3 33)]"},
     });
     test.evaluate_all("make_string", {
         {R"(make_string![])", R"("")"},
@@ -1322,15 +1322,15 @@ int main() {
     });
     test.evaluate_types("make_table", {
         {"make_table![]", "<>"},
-        {"make_table![(3 33) (1 11) (2 22)]", "<NUMBER:NUMBER>"},
-        {"make_table!<>", "<ANY:ANY>"}, // TODO
-        {"make_table!<3:33 1:11 2:22>", "<NUMBER:NUMBER>"},
+        {"make_table![(3 33) (1 11) (2 22)]", "<(NUMBER NUMBER)>"},
+        {"make_table!<>", "<(ANY ANY)>"}, // TODO
+        {"make_table!<(3 33) (1 11) (2 22)>", "<(NUMBER NUMBER)>"},
     });
     test.evaluate_all("make_table", {
         {"make_table![]", "<>"},
-        {"make_table![(3 33) (1 11) (2 22)]", "<1:11 2:22 3:33>"},
+        {"make_table![(3 33) (1 11) (2 22)]", "<(1 11) (2 22) (3 33)>"},
         {"make_table!<>", "<>"},
-        {"make_table!<3:33 1:11 2:22>", "<1:11 2:22 3:33>"},
+        {"make_table!<(3 33) (1 11) (2 22)>", "<(1 11) (2 22) (3 33)>"},
     });
     test.evaluate_all("map_stack", {
         {"map_stack!(inc [])", "[]"},
@@ -1355,8 +1355,8 @@ int main() {
         {R"(map_string!(to_upper "abc"))", "STRING"},
     });
     test.evaluate_all("map table", {
-        {"map_table!(in x out (x x) [1 2])", "<1:1 2:2>"},
-        {"map_table!(in (x y) out (x inc!y) <1:11 2:22>)", "<1:12 2:23>"},
+        {"map_table!(in x out (x x) [1 2])", "<(1 1) (2 2)>"},
+        {"map_table!(in (x y) out (x inc!y) <(1 11) (2 22)>)", "<(1 12) (2 23)>"},
     });
     test.evaluate_all("clear_if stack", {
         {"clear_if!(in x out 1 [])", "[]"},
@@ -1365,9 +1365,9 @@ int main() {
         {"clear_if!(in x out less?(x 5) [7 4 6 1 9 3 2])", "[7 6 9]"},
     });
     test.evaluate_all("clear_if table", {
-        {"clear_if!(less <0:0>)", "<0:0>"},
-        {"clear_if!(less <0:1>)", "<>"},
-        {"clear_if!(less <0:0 1:2 2:3 5:4>)", "<0:0 5:4>"},
+        {"clear_if!(less <(0 0)>)", "<(0 0)>"},
+        {"clear_if!(less <(0 1)>)", "<>"},
+        {"clear_if!(less <(0 0) (1 2) (2 3) (5 4)>)", "<(0 0) (5 4)>"},
     });
     test.evaluate_all("clear_if string", {
         {R"(clear_if!(in x out 0 ""))", R"("")"},
@@ -1506,11 +1506,11 @@ int main() {
     });
     test.evaluate_all("put_each table", {
         {"put_each!(<> <>)", "<>"},
-        {"put_each!(<> <1:2>)", "<1:2>"},
-        {"put_each!(<1:2> <>)", "<1:2>"},
-        {"put_each!(<1:2> <1:1>)", "<1:2>"},
-        {"put_each!(<1:11> <2:22>)", "<1:11 2:22>"},
-        {"put_each!(<1:11 3:33> <2:22 4:44>)", "<1:11 2:22 3:33 4:44>"},
+        {"put_each!(<> <(1 2)>)", "<(1 2)>"},
+        {"put_each!(<(1 2)> <>)", "<(1 2)>"},
+        {"put_each!(<(1 2)> <(1 1)>)", "<(1 2)>"},
+        {"put_each!(<(1 11)> <(2 22)>)", "<(1 11) (2 22)>"},
+        {"put_each!(<(1 11) (3 33)> <(2 22) (4 44)>)", "<(1 11) (2 22) (3 33) (4 44)>"},
     });
     test.evaluate_types("put_each", {
         {"put_each!([] [])", "EMPTY_STACK"},
@@ -1544,7 +1544,7 @@ int main() {
         {"merge_stack![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
     });
     test.evaluate_all("merge_stack table", {
-        {"merge_stack![[(1 11)] <2:22>]", "[(1 11) (2 22)]"},
+        {"merge_stack![[(1 11)] <(2 22)>]", "[(1 11) (2 22)]"},
     });
     test.evaluate_all("merge_stack string", {
         {R"(merge_stack![['a'] "b"])", "['a' 'b']"},
@@ -1558,12 +1558,12 @@ int main() {
     });
     test.evaluate_all("merge_table", {
         {"merge_table![<> <>]", "<>"},
-        {"merge_table![<> <2:22>]", "<2:22>"},
-        {"merge_table![<1:11> <>]", "<1:11>"},
-        {"merge_table![<1:11> <1:11>]", "<1:11>"},
-        {"merge_table![<1:11> <2:22>]", "<1:11 2:22>"},
-        {"merge_table![<1:11> <5:55 3:33> <4:44 5:0 6:66 2:22>]", "<1:11 2:22 3:33 4:44 5:55 6:66>"},
-        {"merge_table![[(1 11)] <2:22>]", "<1:11 2:22>"},
+        {"merge_table![<> <(2 22)>]", "<(2 22)>"},
+        {"merge_table![<(1 11)> <>]", "<(1 11)>"},
+        {"merge_table![<(1 11)> <(1 11)>]", "<(1 11)>"},
+        {"merge_table![<(1 11)> <(2 22)>]", "<(1 11) (2 22)>"},
+        {"merge_table![<(1 11)> <(5 55) (3 33)> <(4 44) (5 0) (6 66) (2 22)>]", "<(1 11) (2 22) (3 33) (4 44) (5 55) (6 66)>"},
+        {"merge_table![[(1 11)] <(2 22)>]", "<(1 11) (2 22)>"},
     });
     test.evaluate_all("merge_string", {
         {R"(merge_string!["" ""])", R"("")"},
@@ -1715,10 +1715,10 @@ int main() {
     });
     test.evaluate_all("count_elements", {
         {"count_elements![]", "<>"},
-        {"count_elements![1]", "<1:1>"},
-        {"count_elements![1 2]", "<1:1 2:1>"},
-        {"count_elements![1 1]", "<1:2>"},
-        {"count_elements![1 1 2 3 1 4 2 4 0]", "<0:1 1:3 2:2 3:1 4:2>"},
+        {"count_elements![1]", "<(1 1)>"},
+        {"count_elements![1 2]", "<(1 1) (2 1)>"},
+        {"count_elements![1 1]", "<(1 2)>"},
+        {"count_elements![1 1 2 3 1 4 2 4 0]", "<(0 1) (1 3) (2 2) (3 1) (4 2)>"},
     });
     test.evaluate_all("vector math", {
         {"addv!([1 2] [3 4])", "[4 6]"},
