@@ -383,6 +383,13 @@ Expression parseSubstitution(CodeRange code) {
         code.first = end(child);
         return makeFunctionApplication(CodeRange{first, code.first}, {name, child});
     }
+    if (startsWith(code, ':')) {
+        code = parseCharacter(code);
+        auto value = parseExpression(code);
+        code.first = end(value);
+        const auto type = makeLookupSymbol(CodeRange{first, end(name)}, {name});
+        return makeTypedExpression(CodeRange{first, code.first}, {type, value});
+    }
     return makeLookupSymbol(CodeRange{first, end(name)}, {name});
 }
 

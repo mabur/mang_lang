@@ -357,6 +357,21 @@ Expression evaluateIs(
     return evaluate(is_expression.expression_else, environment);
 }
 
+template<typename Evaluator>
+Expression evaluateTypedExpression(
+    Evaluator evaluator, TypedExpression expression, Expression environment
+) {
+    const auto type = evaluator(expression.type, environment);
+    const auto value = evaluator(expression.value, environment);
+    if (!areTypesConsistent(type.type, value.type)) {
+        throw std::runtime_error(
+            "Type error. Different types " +
+                NAMES[type.type] + " & " + NAMES[value.type]
+        );
+    }
+    return value;
+}
+
 Expression evaluateDictionaryTypes(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -604,6 +619,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
+        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, getTypedExpression(expression), environment);
 
         // These are different for types and values:
         case DYNAMIC_EXPRESSION: return Expression{};
@@ -642,6 +658,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate, getTuple(expression), environment);
         case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
+        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, getTypedExpression(expression), environment);
 
         // These are different for types and values:
         case DYNAMIC_EXPRESSION: return evaluate(getDynamicExpression(expression).expression, environment);

@@ -16,6 +16,10 @@ std::string serializeDynamicExpression(const DynamicExpression& dynamic_expressi
     return "dynamic " + serialize(dynamic_expression.expression);
 }
 
+std::string serializeTypedExpression(const TypedExpression& typed_expression) {
+    return serialize(typed_expression.type) + ':' + serialize(typed_expression.value);
+}
+
 std::string serializeConditional(const Conditional& conditional) {
     auto result = std::string{"if "};
     for (const auto& alternative : conditional.alternatives) {
@@ -305,6 +309,7 @@ std::string serialize(Expression expression) {
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
         case DYNAMIC_EXPRESSION: return serializeDynamicExpression(getDynamicExpression(expression));
+        case TYPED_EXPRESSION: return serializeTypedExpression(getTypedExpression(expression));
         default: return NAMES[expression.type];
     }
 }

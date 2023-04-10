@@ -6,6 +6,7 @@
 #include "operations/serialize.h"
 
 std::vector<DynamicExpression> dynamic_expressions;
+std::vector<TypedExpression> typed_expressions;
 std::vector<EvaluatedDictionary> evaluated_dictionaries;
 std::vector<Dictionary> dictionaries;
 std::vector<Character> characters;
@@ -168,6 +169,10 @@ Expression makeDynamicExpression(CodeRange code, DynamicExpression expression) {
     return makeExpression(code, expression, DYNAMIC_EXPRESSION, dynamic_expressions);
 }
 
+Expression makeTypedExpression(CodeRange code, TypedExpression expression) {
+    return makeExpression(code, expression, TYPED_EXPRESSION, typed_expressions);
+}
+
 Expression makeConditional(CodeRange code, Conditional expression) {
     return makeExpression(code, expression, CONDITIONAL, conditionals);
 }
@@ -292,6 +297,10 @@ Expression makeBoolean(CodeRange code, Boolean expression) {
 
 DynamicExpression getDynamicExpression(Expression expression) {
     return getExpression(expression, DYNAMIC_EXPRESSION, dynamic_expressions);
+}
+
+TypedExpression getTypedExpression(Expression expression) {
+    return getExpression(expression, TYPED_EXPRESSION, typed_expressions);
 }
 
 Definition getDefinition(Expression expression) {

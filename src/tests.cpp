@@ -571,6 +571,16 @@ int main() {
     test.evaluate_all("dynamic", {
         {"dynamic 1", "1"},
     });
+    test.reformat("typed expression", {
+        {"a:b", "a:b"},
+        {" a : b ", "a:b"},
+    });
+    test.evaluate_types("typed expression", {
+        {"{a=1 b=a:1}", "{a=NUMBER b=NUMBER}"},
+        {"{a=[] b=a:[]}", "{a=EMPTY_STACK b=EMPTY_STACK}"},
+        {"{a=[] b=a:[1]}", "{a=EMPTY_STACK b=[NUMBER]}"},
+        {"{a=[1] b=a:[]}", "{a=[NUMBER] b=EMPTY_STACK}"}, // TODO
+    });
     test.evaluate_types("lookup function dictionary", {
         {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "NUMBER"},

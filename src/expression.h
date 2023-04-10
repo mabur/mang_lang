@@ -43,6 +43,7 @@ enum ExpressionType {
     EMPTY_STRING,
     BOOLEAN,
     DYNAMIC_EXPRESSION,
+    TYPED_EXPRESSION,
     ANY,
 };
 
@@ -80,6 +81,7 @@ const auto NAMES = std::vector<std::string>{
     "EMPTY_STRING",
     "BOOLEAN",
     "DYNAMIC_EXPRESSION",
+    "TYPED_EXPRESSION",
     "ANY",
 };
 
@@ -124,6 +126,11 @@ using Name = std::string;
 
 struct DynamicExpression {
     Expression expression;
+};
+
+struct TypedExpression {
+    Expression type;
+    Expression value;
 };
 
 struct Alternative {
