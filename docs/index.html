@@ -476,19 +476,19 @@ Stacks and strings are immutable, which means that if we add or remove items we 
 
 <h2 id="generic_programming">2.g. Generic Programming</h2>
 <p>
-Stacks, strings, tables share some basic operations. The following operations can be used to iterate through these dynamic containers:
+Stacks, strings, tables as well as numbers share some basic operations. The following operations can be used to iterate through these dynamic containers:
 <ul>
-<li><code>take!container</code> takes an item from the container. Can be seen as dereferencing an iterator.</li>
-<li><code>drop!container</code> returns a view of the container with one item removed. Can be seen as decrementing the iterator so that it points at the previous item.</li>
-<li><code>if container then ... else ...</code> can be used to check that the container is not empty. Can be seen as checking whether the iterator has a successor or not.</li>
+<li><code>take!container</code> takes an item from the container. Can be seen as dereferencing an iterator. <code>take</code> is also defined for numbers, but it then just returns <code>1</code>.</li>
+<li><code>drop!container</code> returns a view of the container with one item removed. Can be seen as decrementing the iterator so that it points at the previous item. When applied to a number it decrements it by one.</li>
+<li><code>if container then ... else ...</code> can be used to check that the container is not empty. Can be seen as checking whether the iterator has a predecessor or not. When applied to numbers we define all numbers except <code>0</code> to have predecessors.</li>
 <li><code>container!index</code> can be used to get the item at the specified index. The container is interpreted as a function which takes an index as input and outputs an item.</li>
 </ul>
 <p>
-Stacks, strings, tables also share the following operations for creating new containers:
+Stacks, strings, tables, numbers also share the following operations for creating new containers:
 </p>
 <ul>
-<li><code>put!(item container)</code> adds an item to the container. Creates a new container for stacks and strings, but modifies tables.</li>
-<li><code>clear!container</code> creates an empty container of the same type.</li>
+<li><code>put!(item container)</code> adds an item to the container/number. Creates a new container for stacks, strings and numbers but modifies tables.</li>
+<li><code>clear!container</code> creates an empty/zero container of the same type.</li>
 </ul>
 </p>
 
@@ -496,8 +496,8 @@ Stacks, strings, tables also share the following operations for creating new con
 The functions above form the generic interface for containers in Manglang. On top of that three kinds of syntactic sugar is provided that can be used when rebinding names inside a dictionary:
 </p>
 <ul>
-<li>To add an item to a container and rebinding the name to refer to the new container we write <code>container = put!(item container)</code>. This is a common operation which we can write more compactly as <code>container += item</code>.</li>
-<li>To remove an item from a container and rebinding the name to refer to the new container we write <code>container = drop!container</code>. This is a common operation which we can write more compactly as <code>container--</code>.</li>
+<li>To add an item to a container and rebinding the name to refer to the new container we write <code>container = put!(item container)</code>. This is a common operation which we can write more compactly as <code>container += item</code>. This also behaves as expected for numbers.</li>
+<li>To remove an item from a container and rebinding the name to refer to the new container we write <code>container = drop!container</code>. This is a common operation which we can write more compactly as <code>container--</code>. For numbers this decrement the number by one.</li>
 <li>To iterate through a container we can use an explicit while loop like:</li>
 <pre>
 {
@@ -541,6 +541,28 @@ All these versions produce the same result:
 }
 </pre>
 </ul>
+<p>
+Since Manglang also defines the generic container operations for numbers we can do things like:
+</p>
+<pre>
+{
+  n = 3
+  container = []
+  total = 0
+  for _ in n
+      container += n
+      total += n
+  end
+}
+</pre>
+which is evaluated to:
+<pre>
+{
+  n = 3
+  container = [1 2 3]
+  total = 6
+}
+</pre>
 
 <p>
 By relying on the generic container interface we can write generic functions that work similarly on both stacks, strings and tables. For some examples of this you can take a look at the <a href="functions.html">standard library documentation</a>,  or look inside the
