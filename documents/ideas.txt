@@ -1,91 +1,30 @@
 TYPE SYSTEM
-* Add static type checks for expressions:
-  - Type : Expression
-  - Checks that Type and Expression have the same type.
-  - Expression : Type similar to Type : Expression,
-    but the first thing is required to be a name:
-    - name:expression
-    - and the second thing is returned.
-  - Can also check generic types, by refering to the function input as a type when checking the output.
-* Add bottom type and/or top type, never/undefined and/or any
-  - never/undefined can cause "abort" as soon as it is encountered during normal evaluation.
-  - Can never/undefined help resolving some anys during type evaluation?
-  - Tag never/undefined with an error message.
-  - sort out differences between: ANY, EMPTY, NEVER/UNDEFINED.
-  - Difference in bottom type NEVER/EMPTY for type-evaluation and value-evaluation.
-* Similarities between:
-  - Type annotation, dealing with recursion, type asserts, value asserts.
-  - Could have:
-    - dynamic expression // Bra. Operator that shortcuts during type pass and returns ANY. Can be used for recursion or dynamic situations.
-    - assume Number expression // Shortcut during first pass and just return the type. Check equal types during second pass.
-    - type Number expression // Operator that checks equal types in both first pass and second pass.
-    - check Number expression
-    - require Number expressionn
-    - assert 1 expression // Operator that checks equal types in first pass and equal values in second pass.
-    - assert_equal 1 expression // Operator that checks equal types in first pass and equal values in second pass.
-    - assert_equal_types!(Number expression) // Check equal types in both first pass and second pass.
-    - assert_equal_values!(1 expression) // Check equal types in first pass and equal values in second pass.
-  - Annotating types for functions:
-    in x out type Number mul!(x type Number x)
-    in x out assume Number mul!(x x)
-    in Number:x out Number:mul!(x x) (Bra)
-
-    Bra. Optional type annotation for functions:
-    Numbers = [Number]
-    PairOfNumbers = (Numbers Numbers)
-    addv = in (Numbers : a Numbers : b) out Numbers : map!(add zip2!(a b)) (bra, enforce that type is name for simpler syntax and readability)
-    addv = in PairOfNumbers : x out Numbers : map!(add zip2!x)
-    Person = {age=0}
-    update = in (Person:person Numbers:age) out Person:...
-* Type "assertions".
-  - For what cases?
-    - any concrete function (simple and pretty)
-    - any function
-    - any concrete symbol
-    - any symbol
-    - any concrete expression
-    - any expression
-  - TypePredicates:
-    - number, function, container, 
-    - TypeFunctions can take a function and return another function
-      - optional!number, variant![number character], container!number, function!(a b), tuple!(number character)
-      - How to handle lazy evaluation for optional and variant?
-        - Add general lazy/shortcut or operator?
-  - Type annotations vs simple inference from code?
-    - Could let the type checker/inferer automatically add it to the code or to the editor.
-    - Could support both options and gradual typing.
-  - static assertions
-  - static_assert!equal?(x Number)
-  - static_assert!any?[equal?(x Number) equal?(x Character)]
-  - is_string = in s out equal?(take!name@d Character)
-  - in d out all?[is_string?name@d is_number?age@d]
-  - Assert as general expression or statement in dict?
-    - Just for input and output of functions, or any symbol or any expression?
-    - Expression:
-      - x = check!(x is_number)
-    - Statement:
-      in (a b c) out {
-        is_number?x
-        is_variant3?(b [is_number is_character is_boolean])
-        is_number?(take!c is_number)
-        is_container?(c)
-      }
-      square = in x out mul!(x x)
-      square = in number : x out number : mul!(x x)    (bra)
-      square = in x out number : mul!(number : x x)
-      square = in x out check!(number mul!(check!(number x) x))
-      square = in x out check!(number result@{
-          x = check!(number x)
-          result = mul!(x x)
-        }
-      )
-* Added version of "is" that checks that the type is equal instead of the value. "is_type_of":
-  * How to solve aoc_22_13 if type checking would enforce homogeneous stacks?
-    - Isinstance
-    - Inheritance/polymorphism
-    - Run-time-dispatch
-    - Sum-type/choice-type
-    - dynamic keyword
+* Annotating types for functions:
+  in Number:x out Number:mul!(x x) (Bra)
+  Bra. Optional type annotation for functions:
+  Numbers = [Number]
+  PairOfNumbers = (Numbers Numbers)
+  addv = in (Numbers : a Numbers : b) out Numbers :
+    map!(add zip2!(a b))
+    (bra, enforce that type is name for simpler syntax and readability)
+  addv = in PairOfNumbers : x out Numbers : map!(add zip2!x)
+  Person = {age=0}
+  update = in (Person:person Numbers:age) out Person:...
+* How to add type annotation for:
+  - optionals
+  - variants / sum-types
+  - items of generic containers
+  - input and output type of a function, for map
+* Run-time polymorphism/dispatch:
+  - How to solve aoc_22_13
+    if type checking would enforce homogeneous stacks?
+  - Add version of "is" that checks that the type is equal
+    instead of the value. "is_type_of" (bra)
+  - Isinstance
+  - Inheritance/polymorphism
+  - Run-time-dispatch
+  - Sum-type/choice-type
+  - dynamic keyword
 
 STANDARD LIBRARY
 * all_of, any_of, none_of
