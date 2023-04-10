@@ -4,34 +4,42 @@
 
 const std::string STANDARD_LIBRARY = R"(
 {
-    boolean = in x out if x then yes else no
-    not = in x out if x then no else yes
+    Number = 0
+    Boolean = no
+    Character = 'a'
+    Stack = []
+    String = ""
+    Table = <>
+    Vector = [Number]
 
-    equal = in (left right) out is left right then yes else no
-    unequal = in (left right) out is left right then no else yes
+    boolean = in x out Boolean : if x then yes else no
+    not = in x out Boolean : if x then no else yes
 
-    less_or_equal = in (left right) out not?less?(right left)
+    equal = in (left right) out Boolean : is left right then yes else no
+    unequal = in (left right) out Boolean : is left right then no else yes
+
+    less_or_equal = in (left right) out Boolean : not?less?(right left)
 
     inf = div!(1 0)
     nan = div!(0 0)
     pi = 3.14159265359
     tau = 6.28318530718
 
-    inc = in x out add!(x 1)
-    dec = in x out sub!(x 1)
-    neg = in x out sub!(0 x)
-    abs = in x out if less?(0 x) then x else neg!x
+    inc = in x out Number : add!(x 1)
+    dec = in x out Number : sub!(x 1)
+    neg = in x out Number : sub!(0 x)
+    abs = in x out Number : if less?(0 x) then x else neg!x
 
     newline = character!10
 
-    is_digit = in c out is_increasing?[number!'0' number!c number!'9']
-    is_upper = in c out is_increasing?[number!'A' number!c number!'Z']
-    is_lower = in c out is_increasing?[number!'a' number!c number!'z']
-    is_letter = in c out any?[is_upper?c is_lower?c]
+    is_digit = in c out Boolean : is_increasing?[number!'0' number!c number!'9']
+    is_upper = in c out Boolean : is_increasing?[number!'A' number!c number!'Z']
+    is_lower = in c out Boolean : is_increasing?[number!'a' number!c number!'z']
+    is_letter = in c out Boolean : any?[is_upper?c is_lower?c]
 
-    parse_digit = in c out sub!(number!c number!'0')
+    parse_digit = in c out Number : sub!(number!c number!'0')
 
-    parse_natural_number = in string out number@{
+    parse_natural_number = in string out Number : number@{
         string = reverse!string
         number = 0
         x = 1
@@ -42,13 +50,13 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    to_upper = in c out
+    to_upper = in c out Character :
         if is_lower?c then
             character!sub!(number!c 32)
         else
             c
 
-    to_lower = in c out
+    to_lower = in c out Character :
         if is_upper?c then
             character!add!(number!c 32)
         else
@@ -73,52 +81,52 @@ const std::string STANDARD_LIBRARY = R"(
         bottom_stack
     )
 
-    make_stack = in container out reverse!put_each!(
+    make_stack = in container out Stack : reverse!put_each!(
         container
         []
     )
 
-    make_string = in container out reverse!put_each!(
+    make_string = in container out String : reverse!put_each!(
         container
         ""
     )
 
-    make_table = in container out put_each!(
+    make_table = in container out Table : put_each!(
         container
         <>
     )
 
-    merge_stack = in stacks out reverse!fold!(
+    merge_stack = in stacks out Stack : reverse!fold!(
         put_each
         stacks
         []
     )
 
-    merge_string = in strings out reverse!fold!(
+    merge_string = in strings out String : reverse!fold!(
         put_each
         strings
         ""
     )
 
-    merge_table = in tables out fold!(
+    merge_table = in tables out Table : fold!(
         put_each
         reverse!tables
         <>
     )
 
-    map_stack = in (f container) out reverse!fold!(
+    map_stack = in (f container) out Stack : reverse!fold!(
         in (item container) out put!(f!item container)
         container
         []
     )
 
-    map_string = in (f string) out reverse!fold!(
+    map_string = in (f string) out String : reverse!fold!(
         in (item string) out put!(f!item string)
         string
         ""
     )
 
-    map_table = in (f table) out fold!(
+    map_table = in (f table) out Table : fold!(
         in (item table) out put!(f!item table)
         table
         <>
@@ -130,7 +138,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    zip2 = in (a b) out reverse!result@{
+    zip2 = in (a b) out Stack : reverse!result@{
         result = []
         while and?[a b]
             result += (take!a take!b)
@@ -139,7 +147,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip3 = in (a b c) out reverse!result@{
+    zip3 = in (a b c) out Stack : reverse!result@{
         result = []
         while and?[a b c]
             result += (take!a take!b take!c)
@@ -149,7 +157,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip4 = in (a b c d) out reverse!result@{
+    zip4 = in (a b c d) out Stack : reverse!result@{
         result = []
         while and?[a b c d]
             result += (take!a take!b take!c take!d)
@@ -160,7 +168,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    consecutive_pairs = in container out reverse!result@{
+    consecutive_pairs = in container out Stack : reverse!result@{
         result = []
         while if container then boolean!drop!container else no
             result += (take!container take!drop!container)
@@ -168,12 +176,12 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    min = in (left right) out if less?(left right) then left else right
-    max = in (left right) out if less?(left right) then right else left
+    min = in (left right) out Number : if less?(left right) then left else right
+    max = in (left right) out Number : if less?(left right) then right else left
 
-    min_item = in container out fold!(min container inf)
+    min_item = in container out Number : fold!(min container inf)
 
-    max_item = in container out fold!(max container -inf)
+    max_item = in container out Number : fold!(max container -inf)
 
     min_predicate = in (predicate container) out fold!(
         in (left right) out if predicate?(left right) then left else right
@@ -199,9 +207,9 @@ const std::string STANDARD_LIBRARY = R"(
         take!container
     )
 
-    sum = in container out fold!(add container 0)
+    sum = in container out Number : fold!(add container 0)
 
-    product = in container out fold!(mul container 1)
+    product = in container out Number : fold!(mul container 1)
 
     clear_if = in (predicate container) out reverse!fold!(
         in (item container) out
@@ -271,19 +279,19 @@ const std::string STANDARD_LIBRARY = R"(
     replace_item = in (old_item new_item container) out
         replace_if?(in x out equal?(x old_item) new_item container)
 
-    count = in container out fold!(
+    count = in container out Number : fold!(
         in (item n) out inc!n
         container
         0
     )
 
-    count_if = in (predicate container) out fold!(
+    count_if = in (predicate container) out Number : fold!(
         in (item n) out if predicate?item then inc!n else n
         container
         0
     )
 
-    count_item = in (item container) out
+    count_item = in (item container) out Number :
         count_if!(in x out equal?(x item) container)
 
     range = in n out container@{
@@ -294,7 +302,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in container out zip2!(range!count!container container)
+    enumerate = in container out Stack : zip2!(range!count!container container)
 
     get0 = in container out container!0
     get1 = in container out container!1
@@ -307,7 +315,7 @@ const std::string STANDARD_LIBRARY = R"(
     get8 = in container out container!8
     get9 = in container out container!9
 
-    split = in (delimiter container) out reverse!result@{
+    split = in (delimiter container) out Stack : reverse!result@{
         word = take_until_item!(delimiter container)
         container = drop_until_item!(delimiter container)
         result = [word]
@@ -319,7 +327,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    cartesian_product2 = in (a b) out result@{
+    cartesian_product2 = in (a b) out Stack : result@{
         result = []
         for item_b in b
             c = a
@@ -329,7 +337,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    put_column = in (column rows) out reverse!new_rows@{
+    put_column = in (column rows) out Stack : reverse!new_rows@{
         new_rows = []
         for item in column
             row = take!rows
@@ -339,26 +347,26 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    transpose = in rows out map!(reverse columns@{
+    transpose = in rows out Stack : map!(reverse columns@{
         columns = replace!([] take!rows)
         for row in rows
             columns = put_column!(row columns)
         end
     })
 
-    all = in container out not?drop_while!(boolean container)
-    none = in container out not?drop_while!(not container)
-    any = in container out boolean?drop_while!(not container)
+    all = in container out Boolean : not?drop_while!(boolean container)
+    none = in container out Boolean : not?drop_while!(not container)
+    any = in container out Boolean : boolean?drop_while!(not container)
 
-    and = in container out all?container
-    or = in container out any?container
+    and = in container out Boolean : all?container
+    or = in container out Boolean : any?container
 
-    is_increasing = in container out not?drop_while!(
+    is_increasing = in container out Boolean : not?drop_while!(
         less_or_equal
         consecutive_pairs!container
     )
 
-    less_or_equal_top = in (left right) out
+    less_or_equal_top = in (left right) out Boolean :
         if left then
             if right then
                 is_increasing?[take!left take!right]
@@ -367,27 +375,27 @@ const std::string STANDARD_LIBRARY = R"(
         else
             no
 
-    merge_sorted = in (left right) out reverse!container@{
-        container = []
+    merge_sorted = in (left right) out Stack : reverse!stack@{
+        stack = []
         while or?[left right]
             while less_or_equal_top?(left right)
-                container += take!left
+                stack += take!left
                 left--
             end
             while less_or_equal_top?(right left)
-                container += take!right
+                stack += take!right
                 right--
             end
         end
     }
 
-    unique = in container out get_keys!fold!(
+    unique = in container out Stack : get_keys!fold!(
         in (item table) out put!((item 0) table)
         container
         <>
     )
 
-    count_elements = in container out fold!(
+    count_elements = in container out Table : fold!(
         in (item table) out put!((item inc!get!(item table 0)) table)
         container
         <>
@@ -395,22 +403,22 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_items = make_stack
 
-    get_keys = in table out map_stack!(
+    get_keys = in table out Stack : map_stack!(
         in (key value) out key
         table
     )
 
-    get_values = in table out map_stack!(
+    get_values = in table out Stack : map_stack!(
         in (key value) out value
         table
     )
 
-    addv = in (a b) out map!(add zip2!(a b))
-    subv = in (a b) out map!(sub zip2!(a b))
-    mulv = in (a b) out map!(mul zip2!(a b))
-    divv = in (a b) out map!(div zip2!(a b))
-    dot = in (a b) out sum!mulv!(a b)
-    squared_norm = in a out dot!(a a)
-    norm = in a out sqrt!squared_norm!a
+    addv = in (a b) out Vector : map!(add zip2!(a b))
+    subv = in (a b) out Vector : map!(sub zip2!(a b))
+    mulv = in (a b) out Vector : map!(mul zip2!(a b))
+    divv = in (a b) out Vector : map!(div zip2!(a b))
+    dot = in (a b) out Number : sum!mulv!(a b)
+    squared_norm = in a out Number : dot!(a a)
+    norm = in a out Number : sqrt!squared_norm!a
 }
 )";
