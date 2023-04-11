@@ -28,6 +28,7 @@ TYPE SYSTEM
   - input and output type of a function, for map
   - Concepts like Container, which is a sum-type of stack,string,table,number.
     - Could introduce a special type CONTAINER, similarly to EMPTY_STACK, and define equal accordingly.
+  - Concepts like BooleanLike, which is a sum-type of Container and Boolean.
 * Run-time polymorphism/dispatch:
   - How to solve aoc_22_13
     if type checking would enforce homogeneous stacks?
