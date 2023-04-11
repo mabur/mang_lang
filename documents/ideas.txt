@@ -1,17 +1,29 @@
 TYPE SYSTEM
 * How to add type annotation for:
-  - FunctionOfDictionaries
-  - Dictionaries
-  - Tuples
+  - function of dictionaries
+  - dictionaries
+  - tuples
+  - functions
   - any
   - never?
-  - optionals
   - variants / sum-types
+    - Similar to tuples/product-types.
+    - Could add some syntax for sum-types like: Container = |Stack String Table Number|
+  - optionals
+    - Can we have type functions like:
+    {
+      make_optional = in Type out |Type NULL|
+      OptionalNumber = make_optional!Number
+      OptionalNumber = |Number NULL|
+    }
   - items of generic containers
   - input and output type of a function, for map
-  - Concepts like Container, which is a sum-type of stack,string,table,number.
+  - concepts like Container, which is a sum-type of stack,string,table,number.
     - Could introduce a special type CONTAINER, similarly to EMPTY_STACK, and define equal accordingly.
-  - Concepts like BooleanLike, which is a sum-type of Container and Boolean.
+  - concepts like BooleanLike, which is a sum-type of Container and Boolean.
+    - Could introduce a special type BOOLEAN_TYPE, similarly to EMPTY_STACK, and define equal accordingly.
+    - Could also remove this concept ant not define truthy/falsey for containers.
+    - Could also define the functions to take only Booleans, and not use them for Containers of Containers.
 * Run-time polymorphism/dispatch:
   - How to solve aoc_22_13
     if type checking would enforce homogeneous stacks?
