@@ -76,10 +76,10 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    put_each = in (top_stack bottom_stack) out bottom_stack:fold!(
+    put_each = in (top_container bottom_container) out bottom_container:fold!(
         put
-        top_stack
-        bottom_stack
+        top_container
+        bottom_container
     )
 
     make_stack = in container out Stack:reverse!put_each!(
@@ -97,21 +97,21 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    merge_stack = in stacks out Stack:reverse!fold!(
+    merge_stack = in containers out Stack:reverse!fold!(
         put_each
-        stacks
+        containers
         []
     )
 
-    merge_string = in strings out String:reverse!fold!(
+    merge_string = in containers out String:reverse!fold!(
         put_each
-        strings
+        containers
         ""
     )
 
-    merge_table = in tables out Table:fold!(
+    merge_table = in containers out Table:fold!(
         put_each
-        reverse!tables
+        reverse!containers
         <>
     )
 
@@ -295,11 +295,10 @@ const std::string STANDARD_LIBRARY = R"(
     count_item = in (item container) out Number:
         count_if!(in x out equal?(x item) container)
 
-    range = in Number:n out Numbers:vector@{
-        vector = []
-        while n
-            n--
-            vector += n
+    range = in Number:n out Numbers:numbers@{
+        numbers = []
+        for _ in n
+            numbers += dec!n
         end
     }
 
