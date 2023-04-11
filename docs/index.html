@@ -84,7 +84,7 @@ It is suitable for describing data and calculations, but not interactive program
 <p>
 Manglang is a functional and interpreted language.
 It takes source code written in Manglang and evaluates it.
-Consider the following input program:
+Consider the following <b>input</b> program:
 </p>
 <pre>
 {
@@ -97,14 +97,14 @@ Consider the following input program:
   get_area = in {width height}
     out mul!(width height)
   areas = map!(get_area rectangles)
-  total_area = add!areas
+  total_area = sum!areas
   num_rectangles = count!rectangles
   average_area = div!(total_area num_rectangles)
 }
 </pre>
 
 <p>
-When we evaluate the input above we get the output below:
+When we evaluate the input above we get the <b>output</b> below:
 </p>
 <pre>
 {
