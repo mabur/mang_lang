@@ -486,12 +486,17 @@ int main() {
     test.reformat("lookup_function", {
         {"add!(1 2)", "add!(1 2)"},
     });
+    test.reformat("function", {
+        {"in T:x out x", "in T:x out x"}, // TODO
+    });
     test.evaluate_types("function", {
-        {"in x out x",       "FUNCTION"},
+        {"in x out x", "FUNCTION"},
+        {"in T:x out x", "FUNCTION"}, // TODO
     });
     test.evaluate_all("function", {
-        {"in x out x",       "in x out x"},
+        {"in x out x", "in x out x"},
         {"f@{f=in x out x}", "in x out x"},
+        {"f@{T=1 f=in T:x out x}", "in T:x out x"}, //TODO:
     });
     test.evaluate_types("function dictionary", {
         {"in {x} out x", "FUNCTION_DICTIONARY"},
@@ -552,6 +557,7 @@ int main() {
         {"y@{a=1 f=in stack out map_stack!(in y out a stack) y=f![0 0]}", "[1 1]"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
         {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
+        {"a@{T=1 f=in T:x out x a=f!0}", "0"},
     });
     test.evaluate_types("recursive function", {
         {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 y=f!3}", "ANY"},

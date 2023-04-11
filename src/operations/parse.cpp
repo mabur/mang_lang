@@ -100,11 +100,28 @@ Expression parseName(CodeRange code) {
 
 Expression parseArgument(CodeRange code) {
     auto first = code.begin();
-    code = parseWhile(code, isNameCharacter);
-    return makeArgument(
-        CodeRange{first, code.first},
-        Argument{rawString({first, code.first})}
-    );
+    auto first_name = parseName(code);
+    code.first = end(first_name);
+    code = parseWhiteSpace(code);
+    if (startsWith(code, ':')) {
+        code = parseCharacter(code);
+        code = parseWhiteSpace(code);
+        auto second_name = parseName(code);
+        code.first = end(second_name);
+        const auto type = makeLookupSymbol(
+            CodeRange{first, end(first_name)}, {first_name}
+        );
+        return makeArgument(
+            CodeRange{first, code.first},
+            Argument{type, getName(second_name)}
+        );
+    }
+    else {
+        return makeArgument(
+            CodeRange{first, code.first},
+            Argument{{}, getName(first_name)}
+        );   
+    }
 }
 
 Expression parseNamedElement(CodeRange code) {

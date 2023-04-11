@@ -127,6 +127,7 @@ using Character = char;
 using Name = std::string;
 
 struct Argument {
+    Expression type;
     std::string name;
 };
 

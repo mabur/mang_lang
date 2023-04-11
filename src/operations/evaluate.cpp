@@ -9,6 +9,16 @@
 
 namespace {
 
+bool areTypesConsistent(ExpressionType left, ExpressionType right) {
+    if (left == ANY || right == ANY) return true;
+    if (left == EMPTY_STACK && right == EVALUATED_STACK) return true;
+    if (left == EVALUATED_STACK && right == EMPTY_STACK) return true;
+    if (left == EMPTY_STRING && right == STRING) return true;
+    if (left == STRING && right == EMPTY_STRING) return true;
+    return left == right;
+}
+
+// TODO: remove forward declaration.
 Expression evaluateFunction(const Function& function, Expression environment);
 
 Expression evaluateFunctionDictionary(
@@ -81,8 +91,18 @@ Expression applyFunction(
     Expression input
 ) {
     auto definitions = Definitions{};
-    const auto name = getArgument(function.input_name).name;
-    definitions.add(name, input);
+    const auto a = getArgument(function.input_name);
+    if (a.type.type != ANY) {
+        const auto type = evaluator(a.type, function.environment);
+        if (!areTypesConsistent(input.type, type.type)) {
+            throw std::runtime_error(
+                std::string{"Static type error in function call. "} +
+                    "Expected " + NAMES[type.type] +
+                    " but got " + NAMES[input.type]
+            );
+        }   
+    }
+    definitions.add(a.name, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
     );
@@ -166,15 +186,6 @@ Expression applyFunctionBuiltIn(
     const FunctionBuiltIn& function_built_in, Expression input
 ) {
     return function_built_in.function(input);
-}
-
-bool areTypesConsistent(ExpressionType left, ExpressionType right) {
-    if (left == ANY || right == ANY) return true;
-    if (left == EMPTY_STACK && right == EVALUATED_STACK) return true;
-    if (left == EVALUATED_STACK && right == EMPTY_STACK) return true;
-    if (left == EMPTY_STRING && right == STRING) return true;
-    if (left == STRING && right == EMPTY_STRING) return true;
-    return left == right;
 }
 
 void booleanTypes(Expression expression) {

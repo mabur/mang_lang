@@ -13,7 +13,11 @@ std::string serializeName(Expression name) {
 }
 
 std::string serializeArgument(Expression argument) {
-    return getArgument(argument).name;
+    const auto a = getArgument(argument);
+    if (a.type.type != ANY) {
+        return serialize(a.type) + ':' + a.name;    
+    }
+    return a.name;
 }
 
 std::string serializeDynamicExpression(const DynamicExpression& dynamic_expression) {
