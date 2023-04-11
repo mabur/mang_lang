@@ -10,7 +10,7 @@ const std::string STANDARD_LIBRARY = R"(
     Stack = []
     String = ""
     Table = <>
-    Vector = [Number]
+    Numbers = [Number]
     Function = in x out x
 
     boolean = in x out Boolean : if x then yes else no
@@ -180,9 +180,9 @@ const std::string STANDARD_LIBRARY = R"(
     min = in (Number:left Number:right) out Number : if less?(left right) then left else right
     max = in (Number:left Number:right) out Number : if less?(left right) then right else left
 
-    min_item = in Vector:container out Number : fold!(min container inf)
+    min_item = in Numbers:container out Number : fold!(min container inf)
 
-    max_item = in Vector:container out Number : fold!(max container -inf)
+    max_item = in Numbers:container out Number : fold!(max container -inf)
 
     min_predicate = in (Function:predicate container) out fold!(
         in (left right) out if predicate?(left right) then left else right
@@ -208,9 +208,9 @@ const std::string STANDARD_LIBRARY = R"(
         take!container
     )
 
-    sum = in Vector:container out Number : fold!(add container 0)
+    sum = in Numbers:container out Number : fold!(add container 0)
 
-    product = in Vector:container out Number : fold!(mul container 1)
+    product = in Numbers:container out Number : fold!(mul container 1)
 
     clear_if = in (Function:predicate container) out container : reverse!fold!(
         in (item container) out
@@ -295,7 +295,7 @@ const std::string STANDARD_LIBRARY = R"(
     count_item = in (item container) out Number :
         count_if!(in x out equal?(x item) container)
 
-    range = in Number:n out Vector : vector@{
+    range = in Number:n out Numbers : vector@{
         vector = []
         while n
             n--
@@ -362,12 +362,12 @@ const std::string STANDARD_LIBRARY = R"(
     and = in container out Boolean : all?container
     or = in container out Boolean : any?container
 
-    is_increasing = in Vector:container out Boolean : not?drop_while!(
+    is_increasing = in Numbers:container out Boolean : not?drop_while!(
         less_or_equal
         consecutive_pairs!container
     )
 
-    less_or_equal_top = in (Vector:left Vector:right) out Boolean :
+    less_or_equal_top = in (Numbers:left Numbers:right) out Boolean :
         if left then
             if right then
                 is_increasing?[take!left take!right]
@@ -414,12 +414,12 @@ const std::string STANDARD_LIBRARY = R"(
         table
     )
 
-    addv = in (Vector:a Vector:b) out Vector : map!(add zip2!(a b))
-    subv = in (Vector:a Vector:b) out Vector : map!(sub zip2!(a b))
-    mulv = in (Vector:a Vector:b) out Vector : map!(mul zip2!(a b))
-    divv = in (Vector:a Vector:b) out Vector : map!(div zip2!(a b))
-    dot = in (Vector:a Vector:b) out Number : sum!mulv!(a b)
-    squared_norm = in Vector:a out Number : dot!(a a)
-    norm = in Vector:a out Number : sqrt!squared_norm!a
+    addv = in (Numbers:a Numbers:b) out Numbers : map!(add zip2!(a b))
+    subv = in (Numbers:a Numbers:b) out Numbers : map!(sub zip2!(a b))
+    mulv = in (Numbers:a Numbers:b) out Numbers : map!(mul zip2!(a b))
+    divv = in (Numbers:a Numbers:b) out Numbers : map!(div zip2!(a b))
+    dot = in (Numbers:a Numbers:b) out Number : sum!mulv!(a b)
+    squared_norm = in Numbers:a out Number : dot!(a a)
+    norm = in Numbers:a out Number : sqrt!squared_norm!a
 }
 )";
