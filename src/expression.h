@@ -125,7 +125,10 @@ using Character = char;
 // After that the std::vector of Names is static, which makes it easier to pass
 // around references or pointers.
 using Name = std::string;
-using Argument = std::string;
+
+struct Argument {
+    std::string name;
+};
 
 struct DynamicExpression {
     Expression expression;

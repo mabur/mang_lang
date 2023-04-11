@@ -12,8 +12,8 @@ std::string serializeName(Expression name) {
     return getName(name);
 }
 
-std::string serializeArgument(Expression name) {
-    return getArgument(name);
+std::string serializeArgument(Expression argument) {
+    return getArgument(argument).name;
 }
 
 std::string serializeDynamicExpression(const DynamicExpression& dynamic_expression) {

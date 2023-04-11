@@ -81,7 +81,7 @@ Expression applyFunction(
     Expression input
 ) {
     auto definitions = Definitions{};
-    const auto name = getArgument(function.input_name);
+    const auto name = getArgument(function.input_name).name;
     definitions.add(name, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
@@ -117,7 +117,7 @@ Expression applyFunctionTuple(
     auto definitions = Definitions{};
     const auto num_inputs = input_names.size();
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto name = getArgument(input_names[i]);
+        const auto name = getArgument(input_names[i]).name;
         const auto expression = tuple.expressions[i];
         definitions.add(name, expression);
     }

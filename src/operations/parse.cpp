@@ -103,7 +103,7 @@ Expression parseArgument(CodeRange code) {
     code = parseWhile(code, isNameCharacter);
     return makeArgument(
         CodeRange{first, code.first},
-        rawString({first, code.first})
+        Argument{rawString({first, code.first})}
     );
 }
 
