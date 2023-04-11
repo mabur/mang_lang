@@ -1,25 +1,8 @@
 TYPE SYSTEM
-* Type annotation for input types.
-  in x out ...
-  in Number:x out ...
-  in (x y) out ...
-  in (Number:x Number:y) out ...
-  in {x y} out ...
-  in {Number:x Number:y} out ...
-  - Implement by adding a concept of "OptionallyTypedArgument".
-  - Could also just deal with it during the parsing phase and just set it to any if not present.
-* Annotating types for functions:
-  in Number:x out Number:mul!(x x) (Bra)
-  Bra. Optional type annotation for functions:
-  Numbers = [Number]
-  PairOfNumbers = (Numbers Numbers)
-  addv = in (Numbers : a Numbers : b) out Numbers :
-    map!(add zip2!(a b))
-    (bra, enforce that type is name for simpler syntax and readability)
-  addv = in PairOfNumbers : x out Numbers : map!(add zip2!x)
-  Person = {age=0}
-  update = in (Person:person Numbers:age) out Person:...
 * How to add type annotation for:
+  - FunctionOfDictionaries
+  - Dictionaries
+  - Tuples
   - any
   - never?
   - optionals
