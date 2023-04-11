@@ -11,6 +11,7 @@ const std::string STANDARD_LIBRARY = R"(
     String = ""
     Table = <>
     Vector = [Number]
+    Function = in x out x
 
     boolean = in x out Boolean : if x then yes else no
     not = in x out Boolean : if x then no else yes
@@ -18,28 +19,28 @@ const std::string STANDARD_LIBRARY = R"(
     equal = in (left right) out Boolean : is left right then yes else no
     unequal = in (left right) out Boolean : is left right then no else yes
 
-    less_or_equal = in (left right) out Boolean : not?less?(right left)
+    less_or_equal = in (Number:left Number:right) out Boolean : not?less?(right left)
 
     inf = div!(1 0)
     nan = div!(0 0)
     pi = 3.14159265359
     tau = 6.28318530718
 
-    inc = in x out Number : add!(x 1)
-    dec = in x out Number : sub!(x 1)
-    neg = in x out Number : sub!(0 x)
-    abs = in x out Number : if less?(0 x) then x else neg!x
+    inc = in Number:x out Number : add!(x 1)
+    dec = in Number:x out Number : sub!(x 1)
+    neg = in Number:x out Number : sub!(0 x)
+    abs = in Number:x out Number : if less?(0 x) then x else neg!x
 
     newline = character!10
 
-    is_digit = in c out Boolean : is_increasing?[number!'0' number!c number!'9']
-    is_upper = in c out Boolean : is_increasing?[number!'A' number!c number!'Z']
-    is_lower = in c out Boolean : is_increasing?[number!'a' number!c number!'z']
-    is_letter = in c out Boolean : any?[is_upper?c is_lower?c]
+    is_digit = in Character:c out Boolean : is_increasing?[number!'0' number!c number!'9']
+    is_upper = in Character:c out Boolean : is_increasing?[number!'A' number!c number!'Z']
+    is_lower = in Character:c out Boolean : is_increasing?[number!'a' number!c number!'z']
+    is_letter = in Character:c out Boolean : any?[is_upper?c is_lower?c]
 
-    parse_digit = in c out Number : sub!(number!c number!'0')
+    parse_digit = in Character:c out Number : sub!(number!c number!'0')
 
-    parse_natural_number = in string out Number : number@{
+    parse_natural_number = in String:string out Number : number@{
         string = reverse!string
         number = 0
         x = 1
@@ -50,19 +51,19 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    to_upper = in c out Character :
+    to_upper = in Character:c out Character :
         if is_lower?c then
             character!sub!(number!c 32)
         else
             c
 
-    to_lower = in c out Character :
+    to_lower = in Character:c out Character :
         if is_upper?c then
             character!add!(number!c 32)
         else
             c
 
-    fold = in (operation container init) out result@{
+    fold = in (Function:operation container init) out result@{
         result = init
         for item in container
             result = operation!(item result)
@@ -114,25 +115,25 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map_stack = in (f container) out Stack : reverse!fold!(
+    map_stack = in (Function:f container) out Stack : reverse!fold!(
         in (item container) out put!(f!item container)
         container
         []
     )
 
-    map_string = in (f string) out String : reverse!fold!(
-        in (item string) out put!(f!item string)
-        string
+    map_string = in (Function:f container) out String : reverse!fold!(
+        in (item container) out put!(f!item container)
+        container
         ""
     )
 
-    map_table = in (f table) out Table : fold!(
-        in (item table) out put!(f!item table)
-        table
+    map_table = in (Function:f container) out Table : fold!(
+        in (item container) out put!(f!item container)
+        container
         <>
     )
 
-    map = in (f container) out container : reverse!fold!(
+    map = in (Function:f container) out container : reverse!fold!(
         in (item container) out put!(f!item container)
         container
         clear!container
@@ -176,26 +177,26 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    min = in (left right) out Number : if less?(left right) then left else right
-    max = in (left right) out Number : if less?(left right) then right else left
+    min = in (Number:left Number:right) out Number : if less?(left right) then left else right
+    max = in (Number:left Number:right) out Number : if less?(left right) then right else left
 
-    min_item = in container out Number : fold!(min container inf)
+    min_item = in Vector:container out Number : fold!(min container inf)
 
-    max_item = in container out Number : fold!(max container -inf)
+    max_item = in Vector:container out Number : fold!(max container -inf)
 
-    min_predicate = in (predicate container) out fold!(
+    min_predicate = in (Function:predicate container) out fold!(
         in (left right) out if predicate?(left right) then left else right
         drop!container
         take!container
     )
 
-    max_predicate = in (predicate container) out fold!(
+    max_predicate = in (Function:predicate container) out fold!(
         in (left right) out if predicate?(left right) then right else left
         drop!container
         take!container
     )
 
-    min_key = in (key container) out fold!(
+    min_key = in (Function:key container) out fold!(
         in (left right) out if less?(key!left key!right) then left else right
         drop!container
         take!container
@@ -207,11 +208,11 @@ const std::string STANDARD_LIBRARY = R"(
         take!container
     )
 
-    sum = in container out Number : fold!(add container 0)
+    sum = in Vector:container out Number : fold!(add container 0)
 
-    product = in container out Number : fold!(mul container 1)
+    product = in Vector:container out Number : fold!(mul container 1)
 
-    clear_if = in (predicate container) out container : reverse!fold!(
+    clear_if = in (Function:predicate container) out container : reverse!fold!(
         in (item container) out
             if predicate?item then
                 container
@@ -224,7 +225,7 @@ const std::string STANDARD_LIBRARY = R"(
     clear_item = in (item container) out container :
         clear_if?(in x out equal?(x item) container)
 
-    take_many = in (n container) out container : reverse!stack_out@{
+    take_many = in (Number:n container) out container : reverse!stack_out@{
         stack_out = clear!container
         for _ in n
             stack_out += take!container
@@ -232,7 +233,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_while = in (predicate container) out container : reverse!stack_out@{
+    take_while = in (Function:predicate container) out container : reverse!stack_out@{
         stack_out = clear!container
         while if container then predicate?take!container else no
             stack_out += take!container
@@ -243,14 +244,14 @@ const std::string STANDARD_LIBRARY = R"(
     take_until_item = in (item container) out container :
         take_while!(in x out unequal?(x item) container)
 
-    drop_many = in (n container) out container : container@{
+    drop_many = in (Number:n container) out container : container@{
         container = container
         for _ in n
             container--
         end
     }
 
-    drop_while = in (predicate container) out container : container@{
+    drop_while = in (Function:predicate container) out container : container@{
         container = container
         while if container then predicate?take!container else no
             container--
@@ -266,7 +267,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    replace_if = in (predicate new_item container) out container : reverse!fold!(
+    replace_if = in (Function:predicate new_item container) out container : reverse!fold!(
         in (item container) out
             if predicate?item then
                 put!(new_item container)
@@ -285,7 +286,7 @@ const std::string STANDARD_LIBRARY = R"(
         0
     )
 
-    count_if = in (predicate container) out Number : fold!(
+    count_if = in (Function:predicate container) out Number : fold!(
         in (item n) out if predicate?item then inc!n else n
         container
         0
@@ -294,7 +295,7 @@ const std::string STANDARD_LIBRARY = R"(
     count_item = in (item container) out Number :
         count_if!(in x out equal?(x item) container)
 
-    range = in n out Vector : vector@{
+    range = in Number:n out Vector : vector@{
         vector = []
         while n
             n--
@@ -361,12 +362,12 @@ const std::string STANDARD_LIBRARY = R"(
     and = in container out Boolean : all?container
     or = in container out Boolean : any?container
 
-    is_increasing = in container out Boolean : not?drop_while!(
+    is_increasing = in Vector:container out Boolean : not?drop_while!(
         less_or_equal
         consecutive_pairs!container
     )
 
-    less_or_equal_top = in (left right) out Boolean :
+    less_or_equal_top = in (Vector:left Vector:right) out Boolean :
         if left then
             if right then
                 is_increasing?[take!left take!right]
@@ -403,22 +404,22 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_items = make_stack
 
-    get_keys = in table out Stack : map_stack!(
+    get_keys = in Table:table out Stack : map_stack!(
         in (key value) out key
         table
     )
 
-    get_values = in table out Stack : map_stack!(
+    get_values = in Table:table out Stack : map_stack!(
         in (key value) out value
         table
     )
 
-    addv = in (a b) out Vector : map!(add zip2!(a b))
-    subv = in (a b) out Vector : map!(sub zip2!(a b))
-    mulv = in (a b) out Vector : map!(mul zip2!(a b))
-    divv = in (a b) out Vector : map!(div zip2!(a b))
-    dot = in (a b) out Number : sum!mulv!(a b)
-    squared_norm = in a out Number : dot!(a a)
-    norm = in a out Number : sqrt!squared_norm!a
+    addv = in (Vector:a Vector:b) out Vector : map!(add zip2!(a b))
+    subv = in (Vector:a Vector:b) out Vector : map!(sub zip2!(a b))
+    mulv = in (Vector:a Vector:b) out Vector : map!(mul zip2!(a b))
+    divv = in (Vector:a Vector:b) out Vector : map!(div zip2!(a b))
+    dot = in (Vector:a Vector:b) out Number : sum!mulv!(a b)
+    squared_norm = in Vector:a out Number : dot!(a a)
+    norm = in Vector:a out Number : sqrt!squared_norm!a
 }
 )";
