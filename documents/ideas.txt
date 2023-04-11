@@ -254,10 +254,11 @@ SIMILAR LANGUAGES
 WEBPAGE
 https://www.passerine.io/
 https://gleam.run/
+https://tabloid.vercel.app/
+https://docs.scala-lang.org/tour/tour-of-scala.html
+https://www.pyret.org/
 https://nim-lang.org/
 https://github.com/tuqqu/oxide-lang
-https://www.pyret.org/
-https://docs.scala-lang.org/tour/tour-of-scala.html
 
 
 Languages supported by Github:
