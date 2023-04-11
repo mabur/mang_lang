@@ -51,13 +51,13 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    to_upper = in Character:c out Character :
+    to_upper = in Character:c out Character:
         if is_lower?c then
             character!sub!(number!c 32)
         else
             c
 
-    to_lower = in Character:c out Character :
+    to_lower = in Character:c out Character:
         if is_upper?c then
             character!add!(number!c 32)
         else
@@ -222,7 +222,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    clear_item = in (item container) out container :
+    clear_item = in (item container) out container:
         clear_if?(in x out equal?(x item) container)
 
     take_many = in (Number:n container) out container:reverse!stack_out@{
@@ -241,7 +241,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_until_item = in (item container) out container :
+    take_until_item = in (item container) out container:
         take_while!(in x out unequal?(x item) container)
 
     drop_many = in (Number:n container) out container:container@{
@@ -258,7 +258,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    drop_until_item = in (item container) out container :
+    drop_until_item = in (item container) out container:
         drop_while?(in x out unequal?(x item) container)
 
     replace = in (new_item container) out container:fold!(
@@ -277,7 +277,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    replace_item = in (old_item new_item container) out container :
+    replace_item = in (old_item new_item container) out container:
         replace_if?(in x out equal?(x old_item) new_item container)
 
     count = in container out Number:fold!(
@@ -292,7 +292,7 @@ const std::string STANDARD_LIBRARY = R"(
         0
     )
 
-    count_item = in (item container) out Number :
+    count_item = in (item container) out Number:
         count_if!(in x out equal?(x item) container)
 
     range = in Number:n out Numbers:vector@{
@@ -367,7 +367,7 @@ const std::string STANDARD_LIBRARY = R"(
         consecutive_pairs!container
     )
 
-    less_or_equal_top = in (Numbers:left Numbers:right) out Boolean :
+    less_or_equal_top = in (Numbers:left Numbers:right) out Boolean:
         if left then
             if right then
                 is_increasing?[take!left take!right]
