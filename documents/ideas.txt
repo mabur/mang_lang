@@ -7,7 +7,9 @@ TYPE SYSTEM
   - never?
   - variants / sum-types
     - Similar to tuples/product-types.
-    - Could add some syntax for sum-types like: Container = |Stack String Table Number|
+    - Could add some syntax for sum-types like:
+      Container = |Stack String Table Number|
+      container_of = in item out |[item] <item>|
   - optionals
     - Can we have type functions like:
     {
