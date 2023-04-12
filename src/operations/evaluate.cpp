@@ -84,6 +84,25 @@ Expression evaluateLookupChild(
 
 Expression lookupDictionary(const Name& name, Expression expression);
 
+
+template<typename Evaluator>
+void checkArgument(
+    Evaluator evaluator, const Argument& a, Expression input, Expression environment
+) {
+    if (a.type.type == ANY) {
+        return;
+    }
+    const auto type = evaluator(a.type, environment);
+    if (areTypesConsistent(input.type, type.type)) {
+        return;
+    }
+    throw std::runtime_error(
+        std::string{"Static type error in function call. "} +
+            "Expected " + NAMES[type.type] +
+            " but got " + NAMES[input.type]
+    );
+}
+
 template<typename Evaluator>
 Expression applyFunction(
     Evaluator evaluator,
@@ -91,18 +110,9 @@ Expression applyFunction(
     Expression input
 ) {
     auto definitions = Definitions{};
-    const auto a = getArgument(function.input_name);
-    if (a.type.type != ANY) {
-        const auto type = evaluator(a.type, function.environment);
-        if (!areTypesConsistent(input.type, type.type)) {
-            throw std::runtime_error(
-                std::string{"Static type error in function call. "} +
-                    "Expected " + NAMES[type.type] +
-                    " but got " + NAMES[input.type]
-            );
-        }   
-    }
-    definitions.add(a.name, input);
+    const auto argument = getArgument(function.input_name);
+    checkArgument(evaluator, argument, input, function.environment);
+    definitions.add(argument.name, input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
     );
@@ -126,25 +136,26 @@ Expression applyFunctionDictionary(
 template<typename Evaluator>
 Expression applyFunctionTuple(
     Evaluator evaluator,
-    const FunctionTuple& function_stack,
+    const FunctionTuple& function,
     Expression input
 ) {
     auto tuple = getEvaluatedTuple(input);
-    const auto& input_names = function_stack.input_names;
+    const auto& input_names = function.input_names;
     if (input_names.size() != tuple.expressions.size()) {
         throw std::runtime_error{"Wrong number of input to function"};
     }
     auto definitions = Definitions{};
     const auto num_inputs = input_names.size();
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto name = getArgument(input_names[i]).name;
+        const auto argument = getArgument(input_names[i]);
         const auto expression = tuple.expressions[i];
-        definitions.add(name, expression);
+        checkArgument(evaluator, argument, expression, function.environment);
+        definitions.add(argument.name, expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function_stack.environment, definitions}
+        EvaluatedDictionary{function.environment, definitions}
     );
-    return evaluator(function_stack.body, middle);
+    return evaluator(function.body, middle);
 }
 
 Expression evaluateFunction(const Function& function, Expression environment) {
