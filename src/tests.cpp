@@ -559,6 +559,7 @@ int main() {
         {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
         {"a@{T=1 f=in T:x out x a=f!0}", "0"},
         {"a@{T=1 f=in (T:x T:y) out x a=f!(0 0)}", "0"},
+        {"a@{T=1 f=in {T:x T:y} out x a=f!{x=0 y=0}}", "0"},
     });
     test.evaluate_types("recursive function", {
         {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 y=f!3}", "ANY"},

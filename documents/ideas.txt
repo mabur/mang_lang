@@ -1,6 +1,5 @@
 TYPE SYSTEM
 * How to add type annotation for:
-  - function of dictionaries
   - dictionaries
   - tuples
   - functions

@@ -129,6 +129,13 @@ Expression applyFunctionDictionary(
     const FunctionDictionary& function_dictionary,
     Expression input
 ) {
+    const auto evaluated_dictionary = getEvaluatedDictionary(input);
+    const auto& definitions = evaluated_dictionary.definitions;
+    for (const auto& name : function_dictionary.input_names) {
+        const auto argument = getArgument(name);
+        const auto expression = definitions.lookup(argument.name);
+        checkArgument(evaluator, argument, expression, function_dictionary.environment);
+    }
     // TODO: pass along environment? Is some use case missing now?
     return evaluator(function_dictionary.body, input);
 }
