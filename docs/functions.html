@@ -30,10 +30,10 @@ Manglang has containers like: stacks, strings, tables. They share an interface o
 <dt>clear</dt><dd><code>clear!container</code> returns an empty container of the same type as the input. O(1).</dd>
 <dt>indexing</dt><dd><code>container!index</code> can be used to get the item at the specified index. The container is interpreted as a function which takes an index as input and outputs an item. O(N).</dd>
 </dl>
-The relationship of these functions can be expressed as <code>put!(take!container drop!container)</code> gives back just the <code>container</code>. Furthermore, we check if a container is not empty by <code>if container then ... else ...</code> O(1).
+We check if a container is not empty by <code>if container then ... else ...</code> O(1).
 
 <p>
-The operations can be used as a base for building more container functions. The standard library does that and adds all the functions below.
+These operations can be used as a base for building more container functions. The standard library does that and adds all the functions below.
 </p>
 
 <h2>Generic Container Functions</h2>
