@@ -24,6 +24,7 @@ TYPE SYSTEM
     - Could introduce a special type BOOLEAN_TYPE, similarly to EMPTY_STACK, and define equal accordingly.
     - Could also remove this concept ant not define truthy/falsey for containers.
     - Could also define the functions to take only Booleans, and not use them for Containers of Containers.
+  - Concepts like Functions
 * Run-time polymorphism/dispatch:
   - How to solve aoc_22_13
     if type checking would enforce homogeneous stacks?
