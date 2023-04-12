@@ -11,7 +11,6 @@ const std::string STANDARD_LIBRARY = R"(
     String = ""
     Table = <>
     Numbers = [Number]
-    Function = in x out x
 
     boolean = in x out Boolean:if x then yes else no
     not = in x out Boolean:if x then no else yes
@@ -63,7 +62,7 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    fold = in (Function:operation container init) out result@{
+    fold = in (operation container init) out result@{
         result = init
         for item in container
             result = operation!(item result)
@@ -115,25 +114,25 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map_stack = in (Function:f container) out Stack:reverse!fold!(
+    map_stack = in (f container) out Stack:reverse!fold!(
         in (item container) out put!(f!item container)
         container
         []
     )
 
-    map_string = in (Function:f container) out String:reverse!fold!(
+    map_string = in (f container) out String:reverse!fold!(
         in (item container) out put!(f!item container)
         container
         ""
     )
 
-    map_table = in (Function:f container) out Table:fold!(
+    map_table = in (f container) out Table:fold!(
         in (item container) out put!(f!item container)
         container
         <>
     )
 
-    map = in (Function:f container) out container:reverse!fold!(
+    map = in (f container) out container:reverse!fold!(
         in (item container) out put!(f!item container)
         container
         clear!container
@@ -184,19 +183,19 @@ const std::string STANDARD_LIBRARY = R"(
 
     max_item = in Numbers:container out Number:fold!(max container -inf)
 
-    min_predicate = in (Function:predicate container) out fold!(
+    min_predicate = in (predicate container) out fold!(
         in (left right) out if predicate?(left right) then left else right
         drop!container
         take!container
     )
 
-    max_predicate = in (Function:predicate container) out fold!(
+    max_predicate = in (predicate container) out fold!(
         in (left right) out if predicate?(left right) then right else left
         drop!container
         take!container
     )
 
-    min_key = in (Function:key container) out fold!(
+    min_key = in (key container) out fold!(
         in (left right) out if less?(key!left key!right) then left else right
         drop!container
         take!container
@@ -212,7 +211,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     product = in Numbers:container out Number:fold!(mul container 1)
 
-    clear_if = in (Function:predicate container) out container:reverse!fold!(
+    clear_if = in (predicate container) out container:reverse!fold!(
         in (item container) out
             if predicate?item then
                 container
@@ -233,7 +232,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_while = in (Function:predicate container) out container:reverse!stack_out@{
+    take_while = in (predicate container) out container:reverse!stack_out@{
         stack_out = clear!container
         while if container then predicate?take!container else no
             stack_out += take!container
@@ -251,7 +250,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    drop_while = in (Function:predicate container) out container:container@{
+    drop_while = in (predicate container) out container:container@{
         container = container
         while if container then predicate?take!container else no
             container--
@@ -267,7 +266,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    replace_if = in (Function:predicate new_item container) out container:reverse!fold!(
+    replace_if = in (predicate new_item container) out container:reverse!fold!(
         in (item container) out
             if predicate?item then
                 put!(new_item container)
@@ -286,7 +285,7 @@ const std::string STANDARD_LIBRARY = R"(
         0
     )
 
-    count_if = in (Function:predicate container) out Number:fold!(
+    count_if = in (predicate container) out Number:fold!(
         in (item n) out if predicate?item then inc!n else n
         container
         0
