@@ -30,6 +30,19 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         checkTypes(row_left.value, row_right.value, description);
         return;
     }
+    if (left.type == EVALUATED_TUPLE && right.type == EVALUATED_TUPLE) {
+        const auto tuple_left = getEvaluatedTuple(left);
+        const auto tuple_right = getEvaluatedTuple(right);
+        if (tuple_left.expressions.size() != tuple_right.expressions.size()) {
+            throw std::runtime_error(
+                "Static type error in " + description + ". Inconsistent tuple size."
+            );
+        }
+        const auto count = tuple_left.expressions.size();
+        for (size_t i = 0; i < count; ++i) {
+            checkTypes(tuple_left.expressions[i], tuple_right.expressions[i], description);
+        }
+    }
     if (left.type == right.type) return;
     throw std::runtime_error(
         "Static type error in " + description +
