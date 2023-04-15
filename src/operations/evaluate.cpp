@@ -65,6 +65,12 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
             checkTypes(definitions_left[i].second, definitions_right[i].second, description);
         }
     }
+    if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
+    if (left.type == FUNCTION && right.type == FUNCTION_TUPLE) return;
+    if (left.type == FUNCTION && right.type == FUNCTION_BUILT_IN) return;
+    if (left.type == FUNCTION_DICTIONARY && right.type == FUNCTION) return;
+    if (left.type == FUNCTION_TUPLE && right.type == FUNCTION) return;
+    if (left.type == FUNCTION_BUILT_IN && right.type == FUNCTION) return;
     if (left.type == right.type) return;
     throw std::runtime_error(
         "Static type error in " + description +
