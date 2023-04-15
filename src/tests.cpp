@@ -270,6 +270,11 @@ int main() {
         {"(() ())", "(() ())"},
         {"((()))", "((()))"},
     });
+    test.evaluate_all("tuple type checking", {
+        {"b@{a=() b=a:()}", "()"},
+        {"b@{a=(1) b=a:(1)}", "(1)"},
+        {"b@{a=(1 'a') b=a:(1 'a')}", "(1 'a')"},
+    });
     test.reformat("dictionary iteration", {
         {"{while 1 end}", "{while 1 end}"},
         {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
