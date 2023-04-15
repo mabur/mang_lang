@@ -27,12 +27,10 @@ TYPE SYSTEM
       - Tuple
         - Concrete tuples
 * How to add and check type annotation for:
-  - container items
-  - dictionary items
-  - tuple items
-  - functions
   - any
   - never?
+  - items of generic containers
+  - input and output type of a function, for map
   - variants / sum-types
     - Similar to tuples/product-types.
     - Could add some syntax for sum-types like:
@@ -46,15 +44,15 @@ TYPE SYSTEM
       OptionalNumber = make_optional!Number
       OptionalNumber = |Number NULL|
     }
-  - items of generic containers
-  - input and output type of a function, for map
-  - concepts like Container, which is a sum-type of stack,string,table,number.
-    - Could introduce a special type CONTAINER, similarly to EMPTY_STACK, and define equal accordingly.
-  - concepts like BooleanLike, which is a sum-type of Container and Boolean.
-    - Could introduce a special type BOOLEAN_TYPE, similarly to EMPTY_STACK, and define equal accordingly.
-    - Could also remove this concept ant not define truthy/falsey for containers.
-    - Could also define the functions to take only Booleans, and not use them for Containers of Containers.
-  - Concepts like Functions
+  - concepts:
+    - concepts like Container, which is a sum-type of stack,string,table,number.
+      - Could introduce a special type CONTAINER, similarly to EMPTY_STACK, and define equal accordingly.
+    - concepts like BooleanLike, which is a sum-type of Container and Boolean.
+      - Could introduce a special type BOOLEAN_TYPE, similarly to EMPTY_STACK, and define equal accordingly.
+      - Could also remove this concept ant not define truthy/falsey for containers.
+      - Could also define the functions to take only Booleans, and not use them for Containers of Containers.
+    - Concepts like Functions, which is a sum type of function, function_tuple, function_dictionary, function_built_in.
+      - Easy as long as we don't care about sub-concepts.
 * Run-time polymorphism/dispatch:
   - How to solve aoc_22_13
     if type checking would enforce homogeneous stacks?
