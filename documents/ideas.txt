@@ -26,9 +26,10 @@ TYPE SYSTEM
         - Conrete dictionaries
       - Tuple
         - Concrete tuples
-* How to add type annotation for:
-  - dictionaries
-  - tuples
+* How to add and check type annotation for:
+  - container items
+  - dictionary items
+  - tuple items
   - functions
   - any
   - never?
