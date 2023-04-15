@@ -323,6 +323,9 @@ int main() {
         {"{a=[1] a+=2 a+=3}", "{a=[NUMBER]}"},
         {"{a=<> a+=(1 2)}", "{a=<(NUMBER NUMBER)>}"},
         {"{a=0 a+=1}", "{a=NUMBER}"},
+        {"{a={} b=a:{}}", "{a={} b={}}"},
+        {"{a={x=1} b=a:{x=1}}", "{a={x=NUMBER} b={x=NUMBER}}"},
+        {"{a={x=1 y=1} b=a:{x=1 y=1}}", "{a={x=NUMBER y=NUMBER} b={x=NUMBER y=NUMBER}}"},
     });
     test.evaluate_all("dictionary", {
         {"{}", "{}"},
