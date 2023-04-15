@@ -9,14 +9,18 @@
 
 namespace {
 
-bool areTypesConsistent(Expression left, Expression right) {
-    if (left.type == ANY || right.type == ANY) return true;
-    if (left.type == EMPTY_STACK && right.type == EVALUATED_STACK) return true;
-    if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return true;
-    if (left.type == EMPTY_STRING && right.type == STRING) return true;
-    if (left.type == STRING && right.type == EMPTY_STRING) return true;
-    if (left.type == EVALUATED_STACK && right.type == EVALUATED_STACK) return true;
-    return left.type == right.type;
+void checkTypes(Expression left, Expression right, const std::string& description) {
+    if (left.type == ANY || right.type == ANY) return;
+    if (left.type == EMPTY_STACK && right.type == EVALUATED_STACK) return;
+    if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return;
+    if (left.type == EMPTY_STRING && right.type == STRING) return;
+    if (left.type == STRING && right.type == EMPTY_STRING) return;
+    if (left.type == right.type) return;
+    throw std::runtime_error(
+        "Static type error in " + description +
+        ". Expected " + NAMES[left.type] +
+        " but got " + NAMES[right.type]
+    );
 }
 
 // TODO: remove forward declaration.
@@ -94,14 +98,7 @@ void checkArgument(
         return;
     }
     const auto type = evaluator(a.type, environment);
-    if (areTypesConsistent(input, type)) {
-        return;
-    }
-    throw std::runtime_error(
-        std::string{"Static type error in function call. "} +
-            "Expected " + NAMES[type.type] +
-            " but got " + NAMES[input.type]
-    );
+    checkTypes(input, type, "function call");
 }
 
 template<typename Evaluator>
@@ -330,13 +327,7 @@ Expression evaluateConditionalTypes(
     const auto else_expression = evaluate_types(conditional.expression_else, environment);
     for (const auto alternative : conditional.alternatives) {
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        if (!areTypesConsistent(alternative_expression, else_expression)) {
-            throw std::runtime_error(
-                "Static type error. Different output types in is-alternatives " +
-                    NAMES[alternative_expression.type] + " & " +
-                    NAMES[else_expression.type]
-            );
-        }
+        checkTypes(alternative_expression, else_expression, "if");
     }
     return else_expression;
 }
@@ -363,13 +354,7 @@ Expression evaluateIsTypes(
     const auto else_expression = evaluate_types(is_expression.expression_else, environment);
     for (const auto alternative : is_expression.alternatives) {
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        if (!areTypesConsistent(alternative_expression, else_expression)) {
-            throw std::runtime_error(
-                "Static type error. Different output types in is-alternatives " +
-                    NAMES[alternative_expression.type] + " & " +
-                    NAMES[else_expression.type]
-            );
-        }
+        checkTypes(alternative_expression, else_expression, "is");
     }
     return else_expression;
 }
@@ -393,12 +378,7 @@ Expression evaluateTypedExpression(
 ) {
     const auto type = evaluator(expression.type, environment);
     const auto value = evaluator(expression.value, environment);
-    if (!areTypesConsistent(type, value)) {
-        throw std::runtime_error(
-            "Type error. Different types " +
-                NAMES[type.type] + " & " + NAMES[value.type]
-        );
-    }
+    checkTypes(type, value, "typed expression");
     return value;
 }
 
