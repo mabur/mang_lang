@@ -15,9 +15,19 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
     if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return;
     if (left.type == EMPTY_STRING && right.type == STRING) return;
     if (left.type == STRING && right.type == EMPTY_STRING) return;
-    // TODO:
     if (left.type == EVALUATED_STACK && right.type == EVALUATED_STACK) {
         checkTypes(getEvaluatedStack(left).top, getEvaluatedStack(right).top, description);
+        return;
+    }
+    if (left.type == EVALUATED_TABLE && right.type == EVALUATED_TABLE) {
+        const auto table_left = getEvaluatedTable(left);
+        const auto table_right = getEvaluatedTable(right);
+        if (table_left.empty()) return;
+        if (table_right.empty()) return;
+        const auto row_left = table_left.begin()->second;
+        const auto row_right = table_right.begin()->second;
+        checkTypes(row_left.key, row_right.key, description);
+        checkTypes(row_left.value, row_right.value, description);
         return;
     }
     if (left.type == right.type) return;
