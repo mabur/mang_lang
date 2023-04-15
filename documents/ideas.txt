@@ -1,4 +1,31 @@
 TYPE SYSTEM
+* Maybe types should not be re-evaluated for every function call?
+  - Could store evaluted types if we have EvaluatedFunction structs.
+    - So EvaluatedFunction sets both environment and types of arguments.
+* Sort out sub-type relation and consistent relation.
+  - a subtype can be used where the supertype is expected.
+  - is & if alternatives should be consistent/equivalent.
+    - Currently use else as base.
+  - TypedExpression and function arguments are of on the form SuperType:SubType
+    - Feels like it can be confusing for []
+  - Both good and bad to use [] to represent both emtpy stack and stack of any item type.
+    - Feels like sub-type relation can go both ways depending on perspective.
+  - Subtype hierarchy:
+    - ANY
+      - Number
+      - Character
+      - Boolean
+      - Container (does not exist as concept yet)
+        - []
+          - [Number]
+        - <>
+          - <(Number Number)>
+        - ""
+          - "a"
+      - Dictionary
+        - Conrete dictionaries
+      - Tuple
+        - Concrete tuples
 * How to add type annotation for:
   - dictionaries
   - tuples
