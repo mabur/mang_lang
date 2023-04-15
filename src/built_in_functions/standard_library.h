@@ -132,7 +132,7 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map = in (f container) out container:reverse!fold!(
+    map = in (f container) out reverse!fold!(
         in (item container) out put!(f!item container)
         container
         clear!container
@@ -260,13 +260,13 @@ const std::string STANDARD_LIBRARY = R"(
     drop_until_item = in (item container) out container:
         drop_while?(in x out unequal?(x item) container)
 
-    replace = in (new_item container) out container:fold!(
+    replace = in (new_item container) out fold!(
         in (item container) out put!(new_item container)
         container
         clear!container
     )
 
-    replace_if = in (predicate new_item container) out container:reverse!fold!(
+    replace_if = in (predicate new_item container) out reverse!fold!(
         in (item container) out
             if predicate?item then
                 put!(new_item container)
@@ -276,7 +276,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    replace_item = in (old_item new_item container) out container:
+    replace_item = in (old_item new_item container) out 
         replace_if?(in x out equal?(x old_item) new_item container)
 
     count = in container out Number:fold!(

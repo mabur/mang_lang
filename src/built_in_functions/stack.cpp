@@ -20,6 +20,17 @@ Expression clear(Expression in) {
 }
 
 Expression clearTyped(Expression in) {
+    // TODO: shouldn't clear EVALUATED_STACK give EMPTY_STACK,
+    // so that it can be populated with items of different type?
+    //switch (in.type) {
+    //    case EVALUATED_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
+    //    case EMPTY_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
+    //    case STRING: return makeEmptyString(CodeRange{}, EmptyString{});
+    //    case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
+    //    case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
+    //    case NUMBER: return makeNumber(CodeRange{}, 0);
+    //    default: throw UnexpectedExpression(in.type, "clear operation");
+    //}
     switch (in.type) {
         case EVALUATED_STACK: return in;
         case EMPTY_STACK: return in;
