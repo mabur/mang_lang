@@ -43,6 +43,28 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
             checkTypes(tuple_left.expressions[i], tuple_right.expressions[i], description);
         }
     }
+    if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
+        const auto definitions_left = getEvaluatedDictionary(left).definitions.sorted();
+        const auto definitions_right = getEvaluatedDictionary(right).definitions.sorted();
+        if (definitions_left.size() != definitions_right.size()) {
+            throw std::runtime_error(
+                "Static type error in " + description + ". Inconsistent dictionary size."
+            );
+        }
+        const auto count = definitions_left.size();
+        for (size_t i = 0; i < count; ++i) {
+            const auto& name_left = definitions_left[i].first;
+            const auto& name_right = definitions_right[i].first;
+            if (name_left != name_right) {
+                throw std::runtime_error(
+                    "Static type error in " + description +
+                    ". Inconsistent dictionary names " +
+                    name_left + " & " + name_right
+                );
+            }
+            checkTypes(definitions_left[i].second, definitions_right[i].second, description);
+        }
+    }
     if (left.type == right.type) return;
     throw std::runtime_error(
         "Static type error in " + description +
