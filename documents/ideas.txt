@@ -10,6 +10,7 @@ TYPE SYSTEM
     - Could add some syntax for sum-types like:
       Container = |Stack String Table Number|
       container_of = in item out |[item] <item>|
+    - But it is a problem that || is symmetric.
   - optionals
     - Can we have type functions like:
     {
