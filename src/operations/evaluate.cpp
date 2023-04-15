@@ -15,11 +15,16 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
     if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return;
     if (left.type == EMPTY_STRING && right.type == STRING) return;
     if (left.type == STRING && right.type == EMPTY_STRING) return;
+    // TODO:
+    //if (left.type == EVALUATED_STACK && right.type == EVALUATED_STACK) {
+    //    checkTypes(getEvaluatedStack(left).top, getEvaluatedStack(right).top, description);
+    //    return;
+    //}
     if (left.type == right.type) return;
     throw std::runtime_error(
         "Static type error in " + description +
-        ". Expected " + NAMES[left.type] +
-        " but got " + NAMES[right.type]
+        ". Expected " + NAMES[right.type] +
+        " but got " + NAMES[left.type]
     );
 }
 
