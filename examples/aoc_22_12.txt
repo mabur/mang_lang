@@ -45,10 +45,10 @@ abdefghi"
                     less?(height_difference 2)
                     not!get!(neighbour visited no)
                 ]
-                next_frontier = if ok_neighbour then put!(neighbour next_frontier)
-                    else next_frontier
-                visited = if ok_neighbour then put!((neighbour yes) visited)
-                    else visited
+                for _ in ok_neighbour                
+                    next_frontier = put!(neighbour next_frontier)
+                    visited = put!((neighbour yes) visited)
+                end
             end
         end
         steps = inc!steps
