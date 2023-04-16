@@ -154,6 +154,7 @@ LANGUAGE SYNTAX & SEMANTICS
     - foreach container
     - repeat container
     - loop container
+    - run container
     - This form is common for numbers and booleans.
   - Extend container interface for Boolean so that it can be used in for loops,
     similar to if-statement. Boolean is like a container that is either empty or contains a single element.
