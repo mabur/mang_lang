@@ -79,17 +79,6 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
     );
 }
 
-// TODO: remove forward declaration.
-Expression evaluateFunction(const Function& function, Expression environment);
-
-Expression evaluateFunctionDictionary(
-    const FunctionDictionary& function_dictionary, Expression environment
-);
-
-Expression evaluateFunctionTuple(
-    const FunctionTuple& function_stack, Expression environment
-);
-
 template<typename Evaluator>
 Expression evaluateStack(Evaluator evaluator,
     Expression stack, Expression environment
@@ -142,9 +131,6 @@ Expression evaluateLookupChild(
     const auto dictionary = getEvaluatedDictionary(child);
     return dictionary.definitions.lookup(name);
 }
-
-Expression lookupDictionary(const Name& name, Expression expression);
-
 
 template<typename Evaluator>
 void checkArgument(
