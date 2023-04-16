@@ -149,6 +149,12 @@ LANGUAGE SYNTAX & SEMANTICS
       if a
         b = c
       end
+  - Add syntactic sugar
+    - for _ in container
+    - foreach container
+    - repeat container
+    - loop container
+    - This form is common for numbers and booleans.
   - Extend container interface for Boolean so that it can be used in for loops,
     similar to if-statement. Boolean is like a container that is either empty or contains a single element.
     Could maybe also deal with optionals in a similar way.
