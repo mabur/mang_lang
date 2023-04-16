@@ -71,6 +71,7 @@ Expression clear(Expression in) {
         case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
         case NUMBER: return makeNumber(CodeRange{}, 0);
+        case BOOLEAN: return makeBoolean(CodeRange{}, false);
         default: throw UnexpectedExpression(in.type, "clear operation");
     }
 }
@@ -94,12 +95,17 @@ Expression clearTyped(Expression in) {
         case EMPTY_STRING: return in;
         case EVALUATED_TABLE: return in;
         case NUMBER: return in;
+        case BOOLEAN: return in;
         default: throw UnexpectedExpression(in.type, "clearTyped operation");
     }
 }
 
 Expression putNumber(Expression collection, Expression item) {
     return makeNumber({}, getNumber(collection) + getNumber(item));
+}
+
+Expression putBoolean(Expression, Expression item) {
+    return item;
 }
 
 Expression put(Expression in) {
@@ -113,6 +119,7 @@ Expression put(Expression in) {
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return putTable(collection, item);
         case NUMBER: return putNumber(collection, item);
+        case BOOLEAN: return putBoolean(collection, item);
         default: throw UnexpectedExpression(in.type, "put operation");
     }
 }
@@ -131,6 +138,7 @@ Expression putTyped(Expression in) {
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
+        case BOOLEAN: return putBoolean(collection, item);
         default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
 }
@@ -165,6 +173,10 @@ Expression dropNumber(Expression in) {
     return makeNumber({}, getNumber(in) - 1);
 }
 
+Expression dropBoolean(Expression in) {
+    return getBoolean(in) ? makeBoolean({}, false) : in;
+}
+
 Expression take(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return getEvaluatedStack(in).top;
@@ -172,6 +184,7 @@ Expression take(Expression in) {
         case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
         case NUMBER: return makeNumber({}, 1);
+        case BOOLEAN: return in;
         default: throw UnexpectedExpression(in.type, "take");
     }
 }
@@ -185,6 +198,7 @@ Expression takeTyped(Expression in) {
         case EMPTY_STACK: return Expression{};
         case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
         case NUMBER: return in;
+        case BOOLEAN: return in;
         default: throw UnexpectedExpression(in.type, "take");
     }
 }
@@ -198,6 +212,7 @@ Expression drop(Expression in) {
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
+        case BOOLEAN: return dropBoolean(in);
         default: throw UnexpectedExpression(in.type, "drop");
     }
 }
@@ -211,6 +226,7 @@ Expression dropTyped(Expression in) {
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return in;
+        case BOOLEAN: return in;
         default: throw UnexpectedExpression(in.type, "drop typed");
     }
 }

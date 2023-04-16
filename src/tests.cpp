@@ -299,13 +299,16 @@ int main() {
         {"{i=2 c=[] while i c+=i i=dec!i end}", "{i=0 c=[1 2]}"},
     });
     test.evaluate_all("dictionary for", {
+        {"{c=3 s=0 for i in c s+=c end}", "{c=0 s=6 i=1}"},
+        {"{c=yes s=0 for i in c s+=1 end}", "{c=no s=1 i=yes}"},
+        {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0}"},
         {"{c=[] for i in c end}", "{c=[]}"},
         {"{c=[1] for i in c end}", "{c=[] i=1}"},
         {"{c=[1 2] for i in c end}", "{c=[] i=2}"},
         {"{a=[] c=[1 2 3] for i in c a+=i end}", "{a=[3 2 1] c=[] i=3}"},
         {"{c=[1 2] for i in c d=[2 3] for j in d end end}", "{c=[] i=2 d=[] j=3}"},
         {"r@{f=in c out {for i in c end} r=f![]}", "{}"},
-        {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"}
+        {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"},
     });
     test.evaluate_types("dictionary for", {
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
@@ -369,6 +372,16 @@ int main() {
         {"{c=<(1 2)> c--}", "{c=<>}"},
         {"{c=<(1 2) (3 4)> c--}", "{c=<(3 4)>}"},
         {"{a=[1] while a a-- end}", "{a=[]}"},
+        {"{c=yes c--}", "{c=no}"},
+    });
+    test.evaluate_all("put assignment", {
+        {"{c=1 c+=2}", "{c=3}"},
+        {"{c=yes c+=yes}", "{c=yes}"},
+        {"{c=yes c+=no}", "{c=no}"},
+        {"{c=no c+=yes}", "{c=yes}"},
+        {"{c=no c+=no}", "{c=no}"},
+        {"{c=[1] c+=2}", "{c=[2 1]}"},
+        {"{c=<(1 2)> c+=(0 3)}", "{c=<(0 3) (1 2)>}"},
     });
     test.reformat("conditional", {
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
@@ -964,6 +977,10 @@ int main() {
         {"clear!1", "0"},
         {"clear!2", "0"},
     });
+    test.evaluate_all("clear boolean", {
+        {"clear!no", "no"},
+        {"clear!yes", "no"},
+    });
     test.evaluate_types("clear string", {
         {R"(clear!"")", "EMPTY_STRING"},
         {R"(clear!"a")", "STRING"},
@@ -990,6 +1007,10 @@ int main() {
         {"take!1", "1"},
         {"take!2", "1"},
     });
+    test.evaluate_all("take boolean", {
+        {"take!no", "no"},
+        {"take!yes", "yes"},
+    });
     test.evaluate_types("take string", {
         {R"(take!"b")", "CHARACTER"},
         {R"(take!"ab")", "CHARACTER"},
@@ -1014,6 +1035,10 @@ int main() {
     test.evaluate_all("drop number", {
         {"drop!1", "0"},
         {"drop!2", "1"},
+    });
+    test.evaluate_all("drop boolean", {
+        {"drop!no", "no"},
+        {"drop!yes", "no"},
     });
     test.evaluate_types("drop string", {
         {R"(drop!"a")", "STRING"},
@@ -1040,6 +1065,12 @@ int main() {
         {"put!(2 0)", "2"},
         {"put!(1 1)", "2"},
         {"put!(2 1)", "3"},
+    });
+    test.evaluate_all("put boolean", {
+        {"put!(no no)", "no"},
+        {"put!(no yes)", "no"},
+        {"put!(yes no)", "yes"},
+        {"put!(yes yes)", "yes"},
     });
     test.evaluate_types("put string", {
         {R"(put!('a' ""))", "STRING"},
