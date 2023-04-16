@@ -21,9 +21,8 @@ TYPE SYSTEM
         - <>
           - <(Number Number)>
         - ""
-          - "a"
       - Dictionary
-        - Conrete dictionaries
+        - Concrete dictionaries
       - Tuple
         - Concrete tuples
 * How to add and check type annotation for:
