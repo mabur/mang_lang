@@ -1287,6 +1287,13 @@ int main() {
         {R"(count!"a")", "1"},
         {R"(count!"ab")", "2"},
     });
+    test.evaluate_all("count number", {
+        {"count!3", "3"},
+    });
+    test.evaluate_all("count boolean", {
+        {"count!no", "0"},
+        {"count!yes", "1"},
+    });
     test.evaluate_types("count_item stack", {
         {"count_item!(1 [])", "NUMBER"},
         {"count_item!(1 [1])", "NUMBER"},
