@@ -4,6 +4,7 @@
 
 const std::string STANDARD_LIBRARY = R"(
 {
+    Any = dynamic 0
     Number = 0
     Boolean = no
     Character = 'a'
