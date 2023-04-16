@@ -168,6 +168,14 @@ Manglang consists of the following basic building blocks:
 <a href="#function_definition">Function definitions</a> and <a href="#function_application">function applications</a> which transform data.
 </td>
 </tr>
+<tr>
+<td>
+<img src="type_annotation.png" width=48 height=48>
+</td>
+<td>
+<a href="#type_annotation">Type Annotation</a>
+</td>
+</tr>
 </table>
 <p>
 Below you will find descriptions and examples of each of these language constructs.
@@ -917,6 +925,74 @@ They expect the same input and return the same result.
 <code>area2</code> just uses syntactic sugar to make it its implementation more concise,
 by unpacking the elements of the input dictionary.
 </p>
+
+<h1 id="type_annotation">5. Type Annotation <img src="type_annotation.png" width=48 height=48></h1>
+Manglang code is evaluated in two separate steps:
+<ol>
+<li><b>Evaluation of types.</b> Quick early verification of the program.</li>
+<li><b>Evaluation of values.</b> Slower evaluation of the whole program.</li>
+</ol>
+<p>
+The <b>second step</b> is the main step which computes the actual result of the program, i.e. the output value. This is what we have focused on so far. This computation might take a long time for some programs. If you are unlucky the program might encounter an error towards the end of the computation after the programming has been running for a while. We want to have a fast feedback loop while programming and discover errors as early as possible. This the motivation for having another pre-step that quickly checks that the program appears to be correct, before we start running it.
+</p>
+<p>
+The <b>first step</b> does a quick static type checking of the program. It checks if the program seem to make sense. Manglang has a simple type system which supports both <b>type inference</b> and <b>gradual typing</b>. This means that static type  checking is happening even when there is no explicit annotation of types in a program. But explicit type annotation can also be added to specify the intention of the program in greater detail.
+</p>
+
+<h2>5. Annotating Types for Expressions</h2>
+You can specify the type of any expression like <code>type:expression</code>. Note that the type and the expression come in the reverse order compared to some other common programming languages. As usual in Manglang white space is optional around <code>:</code>. Let's look at an example:
+<pre>
+{
+  width = Number:320
+  height = Number:240
+}
+</pre>
+
+<h2>5. Annotating Types for Functions</h2>
+<p>
+We can also annotate the types for the input and output of functions similarly. Here are some example functions from the standard library:
+</p>
+<pre>
+{
+  inc = in Number:x
+    out Number:add!(x 1)
+
+  min = in (Number:left Number:right)
+    out Number:if less?(left right) then left else right
+
+  min_item = in Numbers:container
+    out Number:fold!(min container inf)
+}
+</pre>
+
+<h2>5. Defining Types</h2>
+Manglang defines the following types in its standard library: <code>Boolean</code>, <code>Number</code>, <code>Numbers</code>, <code>Character</code>, <code>String</code>, <code>Stack</code>, <code>Table</code>, <code>Function</code>. By convention we capitalize the name of types. Inside the standard library this is implemented like:
+<pre>
+{
+  ...
+  Number = 0
+  Boolean = no
+  Character = 'a'
+  Stack = []
+  String = ""
+  Table = <>
+  Numbers = [Number]
+  Function = in x out x
+  ...
+}
+</pre>
+So a named type is just a named example value for that type. We can name and use our own types similarly:
+<pre>
+{
+  Age = Number
+  Person = {name = String age = Age}
+  Persons = [Person]
+
+  anders = Person : {name = "Anders" age = 9}
+  ada = Person : {name = "Ada" age = 11}
+  persons = Persons : [anders ada]
+}
+</pre>
 
 <h1>More Code Examples</h1>
 <p>
