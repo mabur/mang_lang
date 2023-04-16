@@ -12,10 +12,10 @@ TYPE SYSTEM
     - Feels like sub-type relation can go both ways depending on perspective.
   - Subtype hierarchy:
     - ANY
-      - Number
       - Character
       - Boolean
       - Container (does not exist as concept yet)
+        - Number
         - []
           - [Number]
         - <>
@@ -150,6 +150,16 @@ LANGUAGE SYNTAX & SEMANTICS
       if a
         b = c
       end
+  - Extend container interface for Boolean so that it can be used in for loops,
+    similar to if-statement. Boolean is like a container that is either empty or contains a single element.
+    Could maybe also deal with optionals in a similar way.
+      state = yes
+      flag = no
+      for _ in state
+        flag = yes
+      end
+    put, clear, take, drop, +=, --
+
   - Add short-circuit "and" "or" to while statement.
 * Empty tuple () for MISSING, NULL.
 * kebab-case
