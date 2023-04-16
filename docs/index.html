@@ -483,19 +483,19 @@ Stacks and strings are immutable, which means that if we add or remove items we 
 
 <h2 id="generic_programming">2.g. Generic Programming</h2>
 <p>
-Stacks, strings, tables as well as numbers share some basic operations. The following operations can be used to iterate through these dynamic containers:
+Stacks, strings, tables as well as numbers and booleans share some basic operations. The following operations can be used to iterate through these dynamic containers:
 <ul>
-<li><code>take!container</code> takes an item from the container. Can be seen as dereferencing an iterator. <code>take</code> is also defined for numbers, but it then just returns <code>1</code>.</li>
-<li><code>drop!container</code> returns a view of the container with one item removed. Can be seen as decrementing the iterator so that it points at the previous item. When applied to a number it decrements it by one.</li>
-<li><code>if container then ... else ...</code> can be used to check that the container is not empty. Can be seen as checking whether the iterator has a predecessor or not. When applied to numbers we define all numbers except <code>0</code> to have predecessors.</li>
+<li><code>take!container</code> takes an item from the container. Can be seen as dereferencing an iterator. <code>take</code> is also defined for numbers, but it then just returns <code>1</code>. For booleans it just returns the boolean itself.</li>
+<li><code>drop!container</code> returns a view of the container with one item removed. Can be seen as decrementing the iterator so that it points at the previous item. When applied to a number it decrements it by one. For booleans it always returns <code>no</code>.</li>
+<li><code>if container then ... else ...</code> can be used to check that the container is not empty. Can be seen as checking whether the iterator has a predecessor or not. When applied to numbers we define all numbers except <code>0</code> to have predecessors. For booleans it behaves as expected.</li>
 <li><code>container!index</code> can be used to get the item at the specified index. The container is interpreted as a function which takes an index as input and outputs an item.</li>
 </ul>
 <p>
-Stacks, strings, tables, numbers also share the following operations for creating new containers:
+Stacks, strings, tables, numbers, booleans also share the following operations for creating new containers:
 </p>
 <ul>
-<li><code>put!(item container)</code> adds an item to the container/number. Creates a new container for stacks, strings and numbers but modifies tables.</li>
-<li><code>clear!container</code> creates an empty/zero container of the same type.</li>
+<li><code>put!(item container)</code> adds an item to the container/number. Creates a new container for stacks, strings, numbers and booleans but modifies tables.</li>
+<li><code>clear!container</code> creates an empty container of the same type. Returns <code>0</code> for numbers and <code>no</code> for booleans.</li>
 </ul>
 </p>
 
@@ -570,7 +570,9 @@ which is evaluated to:
   total = 6
 }
 </pre>
-
+<p>
+In the same spirit Manglang also defines the generic container operations for booleans, which means we can use the for loop similar to an if-statement. The the body is run once if the boolean is <code>yes</code> and zero times if the boolean is <code>no</code>.
+</p>
 <p>
 By relying on the generic container interface we can write generic functions that work similarly on both stacks, strings and tables. For some examples of this you can take a look at the <a href="functions.html">standard library documentation</a>,  or look inside the
 <a href="https://github.com/mabur/mang_lang/blob/master/src/built_in_functions/standard_library.h">standard library implementation</a>.
