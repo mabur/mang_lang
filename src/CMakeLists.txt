@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 14)
 add_library(shared
         built_in_functions/arithmetic.cpp
         built_in_functions/built_in_functions.cpp
-        built_in_functions/table.cpp
         built_in_functions/container.cpp
         operations/evaluate.cpp
         operations/parse.cpp

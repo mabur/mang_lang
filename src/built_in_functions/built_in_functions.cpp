@@ -4,7 +4,6 @@
 
 #include "../factory.h"
 #include "arithmetic.h"
-#include "table.h"
 #include "container.h"
 
 Expression define(std::function<Expression(Expression)> function) {
