@@ -5,7 +5,7 @@
 #include "../factory.h"
 #include "arithmetic.h"
 #include "table.h"
-#include "stack.h"
+#include "container.h"
 
 Expression define(std::function<Expression(Expression)> function) {
     return makeFunctionBuiltIn(CodeRange{}, {function});
