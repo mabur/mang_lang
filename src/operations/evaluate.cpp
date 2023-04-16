@@ -159,10 +159,6 @@ Expression applyFunction(
     return evaluator(function.body, middle);
 }
 
-Expression applyFunctionBuiltIn(
-    const FunctionBuiltIn& function_built_in, Expression input
-);
-
 template<typename Evaluator>
 Expression applyFunctionDictionary(
     Evaluator evaluator,
