@@ -926,7 +926,7 @@ They expect the same input and return the same result.
 by unpacking the elements of the input dictionary.
 </p>
 
-<h1 id="type_annotation">5. Type Annotation <img src="type_annotation.png" width=48 height=48></h1>
+<h1 id="type_annotation">6. Type Annotation <img src="type_annotation.png" width=48 height=48></h1>
 Manglang code is evaluated in two separate steps:
 <ol>
 <li><b>Evaluation of types.</b> Quick early verification of the program.</li>
@@ -939,7 +939,7 @@ The <b>second step</b> is the main step which computes the actual result of the 
 The <b>first step</b> does a quick static type checking of the program. It checks if the program seem to make sense. Manglang has a simple type system which supports both <b>type inference</b> and <b>gradual typing</b>. This means that static type  checking is happening even when there is no explicit annotation of types in a program. But explicit type annotation can also be added to specify the intention of the program in greater detail.
 </p>
 
-<h2>5. Annotating Types for Expressions</h2>
+<h2>6.a. Annotating Types for Expressions</h2>
 You can specify the type of any expression like <code>type:expression</code>. Note that the type and the expression come in the reverse order compared to some other common programming languages. As usual in Manglang white space is optional around <code>:</code>. Let's look at an example:
 <pre>
 {
@@ -948,7 +948,7 @@ You can specify the type of any expression like <code>type:expression</code>. No
 }
 </pre>
 
-<h2>5. Annotating Types for Functions</h2>
+<h2>6.b. Annotating Types for Functions</h2>
 <p>
 We can also annotate the types for the input and output of functions similarly. Here are some example functions from the standard library:
 </p>
@@ -965,11 +965,12 @@ We can also annotate the types for the input and output of functions similarly. 
 }
 </pre>
 
-<h2>5. Defining Types</h2>
-Manglang defines the following types in its standard library: <code>Boolean</code>, <code>Number</code>, <code>Numbers</code>, <code>Character</code>, <code>String</code>, <code>Stack</code>, <code>Table</code>, <code>Function</code>. By convention we capitalize the name of types. Inside the standard library this is implemented like:
+<h2>6.c. Defining Types</h2>
+Manglang defines the following types in its standard library: <code>Any</code>, <code>Boolean</code>, <code>Number</code>, <code>Numbers</code>, <code>Character</code>, <code>String</code>, <code>Stack</code>, <code>Table</code>, <code>Function</code>. By convention we capitalize the name of types. Inside the standard library this is implemented like:
 <pre>
 {
   ...
+  Any = dynamic 0
   Number = 0
   Boolean = no
   Character = 'a'
@@ -993,6 +994,50 @@ So a named type is just a named example value for that type. We can name and use
   persons = Persons : [anders ada]
 }
 </pre>
+
+<h2>6.d. Checking Types</h2>
+The static type checker compares pairs of types to see that they compatible. The following hierarchical rules define type compatibility:
+<ul>
+  <li>
+  <code>Any</code> is compatible with all types:
+
+  <ul>
+    <li><code>Boolean</code> is compatible with all booleans.</li>
+    
+    <li><code>Character</code> is compatible with all characters.</li>
+    
+    <li><code>Function</code> is compatible with all functions.</li>
+    
+    <li>A tuple is compatible with other tuples if they have the same number of sub-expression and if the corresponding sub-expressions are compatible.</li>
+    
+    <li>A dictionary is compatible with other dictionaries if they have the same number of sub-items and if the the sub-items have the same names and if each sub-expression is compatible.</li>
+
+    <li> Dynamic containers:
+    <ul>
+      <li><code>Number</code> is compatible with all numbers.</li>
+      
+      <li><code>String</code> is compatible with all strings.</li>
+      
+      <li><code>Stack</code> is compatible with all stacks, including the empty stack:
+      <ul>
+        <li>A stack with specified item type like <code>Numbers</code> is compatible with other stacks with the same item type.</li>
+      </ul>
+      </li>
+
+      <li><code>Table</code> is compatible with all tables, including the empty table:
+      <ul>
+        <li>A table with specified item type is compatible with other tables with the same item type.</li>
+      </ul>
+      </li>
+
+    </ul>
+    </li>
+
+  </ul>
+
+  </li>
+</ul>
+The types in Manglang form a tree, where a type is compatible with all its descendants and all its ancestors. Type compatibility is a <b>symmetric</b> relation, so if <code>a:b</code> are compatible then <code>b:a</code> are compatible. However, compatibility is <b>not transitive</b>, which means that if <code>a:b</code> are compatible and <code>a:c</code> are compatible, it does NOT mean that <code>b:c</code> are compatible.
 
 <h1>More Code Examples</h1>
 <p>
