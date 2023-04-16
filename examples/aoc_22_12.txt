@@ -45,7 +45,7 @@ abdefghi"
                     less?(height_difference 2)
                     not!get!(neighbour visited no)
                 ]
-                for _ in ok_neighbour                
+                for _ in ok_neighbour
                     next_frontier = put!(neighbour next_frontier)
                     visited = put!((neighbour yes) visited)
                 end
