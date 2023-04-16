@@ -40,7 +40,28 @@ Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
         EMPTY_STACK, getEvaluatedStack);
 }
 
-namespace stack_functions {
+Expression putTable(Expression table, Expression item) {
+    const auto tuple = getBinaryTuple(item);
+    const auto key = tuple.left;
+    const auto value = tuple.right;
+    auto& rows = getMutableEvaluatedTable(table).rows;
+    rows[serialize(key)] = {key, value};
+    return table;
+}
+
+Expression putTableTyped(Expression table, Expression item) {
+    if (item.type == ANY) {
+        return table;
+    }
+    const auto tuple = getBinaryTuple(item);
+    const auto key = tuple.left;
+    const auto value = tuple.right;
+    auto& rows = getMutableEvaluatedTable(table).rows;
+    rows[serialize_types(key)] = {key, value};
+    return table;
+}
+
+namespace container_functions {
 
 Expression clear(Expression in) {
     switch (in.type) {
@@ -90,7 +111,7 @@ Expression put(Expression in) {
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return putString(collection, item);
         case EMPTY_STRING: return putString(collection, item);
-        case EVALUATED_TABLE: return table_functions::put(collection, item);
+        case EVALUATED_TABLE: return putTable(collection, item);
         case NUMBER: return putNumber(collection, item);
         default: throw UnexpectedExpression(in.type, "put operation");
     }
@@ -108,7 +129,7 @@ Expression putTyped(Expression in) {
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return collection;
         case EMPTY_STRING: return putString(collection, item);
-        case EVALUATED_TABLE: return table_functions::putTyped(collection, item);
+        case EVALUATED_TABLE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
         default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
@@ -194,10 +215,6 @@ Expression dropTyped(Expression in) {
     }
 }
 
-}
-
-namespace table_functions {
-
 Expression get(Expression in) {
     const auto tuple = getEvaluatedTuple(in);
     const auto key = tuple.expressions.at(0);
@@ -207,27 +224,6 @@ Expression get(Expression in) {
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?
         tuple.expressions.at(2) : iterator->second.value;
-}
-
-Expression put(Expression table, Expression item) {
-    const auto tuple = getBinaryTuple(item);
-    const auto key = tuple.left;
-    const auto value = tuple.right;
-    auto& rows = getMutableEvaluatedTable(table).rows;
-    rows[serialize(key)] = {key, value};
-    return table;
-}
-
-Expression putTyped(Expression table, Expression item) {
-    if (item.type == ANY) {
-        return table;
-    }
-    const auto tuple = getBinaryTuple(item);
-    const auto key = tuple.left;
-    const auto value = tuple.right;
-    auto& rows = getMutableEvaluatedTable(table).rows;
-    rows[serialize_types(key)] = {key, value};
-    return table;
 }
 
 }

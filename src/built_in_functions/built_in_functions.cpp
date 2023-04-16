@@ -12,11 +12,11 @@ Expression define(std::function<Expression(Expression)> function) {
 
 Expression builtIns() {
     auto definitions = Definitions{};
-    definitions.add("clear", define(stack_functions::clear));
-    definitions.add("put", define(stack_functions::put));
-    definitions.add("take", define(stack_functions::take));
-    definitions.add("drop", define(stack_functions::drop));
-    definitions.add("get", define(table_functions::get));
+    definitions.add("clear", define(container_functions::clear));
+    definitions.add("put", define(container_functions::put));
+    definitions.add("take", define(container_functions::take));
+    definitions.add("drop", define(container_functions::drop));
+    definitions.add("get", define(container_functions::get));
 
     definitions.add("add", define(arithmetic::add));
     definitions.add("mul", define(arithmetic::mul));
@@ -40,11 +40,11 @@ Expression builtIns() {
 
 Expression builtInsTypes() {
     auto definitions = Definitions{};
-    definitions.add("clear", define(stack_functions::clearTyped));
-    definitions.add("put", define(stack_functions::putTyped));
-    definitions.add("take", define(stack_functions::takeTyped));
-    definitions.add("drop", define(stack_functions::dropTyped));
-    definitions.add("get", define(table_functions::get));
+    definitions.add("clear", define(container_functions::clearTyped));
+    definitions.add("put", define(container_functions::putTyped));
+    definitions.add("take", define(container_functions::takeTyped));
+    definitions.add("drop", define(container_functions::dropTyped));
+    definitions.add("get", define(container_functions::get));
 
     definitions.add("add", define(arithmetic::checkTypesNumberNumberToNumber));
     definitions.add("mul", define(arithmetic::checkTypesNumberNumberToNumber));

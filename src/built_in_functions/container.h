@@ -34,7 +34,7 @@ Expression reverseString(CodeRange code, Expression string);
 Expression reverseStack(CodeRange code, Expression stack);
 Expression reverseEvaluatedStack(CodeRange code, Expression stack);
 
-namespace stack_functions {
+namespace container_functions {
 
 Expression clear(Expression in);
 Expression clearTyped(Expression in);
@@ -44,13 +44,6 @@ Expression take(Expression in);
 Expression takeTyped(Expression in);
 Expression drop(Expression in);
 Expression dropTyped(Expression in);
-
-}
-
-namespace table_functions {
-
 Expression get(Expression in);
-Expression put(Expression rest, Expression top);
-Expression putTyped(Expression rest, Expression top);
 
 }

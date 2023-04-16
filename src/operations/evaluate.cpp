@@ -450,7 +450,7 @@ Expression evaluateDictionaryTypes(
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
-            const auto new_value = stack_functions::putTyped(tuple);
+            const auto new_value = container_functions::putTyped(tuple);
             result.definitions.add(name, new_value);
         }
         else if (type == DROP_ASSIGNMENT) {
@@ -458,7 +458,7 @@ Expression evaluateDictionaryTypes(
             const auto name = getName(drop_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = lookupDictionary(name, result_environment);
-            const auto new_value = stack_functions::dropTyped(current);
+            const auto new_value = container_functions::dropTyped(current);
             result.definitions.add(name, new_value);
         }
         else if (type == WHILE_STATEMENT) {
@@ -472,7 +472,7 @@ Expression evaluateDictionaryTypes(
             const auto container = lookupDictionary(name_container, result_environment);
             booleanTypes(container);
             const auto name_item = getName(for_statement.name_item);
-            const auto value = stack_functions::takeTyped(container);
+            const auto value = container_functions::takeTyped(container);
             result.definitions.add(name_item, value);
         }
     }
@@ -509,7 +509,7 @@ Expression evaluateDictionary(
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
-            const auto new_value = stack_functions::put(tuple);
+            const auto new_value = container_functions::put(tuple);
             result.definitions.add(name, new_value);
             i += 1;
         }
@@ -518,7 +518,7 @@ Expression evaluateDictionary(
             const auto name = getName(drop_assignment.name);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = lookupDictionary(name, result_environment);
-            const auto new_value = stack_functions::drop(current);
+            const auto new_value = container_functions::drop(current);
             result.definitions.add(name, new_value);
             i += 1;
         }
@@ -537,7 +537,7 @@ Expression evaluateDictionary(
             const auto container = lookupDictionary(name_container, result_environment);
             if (boolean(container)) {
                 const auto name_item = getName(for_statement.name_item);
-                const auto value = stack_functions::take(container);
+                const auto value = container_functions::take(container);
                 result.definitions.add(name_item, value);
                 i += 1;
             } else {
@@ -555,7 +555,7 @@ Expression evaluateDictionary(
             const auto name = getName(for_statement.name_container);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto old_container = lookupDictionary(name, result_environment);
-            const auto new_container = stack_functions::drop(old_container);
+            const auto new_container = container_functions::drop(old_container);
             result.definitions.add(name, new_container);
         }
     }
