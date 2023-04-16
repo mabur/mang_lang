@@ -11,7 +11,6 @@ add_library(shared
         operations/evaluate.cpp
         operations/parse.cpp
         operations/serialize.cpp
-        algorithm.cpp
         expression.cpp
         factory.cpp
         mang_lang.cpp

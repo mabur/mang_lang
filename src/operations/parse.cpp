@@ -4,7 +4,7 @@
 #include <limits>
 
 #include "../factory.h"
-#include "../algorithm.h"
+#include "../built_in_functions/container.h"
 
 namespace {
 
