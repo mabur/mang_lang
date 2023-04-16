@@ -1,7 +1,7 @@
 #include "stack.h"
 
 #include "../factory.h"
-#include "../container.h"
+#include "../algorithm.h"
 
 #include "table.h"
 

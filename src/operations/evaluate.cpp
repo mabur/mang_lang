@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include "../built_in_functions/stack.h"
-#include "../container.h"
+#include "../algorithm.h"
 #include "../factory.h"
 #include "serialize.h"
 
