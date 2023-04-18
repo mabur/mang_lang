@@ -210,6 +210,8 @@ SYSTEM IMPLEMENTATION
       - serialize_types
     - evaluate
       - serialize
+* Fewer heap allocations and more stack allocations.
+  - Usage of std::string in serialize.
 * Better error messages:
   - Always run type checking for better error messages.
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
