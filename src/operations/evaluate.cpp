@@ -151,7 +151,7 @@ Expression applyFunction(
     auto definitions = Definitions{};
     const auto argument = getArgument(function.input_name);
     checkArgument(evaluator, argument, input, function.environment);
-    definitions.add(argument.name, input);
+    definitions.add(getName(argument.name), input);
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
     );
@@ -168,7 +168,7 @@ Expression applyFunctionDictionary(
     const auto& definitions = evaluated_dictionary.definitions;
     for (const auto& name : function_dictionary.input_names) {
         const auto argument = getArgument(name);
-        const auto expression = definitions.lookup(argument.name);
+        const auto expression = definitions.lookup(getName(argument.name));
         checkArgument(evaluator, argument, expression, function_dictionary.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
@@ -192,7 +192,7 @@ Expression applyFunctionTuple(
         const auto argument = getArgument(input_names[i]);
         const auto expression = tuple.expressions[i];
         checkArgument(evaluator, argument, expression, function.environment);
-        definitions.add(argument.name, expression);
+        definitions.add(getName(argument.name), expression);
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
