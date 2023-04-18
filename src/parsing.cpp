@@ -114,7 +114,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c) {
     return {it, code.end()};
 }
 
-CodeRange parseKeyword(CodeRange code, std::string keyword) {
+CodeRange parseKeyword(CodeRange code, const std::string& keyword) {
     if (code.size() < keyword.size()) {
         throw ParseException(
             "Reached end of file when parsing " + keyword, code.begin()
