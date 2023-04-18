@@ -9,7 +9,7 @@
 namespace {
 
 std::string serializeName(Expression name) {
-    return getName(name);
+    return std::string(getName(name));
 }
 
 std::string serializeArgument(Expression argument) {
@@ -55,15 +55,15 @@ std::string serializeIs(const IsExpression& is_expression) {
 }
 
 std::string serializeDefinition(const Definition& element) {
-    return getName(element.name) + '=' + serialize(element.expression) + ' ';
+    return std::string(getName(element.name)) + '=' + serialize(element.expression) + ' ';
 }
 
 std::string serializePutAssignment(const PutAssignment& element) {
-    return getName(element.name) + "+=" + serialize(element.expression) + ' ';
+    return std::string(getName(element.name)) + "+=" + serialize(element.expression) + ' ';
 }
 
 std::string serializeDropAssignment(const DropAssignment& element) {
-    return getName(element.name) + "-- ";
+    return std::string(getName(element.name)) + "-- ";
 }
 
 std::string serializeWhileStatement(const WhileStatement& element) {
@@ -82,7 +82,7 @@ std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedD
     }
     auto result = std::string{"{"};
     for (const auto& pair : dictionary.definitions.sorted()) {
-        result += pair.first + "=" + serializer(pair.second) + " ";
+        result += std::string(pair.first) + "=" + serializer(pair.second) + " ";
     }
     result.back() = '}';
     return result;

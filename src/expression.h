@@ -120,11 +120,11 @@ struct Expression {
 using Number = double;
 using Boolean = bool;
 using Character = char;
-// TODO: Consider pointer for cheap copy.
 // Unlike the other atoms Names are just created during parsing.
 // After that the std::vector of Names is static, which makes it easier to pass
 // around references or pointers.
 using Name = std::string;
+using NamePointer = const char*;
 
 struct Argument {
     Expression type;
@@ -264,13 +264,13 @@ using Statements = std::vector<Expression>;
 // TODO: make cheaper to copy or pass by reference or pointer?
 class Definitions {
 private:
-    std::vector<std::pair<std::string, Expression>> definitions;
+    std::vector<std::pair<NamePointer, Expression>> definitions;
 public:
     bool empty() const;
-    void add(const std::string& key, Expression value);
-    bool has(const std::string& key) const;
-    Expression lookup(const std::string& key) const;
-    std::vector<std::pair<std::string, Expression>> sorted() const;
+    void add(NamePointer key, Expression value);
+    bool has(NamePointer key) const;
+    Expression lookup(NamePointer key) const;
+    std::vector<std::pair<NamePointer, Expression>> sorted() const;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?

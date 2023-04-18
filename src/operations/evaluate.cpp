@@ -1,6 +1,7 @@
 #include "evaluate.h"
 
 #include <cassert>
+#include <string.h>
 
 #include "../built_in_functions/container.h"
 #include "../factory.h"
@@ -54,7 +55,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         for (size_t i = 0; i < count; ++i) {
             const auto& name_left = definitions_left[i].first;
             const auto& name_right = definitions_right[i].first;
-            if (name_left != name_right) {
+            if (strcmp(name_left, name_right) != 0) {
                 throw std::runtime_error(
                     "Static type error in " + description +
                     ". Inconsistent dictionary names " +
@@ -224,9 +225,9 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(const Name& name, Expression expression) {
+Expression lookupDictionary(NamePointer name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(name, "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(std::string(name), "environment of type " + NAMES[expression.type]);
     }
     const auto dictionary = getEvaluatedDictionary(expression);
     if (!dictionary.definitions.has(name)) {

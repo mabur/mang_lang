@@ -1,4 +1,5 @@
 #include "expression.h"
+#include <string.h>
 
 StaticTypeError::StaticTypeError(
     ExpressionType type, const std::string& location)
@@ -24,9 +25,9 @@ bool Definitions::empty() const {
     return definitions.empty();
 }
 
-void Definitions::add(const std::string& key, Expression value) {
+void Definitions::add(NamePointer key, Expression value) {
     for (auto& definition: definitions) {
-        if (definition.first == key) {
+        if (strcmp(definition.first, key) == 0) {
             definition.second = value;
             return;
         }
@@ -34,9 +35,9 @@ void Definitions::add(const std::string& key, Expression value) {
     definitions.push_back({key, value});
 }
 
-bool Definitions::has(const std::string& key) const {
+bool Definitions::has(NamePointer key) const {
     for (const auto& definition: definitions) {
-        if (definition.first == key) {
+        if (strcmp(definition.first, key) == 0) {
             return true;
         }
     }
@@ -44,15 +45,15 @@ bool Definitions::has(const std::string& key) const {
 }
 
 
-Expression Definitions::lookup(const std::string& key) const {
+Expression Definitions::lookup(NamePointer key) const {
     for (const auto& definition: definitions) {
-        if (definition.first == key) {
+        if (strcmp(definition.first, key) == 0) {
             return definition.second;
         }
     }
     throw MissingSymbol(key, "dictionary");
 }
 
-std::vector<std::pair<std::string, Expression>> Definitions::sorted() const {
+std::vector<std::pair<NamePointer, Expression>> Definitions::sorted() const {
     return definitions;
 }
