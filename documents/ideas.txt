@@ -129,6 +129,7 @@ LANGUAGE SYNTAX & SEMANTICS
     - Define generic programming axioms for containers using predecessor!
 * Indexing
   - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
+  - Could also have index@container and x@y@image.
   - What about tables? When to return key-value-tuple and when to just return value?
     - get0,..., can already be used for tables. Mirror that behaviour.
     - table!index (make constant or logN?)
@@ -218,8 +219,6 @@ SYSTEM IMPLEMENTATION
   - std::vector in Dictionary and EvaluatedDictionary.
   - std::vector in Table.
   - std::map in EvaluatedTable and EvaluatedTableView.
-* Better error messages:
-  - Always run type checking for better error messages.
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
@@ -258,6 +257,7 @@ SYSTEM IMPLEMENTATION
   - c++ add systematic error messages when parsing fails
     - Print all sub-expressions that it parsed
   - Better error messages
+  - Article: "Concepts error messages for humans"
   - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
 * Rename to Mangelang?
