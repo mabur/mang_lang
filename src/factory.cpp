@@ -32,6 +32,7 @@ std::vector<Argument> arguments;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
 std::vector<ForStatement> for_statements;
+std::vector<ForSimpleStatement> for_simple_statements;
 std::vector<WhileEndStatement> while_end_statements;
 std::vector<ForEndStatement> for_end_statements;
 std::vector<Definition> definitions;
@@ -278,6 +279,10 @@ Expression makeForStatement(CodeRange code, ForStatement expression) {
     return makeExpression(code, expression, FOR_STATEMENT, for_statements);
 }
 
+Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression) {
+    return makeExpression(code, expression, FOR_SIMPLE_STATEMENT, for_simple_statements);
+}
+
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression) {
     return makeExpression(code, expression, WHILE_END_STATEMENT, while_end_statements);
 }
@@ -332,8 +337,16 @@ ForStatement getForStatement(Expression expression) {
     return getExpression(expression, FOR_STATEMENT, for_statements);
 }
 
+ForSimpleStatement getForSimpleStatement(Expression expression) {
+    return getExpression(expression, FOR_SIMPLE_STATEMENT, for_simple_statements);
+}
+
 ForStatement& getMutableForStatement(Expression expression) {
     return getMutableExpressionReference(expression, FOR_STATEMENT, for_statements);
+}
+
+ForSimpleStatement& getMutableForSimpleStatement(Expression expression) {
+    return getMutableExpressionReference(expression, FOR_SIMPLE_STATEMENT, for_simple_statements);
 }
 
 WhileEndStatement getWhileEndStatement(Expression expression) {

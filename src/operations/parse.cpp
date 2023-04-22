@@ -175,16 +175,23 @@ Expression parseForStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
-    auto name_item = parseName(code);
-    code.first = end(name_item);
+    auto first_name = parseName(code);
+    code.first = end(first_name);
     code = parseWhiteSpace(code);
-    code = parseKeyword(code, "in");
-    code = parseWhiteSpace(code);
-    auto name_container = parseName(code);
-    code.first = end(name_container);
-    return makeForStatement(CodeRange{first, code.first},
-        ForStatement{name_item, name_container, 0}
-    );
+    if (isKeyword(code, "in")) {
+        code = parseKeyword(code, "in");
+        code = parseWhiteSpace(code);
+        auto second_name = parseName(code);
+        code.first = end(second_name);
+        return makeForStatement(CodeRange{first, code.first},
+            ForStatement{first_name, second_name, 0}
+        );
+    }
+    else {
+        return makeForSimpleStatement(CodeRange{first, code.first},
+            ForSimpleStatement{first_name, 0}
+        );
+    }
 }
 
 Expression parseWhileEndStatement(CodeRange code, size_t while_index) {
@@ -250,8 +257,14 @@ Expression parseDictionary(CodeRange code) {
                 const auto for_index = for_indices.back();
                 for_indices.pop_back();
                 const auto for_statement_pointer = statements.at(for_index);
-                auto& for_statement = getMutableForStatement(for_statement_pointer);
-                for_statement.end_index_ = end_index;
+                if (for_statement_pointer.type == FOR_STATEMENT) {
+                    auto& for_statement = getMutableForStatement(for_statement_pointer);
+                    for_statement.end_index_ = end_index;
+                }
+                else if (for_statement_pointer.type == FOR_SIMPLE_STATEMENT) {
+                    auto& for_statement = getMutableForSimpleStatement(for_statement_pointer);
+                    for_statement.end_index_ = end_index;
+                }
                 statements.push_back(parseForEndStatement(code, for_index));
             }
         }

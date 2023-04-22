@@ -37,6 +37,7 @@ enum ExpressionType {
     DROP_ASSIGNMENT,
     WHILE_STATEMENT,
     FOR_STATEMENT,
+    FOR_SIMPLE_STATEMENT,
     WHILE_END_STATEMENT,
     FOR_END_STATEMENT,
     NUMBER,
@@ -76,6 +77,7 @@ const auto NAMES = std::vector<std::string>{
     "DROP_ASSIGNMENT",
     "WHILE_STATEMENT",
     "FOR_STATEMENT",
+    "FOR_SIMPLE_STATEMENT,",
     "WHILE_END_STATEMENT",
     "FOR_END_STATEMENT",
     "NUMBER",
@@ -247,6 +249,11 @@ struct WhileStatement {
 
 struct ForStatement {
     Expression name_item;
+    Expression name_container;
+    size_t end_index_;
+};
+
+struct ForSimpleStatement {
     Expression name_container;
     size_t end_index_;
 };

@@ -285,6 +285,7 @@ int main() {
     });
     test.reformat("dictionary for", {
         {"{for i in c end}", "{for i in c end}"},
+        {"{for c end}", "{for c end}"},
     });
     test.evaluate_types("dictionary iteration", {
         {"{while 1 end}", "{}"},
@@ -299,7 +300,9 @@ int main() {
         {"{i=2 c=[] while i c+=i i=dec!i end}", "{i=0 c=[1 2]}"},
     });
     test.evaluate_all("dictionary for", {
+        {"{c=3 s=0 for c s+=c end}", "{c=0 s=6}"},
         {"{c=3 s=0 for i in c s+=c end}", "{c=0 s=6 i=1}"},
+        {"{c=yes s=0 for c s+=1 end}", "{c=no s=1}"},
         {"{c=yes s=0 for i in c s+=1 end}", "{c=no s=1 i=yes}"},
         {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0}"},
         {"{c=[] for i in c end}", "{c=[]}"},
@@ -311,6 +314,7 @@ int main() {
         {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"},
     });
     test.evaluate_types("dictionary for", {
+        {"{c=[] for c end}", "{c=EMPTY_STACK}"},
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
         {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
         {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<(ANY ANY)> i=(ANY ANY)}"}, // TODO 

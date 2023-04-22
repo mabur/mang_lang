@@ -476,6 +476,12 @@ Expression evaluateDictionaryTypes(
             const auto value = container_functions::takeTyped(container);
             result.definitions.add(name_item, value);
         }
+        else if (type == FOR_SIMPLE_STATEMENT) {
+            const auto for_statement = getForSimpleStatement(statement);
+            const auto name_container = getName(for_statement.name_container);
+            const auto container = lookupDictionary(name_container, result_environment);
+            booleanTypes(container);
+        }
     }
     return result_environment;
 }
@@ -545,6 +551,16 @@ Expression evaluateDictionary(
                 i = for_statement.end_index_ + 1;
             }
         }
+        else if (type == FOR_SIMPLE_STATEMENT) {
+            const auto for_statement = getForSimpleStatement(statement);
+            const auto name_container = getName(for_statement.name_container);
+            const auto container = lookupDictionary(name_container, result_environment);
+            if (boolean(container)) {
+                i += 1;
+            } else {
+                i = for_statement.end_index_ + 1;
+            }
+        }
         else if (type == WHILE_END_STATEMENT) {
             const auto end_statement = getWhileEndStatement(statement);
             i = end_statement.while_index_;
@@ -552,12 +568,22 @@ Expression evaluateDictionary(
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = getForEndStatement(statement);
             i = end_statement.for_index_;
-            const auto for_statement = getForStatement(statements.at(i));
-            const auto name = getName(for_statement.name_container);
-            auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto old_container = lookupDictionary(name, result_environment);
-            const auto new_container = container_functions::drop(old_container);
-            result.definitions.add(name, new_container);
+            if (statements.at(i).type == FOR_STATEMENT) {
+                const auto for_statement = getForStatement(statements.at(i));
+                const auto name = getName(for_statement.name_container);
+                auto& result = getMutableEvaluatedDictionary(result_environment);
+                const auto old_container = lookupDictionary(name, result_environment);
+                const auto new_container = container_functions::drop(old_container);
+                result.definitions.add(name, new_container);   
+            }
+            else if (statements.at(i).type == FOR_SIMPLE_STATEMENT) {
+                const auto for_statement = getForSimpleStatement(statements.at(i));
+                const auto name = getName(for_statement.name_container);
+                auto& result = getMutableEvaluatedDictionary(result_environment);
+                const auto old_container = lookupDictionary(name, result_environment);
+                const auto new_container = container_functions::drop(old_container);
+                result.definitions.add(name, new_container);
+            }
         }
     }
     return result_environment;

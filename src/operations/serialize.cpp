@@ -75,6 +75,10 @@ std::string serializeForStatement(const ForStatement& element) {
         serialize(element.name_container) + " ";
 }
 
+std::string serializeForSimpleStatement(const ForSimpleStatement& element) {
+    return "for " + serialize(element.name_container) + " ";
+}
+
 template<typename Serializer>
 std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedDictionary& dictionary) {
     if (dictionary.definitions.empty()) {
@@ -295,6 +299,7 @@ std::string serialize(Expression expression) {
         case DROP_ASSIGNMENT: return serializeDropAssignment(getDropAssignment(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
         case FOR_STATEMENT: return serializeForStatement(getForStatement(expression));
+        case FOR_SIMPLE_STATEMENT: return serializeForSimpleStatement(getForSimpleStatement(expression));
         case WHILE_END_STATEMENT: return "end ";
         case FOR_END_STATEMENT: return "end ";
         case FUNCTION: return serializeFunction(getFunction(expression));
