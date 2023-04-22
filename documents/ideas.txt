@@ -1,4 +1,6 @@
 TYPE SYSTEM
+* Dictionary types:
+  - aoc_22_07
 * Maybe types should not be re-evaluated for every function call?
   - Could store evaluted types if we have EvaluatedFunction structs.
     - So EvaluatedFunction sets both environment and types of arguments.
