@@ -31,7 +31,7 @@ risk_levels@{
                 parse_height!row_below!1
             ]
             is_low_point = less?(point min_item!neighbours)
-            for _ in is_low_point
+            for is_low_point
                 num_low_points = inc!num_low_points
                 risk_levels = sum![risk_levels point 1]
             end
