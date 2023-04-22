@@ -152,7 +152,7 @@ LANGUAGE SYNTAX & SEMANTICS
       end
   - Add syntactic sugar
     - for _ in container
-    - for container
+    - for container (bra!)
     - foreach container
     - repeat container
     - loop container
@@ -243,10 +243,8 @@ SYSTEM IMPLEMENTATION
   - Let them have the semantics:
     evaluate preserve expression -> expression
   - "Evaluate" function as general solution that can be used to convert strings to names and general code, e.g. for parsing json.
-* Advent of code Needs
-  * Look at advent of code 2021 day 10 for example of code with a bit of friction
-    - Try to implement calculation of most common words in a text.
-  * Memory
+* Advent of Code needs
+  - Memory
     - 64 bit
     - Use less memory
 * Memory management.
@@ -280,7 +278,6 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 
 
 TOOLS:
-* Type checking from command line.
 * Command line interface for reading source from file and piping it to interpretor
 * Code formatting
   - Indentaiton and line breaks.
