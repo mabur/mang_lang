@@ -147,7 +147,7 @@ LANGUAGE SYNTAX & SEMANTICS
       x = optional[]
       x += 5
       flag = no
-      for _ in x
+      for x
         flag = yes
       end
     put, clear, take, drop, +=, --
