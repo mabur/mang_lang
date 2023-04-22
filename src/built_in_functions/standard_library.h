@@ -228,7 +228,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     take_many = in (Number:n container) out container:reverse!stack_out@{
         stack_out = clear!container
-        for _ in n
+        for n
             stack_out += take!container
             container--
         end
@@ -247,7 +247,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     drop_many = in (Number:n container) out container:container@{
         container = container
-        for _ in n
+        for n
             container--
         end
     }
@@ -298,7 +298,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     range = in Number:n out Numbers:numbers@{
         numbers = []
-        for _ in n
+        for n
             numbers += dec!n
         end
     }
