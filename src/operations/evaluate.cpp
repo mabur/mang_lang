@@ -486,6 +486,14 @@ Expression evaluateDictionaryTypes(
     return result_environment;
 }
 
+NamePointer getContainerName(Expression expression) {
+    switch (expression.type) {
+        case FOR_STATEMENT: return getName(getForStatement(expression).name_container);
+        case FOR_SIMPLE_STATEMENT: return getName(getForSimpleStatement(expression).name_container);
+        default: throw UnexpectedExpression(expression.type, "getContainerName");
+    }
+}
+
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -568,22 +576,11 @@ Expression evaluateDictionary(
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = getForEndStatement(statement);
             i = end_statement.for_index_;
-            if (statements.at(i).type == FOR_STATEMENT) {
-                const auto for_statement = getForStatement(statements.at(i));
-                const auto name = getName(for_statement.name_container);
-                auto& result = getMutableEvaluatedDictionary(result_environment);
-                const auto old_container = lookupDictionary(name, result_environment);
-                const auto new_container = container_functions::drop(old_container);
-                result.definitions.add(name, new_container);   
-            }
-            else if (statements.at(i).type == FOR_SIMPLE_STATEMENT) {
-                const auto for_statement = getForSimpleStatement(statements.at(i));
-                const auto name = getName(for_statement.name_container);
-                auto& result = getMutableEvaluatedDictionary(result_environment);
-                const auto old_container = lookupDictionary(name, result_environment);
-                const auto new_container = container_functions::drop(old_container);
-                result.definitions.add(name, new_container);
-            }
+            const auto name = getContainerName(statements.at(i));
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto old_container = lookupDictionary(name, result_environment);
+            const auto new_container = container_functions::drop(old_container);
+            result.definitions.add(name, new_container);
         }
     }
     return result_environment;
