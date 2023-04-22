@@ -64,7 +64,7 @@ $ ls
         path = path_and_size!0
         size = path_and_size!1
         path = drop!path
-        for _ in path
+        for path
             directory_size = get!(path directory_sizes 0)
             directory_size = add!(directory_size size)
             directory_sizes = put!((path directory_size) directory_sizes)
