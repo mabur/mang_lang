@@ -141,6 +141,7 @@ LANGUAGE SYNTAX & SEMANTICS
     - table!index (make constant or logN?)
     - get!(key table default_value) (logN)
 * Control structures for dictionaries.
+  - Early return/exit/finish.
   - Support index in for loop:
     for index, item in container
     container2 = enumerate!container for pair in container2
