@@ -47,21 +47,21 @@ Expression builtInsTypes() {
     definitions.add("drop", define(container_functions::dropTyped));
     definitions.add("get", define(container_functions::get));
 
-    definitions.add("add", define(arithmetic::checkTypesNumberNumberToNumber));
-    definitions.add("mul", define(arithmetic::checkTypesNumberNumberToNumber));
-    definitions.add("sub", define(arithmetic::checkTypesNumberNumberToNumber));
-    definitions.add("div", define(arithmetic::checkTypesNumberNumberToNumber));
-    definitions.add("mod", define(arithmetic::checkTypesNumberNumberToNumber));
+    definitions.add("add", define(arithmetic::FunctionNumberNumberToNumber{"add"}));
+    definitions.add("mul", define(arithmetic::FunctionNumberNumberToNumber{"mul"}));
+    definitions.add("sub", define(arithmetic::FunctionNumberNumberToNumber{"sub"}));
+    definitions.add("div", define(arithmetic::FunctionNumberNumberToNumber{"div"}));
+    definitions.add("mod", define(arithmetic::FunctionNumberNumberToNumber{"mod"}));
 
-    definitions.add("less", define(arithmetic::checkTypesNumberNumberToBoolean));
+    definitions.add("less", define(arithmetic::FunctionNumberNumberToBoolean{"less"}));
 
-    definitions.add("round", define(arithmetic::checkTypesNumberToNumber));
-    definitions.add("round_up", define(arithmetic::checkTypesNumberToNumber));
-    definitions.add("round_down", define(arithmetic::checkTypesNumberToNumber));
-    definitions.add("sqrt", define(arithmetic::checkTypesNumberToNumber));
+    definitions.add("round", define(arithmetic::FunctionNumberToNumber{"round"}));
+    definitions.add("round_up", define(arithmetic::FunctionNumberToNumber{"round_up"}));
+    definitions.add("round_down", define(arithmetic::FunctionNumberToNumber{"round_down"}));
+    definitions.add("sqrt", define(arithmetic::FunctionNumberToNumber{"sqrt"}));
 
-    definitions.add("number", define(arithmetic::checkTypesCharacterToNumber));
-    definitions.add("character", define(arithmetic::checkTypesNumberToCharacter));
+    definitions.add("number", define(arithmetic::FunctionCharacterToNumber{"number"}));
+    definitions.add("character", define(arithmetic::FunctionNumberToCharacter{"character"}));
 
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}

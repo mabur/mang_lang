@@ -75,51 +75,91 @@ Expression ascii_character(Expression in) {
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
 }
 
-Expression checkTypesNumberToNumber(Expression in) {
+Expression FunctionNumberToNumber::operator()(Expression in) const {
     if (in.type != ANY && in.type != NUMBER) {
-        throw StaticTypeError(in.type, "checkTypesNumberToNumber");
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a " + NAMES[NUMBER] + "," +
+                "\nbut now got " + NAMES[in.type] +
+                ".\n"
+        );
     }
     return makeNumber(1);
 }
-
-Expression checkTypesNumberToCharacter(Expression in) {
+Expression FunctionNumberToCharacter::operator()(Expression in) const {
     if (in.type != ANY && in.type != NUMBER) {
-        throw StaticTypeError(in.type, "checkTypesNumberToCharacter");
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a " + NAMES[NUMBER] + "," +
+                "\nbut now got " + NAMES[in.type] +
+                ".\n"
+        );
     }
     return makeCharacter(CodeRange{}, 'a');
 }
-
-Expression checkTypesCharacterToNumber(Expression in) {
+Expression FunctionCharacterToNumber::operator()(Expression in) const {
     if (in.type != ANY && in.type != CHARACTER) {
-        throw StaticTypeError(in.type, "checkTypesCharacterToNumber");
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a " + NAMES[CHARACTER] + "," +
+                "\nbut now got " + NAMES[in.type] +
+                ".\n"
+        );
     }
     return makeNumber(1);
 }
 
-Expression checkTypesNumberNumberToNumber(Expression in) {
+Expression FunctionNumberNumberToBoolean::operator()(Expression in) const {
     const auto tuple = getBinaryTuple(in);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     if (left != ANY && left != NUMBER) {
-        throw StaticTypeError(left, "left checkTypesNumberNumberToNumber");
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a tuple of two " + NAMES[NUMBER] + "s," +
+                "\nbut now the first item in the tuple is " + NAMES[left] +
+                ".\n"
+        );
     }
     if (right != ANY && right != NUMBER) {
-        throw StaticTypeError(right, "right checkTypesNumberNumberToNumber");
-    }
-    return makeNumber(1);
-}
-
-Expression checkTypesNumberNumberToBoolean(Expression in) {
-    const auto tuple = getBinaryTuple(in);
-    const auto left = tuple.left.type;
-    const auto right = tuple.right.type;
-    if (left != ANY && left != NUMBER) {
-        throw StaticTypeError(left, "left checkTypesNumberNumberToBoolean");
-    }
-    if (right != ANY && right != NUMBER) {
-        throw StaticTypeError(right, "right checkTypesNumberNumberToBoolean");
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a tuple of two " + NAMES[NUMBER] + "s," +
+                "\nbut now the second item in the tuple is " + NAMES[right] +
+                ".\n"
+        );
     }
     return makeBoolean(true);
+}
+
+Expression FunctionNumberNumberToNumber::operator()(Expression in) const {
+    const auto tuple = getBinaryTuple(in);
+    const auto left = tuple.left.type;
+    const auto right = tuple.right.type;
+    if (left != ANY && left != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a tuple of two " + NAMES[NUMBER] + "s," +
+                "\nbut now the first item in the tuple is " + NAMES[left] +
+                ".\n"
+        );
+    }
+    if (right != ANY && right != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens when calling the built-in function " + name + ". " +
+                "\nThe function expects to be called with a tuple of two " + NAMES[NUMBER] + "s," +
+                "\nbut now the second item in the tuple is " + NAMES[right] +
+                ".\n"
+        );
+    }
+    return makeNumber(1);
 }
 
 }

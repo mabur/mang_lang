@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 struct Expression;
 
 namespace arithmetic {
@@ -18,10 +20,29 @@ Expression round_down(Expression in);
 Expression ascii_number(Expression in);
 Expression ascii_character(Expression in);
 
-Expression checkTypesNumberToNumber(Expression in);
-Expression checkTypesNumberToCharacter(Expression in);
-Expression checkTypesCharacterToNumber(Expression in);
-Expression checkTypesNumberNumberToNumber(Expression in);
-Expression checkTypesNumberNumberToBoolean(Expression in);
+struct FunctionNumberToNumber {
+    std::string name;
+    Expression operator()(Expression in) const;
+};
+
+struct FunctionNumberToCharacter {
+    std::string name;
+    Expression operator()(Expression in) const;
+};
+
+struct FunctionCharacterToNumber {
+    std::string name;
+    Expression operator()(Expression in) const;
+};
+
+struct FunctionNumberNumberToNumber {
+    std::string name;
+    Expression operator()(Expression in) const;    
+};
+
+struct FunctionNumberNumberToBoolean {
+    std::string name;
+    Expression operator()(Expression in) const;
+};
 
 }
