@@ -74,7 +74,6 @@ shadeAtmosphere = in (intersection atmosphere_color) out
 shade = in (intersection world) out is distance@intersection
     inf then [1 1 1]
     else color@{
-        color = [1 1 1]
         color = shadeAtmosphere!(intersection atmosphere_color@world)
         lights = lights@world
         for light in lights
