@@ -2,9 +2,9 @@ result@{
 muls = in (scalar vector) out map!(in x out mul!(scalar x) vector)
 
 makeIntersection = {
+    distance = inf
 	position = []
     normal = []
-    distance = inf
     color = []
 }
 
@@ -28,6 +28,12 @@ make_world = world@{
 	}
 }
 
+normalize = in Numbers:vector out Numbers:result@{
+    n = norm!vector
+    f = in x out div!(x n)
+    result = map!(f vector)
+}
+
 findSingleIntersection = in (start direction sphere) out intersection@{
 	intersection = makeIntersection
 	offset = subv!(position@sphere start)
@@ -43,7 +49,7 @@ findSingleIntersection = in (start direction sphere) out intersection@{
                 else {
                     distance = sub!(c sqrt!discriminant)
                     position = addv!(start muls!(distance direction))
-                    normal = normalize!(subv!(position position@sphere))
+                    normal = normalize!subv!(position position@sphere)
                     color = color@sphere
                 }
         }
@@ -63,12 +69,12 @@ shadeSingleLight = in (intersection light) out result@{
 }
 
 shadeAtmosphere = in (intersection atmosphere_color) out 
-	muls!(sqrt!(z@position@intersection) atmosphere_color)
+	muls!(sqrt!get2!position@intersection atmosphere_color)
 
-shade = in (intersection world) out
-	if IsInf?distance@intersection then
-		[1 1 1]
-	else color@{
+shade = in (intersection world) out is distance@intersection
+    inf then [1 1 1]
+    else color@{
+        color = [1 1 1]
         color = shadeAtmosphere!(intersection atmosphere_color@world)
         lights = lights@world
         for light in lights
@@ -76,21 +82,47 @@ shade = in (intersection world) out
         end
     }
 
-colorU8fromF64 = in c out round!(min!(mul!(255 c) 255))
+colorU8fromF64 = in c out round!min!(mul!(255 c) 255)
 
 writePixel = in (x y width height world) out result@{
-	start = [0 0 0]
-	xd = sub!(x div!(width 2))
-	yd = sub!(y div!(height 2))
-	zd = div!(height 2)
-	direction = normalize!([xd yd zd])
-	intersection = findIntersection!(start direction spheres@world)
-	color = shade!(intersection world)
-	r = colorU8fromF64!(x@color)
-	g = colorU8fromF64!(y@color)
-	b = colorU8fromF64!(z@color)
-	result = "r g b "
+    result = ""
+    start = [0 0 0]
+    xd = sub!(x div!(width 2))
+    yd = sub!(y div!(height 2))
+    zd = div!(height 2)
+    direction = normalize![xd yd zd]
+
+    intersection = findIntersection!(start direction spheres@world)
+    color = shade!(intersection world)
+    r = serialize_natural_number!colorU8fromF64!color!0
+    g = serialize_natural_number!colorU8fromF64!color!1
+    b = serialize_natural_number!colorU8fromF64!color!2
+    result = merge_strings![r " " g " " b " "]
 }
 
-result = make_world
+writeImage = in world out image@{
+	WIDTH = 8
+	HEIGHT = 6
+	image = ""
+	image = put_each!("P3" image)
+	image += ' '
+	image = put_each!(serialize_natural_number!WIDTH image)
+	image += ' '
+	image = put_each!(serialize_natural_number!HEIGHT image)
+	image += ' '
+	image = put_each!("255" image)
+    image += ' '
+    ys = range!HEIGHT
+    xs = range!WIDTH
+    for y in ys
+        for x in xs
+            pixel = ""
+            pixel = writePixel!(x y WIDTH HEIGHT world)
+            image = put_each!(pixel image)
+        end
+    end
+}
+
+world = make_world
+result = writeImage!world
 }
