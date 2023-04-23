@@ -40,6 +40,7 @@ const std::string STANDARD_LIBRARY = R"(
     is_letter = in Character:c out Boolean:any?[is_upper?c is_lower?c]
 
     parse_digit = in Character:c out Number:sub!(number!c number!'0')
+    serialize_digit = in Number:x out Character:character!add!(x number!'0')
 
     parse_natural_number = in String:string out Number:number@{
         string = reverse!string

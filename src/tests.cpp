@@ -1204,6 +1204,18 @@ int main() {
         {"parse_digit!'8'", "8"},
         {"parse_digit!'9'", "9"},
     });
+    test.evaluate_all("serialize_digit", {
+        {"serialize_digit!0", "'0'"},
+        {"serialize_digit!1", "'1'"},
+        {"serialize_digit!2", "'2'"},
+        {"serialize_digit!3", "'3'"},
+        {"serialize_digit!4", "'4'"},
+        {"serialize_digit!5", "'5'"},
+        {"serialize_digit!6", "'6'"},
+        {"serialize_digit!7", "'7'"},
+        {"serialize_digit!8", "'8'"},
+        {"serialize_digit!9", "'9'"},
+    });
     test.evaluate_all("parse_natural_number", {
         {R"(parse_natural_number!"0")", "0"},
         {R"(parse_natural_number!"1")", "1"},
