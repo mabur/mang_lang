@@ -3,6 +3,7 @@ TYPE SYSTEM
   - aoc_22_07
   - Should type checking for dictionaries be symmetric?
     Interfaces are typically not symmetric, i.e. the implementation has more details.
+  - Should type checking for dictionaries not require exactly the same order?
 * Run-time polymorphism/dispatch:
   - How to solve aoc_22_13
     if type checking would enforce homogeneous stacks?
