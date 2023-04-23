@@ -8,6 +8,7 @@ Expression add(Expression in);
 Expression mul(Expression in);
 Expression sub(Expression in);
 Expression div(Expression in);
+Expression mod(Expression in);
 Expression less(Expression in);
 
 Expression sqrt(Expression in);

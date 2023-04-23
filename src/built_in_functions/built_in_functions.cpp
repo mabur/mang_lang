@@ -22,6 +22,7 @@ Expression builtIns() {
     definitions.add("mul", define(arithmetic::mul));
     definitions.add("sub", define(arithmetic::sub));
     definitions.add("div", define(arithmetic::div));
+    definitions.add("mod", define(arithmetic::mod));
 
     definitions.add("less", define(arithmetic::less));
 
@@ -50,6 +51,7 @@ Expression builtInsTypes() {
     definitions.add("mul", define(arithmetic::checkTypesNumberNumberToNumber));
     definitions.add("sub", define(arithmetic::checkTypesNumberNumberToNumber));
     definitions.add("div", define(arithmetic::checkTypesNumberNumberToNumber));
+    definitions.add("mod", define(arithmetic::checkTypesNumberNumberToNumber));
 
     definitions.add("less", define(arithmetic::checkTypesNumberNumberToBoolean));
 

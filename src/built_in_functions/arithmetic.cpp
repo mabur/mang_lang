@@ -40,6 +40,12 @@ Expression div(Expression in) {
     return binaryOperation(in, std::divides<>());
 }
 
+Expression mod(Expression in) {
+    return binaryOperation(
+        in, [](double a, double b){return std::fmod(a, b);}
+    );
+}
+
 Expression less(Expression in) {
     const auto tuple = getBinaryTuple(in);
     return makeBoolean(getNumber(tuple.left) < getNumber(tuple.right));
