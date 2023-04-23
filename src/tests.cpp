@@ -1226,6 +1226,16 @@ int main() {
         {R"(parse_natural_number!"20")", "20"},
         {R"(parse_natural_number!"123")", "123"},
     });
+    test.evaluate_all("serialize_natural_number", {
+        {"serialize_natural_number!0", R"("0")"},
+        {"serialize_natural_number!1", R"("1")"},
+        {"serialize_natural_number!2", R"("2")"},
+        {"serialize_natural_number!10", R"("10")"},
+        {"serialize_natural_number!11", R"("11")"},
+        {"serialize_natural_number!12", R"("12")"},
+        {"serialize_natural_number!20", R"("20")"},
+        {"serialize_natural_number!123", R"("123")"},
+    });
     test.evaluate_types("min_item stack", {
         {"min_item![]", "NUMBER"},
         {"min_item![0]", "NUMBER"},

@@ -53,6 +53,17 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
+    serialize_natural_number = in Number:number out String:string@{
+        number = number        
+        string = ""
+        string += serialize_digit!mod!(number 10)
+        number = round_down!div!(number 10)
+        while less?(0 number) 
+            string += serialize_digit!mod!(number 10)
+            number = round_down!div!(number 10)
+        end
+    }
+
     to_upper = in Character:c out Character:
         if is_lower?c then
             character!sub!(number!c 32)
