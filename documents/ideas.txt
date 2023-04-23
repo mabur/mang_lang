@@ -128,9 +128,10 @@ LANGUAGE SYNTAX & SEMANTICS
   - What do we refer to as first and last of a stack?
   - Should "take" give first or last?
   - Should we index from front or back?
-  - Compare Peono axioms with generic programming and iterators.
+  - Compare Peano axioms with generic programming and iterators.
     - Natural to have predecessor instead of successor for containers, since we can drop items without knowing what item we drop, but we cannot add an item without knowing what item we add.
     - Define generic programming axioms for containers using predecessor!
+    - https://en.wikipedia.org/wiki/List_(abstract_data_type)
 * Indexing
   - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
   - Could also have index@container and x@y@image.
