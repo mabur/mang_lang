@@ -78,7 +78,7 @@ shade = in (intersection world) out is distance@intersection
         color = shadeAtmosphere!(intersection atmosphere_color@world)
         lights = lights@world
         for light in lights
-            color = add!(color shadeSingleLight!(intersection light))
+            color = addv!(color shadeSingleLight!(intersection light))
         end
     }
 
@@ -97,7 +97,7 @@ writePixel = in (x y width height world) out result@{
     r = serialize_natural_number!colorU8fromF64!color!0
     g = serialize_natural_number!colorU8fromF64!color!1
     b = serialize_natural_number!colorU8fromF64!color!2
-    result = merge_strings![r " " g " " b " "]
+    result = merge_string![r " " g " " b " "]
 }
 
 writeImage = in world out image@{
@@ -121,6 +121,7 @@ writeImage = in world out image@{
             image = put_each!(pixel image)
         end
     end
+    image = reverse!image
 }
 
 world = make_world
