@@ -100,20 +100,20 @@ writePixel = in (x y width height world) out result@{
 }
 
 writeImage = in world out image@{
-	WIDTH = 8
-	HEIGHT = 6
+	WIDTH = 4
+	HEIGHT = 4
 	image = ""
 	image = put_each!("P3" image)
-	image += ' '
+	image += newline
 	image = put_each!(serialize_natural_number!WIDTH image)
-	image += ' '
+	image += newline
 	image = put_each!(serialize_natural_number!HEIGHT image)
-	image += ' '
+	image += newline
 	image = put_each!("255" image)
-    image += ' '
+    image += newline
     ys = range!HEIGHT
-    xs = range!WIDTH
     for y in ys
+        xs = range!WIDTH
         for x in xs
             pixel = ""
             pixel = writePixel!(x y WIDTH HEIGHT world)
