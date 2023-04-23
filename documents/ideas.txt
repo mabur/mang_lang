@@ -1,6 +1,18 @@
 TYPE SYSTEM
 * Dictionary types:
   - aoc_22_07
+  - Should type checking for dictionaries be symmetric?
+    Interfaces are typically not symmetric, i.e. the implementation has more details.
+* Run-time polymorphism/dispatch:
+  - How to solve aoc_22_13
+    if type checking would enforce homogeneous stacks?
+  - Add version of "is" that checks that the type is equal
+    instead of the value. "is_type_of" (bra)
+  - Isinstance
+  - Inheritance/polymorphism
+  - Run-time-dispatch
+  - Sum-type/choice-type
+  - dynamic keyword
 * Maybe types should not be re-evaluated for every function call?
   - Could store evaluted types if we have EvaluatedFunction structs.
     - So EvaluatedFunction sets both environment and types of arguments.
@@ -54,16 +66,6 @@ TYPE SYSTEM
       - Could also define the functions to take only Booleans, and not use them for Containers of Containers.
     - Concepts like Functions, which is a sum type of function, function_tuple, function_dictionary, function_built_in.
       - Easy as long as we don't care about sub-concepts.
-* Run-time polymorphism/dispatch:
-  - How to solve aoc_22_13
-    if type checking would enforce homogeneous stacks?
-  - Add version of "is" that checks that the type is equal
-    instead of the value. "is_type_of" (bra)
-  - Isinstance
-  - Inheritance/polymorphism
-  - Run-time-dispatch
-  - Sum-type/choice-type
-  - dynamic keyword
 * Rename serialized types from NUMBER to Number.
 
 STANDARD LIBRARY
@@ -202,13 +204,15 @@ SYSTEM IMPLEMENTATION
     - evaluate
       - serialize
 * Fewer heap allocations and more stack allocations.
-  - std::string in serialize.
-  - std::vector for alternatives in Conditional and IsExpression.
-  - std::vector in input_names for FunctionDictionary and FunctionTuple.
-  - std::vector in Tuple and EvaluatedTuple.
-  - std::vector in Dictionary and EvaluatedDictionary.
-  - std::vector in Table.
-  - std::map in EvaluatedTable and EvaluatedTableView.
+  - Examples:
+    - std::string in serialize.
+    - std::vector for alternatives in Conditional and IsExpression.
+    - std::vector in input_names for FunctionDictionary and FunctionTuple.
+    - std::vector in Tuple and EvaluatedTuple.
+    - std::vector in Dictionary and EvaluatedDictionary.
+    - std::vector in Table.
+    - std::map in EvaluatedTable and EvaluatedTableView.
+  - Could implement on stack as fixed sized arrays like, possible many different like: Tuple4, Tuple8, Tuple16.
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
@@ -239,6 +243,7 @@ SYSTEM IMPLEMENTATION
   - Lists (done)
   - Tables (done)
   - Functions (todo)
+    - Sets environment and taret types for input.
 * Error handling:
   - Output logs
   - Make "1 2" throw a parse error
