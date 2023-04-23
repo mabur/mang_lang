@@ -270,12 +270,17 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
 
 TOOLS:
 * Command line interface for reading source from file and piping it to interpretor
+* Web interpreter using wasm.
 * Code formatting
   - Indentaiton and line breaks.
   - Colors and syntax high-lighting.
   - Implement tool that takes a source file and outputs an html.
   - Homepage
-* Web interpreter using wasm.
+  - Start by describing rules for wrapping different expressions.
+    - Expressions with arbitrary number of sub-expressions:
+      - Tuples, Dictionaries, Stacks, Tables, If, Is, FunctionTuple, FunctionDictionary.
+        - 2 modes: single line or wrap with each item on its own line.
+        - serialize(int indentation_level, int column_wrap_limit, ...)
 
 
 EXAMPLE PROGRAMS:
