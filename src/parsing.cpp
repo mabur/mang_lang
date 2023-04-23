@@ -3,12 +3,13 @@
 #include <cassert>
 #include <iostream>
 
+std::string describeLocation(CodeCharacter c) {
+    return  " at row " + std::to_string(c.row + 1)
+        + " and column " + std::to_string(c.column + 1);
+}
+
 ParseException::ParseException(const std::string& description, const CodeCharacter* it)
-    : std::runtime_error(
-        description
-        + " at row " + std::to_string(it->row + 1)
-        + " and column " + std::to_string(it->column + 1)
-    )
+    : std::runtime_error(description + describeLocation(*it))
 {}
 
 char rawCharacter(CodeCharacter c) {
