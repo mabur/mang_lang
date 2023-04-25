@@ -291,6 +291,8 @@ int main() {
         {"{while 1 end}", "{}"},
         {"{i=2 while i i=dec!i end}", "{i=NUMBER}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=NUMBER j=NUMBER}"},
+        {"{c=yes for c return end s=0}", "{c=BOOLEAN s=NUMBER}"},
+        {"{c=no for c return end s=0}", "{c=BOOLEAN s=NUMBER}"},
     });
     test.evaluate_all("dictionary iterations", {
         {"{i=2 while i i=dec!i end}", "{i=0}"},
@@ -302,6 +304,8 @@ int main() {
     test.evaluate_all("dictionary for", {
         {"{c=3 s=0 for c s+=c end}", "{c=0 s=6}"},
         {"{c=3 s=0 for i in c s+=c end}", "{c=0 s=6 i=1}"},
+        {"{c=yes for c return end s=0}", "{c=yes}"},
+        {"{c=no for c return end s=0}", "{c=no s=0}"},
         {"{c=yes s=0 for c s+=1 end}", "{c=no s=1}"},
         {"{c=yes s=0 for i in c s+=1 end}", "{c=no s=1 i=yes}"},
         {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0}"},

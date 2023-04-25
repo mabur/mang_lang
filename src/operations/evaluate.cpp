@@ -482,6 +482,8 @@ Expression evaluateDictionaryTypes(
             const auto container = lookupDictionary(name_container, result_environment);
             booleanTypes(container);
         }
+        else if (type == RETURN_STATEMENT) {
+        }
     }
     return result_environment;
 }
@@ -581,6 +583,9 @@ Expression evaluateDictionary(
             const auto old_container = lookupDictionary(name, result_environment);
             const auto new_container = container_functions::drop(old_container);
             result.definitions.add(name, new_container);
+        }
+        else if (type == RETURN_STATEMENT) {
+            break;
         }
     }
     return result_environment;

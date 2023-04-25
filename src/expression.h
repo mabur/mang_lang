@@ -40,6 +40,7 @@ enum ExpressionType {
     FOR_SIMPLE_STATEMENT,
     WHILE_END_STATEMENT,
     FOR_END_STATEMENT,
+    RETURN_STATEMENT,
     NUMBER,
     STRING,
     EMPTY_STRING,
@@ -80,6 +81,7 @@ const auto NAMES = std::vector<std::string>{
     "FOR_SIMPLE_STATEMENT,",
     "WHILE_END_STATEMENT",
     "FOR_END_STATEMENT",
+    "RETURN_STATEMENT",
     "NUMBER",
     "STRING",
     "EMPTY_STRING",
@@ -264,6 +266,9 @@ struct WhileEndStatement {
 
 struct ForEndStatement {
     size_t for_index_;
+};
+
+struct ReturnStatement {
 };
 
 using Statements = std::vector<Expression>;

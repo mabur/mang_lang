@@ -88,6 +88,7 @@ Expression makeForStatement(CodeRange code, ForStatement expression);
 Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression);
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
+Expression makeReturnStatement(CodeRange code, ReturnStatement expression);
 Expression makeString(CodeRange code, String expression);
 Expression makeEmptyString(CodeRange code, EmptyString expression);
 Expression makeBoolean(CodeRange code, Boolean expression);

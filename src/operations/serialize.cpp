@@ -302,6 +302,7 @@ std::string serialize(Expression expression) {
         case FOR_SIMPLE_STATEMENT: return serializeForSimpleStatement(getForSimpleStatement(expression));
         case WHILE_END_STATEMENT: return "end ";
         case FOR_END_STATEMENT: return "end ";
+        case RETURN_STATEMENT: return "return ";
         case FUNCTION: return serializeFunction(getFunction(expression));
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
         case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));

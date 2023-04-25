@@ -207,6 +207,13 @@ Expression parseForEndStatement(CodeRange code, size_t for_index) {
     code = parseWhiteSpace(code);
     return makeForEndStatement(CodeRange{first, code.first}, {for_index});
 }
+
+Expression parseReturnStatement(CodeRange code) {
+    auto first = code.begin();
+    code = parseKeyword(code, "return");
+    code = parseWhiteSpace(code);
+    return makeReturnStatement(CodeRange{first, code.first}, {});
+}
     
 bool isEndMatchingWhile(
     const std::vector<size_t>& while_indices,
@@ -267,6 +274,9 @@ Expression parseDictionary(CodeRange code) {
                 }
                 statements.push_back(parseForEndStatement(code, for_index));
             }
+        }
+        else if (isKeyword(code, "return")) {
+            statements.push_back(parseReturnStatement(code));
         }
         else {
             statements.push_back(parseNamedElement(code));
