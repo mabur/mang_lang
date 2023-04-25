@@ -21,7 +21,7 @@ Light = {
 
 Sphere = {
     position = Numbers
-    squaredRadius = Number
+    squared_radius = Number
     color = Numbers
 }
 
@@ -43,11 +43,11 @@ MIN_C = 0.1
 
 world = World:{
     spheres = [
-        {position=[-2 0 6] squaredRadius=1 color=[MAX_C MAX_C MIN_C]}
-        {position=[0 0 5] squaredRadius=1 color=[MAX_C MIN_C MIN_C]}
-        {position=[2 0 4] squaredRadius=1 color=[mul!(2 MIN_C) mul!(4 MIN_C) MAX_C]}
-        {position=[0 add!(1 R) 0] squaredRadius=mul!(R R) color=[MIN_C MAX_C MIN_C]}
-        {position=[0 sub!(-1 R) 0] squaredRadius=mul!(R R) color=[MAX_C MAX_C MAX_C]}
+        {position=[-2 0 6] squared_radius=1 color=[MAX_C MAX_C MIN_C]}
+        {position=[0 0 5] squared_radius=1 color=[MAX_C MIN_C MIN_C]}
+        {position=[2 0 4] squared_radius=1 color=[mul!(2 MIN_C) mul!(4 MIN_C) MAX_C]}
+        {position=[0 add!(1 R) 0] squared_radius=mul!(R R) color=[MIN_C MAX_C MIN_C]}
+        {position=[0 sub!(-1 R) 0] squared_radius=mul!(R R) color=[MAX_C MAX_C MAX_C]}
     ]
     lights = [
         {direction=[+1 +1 +2] color=muls!(0.4 [1 0.8 0.5])}
@@ -67,7 +67,7 @@ findSingleIntersection = in (Numbers:start Numbers:direction Sphere:sphere) out 
 	for is_backwards
         return	
 	end	
-    discriminant = sub!(mul!(c c) add!(squared_norm!offset squaredRadius@sphere))
+    discriminant = sub!(mul!(c c) add!(squared_norm!offset squared_radius@sphere))
     is_outside = less?(discriminant 0.0)
     for is_outside
         return    
