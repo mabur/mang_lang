@@ -212,7 +212,7 @@ Expression parseReturnStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "return");
     code = parseWhiteSpace(code);
-    return makeReturnStatement(CodeRange{first, code.first}, {});
+    return Expression{RETURN_STATEMENT, 0, CodeRange{first, code.first}};
 }
     
 bool isEndMatchingWhile(

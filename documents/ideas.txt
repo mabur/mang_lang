@@ -206,7 +206,6 @@ SYSTEM IMPLEMENTATION
       - serialize
 * Fewer heap allocations and more stack allocations.
   - Examples:
-    - Do not allocate empty structs like EmptyStack, EmptyString, ReturnStatement.
     - std::string in serialize.
     - std::vector for alternatives in Conditional and IsExpression.
     - std::vector in input_names for FunctionDictionary and FunctionTuple.
