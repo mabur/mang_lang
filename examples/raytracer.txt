@@ -67,7 +67,7 @@ findSingleIntersection = in (Numbers:start Numbers:direction Sphere:sphere) out 
     for is_backwards
         return
     end
-    discriminant = sub!(mul!(c c) add!(squared_norm!offset squared_radius@sphere))
+    discriminant = add!(sub!(mul!(c c) squared_norm!offset) squared_radius@sphere)
     is_outside = less?(discriminant 0.0)
     for is_outside
         return
