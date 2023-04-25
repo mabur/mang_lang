@@ -663,7 +663,10 @@ Expression evaluateFunctionApplication(
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
         case STRING: return applyStringIndexing(getString(function), getNumber(input));
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplicationTypes");
+        
+        case EMPTY_STACK: throw std::runtime_error("I caught a run-time error when trying to index an empty stack.");
+        case EMPTY_STRING: throw std::runtime_error("I caught a run-time error when trying to index an empty string.");
+        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
 
