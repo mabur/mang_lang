@@ -40,7 +40,6 @@ std::vector<PutAssignment> put_assignments;
 std::vector<DropAssignment> drop_assignments;
 std::vector<ReturnStatement> return_statements;
 std::vector<String> strings;
-std::vector<EmptyString> empty_strings;
 std::vector<Boolean> booleans;
 std::vector<Expression> expressions;
 
@@ -145,7 +144,6 @@ void clearMemory() {
     definitions.clear();
     put_assignments.clear();
     strings.clear();
-    empty_strings.clear();
     booleans.clear();
     expressions.clear();
 }
@@ -298,10 +296,6 @@ Expression makeReturnStatement(CodeRange code, ReturnStatement expression) {
 
 Expression makeString(CodeRange code, String expression) {
     return makeExpression(code, expression, STRING, strings);
-}
-
-Expression makeEmptyString(CodeRange code, EmptyString expression) {
-    return makeExpression(code, expression, EMPTY_STRING, empty_strings);
 }
 
 Expression makeBoolean(CodeRange code, Boolean expression) {
@@ -466,10 +460,6 @@ Argument getArgument(Expression expression) {
 
 String getString(Expression expression) {
     return getExpression(expression, STRING, strings);
-}
-
-EmptyString getEmptyString(Expression expression) {
-    return getExpression(expression, EMPTY_STRING, empty_strings);
 }
 
 Boolean getBoolean(Expression expression) {

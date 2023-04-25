@@ -27,7 +27,8 @@ Expression putEvaluatedStack(Expression rest, Expression top) {
 }
 
 Expression reverseString(CodeRange code, Expression string) {
-    return leftFold(makeEmptyString(code, EmptyString{}), string, putString, EMPTY_STRING, getString);
+    const auto init = Expression{EMPTY_STRING, 0, code};
+    return leftFold(init, string, putString, EMPTY_STRING, getString);
 }
 
 Expression reverseStack(CodeRange code, Expression stack) {
@@ -67,8 +68,8 @@ Expression clear(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
         case EMPTY_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
-        case STRING: return makeEmptyString(CodeRange{}, EmptyString{});
-        case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
+        case STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
+        case EMPTY_STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case BOOLEAN: return makeBoolean(CodeRange{}, false);

@@ -483,7 +483,7 @@ Expression parseDynamicExpression(CodeRange code) {
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
-    auto value = makeEmptyString({first, first + 1}, {});
+    auto value = Expression{EMPTY_STRING, 0, {first, first + 1}};
     for (; code.first->character != '"'; ++code.first) {
         auto item = makeCharacter(
             CodeRange{code.first, code.first + 1},
