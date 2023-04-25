@@ -204,9 +204,6 @@ struct String {
     Expression rest;
 };
 
-struct EmptyString {
-};
-
 // TODO: make cheaper to copy or pass by reference or pointer?
 struct Tuple {
     std::vector<Expression> expressions;
@@ -225,9 +222,6 @@ struct Stack {
 struct EvaluatedStack {
     Expression top;
     Expression rest;
-};
-
-struct EmptyStack {
 };
 
 struct Definition {
@@ -266,9 +260,6 @@ struct WhileEndStatement {
 
 struct ForEndStatement {
     size_t for_index_;
-};
-
-struct ReturnStatement {
 };
 
 using Statements = std::vector<Expression>;
