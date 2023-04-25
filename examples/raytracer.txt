@@ -2,14 +2,14 @@ result@{
 
 Intersection = {
     distance = Number
-	position = Numbers
+    position = Numbers
     normal = Numbers
     color = Numbers
 }
 
 default_intersection = Intersection:{
     distance = inf
-	position = []
+    position = []
     normal = []
     color = []
 }
@@ -60,13 +60,13 @@ normalize = in Numbers:vector out Numbers:
     muls!(div!(1 norm!vector) vector)
 
 findSingleIntersection = in (Numbers:start Numbers:direction Sphere:sphere) out Intersection:intersection@{
-	intersection = default_intersection
-	offset = subv!(position@sphere start)
-	c = dot!(direction offset)
-	is_backwards = less?(c 0.0)
-	for is_backwards
+    intersection = default_intersection
+    offset = subv!(position@sphere start)
+    c = dot!(direction offset)
+    is_backwards = less?(c 0.0)
+    for is_backwards
         return	
-	end	
+    end	
     discriminant = sub!(mul!(c c) add!(squared_norm!offset squared_radius@sphere))
     is_outside = less?(discriminant 0.0)
     for is_outside
@@ -81,20 +81,20 @@ findSingleIntersection = in (Numbers:start Numbers:direction Sphere:sphere) out 
 }
 
 findIntersection = in (Numbers:start Numbers:direction Spheres:spheres) out Intersection:i1@{
-	i1 = default_intersection
-	for sphere in spheres
-		i2 = findSingleIntersection!(start direction sphere)
-		i1 = if less?(distance@i2 distance@i1) then i2 else i1
-	end
+    i1 = default_intersection
+    for sphere in spheres
+        i2 = findSingleIntersection!(start direction sphere)
+        i1 = if less?(distance@i2 distance@i1) then i2 else i1
+    end
 }
 
 shadeSingleLight = in (Intersection:intersection Light:light) out result@{
-	geometry = max!(neg!dot!(direction@light normal@intersection) 0.0)
-	result = muls!(geometry mulv!(color@intersection color@light))
+    geometry = max!(neg!dot!(direction@light normal@intersection) 0.0)
+    result = muls!(geometry mulv!(color@intersection color@light))
 }
 
 shadeAtmosphere = in (Intersection:intersection Numbers:atmosphere_color) out 
-	Numbers:muls!(sqrt!get2!position@intersection atmosphere_color)
+    Numbers:muls!(sqrt!get2!position@intersection atmosphere_color)
 
 shade = in (Intersection:intersection world) out Numbers:color@{
     color = [1 1 1]
@@ -128,16 +128,16 @@ writePixel = in (Number:x Number:y Number:width Number:height World:world) out S
 }
 
 writeImage = in World:world out String:image@{
-	WIDTH = 4
-	HEIGHT = 4
-	image = ""
-	image = put_each!("P3" image)
-	image += newline
-	image = put_each!(serialize_natural_number!WIDTH image)
-	image += newline
-	image = put_each!(serialize_natural_number!HEIGHT image)
-	image += newline
-	image = put_each!("255" image)
+    WIDTH = 4
+    HEIGHT = 4
+    image = ""
+    image = put_each!("P3" image)
+    image += newline
+    image = put_each!(serialize_natural_number!WIDTH image)
+    image += newline
+    image = put_each!(serialize_natural_number!HEIGHT image)
+    image += newline
+    image = put_each!("255" image)
     image += newline
     ys = range!HEIGHT
     for y in ys
