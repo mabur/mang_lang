@@ -361,7 +361,7 @@ Expression parseStackNew(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
-    auto stack = makeEmptyStack({}, {});
+    auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
     while (!::startsWith(code, ']')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);

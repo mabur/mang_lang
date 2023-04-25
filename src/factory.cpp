@@ -20,7 +20,6 @@ std::vector<Tuple> tuples;
 std::vector<EvaluatedTuple> evaluated_tuples;
 std::vector<Stack> stacks;
 std::vector<EvaluatedStack> evaluated_stacks;
-std::vector<EmptyStack> empty_stacks;
 std::vector<Table> tables;
 std::vector<EvaluatedTable> evaluated_tables;
 std::vector<EvaluatedTableView> evaluated_table_views;
@@ -128,7 +127,6 @@ void clearMemory() {
     evaluated_tuples.clear();
     stacks.clear();
     evaluated_stacks.clear();
-    empty_stacks.clear();
     tables.clear();
     evaluated_tables.clear();
     evaluated_table_views.clear();
@@ -220,10 +218,6 @@ Expression makeStack(CodeRange code, Stack expression) {
 
 Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
     return makeExpression(code, expression, EVALUATED_STACK, evaluated_stacks);
-}
-
-Expression makeEmptyStack(CodeRange code, EmptyStack expression) {
-    return makeExpression(code, expression, EMPTY_STACK, empty_stacks);
 }
 
 Expression makeTable(CodeRange code, Table expression) {
@@ -431,10 +425,6 @@ Stack getStack(Expression expression) {
 
 EvaluatedStack getEvaluatedStack(Expression expression) {
     return getExpression(expression, EVALUATED_STACK, evaluated_stacks);
-}
-
-EmptyStack getEmptyStack(Expression expression) {
-    return getExpression(expression, EMPTY_STACK, empty_stacks);
 }
 
 LookupChild getLookupChild(Expression expression) {

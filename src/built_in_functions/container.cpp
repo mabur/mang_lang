@@ -32,13 +32,13 @@ Expression reverseString(CodeRange code, Expression string) {
 }
 
 Expression reverseStack(CodeRange code, Expression stack) {
-    return leftFold(makeEmptyStack(code, EmptyStack{}), stack, putStack,
-        EMPTY_STACK, getStack);
+    const auto init = Expression{EMPTY_STACK, 0, code};
+    return leftFold(init, stack, putStack, EMPTY_STACK, getStack);
 }
 
 Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
-    return leftFold(makeEmptyStack(code, EmptyStack{}), stack, putEvaluatedStack,
-        EMPTY_STACK, getEvaluatedStack);
+    const auto init = Expression{EMPTY_STACK, 0, code};
+    return leftFold(init, stack, putEvaluatedStack, EMPTY_STACK, getEvaluatedStack);
 }
 
 Expression putTable(Expression table, Expression item) {
@@ -66,8 +66,8 @@ namespace container_functions {
 
 Expression clear(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
-        case EMPTY_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
+        case EVALUATED_STACK: return Expression{EMPTY_STACK, 0, CodeRange{}};
+        case EMPTY_STACK: return Expression{EMPTY_STACK, 0, CodeRange{}};
         case STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
         case EMPTY_STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});

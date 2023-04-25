@@ -88,7 +88,7 @@ Expression evaluateStack(Evaluator evaluator,
         return putEvaluatedStack(rest, evaluated_top);
     };
     const auto code = CodeRange{};
-    const auto init = makeEmptyStack(code, {});
+    const auto init = Expression{EMPTY_STACK, 0, code};
     const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
     return reverseEvaluatedStack(code, output);
 }
