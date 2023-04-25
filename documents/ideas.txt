@@ -141,7 +141,6 @@ LANGUAGE SYNTAX & SEMANTICS
     - table!index (make constant or logN?)
     - get!(key table default_value) (logN)
 * Control structures for dictionaries.
-  - Early return/exit/finish.
   - Support index in for loop:
     for index, item in container
     container2 = enumerate!container for pair in container2
@@ -149,7 +148,6 @@ LANGUAGE SYNTAX & SEMANTICS
     - Use -= to subtract from number?
     - Use -= to remove a specific item from a table?
     - Use -= to drop N items from a container?
-  - Early return statements for dictionary.
   - Add optionals and treat them like containers.
       x = optional[]
       x += 5
@@ -208,6 +206,7 @@ SYSTEM IMPLEMENTATION
       - serialize
 * Fewer heap allocations and more stack allocations.
   - Examples:
+    - Do not allocate empty structs like EmptyStack, EmptyString, ReturnStatement.
     - std::string in serialize.
     - std::vector for alternatives in Conditional and IsExpression.
     - std::vector in input_names for FunctionDictionary and FunctionTuple.
