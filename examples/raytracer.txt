@@ -65,12 +65,12 @@ findSingleIntersection = in (Numbers:start Numbers:direction Sphere:sphere) out 
     c = dot!(direction offset)
     is_backwards = less?(c 0.0)
     for is_backwards
-        return	
-    end	
+        return
+    end
     discriminant = sub!(mul!(c c) add!(squared_norm!offset squared_radius@sphere))
     is_outside = less?(discriminant 0.0)
     for is_outside
-        return    
+        return
     end
     intersection = {
         distance = sub!(c sqrt!discriminant)
