@@ -215,6 +215,7 @@ SYSTEM IMPLEMENTATION
     - std::map in EvaluatedTable and EvaluatedTableView.
   - Could implement on stack as fixed sized arrays like, possible many different like: Tuple4, Tuple8, Tuple16.
   - Could implement stacks and dictionaries as two indices/pointers to its first and last elements.
+    - Maybe store all dictionary-statements in the same std::vector for faster dictionary iteration.
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
