@@ -324,6 +324,7 @@ https://docs.scala-lang.org/tour/tour-of-scala.html
 https://www.pyret.org/
 https://nim-lang.org/
 https://github.com/tuqqu/oxide-lang
+https://typst.app/docs/reference/text/strong/
 
 
 Languages supported by Github:
