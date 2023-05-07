@@ -424,7 +424,7 @@ Expression parseSubstitution(CodeRange code) {
         code.first = end(child);
         return makeLookupChild(CodeRange{first, code.first}, {name, child});
     }
-    if (startsWith(code, '!') or startsWith(code, '?')) {
+    if (startsWith(code, '!') || startsWith(code, '?')) {
         code = parseCharacter(code);
         auto child = parseExpression(code);
         code.first = end(child);
@@ -521,8 +521,8 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "else")) {throwParseException(code);}
         if (isKeyword(code, "while")) {throwParseException(code);}
         if (isKeyword(code, "end")) {throwParseException(code);}
-        if (isdigit(c) or c == '+' or c == '-') {return parseNumber(code);}
-        if (isalpha(c) or c == '_') {return parseSubstitution(code);}
+        if (isdigit(c) || c == '+' || c == '-') {return parseNumber(code);}
+        if (isalpha(c) || c == '_') {return parseSubstitution(code);}
         throwParseException(code);
         return {};
     } catch (const std::runtime_error& e) {
