@@ -128,8 +128,8 @@ writePixel = in (Number:x Number:y Number:width Number:height World:world) out S
 }
 
 writeImage = in World:world out String:image@{
-    WIDTH = 16
-    HEIGHT = 10
+    WIDTH = 32
+    HEIGHT = 20
     image = ""
     image = put_each!("P3" image)
     image += newline
