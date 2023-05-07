@@ -53,8 +53,8 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         }
         const auto count = definitions_left.size();
         for (size_t i = 0; i < count; ++i) {
-            const auto& name_left = definitions_left[i].first;
-            const auto& name_right = definitions_right[i].first;
+            const auto& name_left = definitions_left[i].key;
+            const auto& name_right = definitions_right[i].key;
             if (strcmp(name_left, name_right) != 0) {
                 throw std::runtime_error(
                     "Static type error in " + description +
@@ -62,7 +62,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
                     name_left + " & " + name_right
                 );
             }
-            checkTypes(definitions_left[i].second, definitions_right[i].second, description);
+            checkTypes(definitions_left[i].value, definitions_right[i].value, description);
         }
     }
     if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;

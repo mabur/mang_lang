@@ -27,8 +27,8 @@ bool Definitions::empty() const {
 
 void Definitions::add(NamePointer key, Expression value) {
     for (auto& definition: definitions) {
-        if (strcmp(definition.first, key) == 0) {
-            definition.second = value;
+        if (strcmp(definition.key, key) == 0) {
+            definition.value = value;
             return;
         }
     }
@@ -37,7 +37,7 @@ void Definitions::add(NamePointer key, Expression value) {
 
 bool Definitions::has(NamePointer key) const {
     for (const auto& definition: definitions) {
-        if (strcmp(definition.first, key) == 0) {
+        if (strcmp(definition.key, key) == 0) {
             return true;
         }
     }
@@ -47,13 +47,13 @@ bool Definitions::has(NamePointer key) const {
 
 Expression Definitions::lookup(NamePointer key) const {
     for (const auto& definition: definitions) {
-        if (strcmp(definition.first, key) == 0) {
-            return definition.second;
+        if (strcmp(definition.key, key) == 0) {
+            return definition.value;
         }
     }
     throw MissingSymbol(key, "dictionary");
 }
 
-std::vector<std::pair<NamePointer, Expression>> Definitions::sorted() const {
+std::vector<DefinitionPointer> Definitions::sorted() const {
     return definitions;
 }

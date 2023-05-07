@@ -264,16 +264,23 @@ struct ForEndStatement {
 
 using Statements = std::vector<Expression>;
 
+
+struct DefinitionPointer {
+    NamePointer key;
+    Expression value;
+};
+
 // TODO: make cheaper to copy or pass by reference or pointer?
+// Bottleneck.
 class Definitions {
 private:
-    std::vector<std::pair<NamePointer, Expression>> definitions;
+    std::vector<DefinitionPointer> definitions;
 public:
     bool empty() const;
     void add(NamePointer key, Expression value);
     bool has(NamePointer key) const;
     Expression lookup(NamePointer key) const;
-    std::vector<std::pair<NamePointer, Expression>> sorted() const;
+    std::vector<DefinitionPointer> sorted() const;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
@@ -282,6 +289,7 @@ struct Dictionary {
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
+// Bottleneck.
 struct EvaluatedDictionary {
     Expression environment;
     Definitions definitions;
