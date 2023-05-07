@@ -1,3 +1,5 @@
+#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 
@@ -33,10 +35,13 @@ int main(int argc,  char **argv) {
 
     try {
         cout << "Evaluating program ... ";
+        const auto start = std::chrono::steady_clock::now();
         const auto result = evaluate_all(code);
-        cout << "Done." << endl;
-
-
+        const auto end = std::chrono::steady_clock::now();
+        const auto duration_total = std::chrono::duration<double>{end - start};
+        cout << "Done. " << std::fixed << std::setprecision(1)
+            << duration_total.count() << " seconds." << endl;
+        
         cout << "Writing result to " << output_file_path << " ... ";
         auto output_file = ofstream{output_file_path};
         output_file << result;
