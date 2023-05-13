@@ -9,7 +9,6 @@ std::vector<DynamicExpression> dynamic_expressions;
 std::vector<TypedExpression> typed_expressions;
 std::vector<EvaluatedDictionary> evaluated_dictionaries;
 std::vector<Dictionary> dictionaries;
-std::vector<Character> characters;
 std::vector<Conditional> conditionals;
 std::vector<IsExpression> is_expressions;
 std::vector<Function> functions;
@@ -115,7 +114,6 @@ BinaryTuple getBinaryTuple(Expression in) {
 void clearMemory() {
     evaluated_dictionaries.clear();
     dictionaries.clear();
-    characters.clear();
     conditionals.clear();
     is_expressions.clear();
     functions.clear();
@@ -160,7 +158,7 @@ Expression makeNumber(CodeRange code, Number expression) {
 }
 
 Expression makeCharacter(CodeRange code, Character expression) {
-    return makeExpression(code, expression, CHARACTER, characters);
+    return Expression{CHARACTER, static_cast<size_t>(expression), code};
 }
 
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression) {
@@ -350,7 +348,13 @@ Number getNumber(Expression expression) {
 }
 
 Character getCharacter(Expression expression) {
-    return getExpression(expression, CHARACTER, characters);
+    if (expression.type != CHARACTER) {
+        throw std::runtime_error{
+            "getExpression expected " + NAMES[CHARACTER]
+                + " got " + NAMES[expression.type]
+        };
+    }
+    return static_cast<Character>(expression.index);
 }
 
 Conditional getConditional(Expression expression) {
