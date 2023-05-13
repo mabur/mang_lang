@@ -37,7 +37,6 @@ std::vector<Definition> definitions;
 std::vector<PutAssignment> put_assignments;
 std::vector<DropAssignment> drop_assignments;
 std::vector<String> strings;
-std::vector<Boolean> booleans;
 std::vector<Expression> expressions;
 
 namespace {
@@ -139,7 +138,6 @@ void clearMemory() {
     definitions.clear();
     put_assignments.clear();
     strings.clear();
-    booleans.clear();
     expressions.clear();
 }
 
@@ -283,10 +281,6 @@ Expression makeForEndStatement(CodeRange code, ForEndStatement expression) {
 
 Expression makeString(CodeRange code, String expression) {
     return makeExpression(code, expression, STRING, strings);
-}
-
-Expression makeBoolean(CodeRange code, Boolean expression) {
-    return makeExpression(code, expression, BOOLEAN, booleans);
 }
 
 // GETTERS
@@ -449,8 +443,4 @@ Argument getArgument(Expression expression) {
 
 String getString(Expression expression) {
     return getExpression(expression, STRING, strings);
-}
-
-Boolean getBoolean(Expression expression) {
-    return getExpression(expression, BOOLEAN, booleans);
 }

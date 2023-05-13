@@ -11,6 +11,8 @@ namespace {
 
 void checkTypes(Expression left, Expression right, const std::string& description) {
     if (left.type == ANY || right.type == ANY) return;
+    if (left.type == YES || right.type == NO) return;
+    if (left.type == NO || right.type == YES) return;
     if (left.type == EMPTY_STACK && right.type == EVALUATED_STACK) return;
     if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return;
     if (left.type == EMPTY_STRING && right.type == STRING) return;
@@ -245,7 +247,8 @@ Expression applyFunctionBuiltIn(
 void booleanTypes(Expression expression) {
     switch (expression.type) {
         case NUMBER: return;
-        case BOOLEAN: return;
+        case YES: return;
+        case NO: return;
         case EVALUATED_TABLE: return;
         case EVALUATED_STACK: return;
         case EMPTY_STACK: return;
@@ -264,7 +267,8 @@ bool boolean(Expression expression) {
         case EVALUATED_TABLE: return !getEvaluatedTable(expression).empty();
         case EVALUATED_TABLE_VIEW: return !getEvaluatedTableView(expression).empty();
         case NUMBER: return static_cast<bool>(getNumber(expression));
-        case BOOLEAN: return getBoolean(expression);
+        case YES: return true;
+        case NO: return false;
         case EVALUATED_STACK: return true;
         case EMPTY_STACK: return false;
         case STRING: return true;
@@ -331,8 +335,11 @@ bool isEqual(Expression left, Expression right) {
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return getCharacter(left) == getCharacter(right);
     }
-    if (left_type == BOOLEAN && right_type == BOOLEAN) {
-        return getBoolean(left) == getBoolean(right);
+    if (left_type == YES && right_type == YES) {
+        return true;
+    }
+    if (left_type == NO && right_type == NO) {
+        return true;
     }
     if (left_type == EMPTY_STACK && right_type == EMPTY_STACK) {
         return true;
@@ -677,7 +684,8 @@ Expression evaluate_types(Expression expression, Expression environment) {
         // These are the same for types and values, and just pass through:
         case NUMBER: return expression;
         case CHARACTER: return expression;
-        case BOOLEAN: return expression;
+        case YES: return expression;
+        case NO: return expression;
         case EMPTY_STRING: return expression;
         case STRING: return expression;
         case EMPTY_STACK: return expression;
@@ -716,7 +724,8 @@ Expression evaluate(Expression expression, Expression environment) {
         // These are the same for types and values, and just pass through:
         case NUMBER: return expression;
         case CHARACTER: return expression;
-        case BOOLEAN: return expression;
+        case YES: return expression;
+        case NO: return expression;
         case EMPTY_STRING: return expression;
         case STRING: return expression;
         case EMPTY_STACK: return expression;

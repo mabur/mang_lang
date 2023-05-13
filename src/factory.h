@@ -51,7 +51,6 @@ LookupSymbol getLookupSymbol(Expression expression);
 NamePointer getName(Expression expression);
 Argument getArgument(Expression expression);
 String getString(Expression expression);
-Boolean getBoolean(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeCharacter(CodeRange code, Character expression);
@@ -86,4 +85,3 @@ Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression)
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
 Expression makeString(CodeRange code, String expression);
-Expression makeBoolean(CodeRange code, Boolean expression);

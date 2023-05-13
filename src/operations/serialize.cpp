@@ -260,10 +260,6 @@ std::string serializeNumber(Number number) {
     return s.str();
 }
 
-std::string serializeBoolean(Boolean boolean) {
-    return boolean ? "yes" : "no";
-}
-
 std::string appendCharacter(const std::string& s, Expression character) {
     return s + getCharacter(character);
 }
@@ -320,7 +316,8 @@ std::string serialize(Expression expression) {
         case NAME: return serializeName(expression);
         case ARGUMENT: return serializeArgument(expression);
         case NUMBER: return serializeNumber(getNumber(expression));
-        case BOOLEAN: return serializeBoolean(getBoolean(expression));
+        case YES: return "yes";
+        case NO: return "no";
         case EMPTY_STRING: return serializeString(expression);
         case STRING: return serializeString(expression);
         case DYNAMIC_EXPRESSION: return serializeDynamicExpression(getDynamicExpression(expression));

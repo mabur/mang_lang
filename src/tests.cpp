@@ -144,8 +144,8 @@ int main() {
         {"no", "no"},
     });
     test.evaluate_types("boolean", {
-        {"yes", "BOOLEAN"},
-        {"no", "BOOLEAN"},
+        {"yes", "YES"},
+        {"no", "NO"},
     });
     test.evaluate_all("string", {
         {R"("")", R"("")"},
@@ -291,8 +291,8 @@ int main() {
         {"{while 1 end}", "{}"},
         {"{i=2 while i i=dec!i end}", "{i=NUMBER}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=NUMBER j=NUMBER}"},
-        {"{c=yes for c return end s=0}", "{c=BOOLEAN s=NUMBER}"},
-        {"{c=no for c return end s=0}", "{c=BOOLEAN s=NUMBER}"},
+        {"{c=yes for c return end s=0}", "{c=YES s=NUMBER}"},
+        {"{c=no for c return end s=0}", "{c=NO s=NUMBER}"},
     });
     test.evaluate_all("dictionary iterations", {
         {"{i=2 while i i=dec!i end}", "{i=0}"},
@@ -849,12 +849,12 @@ int main() {
         {"all?[1 1]", "yes"},
     });
     test.evaluate_types("all", {
-        {"all?[]", "BOOLEAN"},
-        {"all?[0]", "BOOLEAN"},
-        {"all?[1]", "BOOLEAN"},
-        {"all?[0 0]", "BOOLEAN"},
-        {"all?[0 1]", "BOOLEAN"},
-        {"all?[1 1]", "BOOLEAN"},
+        {"all?[]", "YES"},
+        {"all?[0]", "YES"},
+        {"all?[1]", "YES"},
+        {"all?[0 0]", "YES"},
+        {"all?[0 1]", "YES"},
+        {"all?[1 1]", "YES"},
     });
     test.evaluate_all("any", {
         {"any?[]", "no"},
@@ -865,12 +865,12 @@ int main() {
         {"any?[1 1]", "yes"},
     });
     test.evaluate_types("any", {
-        {"any?[]", "BOOLEAN"},
-        {"any?[0]", "BOOLEAN"},
-        {"any?[1]", "BOOLEAN"},
-        {"any?[0 0]", "BOOLEAN"},
-        {"any?[0 1]", "BOOLEAN"},
-        {"any?[1 1]", "BOOLEAN"},
+        {"any?[]", "NO"},
+        {"any?[0]", "NO"},
+        {"any?[1]", "NO"},
+        {"any?[0 0]", "NO"},
+        {"any?[0 1]", "NO"},
+        {"any?[1 1]", "NO"},
     });
     test.evaluate_all("none", {
         {"none?[]", "yes"},
@@ -881,12 +881,12 @@ int main() {
         {"none?[1 1]", "no"},
     });
     test.evaluate_types("none", {
-        {"none?[]", "BOOLEAN"},
-        {"none?[0]", "BOOLEAN"},
-        {"none?[1]", "BOOLEAN"},
-        {"none?[0 0]", "BOOLEAN"},
-        {"none?[0 1]", "BOOLEAN"},
-        {"none?[1 1]", "BOOLEAN"},
+        {"none?[]", "YES"},
+        {"none?[0]", "YES"},
+        {"none?[1]", "YES"},
+        {"none?[0 0]", "YES"},
+        {"none?[0 1]", "YES"},
+        {"none?[1 1]", "YES"},
     });
     test.evaluate_all("equal number", {
         {"equal?(0 0)", "yes"},
@@ -895,10 +895,10 @@ int main() {
         {"equal?(1 1)", "yes"},
     });
     test.evaluate_types("equal number", {
-        {"equal?(0 0)", "BOOLEAN"},
-        {"equal?(0 1)", "BOOLEAN"},
-        {"equal?(1 0)", "BOOLEAN"},
-        {"equal?(1 1)", "BOOLEAN"},
+        {"equal?(0 0)", "NO"},
+        {"equal?(0 1)", "NO"},
+        {"equal?(1 0)", "NO"},
+        {"equal?(1 1)", "NO"},
     });
     test.evaluate_all("unequal number", {
         {"unequal?(0 0)", "no"},
@@ -939,12 +939,12 @@ int main() {
         {"equal?([0 1] [0])", "no"},
     });
     test.evaluate_types("equal stack", {
-        {"equal?([] [])", "BOOLEAN"},
-        {"equal?([1] [1])", "BOOLEAN"},
-        {"equal?([0] [1])", "BOOLEAN"},
-        {"equal?([0 1] [0 1])", "BOOLEAN"},
-        {"equal?([0 1] [1 1])", "BOOLEAN"},
-        {"equal?([0 1] [0])", "BOOLEAN"},
+        {"equal?([] [])", "NO"},
+        {"equal?([1] [1])", "NO"},
+        {"equal?([0] [1])", "NO"},
+        {"equal?([0 1] [0 1])", "NO"},
+        {"equal?([0 1] [1 1])", "NO"},
+        {"equal?([0 1] [0])", "NO"},
     });
     test.evaluate_all("unequal stack", {
         {"unequal?([] [])", "no"},
@@ -1137,7 +1137,7 @@ int main() {
         {"dec!0", "-1"},
     });
     test.evaluate_types("is_digit", {
-        {"is_digit?'A'", "BOOLEAN"},
+        {"is_digit?'A'", "YES"},
     });
     test.evaluate_all("is_digit", {
         {"is_digit?'A'", "no"},
@@ -1148,7 +1148,7 @@ int main() {
         {"is_digit?'9'", "yes"},
     });
     test.evaluate_types("is_upper", {
-        {"is_upper?'A')", "BOOLEAN"},
+        {"is_upper?'A')", "YES"},
     });
     test.evaluate_all("is_upper", {
         {"is_upper?'A'", "yes"},
@@ -1159,7 +1159,7 @@ int main() {
         {"is_upper?'9'", "no"},
     });
     test.evaluate_types("is_lower", {
-        {"is_lower?'A'", "BOOLEAN"},
+        {"is_lower?'A'", "YES"},
     });
     test.evaluate_all("is_lower", {
         {"is_lower?'A')", "no"},
@@ -1170,7 +1170,7 @@ int main() {
         {"is_lower?'9')", "no"},
     });
     test.evaluate_types("is_letter", {
-        {"is_letter?'A'", "BOOLEAN"},
+        {"is_letter?'A'", "NO"},
     });
     test.evaluate_all("is_letter", {
         {"is_letter?'A'", "yes"},

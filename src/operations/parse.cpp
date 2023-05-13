@@ -456,11 +456,11 @@ CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
 }
 
 Expression parseYes(CodeRange code) {
-    return makeBoolean(parseKeyWordContent(code, "yes"), {true});
+    return Expression{YES, 0, parseKeyWordContent(code, "yes")};
 }
 
 Expression parseNo(CodeRange code) {
-    return makeBoolean(parseKeyWordContent(code, "no"), {false});
+    return Expression{NO, 0, parseKeyWordContent(code, "no")};
 }
 
 Expression parseNegInf(CodeRange code) {

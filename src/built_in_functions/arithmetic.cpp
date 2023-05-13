@@ -12,10 +12,6 @@ Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, x);
 }
 
-Expression makeBoolean(bool x) {
-    return makeBoolean(CodeRange{}, x);
-}
-
 template <typename BinaryOperation>
 Expression binaryOperation(Expression in, BinaryOperation operation) {
     const auto tuple = getBinaryTuple(in);
@@ -48,7 +44,8 @@ Expression mod(Expression in) {
 
 Expression less(Expression in) {
     const auto tuple = getBinaryTuple(in);
-    return makeBoolean(getNumber(tuple.left) < getNumber(tuple.right));
+    return getNumber(tuple.left) < getNumber(tuple.right) ?
+        Expression{YES, 0, {}} : Expression{NO, 0, {}};
 }
 
 Expression sqrt(Expression in) {
@@ -134,7 +131,7 @@ Expression FunctionNumberNumberToBoolean::operator()(Expression in) const {
                 ".\n"
         );
     }
-    return makeBoolean(true);
+    return Expression{YES, 0, {}};
 }
 
 Expression FunctionNumberNumberToNumber::operator()(Expression in) const {
