@@ -366,12 +366,21 @@ bool isEqual(Expression left, Expression right) {
 Expression evaluateConditionalTypes(
     const Conditional& conditional, Expression environment
 ) {
-    for (const auto alternative : conditional.alternatives) {
-        evaluate_types(alternative.left, environment);
+    for (auto alternative = conditional.alternative_first;
+        alternative.index <= conditional.alternative_last.index;
+        ++alternative.index
+    ) {
+        evaluate_types(getAlternative(alternative).left, environment);
     }
     const auto else_expression = evaluate_types(conditional.expression_else, environment);
-    for (const auto alternative : conditional.alternatives) {
-        const auto alternative_expression = evaluate_types(alternative.right, environment);
+    for (auto a = conditional.alternative_first;
+        a.index <= conditional.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
+        const auto alternative_expression = evaluate_types(
+            alternative.right, environment
+        );
         checkTypes(alternative_expression, else_expression, "if");
     }
     return else_expression;
@@ -380,7 +389,11 @@ Expression evaluateConditionalTypes(
 Expression evaluateConditional(
     const Conditional& conditional, Expression environment
 ) {
-    for (const auto alternative : conditional.alternatives) {
+    for (auto a = conditional.alternative_first;
+        a.index <= conditional.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
         const auto left_value = evaluate(alternative.left, environment);
         if (boolean(left_value)) {
             return evaluate(alternative.right, environment);
@@ -393,11 +406,19 @@ Expression evaluateIsTypes(
     const IsExpression& is_expression, Expression environment
 ) {
     evaluate_types(is_expression.input, environment);
-    for (const auto alternative : is_expression.alternatives) {
+    for (auto a = is_expression.alternative_first;
+        a.index <= is_expression.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
         evaluate_types(alternative.left, environment);
     }
     const auto else_expression = evaluate_types(is_expression.expression_else, environment);
-    for (const auto alternative : is_expression.alternatives) {
+    for (auto a = is_expression.alternative_first;
+        a.index <= is_expression.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
         const auto alternative_expression = evaluate_types(alternative.right, environment);
         checkTypes(alternative_expression, else_expression, "is");
     }
@@ -408,7 +429,11 @@ Expression evaluateIs(
     const IsExpression& is_expression, Expression environment
 ) {
     const auto value = evaluate(is_expression.input, environment);
-    for (const auto alternative : is_expression.alternatives) {
+    for (auto a = is_expression.alternative_first;
+        a.index <= is_expression.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
         const auto left_value = evaluate(alternative.left, environment);
         if (isEqual(value, left_value)) {
             return evaluate(alternative.right, environment);

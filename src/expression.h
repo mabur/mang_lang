@@ -13,6 +13,7 @@ enum ExpressionType {
     CHARACTER,
     CONDITIONAL,
     IS,
+    ALTERNATIVE,
     TABLE,
     EVALUATED_TABLE,
     EVALUATED_TABLE_VIEW,
@@ -55,6 +56,7 @@ const auto NAMES = std::vector<std::string>{
     "CHARACTER",
     "CONDITIONAL",
     "IS",
+    "ALTERNATIVE",
     "TABLE",
     "EVALUATED_TABLE",
     "EVALUATED_TABLE_VIEW",
@@ -150,16 +152,16 @@ struct Alternative {
     Expression right;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
 struct Conditional {
-    std::vector<Alternative> alternatives;
+    Expression alternative_first;
+    Expression alternative_last;
     Expression expression_else;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
 struct IsExpression {
     Expression input;
-    std::vector<Alternative> alternatives;
+    Expression alternative_first;
+    Expression alternative_last;
     Expression expression_else;
 };
 

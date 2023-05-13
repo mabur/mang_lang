@@ -28,7 +28,8 @@ Expression parseConditional(CodeRange code) {
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
     
-    auto alternatives = std::vector<Alternative>{};
+    // TODO: extract function for parsing alternatives for both if and is. 
+    auto alternatives = std::vector<Expression>{};
 
     while (!isKeyword(code, "else")) {
         auto left = parseExpression(code);
@@ -39,7 +40,9 @@ Expression parseConditional(CodeRange code) {
         auto right = parseExpression(code);
         code.first = end(right);
         code = parseWhiteSpace(code);
-        alternatives.push_back(Alternative{left, right});
+        alternatives.push_back(makeAlternative(
+            {left.range.first, right.range.last}, Alternative{left, right}
+        ));
     }
 
     code = parseKeyword(code, "else");
@@ -50,7 +53,7 @@ Expression parseConditional(CodeRange code) {
 
     return makeConditional(
         CodeRange{first, code.begin()},
-        Conditional{alternatives, expression_else}
+        Conditional{alternatives.front(), alternatives.back(), expression_else}
     );
 }
 
@@ -63,7 +66,8 @@ Expression parseIs(CodeRange code) {
     code.first = end(input);
     code = parseWhiteSpace(code);
 
-    auto alternatives = std::vector<Alternative>{};
+    // TODO: extract function for parsing alternatives for both if and is.
+    auto alternatives = std::vector<Expression>{};
 
     while (!isKeyword(code, "else")) {
         auto left = parseExpression(code);
@@ -74,7 +78,9 @@ Expression parseIs(CodeRange code) {
         auto right = parseExpression(code);
         code.first = end(right);
         code = parseWhiteSpace(code);
-        alternatives.push_back(Alternative{left, right});
+        alternatives.push_back(makeAlternative(
+            {left.range.first, right.range.last}, Alternative{left, right}
+        ));
     }
 
     code = parseKeyword(code, "else");
@@ -85,7 +91,7 @@ Expression parseIs(CodeRange code) {
 
     return makeIs(
         CodeRange{first, code.begin()},
-        IsExpression{input, alternatives, expression_else}
+        IsExpression{input, alternatives.front(), alternatives.back(), expression_else}
     );
 }
 

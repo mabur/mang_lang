@@ -30,7 +30,11 @@ std::string serializeTypedExpression(const TypedExpression& typed_expression) {
 
 std::string serializeConditional(const Conditional& conditional) {
     auto result = std::string{"if "};
-    for (const auto& alternative : conditional.alternatives) {
+    for (auto a = conditional.alternative_first;
+        a.index <= conditional.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
         result += serialize(alternative.left);
         result += " then ";
         result += serialize(alternative.right);
@@ -43,7 +47,11 @@ std::string serializeConditional(const Conditional& conditional) {
 
 std::string serializeIs(const IsExpression& is_expression) {
     auto result = "is " + serialize(is_expression.input) + " ";
-    for (const auto& alternative : is_expression.alternatives) {
+    for (auto a = is_expression.alternative_first;
+        a.index <= is_expression.alternative_last.index;
+        ++a.index
+    ) {
+        const auto alternative = getAlternative(a);
         result += serialize(alternative.left);
         result += " then ";
         result += serialize(alternative.right);

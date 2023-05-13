@@ -11,6 +11,7 @@ std::vector<EvaluatedDictionary> evaluated_dictionaries;
 std::vector<Dictionary> dictionaries;
 std::vector<Conditional> conditionals;
 std::vector<IsExpression> is_expressions;
+std::vector<Alternative> alternatives;
 std::vector<Function> functions;
 std::vector<FunctionBuiltIn> built_in_functions;
 std::vector<FunctionDictionary> dictionary_functions;
@@ -173,6 +174,10 @@ Expression makeConditional(CodeRange code, Conditional expression) {
 
 Expression makeIs(CodeRange code, IsExpression expression) {
     return makeExpression(code, expression, IS, is_expressions);
+}
+
+Expression makeAlternative(CodeRange code, Alternative expression) {
+    return makeExpression(code, expression, ALTERNATIVE, alternatives);
 }
 
 Expression makeDictionary(CodeRange code, Dictionary expression) {
@@ -357,6 +362,10 @@ Conditional getConditional(Expression expression) {
 
 IsExpression getIs(Expression expression) {
     return getExpression(expression, IS, is_expressions);
+}
+
+Alternative getAlternative(Expression expression) {
+    return getExpression(expression, ALTERNATIVE, alternatives);
 }
 
 Dictionary getDictionary(Expression expression) {
