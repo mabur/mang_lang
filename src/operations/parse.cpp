@@ -22,27 +22,30 @@ Expression parseCharacterExpression(CodeRange code) {
     return makeCharacter(CodeRange{first, code.begin()}, {value});
 }
 
+Expression parseAlternative(CodeRange code) {
+    auto first = code.begin();
+    auto left = parseExpression(code);
+    code.first = end(left);
+    code = parseWhiteSpace(code);
+    code = parseKeyword(code, "then");
+    code = parseWhiteSpace(code);
+    auto right = parseExpression(code);
+    code.first = end(right);
+    code = parseWhiteSpace(code);
+    return makeAlternative({first, code.first}, Alternative{left, right});
+}
+
 Expression parseConditional(CodeRange code) {
     auto first = code.begin();
 
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
     
-    // TODO: extract function for parsing alternatives for both if and is. 
     auto alternatives = std::vector<Expression>{};
 
     while (!isKeyword(code, "else")) {
-        auto left = parseExpression(code);
-        code.first = end(left);
-        code = parseWhiteSpace(code);
-        code = parseKeyword(code, "then");
-        code = parseWhiteSpace(code);
-        auto right = parseExpression(code);
-        code.first = end(right);
-        code = parseWhiteSpace(code);
-        alternatives.push_back(makeAlternative(
-            {left.range.first, right.range.last}, Alternative{left, right}
-        ));
+        alternatives.push_back(parseAlternative(code));
+        code.first = end(alternatives.back());
     }
 
     code = parseKeyword(code, "else");
@@ -65,22 +68,12 @@ Expression parseIs(CodeRange code) {
     auto input = parseExpression(code);
     code.first = end(input);
     code = parseWhiteSpace(code);
-
-    // TODO: extract function for parsing alternatives for both if and is.
+    
     auto alternatives = std::vector<Expression>{};
 
     while (!isKeyword(code, "else")) {
-        auto left = parseExpression(code);
-        code.first = end(left);
-        code = parseWhiteSpace(code);
-        code = parseKeyword(code, "then");
-        code = parseWhiteSpace(code);
-        auto right = parseExpression(code);
-        code.first = end(right);
-        code = parseWhiteSpace(code);
-        alternatives.push_back(makeAlternative(
-            {left.range.first, right.range.last}, Alternative{left, right}
-        ));
+        alternatives.push_back(parseAlternative(code));
+        code.first = end(alternatives.back());
     }
 
     code = parseKeyword(code, "else");
