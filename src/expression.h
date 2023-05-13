@@ -124,7 +124,6 @@ struct Expression {
 };
 
 using Number = double;
-using Boolean = bool;
 using Character = char;
 // Unlike the other atoms Names are just created during parsing.
 // After that the std::vector of Names is static, which makes it easier to pass
