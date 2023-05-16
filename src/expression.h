@@ -176,6 +176,7 @@ struct FunctionBuiltIn {
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
+// Use index range for names, if names are not internalized.
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
     std::vector<Expression> input_names;
@@ -183,6 +184,7 @@ struct FunctionDictionary {
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
+// Use index range for names, if names are not internalized.
 struct FunctionTuple {
     Expression environment;
     std::vector<Expression> input_names;
@@ -209,11 +211,13 @@ struct String {
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
+// Cannot just use index range since elements are heterogeneous.
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
+// Cannot just use index range since elements are heterogeneous.
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
@@ -276,6 +280,9 @@ struct DefinitionPointer {
 
 // TODO: make cheaper to copy or pass by reference or pointer?
 // Bottleneck.
+// Add global vector to store all DefinitionPointer and use and index range here.
+// But then need to know all members of the dictionary before it is evaluated.
+// Do I also need to know their type?
 class Definitions {
 private:
     std::vector<DefinitionPointer> definitions;
