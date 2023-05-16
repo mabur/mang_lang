@@ -175,6 +175,7 @@ struct FunctionBuiltIn {
     std::function<Expression(Expression)> function;
 };
 
+// TODO: make cheaper to copy or pass by reference or pointer?
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
     std::vector<Expression> input_names;
