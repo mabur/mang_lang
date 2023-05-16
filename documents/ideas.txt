@@ -206,6 +206,8 @@ SYSTEM IMPLEMENTATION
       - serialize_types
     - evaluate
       - serialize
+* Internalizing "names" so that there is only one instance of each name.
+  - Use an unordered_map<string, size_t> to map from string to index in name array, to check if it already exist in makeName.
 * Fewer heap allocations and more stack allocations.
   - Examples:
     - std::string in serialize.
