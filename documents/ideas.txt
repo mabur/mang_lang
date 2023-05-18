@@ -151,6 +151,11 @@ LANGUAGE SYNTAX & SEMANTICS
   - Syntactic sugar for put-each-assignment
     - stack ++= [1 2 3]
     - string ++= "abc"
+    - table ++= <(1 2) (3 4)>
+    - number ++= 5 equivalent to number += 5
+    - boolean ++= yes equivalent to boolean += yes
+    - boolean ++= no does nothing.
+    - optional1 ++= optional2
   - Add optionals and treat them like containers.
       x = optional[]
       x += 5
