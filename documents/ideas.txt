@@ -148,6 +148,9 @@ LANGUAGE SYNTAX & SEMANTICS
     - Use -= to subtract from number?
     - Use -= to remove a specific item from a table?
     - Use -= to drop N items from a container?
+  - Syntactic sugar for put-each-assignment
+    - stack ++= [1 2 3]
+    - string ++= "abc"
   - Add optionals and treat them like containers.
       x = optional[]
       x += 5
