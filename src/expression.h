@@ -273,25 +273,25 @@ struct ForEndStatement {
 using Statements = std::vector<Expression>;
 
 
-struct DefinitionPointer {
+struct EvaluatedDefinition {
     NamePointer key;
     Expression value;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
 // Bottleneck.
-// Add global vector to store all DefinitionPointer and use and index range here.
+// Add global vector to store all EvaluatedDefinition and use and index range here.
 // But then need to know all members of the dictionary before it is evaluated.
 // Do I also need to know their type?
 class Definitions {
 private:
-    std::vector<DefinitionPointer> definitions;
+    std::vector<EvaluatedDefinition> definitions;
 public:
     bool empty() const;
     void add(NamePointer key, Expression value);
     bool has(NamePointer key) const;
     Expression lookup(NamePointer key) const;
-    std::vector<DefinitionPointer> sorted() const;
+    std::vector<EvaluatedDefinition> sorted() const;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?

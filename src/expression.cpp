@@ -54,6 +54,6 @@ Expression Definitions::lookup(NamePointer key) const {
     throw MissingSymbol(key, "dictionary");
 }
 
-std::vector<DefinitionPointer> Definitions::sorted() const {
+std::vector<EvaluatedDefinition> Definitions::sorted() const {
     return definitions;
 }
