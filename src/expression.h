@@ -282,7 +282,7 @@ struct EvaluatedDefinition {
 // Bottleneck.
 // Add global vector to store all EvaluatedDefinition and use and index range here.
 // But then need to know all members of the dictionary before it is evaluated.
-// Do I also need to know their type?
+// so that they are all added together, at least the first time.
 class Definitions {
 private:
     std::vector<EvaluatedDefinition> definitions;
