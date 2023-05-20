@@ -141,21 +141,10 @@ LANGUAGE SYNTAX & SEMANTICS
     - table!index (make constant or logN?)
     - get!(key table default_value) (logN)
 * Control structures for dictionaries.
-  - Support index in for loop:
-    for index, item in container
-    container2 = enumerate!container for pair in container2
   - Add syntactic sugar for numbers besides += like -=.
     - Use -= to subtract from number?
     - Use -= to remove a specific item from a table?
     - Use -= to drop N items from a container?
-  - Syntactic sugar for put-each-assignment
-    - stack ++= [1 2 3]
-    - string ++= "abc"
-    - table ++= <(1 2) (3 4)>
-    - number ++= 5 equivalent to number += 5
-    - boolean ++= yes equivalent to boolean += yes
-    - boolean ++= no does nothing.
-    - optional1 ++= optional2
   - Add optionals and treat them like containers.
       x = optional[]
       x += 5
