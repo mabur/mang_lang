@@ -130,20 +130,21 @@ writePixel = in (Number:x Number:y Number:width Number:height World:world) out S
 writeImage = in World:world out String:image@{
     WIDTH = 32
     HEIGHT = 20
-    image = ""
-    image = put_each!("P3" image)
-    image += newline
-    image = put_each!(serialize_natural_number!WIDTH image)
-    image += newline
-    image = put_each!(serialize_natural_number!HEIGHT image)
-    image += newline
-    image = put_each!("255" image)
-    image += newline
+    SEPARATOR = put!(newline "")
+    image = reverse!merge_string![
+        "P3"
+        SEPARATOR
+        serialize_natural_number!WIDTH
+        SEPARATOR
+        serialize_natural_number!HEIGHT
+        SEPARATOR
+        "255"
+        SEPARATOR
+    ]
     ys = range!HEIGHT
     for y in ys
         xs = range!WIDTH
         for x in xs
-            pixel = ""
             pixel = writePixel!(x y WIDTH HEIGHT world)
             image = put_each!(pixel image)
         end
