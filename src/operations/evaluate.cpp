@@ -486,6 +486,23 @@ Expression evaluateDictionaryTypes(
             const auto new_value = container_functions::putTyped(tuple);
             result.definitions.add(name, new_value);
         }
+        else if (type == PUT_EACH_ASSIGNMENT) {
+            const auto put_each_assignment = getPutEachAssignment(statement);
+            const auto& right_expression = put_each_assignment.expression;
+            const auto name = getName(put_each_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            
+            auto container = evaluate_types(right_expression, result_environment);
+            {
+                const auto current = lookupDictionary(name, result_environment);
+                const auto value = container_functions::takeTyped(container);
+                const auto tuple = makeEvaluatedTuple(
+                    {}, EvaluatedTuple{{value, current}}
+                );
+                const auto new_value = container_functions::putTyped(tuple);
+                result.definitions.add(name, new_value);
+            }
+        }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = getDropAssignment(statement);
             const auto name = getName(drop_assignment.name);
@@ -560,6 +577,28 @@ Expression evaluateDictionary(
             );
             const auto new_value = container_functions::put(tuple);
             result.definitions.add(name, new_value);
+            i += 1;
+        }
+        else if (type == PUT_EACH_ASSIGNMENT) {
+            const auto put_each_assignment = getPutEachAssignment(statement);
+            const auto& right_expression = put_each_assignment.expression;
+            const auto name = getName(put_each_assignment.name);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            
+            
+            for (
+                auto container = evaluate(right_expression, result_environment);
+                boolean(container);
+                container = container_functions::drop(container)
+            ) {
+                const auto current = lookupDictionary(name, result_environment);
+                const auto value = container_functions::take(container);
+                const auto tuple = makeEvaluatedTuple(
+                    {}, EvaluatedTuple{{value, current}}
+                );
+                const auto new_value = container_functions::put(tuple);
+                result.definitions.add(name, new_value);
+            }
             i += 1;
         }
         else if (type == DROP_ASSIGNMENT) {

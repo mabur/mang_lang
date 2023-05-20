@@ -35,6 +35,7 @@ enum ExpressionType {
     ARGUMENT,
     DEFINITION,
     PUT_ASSIGNMENT,
+    PUT_EACH_ASSIGNMENT,
     DROP_ASSIGNMENT,
     WHILE_STATEMENT,
     FOR_STATEMENT,
@@ -78,6 +79,7 @@ const auto NAMES = std::vector<std::string>{
     "ARGUMENT",
     "DEFINITION",
     "PUT_ASSIGNMENT",
+    "PUT_EACH_ASSIGNMENT",
     "DROP_ASSIGNMENT",
     "WHILE_STATEMENT",
     "FOR_STATEMENT",
@@ -238,6 +240,11 @@ struct Definition {
 };
 
 struct PutAssignment {
+    Expression name;
+    Expression expression;
+};
+
+struct PutEachAssignment {
     Expression name;
     Expression expression;
 };

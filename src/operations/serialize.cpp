@@ -70,6 +70,10 @@ std::string serializePutAssignment(const PutAssignment& element) {
     return std::string(getName(element.name)) + "+=" + serialize(element.expression) + ' ';
 }
 
+std::string serializePutEachAssignment(const PutEachAssignment& element) {
+    return std::string(getName(element.name)) + "++=" + serialize(element.expression) + ' ';
+}
+
 std::string serializeDropAssignment(const DropAssignment& element) {
     return std::string(getName(element.name)) + "-- ";
 }
@@ -300,6 +304,7 @@ std::string serialize(Expression expression) {
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize, getEvaluatedDictionary(expression));
         case DEFINITION: return serializeDefinition(getDefinition(expression));
         case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
+        case PUT_EACH_ASSIGNMENT: return serializePutEachAssignment(getPutEachAssignment(expression));
         case DROP_ASSIGNMENT: return serializeDropAssignment(getDropAssignment(expression));
         case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
         case FOR_STATEMENT: return serializeForStatement(getForStatement(expression));

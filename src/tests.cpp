@@ -282,6 +282,7 @@ int main() {
         {"{while 1 end}", "{while 1 end}"},
         {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
+        {"{i=[] i++=[1]}", "{i=[] i++=[1]}"},
     });
     test.reformat("dictionary for", {
         {"{for i in c end}", "{for i in c end}"},
@@ -293,6 +294,7 @@ int main() {
         {"{i=10 while i i=dec!i end j=1}", "{i=NUMBER j=NUMBER}"},
         {"{c=yes for c return end s=0}", "{c=YES s=NUMBER}"},
         {"{c=no for c return end s=0}", "{c=NO s=NUMBER}"},
+        {"{i=[] i++=[1]}", "{i=[NUMBER]}"},
     });
     test.evaluate_all("dictionary iterations", {
         {"{i=2 while i i=dec!i end}", "{i=0}"},
@@ -300,6 +302,9 @@ int main() {
         {"{i=2 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=3}"},
         {"{i=1000 tot=0 while i tot=add!(tot i) i=dec!i end}", "{i=0 tot=500500}"},
         {"{i=2 c=[] while i c+=i i=dec!i end}", "{i=0 c=[1 2]}"},
+        {"{i=[] i++=[]}", "{i=[]}"},
+        {"{i=[] i++=[1]}", "{i=[1]}"},
+        {"{i=[] i++=[1 2]}", "{i=[2 1]}"},
     });
     test.evaluate_all("dictionary for", {
         {"{c=3 s=0 for c s+=c end}", "{c=0 s=6}"},

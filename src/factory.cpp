@@ -36,6 +36,7 @@ std::vector<WhileEndStatement> while_end_statements;
 std::vector<ForEndStatement> for_end_statements;
 std::vector<Definition> definitions;
 std::vector<PutAssignment> put_assignments;
+std::vector<PutEachAssignment> put_each_assignments;
 std::vector<DropAssignment> drop_assignments;
 std::vector<String> strings;
 std::vector<Expression> expressions;
@@ -260,6 +261,10 @@ Expression makePutAssignment(CodeRange code, PutAssignment expression) {
     return makeExpression(code, expression, PUT_ASSIGNMENT, put_assignments);
 }
 
+Expression makePutEachAssignment(CodeRange code, PutEachAssignment expression) {
+    return makeExpression(code, expression, PUT_EACH_ASSIGNMENT, put_each_assignments);
+}
+
 Expression makeDropAssignment(CodeRange code, DropAssignment expression) {
     return makeExpression(code, expression, DROP_ASSIGNMENT, drop_assignments);
 }
@@ -304,6 +309,10 @@ Definition getDefinition(Expression expression) {
 
 PutAssignment getPutAssignment(Expression expression) {
     return getExpression(expression, PUT_ASSIGNMENT, put_assignments);
+}
+
+PutEachAssignment getPutEachAssignment(Expression expression) {
+    return getExpression(expression, PUT_EACH_ASSIGNMENT, put_each_assignments);
 }
 
 DropAssignment getDropAssignment(Expression expression) {

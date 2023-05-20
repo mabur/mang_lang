@@ -76,6 +76,14 @@ bool isKeyword(CodeRange code, const std::string& word) {
     return !isNameCharacter(*after);
 }
 
+bool startsWith(CodeRange code, const std::string& word) {
+    const auto w = makeCodeCharacters(word);
+    if (code.size() < w.size()) {
+        return false;
+    }
+    return std::equal(w.begin(), w.end(), code.begin(), haveSameCharacters);
+}
+
 bool startsWith(CodeRange code, char c) {
     return !code.empty() && code.begin()->character == c;
 }

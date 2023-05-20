@@ -146,7 +146,7 @@ Expression parseNamedElement(CodeRange code) {
             DropAssignment{std::move(name)}
         );
     }
-    else {
+    else if (startsWith(code, "+=")) {
         code = parseKeyword(code, "+=");
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
@@ -155,6 +155,17 @@ Expression parseNamedElement(CodeRange code) {
         return makePutAssignment(
             CodeRange{first, code.first},
             PutAssignment{std::move(name), expression}
+        );
+    }
+    else {
+        code = parseKeyword(code, "++=");
+        code = parseWhiteSpace(code);
+        auto expression = parseExpression(code);
+        code.first = end(expression);
+        code = parseWhiteSpace(code);
+        return makePutEachAssignment(
+            CodeRange{first, code.first},
+            PutEachAssignment{std::move(name), expression}
         );
     }
 
