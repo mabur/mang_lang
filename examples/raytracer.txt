@@ -111,42 +111,41 @@ shade = in (Intersection:intersection world) out Numbers:color@{
 
 colorU8fromF64 = in Number:c out Number:round!min!(mul!(255 c) 255)
 
-writePixel = in (Number:x Number:y Number:width Number:height World:world) out String:result@{
-    result = ""
+writePixel = in (String:image Number:x Number:y Number:width Number:height World:world) out String:image@{
     start = [0 0 0]
     xd = sub!(x div!(width 2))
     yd = sub!(y div!(height 2))
     zd = div!(height 2)
     direction = normalize![xd yd zd]
-
     intersection = findIntersection!(start direction spheres@world)
     color = shade!(intersection world)
-    r = serialize_natural_number!colorU8fromF64!color!0
-    g = serialize_natural_number!colorU8fromF64!color!1
-    b = serialize_natural_number!colorU8fromF64!color!2
-    result = merge_string![r " " g " " b " "]
+
+    image = image
+    image ++= serialize_natural_number!colorU8fromF64!color!0
+    image ++= " "
+    image ++= serialize_natural_number!colorU8fromF64!color!1
+    image ++= " "
+    image ++= serialize_natural_number!colorU8fromF64!color!2
+    image ++= " "
 }
 
 writeImage = in World:world out String:image@{
     WIDTH = 32
     HEIGHT = 20
-    SEPARATOR = put!(newline "")
-    image = reverse!merge_string![
-        "P3"
-        SEPARATOR
-        serialize_natural_number!WIDTH
-        SEPARATOR
-        serialize_natural_number!HEIGHT
-        SEPARATOR
-        "255"
-        SEPARATOR
-    ]
+    image = ""
+    image ++= "P3"
+    image += newline
+    image ++= serialize_natural_number!WIDTH
+    image += newline
+    image ++= serialize_natural_number!HEIGHT
+    image += newline
+    image ++= "255"
+    image += newline
     ys = range!HEIGHT
     for y in ys
         xs = range!WIDTH
         for x in xs
-            pixel = writePixel!(x y WIDTH HEIGHT world)
-            image = put_each!(pixel image)
+            image = writePixel!(image x y WIDTH HEIGHT world)
         end
     end
     image = reverse!image
