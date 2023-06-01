@@ -254,6 +254,10 @@ SYSTEM IMPLEMENTATION
   - Functions (todo)
     - Sets environment and taret types for input.
 * Error handling:
+  - Add error messages as comments in source code.
+    - Add (line) comments
+    - // PARSE ERROR   ^ expected closing brace }
+    - Remove old error message comments when there are no error messages.
   - Output logs
   - Make "1 2" throw a parse error
   - c++ add systematic error messages when parsing fails
