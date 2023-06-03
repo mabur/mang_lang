@@ -234,6 +234,8 @@ struct EvaluatedStack {
     Expression rest;
 };
 
+// STATEMENTS BEGIN
+
 struct Definition {
     Expression name;
     Expression expression;
@@ -276,6 +278,8 @@ struct WhileEndStatement {
 struct ForEndStatement {
     size_t for_index_;
 };
+
+// STATEMENTS END
 
 struct EvaluatedDefinition {
     NamePointer key;
