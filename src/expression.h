@@ -236,8 +236,8 @@ struct EvaluatedStack {
 
 // TODO: store index for dictionary names for fast lookup.
 struct DictionaryName {
+    Expression name;
     size_t index;
-    std::string name;
 };
 
 // STATEMENTS BEGIN
