@@ -173,16 +173,16 @@ struct FunctionBuiltIn {
     std::function<Expression(Expression)> function;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
-// Use index range for names, if names are not internalized.
+// TODO: make cheaper to copy.
+// Use index range for name expressions, or fixed size on stack.
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
     std::vector<Expression> input_names;
     Expression body;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
-// Use index range for names, if names are not internalized.
+// TODO: make cheaper to copy.
+// Use index range for name expressions, or fixed size on stack.
 struct FunctionTuple {
     Expression environment;
     std::vector<Expression> input_names;
@@ -208,18 +208,14 @@ struct String {
     Expression rest;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
-// Cannot just use index range on a single type since elements are heterogeneous.
-// But there is also an expressions array that we can refer to using indices.
-// But maybe no point since tuples are small any way.
+// TODO: make cheaper to copy.
+// Use index range for expressions, or fixed size on stack.
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
-// Cannot just use index range on a single type since elements are heterogeneous.
-// But there is also an expressions array that we can refer to using indices.
-// But maybe no point since tuples are small any way.
+// TODO: make cheaper to copy.
+// Use index range for expressions, or fixed size on stack.
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
@@ -292,9 +288,9 @@ struct EvaluatedDefinition {
     Expression value;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
+// TODO: make cheaper to copy.
 // Bottleneck.
-// Add global vector to store all EvaluatedDefinition and use and index range here.
+// Use index range for definitions.
 // But then need to know all members of the dictionary before it is evaluated.
 // so that they are all added together, at least the first time.
 struct Definitions {
@@ -307,12 +303,12 @@ struct Definitions {
     std::vector<EvaluatedDefinition> sorted() const;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
+// TODO: make cheaper to copy.
 struct Dictionary {
     std::vector<Expression> statements;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
+// TODO: make cheaper to copy.
 // Bottleneck.
 struct EvaluatedDictionary {
     Expression environment;
