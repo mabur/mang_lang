@@ -195,7 +195,7 @@ LANGUAGE SYNTAX & SEMANTICS
 
 SYSTEM IMPLEMENTATION
 * Optimization:
-  - Raytracer 32x20: 2.3s
+  - Raytracer 32x20: 2.3s -> name interning -> 1.9s
 * Nodes & Passes:
   - Parse
     - serialize
