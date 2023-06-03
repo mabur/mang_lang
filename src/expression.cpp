@@ -23,11 +23,11 @@ MissingKey::MissingKey(
     : std::runtime_error("Cannot find key " + key + " in table")
 {}
 
-bool Definitions::empty() const {
+bool EvaluatedDictionary::empty() const {
     return definitions.empty();
 }
 
-void Definitions::add(Expression key, Expression value) {
+void EvaluatedDictionary::add(Expression key, Expression value) {
     for (auto& definition: definitions) {
         if (definition.name.index == key.index) {
             definition.expression = value;
@@ -37,7 +37,7 @@ void Definitions::add(Expression key, Expression value) {
     definitions.push_back({key, value});
 }
 
-bool Definitions::has(Expression key) const {
+bool EvaluatedDictionary::has(Expression key) const {
     for (const auto& definition: definitions) {
         if (definition.name.index == key.index) {
             return true;
@@ -47,7 +47,7 @@ bool Definitions::has(Expression key) const {
 }
 
 
-Expression Definitions::lookup(Expression key) const {
+Expression EvaluatedDictionary::lookup(Expression key) const {
     for (const auto& definition: definitions) {
         if (definition.name.index == key.index) {
             return definition.expression;

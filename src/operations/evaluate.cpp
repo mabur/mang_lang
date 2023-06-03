@@ -46,8 +46,8 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         }
     }
     if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
-        const auto definitions_left = getEvaluatedDictionary(left).definitions.definitions;
-        const auto definitions_right = getEvaluatedDictionary(right).definitions.definitions;
+        const auto definitions_left = getEvaluatedDictionary(left).definitions;
+        const auto definitions_right = getEvaluatedDictionary(right).definitions;
         if (definitions_left.size() != definitions_right.size()) {
             throw std::runtime_error(
                 "Static type error in " + description + ". Inconsistent dictionary size."
@@ -130,7 +130,7 @@ Expression evaluateLookupChild(
 ) {
     const auto child = evaluator(lookup_child.child, environment);
     const auto dictionary = getEvaluatedDictionary(child);
-    return dictionary.definitions.lookup(lookup_child.name);
+    return dictionary.lookup(lookup_child.name);
 }
 
 template<typename Evaluator>
@@ -153,7 +153,7 @@ Expression applyFunction(
     
     const auto argument = getArgument(function.input_name);
     checkArgument(evaluator, argument, input, function.environment);
-    const auto definitions = Definitions{{{argument.name, input}}};
+    const auto definitions = std::vector<Definition>{{argument.name, input}};
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
     );
@@ -167,10 +167,9 @@ Expression applyFunctionDictionary(
     Expression input
 ) {
     const auto evaluated_dictionary = getEvaluatedDictionary(input);
-    const auto& definitions = evaluated_dictionary.definitions;
     for (const auto& name : function_dictionary.input_names) {
         const auto argument = getArgument(name);
-        const auto expression = definitions.lookup(argument.name);
+        const auto expression = evaluated_dictionary.lookup(argument.name);
         checkArgument(evaluator, argument, expression, function_dictionary.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
@@ -198,7 +197,7 @@ Expression applyFunctionTuple(
         definitions[i] = Definition{argument.name, expression};
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function.environment, Definitions{definitions}}
+        EvaluatedDictionary{function.environment, definitions}
     );
     return evaluator(function.body, middle);
 }
@@ -232,10 +231,10 @@ Expression lookupDictionary(Expression name, Expression expression) {
         throw MissingSymbol(getName(name), "environment of type " + NAMES[expression.type]);
     }
     const auto dictionary = getEvaluatedDictionary(expression);
-    if (!dictionary.definitions.has(name)) {
+    if (!dictionary.has(name)) {
         return lookupDictionary(name, dictionary.environment);
     }
-    return dictionary.definitions.lookup(name);
+    return dictionary.lookup(name);
 }
 
 Expression applyFunctionBuiltIn(
@@ -469,8 +468,8 @@ Expression evaluateDictionaryTypes(
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             // TODO: is this a principled approach?
-            if (value.type != ANY || !result.definitions.has(name)) {
-                result.definitions.add(name, value);
+            if (value.type != ANY || !result.has(name)) {
+                result.add(name, value);
             }
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -484,7 +483,7 @@ Expression evaluateDictionaryTypes(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::putTyped(tuple);
-            result.definitions.add(name, new_value);
+            result.add(name, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
@@ -500,7 +499,7 @@ Expression evaluateDictionaryTypes(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::putTyped(tuple);
-                result.definitions.add(name, new_value);
+                result.add(name, new_value);
             }
         }
         else if (type == DROP_ASSIGNMENT) {
@@ -509,7 +508,7 @@ Expression evaluateDictionaryTypes(
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = lookupDictionary(name, result_environment);
             const auto new_value = container_functions::dropTyped(current);
-            result.definitions.add(name, new_value);
+            result.add(name, new_value);
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWhileStatement(statement);
@@ -523,7 +522,7 @@ Expression evaluateDictionaryTypes(
             booleanTypes(container);
             const auto name_item = for_statement.name_item;
             const auto value = container_functions::takeTyped(container);
-            result.definitions.add(name_item, value);
+            result.add(name_item, value);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
@@ -562,7 +561,7 @@ Expression evaluateDictionary(
             const auto value = evaluate(right_expression, result_environment);
             const auto name = definition.name;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            result.definitions.add(name, value);
+            result.add(name, value);
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -576,7 +575,7 @@ Expression evaluateDictionary(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::put(tuple);
-            result.definitions.add(name, new_value);
+            result.add(name, new_value);
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
@@ -597,7 +596,7 @@ Expression evaluateDictionary(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::put(tuple);
-                result.definitions.add(name, new_value);
+                result.add(name, new_value);
             }
             i += 1;
         }
@@ -607,7 +606,7 @@ Expression evaluateDictionary(
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto current = lookupDictionary(name, result_environment);
             const auto new_value = container_functions::drop(current);
-            result.definitions.add(name, new_value);
+            result.add(name, new_value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -626,7 +625,7 @@ Expression evaluateDictionary(
             if (boolean(container)) {
                 const auto name_item = for_statement.name_item;
                 const auto value = container_functions::take(container);
-                result.definitions.add(name_item, value);
+                result.add(name_item, value);
                 i += 1;
             } else {
                 i = for_statement.end_index_ + 1;
@@ -653,7 +652,7 @@ Expression evaluateDictionary(
             auto& result = getMutableEvaluatedDictionary(result_environment);
             const auto old_container = lookupDictionary(name, result_environment);
             const auto new_container = container_functions::drop(old_container);
-            result.definitions.add(name, new_container);
+            result.add(name, new_container);
         }
         else if (type == RETURN_STATEMENT) {
             break;

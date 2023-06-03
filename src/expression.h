@@ -284,29 +284,24 @@ struct ForEndStatement {
 // STATEMENTS END
 
 // TODO: make cheaper to copy.
-// Bottleneck.
-// Use index range for definitions.
-// But then need to know all members of the dictionary before it is evaluated.
-// so that they are all added together, at least the first time.
-struct Definitions {
-    std::vector<Definition> definitions;
-
-    bool empty() const;
-    void add(Expression key, Expression value);
-    bool has(Expression key) const;
-    Expression lookup(Expression key) const;
-};
-
-// TODO: make cheaper to copy.
 struct Dictionary {
     std::vector<Expression> statements;
 };
 
 // TODO: make cheaper to copy.
 // Bottleneck.
+// Use index range for definitions.
+// But then need to know all members of the dictionary before it is evaluated.
+// so that they are all added together, at least the first time.
+// Bottleneck.
 struct EvaluatedDictionary {
     Expression environment;
-    Definitions definitions;
+    std::vector<Definition> definitions;
+
+    bool empty() const;
+    void add(Expression key, Expression value);
+    bool has(Expression key) const;
+    Expression lookup(Expression key) const;
 };
 
 struct Row {

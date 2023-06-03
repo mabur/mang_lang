@@ -11,7 +11,7 @@ Expression define(std::function<Expression(Expression)> function) {
 }
 
 Expression builtIns() {
-    const auto definitions = Definitions{{
+    const auto definitions = std::vector<Definition>{
         {makeName({}, "clear"),      define(container_functions::clear)},
         {makeName({}, "put"),        define(container_functions::put)},
         {makeName({}, "take"),       define(container_functions::take)},
@@ -29,14 +29,14 @@ Expression builtIns() {
         {makeName({}, "sqrt"),       define(arithmetic::sqrt)},
         {makeName({}, "number"),     define(arithmetic::ascii_number)},
         {makeName({}, "character"),  define(arithmetic::ascii_character)},
-    }};
+    };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
     );
 }
 
 Expression builtInsTypes() {
-    const auto definitions = Definitions{{
+    const auto definitions = std::vector<Definition>{
         {makeName({}, "clear"),       define(container_functions::clearTyped)},
         {makeName({}, "put"),         define(container_functions::putTyped)},
         {makeName({}, "take"),        define(container_functions::takeTyped)},
@@ -54,7 +54,7 @@ Expression builtInsTypes() {
         {makeName({}, "sqrt"),        define(arithmetic::FunctionNumberToNumber{"sqrt"})},
         {makeName({}, "number"),      define(arithmetic::FunctionCharacterToNumber{"number"})},
         {makeName({}, "character"),   define(arithmetic::FunctionNumberToCharacter{"character"})},
-    }};
+    };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
     );
