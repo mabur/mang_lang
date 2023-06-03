@@ -297,8 +297,7 @@ struct Dictionary {
 struct EvaluatedDictionary {
     Expression environment;
     std::vector<Definition> definitions;
-
-    bool empty() const;
+    
     void add(Expression key, Expression value);
     bool has(Expression key) const;
     Expression lookup(Expression key) const;

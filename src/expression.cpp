@@ -23,10 +23,6 @@ MissingKey::MissingKey(
     : std::runtime_error("Cannot find key " + key + " in table")
 {}
 
-bool EvaluatedDictionary::empty() const {
-    return definitions.empty();
-}
-
 void EvaluatedDictionary::add(Expression key, Expression value) {
     for (auto& definition: definitions) {
         if (definition.name.index == key.index) {
