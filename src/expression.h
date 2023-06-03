@@ -213,13 +213,17 @@ struct String {
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
-// Cannot just use index range since elements are heterogeneous.
+// Cannot just use index range on a single type since elements are heterogeneous.
+// But there is also an expressions array that we can refer to using indices.
+// But maybe no point since tuples are small any way.
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
-// Cannot just use index range since elements are heterogeneous.
+// Cannot just use index range on a single type since elements are heterogeneous.
+// But there is also an expressions array that we can refer to using indices.
+// But maybe no point since tuples are small any way.
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
