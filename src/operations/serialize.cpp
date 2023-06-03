@@ -97,7 +97,7 @@ std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedD
         return "{}";
     }
     auto result = std::string{"{"};
-    for (const auto& pair : dictionary.definitions.sorted()) {
+    for (const auto& pair : dictionary.definitions.definitions) {
         result += getName(pair.name) + "=" + serializer(pair.expression) + " ";
     }
     result.back() = '}';

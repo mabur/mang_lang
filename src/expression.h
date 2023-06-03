@@ -295,7 +295,6 @@ struct Definitions {
     void add(Expression key, Expression value);
     bool has(Expression key) const;
     Expression lookup(Expression key) const;
-    std::vector<Definition> sorted() const;
 };
 
 // TODO: make cheaper to copy.

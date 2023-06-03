@@ -46,8 +46,8 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         }
     }
     if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
-        const auto definitions_left = getEvaluatedDictionary(left).definitions.sorted();
-        const auto definitions_right = getEvaluatedDictionary(right).definitions.sorted();
+        const auto definitions_left = getEvaluatedDictionary(left).definitions.definitions;
+        const auto definitions_right = getEvaluatedDictionary(right).definitions.definitions;
         if (definitions_left.size() != definitions_right.size()) {
             throw std::runtime_error(
                 "Static type error in " + description + ". Inconsistent dictionary size."

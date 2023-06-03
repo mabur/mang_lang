@@ -55,7 +55,3 @@ Expression Definitions::lookup(Expression key) const {
     }
     throw MissingSymbol(getName(key), "dictionary");
 }
-
-std::vector<Definition> Definitions::sorted() const {
-    return definitions;
-}
