@@ -290,10 +290,9 @@ struct EvaluatedDefinition {
 // Add global vector to store all EvaluatedDefinition and use and index range here.
 // But then need to know all members of the dictionary before it is evaluated.
 // so that they are all added together, at least the first time.
-class Definitions {
-private:
+struct Definitions {
     std::vector<EvaluatedDefinition> definitions;
-public:
+
     bool empty() const;
     void add(NamePointer key, Expression value);
     bool has(NamePointer key) const;

@@ -11,29 +11,25 @@ Expression define(std::function<Expression(Expression)> function) {
 }
 
 Expression builtIns() {
-    auto definitions = Definitions{};
-    definitions.add("clear", define(container_functions::clear));
-    definitions.add("put", define(container_functions::put));
-    definitions.add("take", define(container_functions::take));
-    definitions.add("drop", define(container_functions::drop));
-    definitions.add("get", define(container_functions::get));
-
-    definitions.add("add", define(arithmetic::add));
-    definitions.add("mul", define(arithmetic::mul));
-    definitions.add("sub", define(arithmetic::sub));
-    definitions.add("div", define(arithmetic::div));
-    definitions.add("mod", define(arithmetic::mod));
-
-    definitions.add("less", define(arithmetic::less));
-
-    definitions.add("round", define(arithmetic::round));
-    definitions.add("round_up", define(arithmetic::round_up));
-    definitions.add("round_down", define(arithmetic::round_down));
-    definitions.add("sqrt", define(arithmetic::sqrt));
-
-    definitions.add("number", define(arithmetic::ascii_number));
-    definitions.add("character", define(arithmetic::ascii_character));
-
+    const auto definitions = Definitions{{
+        {"clear",      define(container_functions::clear)},
+        {"put",        define(container_functions::put)},
+        {"take",       define(container_functions::take)},
+        {"drop",       define(container_functions::drop)},
+        {"get",        define(container_functions::get)},
+        {"add",        define(arithmetic::add)},
+        {"mul",        define(arithmetic::mul)},
+        {"sub",        define(arithmetic::sub)},
+        {"div",        define(arithmetic::div)},
+        {"mod",        define(arithmetic::mod)},
+        {"less",       define(arithmetic::less)},
+        {"round",      define(arithmetic::round)},
+        {"round_up",   define(arithmetic::round_up)},
+        {"round_down", define(arithmetic::round_down)},
+        {"sqrt",       define(arithmetic::sqrt)},
+        {"number",     define(arithmetic::ascii_number)},
+        {"character",  define(arithmetic::ascii_character)},
+    }};
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
     );
