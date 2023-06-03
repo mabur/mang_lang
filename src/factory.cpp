@@ -1,6 +1,8 @@
 #include "factory.h"
 
 #include <cassert>
+#include <iostream>
+#include <unordered_map>
 #include <vector>
 
 #include "operations/serialize.h"
@@ -27,6 +29,7 @@ std::vector<LookupChild> child_lookups;
 std::vector<FunctionApplication> function_applications;
 std::vector<LookupSymbol> symbol_lookups;
 std::vector<Name> names;
+std::unordered_map<Name, size_t> name_indices;
 std::vector<Argument> arguments;
 std::vector<Number> numbers;
 std::vector<WhileStatement> while_statements;
@@ -113,10 +116,13 @@ BinaryTuple getBinaryTuple(Expression in) {
 }
 
 void clearMemory() {
+    dynamic_expressions.clear();
+    typed_expressions.clear();
     evaluated_dictionaries.clear();
     dictionaries.clear();
     conditionals.clear();
     is_expressions.clear();
+    alternatives.clear();
     functions.clear();
     built_in_functions.clear();
     dictionary_functions.clear();
@@ -132,13 +138,18 @@ void clearMemory() {
     function_applications.clear();
     symbol_lookups.clear();
     names.clear();
+    name_indices.clear();
+    arguments.clear();
     numbers.clear();
     while_statements.clear();
     for_statements.clear();
+    for_simple_statements.clear();
     while_end_statements.clear();
     for_end_statements.clear();
     definitions.clear();
     put_assignments.clear();
+    put_each_assignments.clear();
+    drop_assignments.clear();
     strings.clear();
     expressions.clear();
 }
@@ -246,7 +257,15 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
 }
 
 Expression makeName(CodeRange code, Name expression) {
-    return makeExpression(code, expression, NAME, names);
+    const auto name_index = name_indices.find(expression);
+    if (name_index == name_indices.end()) {
+        name_indices[expression] = names.size();
+        return makeExpression(code, expression, NAME, names);
+    }
+    else {
+        expressions.push_back(Expression{NAME, name_index->second, code});
+        return expressions.back();
+    }
 }
 
 Expression makeArgument(CodeRange code, Argument expression) {
