@@ -55,8 +55,8 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         }
         const auto count = definitions_left.size();
         for (size_t i = 0; i < count; ++i) {
-            const auto& name_left = definitions_left[i].key;
-            const auto& name_right = definitions_right[i].key;
+            const auto& name_left = definitions_left[i].name;
+            const auto& name_right = definitions_right[i].name;
             if (name_left.index != name_right.index) {
                 throw std::runtime_error(
                     "Static type error in " + description +
@@ -64,7 +64,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
                     getName(name_left) + " & " + getName(name_right)
                 );
             }
-            checkTypes(definitions_left[i].value, definitions_right[i].value, description);
+            checkTypes(definitions_left[i].expression, definitions_right[i].expression, description);
         }
     }
     if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
@@ -190,12 +190,12 @@ Expression applyFunctionTuple(
     }
     
     const auto num_inputs = input_names.size();
-    auto definitions = std::vector<EvaluatedDefinition>(num_inputs);
+    auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = getArgument(input_names[i]);
         const auto expression = tuple.expressions[i];
         checkArgument(evaluator, argument, expression, function.environment);
-        definitions[i] = EvaluatedDefinition{argument.name, expression};
+        definitions[i] = Definition{argument.name, expression};
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, Definitions{definitions}}

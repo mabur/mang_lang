@@ -29,8 +29,8 @@ bool Definitions::empty() const {
 
 void Definitions::add(Expression key, Expression value) {
     for (auto& definition: definitions) {
-        if (definition.key.index == key.index) {
-            definition.value = value;
+        if (definition.name.index == key.index) {
+            definition.expression = value;
             return;
         }
     }
@@ -39,7 +39,7 @@ void Definitions::add(Expression key, Expression value) {
 
 bool Definitions::has(Expression key) const {
     for (const auto& definition: definitions) {
-        if (definition.key.index == key.index) {
+        if (definition.name.index == key.index) {
             return true;
         }
     }
@@ -49,13 +49,13 @@ bool Definitions::has(Expression key) const {
 
 Expression Definitions::lookup(Expression key) const {
     for (const auto& definition: definitions) {
-        if (definition.key.index == key.index) {
-            return definition.value;
+        if (definition.name.index == key.index) {
+            return definition.expression;
         }
     }
     throw MissingSymbol(getName(key), "dictionary");
 }
 
-std::vector<EvaluatedDefinition> Definitions::sorted() const {
+std::vector<Definition> Definitions::sorted() const {
     return definitions;
 }
