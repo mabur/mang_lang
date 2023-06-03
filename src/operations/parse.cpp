@@ -246,7 +246,7 @@ Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto statements = Statements{};
+    auto statements = std::vector<Expression>{};
     auto while_indices = std::vector<size_t>{};
     auto for_indices = std::vector<size_t>{};
     while (!::startsWith(code, '}')) {

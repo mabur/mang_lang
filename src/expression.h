@@ -277,9 +277,6 @@ struct ForEndStatement {
     size_t for_index_;
 };
 
-using Statements = std::vector<Expression>;
-
-
 struct EvaluatedDefinition {
     NamePointer key;
     Expression value;
@@ -302,7 +299,7 @@ struct Definitions {
 
 // TODO: make cheaper to copy or pass by reference or pointer?
 struct Dictionary {
-    Statements statements;
+    std::vector<Expression> statements;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
