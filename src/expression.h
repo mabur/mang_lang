@@ -129,11 +129,7 @@ struct Expression {
 
 using Number = double;
 using Character = char;
-// Unlike the other atoms Names are just created during parsing.
-// After that the std::vector of Names is static, which makes it easier to pass
-// around references or pointers.
 using Name = std::string;
-using NamePointer = const char*;
 
 struct Argument {
     Expression type;
@@ -292,7 +288,7 @@ struct ForEndStatement {
 // STATEMENTS END
 
 struct EvaluatedDefinition {
-    NamePointer key;
+    Expression key; // Name
     Expression value;
 };
 
@@ -305,9 +301,9 @@ struct Definitions {
     std::vector<EvaluatedDefinition> definitions;
 
     bool empty() const;
-    void add(NamePointer key, Expression value);
-    bool has(NamePointer key) const;
-    Expression lookup(NamePointer key) const;
+    void add(Expression key, Expression value);
+    bool has(Expression key) const;
+    Expression lookup(Expression key) const;
     std::vector<EvaluatedDefinition> sorted() const;
 };
 

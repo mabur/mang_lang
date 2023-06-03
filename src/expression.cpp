@@ -1,6 +1,8 @@
 #include "expression.h"
 #include <string.h>
 
+#include "factory.h"
+
 StaticTypeError::StaticTypeError(
     ExpressionType type, const std::string& location)
     : std::runtime_error("Static type error " + NAMES[type] + " for " + location)
@@ -25,9 +27,9 @@ bool Definitions::empty() const {
     return definitions.empty();
 }
 
-void Definitions::add(NamePointer key, Expression value) {
+void Definitions::add(Expression key, Expression value) {
     for (auto& definition: definitions) {
-        if (strcmp(definition.key, key) == 0) {
+        if (definition.key.index == key.index) {
             definition.value = value;
             return;
         }
@@ -35,9 +37,9 @@ void Definitions::add(NamePointer key, Expression value) {
     definitions.push_back({key, value});
 }
 
-bool Definitions::has(NamePointer key) const {
+bool Definitions::has(Expression key) const {
     for (const auto& definition: definitions) {
-        if (strcmp(definition.key, key) == 0) {
+        if (definition.key.index == key.index) {
             return true;
         }
     }
@@ -45,13 +47,13 @@ bool Definitions::has(NamePointer key) const {
 }
 
 
-Expression Definitions::lookup(NamePointer key) const {
+Expression Definitions::lookup(Expression key) const {
     for (const auto& definition: definitions) {
-        if (strcmp(definition.key, key) == 0) {
+        if (definition.key.index == key.index) {
             return definition.value;
         }
     }
-    throw MissingSymbol(key, "dictionary");
+    throw MissingSymbol(getName(key), "dictionary");
 }
 
 std::vector<EvaluatedDefinition> Definitions::sorted() const {

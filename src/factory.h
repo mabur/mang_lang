@@ -50,7 +50,7 @@ EvaluatedStack getEvaluatedStack(Expression expression);
 LookupChild getLookupChild(Expression expression);
 FunctionApplication getFunctionApplication(Expression expression);
 LookupSymbol getLookupSymbol(Expression expression);
-NamePointer getName(Expression expression);
+Name getName(Expression expression);
 Argument getArgument(Expression expression);
 String getString(Expression expression);
 

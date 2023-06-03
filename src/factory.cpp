@@ -470,8 +470,8 @@ LookupSymbol getLookupSymbol(Expression expression) {
     return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
 }
 
-NamePointer getName(Expression expression) {
-    return getImmutableExpressionReference(expression, NAME, names).c_str();
+Name getName(Expression expression) {
+    return getExpression(expression, NAME, names);
 }
 
 Argument getArgument(Expression expression) {
