@@ -189,16 +189,17 @@ Expression applyFunctionTuple(
     if (input_names.size() != tuple.expressions.size()) {
         throw std::runtime_error{"Wrong number of input to function"};
     }
-    auto definitions = Definitions{};
+    
     const auto num_inputs = input_names.size();
+    auto definitions = std::vector<EvaluatedDefinition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = getArgument(input_names[i]);
         const auto expression = tuple.expressions[i];
         checkArgument(evaluator, argument, expression, function.environment);
-        definitions.add(getName(argument.name), expression);
+        definitions[i] = EvaluatedDefinition{getName(argument.name), expression};
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function.environment, definitions}
+        EvaluatedDictionary{function.environment, Definitions{definitions}}
     );
     return evaluator(function.body, middle);
 }
