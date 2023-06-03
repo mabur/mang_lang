@@ -151,10 +151,10 @@ Expression applyFunction(
     const Function& function,
     Expression input
 ) {
-    auto definitions = Definitions{};
+    
     const auto argument = getArgument(function.input_name);
     checkArgument(evaluator, argument, input, function.environment);
-    definitions.add(getName(argument.name), input);
+    const auto definitions = Definitions{{{getName(argument.name), input}}};
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
     );
