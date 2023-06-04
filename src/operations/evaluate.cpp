@@ -194,7 +194,7 @@ Expression applyFunctionTuple(
         const auto argument = getArgument(input_names[i]);
         const auto expression = tuple.expressions[i];
         checkArgument(evaluator, argument, expression, function.environment);
-        definitions[i] = Definition{argument.name, expression, 0};
+        definitions[i] = Definition{argument.name, expression, i};
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{function.environment, definitions}
