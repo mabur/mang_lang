@@ -319,7 +319,7 @@ Expression parseDictionary(CodeRange code) {
         }
     }
     return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{new_statements}
+        CodeRange{first, code.begin()}, Dictionary{new_statements, index_from_name.size()}
     );
 }
 

@@ -281,6 +281,7 @@ struct ForEndStatement {
 // TODO: make cheaper to copy.
 struct Dictionary {
     std::vector<Expression> statements;
+    size_t definition_count;
 };
 
 // TODO: make cheaper to copy.
