@@ -1,6 +1,7 @@
 #include "evaluate.h"
 
 #include <cassert>
+#include <iostream>
 #include <string.h>
 
 #include "../built_in_functions/container.h"
@@ -454,20 +455,29 @@ Expression evaluateTypedExpression(
 Expression evaluateDictionaryTypes(
     const Dictionary& dictionary, Expression environment
 ) {
+    auto definitions = std::vector<Definition>(dictionary.definition_count);
+    for (const auto& statement : dictionary.statements) {
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            auto definition = getDefinition(statement);
+            definition.expression = Expression{};
+            definitions[definition.name_index] = definition;
+        }
+    }
     const auto result_environment = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, {}}
+        CodeRange{}, EvaluatedDictionary{environment, definitions}
     );
     for (const auto& statement : dictionary.statements) {
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            const auto& name = definition.name;
             const auto& right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
             // TODO: is this a principled approach?
-            if (value.type != ANY || !result.has(name)) {
-                result.add(name, value);
+            if (value.type != ANY) {
+                // result.add(name, value);
+                result.definitions[definition.name_index].expression = value;
             }
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -545,8 +555,17 @@ Expression getContainerName(Expression expression) {
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
+    auto definitions = std::vector<Definition>(dictionary.definition_count);
+    for (const auto& statement : dictionary.statements) {
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            auto definition = getDefinition(statement);
+            definition.expression = Expression{};
+            definitions[definition.name_index] = definition;
+        }
+    }
     const auto result_environment = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, {}}
+        CodeRange{}, EvaluatedDictionary{environment, definitions}
     );
     const auto& statements = dictionary.statements;
     auto i = size_t{0};
@@ -557,9 +576,9 @@ Expression evaluateDictionary(
             const auto definition = getDefinition(statement);
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result_environment);
-            const auto name = definition.name;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            result.add(name, value);
+            // result.add(name, value);
+            result.definitions[definition.name_index].expression = value;
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {

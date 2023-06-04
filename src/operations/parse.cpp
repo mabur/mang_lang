@@ -298,6 +298,7 @@ Expression parseDictionary(CodeRange code) {
     // Set indices for definitions:
     auto new_statements = std::vector<Expression>{};
     auto index_from_name = std::unordered_map<size_t, size_t>{};
+    size_t i = 0;
     for (const auto statement : statements) {
         if (statement.type == DEFINITION) {
             auto definition = getDefinition(statement);
@@ -308,7 +309,7 @@ Expression parseDictionary(CodeRange code) {
                 definition.name_index = index_in_dictionary;
             }
             else {
-                const auto index_in_dictionary = 0;
+                const auto index_in_dictionary = i++;
                 index_from_name[name_index] = index_in_dictionary;
                 definition.name_index = index_in_dictionary;
             }
