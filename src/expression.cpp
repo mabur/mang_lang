@@ -30,7 +30,7 @@ void EvaluatedDictionary::add(Expression key, Expression value) {
             return;
         }
     }
-    definitions.push_back({key, value});
+    definitions.push_back({key, value, 0});
 }
 
 bool EvaluatedDictionary::has(Expression key) const {

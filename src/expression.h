@@ -230,17 +230,12 @@ struct EvaluatedStack {
     Expression rest;
 };
 
-// TODO: store index for dictionary names for fast lookup.
-struct DictionaryName {
-    Expression name;
-    size_t index;
-};
-
 // STATEMENTS BEGIN
 
 struct Definition {
     Expression name;
     Expression expression;
+    size_t name_index;
 };
 
 struct PutAssignment {

@@ -135,7 +135,7 @@ Expression parseNamedElement(CodeRange code) {
         code = parseWhiteSpace(code);
         return makeDefinition(
             CodeRange{first, code.first},
-            Definition{std::move(name), expression}
+            Definition{std::move(name), expression, 0}
         );
     }
     else if (startsWith(code, '-')) {
