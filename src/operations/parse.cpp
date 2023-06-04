@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <limits>
+#include <unordered_map>
 
 #include "../factory.h"
 #include "../built_in_functions/container.h"
@@ -294,8 +295,31 @@ Expression parseDictionary(CodeRange code) {
         code.first = end(statements.back());
     }
     code = parseCharacter(code, '}');
+    // Set indices for definitions:
+    auto new_statements = std::vector<Expression>{};
+    auto index_from_name = std::unordered_map<size_t, size_t>{};
+    for (const auto statement : statements) {
+        if (statement.type == DEFINITION) {
+            auto definition = getDefinition(statement);
+            const auto name_index = definition.name.index;
+            const auto it = index_from_name.find(definition.name.index);
+            if (it != index_from_name.end()) {
+                const auto index_in_dictionary = it->second;
+                definition.name_index = index_in_dictionary;
+            }
+            else {
+                const auto index_in_dictionary = 0;
+                index_from_name[name_index] = index_in_dictionary;
+                definition.name_index = index_in_dictionary;
+            }
+            new_statements.push_back(makeDefinition(statement.range, definition));
+        }
+        else {
+            new_statements.push_back(statement);
+        }
+    }
     return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{statements}
+        CodeRange{first, code.begin()}, Dictionary{new_statements}
     );
 }
 
