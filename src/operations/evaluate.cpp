@@ -452,9 +452,7 @@ Expression evaluateTypedExpression(
     return value;
 }
 
-Expression evaluateDictionaryTypes(
-    const Dictionary& dictionary, Expression environment
-) {
+std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     auto definitions = std::vector<Definition>(dictionary.definition_count);
     for (const auto& statement : dictionary.statements) {
         const auto type = statement.type;
@@ -464,6 +462,13 @@ Expression evaluateDictionaryTypes(
             definitions[definition.name_index] = definition;
         }
     }
+    return definitions;
+}
+
+Expression evaluateDictionaryTypes(
+    const Dictionary& dictionary, Expression environment
+) {
+    const auto definitions = initializeDefinitions(dictionary);
     const auto result_environment = makeEvaluatedDictionary(
         CodeRange{}, EvaluatedDictionary{environment, definitions}
     );
@@ -555,15 +560,7 @@ Expression getContainerName(Expression expression) {
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
-    auto definitions = std::vector<Definition>(dictionary.definition_count);
-    for (const auto& statement : dictionary.statements) {
-        const auto type = statement.type;
-        if (type == DEFINITION) {
-            auto definition = getDefinition(statement);
-            definition.expression = Expression{};
-            definitions[definition.name_index] = definition;
-        }
-    }
+    const auto definitions = initializeDefinitions(dictionary);
     const auto result_environment = makeEvaluatedDictionary(
         CodeRange{}, EvaluatedDictionary{environment, definitions}
     );
