@@ -54,13 +54,13 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     serialize_natural_number = in Number:number out String:string@{
-        number = number        
+        x = number        
         string = ""
-        string += serialize_digit!mod!(number 10)
-        number = round_down!div!(number 10)
-        while less?(0 number) 
-            string += serialize_digit!mod!(number 10)
-            number = round_down!div!(number 10)
+        string += serialize_digit!mod!(x 10)
+        x = round_down!div!(x 10)
+        while less?(0 x) 
+            string += serialize_digit!mod!(x 10)
+            x = round_down!div!(x 10)
         end
     }
 
