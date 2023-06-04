@@ -241,6 +241,7 @@ struct Definition {
 struct PutAssignment {
     Expression name;
     Expression expression;
+    size_t name_index;
 };
 
 struct PutEachAssignment {

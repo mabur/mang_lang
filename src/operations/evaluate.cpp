@@ -489,14 +489,13 @@ Expression evaluateDictionaryTypes(
             const auto put_assignment = getPutAssignment(statement);
             const auto& right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result_environment);
-            const auto name = put_assignment.name;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = lookupDictionary(name, result_environment);
+            const auto current = result.definitions[put_assignment.name_index].expression;
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::putTyped(tuple);
-            result.add(name, new_value);
+            result.definitions[put_assignment.name_index].expression = new_value;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
@@ -582,14 +581,14 @@ Expression evaluateDictionary(
             const auto put_assignment = getPutAssignment(statement);
             const auto& right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result_environment);
-            const auto name = put_assignment.name;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = lookupDictionary(name, result_environment);
+            const auto current = result.definitions[put_assignment.name_index].expression;
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::put(tuple);
-            result.add(name, new_value);
+            // result.add(name, new_value);
+            result.definitions[put_assignment.name_index].expression = new_value;
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
