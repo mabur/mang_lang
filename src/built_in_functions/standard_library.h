@@ -43,10 +43,10 @@ const std::string STANDARD_LIBRARY = R"(
     serialize_digit = in Number:x out Character:character!add!(x number!'0')
 
     parse_natural_number = in String:string out Number:number@{
-        string = reverse!string
+        reversed_string = reverse!string
         number = 0
         x = 1
-        for c in string
+        for c in reversed_string
             digit = parse_digit!c
             number = add!(number mul!(x digit))
             x = mul!(x 10)
@@ -257,17 +257,17 @@ const std::string STANDARD_LIBRARY = R"(
     take_until_item = in (item container) out container:
         take_while!(in x out unequal?(x item) container)
 
-    drop_many = in (Number:n container) out container:container@{
-        container = container
+    drop_many = in (Number:n container) out container:sub_container@{
+        sub_container = container
         for n
-            container--
+            sub_container--
         end
     }
 
-    drop_while = in (Function:predicate container) out container:container@{
-        container = container
-        while if container then predicate?take!container else no
-            container--
+    drop_while = in (Function:predicate container) out container:sub_container@{
+        sub_container = container
+        while if sub_container then predicate?take!sub_container else no
+            sub_container--
         end
     }
 
@@ -330,12 +330,12 @@ const std::string STANDARD_LIBRARY = R"(
 
     split = in (delimiter container) out Stack:reverse!result@{
         word = take_until_item!(delimiter container)
-        container = drop_until_item!(delimiter container)
+        sub_container = drop_until_item!(delimiter container)
         result = [word]
-        while container
-            container--
-            word = take_until_item!(delimiter container)
-            container = drop_until_item!(delimiter container)
+        while sub_container
+            sub_container--
+            word = take_until_item!(delimiter sub_container)
+            sub_container = drop_until_item!(delimiter sub_container)
             result += word
         end
     }
