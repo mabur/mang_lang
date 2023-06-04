@@ -457,9 +457,7 @@ Expression evaluateDictionaryTypes(
     const auto result_environment = makeEvaluatedDictionary(
         CodeRange{}, EvaluatedDictionary{environment, {}}
     );
-    const auto& statements = dictionary.statements;
-    for (size_t i = 0; i < dictionary.statements.size(); ++i) {
-        const auto statement = statements[i];
+    for (const auto& statement : dictionary.statements) {
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
