@@ -200,7 +200,7 @@ Expression parseForStatement(CodeRange code) {
     }
     else {
         return makeForSimpleStatement(CodeRange{first, code.first},
-            ForSimpleStatement{first_name, 0}
+            ForSimpleStatement{first_name, 0, 0}
         );
     }
 }
@@ -359,6 +359,21 @@ Expression parseDictionary(CodeRange code) {
                 drop_assignment.name_index = index_in_dictionary;
             }
             new_statements.push_back(makeDropAssignment(statement.range, drop_assignment));
+        }
+        else if (statement.type == FOR_SIMPLE_STATEMENT) {
+            auto for_simple_statement = getForSimpleStatement(statement);
+            const auto name_index = for_simple_statement.name_container.index;
+            const auto it = index_from_name.find(for_simple_statement.name_container.index);
+            if (it != index_from_name.end()) {
+                const auto index_in_dictionary = it->second;
+                for_simple_statement.name_index = index_in_dictionary;
+            }
+            else {
+                const auto index_in_dictionary = i++;
+                index_from_name[name_index] = index_in_dictionary;
+                for_simple_statement.name_index = index_in_dictionary;
+            }
+            new_statements.push_back(makeForSimpleStatement(statement.range, for_simple_statement));
         }
         else {
             new_statements.push_back(statement);

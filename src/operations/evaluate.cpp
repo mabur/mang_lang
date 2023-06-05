@@ -481,7 +481,6 @@ Expression evaluateDictionaryTypes(
             auto& result = getMutableEvaluatedDictionary(result_environment);
             // TODO: is this a principled approach?
             if (value.type != ANY) {
-                // result.add(name, value);
                 result.definitions[definition.name_index].expression = value;
             }
         }
@@ -536,8 +535,8 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
-            const auto name_container = for_statement.name_container;
-            const auto container = lookupDictionary(name_container, result_environment);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto container = result.definitions[for_statement.name_index].expression;
             booleanTypes(container);
         }
         else if (type == RETURN_STATEMENT) {
@@ -571,7 +570,6 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            // result.add(name, value);
             result.definitions[definition.name_index].expression = value;
             i += 1;
         }
@@ -585,7 +583,6 @@ Expression evaluateDictionary(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::put(tuple);
-            // result.add(name, new_value);
             result.definitions[put_assignment.name_index].expression = new_value;
             i += 1;
         }
@@ -641,8 +638,8 @@ Expression evaluateDictionary(
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
-            const auto name_container = for_statement.name_container;
-            const auto container = lookupDictionary(name_container, result_environment);
+            auto& result = getMutableEvaluatedDictionary(result_environment);
+            const auto container = result.definitions[for_statement.name_index].expression;
             if (boolean(container)) {
                 i += 1;
             } else {

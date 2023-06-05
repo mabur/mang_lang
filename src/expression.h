@@ -269,6 +269,7 @@ struct ForStatement {
 struct ForSimpleStatement {
     Expression name_container;
     size_t end_index_;
+    size_t name_index;
 };
 
 struct WhileEndStatement {
