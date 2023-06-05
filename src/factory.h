@@ -34,7 +34,6 @@ IsExpression getIs(Expression expression);
 Alternative getAlternative(Expression expression);
 Dictionary getDictionary(Expression expression);
 EvaluatedDictionary getEvaluatedDictionary(Expression expression);
-EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression);
 Table getTable(Expression expression);
 const EvaluatedTable& getEvaluatedTable(Expression expression);
 EvaluatedTable& getMutableEvaluatedTable(Expression expression);

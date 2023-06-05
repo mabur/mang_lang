@@ -404,11 +404,6 @@ EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
     return getExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
 }
 
-EvaluatedDictionary& getMutableEvaluatedDictionary(Expression expression) {
-    return getMutableExpressionReference(expression, EVALUATED_DICTIONARY,
-        evaluated_dictionaries);
-}
-
 Table getTable(Expression expression) {
     return getExpression(expression, TABLE, tables);
 }
