@@ -537,9 +537,8 @@ Expression evaluateDictionaryTypes(
             const auto name_container = for_statement.name_container;
             const auto container = lookupDictionary(name_container, result_environment);
             booleanTypes(container);
-            const auto name_item = for_statement.name_item;
             const auto value = container_functions::takeTyped(container);
-            result.add(name_item, value);
+            result.definitions[for_statement.name_index_item].expression = value;
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
@@ -636,9 +635,8 @@ Expression evaluateDictionary(
             const auto name_container = for_statement.name_container;
             const auto container = lookupDictionary(name_container, result_environment);
             if (boolean(container)) {
-                const auto name_item = for_statement.name_item;
                 const auto value = container_functions::take(container);
-                result.add(name_item, value);
+                result.definitions[for_statement.name_index_item].expression = value;
                 i += 1;
             } else {
                 i = for_statement.end_index_ + 1;
