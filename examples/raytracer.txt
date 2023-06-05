@@ -82,7 +82,8 @@ findSingleIntersection = in (Numbers:start Numbers:direction Sphere:sphere) out 
 
 findIntersection = in (Numbers:start Numbers:direction Spheres:spheres) out Intersection:i1@{
     i1 = default_intersection
-    for sphere in spheres
+    s = spheres
+    for sphere in s
         i2 = findSingleIntersection!(start direction sphere)
         i1 = if less?(distance@i2 distance@i1) then i2 else i1
     end
@@ -111,7 +112,7 @@ shade = in (Intersection:intersection world) out Numbers:color@{
 
 colorU8fromF64 = in Number:c out Number:round!min!(mul!(255 c) 255)
 
-writePixel = in (String:image Number:x Number:y Number:width Number:height World:world) out String:image@{
+writePixel = in (String:image Number:x Number:y Number:width Number:height World:world) out String:image_out@{
     start = [0 0 0]
     xd = sub!(x div!(width 2))
     yd = sub!(y div!(height 2))
@@ -120,13 +121,13 @@ writePixel = in (String:image Number:x Number:y Number:width Number:height World
     intersection = findIntersection!(start direction spheres@world)
     color = shade!(intersection world)
 
-    image = image
-    image ++= serialize_natural_number!colorU8fromF64!color!0
-    image ++= " "
-    image ++= serialize_natural_number!colorU8fromF64!color!1
-    image ++= " "
-    image ++= serialize_natural_number!colorU8fromF64!color!2
-    image ++= " "
+    image_out = image
+    image_out ++= serialize_natural_number!colorU8fromF64!color!0
+    image_out ++= " "
+    image_out ++= serialize_natural_number!colorU8fromF64!color!1
+    image_out ++= " "
+    image_out ++= serialize_natural_number!colorU8fromF64!color!2
+    image_out ++= " "
 }
 
 writeImage = in World:world out String:image@{
