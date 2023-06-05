@@ -534,8 +534,7 @@ Expression evaluateDictionaryTypes(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto name_container = for_statement.name_container;
-            const auto container = lookupDictionary(name_container, result_environment);
+            const auto container = result.definitions[for_statement.name_index_container].expression;
             booleanTypes(container);
             const auto value = container_functions::takeTyped(container);
             result.definitions[for_statement.name_index_item].expression = value;
@@ -632,8 +631,7 @@ Expression evaluateDictionary(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto name_container = for_statement.name_container;
-            const auto container = lookupDictionary(name_container, result_environment);
+            const auto container = result.definitions[for_statement.name_index_container].expression;
             if (boolean(container)) {
                 const auto value = container_functions::take(container);
                 result.definitions[for_statement.name_index_item].expression = value;
