@@ -251,7 +251,8 @@ const std::string STANDARD_LIBRARY = R"(
     take_many = in (Number:n container_in) out container_in:reverse!container_out@{
         container = container_in
         container_out = clear!container
-        for n
+        m = n
+        for m
             container_out += take!container
             container--
         end
