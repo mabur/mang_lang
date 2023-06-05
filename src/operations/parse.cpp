@@ -243,6 +243,23 @@ bool isEndMatchingWhile(
     return while_indices.back() > for_indices.back();
 }
 
+size_t getIndexInDictionary(
+    size_t name,
+    std::unordered_map<size_t, size_t>& index_from_name,
+    size_t& i
+) {
+    const auto it = index_from_name.find(name);
+    if (it != index_from_name.end()) {
+        const auto index_in_dictionary = it->second;
+        return index_in_dictionary;
+    }
+    else {
+        const auto index_in_dictionary = i++;
+        index_from_name[name] = index_in_dictionary;
+        return index_in_dictionary;
+    }
+}
+
 Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
@@ -303,76 +320,31 @@ Expression parseDictionary(CodeRange code) {
         if (statement.type == DEFINITION) {
             auto assignment = getDefinition(statement);
             const auto name_index = assignment.name.index;
-            const auto it = index_from_name.find(assignment.name.index);
-            if (it != index_from_name.end()) {
-                const auto index_in_dictionary = it->second;
-                assignment.name_index = index_in_dictionary;
-            }
-            else {
-                const auto index_in_dictionary = i++;
-                index_from_name[name_index] = index_in_dictionary;
-                assignment.name_index = index_in_dictionary;
-            }
+            assignment.name_index = getIndexInDictionary(name_index, index_from_name, i);
             new_statements.push_back(makeDefinition(statement.range, assignment));
         }
         else if (statement.type == PUT_ASSIGNMENT) {
             auto assignment = getPutAssignment(statement);
             const auto name_index = assignment.name.index;
-            const auto it = index_from_name.find(assignment.name.index);
-            if (it != index_from_name.end()) {
-                const auto index_in_dictionary = it->second;
-                assignment.name_index = index_in_dictionary;
-            }
-            else {
-                const auto index_in_dictionary = i++;
-                index_from_name[name_index] = index_in_dictionary;
-                assignment.name_index = index_in_dictionary;
-            }
+            assignment.name_index = getIndexInDictionary(name_index, index_from_name, i);
             new_statements.push_back(makePutAssignment(statement.range, assignment));
         }
         else if (statement.type == PUT_EACH_ASSIGNMENT) {
             auto assignment = getPutEachAssignment(statement);
             const auto name_index = assignment.name.index;
-            const auto it = index_from_name.find(assignment.name.index);
-            if (it != index_from_name.end()) {
-                const auto index_in_dictionary = it->second;
-                assignment.name_index = index_in_dictionary;
-            }
-            else {
-                const auto index_in_dictionary = i++;
-                index_from_name[name_index] = index_in_dictionary;
-                assignment.name_index = index_in_dictionary;
-            }
+            assignment.name_index = getIndexInDictionary(name_index, index_from_name, i);
             new_statements.push_back(makePutEachAssignment(statement.range, assignment));
         }
         else if (statement.type == DROP_ASSIGNMENT) {
             auto assignment = getDropAssignment(statement);
             const auto name_index = assignment.name.index;
-            const auto it = index_from_name.find(assignment.name.index);
-            if (it != index_from_name.end()) {
-                const auto index_in_dictionary = it->second;
-                assignment.name_index = index_in_dictionary;
-            }
-            else {
-                const auto index_in_dictionary = i++;
-                index_from_name[name_index] = index_in_dictionary;
-                assignment.name_index = index_in_dictionary;
-            }
+            assignment.name_index = getIndexInDictionary(name_index, index_from_name, i);
             new_statements.push_back(makeDropAssignment(statement.range, assignment));
         }
         else if (statement.type == FOR_SIMPLE_STATEMENT) {
             auto assignment = getForSimpleStatement(statement);
             const auto name_index = assignment.name_container.index;
-            const auto it = index_from_name.find(assignment.name_container.index);
-            if (it != index_from_name.end()) {
-                const auto index_in_dictionary = it->second;
-                assignment.name_index = index_in_dictionary;
-            }
-            else {
-                const auto index_in_dictionary = i++;
-                index_from_name[name_index] = index_in_dictionary;
-                assignment.name_index = index_in_dictionary;
-            }
+            assignment.name_index = getIndexInDictionary(name_index, index_from_name, i);
             new_statements.push_back(makeForSimpleStatement(statement.range, assignment));
         }
         else {
