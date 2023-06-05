@@ -551,11 +551,11 @@ Expression evaluateDictionaryTypes(
     return result_environment;
 }
 
-Expression getContainerName(Expression expression) {
+size_t getContainerNameIndex(Expression expression) {
     switch (expression.type) {
-        case FOR_STATEMENT: return getForStatement(expression).name_container;
-        case FOR_SIMPLE_STATEMENT: return getForSimpleStatement(expression).name_container;
-        default: throw UnexpectedExpression(expression.type, "getContainerName");
+        case FOR_STATEMENT: return getForStatement(expression).name_index_container;
+        case FOR_SIMPLE_STATEMENT: return getForSimpleStatement(expression).name_index;
+        default: throw UnexpectedExpression(expression.type, "getContainerNameIndex");
     }
 }
 
@@ -657,11 +657,11 @@ Expression evaluateDictionary(
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = getForEndStatement(statement);
             i = end_statement.for_index_;
-            const auto name = getContainerName(statements.at(i));
+            const auto name_index = getContainerNameIndex(statements.at(i));
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto old_container = lookupDictionary(name, result_environment);
+            const auto old_container = result.definitions[name_index].expression;
             const auto new_container = container_functions::drop(old_container);
-            result.add(name, new_container);
+            result.definitions[name_index].expression = new_container;
         }
         else if (type == RETURN_STATEMENT) {
             break;
