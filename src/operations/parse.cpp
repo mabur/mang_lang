@@ -144,7 +144,7 @@ Expression parseNamedElement(CodeRange code) {
         code = parseWhiteSpace(code);
         return makeDropAssignment(
             CodeRange{first, code.first},
-            DropAssignment{std::move(name)}
+            DropAssignment{std::move(name), 0}
         );
     }
     else if (startsWith(code, "+=")) {
@@ -344,6 +344,21 @@ Expression parseDictionary(CodeRange code) {
                 put_each_assignment.name_index = index_in_dictionary;
             }
             new_statements.push_back(makePutEachAssignment(statement.range, put_each_assignment));
+        }
+        else if (statement.type == DROP_ASSIGNMENT) {
+            auto drop_assignment = getDropAssignment(statement);
+            const auto name_index = drop_assignment.name.index;
+            const auto it = index_from_name.find(drop_assignment.name.index);
+            if (it != index_from_name.end()) {
+                const auto index_in_dictionary = it->second;
+                drop_assignment.name_index = index_in_dictionary;
+            }
+            else {
+                const auto index_in_dictionary = i++;
+                index_from_name[name_index] = index_in_dictionary;
+                drop_assignment.name_index = index_in_dictionary;
+            }
+            new_statements.push_back(makeDropAssignment(statement.range, drop_assignment));
         }
         else {
             new_statements.push_back(statement);

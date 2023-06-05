@@ -515,11 +515,10 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = getDropAssignment(statement);
-            const auto name = drop_assignment.name;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = lookupDictionary(name, result_environment);
+            const auto current = result.definitions[drop_assignment.name_index].expression;
             const auto new_value = container_functions::dropTyped(current);
-            result.add(name, new_value);
+            result.definitions[drop_assignment.name_index].expression = new_value;
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWhileStatement(statement);
@@ -612,11 +611,10 @@ Expression evaluateDictionary(
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = getDropAssignment(statement);
-            const auto name = drop_assignment.name;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = lookupDictionary(name, result_environment);
+            const auto current = result.definitions[drop_assignment.name_index].expression;
             const auto new_value = container_functions::drop(current);
-            result.add(name, new_value);
+            result.definitions[drop_assignment.name_index].expression = new_value;
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {

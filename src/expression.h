@@ -252,6 +252,7 @@ struct PutEachAssignment {
 
 struct DropAssignment {
     Expression name;
+    size_t name_index;
 };
 
 struct WhileStatement {
