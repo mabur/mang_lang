@@ -153,40 +153,50 @@ const std::string STANDARD_LIBRARY = R"(
     )
 
     zip2 = in (a b) out Stack:reverse!result@{
+        a2 = a
+        b2 = b
         result = []
-        while and?[a b]
-            result += (take!a take!b)
-            a--
-            b--
+        while and?[a2 b2]
+            result += (take!a2 take!b2)
+            a2--
+            b2--
         end
     }
 
     zip3 = in (a b c) out Stack:reverse!result@{
+        a2 = a
+        b2 = b
+        c2 = c
         result = []
-        while and?[a b c]
-            result += (take!a take!b take!c)
-            a--
-            b--
-            c--
+        while and?[a2 b2 c2]
+            result += (take!a2 take!b2 take!c2)
+            a2--
+            b2--
+            c2--
         end
     }
 
     zip4 = in (a b c d) out Stack:reverse!result@{
+        a2 = a
+        b2 = b
+        c2 = c
+        d2 = d
         result = []
-        while and?[a b c d]
-            result += (take!a take!b take!c take!d)
-            a--
-            b--
-            c--
-            d--
+        while and?[a2 b2 c2 d2]
+            result += (take!a2 take!b2 take!c2 take!d2)
+            a2--
+            b2--
+            c2--
+            d2--
         end
     }
 
     consecutive_pairs = in container out Stack:reverse!result@{
+        c = container
         result = []
-        while if container then boolean!drop!container else no
-            result += (take!container take!drop!container)
-            container--
+        while if c then boolean!drop!c else no
+            result += (take!c take!drop!c)
+            c--
         end
     }
 
@@ -353,12 +363,13 @@ const std::string STANDARD_LIBRARY = R"(
     }
 
     put_column = in (column rows) out Stack:reverse!new_rows@{
+        remaining_rows = rows
         new_rows = []
         for item in column
-            row = take!rows
+            row = take!remaining_rows
             row += item
             new_rows += row
-            rows--
+            remaining_rows--
         end
     }
 
@@ -390,7 +401,9 @@ const std::string STANDARD_LIBRARY = R"(
         else
             no
 
-    merge_sorted = in (left right) out Stack:reverse!stack@{
+    merge_sorted = in (left_in right_in) out Stack:reverse!stack@{
+        left = left_in
+        right = right_in
         stack = []
         while or?[left right]
             while less_or_equal_top?(left right)
