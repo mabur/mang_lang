@@ -485,11 +485,23 @@ String getString(Expression expression) {
 void setDictionaryDefinition(
     Expression evaluated_dictionary, size_t name_index, Expression value
 ) {
-    getMutableEvaluatedDictionary(evaluated_dictionary).definitions[name_index].expression = value;
+    if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
+        throw std::runtime_error{
+            "setDictionaryDefinition expected " + NAMES[EVALUATED_DICTIONARY]
+            + " got " + NAMES[evaluated_dictionary.type]
+        };
+    }
+    evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name_index].expression = value;
 }
 
 Expression getDictionaryDefinition(
     Expression evaluated_dictionary, size_t name_index
 ) {
-    return getEvaluatedDictionary(evaluated_dictionary).definitions[name_index].expression;
+    if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
+        throw std::runtime_error{
+            "getDictionaryDefinition expected " + NAMES[EVALUATED_DICTIONARY]
+            + " got " + NAMES[evaluated_dictionary.type]
+        };
+    }
+    return evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name_index].expression;
 }
