@@ -476,9 +476,9 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
 Expression evaluateDictionaryTypes(
     const Dictionary& dictionary, Expression environment
 ) {
-    const auto definitions = initializeDefinitions(dictionary);
+    const auto initial_definitions = initializeDefinitions(dictionary);
     const auto result_environment = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, definitions}
+        CodeRange{}, EvaluatedDictionary{environment, initial_definitions}
     );
     for (const auto& statement : dictionary.statements) {
         const auto type = statement.type;
@@ -487,9 +487,10 @@ Expression evaluateDictionaryTypes(
             const auto& right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
+            auto& definitions = result.definitions;
             // TODO: is this a principled approach?
             if (value.type != ANY) {
-                result.definitions[definition.name_index].expression = value;
+                definitions[definition.name_index].expression = value;
             }
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -497,35 +498,37 @@ Expression evaluateDictionaryTypes(
             const auto& right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions[put_assignment.name_index].expression;
+            auto& definitions = result.definitions;
+            const auto current = definitions[put_assignment.name_index].expression;
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::putTyped(tuple);
-            result.definitions[put_assignment.name_index].expression = new_value;
+            definitions[put_assignment.name_index].expression = new_value;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
             const auto& right_expression = put_each_assignment.expression;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            
+            auto& definitions = result.definitions;
             auto container = evaluate_types(right_expression, result_environment);
             {
-                const auto current = result.definitions[put_each_assignment.name_index].expression;
+                const auto current = definitions[put_each_assignment.name_index].expression;
                 const auto value = container_functions::takeTyped(container);
                 const auto tuple = makeEvaluatedTuple(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::putTyped(tuple);
-                result.definitions[put_each_assignment.name_index].expression = new_value;
+                definitions[put_each_assignment.name_index].expression = new_value;
             }
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = getDropAssignment(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions[drop_assignment.name_index].expression;
+            auto& definitions = result.definitions;
+            const auto current = definitions[drop_assignment.name_index].expression;
             const auto new_value = container_functions::dropTyped(current);
-            result.definitions[drop_assignment.name_index].expression = new_value;
+            definitions[drop_assignment.name_index].expression = new_value;
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWhileStatement(statement);
@@ -534,15 +537,17 @@ Expression evaluateDictionaryTypes(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = result.definitions[for_statement.name_index_container].expression;
+            auto& definitions = result.definitions;
+            const auto container = definitions[for_statement.name_index_container].expression;
             booleanTypes(container);
             const auto value = container_functions::takeTyped(container);
-            result.definitions[for_statement.name_index_item].expression = value;
+            definitions[for_statement.name_index_item].expression = value;
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = result.definitions[for_statement.name_index].expression;
+            auto& definitions = result.definitions;
+            const auto container = definitions[for_statement.name_index].expression;
             booleanTypes(container);
         }
         else if (type == RETURN_STATEMENT) {
@@ -562,9 +567,9 @@ size_t getContainerNameIndex(Expression expression) {
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
-    const auto definitions = initializeDefinitions(dictionary);
+    const auto initial_definitions = initializeDefinitions(dictionary);
     const auto result_environment = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, definitions}
+        CodeRange{}, EvaluatedDictionary{environment, initial_definitions}
     );
     const auto& statements = dictionary.statements;
     auto i = size_t{0};
@@ -576,7 +581,8 @@ Expression evaluateDictionary(
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            result.definitions[definition.name_index].expression = value;
+            auto& definitions = result.definitions;
+            definitions[definition.name_index].expression = value;
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -584,40 +590,42 @@ Expression evaluateDictionary(
             const auto& right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result_environment);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions[put_assignment.name_index].expression;
+            auto& definitions = result.definitions;
+            const auto current = definitions[put_assignment.name_index].expression;
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::put(tuple);
-            result.definitions[put_assignment.name_index].expression = new_value;
+            definitions[put_assignment.name_index].expression = new_value;
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
             const auto& right_expression = put_each_assignment.expression;
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            
+            auto& definitions = result.definitions;
             for (
                 auto container = evaluate(right_expression, result_environment);
                 boolean(container);
                 container = container_functions::drop(container)
             ) {
-                const auto current = result.definitions[put_each_assignment.name_index].expression;
+                const auto current = definitions[put_each_assignment.name_index].expression;
                 const auto value = container_functions::take(container);
                 const auto tuple = makeEvaluatedTuple(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::put(tuple);
-                result.definitions[put_each_assignment.name_index].expression = new_value;
+                definitions[put_each_assignment.name_index].expression = new_value;
             }
             i += 1;
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = getDropAssignment(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto current = result.definitions[drop_assignment.name_index].expression;
+            auto& definitions = result.definitions;
+            const auto current = definitions[drop_assignment.name_index].expression;
             const auto new_value = container_functions::drop(current);
-            result.definitions[drop_assignment.name_index].expression = new_value;
+            definitions[drop_assignment.name_index].expression = new_value;
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -631,10 +639,11 @@ Expression evaluateDictionary(
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = result.definitions[for_statement.name_index_container].expression;
+            auto& definitions = result.definitions;
+            const auto container = definitions[for_statement.name_index_container].expression;
             if (boolean(container)) {
                 const auto value = container_functions::take(container);
-                result.definitions[for_statement.name_index_item].expression = value;
+                definitions[for_statement.name_index_item].expression = value;
                 i += 1;
             } else {
                 i = for_statement.end_index_ + 1;
@@ -643,7 +652,8 @@ Expression evaluateDictionary(
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto container = result.definitions[for_statement.name_index].expression;
+            auto& definitions = result.definitions;
+            const auto container = definitions[for_statement.name_index].expression;
             if (boolean(container)) {
                 i += 1;
             } else {
@@ -659,9 +669,10 @@ Expression evaluateDictionary(
             i = end_statement.for_index_;
             const auto name_index = getContainerNameIndex(statements.at(i));
             auto& result = getMutableEvaluatedDictionary(result_environment);
-            const auto old_container = result.definitions[name_index].expression;
+            auto& definitions = result.definitions;
+            const auto old_container = definitions[name_index].expression;
             const auto new_container = container_functions::drop(old_container);
-            result.definitions[name_index].expression = new_container;
+            definitions[name_index].expression = new_container;
         }
         else if (type == RETURN_STATEMENT) {
             break;
