@@ -238,18 +238,20 @@ const std::string STANDARD_LIBRARY = R"(
     clear_item = in (item container) out container:
         clear_if?(in x out equal?(x item) container)
 
-    take_many = in (Number:n container) out container:reverse!stack_out@{
-        stack_out = clear!container
+    take_many = in (Number:n container_in) out container_in:reverse!container_out@{
+        container = container_in
+        container_out = clear!container
         for n
-            stack_out += take!container
+            container_out += take!container
             container--
         end
     }
 
-    take_while = in (Function:predicate container) out container:reverse!stack_out@{
-        stack_out = clear!container
+    take_while = in (Function:predicate container_in) out container_in:reverse!container_out@{
+        container = container_in        
+        container_out = clear!container
         while if container then predicate?take!container else no
-            stack_out += take!container
+            container_out += take!container
             container--
         end
     }
