@@ -473,6 +473,9 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     return definitions;
 }
 
+// TODO: do not store the references to result and definitions,
+// since they can be invalidated by any operation that creates a new dictionary.
+// Instead do the index lookup right when needed.
 Expression evaluateDictionaryTypes(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -564,6 +567,9 @@ size_t getContainerNameIndex(Expression expression) {
     }
 }
 
+// TODO: do not store the references to result and definitions,
+// since they can be invalidated by any operation that creates a new dictionary.
+// Instead do the index lookup right when needed.
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
