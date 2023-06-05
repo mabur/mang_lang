@@ -481,3 +481,9 @@ Argument getArgument(Expression expression) {
 String getString(Expression expression) {
     return getExpression(expression, STRING, strings);
 }
+
+void setDictionaryDefinition(
+    Expression evaluated_dictionary, size_t name_index, Expression value
+) {
+    getMutableEvaluatedDictionary(evaluated_dictionary).definitions[name_index].expression = value;
+}

@@ -489,10 +489,9 @@ Expression evaluateDictionaryTypes(
             const auto definition = getDefinition(statement);
             const auto& right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
-            auto& definitions = getMutableEvaluatedDictionary(result).definitions;
             // TODO: is this a principled approach?
             if (value.type != ANY) {
-                definitions[definition.name_index].expression = value;
+                setDictionaryDefinition(result, definition.name_index, value);
             }
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -505,7 +504,7 @@ Expression evaluateDictionaryTypes(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::putTyped(tuple);
-            definitions[put_assignment.name_index].expression = new_value;
+            setDictionaryDefinition(result, put_assignment.name_index, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
@@ -519,7 +518,7 @@ Expression evaluateDictionaryTypes(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::putTyped(tuple);
-                definitions[put_each_assignment.name_index].expression = new_value;
+                setDictionaryDefinition(result, put_each_assignment.name_index, new_value);
             }
         }
         else if (type == DROP_ASSIGNMENT) {
@@ -527,7 +526,7 @@ Expression evaluateDictionaryTypes(
             auto& definitions = getMutableEvaluatedDictionary(result).definitions;
             const auto current = definitions[drop_assignment.name_index].expression;
             const auto new_value = container_functions::dropTyped(current);
-            definitions[drop_assignment.name_index].expression = new_value;
+            setDictionaryDefinition(result, drop_assignment.name_index, new_value);
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = getWhileStatement(statement);
@@ -539,7 +538,7 @@ Expression evaluateDictionaryTypes(
             const auto container = definitions[for_statement.name_index_container].expression;
             booleanTypes(container);
             const auto value = container_functions::takeTyped(container);
-            definitions[for_statement.name_index_item].expression = value;
+            setDictionaryDefinition(result, for_statement.name_index_item, value);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = getForSimpleStatement(statement);
@@ -580,8 +579,7 @@ Expression evaluateDictionary(
             const auto definition = getDefinition(statement);
             const auto& right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
-            auto& definitions = getMutableEvaluatedDictionary(result).definitions;
-            definitions[definition.name_index].expression = value;
+            setDictionaryDefinition(result, definition.name_index, value);
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -594,7 +592,7 @@ Expression evaluateDictionary(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::put(tuple);
-            definitions[put_assignment.name_index].expression = new_value;
+            setDictionaryDefinition(result, put_assignment.name_index, new_value);
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
@@ -612,7 +610,7 @@ Expression evaluateDictionary(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::put(tuple);
-                definitions[put_each_assignment.name_index].expression = new_value;
+                setDictionaryDefinition(result, put_each_assignment.name_index, new_value);
             }
             i += 1;
         }
@@ -621,7 +619,7 @@ Expression evaluateDictionary(
             auto& definitions = getMutableEvaluatedDictionary(result).definitions;
             const auto current = definitions[drop_assignment.name_index].expression;
             const auto new_value = container_functions::drop(current);
-            definitions[drop_assignment.name_index].expression = new_value;
+            setDictionaryDefinition(result, drop_assignment.name_index, new_value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
@@ -638,7 +636,7 @@ Expression evaluateDictionary(
             const auto container = definitions[for_statement.name_index_container].expression;
             if (boolean(container)) {
                 const auto value = container_functions::take(container);
-                definitions[for_statement.name_index_item].expression = value;
+                setDictionaryDefinition(result, for_statement.name_index_item, value);
                 i += 1;
             } else {
                 i = for_statement.end_index_ + 1;
@@ -665,7 +663,7 @@ Expression evaluateDictionary(
             auto& definitions = getMutableEvaluatedDictionary(result).definitions;
             const auto old_container = definitions[name_index].expression;
             const auto new_container = container_functions::drop(old_container);
-            definitions[name_index].expression = new_container;
+            setDictionaryDefinition(result, name_index, new_container);
         }
         else if (type == RETURN_STATEMENT) {
             break;
