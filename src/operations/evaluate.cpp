@@ -473,9 +473,6 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     return definitions;
 }
 
-// TODO: do not store the references to result and definitions,
-// since they can be invalidated by any operation that creates a new dictionary.
-// Instead do the index lookup right when needed.
 Expression evaluateDictionaryTypes(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -487,7 +484,7 @@ Expression evaluateDictionaryTypes(
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            const auto& right_expression = definition.expression;
+            const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
             // TODO: is this a principled approach?
             if (value.type != ANY) {
@@ -496,7 +493,7 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == PUT_ASSIGNMENT) {
             const auto put_assignment = getPutAssignment(statement);
-            const auto& right_expression = put_assignment.expression;
+            const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name_index);
             const auto tuple = makeEvaluatedTuple(
@@ -507,7 +504,7 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
-            const auto& right_expression = put_each_assignment.expression;
+            const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name_index);
@@ -555,9 +552,6 @@ size_t getContainerNameIndex(Expression expression) {
     }
 }
 
-// TODO: do not store the references to result and definitions,
-// since they can be invalidated by any operation that creates a new dictionary.
-// Instead do the index lookup right when needed.
 Expression evaluateDictionary(
     const Dictionary& dictionary, Expression environment
 ) {
@@ -572,14 +566,14 @@ Expression evaluateDictionary(
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
-            const auto& right_expression = definition.expression;
+            const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
             setDictionaryDefinition(result, definition.name_index, value);
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
             const auto put_assignment = getPutAssignment(statement);
-            const auto& right_expression = put_assignment.expression;
+            const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name_index);
             const auto tuple = makeEvaluatedTuple(
@@ -591,7 +585,7 @@ Expression evaluateDictionary(
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = getPutEachAssignment(statement);
-            const auto& right_expression = put_each_assignment.expression;
+            const auto right_expression = put_each_assignment.expression;
             for (
                 auto container = evaluate(right_expression, result);
                 boolean(container);
