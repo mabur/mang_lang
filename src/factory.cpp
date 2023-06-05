@@ -487,3 +487,9 @@ void setDictionaryDefinition(
 ) {
     getMutableEvaluatedDictionary(evaluated_dictionary).definitions[name_index].expression = value;
 }
+
+Expression getDictionaryDefinition(
+    Expression evaluated_dictionary, size_t name_index
+) {
+    return getEvaluatedDictionary(evaluated_dictionary).definitions[name_index].expression;
+}

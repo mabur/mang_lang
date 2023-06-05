@@ -93,3 +93,7 @@ Expression makeString(CodeRange code, String expression);
 void setDictionaryDefinition(
     Expression evaluated_dictionary, size_t name_index, Expression value
 );
+
+Expression getDictionaryDefinition(
+    Expression evaluated_dictionary, size_t name_index
+);
