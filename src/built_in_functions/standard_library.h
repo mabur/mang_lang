@@ -272,7 +272,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     drop_many = in (Number:n container) out container:sub_container@{
         sub_container = container
-        for n
+        m = n
+        for m
             sub_container--
         end
     }
@@ -323,8 +324,9 @@ const std::string STANDARD_LIBRARY = R"(
 
     range = in Number:n out Numbers:numbers@{
         numbers = []
-        for n
-            numbers += dec!n
+        m = n
+        for m
+            numbers += dec!m
         end
     }
 
