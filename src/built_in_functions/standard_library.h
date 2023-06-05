@@ -78,7 +78,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     fold = in (Function:operation container init) out result@{
         result = init
-        for item in container
+        c = container
+        for item in c
             result = operation!(item result)
         end
     }
@@ -357,10 +358,11 @@ const std::string STANDARD_LIBRARY = R"(
 
     cartesian_product2 = in (a b) out Stack:result@{
         result = []
-        for item_b in b
+        d = b
+        for item_d in d
             c = a
             for item_c in c
-                result += (item_c item_b)
+                result += (item_c item_d)
             end
         end
     }
@@ -368,7 +370,8 @@ const std::string STANDARD_LIBRARY = R"(
     put_column = in (column rows) out Stack:reverse!new_rows@{
         remaining_rows = rows
         new_rows = []
-        for item in column
+        c = column
+        for item in c
             row = take!remaining_rows
             row += item
             new_rows += row
@@ -378,7 +381,8 @@ const std::string STANDARD_LIBRARY = R"(
 
     transpose = in rows out Stack:map!(reverse columns@{
         columns = replace!([] take!rows)
-        for row in rows
+        r = rows
+        for row in r
             columns = put_column!(row columns)
         end
     })
