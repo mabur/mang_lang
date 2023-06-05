@@ -247,6 +247,7 @@ struct PutAssignment {
 struct PutEachAssignment {
     Expression name;
     Expression expression;
+    size_t name_index;
 };
 
 struct DropAssignment {
