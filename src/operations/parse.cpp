@@ -245,21 +245,21 @@ bool isEndMatchingWhile(
 
 struct NameIndexer {
     std::unordered_map<size_t, size_t> index_from_name;
-    size_t i = 0;    
-};
+    size_t i = 0;
 
-size_t getIndexInDictionary(size_t name, NameIndexer& name_indexer) {
-    const auto it = name_indexer.index_from_name.find(name);
-    if (it != name_indexer.index_from_name.end()) {
-        const auto index_in_dictionary = it->second;
-        return index_in_dictionary;
+    size_t getIndexInDictionary(size_t name) {
+        const auto it = index_from_name.find(name);
+        if (it != index_from_name.end()) {
+            const auto index_in_dictionary = it->second;
+            return index_in_dictionary;
+        }
+        else {
+            const auto index_in_dictionary = i++;
+            index_from_name[name] = index_in_dictionary;
+            return index_in_dictionary;
+        }
     }
-    else {
-        const auto index_in_dictionary = name_indexer.i++;
-        name_indexer.index_from_name[name] = index_in_dictionary;
-        return index_in_dictionary;
-    }
-}
+};
 
 Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
@@ -320,31 +320,31 @@ Expression parseDictionary(CodeRange code) {
         if (statement.type == DEFINITION) {
             auto assignment = getDefinition(statement);
             const auto name_index = assignment.name.index;
-            assignment.name_index = getIndexInDictionary(name_index, name_indexer);
+            assignment.name_index = name_indexer.getIndexInDictionary(name_index);
             new_statements.push_back(makeDefinition(statement.range, assignment));
         }
         else if (statement.type == PUT_ASSIGNMENT) {
             auto assignment = getPutAssignment(statement);
             const auto name_index = assignment.name.index;
-            assignment.name_index = getIndexInDictionary(name_index, name_indexer);
+            assignment.name_index = name_indexer.getIndexInDictionary(name_index);
             new_statements.push_back(makePutAssignment(statement.range, assignment));
         }
         else if (statement.type == PUT_EACH_ASSIGNMENT) {
             auto assignment = getPutEachAssignment(statement);
             const auto name_index = assignment.name.index;
-            assignment.name_index = getIndexInDictionary(name_index, name_indexer);
+            assignment.name_index = name_indexer.getIndexInDictionary(name_index);
             new_statements.push_back(makePutEachAssignment(statement.range, assignment));
         }
         else if (statement.type == DROP_ASSIGNMENT) {
             auto assignment = getDropAssignment(statement);
             const auto name_index = assignment.name.index;
-            assignment.name_index = getIndexInDictionary(name_index, name_indexer);
+            assignment.name_index = name_indexer.getIndexInDictionary(name_index);
             new_statements.push_back(makeDropAssignment(statement.range, assignment));
         }
         else if (statement.type == FOR_SIMPLE_STATEMENT) {
             auto assignment = getForSimpleStatement(statement);
             const auto name_index = assignment.name_container.index;
-            assignment.name_index = getIndexInDictionary(name_index, name_indexer);
+            assignment.name_index = name_indexer.getIndexInDictionary(name_index);
             new_statements.push_back(makeForSimpleStatement(statement.range, assignment));
         }
         else {
