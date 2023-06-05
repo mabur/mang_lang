@@ -245,7 +245,7 @@ bool isEndMatchingWhile(
 
 struct NameIndexer {
     std::unordered_map<size_t, size_t> index_from_name;
-    size_t i = 0;
+    size_t count = 0;
 
     size_t getIndexInDictionary(size_t name) {
         const auto it = index_from_name.find(name);
@@ -254,7 +254,7 @@ struct NameIndexer {
             return index_in_dictionary;
         }
         else {
-            const auto index_in_dictionary = i++;
+            const auto index_in_dictionary = count++;
             index_from_name[name] = index_in_dictionary;
             return index_in_dictionary;
         }
@@ -352,7 +352,7 @@ Expression parseDictionary(CodeRange code) {
         }
     }
     return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{new_statements, name_indexer.index_from_name.size()}
+        CodeRange{first, code.begin()}, Dictionary{new_statements, name_indexer.count}
     );
 }
 
