@@ -313,14 +313,14 @@ int main() {
         {"{c=no for c return end s=0}", "{c=no s=0}"},
         {"{c=yes s=0 for c s+=1 end}", "{c=no s=1}"},
         {"{c=yes s=0 for i in c s+=1 end}", "{c=no s=1 i=yes}"},
-        {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0}"},
-        {"{c=[] for i in c end}", "{c=[]}"},
+        {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0 i=ANY}"}, // TODO: think about
+        {"{c=[] for i in c end}", "{c=[] i=ANY}"}, // TODO: think about
         {"{c=[1] for i in c end}", "{c=[] i=1}"},
         {"{c=[1 2] for i in c end}", "{c=[] i=2}"},
         {"{a=[] c=[1 2 3] for i in c a+=i end}", "{a=[3 2 1] c=[] i=3}"},
-        {"{c=[1 2] for i in c d=[2 3] for j in d end end}", "{c=[] d=[] i=2 j=3}"}, // TODO: think about
-        {"r@{f=in c out {for i in c end} r=f![]}", "{}"},
-        {"r@{f=in c out {for i in c end} r=f![1]}", "{i=1 c=[]}"},
+        {"{c=[1 2] for i in c d=[2 3] for j in d end end}", "{c=[] i=2 d=[] j=3}"},
+        {"r@{f=in c out {d=c for i in d end} r=f![]}", "{d=[] i=ANY}"},
+        {"r@{f=in c out {d=c for i in d end} r=f![1]}", "{d=[] i=1}"},
     });
     test.evaluate_types("dictionary for", {
         {"{c=[] for c end}", "{c=EMPTY_STACK}"},

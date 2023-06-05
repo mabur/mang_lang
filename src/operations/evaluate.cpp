@@ -461,6 +461,14 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
             definition.expression = Expression{};
             definitions[definition.name_index] = definition;
         }
+        else if (type == FOR_STATEMENT) {
+            const auto for_statement = getForStatement(statement);
+            definitions[for_statement.name_index_item] = Definition{
+                for_statement.name_item,
+                Expression{},
+                for_statement.name_index_item
+            };
+        }
     }
     return definitions;
 }

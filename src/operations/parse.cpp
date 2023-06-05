@@ -209,8 +209,10 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         auto second_name = parseName(code);
         code.first = end(second_name);
+        const auto first_name_index = indexer.getIndex(first_name.index);
+        const auto second_name_index = indexer.getIndex(second_name.index);
         return makeForStatement(CodeRange{first, code.first},
-            ForStatement{first_name, second_name, 0}
+            ForStatement{first_name, second_name, 0, first_name_index, second_name_index}
         );
     }
     else {

@@ -264,6 +264,8 @@ struct ForStatement {
     Expression name_item;
     Expression name_container;
     size_t end_index_;
+    size_t name_index_item;
+    size_t name_index_container;
 };
 
 struct ForSimpleStatement {
