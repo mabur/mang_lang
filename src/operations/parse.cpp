@@ -250,13 +250,11 @@ struct NameIndexer {
     size_t getIndexInDictionary(size_t name) {
         const auto it = index_from_name.find(name);
         if (it != index_from_name.end()) {
-            const auto index_in_dictionary = it->second;
-            return index_in_dictionary;
+            return it->second;
         }
         else {
-            const auto index_in_dictionary = count++;
-            index_from_name[name] = index_in_dictionary;
-            return index_in_dictionary;
+            index_from_name[name] = count;
+            return count++;
         }
     }
 };
