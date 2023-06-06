@@ -295,6 +295,8 @@ struct Dictionary {
 // Use index range for definitions.
 // But then need to know all members of the dictionary before it is evaluated.
 // so that they are all added together, at least the first time.
+// Alternatively, use unordered_map for fast lookup of all names
+// and not just definitions.
 // Bottleneck.
 struct EvaluatedDictionary {
     Expression environment;
