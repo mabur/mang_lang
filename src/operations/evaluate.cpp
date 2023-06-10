@@ -232,10 +232,11 @@ Expression lookupDictionary(Expression name, Expression expression) {
         throw MissingSymbol(getName(name), "environment of type " + NAMES[expression.type]);
     }
     const auto dictionary = getEvaluatedDictionary(expression);
-    if (!dictionary.has(name)) {
-        return lookupDictionary(name, dictionary.environment);
+    const auto result = dictionary.optionalLookup(name);
+    if (result) {
+        return *result;
     }
-    return dictionary.lookup(name);
+    return lookupDictionary(name, dictionary.environment);
 }
 
 Expression applyFunctionBuiltIn(

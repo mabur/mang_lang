@@ -302,7 +302,7 @@ struct EvaluatedDictionary {
     Expression environment;
     std::vector<Definition> definitions;
 
-    bool has(Expression key) const;
+    const Expression* optionalLookup(Expression key) const;
     Expression lookup(Expression key) const;
 };
 
