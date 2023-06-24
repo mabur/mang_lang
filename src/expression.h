@@ -299,7 +299,7 @@ struct Dictionary {
 // and not just definitions.
 // Bottleneck.
 struct EvaluatedDictionary {
-    Expression environment;
+    Expression environment; // TODO: is this needed?
     std::vector<Definition> definitions;
 
     const Expression* optionalLookup(Expression key) const;
