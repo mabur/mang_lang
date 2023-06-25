@@ -72,6 +72,12 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
     if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return;
     if (left.type == EMPTY_STRING && right.type == STRING) return;
     if (left.type == STRING && right.type == EMPTY_STRING) return;
+    if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
+    if (left.type == FUNCTION && right.type == FUNCTION_TUPLE) return;
+    if (left.type == FUNCTION && right.type == FUNCTION_BUILT_IN) return;
+    if (left.type == FUNCTION_DICTIONARY && right.type == FUNCTION) return;
+    if (left.type == FUNCTION_TUPLE && right.type == FUNCTION) return;
+    if (left.type == FUNCTION_BUILT_IN && right.type == FUNCTION) return;
     if (left.type == EVALUATED_STACK && right.type == EVALUATED_STACK) {
         checkTypesEvaluatedStack(left, right, description);
         return;
@@ -88,12 +94,6 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         checkTypesEvaluatedDictionary(left, right, description);
         return;
     }
-    if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
-    if (left.type == FUNCTION && right.type == FUNCTION_TUPLE) return;
-    if (left.type == FUNCTION && right.type == FUNCTION_BUILT_IN) return;
-    if (left.type == FUNCTION_DICTIONARY && right.type == FUNCTION) return;
-    if (left.type == FUNCTION_TUPLE && right.type == FUNCTION) return;
-    if (left.type == FUNCTION_BUILT_IN && right.type == FUNCTION) return;
     if (left.type == right.type) return;
     throw std::runtime_error(
         "Static type error in " + description +
