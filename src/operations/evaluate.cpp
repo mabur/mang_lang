@@ -12,6 +12,10 @@ namespace {
 
 void checkTypes(Expression left, Expression right, const std::string& description);
 
+void checkTypesEvaluatedStack(Expression left, Expression right, const std::string& description) {
+    checkTypes(getEvaluatedStack(left).top, getEvaluatedStack(right).top, description);
+}
+
 void checkTypesEvaluatedTable(Expression left, Expression right, const std::string& description) {
     const auto table_left = getEvaluatedTable(left);
     const auto table_right = getEvaluatedTable(right);
@@ -33,7 +37,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
     if (left.type == EMPTY_STRING && right.type == STRING) return;
     if (left.type == STRING && right.type == EMPTY_STRING) return;
     if (left.type == EVALUATED_STACK && right.type == EVALUATED_STACK) {
-        checkTypes(getEvaluatedStack(left).top, getEvaluatedStack(right).top, description);
+        checkTypesEvaluatedStack(left, right, description);
         return;
     }
     if (left.type == EVALUATED_TABLE && right.type == EVALUATED_TABLE) {
