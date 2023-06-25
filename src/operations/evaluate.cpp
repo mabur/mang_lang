@@ -28,6 +28,20 @@ void checkTypesEvaluatedTable(Expression left, Expression right, const std::stri
     return;
 }
 
+void checkTypesEvaluatedTuple(Expression left, Expression right, const std::string& description) {
+    const auto tuple_left = getEvaluatedTuple(left);
+    const auto tuple_right = getEvaluatedTuple(right);
+    if (tuple_left.expressions.size() != tuple_right.expressions.size()) {
+        throw std::runtime_error(
+            "Static type error in " + description + ". Inconsistent tuple size."
+        );
+    }
+    const auto count = tuple_left.expressions.size();
+    for (size_t i = 0; i < count; ++i) {
+        checkTypes(tuple_left.expressions[i], tuple_right.expressions[i], description);
+    }
+}
+
 void checkTypes(Expression left, Expression right, const std::string& description) {
     if (left.type == ANY || right.type == ANY) return;
     if (left.type == YES || right.type == NO) return;
@@ -44,17 +58,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         checkTypesEvaluatedTable(left, right, description);
     }
     if (left.type == EVALUATED_TUPLE && right.type == EVALUATED_TUPLE) {
-        const auto tuple_left = getEvaluatedTuple(left);
-        const auto tuple_right = getEvaluatedTuple(right);
-        if (tuple_left.expressions.size() != tuple_right.expressions.size()) {
-            throw std::runtime_error(
-                "Static type error in " + description + ". Inconsistent tuple size."
-            );
-        }
-        const auto count = tuple_left.expressions.size();
-        for (size_t i = 0; i < count; ++i) {
-            checkTypes(tuple_left.expressions[i], tuple_right.expressions[i], description);
-        }
+        checkTypesEvaluatedTuple(left, right, description);
     }
     if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
         const auto definitions_left = getEvaluatedDictionary(left).definitions;
