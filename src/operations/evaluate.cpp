@@ -25,7 +25,6 @@ void checkTypesEvaluatedTable(Expression left, Expression right, const std::stri
     const auto row_right = table_right.begin()->second;
     checkTypes(row_left.key, row_right.key, description);
     checkTypes(row_left.value, row_right.value, description);
-    return;
 }
 
 void checkTypesEvaluatedTuple(Expression left, Expression right, const std::string& description) {
@@ -79,12 +78,15 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
     }
     if (left.type == EVALUATED_TABLE && right.type == EVALUATED_TABLE) {
         checkTypesEvaluatedTable(left, right, description);
+        return;
     }
     if (left.type == EVALUATED_TUPLE && right.type == EVALUATED_TUPLE) {
         checkTypesEvaluatedTuple(left, right, description);
+        return;
     }
     if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
         checkTypesEvaluatedDictionary(left, right, description);
+        return;
     }
     if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
     if (left.type == FUNCTION && right.type == FUNCTION_TUPLE) return;
