@@ -10,6 +10,20 @@
 
 namespace {
 
+void checkTypes(Expression left, Expression right, const std::string& description);
+
+void checkTypesEvaluatedTable(Expression left, Expression right, const std::string& description) {
+    const auto table_left = getEvaluatedTable(left);
+    const auto table_right = getEvaluatedTable(right);
+    if (table_left.empty()) return;
+    if (table_right.empty()) return;
+    const auto row_left = table_left.begin()->second;
+    const auto row_right = table_right.begin()->second;
+    checkTypes(row_left.key, row_right.key, description);
+    checkTypes(row_left.value, row_right.value, description);
+    return;
+}
+
 void checkTypes(Expression left, Expression right, const std::string& description) {
     if (left.type == ANY || right.type == ANY) return;
     if (left.type == YES || right.type == NO) return;
@@ -23,15 +37,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         return;
     }
     if (left.type == EVALUATED_TABLE && right.type == EVALUATED_TABLE) {
-        const auto table_left = getEvaluatedTable(left);
-        const auto table_right = getEvaluatedTable(right);
-        if (table_left.empty()) return;
-        if (table_right.empty()) return;
-        const auto row_left = table_left.begin()->second;
-        const auto row_right = table_right.begin()->second;
-        checkTypes(row_left.key, row_right.key, description);
-        checkTypes(row_left.value, row_right.value, description);
-        return;
+        checkTypesEvaluatedTable(left, right, description);
     }
     if (left.type == EVALUATED_TUPLE && right.type == EVALUATED_TUPLE) {
         const auto tuple_left = getEvaluatedTuple(left);
