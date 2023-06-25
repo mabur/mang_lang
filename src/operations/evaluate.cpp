@@ -42,6 +42,29 @@ void checkTypesEvaluatedTuple(Expression left, Expression right, const std::stri
     }
 }
 
+void checkTypesEvaluatedDictionary(Expression left, Expression right, const std::string& description) {
+    const auto definitions_left = getEvaluatedDictionary(left).definitions;
+    const auto definitions_right = getEvaluatedDictionary(right).definitions;
+    if (definitions_left.size() != definitions_right.size()) {
+        throw std::runtime_error(
+            "Static type error in " + description + ". Inconsistent dictionary size."
+        );
+    }
+    const auto count = definitions_left.size();
+    for (size_t i = 0; i < count; ++i) {
+        const auto& name_left = definitions_left[i].name;
+        const auto& name_right = definitions_right[i].name;
+        if (name_left.index != name_right.index) {
+            throw std::runtime_error(
+                "Static type error in " + description +
+                    ". Inconsistent dictionary names " +
+                    getName(name_left) + " & " + getName(name_right)
+            );
+        }
+        checkTypes(definitions_left[i].expression, definitions_right[i].expression, description);
+    }
+}
+
 void checkTypes(Expression left, Expression right, const std::string& description) {
     if (left.type == ANY || right.type == ANY) return;
     if (left.type == YES || right.type == NO) return;
@@ -61,26 +84,7 @@ void checkTypes(Expression left, Expression right, const std::string& descriptio
         checkTypesEvaluatedTuple(left, right, description);
     }
     if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
-        const auto definitions_left = getEvaluatedDictionary(left).definitions;
-        const auto definitions_right = getEvaluatedDictionary(right).definitions;
-        if (definitions_left.size() != definitions_right.size()) {
-            throw std::runtime_error(
-                "Static type error in " + description + ". Inconsistent dictionary size."
-            );
-        }
-        const auto count = definitions_left.size();
-        for (size_t i = 0; i < count; ++i) {
-            const auto& name_left = definitions_left[i].name;
-            const auto& name_right = definitions_right[i].name;
-            if (name_left.index != name_right.index) {
-                throw std::runtime_error(
-                    "Static type error in " + description +
-                    ". Inconsistent dictionary names " +
-                    getName(name_left) + " & " + getName(name_right)
-                );
-            }
-            checkTypes(definitions_left[i].expression, definitions_right[i].expression, description);
-        }
+        checkTypesEvaluatedDictionary(left, right, description);
     }
     if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
     if (left.type == FUNCTION && right.type == FUNCTION_TUPLE) return;
