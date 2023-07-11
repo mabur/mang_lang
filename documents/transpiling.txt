@@ -1,0 +1,60 @@
+# Transpiling Manglang to C
+
+* Transpile to C, for speed.
+* Could start by transpiling to C++, and identical code as interpretor, and then gradually add speed ups by moving execution from interpretor to C compilation.
+* Use C-compiler for:
+  - name-lookup
+  - loops
+* A bytecode interpretor will probably be as fast?
+
+## Dictionary with reference OK
+{
+	a=1
+	b=a
+}
+Expression evaluateDictX() {
+	Expression a;
+	Expression b;
+	a = makeNumber(1);
+	b = a;
+	return makeDictionary({{"a",a}, {"b",b}});
+}
+int main() {serialize(evaluateDictX());}
+
+## Dictionary with loop OK
+
+{
+	i=2
+	while i
+	end
+}
+Expression evaluateDictX() {
+	Expression i;
+	i = makeNumber(2);
+	while (asBoolean(i)) {
+	}
+	return makeDictionary({{"i", i}});
+}
+
+## Nested dictionaries
+{
+	a = 1
+	b = {
+		c = a
+	}
+}
+{
+	Expression result;
+	Expression a;
+	Expression b;
+	result = makeNumer(1);
+	a = result;
+	{
+		Expression c;
+		result = a;
+		c = result;
+		result = makeDictionary({{"c", c}});
+	}
+	b = result;
+	result = makeDictionary({{"a", a}, {"b", b}});
+}
