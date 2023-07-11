@@ -1,19 +1,4 @@
 TYPE SYSTEM
-* Dictionary types:
-  - aoc_22_07
-  - Should type checking for dictionaries be symmetric?
-    Interfaces are typically not symmetric, i.e. the implementation has more details.
-  - Should type checking for dictionaries not require exactly the same order?
-* Run-time polymorphism/dispatch:
-  - How to solve aoc_22_13
-    if type checking would enforce homogeneous stacks?
-  - Add version of "is" that checks that the type is equal
-    instead of the value. "is_type_of" (bra)
-  - Isinstance
-  - Inheritance/polymorphism
-  - Run-time-dispatch
-  - Sum-type/choice-type
-  - dynamic keyword
 * Maybe types should not be re-evaluated for every function call?
   - Could store evaluted types if we have EvaluatedFunction structs.
     - So EvaluatedFunction sets both environment and types of arguments.
@@ -68,6 +53,53 @@ TYPE SYSTEM
     - Concepts like Functions, which is a sum type of function, function_tuple, function_dictionary, function_built_in.
       - Easy as long as we don't care about sub-concepts.
 * Rename serialized types from NUMBER to Number.
+* Dictionary types:
+  - aoc_22_07
+  - Should type checking for dictionaries be symmetric?
+    Interfaces are typically not symmetric, i.e. the implementation has more details.
+  - Should type checking for dictionaries not require exactly the same order?
+* Run-time polymorphism/dispatch:
+  - How to solve aoc_22_13
+    if type checking would enforce homogeneous stacks?
+  - Add version of "is" that checks that the type is equal
+    instead of the value. "is_type_of" (bra)
+  - Isinstance
+  - Sum-type/choice-type
+  - Run-time-dispatch/polymorphism/interfaces
+    - Make type checking for dictionaries non-symmetric,
+      so that a child can implement a parent interface and add more fields.
+    - Add "using" 
+  - dynamic keyword
+* Oding keyword "using" for unpacking dictionary into dictionary.
+{
+  size = {width=320 height=240}
+  point = {x=10 y=20}
+  rect = {using size using point}
+
+  using std
+
+  max_element = in list out {value = ... index = ...}
+  result = max_element!(3 7 6)
+  value = value@result
+  index = index@result
+  // Alternative
+  using max_element!(3 7 6)
+}
+{
+  size = {width=320 height=240}
+  point = {x=10 y=20}
+  rect = {unpack size unpack point}
+  
+  unpack std
+
+  max_element = in list out {value = ... index = ...}
+  result = max_element!(3 7 6)
+  value = value@result
+  index = index@result
+  // Alternative
+  unpack max_element!(3 7 6)
+}
+
 
 STANDARD LIBRARY
 * all_of, any_of, none_of
@@ -162,35 +194,6 @@ LANGUAGE SYNTAX & SEMANTICS
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
-* Oding keyword "using" for unpacking dictionary into dictionary.
-{
-  size = {width=320 height=240}
-  point = {x=10 y=20}
-  rect = {using size using point}
-
-  using std
-
-  max_element = in list out {value = ... index = ...}
-  result = max_element!(3 7 6)
-  value = value@result
-  index = index@result
-  // Alternative
-  using max_element!(3 7 6)
-}
-{
-  size = {width=320 height=240}
-  point = {x=10 y=20}
-  rect = {unpack size unpack point}
-  
-  unpack std
-
-  max_element = in list out {value = ... index = ...}
-  result = max_element!(3 7 6)
-  value = value@result
-  index = index@result
-  // Alternative
-  unpack max_element!(3 7 6)
-}
 
 
 SYSTEM IMPLEMENTATION
