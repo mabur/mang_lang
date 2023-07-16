@@ -13,8 +13,8 @@ TYPE SYSTEM
   - Subtype hierarchy:
     - ANY
       - Character
-      - Boolean
       - Container (does not exist as concept yet)
+        - Boolean
         - Number
         - []
           - [Number]
@@ -222,6 +222,7 @@ SYSTEM IMPLEMENTATION
   - Adrian Sampson, Department of Computer Science Cornell University
     - Flattening ASTs (and Other Compiler Data Structures)- 
     - https://www.cs.cornell.edu/~asampson/blog/flattening.html
+* Static evaluation names: 1 in for number of steps to parent and another int for index in that dictionary.
 * Storing all expression fields as SOA instead of AOS?
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
