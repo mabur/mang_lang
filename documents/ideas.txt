@@ -10,21 +10,39 @@ TYPE SYSTEM
     - Feels like it can be confusing for []
   - Both good and bad to use [] to represent both emtpy stack and stack of any item type.
     - Feels like sub-type relation can go both ways depending on perspective.
-  - Subtype hierarchy:
+  - Subtype hierarchy or graph:
     - ANY
       - Character
-      - Container (does not exist as concept yet)
-        - Boolean
-        - Number
-        - []
-          - [Number]
-        - <>
-          - <(Number Number)>
-        - ""
-      - Dictionary
-        - Concrete dictionaries
-      - Tuple
-        - Concrete tuples
+      - Homogeneous & dynamic containers
+        - ShrinkableContainer/ContractingContainer/Consumable(bra): take, drop
+          - Text file input
+          - Terminal input
+          - Random number generation
+          - Mouse input
+          - Keyboard input
+          - Concurrent input channel
+        - GrowableContainer/ExpandableContainer/ExtendableContainer/Accumulator/Collector(bra)/Aggregator/Gatherer: put
+          - Text file output
+          - Terminal output
+          - TUI output
+          - Concurrent output channel
+          - Pixel output?
+            - How to make it efficient for real-time 2d games and images?
+            - Might need an array/range/slice type.
+            - Could also hide it behind a built-in sprite abstraction. Good enough for 2D.
+        - Container: take, drop, put
+          - Boolean
+          - Number
+          - String
+          - Generic Option/Optional/Maybe, Option[]
+            - Concrete options, Option[...]
+          - Generic stack, []
+            - Concrete stacks, [...]
+          - Generic table, Table[]
+            - Concrete tables, Table[...]
+      - Inhomogenouse & static containers / data structures
+        - Concrete dictionaries (specifies the sufficient members)
+        - Concrete tuples (specifies the sufficient members)
 * How to add and check type annotation for:
   - any
   - never?
@@ -33,16 +51,9 @@ TYPE SYSTEM
   - variants / sum-types
     - Similar to tuples/product-types.
     - Could add some syntax for sum-types like:
-      Container = |Stack String Table Number|
-      container_of = in item out |[item] <item>|
-    - But it is a problem that || is symmetric.
-  - optionals
-    - Can we have type functions like:
-    {
-      make_optional = in Type out |Type NULL|
-      OptionalNumber = make_optional!Number
-      OptionalNumber = |Number NULL|
-    }
+      Container = Variant(Stack String Table Number)
+      container_of = in item out Variant([item] <item>)
+  - optionals could either be sum-types or containers.
   - concepts:
     - concepts like Container, which is a sum-type of stack,string,table,number.
       - Could introduce a special type CONTAINER, similarly to EMPTY_STACK, and define equal accordingly.
@@ -222,7 +233,10 @@ SYSTEM IMPLEMENTATION
   - Adrian Sampson, Department of Computer Science Cornell University
     - Flattening ASTs (and Other Compiler Data Structures)- 
     - https://www.cs.cornell.edu/~asampson/blog/flattening.html
-* Static evaluation names: 1 in for number of steps to parent and another int for index in that dictionary.
+* Static evaluation names:
+  - Current O(parents * members)
+  - 1 in for number of steps to parent and another int for index in that dictionary. O(parents)
+  - or just a single int for index in that dictionary, and then visit parents until it is found. O(parents)
 * Storing all expression fields as SOA instead of AOS?
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
