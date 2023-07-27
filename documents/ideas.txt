@@ -21,7 +21,7 @@ TYPE SYSTEM
           - Mouse input
           - Keyboard input
           - Concurrent input channel
-        - GrowableContainer/ExpandableContainer/ExtendableContainer/Accumulator/Collector(bra)/Aggregator/Gatherer: put
+        - GrowableContainer/ExpandableContainer/ExtendableContainer/Accumulator(ganska bra +=)/Collector(bra)/Aggregator/Gatherer: put
           - Text file output
           - Terminal output
           - TUI output
