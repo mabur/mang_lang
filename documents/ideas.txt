@@ -14,7 +14,7 @@ TYPE SYSTEM
     - ANY
       - Character
       - Homogeneous & dynamic containers
-        - ShrinkableContainer/ContractingContainer/Consumable(bra): take, drop
+        - ShrinkableContainer/ContractingContainer/Provider/Consumable(bra): take, drop
           - Text file input
           - Terminal input
           - Random number generation
