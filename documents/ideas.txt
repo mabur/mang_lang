@@ -14,14 +14,19 @@ TYPE SYSTEM
     - ANY
       - Character
       - Homogeneous & dynamic containers
-        - ShrinkableContainer/ContractingContainer/Provider/Consumable(bra): take, drop
+        - Concept: take, drop.
+          - Names: Sender (bra), Source, Consumable, Provider, Producer, Publisher.
+          - Container
           - Text file input
           - Terminal input
           - Random number generation
           - Mouse input
           - Keyboard input
           - Concurrent input channel
-        - GrowableContainer/ExpandableContainer/ExtendableContainer/Accumulator(ganska bra +=)/Collector(bra)/Aggregator/Gatherer: put
+        - Concept: put.
+          - Names: Receiver (bra), Target, Destination, Sink,
+                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber.
+          - Container
           - Text file output
           - Terminal output
           - TUI output
