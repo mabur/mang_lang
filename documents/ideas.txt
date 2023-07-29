@@ -15,7 +15,7 @@ TYPE SYSTEM
       - Character
       - Homogeneous & dynamic containers
         - Concept: take, drop.
-          - Names: Sender (bra), Source, Consumable, Provider, Producer, Publisher.
+          - Names: Sender (bra), Source, Consumable, Provider, Producer, Publisherl, InputIterator, Iterable, Reader.
           - Container
           - Text file input
           - Terminal input
@@ -23,9 +23,9 @@ TYPE SYSTEM
           - Mouse input
           - Keyboard input
           - Concurrent input channel
-        - Concept: put.
+        - Concept: put, clear?
           - Names: Receiver (bra), Target, Destination, Sink,
-                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber.
+                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber, OutputIterator, Writer.
           - Container
           - Text file output
           - Terminal output
@@ -35,7 +35,7 @@ TYPE SYSTEM
             - How to make it efficient for real-time 2d games and images?
             - Might need an array/range/slice type.
             - Could also hide it behind a built-in sprite abstraction. Good enough for 2D.
-        - Container: take, drop, put
+        - Container: take, drop, put, clear.
           - Boolean
           - Number
           - String
@@ -116,6 +116,7 @@ TYPE SYSTEM
 STANDARD LIBRARY
 * all_of, any_of, none_of
 * Interface for containers:
+  - Look at all usages of clear in standard library, and consider sending in the target container/receiver, like STL.
   - Define and & or on tuples/pairs instead of stacks.
   - add empty? is_empty? function for containers?
     - Makes even more sense after for-loops are added.
