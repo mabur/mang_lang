@@ -110,20 +110,23 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    merge_stack = in containers out Stack:reverse!fold!(
+    merge_generic = in (containers bottom_container) out bottom_container:fold!(
         put_each
+        containers
+        bottom_container
+    )
+
+    merge_stack = in containers out Stack:reverse!merge_generic!(
         containers
         []
     )
 
-    merge_string = in containers out String:reverse!fold!(
-        put_each
+    merge_string = in containers out String:reverse!merge_generic!(
         containers
         ""
     )
 
-    merge_table = in containers out Table:fold!(
-        put_each
+    merge_table = in containers out Table:merge_generic!(
         reverse!containers
         <>
     )
