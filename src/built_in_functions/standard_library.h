@@ -289,20 +289,18 @@ const std::string STANDARD_LIBRARY = R"(
     drop_until_item = in (item container) out container:
         drop_while?(in x out unequal?(x item) container)
 
-    replace = in (new_item container) out fold!(
-        in (item container) out put!(new_item container)
+    replace = in (new_item container) out map!(
+        in old_item out new_item
         container
-        clear!container
     )
 
-    replace_if = in (Function:predicate new_item container) out reverse!fold!(
-        in (item container) out
-            if predicate?item then
-                put!(new_item container)
+    replace_if = in (Function:predicate new_item container) out map!(
+        in old_item out
+            if predicate?old_item then
+                new_item
             else
-                put!(item container)
+                old_item
         container
-        clear!container
     )
 
     replace_item = in (old_item new_item container) out 
