@@ -84,16 +84,15 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    reverse = in container out container:fold!(
-        put
-        container
-        clear!container
-    )
-
     put_each = in (top_container bottom_container) out bottom_container:fold!(
         put
         top_container
         bottom_container
+    )
+
+    reverse = in container out container:put_each!(
+        container
+        clear!container
     )
 
     make_stack = in container out Stack:reverse!put_each!(
