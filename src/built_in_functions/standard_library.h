@@ -131,28 +131,34 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map_stack = in (Function:f container) out Stack:reverse!fold!(
+    map_generic = in (Function:f container bottom_container) out fold!(
         in (item container) out put!(f!item container)
+        container
+        bottom_container
+    )
+
+    map = in (Function:f container) out reverse!map_generic!(
+        f
+        container
+        clear!container
+    )
+
+    map_stack = in (Function:f container) out Stack:reverse!map_generic!(
+        f
         container
         []
     )
 
-    map_string = in (Function:f container) out String:reverse!fold!(
-        in (item container) out put!(f!item container)
+    map_string = in (Function:f container) out String:reverse!map_generic!(
+        f
         container
         ""
     )
 
-    map_table = in (Function:f container) out Table:fold!(
-        in (item container) out put!(f!item container)
+    map_table = in (Function:f container) out Table:map_generic!(
+        f
         container
         <>
-    )
-
-    map = in (Function:f container) out reverse!fold!(
-        in (item container) out put!(f!item container)
-        container
-        clear!container
     )
 
     zip2 = in (a b) out Stack:reverse!result@{
