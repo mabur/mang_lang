@@ -114,6 +114,10 @@ TYPE SYSTEM
 
 
 STANDARD LIBRARY
+* Make algorithms more similar to STL:
+  - Let them take the "init container".
+  - Add array containers/iterators that put new items in-place, similar to tables.
+  - Then the same base algorithm can be used for both in-place (transform) and new allocation (map).
 * all_of, any_of, none_of
 * Interface for containers:
   - Look at all usages of clear in standard library, and consider sending in the target container/receiver, like STL.
