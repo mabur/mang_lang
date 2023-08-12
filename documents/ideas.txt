@@ -211,7 +211,12 @@ LANGUAGE SYNTAX & SEMANTICS
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
-
+* Add asserts/value-checks/predicates with similar syntax to type-checks:
+  - type-check:value-check;expression
+  - List:is_populated;expression
+  - List:expression
+  - is_populated;expression
+  - expression
 
 SYSTEM IMPLEMENTATION
 * Optimization:
