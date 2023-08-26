@@ -239,9 +239,10 @@ Expression applyFunctionTuple(
     return evaluator(function.body, middle);
 }
 
-Expression evaluateFunction(const Function& function, Expression environment) {
+Expression evaluateFunction(Expression function, Expression environment) {
+    const auto function_struct = getFunction(function);
     return makeFunction(CodeRange{}, {
-        environment, function.input_name, function.body
+        environment, function_struct.input_name, function_struct.body
     });
 }
 
@@ -790,7 +791,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case EVALUATED_TABLE_VIEW: return expression;
 
         // These are the same for types and values:
-        case FUNCTION: return evaluateFunction(getFunction(expression), environment);
+        case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
@@ -830,7 +831,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case EVALUATED_TABLE_VIEW: return expression;
 
         // These are the same for types and values:
-        case FUNCTION: return evaluateFunction(getFunction(expression), environment);
+        case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
