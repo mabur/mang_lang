@@ -142,7 +142,7 @@ Expression evaluateTuple(
     for (const auto& expression : tuple_struct.expressions) {
         evaluated_expressions.push_back(evaluator(expression, environment));
     }
-    const auto code = CodeRange{};
+    const auto code = tuple.range;
     return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
 }
 
@@ -161,7 +161,7 @@ Expression evaluateTable(
         const auto serialized_key = serializer(key);
         rows[serialized_key] = {key, value};
     }
-    const auto code = CodeRange{};
+    const auto code = table.range;
     return makeEvaluatedTable(code, EvaluatedTable{rows});
 }
 
@@ -246,7 +246,7 @@ Expression applyFunctionTuple(
 
 Expression evaluateFunction(Expression function, Expression environment) {
     const auto function_struct = getFunction(function);
-    return makeFunction(CodeRange{}, {
+    return makeFunction(function.range, {
         environment, function_struct.input_name, function_struct.body
     });
 }
@@ -255,7 +255,7 @@ Expression evaluateFunctionDictionary(
     Expression function_dictionary, Expression environment
 ) {
     const auto function_dictionary_struct = getFunctionDictionary(function_dictionary);
-    return makeFunctionDictionary(CodeRange{}, {
+    return makeFunctionDictionary(function_dictionary.range, {
         environment,
         function_dictionary_struct.input_names,
         function_dictionary_struct.body
@@ -266,7 +266,7 @@ Expression evaluateFunctionTuple(
     Expression function_tuple, Expression environment
 ) {
     const auto function_tuple_struct = getFunctionTuple(function_tuple);
-    return makeFunctionTuple(CodeRange{}, {
+    return makeFunctionTuple(function_tuple.range, {
         environment, function_tuple_struct.input_names, function_tuple_struct.body
     });
 }
@@ -533,7 +533,7 @@ Expression evaluateDictionaryTypes(
     const auto dictionary_struct = getDictionary(dictionary);
     const auto initial_definitions = initializeDefinitions(dictionary_struct);
     const auto result = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, initial_definitions}
+        dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
     for (const auto& statement : dictionary_struct.statements) {
         const auto type = statement.type;
@@ -611,7 +611,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto dictionary_struct = getDictionary(dictionary);
     const auto initial_definitions = initializeDefinitions(dictionary_struct);
     const auto result = makeEvaluatedDictionary(
-        CodeRange{}, EvaluatedDictionary{environment, initial_definitions}
+        dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
     const auto& statements = dictionary_struct.statements;
     auto i = size_t{0};
@@ -758,8 +758,8 @@ Expression evaluateFunctionApplicationTypes(
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function));
         case STRING: return applyStringIndexing(getString(function));
 
-        case EMPTY_STACK: return Expression{};
-        case EMPTY_STRING: return Expression{CHARACTER, {}, CodeRange{}};
+        case EMPTY_STACK: return Expression{ANY, 0, function_application.range};
+        case EMPTY_STRING: return Expression{CHARACTER, 0, function_application.range};
 
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplicationTypes");
     }
