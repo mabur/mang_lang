@@ -347,18 +347,18 @@ Expression applyTupleIndexing(Expression tuple, Number number) {
     }
 }
 
-Expression applyTableIndexing(const EvaluatedTable& table) {
+Expression applyTableIndexingTypes(const EvaluatedTable& table) {
     if (table.rows.empty()) {
         return Expression{};
     }
     return table.begin()->second.value;
 }
 
-Expression applyStackIndexing(EvaluatedStack stack) {
+Expression applyStackIndexingTypes(EvaluatedStack stack) {
     return stack.top;
 }
 
-Expression applyStringIndexing(String string) {
+Expression applyStringIndexingTypes(String string) {
     return string.top;
 }
 
@@ -758,10 +758,10 @@ Expression evaluateFunctionApplicationTypes(
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, function, input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, function, input);
 
-        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function));
+        case EVALUATED_TABLE: return applyTableIndexingTypes(getEvaluatedTable(function));
         case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
-        case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function));
-        case STRING: return applyStringIndexing(getString(function));
+        case EVALUATED_STACK: return applyStackIndexingTypes(getEvaluatedStack(function));
+        case STRING: return applyStringIndexingTypes(getString(function));
 
         case EMPTY_STACK: return Expression{ANY, 0, function_application.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, function_application.range};
