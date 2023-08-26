@@ -600,14 +600,13 @@ size_t getContainerNameIndex(Expression expression) {
     }
 }
 
-Expression evaluateDictionary(
-    const Dictionary& dictionary, Expression environment
-) {
-    const auto initial_definitions = initializeDefinitions(dictionary);
+Expression evaluateDictionary(Expression dictionary, Expression environment) {
+    const auto dictionary_struct = getDictionary(dictionary);
+    const auto initial_definitions = initializeDefinitions(dictionary_struct);
     const auto result = makeEvaluatedDictionary(
         CodeRange{}, EvaluatedDictionary{environment, initial_definitions}
     );
-    const auto& statements = dictionary.statements;
+    const auto& statements = dictionary_struct.statements;
     auto i = size_t{0};
     while (i < statements.size()) {
         const auto statement = statements[i];
@@ -857,7 +856,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return evaluate(getDynamicExpression(expression).expression, environment);
         case CONDITIONAL: return evaluateConditional(expression, environment);
         case IS: return evaluateIs(getIs(expression), environment);
-        case DICTIONARY: return evaluateDictionary(getDictionary(expression), environment);
+        case DICTIONARY: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
         
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
