@@ -257,10 +257,11 @@ Expression evaluateFunctionDictionary(
 }
 
 Expression evaluateFunctionTuple(
-    const FunctionTuple& function_stack, Expression environment
+    Expression function_tuple, Expression environment
 ) {
+    const auto function_tuple_struct = getFunctionTuple(function_tuple);
     return makeFunctionTuple(CodeRange{}, {
-        environment, function_stack.input_names, function_stack.body
+        environment, function_tuple_struct.input_names, function_tuple_struct.body
     });
 }
 
@@ -792,7 +793,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
 
         // These are the same for types and values:
         case FUNCTION: return evaluateFunction(expression, environment);
-        case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
 
@@ -832,7 +833,7 @@ Expression evaluate(Expression expression, Expression environment) {
 
         // These are the same for types and values:
         case FUNCTION: return evaluateFunction(expression, environment);
-        case FUNCTION_TUPLE: return evaluateFunctionTuple(getFunctionTuple(expression), environment);
+        case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
 
