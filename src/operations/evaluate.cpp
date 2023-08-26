@@ -112,6 +112,7 @@ void checkTypes(Expression super, Expression sub, const std::string& description
     }
     throw std::runtime_error(
         "Static type error in " + description +
+        describeLocation(super.range.begin()) +
         ". " + NAMES[super.type] +
         " is not a supertype for " + NAMES[sub.type]
     );
