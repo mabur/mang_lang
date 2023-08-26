@@ -737,11 +737,11 @@ Expression applyStringIndexing(String string, Number number) {
 }
 
 Expression evaluateFunctionApplicationTypes(
-    const FunctionApplication& function_application,
-    Expression environment
+    Expression function_application, Expression environment
 ) {
-    const auto function = lookupDictionary(function_application.name, environment);
-    const auto input = evaluate_types(function_application.child, environment);
+    const auto function_application_struct = getFunctionApplication(function_application);
+    const auto function = lookupDictionary(function_application_struct.name, environment);
+    const auto input = evaluate_types(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate_types, getFunction(function), input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
@@ -819,7 +819,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
         case IS: return evaluateIsTypes(expression, environment);
         case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(getFunctionApplication(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
         
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
     }
