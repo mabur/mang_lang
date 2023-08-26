@@ -232,7 +232,9 @@ Expression dropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: throw UnexpectedExpression(in.type, "drop typed");
+        default: throw UnexpectedExpression(in.type,
+            "drop typed" + describeLocation(in.range.begin())
+        );
     }
 }
 
