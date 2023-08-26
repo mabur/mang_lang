@@ -222,13 +222,14 @@ Expression applyFunctionDictionary(
 template<typename Evaluator>
 Expression applyFunctionTuple(
     Evaluator evaluator,
-    const FunctionTuple& function,
+    Expression function,
     Expression input
 ) {
+    const auto function_struct = getFunctionTuple(function);
     auto tuple = getEvaluatedTuple(input);
-    const auto& input_names = function.input_names;
+    const auto& input_names = function_struct.input_names;
     if (input_names.size() != tuple.expressions.size()) {
-        throw std::runtime_error{"Wrong number of input to function"};
+        throw std::runtime_error{"Wrong number of input to function_struct"};
     }
     
     const auto num_inputs = input_names.size();
@@ -236,13 +237,13 @@ Expression applyFunctionTuple(
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = getArgument(input_names[i]);
         const auto expression = tuple.expressions[i];
-        checkArgument(evaluator, argument, expression, function.environment);
+        checkArgument(evaluator, argument, expression, function_struct.environment);
         definitions[i] = Definition{argument.name, expression, i};
     }
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function.environment, definitions}
+        EvaluatedDictionary{function_struct.environment, definitions}
     );
-    return evaluator(function.body, middle);
+    return evaluator(function_struct.body, middle);
 }
 
 Expression evaluateFunction(Expression function, Expression environment) {
@@ -753,7 +754,7 @@ Expression evaluateFunctionApplicationTypes(
         case FUNCTION: return applyFunction(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, function, input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, getFunctionTuple(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, function, input);
 
         case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function));
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
@@ -777,7 +778,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION: return applyFunction(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, function, input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, getFunctionTuple(function), input);
+        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, function, input);
         
         case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function), input);
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
