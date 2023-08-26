@@ -247,12 +247,13 @@ Expression evaluateFunction(Expression function, Expression environment) {
 }
 
 Expression evaluateFunctionDictionary(
-    const FunctionDictionary& function_dictionary, Expression environment
+    Expression function_dictionary, Expression environment
 ) {
+    const auto function_dictionary_struct = getFunctionDictionary(function_dictionary);
     return makeFunctionDictionary(CodeRange{}, {
         environment,
-        function_dictionary.input_names,
-        function_dictionary.body
+        function_dictionary_struct.input_names,
+        function_dictionary_struct.body
     });
 }
 
@@ -794,7 +795,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         // These are the same for types and values:
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
-        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
 
         // These are different for types and values, but templated:
@@ -834,7 +835,7 @@ Expression evaluate(Expression expression, Expression environment) {
         // These are the same for types and values:
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
-        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(getFunctionDictionary(expression), environment);
+        case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
         case LOOKUP_SYMBOL: return lookupDictionary(getLookupSymbol(expression).name, environment);
 
         // These are different for types and values, but templated:
