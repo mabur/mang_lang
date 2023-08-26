@@ -189,17 +189,17 @@ void checkArgument(
 template<typename Evaluator>
 Expression applyFunction(
     Evaluator evaluator,
-    const Function& function,
+    Expression function,
     Expression input
 ) {
-    
-    const auto argument = getArgument(function.input_name);
-    checkArgument(evaluator, argument, input, function.environment);
+    const auto function_struct = getFunction(function);
+    const auto argument = getArgument(function_struct.input_name);
+    checkArgument(evaluator, argument, input, function_struct.environment);
     const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
     const auto middle = makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{function.environment, definitions}
+        EvaluatedDictionary{function_struct.environment, definitions}
     );
-    return evaluator(function.body, middle);
+    return evaluator(function_struct.body, middle);
 }
 
 template<typename Evaluator>
@@ -748,7 +748,7 @@ Expression evaluateFunctionApplicationTypes(
     const auto function = lookupDictionary(function_application_struct.name, environment);
     const auto input = evaluate_types(function_application_struct.child, environment);
     switch (function.type) {
-        case FUNCTION: return applyFunction(evaluate_types, getFunction(function), input);
+        case FUNCTION: return applyFunction(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, getFunctionDictionary(function), input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, getFunctionTuple(function), input);
@@ -772,7 +772,7 @@ Expression evaluateFunctionApplication(
     const auto function = lookupDictionary(function_application_struct.name, environment);
     const auto input = evaluate(function_application_struct.child, environment);
     switch (function.type) {
-        case FUNCTION: return applyFunction(evaluate, getFunction(function), input);
+        case FUNCTION: return applyFunction(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, getFunctionDictionary(function), input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, getFunctionTuple(function), input);
