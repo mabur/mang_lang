@@ -4,19 +4,16 @@ TYPE SYSTEM
   - Could store evaluted types if we have EvaluatedFunction structs.
     - So EvaluatedFunction sets both environment and types of arguments.
 * Sort out sub-type relation and consistent relation.
+  - TypedExpression and function arguments are of on the form SuperType:SubType
   - a subtype can be used where the supertype is expected.
   - is & if alternatives should be consistent/equivalent.
     - Currently use else as base.
-  - TypedExpression and function arguments are of on the form SuperType:SubType
-    - Feels like it can be confusing for []
-  - Both good and bad to use [] to represent both emtpy stack and stack of any item type.
-    - Feels like sub-type relation can go both ways depending on perspective.
   - Subtype hierarchy or graph:
     - ANY
       - Character
       - Homogeneous & dynamic containers
         - Concept: take, drop.
-          - Names: Sender (bra), Source, Consumable, Provider, Producer, Publisherl, InputIterator, Iterable, Reader.
+          - Names: Sender (bra), Source, Consumable, Provider, Producer, Publisher, InputIterator, Iterable, Reader (bra?).
           - Container
           - Text file input
           - Terminal input
@@ -26,7 +23,7 @@ TYPE SYSTEM
           - Concurrent input channel
         - Concept: put, clear?
           - Names: Receiver (bra), Target, Destination, Sink,
-                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber, OutputIterator, Writer.
+                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber, OutputIterator, Writer (bra?).
           - Container
           - Text file output
           - Terminal output
@@ -50,17 +47,12 @@ TYPE SYSTEM
         - Concrete dictionaries (specifies the sufficient members)
         - Concrete tuples (specifies the sufficient members)
 * How to add and check type annotation for:
-  - any
   - never?
   - items of generic containers
   - input and output type of a function, for map
-  - variants / sum-types
-    - Similar to tuples/product-types.
-    - Could add some syntax for sum-types like:
-      Container = Variant(Stack String Table Number)
-      container_of = in item out Variant([item] <item>)
-  - optionals could either be sum-types or containers.
+  - optionals can be container instead of sum-type
   - concepts:
+    - concepts like sender & receiver
     - concepts like Container, which is a sum-type of stack,string,table,number, boolean.
       - Could introduce a special type CONTAINER, similarly to EMPTY_STACK, and define equal accordingly.
     - Concepts like Functions, which is a sum type of function, function_tuple, function_dictionary, function_built_in.
