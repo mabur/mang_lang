@@ -355,6 +355,9 @@ int main() {
         {"{a={} b=a:{x=1 y=1}}", "{a={} b={x=NUMBER y=NUMBER}}"},
         {"{a={x=1} b=a:{x=1 y=1}}", "{a={x=NUMBER} b={x=NUMBER y=NUMBER}}"},
         {"{a={x=1 y=1} b=a:{x=1 y=1}}", "{a={x=NUMBER y=NUMBER} b={x=NUMBER y=NUMBER}}"},
+        {"{a={} b=a:{y=1 x=1}}", "{a={} b={y=NUMBER x=NUMBER}}"},
+        {"{a={x=1} b=a:{y=1 x=1}}", "{a={x=NUMBER} b={y=NUMBER x=NUMBER}}"},
+        {"{a={x=1 y=1} b=a:{y=1 x=1}}", "{a={x=NUMBER y=NUMBER} b={y=NUMBER x=NUMBER}}"},
     });
     test.evaluate_all("dictionary", {
         {"{}", "{}"},

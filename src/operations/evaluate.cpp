@@ -46,26 +46,19 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
     const auto dictionary_super = getEvaluatedDictionary(super);
     const auto dictionary_sub = getEvaluatedDictionary(sub);
-    const auto definitions_super = dictionary_super.definitions;
-    const auto definitions_sub = dictionary_sub.definitions;
-    if (definitions_super.size() > definitions_sub.size()) {
-        throw std::runtime_error(
-            "Static type error in " + description + 
-            ". Dictionary supertype is bigger than dictionary subtype."
-        );
-    }
-    const auto count = definitions_super.size();
-    for (size_t i = 0; i < count; ++i) {
-        const auto& name_super = definitions_super.at(i).name;
-        const auto& name_sub = definitions_sub.at(i).name;
-        if (name_super.index != name_sub.index) {
+    for (const auto& definition_super : dictionary_super.definitions) {
+        const auto name_super = definition_super.name;
+        const auto value_sub = dictionary_sub.optionalLookup(name_super);
+        if (value_sub) {
+            checkTypes(definition_super.expression, *value_sub, description);
+        }
+        else {
             throw std::runtime_error(
                 "Static type error in " + description +
-                    ". Inconsistent dictionary names " +
-                    getName(name_super) + " & " + getName(name_sub)
-            );
+                    ". Could not find name " + getName(name_super) +
+                    " in dictionary" + describeLocation(sub.range.begin()) 
+            );            
         }
-        checkTypes(definitions_super.at(i).expression, definitions_sub.at(i).expression, description);
     }
 }
 

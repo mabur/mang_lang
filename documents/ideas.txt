@@ -68,20 +68,15 @@ TYPE SYSTEM
 * Rename serialized types from NUMBER to Number.
 * Dictionary types:
   - aoc_22_07
-  - Should type checking for dictionaries be symmetric?
-    Interfaces are typically not symmetric, i.e. the implementation has more details.
-  - Should type checking for dictionaries not require exactly the same order?
 * Run-time polymorphism/dispatch:
   - How to solve aoc_22_13
     if type checking would enforce homogeneous stacks?
   - Add version of "is" that checks that the type is equal
-    instead of the value. "is_type_of" (bra)
+    instead of the value. "is_type_of"
   - Isinstance
   - Sum-type/choice-type
   - Run-time-dispatch/polymorphism/interfaces (bra)
-    - Make type checking for dictionaries non-symmetric,
-      so that a child can implement a parent interface and add more fields.
-    - Add "using" 
+    - Add "using" for dictionaries
   - dynamic keyword
 * Oding keyword "using" for unpacking dictionary into dictionary.
 {
