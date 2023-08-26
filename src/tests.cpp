@@ -350,7 +350,10 @@ int main() {
     });    
     test.evaluate_types("dictionary type checking", {
         {"{a={} b=a:{}}", "{a={} b={}}"},
+        {"{a={} b=a:{x=1}}", "{a={} b={x=NUMBER}}"},
         {"{a={x=1} b=a:{x=1}}", "{a={x=NUMBER} b={x=NUMBER}}"},
+        {"{a={} b=a:{x=1 y=1}}", "{a={} b={x=NUMBER y=NUMBER}}"},
+        {"{a={x=1} b=a:{x=1 y=1}}", "{a={x=NUMBER} b={x=NUMBER y=NUMBER}}"},
         {"{a={x=1 y=1} b=a:{x=1 y=1}}", "{a={x=NUMBER y=NUMBER} b={x=NUMBER y=NUMBER}}"},
     });
     test.evaluate_all("dictionary", {
