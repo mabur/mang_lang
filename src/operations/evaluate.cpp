@@ -205,17 +205,18 @@ Expression applyFunction(
 template<typename Evaluator>
 Expression applyFunctionDictionary(
     Evaluator evaluator,
-    const FunctionDictionary& function_dictionary,
+    Expression function,
     Expression input
 ) {
+    const auto function_struct = getFunctionDictionary(function);
     const auto evaluated_dictionary = getEvaluatedDictionary(input);
-    for (const auto& name : function_dictionary.input_names) {
+    for (const auto& name : function_struct.input_names) {
         const auto argument = getArgument(name);
         const auto expression = evaluated_dictionary.lookup(argument.name);
-        checkArgument(evaluator, argument, expression, function_dictionary.environment);
+        checkArgument(evaluator, argument, expression, function_struct.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
-    return evaluator(function_dictionary.body, input);
+    return evaluator(function_struct.body, input);
 }
 
 template<typename Evaluator>
@@ -751,7 +752,7 @@ Expression evaluateFunctionApplicationTypes(
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, getFunctionDictionary(function), input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, function, input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, getFunctionTuple(function), input);
 
         case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function));
@@ -775,7 +776,7 @@ Expression evaluateFunctionApplication(
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, getFunctionDictionary(function), input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, function, input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, getFunctionTuple(function), input);
         
         case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function), input);
