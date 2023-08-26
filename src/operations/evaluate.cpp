@@ -408,6 +408,10 @@ bool isEqual(Expression left, Expression right) {
     return false;
 }
 
+Expression evaluateDynamicExpression(Expression expression, Expression environment) {
+    return evaluate(getDynamicExpression(expression).expression, environment);
+}
+
 Expression evaluateConditionalTypes(
     Expression conditional, Expression environment
 ) {
@@ -852,7 +856,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, expression, environment);
 
         // These are different for types and values:
-        case DYNAMIC_EXPRESSION: return evaluate(getDynamicExpression(expression).expression, environment);
+        case DYNAMIC_EXPRESSION: return evaluateDynamicExpression(expression, environment);
         case CONDITIONAL: return evaluateConditional(expression, environment);
         case IS: return evaluateIs(expression, environment);
         case DICTIONARY: return evaluateDictionary(expression, environment);
