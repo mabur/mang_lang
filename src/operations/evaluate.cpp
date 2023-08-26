@@ -196,7 +196,7 @@ Expression applyFunction(
     const auto argument = getArgument(function_struct.input_name);
     checkArgument(evaluator, argument, input, function_struct.environment);
     const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
-    const auto middle = makeEvaluatedDictionary(CodeRange{},
+    const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
     return evaluator(function_struct.body, middle);
@@ -240,7 +240,7 @@ Expression applyFunctionTuple(
         checkArgument(evaluator, argument, expression, function_struct.environment);
         definitions[i] = Definition{argument.name, expression, i};
     }
-    const auto middle = makeEvaluatedDictionary(CodeRange{},
+    const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
     return evaluator(function_struct.body, middle);
