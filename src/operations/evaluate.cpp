@@ -44,8 +44,10 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
-    const auto definitions_super = getEvaluatedDictionary(super).definitions;
-    const auto definitions_sub = getEvaluatedDictionary(sub).definitions;
+    const auto dictionary_super = getEvaluatedDictionary(super);
+    const auto dictionary_sub = getEvaluatedDictionary(sub);
+    const auto definitions_super = dictionary_super.definitions;
+    const auto definitions_sub = dictionary_sub.definitions;
     if (definitions_super.size() > definitions_sub.size()) {
         throw std::runtime_error(
             "Static type error in " + description + 
