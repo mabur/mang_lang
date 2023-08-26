@@ -414,7 +414,7 @@ Expression evaluateConditionalTypes(
         const auto alternative_expression = evaluate_types(
             alternative.right, environment
         );
-        checkTypes(alternative_expression, else_expression, "if");
+        checkTypes(else_expression, alternative_expression, "if");
     }
     return else_expression;
 }
@@ -453,7 +453,7 @@ Expression evaluateIsTypes(
     ) {
         const auto alternative = getAlternative(a);
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        checkTypes(alternative_expression, else_expression, "is");
+        checkTypes(else_expression, alternative_expression, "is");
     }
     return else_expression;
 }
