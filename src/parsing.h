@@ -26,7 +26,7 @@ struct ParseException : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
-std::string describeLocation(CodeCharacter c);
+std::string describeLocation(const CodeCharacter* c);
 
 void throwIfEmpty(CodeRange code);
 void throwParseException(CodeRange code);
