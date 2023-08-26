@@ -471,12 +471,11 @@ Expression evaluateIsTypes(
     return else_expression;
 }
 
-Expression evaluateIs(
-    const IsExpression& is_expression, Expression environment
-) {
-    const auto value = evaluate(is_expression.input, environment);
-    for (auto a = is_expression.alternative_first;
-        a.index <= is_expression.alternative_last.index;
+Expression evaluateIs(Expression is, Expression environment) {
+    const auto is_struct = getIs(is);
+    const auto value = evaluate(is_struct.input, environment);
+    for (auto a = is_struct.alternative_first;
+        a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
         const auto alternative = getAlternative(a);
@@ -485,7 +484,7 @@ Expression evaluateIs(
             return evaluate(alternative.right, environment);
         }
     }
-    return evaluate(is_expression.expression_else, environment);
+    return evaluate(is_struct.expression_else, environment);
 }
 
 template<typename Evaluator>
@@ -855,7 +854,7 @@ Expression evaluate(Expression expression, Expression environment) {
         // These are different for types and values:
         case DYNAMIC_EXPRESSION: return evaluate(getDynamicExpression(expression).expression, environment);
         case CONDITIONAL: return evaluateConditional(expression, environment);
-        case IS: return evaluateIs(getIs(expression), environment);
+        case IS: return evaluateIs(expression, environment);
         case DICTIONARY: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
         
