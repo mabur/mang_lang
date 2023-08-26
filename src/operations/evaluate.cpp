@@ -712,10 +712,11 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     return result;
 }
 
-Expression applyTableIndexing(const EvaluatedTable& table, Expression key) {
+Expression applyTableIndexing(Expression table, Expression key) {
+    const auto table_struct = getEvaluatedTable(table);
     const auto k = serialize(key);
     try {
-        return table.rows.at(k).value;
+        return table_struct.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
         throw MissingKey(k);
@@ -780,7 +781,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, function, input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, function, input);
         
-        case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function), input);
+        case EVALUATED_TABLE: return applyTableIndexing(function, input);
         case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
         case STRING: return applyStringIndexing(getString(function), getNumber(input));
