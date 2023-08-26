@@ -10,107 +10,109 @@
 
 namespace {
 
-void checkTypes(Expression left, Expression right, const std::string& description);
+void checkTypes(Expression super, Expression sub, const std::string& description);
 
-void checkTypesEvaluatedStack(Expression left, Expression right, const std::string& description) {
-    checkTypes(getEvaluatedStack(left).top, getEvaluatedStack(right).top, description);
+void checkTypesEvaluatedStack(Expression super, Expression sub, const std::string& description) {
+    const auto stack_super = getEvaluatedStack(super).top;
+    const auto stack_sub = getEvaluatedStack(sub).top;
+    checkTypes(stack_super, stack_sub, description);
 }
 
-void checkTypesEvaluatedTable(Expression left, Expression right, const std::string& description) {
-    const auto table_left = getEvaluatedTable(left);
-    const auto table_right = getEvaluatedTable(right);
-    if (table_left.empty()) return;
-    if (table_right.empty()) return;
-    const auto row_left = table_left.begin()->second;
-    const auto row_right = table_right.begin()->second;
-    checkTypes(row_left.key, row_right.key, description);
-    checkTypes(row_left.value, row_right.value, description);
+void checkTypesEvaluatedTable(Expression super, Expression sub, const std::string& description) {
+    const auto table_super = getEvaluatedTable(super);
+    const auto table_sub = getEvaluatedTable(sub);
+    if (table_super.empty()) return;
+    if (table_sub.empty()) return;
+    const auto row_super = table_super.begin()->second;
+    const auto row_sub = table_sub.begin()->second;
+    checkTypes(row_super.key, row_sub.key, description);
+    checkTypes(row_super.value, row_sub.value, description);
 }
 
-void checkTypesEvaluatedTuple(Expression left, Expression right, const std::string& description) {
-    const auto tuple_left = getEvaluatedTuple(left);
-    const auto tuple_right = getEvaluatedTuple(right);
-    if (tuple_left.expressions.size() != tuple_right.expressions.size()) {
+void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::string& description) {
+    const auto tuple_super = getEvaluatedTuple(super);
+    const auto tuple_sub = getEvaluatedTuple(sub);
+    if (tuple_super.expressions.size() != tuple_sub.expressions.size()) {
         throw std::runtime_error(
             "Static type error in " + description + ". Inconsistent tuple size."
         );
     }
-    const auto count = tuple_left.expressions.size();
+    const auto count = tuple_super.expressions.size();
     for (size_t i = 0; i < count; ++i) {
-        checkTypes(tuple_left.expressions[i], tuple_right.expressions[i], description);
+        checkTypes(tuple_super.expressions[i], tuple_sub.expressions[i], description);
     }
 }
 
-void checkTypesEvaluatedDictionary(Expression left, Expression right, const std::string& description) {
-    const auto definitions_left = getEvaluatedDictionary(left).definitions;
-    const auto definitions_right = getEvaluatedDictionary(right).definitions;
-    if (definitions_left.size() != definitions_right.size()) {
+void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
+    const auto definitions_super = getEvaluatedDictionary(super).definitions;
+    const auto definitions_sub = getEvaluatedDictionary(sub).definitions;
+    if (definitions_super.size() != definitions_sub.size()) {
         throw std::runtime_error(
             "Static type error in " + description + ". Inconsistent dictionary size."
         );
     }
-    const auto count = definitions_left.size();
+    const auto count = definitions_super.size();
     for (size_t i = 0; i < count; ++i) {
-        const auto& name_left = definitions_left[i].name;
-        const auto& name_right = definitions_right[i].name;
-        if (name_left.index != name_right.index) {
+        const auto& name_super = definitions_super[i].name;
+        const auto& name_sub = definitions_sub[i].name;
+        if (name_super.index != name_sub.index) {
             throw std::runtime_error(
                 "Static type error in " + description +
                     ". Inconsistent dictionary names " +
-                    getName(name_left) + " & " + getName(name_right)
+                    getName(name_super) + " & " + getName(name_sub)
             );
         }
-        checkTypes(definitions_left[i].expression, definitions_right[i].expression, description);
+        checkTypes(definitions_super[i].expression, definitions_sub[i].expression, description);
     }
 }
 
-void checkTypes(Expression left, Expression right, const std::string& description) {
-    if (left.type == ANY || right.type == ANY) return;
+void checkTypes(Expression super, Expression sub, const std::string& description) {
+    if (super.type == ANY || sub.type == ANY) return;
     
-    if (left.type == NUMBER && right.type == NUMBER) return;
-    if (left.type == CHARACTER && right.type == CHARACTER) return;
+    if (super.type == NUMBER && sub.type == NUMBER) return;
+    if (super.type == CHARACTER && sub.type == CHARACTER) return;
     
-    if (left.type == NO && right.type == NO) return;
-    if (left.type == YES && right.type == YES) return;
-    if (left.type == YES && right.type == NO) return;
-    if (left.type == NO && right.type == YES) return;
+    if (super.type == NO && sub.type == NO) return;
+    if (super.type == YES && sub.type == YES) return;
+    if (super.type == YES && sub.type == NO) return;
+    if (super.type == NO && sub.type == YES) return;
 
-    if (left.type == FUNCTION && right.type == FUNCTION) return;
-    if (left.type == FUNCTION && right.type == FUNCTION_DICTIONARY) return;
-    if (left.type == FUNCTION && right.type == FUNCTION_TUPLE) return;
-    if (left.type == FUNCTION && right.type == FUNCTION_BUILT_IN) return;
-    if (left.type == FUNCTION_DICTIONARY && right.type == FUNCTION) return;
-    if (left.type == FUNCTION_TUPLE && right.type == FUNCTION) return;
-    if (left.type == FUNCTION_BUILT_IN && right.type == FUNCTION) return;
+    if (super.type == FUNCTION && sub.type == FUNCTION) return;
+    if (super.type == FUNCTION && sub.type == FUNCTION_DICTIONARY) return;
+    if (super.type == FUNCTION && sub.type == FUNCTION_TUPLE) return;
+    if (super.type == FUNCTION && sub.type == FUNCTION_BUILT_IN) return;
+    if (super.type == FUNCTION_DICTIONARY && sub.type == FUNCTION) return;
+    if (super.type == FUNCTION_TUPLE && sub.type == FUNCTION) return;
+    if (super.type == FUNCTION_BUILT_IN && sub.type == FUNCTION) return;
     
-    if (left.type == EMPTY_STRING && right.type == EMPTY_STRING) return;
-    if (left.type == EMPTY_STRING && right.type == STRING) return;
-    if (left.type == STRING && right.type == EMPTY_STRING) return;
-    if (left.type == STRING && right.type == STRING) return;
+    if (super.type == EMPTY_STRING && sub.type == EMPTY_STRING) return;
+    if (super.type == EMPTY_STRING && sub.type == STRING) return;
+    if (super.type == STRING && sub.type == EMPTY_STRING) return;
+    if (super.type == STRING && sub.type == STRING) return;
     
-    if (left.type == EMPTY_STACK && right.type == EMPTY_STACK) return;
-    if (left.type == EMPTY_STACK && right.type == EVALUATED_STACK) return;
-    if (left.type == EVALUATED_STACK && right.type == EMPTY_STACK) return;
-    if (left.type == EVALUATED_STACK && right.type == EVALUATED_STACK) {
-        checkTypesEvaluatedStack(left, right, description);
+    if (super.type == EMPTY_STACK && sub.type == EMPTY_STACK) return;
+    if (super.type == EMPTY_STACK && sub.type == EVALUATED_STACK) return;
+    if (super.type == EVALUATED_STACK && sub.type == EMPTY_STACK) return;
+    if (super.type == EVALUATED_STACK && sub.type == EVALUATED_STACK) {
+        checkTypesEvaluatedStack(super, sub, description);
         return;
     }
-    if (left.type == EVALUATED_TABLE && right.type == EVALUATED_TABLE) {
-        checkTypesEvaluatedTable(left, right, description);
+    if (super.type == EVALUATED_TABLE && sub.type == EVALUATED_TABLE) {
+        checkTypesEvaluatedTable(super, sub, description);
         return;
     }
-    if (left.type == EVALUATED_TUPLE && right.type == EVALUATED_TUPLE) {
-        checkTypesEvaluatedTuple(left, right, description);
+    if (super.type == EVALUATED_TUPLE && sub.type == EVALUATED_TUPLE) {
+        checkTypesEvaluatedTuple(super, sub, description);
         return;
     }
-    if (left.type == EVALUATED_DICTIONARY && right.type == EVALUATED_DICTIONARY) {
-        checkTypesEvaluatedDictionary(left, right, description);
+    if (super.type == EVALUATED_DICTIONARY && sub.type == EVALUATED_DICTIONARY) {
+        checkTypesEvaluatedDictionary(super, sub, description);
         return;
     }
     throw std::runtime_error(
         "Static type error in " + description +
-        ". Expected " + NAMES[right.type] +
-        " but got " + NAMES[left.type]
+        ". " + NAMES[super.type] +
+        " is not a supertype for " + NAMES[sub.type]
     );
 }
 
