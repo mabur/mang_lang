@@ -488,10 +488,11 @@ Expression evaluateIs(
 
 template<typename Evaluator>
 Expression evaluateTypedExpression(
-    Evaluator evaluator, TypedExpression expression, Expression environment
+    Evaluator evaluator, Expression expression, Expression environment
 ) {
-    const auto type = evaluator(expression.type, environment);
-    const auto value = evaluator(expression.value, environment);
+    const auto expression_struct = getTypedExpression(expression);
+    const auto type = evaluator(expression_struct.type, environment);
+    const auto value = evaluator(expression_struct.value, environment);
     checkTypes(type, value, "typed expression");
     return value;
 }
@@ -807,7 +808,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, expression, environment);
-        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, getTypedExpression(expression), environment);
+        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, expression, environment);
 
         // These are different for types and values:
         case DYNAMIC_EXPRESSION: return Expression{};
@@ -847,7 +848,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate, expression, environment);
         case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, expression, environment);
-        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, getTypedExpression(expression), environment);
+        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, expression, environment);
 
         // These are different for types and values:
         case DYNAMIC_EXPRESSION: return evaluate(getDynamicExpression(expression).expression, environment);
