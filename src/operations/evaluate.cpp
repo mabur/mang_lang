@@ -166,11 +166,12 @@ Expression evaluateTable(
 
 template<typename Evaluator>
 Expression evaluateLookupChild(
-    Evaluator evaluator, const LookupChild& lookup_child, Expression environment
+    Evaluator evaluator, Expression lookup_child, Expression environment
 ) {
-    const auto child = evaluator(lookup_child.child, environment);
+    const auto lookup_child_struct = getLookupChild(lookup_child);
+    const auto child = evaluator(lookup_child_struct.child, environment);
     const auto dictionary = getEvaluatedDictionary(child);
-    return dictionary.lookup(lookup_child.name);
+    return dictionary.lookup(lookup_child_struct.name);
 }
 
 template<typename Evaluator>
@@ -805,7 +806,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
-        case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
+        case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, expression, environment);
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, getTypedExpression(expression), environment);
 
         // These are different for types and values:
@@ -845,7 +846,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case STACK: return evaluateStack(evaluate, expression, environment);
         case TUPLE: return evaluateTuple(evaluate, expression, environment);
         case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
-        case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
+        case LOOKUP_CHILD: return evaluateLookupChild(evaluate, expression, environment);
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, getTypedExpression(expression), environment);
 
         // These are different for types and values:
