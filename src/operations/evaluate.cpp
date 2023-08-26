@@ -284,9 +284,10 @@ Expression lookupDictionary(Expression name, Expression expression) {
 }
 
 Expression applyFunctionBuiltIn(
-    const FunctionBuiltIn& function_built_in, Expression input
+    Expression function, Expression input
 ) {
-    return function_built_in.function(input);
+    const auto function_struct = getFunctionBuiltIn(function);
+    return function_struct.function(input);
 }
 
 void booleanTypes(Expression expression) {
@@ -749,7 +750,7 @@ Expression evaluateFunctionApplicationTypes(
     const auto input = evaluate_types(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate_types, function, input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, getFunctionDictionary(function), input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, getFunctionTuple(function), input);
 
@@ -773,7 +774,7 @@ Expression evaluateFunctionApplication(
     const auto input = evaluate(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate, function, input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
+        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
         case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, getFunctionDictionary(function), input);
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, getFunctionTuple(function), input);
         
