@@ -522,13 +522,14 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
 }
 
 Expression evaluateDictionaryTypes(
-    const Dictionary& dictionary, Expression environment
+    Expression dictionary, Expression environment
 ) {
-    const auto initial_definitions = initializeDefinitions(dictionary);
+    const auto dictionary_struct = getDictionary(dictionary);
+    const auto initial_definitions = initializeDefinitions(dictionary_struct);
     const auto result = makeEvaluatedDictionary(
         CodeRange{}, EvaluatedDictionary{environment, initial_definitions}
     );
-    for (const auto& statement : dictionary.statements) {
+    for (const auto& statement : dictionary_struct.statements) {
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);
@@ -817,7 +818,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return Expression{};
         case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
         case IS: return evaluateIsTypes(expression, environment);
-        case DICTIONARY: return evaluateDictionaryTypes(getDictionary(expression), environment);
+        case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(getFunctionApplication(expression), environment);
         
         default: throw UnexpectedExpression(expression.type, "evaluate types operation");
