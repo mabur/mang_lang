@@ -333,8 +333,9 @@ size_t getIndex(Number number) {
     return static_cast<size_t>(number);
 }
 
-Expression applyTupleIndexing(Expression tuple, Number number) {
+Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto tuple_struct = getEvaluatedTuple(tuple);
+    const auto number = getNumber(input);
     const auto i = getIndex(number);
     try {
         return tuple_struct.expressions.at(i);
@@ -760,7 +761,7 @@ Expression evaluateFunctionApplicationTypes(
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, function, input);
 
         case EVALUATED_TABLE: return applyTableIndexingTypes(function);
-        case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
+        case EVALUATED_TUPLE: return applyTupleIndexing(function, input);
         case EVALUATED_STACK: return applyStackIndexingTypes(function);
         case STRING: return applyStringIndexingTypes(function);
 
@@ -784,7 +785,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, function, input);
         
         case EVALUATED_TABLE: return applyTableIndexing(function, input);
-        case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
+        case EVALUATED_TUPLE: return applyTupleIndexing(function, input);
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
         case STRING: return applyStringIndexing(getString(function), getNumber(input));
         
