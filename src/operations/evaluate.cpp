@@ -150,11 +150,12 @@ template<typename Evaluator, typename Serializer>
 Expression evaluateTable(
     Evaluator evaluator,
     Serializer serializer,
-    Table table,
+    Expression table,
     Expression environment
 ) {
+    const auto table_struct = getTable(table);
     auto rows = std::map<std::string, Row>{};
-    for (const auto& row : table.rows) {
+    for (const auto& row : table_struct.rows) {
         const auto key = evaluator(row.key, environment);
         const auto value = evaluator(row.value, environment);
         const auto serialized_key = serializer(key);
@@ -806,7 +807,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE: return evaluateTuple(evaluate_types, expression, environment);
-        case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
+        case TABLE: return evaluateTable(evaluate_types, serialize_types, expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, expression, environment);
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, expression, environment);
 
@@ -846,7 +847,7 @@ Expression evaluate(Expression expression, Expression environment) {
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);
         case TUPLE: return evaluateTuple(evaluate, expression, environment);
-        case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
+        case TABLE: return evaluateTable(evaluate, serialize, expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, expression, environment);
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, expression, environment);
 
