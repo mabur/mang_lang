@@ -759,11 +759,11 @@ Expression evaluateFunctionApplicationTypes(
 }
 
 Expression evaluateFunctionApplication(
-    const FunctionApplication& function_application,
-    Expression environment
+    Expression function_application, Expression environment
 ) {
-    const auto function = lookupDictionary(function_application.name, environment);
-    const auto input = evaluate(function_application.child, environment);
+    const auto function_application_struct = getFunctionApplication(function_application);
+    const auto function = lookupDictionary(function_application_struct.name, environment);
+    const auto input = evaluate(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate, getFunction(function), input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(getFunctionBuiltIn(function), input);
@@ -857,7 +857,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case CONDITIONAL: return evaluateConditional(expression, environment);
         case IS: return evaluateIs(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionary(expression, environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(getFunctionApplication(expression), environment);
+        case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
         
         default: throw UnexpectedExpression(expression.type, "evaluate operation");
     }
