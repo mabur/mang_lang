@@ -39,7 +39,7 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
     }
     const auto count = tuple_super.expressions.size();
     for (size_t i = 0; i < count; ++i) {
-        checkTypes(tuple_super.expressions[i], tuple_sub.expressions[i], description);
+        checkTypes(tuple_super.expressions.at(i), tuple_sub.expressions.at(i), description);
     }
 }
 
@@ -54,8 +54,8 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
     }
     const auto count = definitions_super.size();
     for (size_t i = 0; i < count; ++i) {
-        const auto& name_super = definitions_super[i].name;
-        const auto& name_sub = definitions_sub[i].name;
+        const auto& name_super = definitions_super.at(i).name;
+        const auto& name_sub = definitions_sub.at(i).name;
         if (name_super.index != name_sub.index) {
             throw std::runtime_error(
                 "Static type error in " + description +
@@ -63,7 +63,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
                     getName(name_super) + " & " + getName(name_sub)
             );
         }
-        checkTypes(definitions_super[i].expression, definitions_sub[i].expression, description);
+        checkTypes(definitions_super.at(i).expression, definitions_sub.at(i).expression, description);
     }
 }
 
@@ -235,10 +235,10 @@ Expression applyFunctionTuple(
     const auto num_inputs = input_names.size();
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto argument = getArgument(input_names[i]);
-        const auto expression = tuple.expressions[i];
+        const auto argument = getArgument(input_names.at(i));
+        const auto expression = tuple.expressions.at(i);
         checkArgument(evaluator, argument, expression, function_struct.environment);
-        definitions[i] = Definition{argument.name, expression, i};
+        definitions.at(i) = Definition{argument.name, expression, i};
     }
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
@@ -370,7 +370,7 @@ bool allOfVectors(const Vector& left, const Vector& right, Predicate predicate) 
         return false;
     }
     for (size_t i = 0; i < left.size(); ++i) {
-        if (!predicate(left[i], right[i])) {
+        if (!predicate(left.at(i), right.at(i))) {
             return false;
         }
     }
@@ -519,11 +519,11 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         if (type == DEFINITION) {
             auto definition = getDefinition(statement);
             definition.expression = Expression{};
-            definitions[definition.name_index] = definition;
+            definitions.at(definition.name_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
-            definitions[for_statement.name_index_item] = Definition{
+            definitions.at(for_statement.name_index_item) = Definition{
                 for_statement.name_item,
                 Expression{},
                 for_statement.name_index_item
@@ -622,7 +622,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto& statements = dictionary_struct.statements;
     auto i = size_t{0};
     while (i < statements.size()) {
-        const auto statement = statements[i];
+        const auto statement = statements.at(i);
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = getDefinition(statement);

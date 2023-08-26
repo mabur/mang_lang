@@ -498,5 +498,5 @@ Expression getDictionaryDefinition(
             + " got " + NAMES[evaluated_dictionary.type]
         };
     }
-    return evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name_index].expression;
+    return evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name_index).expression;
 }
