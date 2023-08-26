@@ -815,7 +815,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, expression, environment);
 
         // These are different for types and values:
-        case DYNAMIC_EXPRESSION: return Expression{};
+        case DYNAMIC_EXPRESSION: return Expression{ANY, 0, expression.range};
         case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
         case IS: return evaluateIsTypes(expression, environment);
         case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
