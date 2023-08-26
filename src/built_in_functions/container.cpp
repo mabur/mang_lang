@@ -198,7 +198,7 @@ Expression takeTyped(Expression in) {
         case EVALUATED_TABLE: return takeTableTyped(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in));
         case EMPTY_STACK: return Expression{};
-        case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
+        case EMPTY_STRING: return Expression{CHARACTER, {}, in.range};
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
@@ -216,7 +216,7 @@ Expression drop(Expression in) {
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
         case NO: return in;
-        case YES: return Expression{NO, 0, {}};
+        case YES: return Expression{NO, 0, CodeRange{}};
         default: throw UnexpectedExpression(in.type, "drop");
     }
 }

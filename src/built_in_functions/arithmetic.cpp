@@ -45,7 +45,7 @@ Expression mod(Expression in) {
 Expression less(Expression in) {
     const auto tuple = getBinaryTuple(in);
     return getNumber(tuple.left) < getNumber(tuple.right) ?
-        Expression{YES, 0, {}} : Expression{NO, 0, {}};
+        Expression{YES, 0, CodeRange{}} : Expression{NO, 0, CodeRange{}};
 }
 
 Expression sqrt(Expression in) {
@@ -131,7 +131,7 @@ Expression FunctionNumberNumberToBoolean::operator()(Expression in) const {
                 ".\n"
         );
     }
-    return Expression{YES, 0, {}};
+    return Expression{YES, 0, CodeRange{}};
 }
 
 Expression FunctionNumberNumberToNumber::operator()(Expression in) const {

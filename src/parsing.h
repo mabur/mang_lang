@@ -6,9 +6,9 @@
 #include <vector>
 
 struct CodeCharacter {
-    char character;
-    size_t row;
-    size_t column;
+    char character = 'a';
+    size_t row = 0;
+    size_t column = 0;
 };
 
 struct CodeRange {
@@ -69,7 +69,7 @@ CodeRange parseCharacter(CodeRange code, Predicate predicate) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
     ++it;
-    return {it, code.end()};
+    return CodeRange{it, code.end()};
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c);
@@ -83,12 +83,12 @@ CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
     if (predicate(*it)) {
         ++it;
     }
-    return {it, code.end()};
+    return CodeRange{it, code.end()};
 }
 
 CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    return {std::find_if_not(code.begin(), code.end(), predicate), code.end()};
+    return CodeRange{std::find_if_not(code.begin(), code.end(), predicate), code.end()};
 }

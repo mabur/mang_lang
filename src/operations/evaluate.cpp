@@ -126,7 +126,7 @@ Expression evaluateStack(Evaluator evaluator,
         const auto evaluated_top = evaluator(top, environment);
         return putEvaluatedStack(rest, evaluated_top);
     };
-    const auto code = CodeRange{};
+    const auto code = stack.range;
     const auto init = Expression{EMPTY_STACK, 0, code};
     const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
     return reverseEvaluatedStack(code, output);
@@ -742,7 +742,7 @@ Expression evaluateFunctionApplicationTypes(
         case STRING: return applyStringIndexing(getString(function));
 
         case EMPTY_STACK: return Expression{};
-        case EMPTY_STRING: return Expression{CHARACTER, {}, {}};
+        case EMPTY_STRING: return Expression{CHARACTER, {}, CodeRange{}};
 
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplicationTypes");
     }

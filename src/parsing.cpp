@@ -29,7 +29,7 @@ std::vector<CodeCharacter> makeCodeCharacters(const std::string& string) {
     auto column = size_t{0};
     auto row = size_t{0};
     for (const auto& character : string) {
-        result.push_back({character, row, column});
+        result.push_back(CodeCharacter{character, row, column});
         ++column;
         if (character == '\n') {
             ++row;
@@ -98,7 +98,7 @@ CodeRange parseCharacter(CodeRange code) {
     throwIfEmpty(code);
     auto it = code.begin();
     ++it;
-    return {it, code.end()};
+    return CodeRange{it, code.end()};
 }
 
 CodeRange parseCharacter(CodeRange code, char expected) {
@@ -111,7 +111,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
         throw ParseException(description, it);
     }
     ++it;
-    return {it, code.end()};
+    return CodeRange{it, code.end()};
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
@@ -122,7 +122,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c) {
     if (it->character == c) {
         ++it;
     }
-    return {it, code.end()};
+    return CodeRange{it, code.end()};
 }
 
 CodeRange parseKeyword(CodeRange code, const std::string& keyword) {
