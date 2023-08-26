@@ -359,8 +359,8 @@ Expression applyStackIndexingTypes(Expression stack) {
     return getEvaluatedStack(stack).top;
 }
 
-Expression applyStringIndexingTypes(String string) {
-    return string.top;
+Expression applyStringIndexingTypes(Expression string) {
+    return getString(string).top;
 }
 
 template<typename Vector, typename Predicate>
@@ -762,7 +762,7 @@ Expression evaluateFunctionApplicationTypes(
         case EVALUATED_TABLE: return applyTableIndexingTypes(function);
         case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
         case EVALUATED_STACK: return applyStackIndexingTypes(function);
-        case STRING: return applyStringIndexingTypes(getString(function));
+        case STRING: return applyStringIndexingTypes(function);
 
         case EMPTY_STACK: return Expression{ANY, 0, function_application.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, function_application.range};
