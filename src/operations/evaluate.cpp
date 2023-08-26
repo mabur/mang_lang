@@ -133,10 +133,13 @@ Expression evaluateStack(Evaluator evaluator,
 }
 
 template<typename Evaluator>
-Expression evaluateTuple(Evaluator evaluator, Tuple tuple, Expression environment) {
+Expression evaluateTuple(
+    Evaluator evaluator, Expression tuple, Expression environment
+) {
+    const auto tuple_struct = getTuple(tuple);
     auto evaluated_expressions = std::vector<Expression>{};
-    evaluated_expressions.reserve(tuple.expressions.size());
-    for (const auto& expression : tuple.expressions) {
+    evaluated_expressions.reserve(tuple_struct.expressions.size());
+    for (const auto& expression : tuple_struct.expressions) {
         evaluated_expressions.push_back(evaluator(expression, environment));
     }
     const auto code = CodeRange{};
@@ -800,7 +803,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
-        case TUPLE: return evaluateTuple(evaluate_types, getTuple(expression), environment);
+        case TUPLE: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, getLookupChild(expression), environment);
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, getTypedExpression(expression), environment);
@@ -840,7 +843,7 @@ Expression evaluate(Expression expression, Expression environment) {
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);
-        case TUPLE: return evaluateTuple(evaluate, getTuple(expression), environment);
+        case TUPLE: return evaluateTuple(evaluate, expression, environment);
         case TABLE: return evaluateTable(evaluate, serialize, getTable(expression), environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, getLookupChild(expression), environment);
         case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, getTypedExpression(expression), environment);
