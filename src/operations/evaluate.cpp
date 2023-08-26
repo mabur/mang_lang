@@ -409,17 +409,18 @@ bool isEqual(Expression left, Expression right) {
 }
 
 Expression evaluateConditionalTypes(
-    const Conditional& conditional, Expression environment
+    Expression conditional, Expression environment
 ) {
-    for (auto alternative = conditional.alternative_first;
-        alternative.index <= conditional.alternative_last.index;
+    const auto conditional_struct = getConditional(conditional);
+    for (auto alternative = conditional_struct.alternative_first;
+        alternative.index <= conditional_struct.alternative_last.index;
         ++alternative.index
     ) {
         evaluate_types(getAlternative(alternative).left, environment);
     }
-    const auto else_expression = evaluate_types(conditional.expression_else, environment);
-    for (auto a = conditional.alternative_first;
-        a.index <= conditional.alternative_last.index;
+    const auto else_expression = evaluate_types(conditional_struct.expression_else, environment);
+    for (auto a = conditional_struct.alternative_first;
+        a.index <= conditional_struct.alternative_last.index;
         ++a.index
     ) {
         const auto alternative = getAlternative(a);
@@ -813,7 +814,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
 
         // These are different for types and values:
         case DYNAMIC_EXPRESSION: return Expression{};
-        case CONDITIONAL: return evaluateConditionalTypes(getConditional(expression), environment);
+        case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
         case IS: return evaluateIsTypes(getIs(expression), environment);
         case DICTIONARY: return evaluateDictionaryTypes(getDictionary(expression), environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(getFunctionApplication(expression), environment);
