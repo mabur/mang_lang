@@ -333,14 +333,15 @@ size_t getIndex(Number number) {
     return static_cast<size_t>(number);
 }
 
-Expression applyTupleIndexing(const EvaluatedTuple& tuple, Number number) {
+Expression applyTupleIndexing(Expression tuple, Number number) {
+    const auto tuple_struct = getEvaluatedTuple(tuple);
     const auto i = getIndex(number);
     try {
-        return tuple.expressions.at(i);
+        return tuple_struct.expressions.at(i);
     }
     catch (const std::out_of_range&) {
         throw std::runtime_error(
-            "Tuple of size " + std::to_string(tuple.expressions.size()) +
+            "Tuple of size " + std::to_string(tuple_struct.expressions.size()) +
                 " indexed with " + std::to_string(i)
         );
     }
@@ -758,7 +759,7 @@ Expression evaluateFunctionApplicationTypes(
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, function, input);
 
         case EVALUATED_TABLE: return applyTableIndexing(getEvaluatedTable(function));
-        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
+        case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function));
         case STRING: return applyStringIndexing(getString(function));
 
@@ -782,7 +783,7 @@ Expression evaluateFunctionApplication(
         case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, function, input);
         
         case EVALUATED_TABLE: return applyTableIndexing(function, input);
-        case EVALUATED_TUPLE: return applyTupleIndexing(getEvaluatedTuple(function), getNumber(input));
+        case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
         case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
         case STRING: return applyStringIndexing(getString(function), getNumber(input));
         
