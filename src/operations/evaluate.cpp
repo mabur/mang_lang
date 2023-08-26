@@ -355,8 +355,8 @@ Expression applyTableIndexingTypes(Expression table) {
     return table_struct.begin()->second.value;
 }
 
-Expression applyStackIndexingTypes(EvaluatedStack stack) {
-    return stack.top;
+Expression applyStackIndexingTypes(Expression stack) {
+    return getEvaluatedStack(stack).top;
 }
 
 Expression applyStringIndexingTypes(String string) {
@@ -761,7 +761,7 @@ Expression evaluateFunctionApplicationTypes(
 
         case EVALUATED_TABLE: return applyTableIndexingTypes(function);
         case EVALUATED_TUPLE: return applyTupleIndexing(function, getNumber(input));
-        case EVALUATED_STACK: return applyStackIndexingTypes(getEvaluatedStack(function));
+        case EVALUATED_STACK: return applyStackIndexingTypes(function);
         case STRING: return applyStringIndexingTypes(getString(function));
 
         case EMPTY_STACK: return Expression{ANY, 0, function_application.range};
