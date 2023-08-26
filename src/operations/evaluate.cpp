@@ -726,15 +726,17 @@ Expression applyTableIndexing(Expression table, Expression key) {
     }
 }
 
-Expression applyStackIndexing(EvaluatedStack stack, Number number) {
+Expression applyStackIndexing(Expression stack, Expression input) {
+    const auto number = getNumber(input);
+    auto stack_struct = getEvaluatedStack(stack);
     const auto index = getIndex(number);
     for (size_t i = 0; i < index; ++i) {
-        if (stack.rest.type == EMPTY_STACK) {
+        if (stack_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("Stack index out of range");
         }
-        stack = getEvaluatedStack(stack.rest);
+        stack_struct = getEvaluatedStack(stack_struct.rest);
     }
-    return stack.top;
+    return stack_struct.top;
 }
 
 Expression applyStringIndexing(String string, Number number) {
@@ -786,7 +788,7 @@ Expression evaluateFunctionApplication(
         
         case EVALUATED_TABLE: return applyTableIndexing(function, input);
         case EVALUATED_TUPLE: return applyTupleIndexing(function, input);
-        case EVALUATED_STACK: return applyStackIndexing(getEvaluatedStack(function), getNumber(input));
+        case EVALUATED_STACK: return applyStackIndexing(function, input);
         case STRING: return applyStringIndexing(getString(function), getNumber(input));
         
         case EMPTY_STACK: throw std::runtime_error("I caught a run-time error when trying to index an empty stack.");
