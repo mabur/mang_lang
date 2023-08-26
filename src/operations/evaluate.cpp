@@ -46,9 +46,10 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
     const auto definitions_super = getEvaluatedDictionary(super).definitions;
     const auto definitions_sub = getEvaluatedDictionary(sub).definitions;
-    if (definitions_super.size() != definitions_sub.size()) {
+    if (definitions_super.size() > definitions_sub.size()) {
         throw std::runtime_error(
-            "Static type error in " + description + ". Inconsistent dictionary size."
+            "Static type error in " + description + 
+            ". Dictionary supertype is bigger than dictionary subtype."
         );
     }
     const auto count = definitions_super.size();
