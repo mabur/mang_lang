@@ -13,7 +13,7 @@ TYPE SYSTEM
       - Character
       - Homogeneous & dynamic containers
         - Concept: take, drop.
-          - Names: Sender (bra), Source, Consumable, Provider, Producer, Publisher, InputIterator, Iterable, Reader (bra?).
+          - Names: InStream (bra), Sender (bra?), Reader (bra?), Source, Consumable, Provider, Producer, Publisher, InputIterator, Iterable.
           - Container
           - Text file input
           - Terminal input
@@ -21,9 +21,9 @@ TYPE SYSTEM
           - Mouse input
           - Keyboard input
           - Concurrent input channel
-        - Concept: put, clear?
-          - Names: Receiver (bra), Target, Destination, Sink,
-                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber, OutputIterator, Writer (bra?).
+        - Concept: put
+          - Names: OutStream (bra), Receiver (bra), Writer (bra?), Target, Destination, Sink,
+                   Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber, OutputIterator.
           - Container
           - Text file output
           - Terminal output
@@ -33,10 +33,13 @@ TYPE SYSTEM
             - How to make it efficient for real-time 2d games and images?
             - Might need an array/range/slice type.
             - Could also hide it behind a built-in sprite abstraction. Good enough for 2D.
-        - Container: take, drop, put, clear.
+        - Concept: take, drop, put, clear.
+          - Name: Fixed type Container?
           - Boolean
           - Number
           - String
+        - Concept: take, drop, put, clear.
+          - Name: Parametric Container?
           - Generic Option/Optional/Maybe, Option[]
             - Concrete options, Option[...]
           - Generic stack, []
