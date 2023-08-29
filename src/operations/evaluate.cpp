@@ -346,7 +346,7 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
 Expression applyTableIndexingTypes(Expression table) {
     const auto table_struct = getEvaluatedTable(table);
     if (table_struct.rows.empty()) {
-        return Expression{};
+        return Expression{ANY, 0, table.range};
     }
     return table_struct.begin()->second.value;
 }
