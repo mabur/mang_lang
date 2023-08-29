@@ -76,18 +76,18 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    fold = in (Function:operation container init) out result@{
+    fold = in (Function:operation in_stream init) out result@{
         result = init
-        c = container
-        for item in c
+        s = in_stream
+        for item in s
             result = operation!(item result)
         end
     }
 
-    put_each = in (top_container bottom_container) out bottom_container:fold!(
+    put_each = in (in_stream out_stream) out out_stream:fold!(
         put
-        top_container
-        bottom_container
+        in_stream
+        out_stream
     )
 
     reverse = in container out container:put_each!(
@@ -95,34 +95,34 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    make_stack = in container out Stack:reverse!put_each!(
-        container
+    make_stack = in in_stream out Stack:reverse!put_each!(
+        in_stream
         []
     )
 
-    make_string = in container out String:reverse!put_each!(
-        container
+    make_string = in in_stream out String:reverse!put_each!(
+        in_stream
         ""
     )
 
-    make_table = in container out Table:put_each!(
-        container
+    make_table = in in_stream out Table:put_each!(
+        in_stream
         <>
     )
 
-    merge_generic = in (containers bottom_container) out bottom_container:fold!(
+    merge_generic = in (in_streams out_stream) out out_stream:fold!(
         put_each
-        containers
-        bottom_container
+        in_streams
+        out_stream
     )
 
-    merge_stack = in containers out Stack:reverse!merge_generic!(
-        containers
+    merge_stack = in in_streams out Stack:reverse!merge_generic!(
+        in_streams
         []
     )
 
-    merge_string = in containers out String:reverse!merge_generic!(
-        containers
+    merge_string = in in_streams out String:reverse!merge_generic!(
+        in_streams
         ""
     )
 
@@ -131,10 +131,10 @@ const std::string STANDARD_LIBRARY = R"(
         <>
     )
 
-    map_generic = in (Function:f container bottom_container) out fold!(
-        in (item container) out put!(f!item container)
-        container
-        bottom_container
+    map_generic = in (Function:f in_stream out_stream) out fold!(
+        in (item stream) out put!(f!item stream)
+        in_stream
+        out_stream
     )
 
     map = in (Function:f container) out reverse!map_generic!(
@@ -143,21 +143,21 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    map_stack = in (Function:f container) out Stack:reverse!map_generic!(
+    map_stack = in (Function:f in_stream) out Stack:reverse!map_generic!(
         f
-        container
+        in_stream
         []
     )
 
-    map_string = in (Function:f container) out String:reverse!map_generic!(
+    map_string = in (Function:f in_stream) out String:reverse!map_generic!(
         f
-        container
+        in_stream
         ""
     )
 
-    map_table = in (Function:f container) out Table:map_generic!(
+    map_table = in (Function:f in_stream) out Table:map_generic!(
         f
-        container
+        in_stream
         <>
     )
 
@@ -200,49 +200,49 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    consecutive_pairs = in container out Stack:reverse!result@{
-        c = container
+    consecutive_pairs = in in_stream out Stack:reverse!result@{
+        s = in_stream
         result = []
-        while if c then boolean!drop!c else no
-            result += (take!c take!drop!c)
-            c--
+        while if s then boolean!drop!s else no
+            result += (take!s take!drop!s)
+            s--
         end
     }
 
     min = in (Number:left Number:right) out Number:if less?(left right) then left else right
     max = in (Number:left Number:right) out Number:if less?(left right) then right else left
 
-    min_item = in Numbers:container out Number:fold!(min container inf)
+    min_item = in Numbers:in_stream out Number:fold!(min in_stream inf)
 
-    max_item = in Numbers:container out Number:fold!(max container -inf)
+    max_item = in Numbers:in_stream out Number:fold!(max in_stream -inf)
 
-    min_predicate = in (Function:predicate container) out fold!(
+    min_predicate = in (Function:predicate in_stream) out fold!(
         in (left right) out if predicate?(left right) then left else right
-        drop!container
-        take!container
+        drop!in_stream
+        take!in_stream
     )
 
-    max_predicate = in (Function:predicate container) out fold!(
+    max_predicate = in (Function:predicate in_stream) out fold!(
         in (left right) out if predicate?(left right) then right else left
-        drop!container
-        take!container
+        drop!in_stream
+        take!in_stream
     )
 
-    min_key = in (Function:key container) out fold!(
+    min_key = in (Function:key in_stream) out fold!(
         in (left right) out if less?(key!left key!right) then left else right
-        drop!container
-        take!container
+        drop!in_stream
+        take!in_stream
     )
 
-    max_key = in (Function:key container) out fold!(
+    max_key = in (Function:key in_stream) out fold!(
         in (left right) out if less?(key!left key!right) then right else left
-        drop!container
-        take!container
+        drop!in_stream
+        take!in_stream
     )
 
-    sum = in Numbers:container out Number:fold!(add container 0)
+    sum = in Numbers:in_stream out Number:fold!(add in_stream 0)
 
-    product = in Numbers:container out Number:fold!(mul container 1)
+    product = in Numbers:in_stream out Number:fold!(mul in_stream 1)
 
     clear_if = in (Function:predicate container) out container:reverse!fold!(
         in (item container) out
@@ -279,23 +279,23 @@ const std::string STANDARD_LIBRARY = R"(
     take_until_item = in (item container) out container:
         take_while!(in x out unequal?(x item) container)
 
-    drop_many = in (Number:n container) out container:sub_container@{
-        sub_container = container
+    drop_many = in (Number:n in_stream) out in_stream:stream@{
+        stream = in_stream
         m = n
         for m
-            sub_container--
+            stream--
         end
     }
 
-    drop_while = in (Function:predicate container) out container:sub_container@{
-        sub_container = container
-        while if sub_container then predicate?take!sub_container else no
-            sub_container--
+    drop_while = in (Function:predicate in_stream) out in_stream:stream@{
+        stream = in_stream
+        while if stream then predicate?take!stream else no
+            stream--
         end
     }
 
-    drop_until_item = in (item container) out container:
-        drop_while?(in x out unequal?(x item) container)
+    drop_until_item = in (item in_stream) out in_stream:
+        drop_while?(in x out unequal?(x item) in_stream)
 
     replace = in (new_item container) out map!(
         in old_item out new_item
@@ -314,20 +314,20 @@ const std::string STANDARD_LIBRARY = R"(
     replace_item = in (old_item new_item container) out 
         replace_if?(in x out equal?(x old_item) new_item container)
 
-    count = in container out Number:fold!(
+    count = in in_stream out Number:fold!(
         in (item n) out inc!n
-        container
+        in_stream
         0
     )
 
-    count_if = in (Function:predicate container) out Number:fold!(
+    count_if = in (Function:predicate in_stream) out Number:fold!(
         in (item n) out if predicate?item then inc!n else n
-        container
+        in_stream
         0
     )
 
-    count_item = in (item container) out Number:
-        count_if!(in x out equal?(x item) container)
+    count_item = in (item in_stream) out Number:
+        count_if!(in x out equal?(x item) in_stream)
 
     range = in Number:n out Numbers:numbers@{
         numbers = []
@@ -337,18 +337,18 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in container out Stack:zip2!(range!count!container container)
+    enumerate = in in_stream out Stack:zip2!(range!count!in_stream in_stream)
 
-    get0 = in container out container!0
-    get1 = in container out container!1
-    get2 = in container out container!2
-    get3 = in container out container!3
-    get4 = in container out container!4
-    get5 = in container out container!5
-    get6 = in container out container!6
-    get7 = in container out container!7
-    get8 = in container out container!8
-    get9 = in container out container!9
+    get0 = in in_stream out in_stream!0
+    get1 = in in_stream out in_stream!1
+    get2 = in in_stream out in_stream!2
+    get3 = in in_stream out in_stream!3
+    get4 = in in_stream out in_stream!4
+    get5 = in in_stream out in_stream!5
+    get6 = in in_stream out in_stream!6
+    get7 = in in_stream out in_stream!7
+    get8 = in in_stream out in_stream!8
+    get9 = in in_stream out in_stream!9
 
     split = in (delimiter container) out Stack:reverse!result@{
         word = take_until_item!(delimiter container)
@@ -393,16 +393,16 @@ const std::string STANDARD_LIBRARY = R"(
         end
     })
 
-    all = in container out Boolean:not?drop_while!(boolean container)
-    none = in container out Boolean:not?drop_while!(not container)
-    any = in container out Boolean:boolean?drop_while!(not container)
+    all = in in_stream out Boolean:not?drop_while!(boolean in_stream)
+    none = in in_stream out Boolean:not?drop_while!(not in_stream)
+    any = in in_stream out Boolean:boolean?drop_while!(not in_stream)
 
-    and = in container out Boolean:all?container
-    or = in container out Boolean:any?container
+    and = in in_stream out Boolean:all?in_stream
+    or = in in_stream out Boolean:any?in_stream
 
-    is_increasing = in Numbers:container out Boolean:not?drop_while!(
+    is_increasing = in Numbers:numbers out Boolean:not?drop_while!(
         less_or_equal
-        consecutive_pairs!container
+        consecutive_pairs!numbers
     )
 
     less_or_equal_top = in (Numbers:left Numbers:right) out Boolean:
@@ -430,15 +430,15 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    unique = in container out Stack:get_keys!fold!(
+    unique = in in_stream out Stack:get_keys!fold!(
         in (item table) out put!((item 0) table)
-        container
+        in_stream
         <>
     )
 
-    count_elements = in container out Table:fold!(
+    count_elements = in in_stream out Table:fold!(
         in (item table) out put!((item inc!get!(item table 0)) table)
-        container
+        in_stream
         <>
     )
 
