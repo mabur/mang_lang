@@ -513,14 +513,14 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         const auto type = statement.type;
         if (type == DEFINITION) {
             auto definition = getDefinition(statement);
-            definition.expression = Expression{};
+            definition.expression = Expression{ANY, 0, statement.range};
             definitions.at(definition.name_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = getForStatement(statement);
             definitions.at(for_statement.name_index_item) = Definition{
                 for_statement.name_item,
-                Expression{},
+                Expression{ANY, 0, statement.range},
                 for_statement.name_index_item
             };
         }
