@@ -197,8 +197,8 @@ Expression takeTyped(Expression in) {
         case STRING: return getString(in).top;
         case EVALUATED_TABLE: return takeTableTyped(getEvaluatedTable(in));
         case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in));
-        case EMPTY_STACK: return Expression{};
-        case EMPTY_STRING: return Expression{CHARACTER, {}, in.range};
+        case EMPTY_STACK: return Expression{ANY, 0, in.range};
+        case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
