@@ -158,15 +158,18 @@ Expression takeTable(const T& table) {
 }
 
 template<typename T>
-Expression takeTableTyped(const T& table) {
+Expression takeTableTyped(const T& table, Expression expression) {
+    const auto range = expression.range;
     if (table.empty()) {
         return makeEvaluatedTuple(
             {},
-            EvaluatedTuple{{Expression{}, Expression{}}}
+            EvaluatedTuple{{Expression{ANY, 0, range}, Expression{ANY, 0, range}}}
         );
     }
     const auto& pair = table.begin()->second;
-    return makeEvaluatedTuple({}, EvaluatedTuple{{pair.key, pair.value}});
+    return makeEvaluatedTuple(
+        range, EvaluatedTuple{{pair.key, pair.value}}
+    );
 }
 
 template<typename T>
@@ -195,8 +198,8 @@ Expression takeTyped(Expression in) {
     switch (in.type) {
         case EVALUATED_STACK: return getEvaluatedStack(in).top;
         case STRING: return getString(in).top;
-        case EVALUATED_TABLE: return takeTableTyped(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in));
+        case EVALUATED_TABLE: return takeTableTyped(getEvaluatedTable(in), in);
+        case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in), in);
         case EMPTY_STACK: return Expression{ANY, 0, in.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
         case NUMBER: return in;
