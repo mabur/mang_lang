@@ -56,7 +56,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
             throw std::runtime_error(
                 "Static type error in " + description +
                     ". Could not find name " + getName(name_super) +
-                    " in dictionary" + describeLocation(sub.range.begin()) 
+                    " in dictionary" + describeLocation(sub.range) 
             );            
         }
     }
@@ -107,7 +107,7 @@ void checkTypes(Expression super, Expression sub, const std::string& description
     }
     throw std::runtime_error(
         "Static type error in " + description +
-        describeLocation(super.range.begin()) +
+        describeLocation(super.range) +
         ". " + NAMES[super.type] +
         " is not a supertype for " + NAMES[sub.type]
     );

@@ -249,7 +249,7 @@ bool isEndMatchingWhile(
     CodeRange code
 ) {
     if (while_indices.empty() && for_indices.empty()) {
-        throw ParseException("end not matching while or for", code.begin());
+        throw ParseException("end not matching while or for", code);
     }
     if (while_indices.empty()) {
         return false;

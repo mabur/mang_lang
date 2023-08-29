@@ -22,11 +22,11 @@ struct CodeRange {
 
 struct ParseException : public std::runtime_error
 {
-    ParseException(const std::string& description, const CodeCharacter* it);
+    ParseException(const std::string& description, CodeRange code);
     using runtime_error::runtime_error;
 };
 
-std::string describeLocation(const CodeCharacter* c);
+std::string describeLocation(CodeRange code);
 
 void throwIfEmpty(CodeRange code);
 void throwParseException(CodeRange code);
