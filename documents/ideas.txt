@@ -12,7 +12,7 @@ TYPE SYSTEM
     - ANY
       - Character
       - Homogeneous & dynamic containers
-        - Concept: take, drop.
+        - Concept: take, drop, --, boolean
           - Names: InStream (bra), Sender (bra?), Reader (bra?), Source, Consumable, Provider, Producer, Publisher, InputIterator, Iterable.
           - Container
           - Text file input
@@ -21,7 +21,7 @@ TYPE SYSTEM
           - Mouse input
           - Keyboard input
           - Concurrent input channel
-        - Concept: put
+        - Concept: put, +=
           - Names: OutStream (bra), Receiver (bra), Writer (bra?), Target, Destination, Sink,
                    Accumulator, Aggregator, Consumer, Gatherer, Collector, Subscriber, OutputIterator.
           - Container
