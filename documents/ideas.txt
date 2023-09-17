@@ -212,6 +212,29 @@ LANGUAGE SYNTAX & SEMANTICS
 SYSTEM IMPLEMENTATION
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s
+* Static evaluation of names:
+  - Current O(parents * members)
+  - In practice I guess the slow parts are:
+    - Jumping around in memory
+    - The standard library is a big dictionary, most other dictionaries are small.
+  - All names are internalized into ints.
+  - Would it make sense to split the single object pool for dictionaries into different pools for dictionaries with different members?
+    - Get a bit of automated data-oriented design at "compile-time".
+  - Could optimize special case for built-ins and standard library.
+  - 1 in for number of steps to parent and another int for index in that dictionary. O(parents)
+  - or just a single int for index in that dictionary, and then visit parents until it is found. O(parents)
+  - How to deal with dictionaries where names are defined in different order?
+    - Could define index-order alphabetically or using some hash-function.
+  - How to deal with dictionaries that are superset of interface?
+    - Could maybe rely on some hash-function?
+    - Could stop supporting typed generic dictionaries and require dynamic ANY for them.
+    - Generic dictionaries is so far also the only thing that is causing the supertype:subtype relation to not be symmetric,
+      which could be a sign of complexity.
+  - Store a name-to-index hash-map for each dictionary type.
+  - Add a new expression EvaluatedName
+    - Store both name and also index and perhaps steps to parent.
+    - Compute it during type-evaluation phase.
+    - Requires that dictionaries of the same type has members in the same order.
 * Nodes & Passes:
   - Parse
     - serialize
@@ -235,24 +258,6 @@ SYSTEM IMPLEMENTATION
   - Adrian Sampson, Department of Computer Science Cornell University
     - Flattening ASTs (and Other Compiler Data Structures)- 
     - https://www.cs.cornell.edu/~asampson/blog/flattening.html
-* Static evaluation of names:
-  - Current O(parents * members)
-  - In practice I guess the slow parts are:
-    - Jumping around in memory
-    - The standard library is a big dictionary, most other dictionaries are small.
-  - All names are internalized into ints.
-  - Would it make sense to split the single object pool for dictionaries into different pools for dictionaries with different members?
-    - Get a bit of automated data-oriented design at "compile-time".
-  - Could optimize special case for built-ins and standard library.
-  - 1 in for number of steps to parent and another int for index in that dictionary. O(parents)
-  - or just a single int for index in that dictionary, and then visit parents until it is found. O(parents)
-  - How to deal with dictionaries where names are defined in different order?
-    - Could define index-order alphabetically or using some hash-function.
-  - How to deal with dictionaries that are superset of interface?
-    - Could maybe rely on some hash-function?
-    - Could stop supporting typed generic dictionaries and require dynamic ANY for them.
-    - Generic dictionaries is so far also the only thing that is causing the supertype:subtype relation to not be symmetric,
-      which could be a sign of complexity.
 * Storing all expression fields as SOA instead of AOS?
 * James Gosling: "jvm bytecode as syntax tree in reverse polish notation".
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
