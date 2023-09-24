@@ -266,6 +266,9 @@ std::string serializeEvaluatedStack(Expression s) {
 }
 
 std::string serializeNumber(Number number) {
+    if (number != number) {
+        return "nan";
+    }
     std::stringstream s;
     s.precision(std::numeric_limits<double>::digits10 + 1);
     s << number;
