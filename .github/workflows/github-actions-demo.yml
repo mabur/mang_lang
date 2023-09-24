@@ -19,6 +19,7 @@ jobs:
         # Add commands for testing your C++ program here
         cd src/build
         ls
+        ./tests
 
     - name: List files in the repository
       run: |
