@@ -14,15 +14,6 @@ jobs:
         cmake ..
         make
 
-    - name: Test
+    - name: Tests
       run: |
-        # Add commands for testing your C++ program here
-        cd src/build
-        ls
-        ./tests
-
-    - name: List files in the repository
-      run: |
-        ls ${{ github.workspace }}
-
-    # Add additional steps for deployment or other tasks as neede
+        ./src/build/tests
