@@ -17,5 +17,6 @@ jobs:
     - name: Test
       run: |
         # Add commands for testing your C++ program here
+        echo ls
 
     # Add additional steps for deployment or other tasks as neede
