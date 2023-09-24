@@ -11,7 +11,7 @@ jobs:
       run: |
         mkdir src/build
         cd src/build
-        cmake ..
+        cmake -DCMAKE_BUILD_TYPE=Release ..
         make
 
     - name: Tests
