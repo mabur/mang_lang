@@ -9,8 +9,8 @@ jobs:
 
     - name: Build C++
       run: |
-        mkdir build
-        cd build
+        mkdir src/build
+        cd src/build
         cmake ..
         make
 
