@@ -46,7 +46,9 @@ Expression putTable(Expression table, Expression item) {
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = getMutableEvaluatedTable(table).rows;
-    rows[serialize(key)] = {key, value};
+    std::string s;
+    serialize(s, key);
+    rows[s] = {key, value};
     return table;
 }
 
@@ -58,7 +60,9 @@ Expression putTableTyped(Expression table, Expression item) {
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = getMutableEvaluatedTable(table).rows;
-    rows[serialize_types(key)] = {key, value};
+    std::string s;
+    serialize_types(s, key);
+    rows[s] = {key, value};
     return table;
 }
 
@@ -245,7 +249,9 @@ Expression get(Expression in) {
     const auto tuple = getEvaluatedTuple(in);
     const auto key = tuple.expressions.at(0);
     const auto table = tuple.expressions.at(1);
-    const auto name = serialize(key);
+    std::string s;
+    serialize(s, key);
+    const auto name = s;
     const auto& rows = getEvaluatedTable(table).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?

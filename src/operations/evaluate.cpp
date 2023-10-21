@@ -153,7 +153,8 @@ Expression evaluateTable(
     for (const auto& row : table_struct.rows) {
         const auto key = evaluator(row.key, environment);
         const auto value = evaluator(row.value, environment);
-        const auto serialized_key = serializer(key);
+        std::string serialized_key;
+        serializer(serialized_key, key);
         rows[serialized_key] = {key, value};
     }
     const auto code = table.range;
@@ -712,7 +713,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto table_struct = getEvaluatedTable(table);
-    const auto k = serialize(key);
+    std::string k;
+    serialize(k, key);
     try {
         return table_struct.rows.at(k).value;
     }

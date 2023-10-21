@@ -8,336 +8,389 @@
 
 namespace {
 
-std::string serializeName(Expression name) {
-    return std::string(getName(name));
+void serializeName(std::string& s, Expression name) {
+    s.append(getName(name));
 }
 
-std::string serializeArgument(Expression argument) {
+void serializeArgument(std::string& s, Expression argument) {
     const auto a = getArgument(argument);
     if (a.type.type != ANY) {
-        return serialize(a.type) + ':' + serialize(a.name);    
+        serialize(s, a.type);
+        s.append(":");
+        serialize(s, a.name);
+        return;
     }
-    return serialize(a.name);
+    serialize(s, a.name);
 }
 
-std::string serializeDynamicExpression(const DynamicExpression& dynamic_expression) {
-    return "dynamic " + serialize(dynamic_expression.expression);
+void serializeDynamicExpression(std::string& s, const DynamicExpression& dynamic_expression) {
+    s.append("dynamic ");
+    serialize(s, dynamic_expression.expression);
 }
 
-std::string serializeTypedExpression(const TypedExpression& typed_expression) {
-    return serialize(typed_expression.type) + ':' + serialize(typed_expression.value);
+void serializeTypedExpression(std::string& s, const TypedExpression& typed_expression) {
+    serialize(s, typed_expression.type);
+    s.append(":");
+    serialize(s, typed_expression.value);
 }
 
-std::string serializeConditional(const Conditional& conditional) {
-    auto result = std::string{"if "};
+void serializeConditional(std::string& s, const Conditional& conditional) {
+    s.append("if ");
     for (auto a = conditional.alternative_first;
         a.index <= conditional.alternative_last.index;
         ++a.index
     ) {
         const auto alternative = getAlternative(a);
-        result += serialize(alternative.left);
-        result += " then ";
-        result += serialize(alternative.right);
-        result += " ";
+        serialize(s, alternative.left);
+        s.append(" then ");
+        serialize(s, alternative.right);
+        s.append(" ");
     }
-    result += "else ";
-    result += serialize(conditional.expression_else);
-    return result;
+    s.append("else ");
+    serialize(s, conditional.expression_else);
 }
 
-std::string serializeIs(const IsExpression& is_expression) {
-    auto result = "is " + serialize(is_expression.input) + " ";
+void serializeIs(std::string& s, const IsExpression& is_expression) {
+    s.append("is ");
+    serialize(s, is_expression.input);
+    s.append(" ");
     for (auto a = is_expression.alternative_first;
         a.index <= is_expression.alternative_last.index;
         ++a.index
     ) {
         const auto alternative = getAlternative(a);
-        result += serialize(alternative.left);
-        result += " then ";
-        result += serialize(alternative.right);
-        result += " ";
+        serialize(s, alternative.left);
+        s.append(" then ");
+        serialize(s, alternative.right);
+        s.append(" ");
     }
-    result += "else ";
-    result += serialize(is_expression.expression_else);
-    return result;
+    s.append("else ");
+    serialize(s, is_expression.expression_else);
 }
 
-std::string serializeDefinition(const Definition& element) {
-    return std::string(getName(element.name)) + '=' + serialize(element.expression) + ' ';
+void serializeDefinition(std::string& s, const Definition& element) {
+    s.append(getName(element.name));
+    s.append("=");
+    serialize(s, element.expression);
+    s.append(" ");
 }
 
-std::string serializePutAssignment(const PutAssignment& element) {
-    return std::string(getName(element.name)) + "+=" + serialize(element.expression) + ' ';
+void serializePutAssignment(std::string& s, const PutAssignment& element) {
+    s.append(getName(element.name));
+    s.append("+=");
+    serialize(s, element.expression);
+    s.append(" ");
 }
 
-std::string serializePutEachAssignment(const PutEachAssignment& element) {
-    return std::string(getName(element.name)) + "++=" + serialize(element.expression) + ' ';
+void serializePutEachAssignment(std::string& s, const PutEachAssignment& element) {
+    s.append(getName(element.name));
+    s.append("++=");
+    serialize(s, element.expression);
+    s.append(" ");
 }
 
-std::string serializeDropAssignment(const DropAssignment& element) {
-    return std::string(getName(element.name)) + "-- ";
+void serializeDropAssignment(std::string& s, const DropAssignment& element) {
+    s.append(getName(element.name));
+    s.append("-- ");
 }
 
-std::string serializeWhileStatement(const WhileStatement& element) {
-    return "while " + serialize(element.expression) + ' ';
+void serializeWhileStatement(std::string& s, const WhileStatement& element) {
+    s.append("while ");
+    serialize(s, element.expression);
+    s.append(" ");
 }
 
-std::string serializeForStatement(const ForStatement& element) {
-    return "for " + serialize(element.name_item) + " in " +
-        serialize(element.name_container) + " ";
+void serializeForStatement(std::string& s, const ForStatement& element) {
+    s.append("for ");
+    serialize(s, element.name_item);
+    s.append(" in ");
+    serialize(s, element.name_container);
+    s.append(" ");
 }
 
-std::string serializeForSimpleStatement(const ForSimpleStatement& element) {
-    return "for " + serialize(element.name_container) + " ";
+void serializeForSimpleStatement(std::string& s, const ForSimpleStatement& element) {
+    s.append("for ");
+    serialize(s, element.name_container);
+    s.append(" ");
 }
 
 template<typename Serializer>
-std::string serializeEvaluatedDictionary(Serializer serializer, const EvaluatedDictionary& dictionary) {
+void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const EvaluatedDictionary& dictionary) {
     if (dictionary.definitions.empty()) {
-        return "{}";
+        s.append("{}");
+        return;
     }
-    auto result = std::string{"{"};
+    s.append("{");
     for (const auto& pair : dictionary.definitions) {
-        result += getName(pair.name) + "=" + serializer(pair.expression) + " ";
+        s.append(getName(pair.name));
+        s.append("=");
+        serializer(s, pair.expression);
+        s.append(" ");
     }
-    result.back() = '}';
-    return result;
+    s.back() = '}';
 }
 
 template<typename Serializer>
-std::string serializeEvaluatedTuple(Serializer serializer, Expression s) {
-    const auto expressions = getEvaluatedTuple(s).expressions;
+void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t) {
+    const auto expressions = getEvaluatedTuple(t).expressions;
     if (expressions.empty()) {
-        return "()";
+        s.append("()");
+        return;
     }
-    auto result = std::string{'('};
+    s.append("(");
     for (const auto& expression : expressions) {
-        result += serializer(expression) + ' ';
+        serializer(s, expression);
+        s.append(" ");
     }
-    result.back() = ')';
-    return result;
+    s.back() = ')';
 }
 
-std::string serializeLookupChild(const LookupChild& lookup_child) {
-    return serializeName(lookup_child.name) + "@" + serialize(lookup_child.child);
+void serializeLookupChild(std::string& s, const LookupChild& lookup_child) {
+    serializeName(s, lookup_child.name);
+    s.append("@");
+    serialize(s, lookup_child.child);
 }
 
-std::string serializeFunctionApplication(const FunctionApplication& function_application) {
-    return serializeName(function_application.name) + "!" +
-        serialize(function_application.child);
+void serializeFunctionApplication(std::string& s, const FunctionApplication& function_application) {
+    serializeName(s, function_application.name);
+    s.append("!");
+    serialize(s, function_application.child);
 }
 
-std::string serializeLookupSymbol(const LookupSymbol& lookup_symbol) {
-    return serializeName(lookup_symbol.name);
+void serializeLookupSymbol(std::string& s, const LookupSymbol& lookup_symbol) {
+    serializeName(s, lookup_symbol.name);
 }
     
-std::string serializeDictionary(const Dictionary& dictionary) {
-    auto result = std::string{};
-    result += '{';
+void serializeDictionary(std::string& s, const Dictionary& dictionary) {
+    s.append("{");
     for (const auto& statement : dictionary.statements) {
-        result += serialize(statement);
+        serialize(s, statement);
     }
     if (dictionary.statements.empty()) {
-        result += '}';
+        s.append("}");
     }
     else {
-        result.back() = '}';
+        s.back() = '}';
     }
-    return result;
 }
 
-std::string serializeTuple(Expression s) {
-    const auto expressions = getTuple(s).expressions;
+void serializeTuple(std::string& s, Expression t) {
+    const auto expressions = getTuple(t).expressions;
     if (expressions.empty()) {
-        return "()";
+        s.append("()");
+        return;
     }
-    auto result = std::string{'('};
+    s.append("(");
     for (const auto& expression : expressions) {
-        result += serialize(expression) + ' ';
+        serialize(s, expression);
+        s.append(" ");
     }
-    result.back() = ')';
-    return result;
+    s.back() = ')';
 }
 
-std::string serializeStack(Expression s) {
-    const auto appendElement = [=](const std::string& s, Expression element) {
-        return s + serialize(element) + ' ';
+void serializeStack(std::string& s, Expression e) {
+    // TODO: simplify
+    const auto appendElement = [=](const std::string& inner_s, Expression element) {
+        std::string temp;
+        serialize(temp, element);
+        return inner_s + temp + ' ';
     };
     auto result = leftFold(
-        std::string{"["}, s, appendElement, EMPTY_STACK, getStack
+        std::string{"["}, e, appendElement, EMPTY_STACK, getStack
     );
     result.back() = ']';
-    return result;
+    s.append(result);
 }
 
-std::string serializeCharacter(Character character) {
-    return {'\'', character, '\''};
+void serializeCharacter(std::string& s, Character character) {
+    s += '\'';
+    s += character;
+    s += '\'';
 }
 
-std::string serializeFunction(const Function& function) {
-    return "in " + serializeArgument(function.input_name)
-        + " out " + serialize(function.body);
+void serializeFunction(std::string& s, const Function& function) {
+    s.append("in ");
+    serializeArgument(s, function.input_name);
+    s.append(" out ");
+    serialize(s, function.body);
 }
 
-std::string serializeFunctionDictionary(const FunctionDictionary& function_dictionary) {
-    auto result = std::string{};
-    result += "in ";
-    result += "{";
+void serializeFunctionDictionary(std::string& s, const FunctionDictionary& function_dictionary) {
+    s.append("in ");
+    s.append("{");
     for (const auto& name : function_dictionary.input_names) {
-        result += serializeArgument(name);
-        result += " ";
+        serializeArgument(s, name);
+        s.append(" ");
     }
     if (function_dictionary.input_names.empty()) {
-        result += '}';
+        s.append("}");
     }
     else {
-        result.back() = '}';
+        s.back() = '}';
     }
-    result += " out " + serialize(function_dictionary.body);
-    return result;
+    s.append(" out ");
+    serialize(s, function_dictionary.body);
 }
 
-std::string serializeFunctionTuple(const FunctionTuple& function_stack) {
-    auto result = std::string{};
-    result += "in ";
-    result += "(";
+void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack) {
+    s.append("in ");
+    s.append("(");
     for (const auto& name : function_stack.input_names) {
-        result += serializeArgument(name);
-        result += " ";
+        serializeArgument(s, name);
+        s.append(" ");
     }
     if (function_stack.input_names.empty()) {
-        result += ')';
+        s.append(")");
     }
     else {
-        result.back() = ')';
+        s.back() = ')';
     }
-    result += " out " + serialize(function_stack.body);
-    return result;
+    s.append(" out ");
+    serialize(s, function_stack.body);
 }
     
-std::string serializeTable(Expression s) {
-    const auto rows = getTable(s).rows;
+void serializeTable(std::string& s, Expression t) {
+    const auto rows = getTable(t).rows;
     if (rows.empty()) {
-        return "<>";
+        s.append("<>");
+        return;
     }
-    auto result = std::string{'<'};
+    s.append("<");
     for (const auto& row : rows) {
-        result += '(' + serialize(row.key) + ' ' + serialize(row.value) + ") ";
+        s.append("(");
+        serialize(s, row.key);
+        s.append(" ");
+        serialize(s, row.value);
+        s.append(") ");
     }
-    result.back() = '>';
-    return result;
+    s.back() = '>';
 }
 
-std::string serializeTypesEvaluatedTable(Expression s) {
-    const auto& rows = getEvaluatedTable(s).rows;
+void serializeTypesEvaluatedTable(std::string& s, Expression t) {
+    const auto& rows = getEvaluatedTable(t).rows;
     if (rows.empty()) {
-        return "<>";
+        s.append("<>");
+        return;
     }
     const auto& row = rows.begin()->second;
-    return "<(" + serialize_types(row.key) + ' ' + serialize_types(row.value) + ")>";
+    s.append("<(");
+    serialize_types(s, row.key);
+    s.append(" ");
+    serialize_types(s, row.value);
+    s.append(")>");
 }
 
 template<typename Table>
-std::string serializeEvaluatedTable(const Table& table) {
+void serializeEvaluatedTable(std::string& s, const Table& table) {
     if (table.empty()) {
-        return "<>";
+        s.append("<>");
+        return;
     }
-    auto result = std::string{'<'};
+    s.append("<");
     for (const auto& row : table) {
-        result += '(' + row.first + ' ' + serialize(row.second.value) + ") ";
+        s.append("(");
+        s.append(row.first);
+        s.append(" ");
+        serialize(s, row.second.value);
+        s.append(") ");
     }
-    result.back() = '>';
-    return result;
+    s.back() = '>';
 }
 
-std::string serializeTypesEvaluatedStack(Expression s) {
-    return '[' + serialize_types(getEvaluatedStack(s).top) + ']';
+void serializeTypesEvaluatedStack(std::string& s, Expression e) {
+    s.append("[");
+    serialize_types(s, getEvaluatedStack(e).top);
+    s.append("]");
 }
     
-std::string appendElement(const std::string& s, Expression element) {
-    return s + serialize(element) + ' ';
+std::string appendElement(const std::string& x, Expression element) {
+    std::string temp;
+    serialize(temp, element);
+    return x + temp + ' ';
 }
 
-std::string serializeEvaluatedStack(Expression s) {
-    auto result = leftFold(std::string{"["}, s, appendElement, EMPTY_STACK,
+void serializeEvaluatedStack(std::string& s, Expression e) {
+    // TODO: simplify
+    auto result = leftFold(std::string{"["}, e, appendElement, EMPTY_STACK,
         getEvaluatedStack);
     result.back() = ']';
-    return result;
+    s.append(result);
 }
 
-std::string serializeNumber(Number number) {
+void serializeNumber(std::string& s, Number number) {
     if (number != number) {
-        return "nan";
+        s.append("nan");
+        return;
     }
-    std::stringstream s;
-    s.precision(std::numeric_limits<double>::digits10 + 1);
-    s << number;
-    return s.str();
+    std::stringstream stream;
+    stream.precision(std::numeric_limits<double>::digits10 + 1);
+    stream << number;
+    s.append(stream.str());
 }
 
-std::string appendCharacter(const std::string& s, Expression character) {
-    return s + getCharacter(character);
+std::string appendCharacter(const std::string& x, Expression character) {
+    return x + getCharacter(character);
 }
 
-std::string serializeString(Expression string) {
+void serializeString(std::string& s, Expression string) {
     const auto delimiter = std::string{"\""};
-    return leftFold(delimiter, string, appendCharacter, EMPTY_STRING, getString)
-        + delimiter;
+    s.append(leftFold(delimiter, string, appendCharacter, EMPTY_STRING, getString));
+    s.append(delimiter);
 }
 
 } // namespace
 
-std::string serialize_types(Expression expression) {
+void serialize_types(std::string& s, Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize_types, getEvaluatedDictionary(expression));
-        case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize_types, expression);
-        case EVALUATED_STACK: return serializeTypesEvaluatedStack(expression);
-        case EVALUATED_TABLE: return serializeTypesEvaluatedTable(expression);
+        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, getEvaluatedDictionary(expression)); break;
+        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize_types, expression); break;
+        case EVALUATED_STACK: serializeTypesEvaluatedStack(s, expression); break;
+        case EVALUATED_TABLE: serializeTypesEvaluatedTable(s, expression); break;
         // TODO: EVALUATED_TABLE_VIEW?
-        default: return NAMES[expression.type];
+        default: s.append(NAMES[expression.type]); break;
     }
 }
 
-std::string serialize(Expression expression) {
+void serialize(std::string& s, Expression expression) {
     switch (expression.type) {
-        case CHARACTER: return serializeCharacter(getCharacter(expression));
-        case CONDITIONAL: return serializeConditional(getConditional(expression));
-        case IS: return serializeIs(getIs(expression));
-        case DICTIONARY: return serializeDictionary(getDictionary(expression));
-        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(serialize, getEvaluatedDictionary(expression));
-        case DEFINITION: return serializeDefinition(getDefinition(expression));
-        case PUT_ASSIGNMENT: return serializePutAssignment(getPutAssignment(expression));
-        case PUT_EACH_ASSIGNMENT: return serializePutEachAssignment(getPutEachAssignment(expression));
-        case DROP_ASSIGNMENT: return serializeDropAssignment(getDropAssignment(expression));
-        case WHILE_STATEMENT: return serializeWhileStatement(getWhileStatement(expression));
-        case FOR_STATEMENT: return serializeForStatement(getForStatement(expression));
-        case FOR_SIMPLE_STATEMENT: return serializeForSimpleStatement(getForSimpleStatement(expression));
-        case WHILE_END_STATEMENT: return "end ";
-        case FOR_END_STATEMENT: return "end ";
-        case RETURN_STATEMENT: return "return ";
-        case FUNCTION: return serializeFunction(getFunction(expression));
-        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(getFunctionDictionary(expression));
-        case FUNCTION_TUPLE: return serializeFunctionTuple(getFunctionTuple(expression));
-        case TABLE: return serializeTable(expression);
-        case EVALUATED_TABLE: return serializeEvaluatedTable(getEvaluatedTable(expression).rows);
-        case EVALUATED_TABLE_VIEW: return serializeEvaluatedTable(getEvaluatedTableView(expression));
-        case TUPLE: return serializeTuple(expression);
-        case EVALUATED_TUPLE: return serializeEvaluatedTuple(serialize, expression);
-        case STACK: return serializeStack(expression);
-        case EVALUATED_STACK: return serializeEvaluatedStack(expression);
-        case EMPTY_STACK: return "[]";
-        case LOOKUP_CHILD: return serializeLookupChild(getLookupChild(expression));
-        case FUNCTION_APPLICATION: return serializeFunctionApplication(getFunctionApplication(expression));
-        case LOOKUP_SYMBOL: return serializeLookupSymbol(getLookupSymbol(expression));
-        case NAME: return serializeName(expression);
-        case ARGUMENT: return serializeArgument(expression);
-        case NUMBER: return serializeNumber(getNumber(expression));
-        case YES: return "yes";
-        case NO: return "no";
-        case EMPTY_STRING: return serializeString(expression);
-        case STRING: return serializeString(expression);
-        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(getDynamicExpression(expression));
-        case TYPED_EXPRESSION: return serializeTypedExpression(getTypedExpression(expression));
-        default: return NAMES[expression.type];
+        case CHARACTER: serializeCharacter(s, getCharacter(expression)); break;
+        case CONDITIONAL: serializeConditional(s, getConditional(expression)); break;
+        case IS: serializeIs(s, getIs(expression)); break;
+        case DICTIONARY: serializeDictionary(s, getDictionary(expression)); break;
+        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); break;
+        case DEFINITION: serializeDefinition(s, getDefinition(expression)); break;
+        case PUT_ASSIGNMENT: serializePutAssignment(s, getPutAssignment(expression)); break;
+        case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, getPutEachAssignment(expression)); break;
+        case DROP_ASSIGNMENT: serializeDropAssignment(s, getDropAssignment(expression)); break;
+        case WHILE_STATEMENT: serializeWhileStatement(s, getWhileStatement(expression)); break;
+        case FOR_STATEMENT: serializeForStatement(s, getForStatement(expression)); break;
+        case FOR_SIMPLE_STATEMENT: serializeForSimpleStatement(s, getForSimpleStatement(expression)); break;
+        case FUNCTION: serializeFunction(s, getFunction(expression)); break;
+        case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, getFunctionDictionary(expression)); break;
+        case FUNCTION_TUPLE: serializeFunctionTuple(s, getFunctionTuple(expression)); break;
+        case TABLE: serializeTable(s, expression); break;
+        case EVALUATED_TABLE: serializeEvaluatedTable(s, getEvaluatedTable(expression).rows); break;
+        case EVALUATED_TABLE_VIEW: serializeEvaluatedTable(s, getEvaluatedTableView(expression)); break;
+        case TUPLE: serializeTuple(s, expression); break;
+        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize, expression); break;
+        case STACK: serializeStack(s, expression); break;
+        case EVALUATED_STACK: serializeEvaluatedStack(s, expression); break;
+        case LOOKUP_CHILD: serializeLookupChild(s, getLookupChild(expression)); break;
+        case FUNCTION_APPLICATION: serializeFunctionApplication(s, getFunctionApplication(expression)); break;
+        case LOOKUP_SYMBOL: serializeLookupSymbol(s, getLookupSymbol(expression)); break;
+        case NAME: serializeName(s, expression); break;
+        case ARGUMENT: serializeArgument(s, expression); break;
+        case NUMBER: serializeNumber(s, getNumber(expression)); break;
+        case EMPTY_STRING: serializeString(s, expression); break;
+        case STRING: serializeString(s, expression); break;
+        case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, getDynamicExpression(expression)); break;
+        case TYPED_EXPRESSION: serializeTypedExpression(s, getTypedExpression(expression)); break;
+        case EMPTY_STACK: s.append("[]"); break;
+        case YES: s.append("yes"); break;
+        case NO: s.append("no"); break;
+        case WHILE_END_STATEMENT: s.append("end "); break;
+        case FOR_END_STATEMENT: s.append("end "); break;
+        case RETURN_STATEMENT: s.append("return "); break;
+        default: s.append(NAMES[expression.type]); break;
     }
 }

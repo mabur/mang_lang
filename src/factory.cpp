@@ -155,9 +155,10 @@ void clearMemory() {
 }
 
 std::string getLog() {
-    auto log = std::string{};
+    std::string log;
     for (const auto expression : expressions) {
-        log += serialize(expression) + '\n';
+        serialize(log, expression);
+        log.append("\n");
     }
     return log;
 }
