@@ -191,10 +191,10 @@ void serializeTuple(std::string& s, Expression t) {
 void serializeStack(std::string& s, Expression expression) {
     s.append("[");
     while (expression.type != EMPTY_STACK) {
-        const auto container = getStack(expression);
-        serialize(s, container.top);
+        const auto stack = getStack(expression);
+        serialize(s, stack.top);
         s.append(" ");
-        expression = container.rest;
+        expression = stack.rest;
     }
     s.back() = ']';
 }
