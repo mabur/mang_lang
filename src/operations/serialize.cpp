@@ -4,7 +4,6 @@
 #include <sstream>
 
 #include "../factory.h"
-#include "../built_in_functions/container.h"
 
 namespace {
 
