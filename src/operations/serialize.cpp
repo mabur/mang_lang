@@ -188,19 +188,15 @@ void serializeTuple(std::string& s, Expression t) {
     s.back() = ')';
 }
 
-void serializeStack(std::string& s, Expression e) {
-    // TODO: simplify
-    const auto appendElement = [=](const std::string& inner_s, Expression element) {
-        auto s = inner_s;
-        serialize(s, element);
+void serializeStack(std::string& s, Expression expression) {
+    s.append("[");
+    while (expression.type != EMPTY_STACK) {
+        const auto container = getStack(expression);
+        serialize(s, container.top);
         s.append(" ");
-        return s;
-    };
-    auto result = leftFold(
-        std::string{"["}, e, appendElement, EMPTY_STACK, getStack
-    );
-    result.back() = ']';
-    s.append(result);
+        expression = container.rest;
+    }
+    s.back() = ']';
 }
 
 void serializeCharacter(std::string& s, Character character) {
