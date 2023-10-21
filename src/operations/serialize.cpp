@@ -336,55 +336,55 @@ void serializeString(std::string& s, Expression expression) {
 
 void serialize_types(std::string& s, Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, getEvaluatedDictionary(expression)); break;
-        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize_types, expression); break;
-        case EVALUATED_STACK: serializeTypesEvaluatedStack(s, expression); break;
-        case EVALUATED_TABLE: serializeTypesEvaluatedTable(s, expression); break;
+        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, getEvaluatedDictionary(expression)); return;
+        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize_types, expression); return;
+        case EVALUATED_STACK: serializeTypesEvaluatedStack(s, expression); return;
+        case EVALUATED_TABLE: serializeTypesEvaluatedTable(s, expression); return;
         // TODO: EVALUATED_TABLE_VIEW?
-        default: s.append(NAMES[expression.type]); break;
+        default: s.append(NAMES[expression.type]); return;
     }
 }
 
 void serialize(std::string& s, Expression expression) {
     switch (expression.type) {
-        case CHARACTER: serializeCharacter(s, getCharacter(expression)); break;
-        case CONDITIONAL: serializeConditional(s, getConditional(expression)); break;
-        case IS: serializeIs(s, getIs(expression)); break;
-        case DICTIONARY: serializeDictionary(s, getDictionary(expression)); break;
-        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); break;
-        case DEFINITION: serializeDefinition(s, getDefinition(expression)); break;
-        case PUT_ASSIGNMENT: serializePutAssignment(s, getPutAssignment(expression)); break;
-        case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, getPutEachAssignment(expression)); break;
-        case DROP_ASSIGNMENT: serializeDropAssignment(s, getDropAssignment(expression)); break;
-        case WHILE_STATEMENT: serializeWhileStatement(s, getWhileStatement(expression)); break;
-        case FOR_STATEMENT: serializeForStatement(s, getForStatement(expression)); break;
-        case FOR_SIMPLE_STATEMENT: serializeForSimpleStatement(s, getForSimpleStatement(expression)); break;
-        case FUNCTION: serializeFunction(s, getFunction(expression)); break;
-        case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, getFunctionDictionary(expression)); break;
-        case FUNCTION_TUPLE: serializeFunctionTuple(s, getFunctionTuple(expression)); break;
-        case TABLE: serializeTable(s, expression); break;
-        case EVALUATED_TABLE: serializeEvaluatedTable(s, getEvaluatedTable(expression).rows); break;
-        case EVALUATED_TABLE_VIEW: serializeEvaluatedTable(s, getEvaluatedTableView(expression)); break;
-        case TUPLE: serializeTuple(s, expression); break;
-        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize, expression); break;
-        case STACK: serializeStack(s, expression); break;
-        case EVALUATED_STACK: serializeEvaluatedStack(s, expression); break;
-        case LOOKUP_CHILD: serializeLookupChild(s, getLookupChild(expression)); break;
-        case FUNCTION_APPLICATION: serializeFunctionApplication(s, getFunctionApplication(expression)); break;
-        case LOOKUP_SYMBOL: serializeLookupSymbol(s, getLookupSymbol(expression)); break;
-        case NAME: serializeName(s, expression); break;
-        case ARGUMENT: serializeArgument(s, expression); break;
-        case NUMBER: serializeNumber(s, getNumber(expression)); break;
-        case EMPTY_STRING: serializeString(s, expression); break;
-        case STRING: serializeString(s, expression); break;
-        case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, getDynamicExpression(expression)); break;
-        case TYPED_EXPRESSION: serializeTypedExpression(s, getTypedExpression(expression)); break;
-        case EMPTY_STACK: s.append("[]"); break;
-        case YES: s.append("yes"); break;
-        case NO: s.append("no"); break;
-        case WHILE_END_STATEMENT: s.append("end "); break;
-        case FOR_END_STATEMENT: s.append("end "); break;
-        case RETURN_STATEMENT: s.append("return "); break;
-        default: s.append(NAMES[expression.type]); break;
+        case CHARACTER: serializeCharacter(s, getCharacter(expression)); return;
+        case CONDITIONAL: serializeConditional(s, getConditional(expression)); return;
+        case IS: serializeIs(s, getIs(expression)); return;
+        case DICTIONARY: serializeDictionary(s, getDictionary(expression)); return;
+        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); return;
+        case DEFINITION: serializeDefinition(s, getDefinition(expression)); return;
+        case PUT_ASSIGNMENT: serializePutAssignment(s, getPutAssignment(expression)); return;
+        case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, getPutEachAssignment(expression)); return;
+        case DROP_ASSIGNMENT: serializeDropAssignment(s, getDropAssignment(expression)); return;
+        case WHILE_STATEMENT: serializeWhileStatement(s, getWhileStatement(expression)); return;
+        case FOR_STATEMENT: serializeForStatement(s, getForStatement(expression)); return;
+        case FOR_SIMPLE_STATEMENT: serializeForSimpleStatement(s, getForSimpleStatement(expression)); return;
+        case FUNCTION: serializeFunction(s, getFunction(expression)); return;
+        case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, getFunctionDictionary(expression)); return;
+        case FUNCTION_TUPLE: serializeFunctionTuple(s, getFunctionTuple(expression)); return;
+        case TABLE: serializeTable(s, expression); return;
+        case EVALUATED_TABLE: serializeEvaluatedTable(s, getEvaluatedTable(expression).rows); return;
+        case EVALUATED_TABLE_VIEW: serializeEvaluatedTable(s, getEvaluatedTableView(expression)); return;
+        case TUPLE: serializeTuple(s, expression); return;
+        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize, expression); return;
+        case STACK: serializeStack(s, expression); return;
+        case EVALUATED_STACK: serializeEvaluatedStack(s, expression); return;
+        case LOOKUP_CHILD: serializeLookupChild(s, getLookupChild(expression)); return;
+        case FUNCTION_APPLICATION: serializeFunctionApplication(s, getFunctionApplication(expression)); return;
+        case LOOKUP_SYMBOL: serializeLookupSymbol(s, getLookupSymbol(expression)); return;
+        case NAME: serializeName(s, expression); return;
+        case ARGUMENT: serializeArgument(s, expression); return;
+        case NUMBER: serializeNumber(s, getNumber(expression)); return;
+        case EMPTY_STRING: serializeString(s, expression); return;
+        case STRING: serializeString(s, expression); return;
+        case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, getDynamicExpression(expression)); return;
+        case TYPED_EXPRESSION: serializeTypedExpression(s, getTypedExpression(expression)); return;
+        case EMPTY_STACK: s.append("[]"); return;
+        case YES: s.append("yes"); return;
+        case NO: s.append("no"); return;
+        case WHILE_END_STATEMENT: s.append("end "); return;
+        case FOR_END_STATEMENT: s.append("end "); return;
+        case RETURN_STATEMENT: s.append("return "); return;
+        default: s.append(NAMES[expression.type]); return;
     }
 }
