@@ -299,19 +299,16 @@ void serializeTypesEvaluatedStack(std::string& s, Expression e) {
     serialize_types(s, getEvaluatedStack(e).top);
     s.append("]");
 }
-    
-std::string appendElement(const std::string& x, Expression element) {
-    std::string temp;
-    serialize(temp, element);
-    return x + temp + ' ';
-}
 
-void serializeEvaluatedStack(std::string& s, Expression e) {
-    // TODO: simplify
-    auto result = leftFold(std::string{"["}, e, appendElement, EMPTY_STACK,
-        getEvaluatedStack);
-    result.back() = ']';
-    s.append(result);
+void serializeEvaluatedStack(std::string& s, Expression expression) {
+    s.append("[");
+    while (expression.type != EMPTY_STACK) {
+        const auto stack = getEvaluatedStack(expression);
+        serialize(s, stack.top);
+        s.append(" ");
+        expression = stack.rest;
+    }
+    s.back() = ']';
 }
 
 void serializeNumber(std::string& s, Number number) {
