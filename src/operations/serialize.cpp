@@ -191,9 +191,10 @@ void serializeTuple(std::string& s, Expression t) {
 void serializeStack(std::string& s, Expression e) {
     // TODO: simplify
     const auto appendElement = [=](const std::string& inner_s, Expression element) {
-        std::string temp;
-        serialize(temp, element);
-        return inner_s + temp + ' ';
+        auto s = inner_s;
+        serialize(s, element);
+        s.append(" ");
+        return s;
     };
     auto result = leftFold(
         std::string{"["}, e, appendElement, EMPTY_STACK, getStack
