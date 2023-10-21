@@ -322,14 +322,14 @@ void serializeNumber(std::string& s, Number number) {
     s.append(stream.str());
 }
 
-std::string appendCharacter(const std::string& x, Expression character) {
-    return x + getCharacter(character);
-}
-
-void serializeString(std::string& s, Expression string) {
-    const auto delimiter = std::string{"\""};
-    s.append(leftFold(delimiter, string, appendCharacter, EMPTY_STRING, getString));
-    s.append(delimiter);
+void serializeString(std::string& s, Expression expression) {
+    s.append("\"");
+    while (expression.type != EMPTY_STRING) {
+        const auto string = getString(expression);
+        s.push_back(getCharacter(string.top));
+        expression = string.rest;
+    }
+    s.append("\"");
 }
 
 } // namespace
