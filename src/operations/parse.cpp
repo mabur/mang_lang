@@ -320,15 +320,15 @@ Expression parseDictionary(CodeRange code) {
 
 Expression parseFunction(CodeRange code) {
     auto first = code.begin();
-    auto input_name = parseArgument(code);
-    code.first = end(input_name);
+    auto argument = parseArgument(code);
+    code.first = end(argument);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunction(
         CodeRange{first, code.begin()},
-        {Expression{}, input_name, body}
+        {Expression{}, argument, body}
     );
 }
 
@@ -359,12 +359,12 @@ Expression parseFunctionTuple(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto input_names = std::vector<Expression>{};
+    auto argument = std::vector<Expression>{};
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = parseArgument(code);
         code.first = end(name);
-        input_names.push_back(name);
+        argument.push_back(name);
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
@@ -374,7 +374,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code.first = end(body);
     return makeFunctionTuple(
         CodeRange{first, code.begin()},
-        {Expression{}, input_names, body}
+        {Expression{}, argument, body}
     );
 }
 

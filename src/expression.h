@@ -165,7 +165,7 @@ struct IsExpression {
 
 struct Function {
     Expression environment;
-    Expression input_name;
+    Expression argument;
     Expression body;
 };
 
@@ -177,7 +177,7 @@ struct FunctionBuiltIn {
 // Use index range for name expressions, or fixed size on stack.
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
-    std::vector<Expression> input_names;
+    std::vector<Expression> arguments;
     Expression body;
 };
 
@@ -185,7 +185,7 @@ struct FunctionDictionary {
 // Use index range for name expressions, or fixed size on stack.
 struct FunctionTuple {
     Expression environment;
-    std::vector<Expression> input_names;
+    std::vector<Expression> arguments;
     Expression body;
 };
 

@@ -206,7 +206,7 @@ void serializeCharacter(std::string& s, Character character) {
 
 void serializeFunction(std::string& s, const Function& function) {
     s.append("in ");
-    serializeArgument(s, function.input_name);
+    serializeArgument(s, function.argument);
     s.append(" out ");
     serialize(s, function.body);
 }
@@ -214,11 +214,11 @@ void serializeFunction(std::string& s, const Function& function) {
 void serializeFunctionDictionary(std::string& s, const FunctionDictionary& function_dictionary) {
     s.append("in ");
     s.append("{");
-    for (const auto& name : function_dictionary.input_names) {
+    for (const auto& name : function_dictionary.arguments) {
         serializeArgument(s, name);
         s.append(" ");
     }
-    if (function_dictionary.input_names.empty()) {
+    if (function_dictionary.arguments.empty()) {
         s.append("}");
     }
     else {
@@ -231,11 +231,11 @@ void serializeFunctionDictionary(std::string& s, const FunctionDictionary& funct
 void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack) {
     s.append("in ");
     s.append("(");
-    for (const auto& name : function_stack.input_names) {
+    for (const auto& name : function_stack.arguments) {
         serializeArgument(s, name);
         s.append(" ");
     }
-    if (function_stack.input_names.empty()) {
+    if (function_stack.arguments.empty()) {
         s.append(")");
     }
     else {

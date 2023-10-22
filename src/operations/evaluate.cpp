@@ -189,7 +189,7 @@ Expression applyFunction(
     Expression input
 ) {
     const auto function_struct = getFunction(function);
-    const auto argument = getArgument(function_struct.input_name);
+    const auto argument = getArgument(function_struct.argument);
     checkArgument(evaluator, argument, input, function_struct.environment);
     const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
     const auto middle = makeEvaluatedDictionary(input.range,
@@ -206,7 +206,7 @@ Expression applyFunctionDictionary(
 ) {
     const auto function_struct = getFunctionDictionary(function);
     const auto evaluated_dictionary = getEvaluatedDictionary(input);
-    for (const auto& name : function_struct.input_names) {
+    for (const auto& name : function_struct.arguments) {
         const auto argument = getArgument(name);
         const auto expression = evaluated_dictionary.lookup(argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
@@ -223,7 +223,7 @@ Expression applyFunctionTuple(
 ) {
     const auto function_struct = getFunctionTuple(function);
     auto tuple = getEvaluatedTuple(input);
-    const auto& input_names = function_struct.input_names;
+    const auto& input_names = function_struct.arguments;
     if (input_names.size() != tuple.expressions.size()) {
         throw std::runtime_error{"Wrong number of input to function_struct"};
     }
@@ -245,7 +245,7 @@ Expression applyFunctionTuple(
 Expression evaluateFunction(Expression function, Expression environment) {
     const auto function_struct = getFunction(function);
     return makeFunction(function.range, {
-        environment, function_struct.input_name, function_struct.body
+        environment, function_struct.argument, function_struct.body
     });
 }
 
@@ -255,7 +255,7 @@ Expression evaluateFunctionDictionary(
     const auto function_dictionary_struct = getFunctionDictionary(function_dictionary);
     return makeFunctionDictionary(function_dictionary.range, {
         environment,
-        function_dictionary_struct.input_names,
+        function_dictionary_struct.arguments,
         function_dictionary_struct.body
     });
 }
@@ -265,7 +265,7 @@ Expression evaluateFunctionTuple(
 ) {
     const auto function_tuple_struct = getFunctionTuple(function_tuple);
     return makeFunctionTuple(function_tuple.range, {
-        environment, function_tuple_struct.input_names, function_tuple_struct.body
+        environment, function_tuple_struct.arguments, function_tuple_struct.body
     });
 }
 
