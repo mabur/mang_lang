@@ -7,42 +7,46 @@
 
 #include "operations/serialize.h"
 
-std::vector<DynamicExpression> dynamic_expressions;
-std::vector<TypedExpression> typed_expressions;
-std::vector<EvaluatedDictionary> evaluated_dictionaries;
-std::vector<Dictionary> dictionaries;
-std::vector<Conditional> conditionals;
-std::vector<IsExpression> is_expressions;
-std::vector<Alternative> alternatives;
-std::vector<Function> functions;
-std::vector<FunctionBuiltIn> built_in_functions;
-std::vector<FunctionDictionary> dictionary_functions;
-std::vector<FunctionTuple> tuple_functions;
-std::vector<Tuple> tuples;
-std::vector<EvaluatedTuple> evaluated_tuples;
-std::vector<Stack> stacks;
-std::vector<EvaluatedStack> evaluated_stacks;
-std::vector<Table> tables;
-std::vector<EvaluatedTable> evaluated_tables;
-std::vector<EvaluatedTableView> evaluated_table_views;
-std::vector<LookupChild> child_lookups;
-std::vector<FunctionApplication> function_applications;
-std::vector<LookupSymbol> symbol_lookups;
-std::vector<Name> names;
-std::unordered_map<Name, size_t> name_indices;
-std::vector<Argument> arguments;
-std::vector<Number> numbers;
-std::vector<WhileStatement> while_statements;
-std::vector<ForStatement> for_statements;
-std::vector<ForSimpleStatement> for_simple_statements;
-std::vector<WhileEndStatement> while_end_statements;
-std::vector<ForEndStatement> for_end_statements;
-std::vector<Definition> definitions;
-std::vector<PutAssignment> put_assignments;
-std::vector<PutEachAssignment> put_each_assignments;
-std::vector<DropAssignment> drop_assignments;
-std::vector<String> strings;
-std::vector<Expression> expressions;
+struct Storage {
+    std::vector<DynamicExpression> dynamic_expressions;
+    std::vector<TypedExpression> typed_expressions;
+    std::vector<EvaluatedDictionary> evaluated_dictionaries;
+    std::vector<Dictionary> dictionaries;
+    std::vector<Conditional> conditionals;
+    std::vector<IsExpression> is_expressions;
+    std::vector<Alternative> alternatives;
+    std::vector<Function> functions;
+    std::vector<FunctionBuiltIn> built_in_functions;
+    std::vector<FunctionDictionary> dictionary_functions;
+    std::vector<FunctionTuple> tuple_functions;
+    std::vector<Tuple> tuples;
+    std::vector<EvaluatedTuple> evaluated_tuples;
+    std::vector<Stack> stacks;
+    std::vector<EvaluatedStack> evaluated_stacks;
+    std::vector<Table> tables;
+    std::vector<EvaluatedTable> evaluated_tables;
+    std::vector<EvaluatedTableView> evaluated_table_views;
+    std::vector<LookupChild> child_lookups;
+    std::vector<FunctionApplication> function_applications;
+    std::vector<LookupSymbol> symbol_lookups;
+    std::vector<Name> names;
+    std::unordered_map<Name, size_t> name_indices;
+    std::vector<Argument> arguments;
+    std::vector<Number> numbers;
+    std::vector<WhileStatement> while_statements;
+    std::vector<ForStatement> for_statements;
+    std::vector<ForSimpleStatement> for_simple_statements;
+    std::vector<WhileEndStatement> while_end_statements;
+    std::vector<ForEndStatement> for_end_statements;
+    std::vector<Definition> definitions;
+    std::vector<PutAssignment> put_assignments;
+    std::vector<PutEachAssignment> put_each_assignments;
+    std::vector<DropAssignment> drop_assignments;
+    std::vector<String> strings;
+    std::vector<Expression> expressions;
+};
+
+Storage storage;
 
 namespace {
 
@@ -54,8 +58,8 @@ Expression makeExpression(
     ArrayType& array
 ) {
     array.emplace_back(expression);
-    expressions.push_back(Expression{type, array.size() - 1, code});
-    return expressions.back();
+    storage.expressions.push_back(Expression{type, array.size() - 1, code});
+    return storage.expressions.back();
 }
 
 template<typename ArrayType>
@@ -116,47 +120,12 @@ BinaryTuple getBinaryTuple(Expression in) {
 }
 
 void clearMemory() {
-    dynamic_expressions.clear();
-    typed_expressions.clear();
-    evaluated_dictionaries.clear();
-    dictionaries.clear();
-    conditionals.clear();
-    is_expressions.clear();
-    alternatives.clear();
-    functions.clear();
-    built_in_functions.clear();
-    dictionary_functions.clear();
-    tuple_functions.clear();
-    tuples.clear();
-    evaluated_tuples.clear();
-    stacks.clear();
-    evaluated_stacks.clear();
-    tables.clear();
-    evaluated_tables.clear();
-    evaluated_table_views.clear();
-    child_lookups.clear();
-    function_applications.clear();
-    symbol_lookups.clear();
-    names.clear();
-    name_indices.clear();
-    arguments.clear();
-    numbers.clear();
-    while_statements.clear();
-    for_statements.clear();
-    for_simple_statements.clear();
-    while_end_statements.clear();
-    for_end_statements.clear();
-    definitions.clear();
-    put_assignments.clear();
-    put_each_assignments.clear();
-    drop_assignments.clear();
-    strings.clear();
-    expressions.clear();
+    storage = Storage{};
 }
 
 std::string getLog() {
     std::string log;
-    for (const auto expression : expressions) {
+    for (const auto expression : storage.expressions) {
         serialize(log, expression);
         log.append("\n");
     }
@@ -166,7 +135,7 @@ std::string getLog() {
 // MAKERS:
 
 Expression makeNumber(CodeRange code, Number expression) {
-    return makeExpression(code, expression, NUMBER, numbers);
+    return makeExpression(code, expression, NUMBER, storage.numbers);
 }
 
 Expression makeCharacter(CodeRange code, Character expression) {
@@ -174,205 +143,205 @@ Expression makeCharacter(CodeRange code, Character expression) {
 }
 
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression) {
-    return makeExpression(code, expression, DYNAMIC_EXPRESSION, dynamic_expressions);
+    return makeExpression(code, expression, DYNAMIC_EXPRESSION, storage.dynamic_expressions);
 }
 
 Expression makeTypedExpression(CodeRange code, TypedExpression expression) {
-    return makeExpression(code, expression, TYPED_EXPRESSION, typed_expressions);
+    return makeExpression(code, expression, TYPED_EXPRESSION, storage.typed_expressions);
 }
 
 Expression makeConditional(CodeRange code, Conditional expression) {
-    return makeExpression(code, expression, CONDITIONAL, conditionals);
+    return makeExpression(code, expression, CONDITIONAL, storage.conditionals);
 }
 
 Expression makeIs(CodeRange code, IsExpression expression) {
-    return makeExpression(code, expression, IS, is_expressions);
+    return makeExpression(code, expression, IS, storage.is_expressions);
 }
 
 Expression makeAlternative(CodeRange code, Alternative expression) {
-    return makeExpression(code, expression, ALTERNATIVE, alternatives);
+    return makeExpression(code, expression, ALTERNATIVE, storage.alternatives);
 }
 
 Expression makeDictionary(CodeRange code, Dictionary expression) {
-    return makeExpression(code, expression, DICTIONARY, dictionaries);
+    return makeExpression(code, expression, DICTIONARY, storage.dictionaries);
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
-    return makeExpression(code, expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+    return makeExpression(code, expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
-    return makeExpression(code, expression, FUNCTION, functions);
+    return makeExpression(code, expression, FUNCTION, storage.functions);
 }
 
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression) {
-    return makeExpression(code, expression, FUNCTION_BUILT_IN, built_in_functions);
+    return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
 }
 
 Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression) {
-    return makeExpression(code, expression, FUNCTION_DICTIONARY, dictionary_functions);
+    return makeExpression(code, expression, FUNCTION_DICTIONARY, storage.dictionary_functions);
 }
 
 Expression makeFunctionTuple(CodeRange code, FunctionTuple expression) {
-    return makeExpression(code, expression, FUNCTION_TUPLE, tuple_functions);
+    return makeExpression(code, expression, FUNCTION_TUPLE, storage.tuple_functions);
 }
 
 Expression makeTuple(CodeRange code, Tuple expression) {
-    return makeExpression(code, expression, TUPLE, tuples);
+    return makeExpression(code, expression, TUPLE, storage.tuples);
 }
 
 Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression) {
-    return makeExpression(code, expression, EVALUATED_TUPLE, evaluated_tuples);
+    return makeExpression(code, expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }
 
 Expression makeStack(CodeRange code, Stack expression) {
-    return makeExpression(code, expression, STACK, stacks);
+    return makeExpression(code, expression, STACK, storage.stacks);
 }
 
 Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
-    return makeExpression(code, expression, EVALUATED_STACK, evaluated_stacks);
+    return makeExpression(code, expression, EVALUATED_STACK, storage.evaluated_stacks);
 }
 
 Expression makeTable(CodeRange code, Table expression) {
-    return makeExpression(code, expression, TABLE, tables);
+    return makeExpression(code, expression, TABLE, storage.tables);
 }
 
 Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
-    return makeExpression(code, expression, EVALUATED_TABLE, evaluated_tables);
+    return makeExpression(code, expression, EVALUATED_TABLE, storage.evaluated_tables);
 }
 
 Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression) {
-    return makeExpression(code, expression, EVALUATED_TABLE_VIEW, evaluated_table_views);
+    return makeExpression(code, expression, EVALUATED_TABLE_VIEW, storage.evaluated_table_views);
 }
 
 Expression makeLookupChild(CodeRange code, LookupChild expression) {
-    return makeExpression(code, expression, LOOKUP_CHILD, child_lookups);
+    return makeExpression(code, expression, LOOKUP_CHILD, storage.child_lookups);
 }
 
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression) {
-    return makeExpression(code, expression, FUNCTION_APPLICATION, function_applications);
+    return makeExpression(code, expression, FUNCTION_APPLICATION, storage.function_applications);
 }
 
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
-    return makeExpression(code, expression, LOOKUP_SYMBOL, symbol_lookups);
+    return makeExpression(code, expression, LOOKUP_SYMBOL, storage.symbol_lookups);
 }
 
 Expression makeName(CodeRange code, Name expression) {
-    const auto name_index = name_indices.find(expression);
-    if (name_index == name_indices.end()) {
-        name_indices[expression] = names.size();
-        return makeExpression(code, expression, NAME, names);
+    const auto name_index = storage.name_indices.find(expression);
+    if (name_index == storage.name_indices.end()) {
+        storage.name_indices[expression] = storage.names.size();
+        return makeExpression(code, expression, NAME, storage.names);
     }
     else {
-        expressions.push_back(Expression{NAME, name_index->second, code});
-        return expressions.back();
+        storage.expressions.push_back(Expression{NAME, name_index->second, code});
+        return storage.expressions.back();
     }
 }
 
 Expression makeArgument(CodeRange code, Argument expression) {
-    return makeExpression(code, expression, ARGUMENT, arguments);
+    return makeExpression(code, expression, ARGUMENT, storage.arguments);
 }
 
 Expression makeDefinition(CodeRange code, Definition expression) {
-    return makeExpression(code, expression, DEFINITION, definitions);
+    return makeExpression(code, expression, DEFINITION, storage.definitions);
 }
 
 Expression makePutAssignment(CodeRange code, PutAssignment expression) {
-    return makeExpression(code, expression, PUT_ASSIGNMENT, put_assignments);
+    return makeExpression(code, expression, PUT_ASSIGNMENT, storage.put_assignments);
 }
 
 Expression makePutEachAssignment(CodeRange code, PutEachAssignment expression) {
-    return makeExpression(code, expression, PUT_EACH_ASSIGNMENT, put_each_assignments);
+    return makeExpression(code, expression, PUT_EACH_ASSIGNMENT, storage.put_each_assignments);
 }
 
 Expression makeDropAssignment(CodeRange code, DropAssignment expression) {
-    return makeExpression(code, expression, DROP_ASSIGNMENT, drop_assignments);
+    return makeExpression(code, expression, DROP_ASSIGNMENT, storage.drop_assignments);
 }
 
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
-    return makeExpression(code, expression, WHILE_STATEMENT, while_statements);
+    return makeExpression(code, expression, WHILE_STATEMENT, storage.while_statements);
 }
 
 Expression makeForStatement(CodeRange code, ForStatement expression) {
-    return makeExpression(code, expression, FOR_STATEMENT, for_statements);
+    return makeExpression(code, expression, FOR_STATEMENT, storage.for_statements);
 }
 
 Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression) {
-    return makeExpression(code, expression, FOR_SIMPLE_STATEMENT, for_simple_statements);
+    return makeExpression(code, expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
 }
 
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression) {
-    return makeExpression(code, expression, WHILE_END_STATEMENT, while_end_statements);
+    return makeExpression(code, expression, WHILE_END_STATEMENT, storage.while_end_statements);
 }
 
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression) {
-    return makeExpression(code, expression, FOR_END_STATEMENT, for_end_statements);
+    return makeExpression(code, expression, FOR_END_STATEMENT, storage.for_end_statements);
 }
 
 Expression makeString(CodeRange code, String expression) {
-    return makeExpression(code, expression, STRING, strings);
+    return makeExpression(code, expression, STRING, storage.strings);
 }
 
 // GETTERS
 
 DynamicExpression getDynamicExpression(Expression expression) {
-    return getExpression(expression, DYNAMIC_EXPRESSION, dynamic_expressions);
+    return getExpression(expression, DYNAMIC_EXPRESSION, storage.dynamic_expressions);
 }
 
 TypedExpression getTypedExpression(Expression expression) {
-    return getExpression(expression, TYPED_EXPRESSION, typed_expressions);
+    return getExpression(expression, TYPED_EXPRESSION, storage.typed_expressions);
 }
 
 Definition getDefinition(Expression expression) {
-    return getExpression(expression, DEFINITION, definitions);
+    return getExpression(expression, DEFINITION, storage.definitions);
 }
 
 PutAssignment getPutAssignment(Expression expression) {
-    return getExpression(expression, PUT_ASSIGNMENT, put_assignments);
+    return getExpression(expression, PUT_ASSIGNMENT, storage.put_assignments);
 }
 
 PutEachAssignment getPutEachAssignment(Expression expression) {
-    return getExpression(expression, PUT_EACH_ASSIGNMENT, put_each_assignments);
+    return getExpression(expression, PUT_EACH_ASSIGNMENT, storage.put_each_assignments);
 }
 
 DropAssignment getDropAssignment(Expression expression) {
-    return getExpression(expression, DROP_ASSIGNMENT, drop_assignments);
+    return getExpression(expression, DROP_ASSIGNMENT, storage.drop_assignments);
 }
 
 WhileStatement getWhileStatement(Expression expression) {
-    return getExpression(expression, WHILE_STATEMENT, while_statements);
+    return getExpression(expression, WHILE_STATEMENT, storage.while_statements);
 }
 
 WhileStatement& getMutableWhileStatement(Expression expression) {
-    return getMutableExpressionReference(expression, WHILE_STATEMENT, while_statements);
+    return getMutableExpressionReference(expression, WHILE_STATEMENT, storage.while_statements);
 }
 
 ForStatement getForStatement(Expression expression) {
-    return getExpression(expression, FOR_STATEMENT, for_statements);
+    return getExpression(expression, FOR_STATEMENT, storage.for_statements);
 }
 
 ForSimpleStatement getForSimpleStatement(Expression expression) {
-    return getExpression(expression, FOR_SIMPLE_STATEMENT, for_simple_statements);
+    return getExpression(expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
 }
 
 ForStatement& getMutableForStatement(Expression expression) {
-    return getMutableExpressionReference(expression, FOR_STATEMENT, for_statements);
+    return getMutableExpressionReference(expression, FOR_STATEMENT, storage.for_statements);
 }
 
 ForSimpleStatement& getMutableForSimpleStatement(Expression expression) {
-    return getMutableExpressionReference(expression, FOR_SIMPLE_STATEMENT, for_simple_statements);
+    return getMutableExpressionReference(expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
 }
 
 WhileEndStatement getWhileEndStatement(Expression expression) {
-    return getExpression(expression, WHILE_END_STATEMENT, while_end_statements);
+    return getExpression(expression, WHILE_END_STATEMENT, storage.while_end_statements);
 }
 
 ForEndStatement getForEndStatement(Expression expression) {
-    return getExpression(expression, FOR_END_STATEMENT, for_end_statements);
+    return getExpression(expression, FOR_END_STATEMENT, storage.for_end_statements);
 }
 
 Number getNumber(Expression expression) {
-    return getExpression(expression, NUMBER, numbers);
+    return getExpression(expression, NUMBER, storage.numbers);
 }
 
 Character getCharacter(Expression expression) {
@@ -386,96 +355,96 @@ Character getCharacter(Expression expression) {
 }
 
 Conditional getConditional(Expression expression) {
-    return getExpression(expression, CONDITIONAL, conditionals);
+    return getExpression(expression, CONDITIONAL, storage.conditionals);
 }
 
 IsExpression getIs(Expression expression) {
-    return getExpression(expression, IS, is_expressions);
+    return getExpression(expression, IS, storage.is_expressions);
 }
 
 Alternative getAlternative(Expression expression) {
-    return getExpression(expression, ALTERNATIVE, alternatives);
+    return getExpression(expression, ALTERNATIVE, storage.alternatives);
 }
 
 Dictionary getDictionary(Expression expression) {
-    return getExpression(expression, DICTIONARY, dictionaries);
+    return getExpression(expression, DICTIONARY, storage.dictionaries);
 }
 
 EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
-    return getExpression(expression, EVALUATED_DICTIONARY, evaluated_dictionaries);
+    return getExpression(expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
 }
 
 Table getTable(Expression expression) {
-    return getExpression(expression, TABLE, tables);
+    return getExpression(expression, TABLE, storage.tables);
 }
 
 const EvaluatedTable& getEvaluatedTable(Expression expression) {
-    return getImmutableExpressionReference(expression, EVALUATED_TABLE, evaluated_tables);
+    return getImmutableExpressionReference(expression, EVALUATED_TABLE, storage.evaluated_tables);
 }
 
 EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
-    return getMutableExpressionReference(expression, EVALUATED_TABLE, evaluated_tables);
+    return getMutableExpressionReference(expression, EVALUATED_TABLE, storage.evaluated_tables);
 }
 
 EvaluatedTableView getEvaluatedTableView(Expression expression) {
-    return getExpression(expression, EVALUATED_TABLE_VIEW, evaluated_table_views);
+    return getExpression(expression, EVALUATED_TABLE_VIEW, storage.evaluated_table_views);
 }
 
 Tuple getTuple(Expression expression) {
-    return getExpression(expression, TUPLE, tuples);
+    return getExpression(expression, TUPLE, storage.tuples);
 }
 
 EvaluatedTuple getEvaluatedTuple(Expression expression) {
-    return getExpression(expression, EVALUATED_TUPLE, evaluated_tuples);
+    return getExpression(expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }
 
 Function getFunction(Expression expression) {
-    return getExpression(expression, FUNCTION, functions);
+    return getExpression(expression, FUNCTION, storage.functions);
 }
 
 FunctionBuiltIn getFunctionBuiltIn(Expression expression) {
-    return getExpression(expression, FUNCTION_BUILT_IN, built_in_functions);
+    return getExpression(expression, FUNCTION_BUILT_IN, storage.built_in_functions);
 }
 
 FunctionDictionary getFunctionDictionary(Expression expression) {
-    return getExpression(expression, FUNCTION_DICTIONARY, dictionary_functions);
+    return getExpression(expression, FUNCTION_DICTIONARY, storage.dictionary_functions);
 }
 
 FunctionTuple getFunctionTuple(Expression expression) {
-    return getExpression(expression, FUNCTION_TUPLE, tuple_functions);
+    return getExpression(expression, FUNCTION_TUPLE, storage.tuple_functions);
 }
 
 Stack getStack(Expression expression) {
-    return getExpression(expression, STACK, stacks);
+    return getExpression(expression, STACK, storage.stacks);
 }
 
 EvaluatedStack getEvaluatedStack(Expression expression) {
-    return getExpression(expression, EVALUATED_STACK, evaluated_stacks);
+    return getExpression(expression, EVALUATED_STACK, storage.evaluated_stacks);
 }
 
 LookupChild getLookupChild(Expression expression) {
-    return getExpression(expression, LOOKUP_CHILD, child_lookups);
+    return getExpression(expression, LOOKUP_CHILD, storage.child_lookups);
 }
 
 FunctionApplication getFunctionApplication(Expression expression) {
     return getExpression(expression, FUNCTION_APPLICATION,
-        function_applications);
+        storage.function_applications);
 }
 
 LookupSymbol getLookupSymbol(Expression expression) {
-    return getExpression(expression, LOOKUP_SYMBOL, symbol_lookups);
+    return getExpression(expression, LOOKUP_SYMBOL, storage.symbol_lookups);
 }
 
 Name getName(Expression expression) {
-    return getExpression(expression, NAME, names);
+    return getExpression(expression, NAME, storage.names);
 }
 
 Argument getArgument(Expression expression) {
-    return getExpression(expression, ARGUMENT, arguments);
+    return getExpression(expression, ARGUMENT, storage.arguments);
 }
 
 String getString(Expression expression) {
-    return getExpression(expression, STRING, strings);
+    return getExpression(expression, STRING, storage.strings);
 }
 
 void setDictionaryDefinition(
@@ -487,7 +456,7 @@ void setDictionaryDefinition(
             + " got " + NAMES[evaluated_dictionary.type]
         };
     }
-    evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name_index].expression = value;
+    storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name_index].expression = value;
 }
 
 Expression getDictionaryDefinition(
@@ -499,5 +468,5 @@ Expression getDictionaryDefinition(
             + " got " + NAMES[evaluated_dictionary.type]
         };
     }
-    return evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name_index).expression;
+    return storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name_index).expression;
 }
