@@ -180,11 +180,10 @@ struct FunctionDictionary {
     Expression body;
 };
 
-// TODO: make cheaper to copy.
-// Use index range for name expressions, or fixed size on stack.
 struct FunctionTuple {
     Expression environment;
-    std::vector<Expression> arguments;
+    Expression first_argument;
+    Expression last_argument; // Exclusive, to handle empty range
     Expression body;
 };
 

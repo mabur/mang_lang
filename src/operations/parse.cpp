@@ -364,12 +364,17 @@ Expression parseFunctionTuple(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto argument = std::vector<Expression>{};
+
+    const auto first_argument = Expression{
+        ARGUMENT, storage.arguments.size(), CodeRange{}
+    };
+    auto last_argument = first_argument;
+    
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = parseArgument(code);
         code.first = end(name);
-        argument.push_back(name);
+        ++last_argument.index;
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, ')');
@@ -379,7 +384,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code.first = end(body);
     return makeFunctionTuple(
         CodeRange{first, code.begin()},
-        {Expression{}, argument, body}
+        {Expression{}, first_argument, last_argument, body}
     );
 }
 

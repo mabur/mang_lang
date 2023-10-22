@@ -225,15 +225,19 @@ Expression applyFunctionTuple(
 ) {
     const auto function_struct = getFunctionTuple(function);
     auto tuple = getEvaluatedTuple(input);
-    const auto& input_names = function_struct.arguments;
-    if (input_names.size() != tuple.expressions.size()) {
+
+    const auto first_argument = function_struct.first_argument;
+    const auto last_argument = function_struct.last_argument;
+    const auto num_inputs = last_argument.index - first_argument.index;
+    
+    if (num_inputs != tuple.expressions.size()) {
         throw std::runtime_error{"Wrong number of input to function_struct"};
     }
-    
-    const auto num_inputs = input_names.size();
+
+    auto argument_index = first_argument.index;
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto argument = getArgument(input_names.at(i));
+        const auto argument = storage.arguments.at(argument_index + i);
         const auto expression = tuple.expressions.at(i);
         checkArgument(evaluator, argument, expression, function_struct.environment);
         definitions.at(i) = Definition{argument.name, expression, i};
@@ -268,7 +272,10 @@ Expression evaluateFunctionTuple(
 ) {
     const auto function_tuple_struct = getFunctionTuple(function_tuple);
     return makeFunctionTuple(function_tuple.range, {
-        environment, function_tuple_struct.arguments, function_tuple_struct.body
+        environment,
+        function_tuple_struct.first_argument,
+        function_tuple_struct.last_argument,
+        function_tuple_struct.body
     });
 }
 
