@@ -342,12 +342,10 @@ Expression parseFunctionDictionary(CodeRange code) {
     };
     auto last_argument = first_argument;
     
-    auto arguments = std::vector<Expression>{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         const auto argument = parseArgument(code);
         code.first = end(argument);
-        arguments.push_back(argument);
         ++last_argument.index;
         code = parseWhiteSpace(code);
     }
