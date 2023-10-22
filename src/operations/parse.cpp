@@ -336,12 +336,19 @@ Expression parseFunctionDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
+    
+    const auto first_argument = Expression{
+        ARGUMENT, storage.arguments.size(), CodeRange{}
+    };
+    auto last_argument = first_argument;
+    
     auto arguments = std::vector<Expression>{};
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         const auto argument = parseArgument(code);
         code.first = end(argument);
         arguments.push_back(argument);
+        ++last_argument.index;
         code = parseWhiteSpace(code);
     }
     code = parseCharacter(code, '}');
@@ -351,7 +358,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     code.first = end(body);
     return makeFunctionDictionary(
         CodeRange{first, code.begin()},
-        {Expression{}, arguments, body}
+        {Expression{}, first_argument, last_argument, body}
     );
 }
 

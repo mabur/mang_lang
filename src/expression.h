@@ -173,11 +173,10 @@ struct FunctionBuiltIn {
     std::function<Expression(Expression)> function;
 };
 
-// TODO: make cheaper to copy.
-// Use index range for name expressions, or fixed size on stack.
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
-    std::vector<Expression> arguments;
+    Expression first_argument;
+    Expression last_argument; // Exclusive, to handle empty range
     Expression body;
 };
 

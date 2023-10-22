@@ -11,8 +11,7 @@ void serializeName(std::string& s, Expression name) {
     s.append(getName(name));
 }
 
-void serializeArgument(std::string& s, Expression argument) {
-    const auto a = getArgument(argument);
+void serializeArgument(std::string& s, Argument a) {
     if (a.type.type != ANY) {
         serialize(s, a.type);
         s.append(":");
@@ -206,7 +205,7 @@ void serializeCharacter(std::string& s, Character character) {
 
 void serializeFunction(std::string& s, const Function& function) {
     s.append("in ");
-    serializeArgument(s, function.argument);
+    serializeArgument(s, getArgument(function.argument));
     s.append(" out ");
     serialize(s, function.body);
 }
@@ -214,11 +213,13 @@ void serializeFunction(std::string& s, const Function& function) {
 void serializeFunctionDictionary(std::string& s, const FunctionDictionary& function_dictionary) {
     s.append("in ");
     s.append("{");
-    for (const auto& name : function_dictionary.arguments) {
-        serializeArgument(s, name);
+    for (auto i = function_dictionary.first_argument.index; i < function_dictionary.last_argument.index; ++i) {
+    //for (const auto& name : function_dictionary.arguments) {
+        //serializeArgument(s, name);
+        serializeArgument(s, storage.arguments.at(i));
         s.append(" ");
     }
-    if (function_dictionary.arguments.empty()) {
+    if (function_dictionary.first_argument.index == function_dictionary.last_argument.index) {
         s.append("}");
     }
     else {
@@ -232,7 +233,7 @@ void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack)
     s.append("in ");
     s.append("(");
     for (const auto& name : function_stack.arguments) {
-        serializeArgument(s, name);
+        serializeArgument(s, getArgument(name));
         s.append(" ");
     }
     if (function_stack.arguments.empty()) {
@@ -372,7 +373,7 @@ void serialize(std::string& s, Expression expression) {
         case FUNCTION_APPLICATION: serializeFunctionApplication(s, getFunctionApplication(expression)); return;
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, getLookupSymbol(expression)); return;
         case NAME: serializeName(s, expression); return;
-        case ARGUMENT: serializeArgument(s, expression); return;
+        case ARGUMENT: serializeArgument(s, getArgument(expression)); return;
         case NUMBER: serializeNumber(s, getNumber(expression)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
         case STRING: serializeString(s, expression); return;
