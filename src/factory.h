@@ -4,6 +4,47 @@
 
 #include "expression.h"
 
+struct Storage {
+    std::vector<DynamicExpression> dynamic_expressions;
+    std::vector<TypedExpression> typed_expressions;
+    std::vector<EvaluatedDictionary> evaluated_dictionaries;
+    std::vector<Dictionary> dictionaries;
+    std::vector<Conditional> conditionals;
+    std::vector<IsExpression> is_expressions;
+    std::vector<Alternative> alternatives;
+    std::vector<Function> functions;
+    std::vector<FunctionBuiltIn> built_in_functions;
+    std::vector<FunctionDictionary> dictionary_functions;
+    std::vector<FunctionTuple> tuple_functions;
+    std::vector<Tuple> tuples;
+    std::vector<EvaluatedTuple> evaluated_tuples;
+    std::vector<Stack> stacks;
+    std::vector<EvaluatedStack> evaluated_stacks;
+    std::vector<Table> tables;
+    std::vector<EvaluatedTable> evaluated_tables;
+    std::vector<EvaluatedTableView> evaluated_table_views;
+    std::vector<LookupChild> child_lookups;
+    std::vector<FunctionApplication> function_applications;
+    std::vector<LookupSymbol> symbol_lookups;
+    std::vector<Name> names;
+    std::unordered_map<Name, size_t> name_indices;
+    std::vector<Argument> arguments;
+    std::vector<Number> numbers;
+    std::vector<WhileStatement> while_statements;
+    std::vector<ForStatement> for_statements;
+    std::vector<ForSimpleStatement> for_simple_statements;
+    std::vector<WhileEndStatement> while_end_statements;
+    std::vector<ForEndStatement> for_end_statements;
+    std::vector<Definition> definitions;
+    std::vector<PutAssignment> put_assignments;
+    std::vector<PutEachAssignment> put_each_assignments;
+    std::vector<DropAssignment> drop_assignments;
+    std::vector<String> strings;
+    std::vector<Expression> expressions;
+};
+
+extern Storage storage;
+
 struct BinaryTuple {
     Expression left;
     Expression right;
