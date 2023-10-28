@@ -299,10 +299,6 @@ FunctionBuiltIn getFunctionBuiltIn(Expression expression) {
     return getExpression(expression, FUNCTION_BUILT_IN, storage.built_in_functions);
 }
 
-FunctionDictionary getFunctionDictionary(Expression expression) {
-    return getExpression(expression, FUNCTION_DICTIONARY, storage.dictionary_functions);
-}
-
 Stack getStack(Expression expression) {
     return getExpression(expression, STACK, storage.stacks);
 }

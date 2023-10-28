@@ -204,7 +204,7 @@ Expression applyFunctionDictionary(
     Expression function,
     Expression input
 ) {
-    const auto function_struct = getFunctionDictionary(function);
+    const auto function_struct = storage.dictionary_functions.at(function.index);
     const auto evaluated_dictionary = getEvaluatedDictionary(input);
     for (auto i = function_struct.first_argument.index; i < function_struct.last_argument.index; ++i) {
     //for (const auto& a : function_struct.arguments) {
@@ -258,7 +258,7 @@ Expression evaluateFunction(Expression function, Expression environment) {
 Expression evaluateFunctionDictionary(
     Expression function_dictionary, Expression environment
 ) {
-    const auto function_dictionary_struct = getFunctionDictionary(function_dictionary);
+    const auto function_dictionary_struct = storage.dictionary_functions.at(function_dictionary.index);
     return makeFunctionDictionary(function_dictionary.range, {
         environment,
         function_dictionary_struct.first_argument,
