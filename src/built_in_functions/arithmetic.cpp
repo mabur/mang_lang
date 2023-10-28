@@ -124,7 +124,9 @@ Expression mod(Expression in) {
 Expression less(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "less");
     const auto tuple = getBinaryTuple(in);
-    return getNumber(tuple.left) < getNumber(tuple.right) ?
+    const auto left = storage.numbers.at(tuple.left.index);
+    const auto right = storage.numbers.at(tuple.right.index);
+    return left < right ?
         Expression{YES, 0, CodeRange{}} : Expression{NO, 0, CodeRange{}};
 }
 
