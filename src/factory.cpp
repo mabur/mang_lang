@@ -311,11 +311,6 @@ EvaluatedStack getEvaluatedStack(Expression expression) {
     return getExpression(expression, EVALUATED_STACK, storage.evaluated_stacks);
 }
 
-FunctionApplication getFunctionApplication(Expression expression) {
-    return getExpression(expression, FUNCTION_APPLICATION,
-        storage.function_applications);
-}
-
 Name getName(Expression expression) {
     return getExpression(expression, NAME, storage.names);
 }

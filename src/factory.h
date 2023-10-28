@@ -69,7 +69,6 @@ FunctionBuiltIn getFunctionBuiltIn(Expression expression);
 FunctionDictionary getFunctionDictionary(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
-FunctionApplication getFunctionApplication(Expression expression);
 Name getName(Expression expression);
 String getString(Expression expression);
 

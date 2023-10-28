@@ -368,7 +368,7 @@ void serialize(std::string& s, Expression expression) {
         case STACK: serializeStack(s, expression); return;
         case EVALUATED_STACK: serializeEvaluatedStack(s, expression); return;
         case LOOKUP_CHILD: serializeLookupChild(s, storage.child_lookups.at(expression.index)); return;
-        case FUNCTION_APPLICATION: serializeFunctionApplication(s, getFunctionApplication(expression)); return;
+        case FUNCTION_APPLICATION: serializeFunctionApplication(s, storage.function_applications.at(expression.index)); return;
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.at(expression.index)); return;
         case NAME: serializeName(s, expression); return;
         case ARGUMENT: serializeArgument(s, storage.arguments.at(expression.index)); return;
