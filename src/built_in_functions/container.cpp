@@ -201,17 +201,19 @@ Expression take(Expression in) {
 }
 
 Expression takeTyped(Expression in) {
-    switch (in.type) {
-        case EVALUATED_STACK: return getEvaluatedStack(in).top;
-        case STRING: return getString(in).top;
-        case EVALUATED_TABLE: return takeTableTyped(getEvaluatedTable(in), in);
-        case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in), in);
+    const auto type = in.type;
+    const auto index = in.index;
+    switch (type) {
+        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
+        case STRING: return storage.strings.at(index).top;
+        case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
+        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.at(index), in);
         case EMPTY_STACK: return Expression{ANY, 0, in.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "take");
+        default: throw UnexpectedExpression(type, "take");
     }
 }
 
