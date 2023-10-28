@@ -294,7 +294,7 @@ Expression parseDictionary(CodeRange code) {
                 for_indices.pop_back();
                 const auto for_statement_pointer = statements.at(for_index);
                 if (for_statement_pointer.type == FOR_STATEMENT) {
-                    auto& for_statement = getMutableForStatement(for_statement_pointer);
+                    auto& for_statement = storage.for_statements.at(for_statement_pointer.index);
                     for_statement.end_index_ = end_index;
                 }
                 else if (for_statement_pointer.type == FOR_SIMPLE_STATEMENT) {
