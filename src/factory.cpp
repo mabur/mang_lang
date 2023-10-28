@@ -263,10 +263,6 @@ EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
     return getMutableExpressionReference(expression, EVALUATED_TABLE, storage.evaluated_tables);
 }
 
-EvaluatedTableView getEvaluatedTableView(Expression expression) {
-    return getExpression(expression, EVALUATED_TABLE_VIEW, storage.evaluated_table_views);
-}
-
 EvaluatedTuple getEvaluatedTuple(Expression expression) {
     return getExpression(expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }
