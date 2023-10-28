@@ -13,8 +13,8 @@ namespace {
 void checkTypes(Expression super, Expression sub, const std::string& description);
 
 void checkTypesEvaluatedStack(Expression super, Expression sub, const std::string& description) {
-    const auto stack_super = getEvaluatedStack(super).top;
-    const auto stack_sub = getEvaluatedStack(sub).top;
+    const auto stack_super = storage.evaluated_stacks.at(super.index).top;
+    const auto stack_sub = storage.evaluated_stacks.at(sub.index).top;
     checkTypes(stack_super, stack_sub, description);
 }
 
