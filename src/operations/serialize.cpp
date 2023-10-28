@@ -355,7 +355,7 @@ void serialize(std::string& s, Expression expression) {
         case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, storage.put_each_assignments.at(expression.index)); return;
         case DROP_ASSIGNMENT: serializeDropAssignment(s, storage.drop_assignments.at(expression.index)); return;
         case WHILE_STATEMENT: serializeWhileStatement(s, storage.while_statements.at(expression.index)); return;
-        case FOR_STATEMENT: serializeForStatement(s, getForStatement(expression)); return;
+        case FOR_STATEMENT: serializeForStatement(s, storage.for_statements.at(expression.index)); return;
         case FOR_SIMPLE_STATEMENT: serializeForSimpleStatement(s, getForSimpleStatement(expression)); return;
         case FUNCTION: serializeFunction(s, getFunction(expression)); return;
         case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, getFunctionDictionary(expression)); return;

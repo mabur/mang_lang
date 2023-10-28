@@ -529,7 +529,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
             definitions.at(definition.name_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = getForStatement(statement);
+            const auto for_statement = storage.for_statements.at(statement.index);
             definitions.at(for_statement.name_index_item) = Definition{
                 for_statement.name_item,
                 Expression{ANY, 0, statement.range},
@@ -595,7 +595,7 @@ Expression evaluateDictionaryTypes(
             booleanTypes(evaluate_types(while_statement.expression, result));
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = getForStatement(statement);
+            const auto for_statement = storage.for_statements.at(statement.index);
             const auto container = getDictionaryDefinition(result, for_statement.name_index_container);
             booleanTypes(container);
             const auto value = container_functions::takeTyped(container);
@@ -614,7 +614,7 @@ Expression evaluateDictionaryTypes(
 
 size_t getContainerNameIndex(Expression expression) {
     switch (expression.type) {
-        case FOR_STATEMENT: return getForStatement(expression).name_index_container;
+        case FOR_STATEMENT: return storage.for_statements.at(expression.index).name_index_container;
         case FOR_SIMPLE_STATEMENT: return getForSimpleStatement(expression).name_index;
         default: throw UnexpectedExpression(expression.type, "getContainerNameIndex");
     }
@@ -684,7 +684,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             }
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = getForStatement(statement);
+            const auto for_statement = storage.for_statements.at(statement.index);
             const auto container = getDictionaryDefinition(result, for_statement.name_index_container);
             if (boolean(container)) {
                 const auto value = container_functions::take(container);

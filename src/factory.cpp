@@ -249,10 +249,6 @@ WhileStatement& getMutableWhileStatement(Expression expression) {
     return getMutableExpressionReference(expression, WHILE_STATEMENT, storage.while_statements);
 }
 
-ForStatement getForStatement(Expression expression) {
-    return getExpression(expression, FOR_STATEMENT, storage.for_statements);
-}
-
 ForSimpleStatement getForSimpleStatement(Expression expression) {
     return getExpression(expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
 }
