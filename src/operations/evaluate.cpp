@@ -188,7 +188,7 @@ Expression applyFunction(
     Expression function,
     Expression input
 ) {
-    const auto function_struct = getFunction(function);
+    const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument.index);
     checkArgument(evaluator, argument, input, function_struct.environment);
     const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
@@ -249,7 +249,7 @@ Expression applyFunctionTuple(
 }
 
 Expression evaluateFunction(Expression function, Expression environment) {
-    const auto function_struct = getFunction(function);
+    const auto function_struct = storage.functions.at(function.index);
     return makeFunction(function.range, {
         environment, function_struct.argument, function_struct.body
     });

@@ -357,7 +357,7 @@ void serialize(std::string& s, Expression expression) {
         case WHILE_STATEMENT: serializeWhileStatement(s, storage.while_statements.at(expression.index)); return;
         case FOR_STATEMENT: serializeForStatement(s, storage.for_statements.at(expression.index)); return;
         case FOR_SIMPLE_STATEMENT: serializeForSimpleStatement(s, storage.for_simple_statements.at(expression.index)); return;
-        case FUNCTION: serializeFunction(s, getFunction(expression)); return;
+        case FUNCTION: serializeFunction(s, storage.functions.at(expression.index)); return;
         case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, storage.dictionary_functions.at(expression.index)); return;
         case FUNCTION_TUPLE: serializeFunctionTuple(s, storage.tuple_functions.at(expression.index)); return;
         case TABLE: serializeTable(s, expression); return;

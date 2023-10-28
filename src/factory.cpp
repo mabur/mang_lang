@@ -291,10 +291,6 @@ EvaluatedTuple getEvaluatedTuple(Expression expression) {
     return getExpression(expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }
 
-Function getFunction(Expression expression) {
-    return getExpression(expression, FUNCTION, storage.functions);
-}
-
 Stack getStack(Expression expression) {
     return getExpression(expression, STACK, storage.stacks);
 }
