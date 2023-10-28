@@ -19,8 +19,8 @@ void checkTypesEvaluatedStack(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedTable(Expression super, Expression sub, const std::string& description) {
-    const auto table_super = getEvaluatedTable(super);
-    const auto table_sub = getEvaluatedTable(sub);
+    const auto table_super = storage.evaluated_tables.at(super.index);
+    const auto table_sub = storage.evaluated_tables.at(sub.index);
     if (table_super.empty()) return;
     if (table_sub.empty()) return;
     const auto row_super = table_super.begin()->second;
