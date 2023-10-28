@@ -167,7 +167,15 @@ Expression evaluateLookupChild(
 ) {
     const auto lookup_child_struct = storage.child_lookups.at(lookup_child.index);
     const auto child = evaluator(lookup_child_struct.child, environment);
-    const auto dictionary = getEvaluatedDictionary(child);
+    if (child.type != EVALUATED_DICTIONARY) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a type error."} +
+                "\nIt happens when trying to lookup a child in a dictionary, " +
+                "\nbut instead of a dictionary I got a" + NAMES[child.type] +
+                ".\n"
+        );
+    }
+    const auto dictionary = storage.evaluated_dictionaries.at(child.index);
     return dictionary.lookup(lookup_child_struct.name);
 }
 
