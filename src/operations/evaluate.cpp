@@ -389,7 +389,7 @@ bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
-        return getNumber(left) == getNumber(right);
+        return storage.numbers.at(left.index) == storage.numbers.at(right.index);
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return getCharacter(left) == getCharacter(right);
