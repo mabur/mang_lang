@@ -142,6 +142,7 @@ struct Argument {
     Expression name;
 };
 
+// TODO: type alias instead of struct?
 struct DynamicExpression {
     Expression expression;
 };
@@ -203,6 +204,7 @@ struct FunctionApplication {
     Expression child;
 };
 
+// TODO: type alias instead of struct?
 struct LookupSymbol {
     Expression name;
 };
