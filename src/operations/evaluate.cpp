@@ -543,7 +543,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
 Expression evaluateDictionaryTypes(
     Expression dictionary, Expression environment
 ) {
-    const auto dictionary_struct = getDictionary(dictionary);
+    const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
     const auto initial_definitions = initializeDefinitions(dictionary_struct);
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
@@ -621,7 +621,7 @@ size_t getContainerNameIndex(Expression expression) {
 }
 
 Expression evaluateDictionary(Expression dictionary, Expression environment) {
-    const auto dictionary_struct = getDictionary(dictionary);
+    const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
     const auto initial_definitions = initializeDefinitions(dictionary_struct);
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}

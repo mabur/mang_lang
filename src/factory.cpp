@@ -271,10 +271,6 @@ Character getCharacter(Expression expression) {
     return static_cast<Character>(expression.index);
 }
 
-Dictionary getDictionary(Expression expression) {
-    return getExpression(expression, DICTIONARY, storage.dictionaries);
-}
-
 EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
     return getExpression(expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
 }

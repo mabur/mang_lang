@@ -348,7 +348,7 @@ void serialize(std::string& s, Expression expression) {
         case CHARACTER: serializeCharacter(s, getCharacter(expression)); return;
         case CONDITIONAL: serializeConditional(s, storage.conditionals.at(expression.index)); return;
         case IS: serializeIs(s, storage.is_expressions.at(expression.index)); return;
-        case DICTIONARY: serializeDictionary(s, getDictionary(expression)); return;
+        case DICTIONARY: serializeDictionary(s, storage.dictionaries.at(expression.index)); return;
         case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); return;
         case DEFINITION: serializeDefinition(s, storage.definitions.at(expression.index)); return;
         case PUT_ASSIGNMENT: serializePutAssignment(s, storage.put_assignments.at(expression.index)); return;

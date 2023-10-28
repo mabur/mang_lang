@@ -59,7 +59,6 @@ ForStatement& getMutableForStatement(Expression expression);
 ForSimpleStatement& getMutableForSimpleStatement(Expression expression);
 Number getNumber(Expression expression);
 Character getCharacter(Expression expression);
-Dictionary getDictionary(Expression expression);
 EvaluatedDictionary getEvaluatedDictionary(Expression expression);
 Table getTable(Expression expression);
 const EvaluatedTable& getEvaluatedTable(Expression expression);
