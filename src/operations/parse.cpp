@@ -298,7 +298,7 @@ Expression parseDictionary(CodeRange code) {
                     for_statement.end_index_ = end_index;
                 }
                 else if (for_statement_pointer.type == FOR_SIMPLE_STATEMENT) {
-                    auto& for_statement = getMutableForSimpleStatement(for_statement_pointer);
+                    auto& for_statement = storage.for_simple_statements.at(for_statement_pointer.index);
                     for_statement.end_index_ = end_index;
                 }
                 statements.push_back(parseForEndStatement(code, for_index));

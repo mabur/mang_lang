@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-ForSimpleStatement& getMutableForSimpleStatement(Expression expression) {
-    return getMutableExpressionReference(expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
-}
-
 Number getNumber(Expression expression) {
     return getExpression(expression, NUMBER, storage.numbers);
 }
