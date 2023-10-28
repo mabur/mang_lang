@@ -524,7 +524,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     for (const auto& statement : dictionary.statements) {
         const auto type = statement.type;
         if (type == DEFINITION) {
-            auto definition = getDefinition(statement);
+            auto definition = storage.definitions.at(statement.index);
             definition.expression = Expression{ANY, 0, statement.range};
             definitions.at(definition.name_index) = definition;
         }
@@ -551,7 +551,7 @@ Expression evaluateDictionaryTypes(
     for (const auto& statement : dictionary_struct.statements) {
         const auto type = statement.type;
         if (type == DEFINITION) {
-            const auto definition = getDefinition(statement);
+            const auto definition = storage.definitions.at(statement.index);
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
             // TODO: is this a principled approach?
@@ -632,7 +632,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         const auto statement = statements.at(i);
         const auto type = statement.type;
         if (type == DEFINITION) {
-            const auto definition = getDefinition(statement);
+            const auto definition = storage.definitions.at(statement.index);
             const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
             setDictionaryDefinition(result, definition.name_index, value);

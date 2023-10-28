@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-Definition getDefinition(Expression expression) {
-    return getExpression(expression, DEFINITION, storage.definitions);
-}
-
 PutAssignment getPutAssignment(Expression expression) {
     return getExpression(expression, PUT_ASSIGNMENT, storage.put_assignments);
 }
