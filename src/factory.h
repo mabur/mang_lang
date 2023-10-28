@@ -70,7 +70,6 @@ FunctionDictionary getFunctionDictionary(Expression expression);
 FunctionTuple getFunctionTuple(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
-LookupChild getLookupChild(Expression expression);
 FunctionApplication getFunctionApplication(Expression expression);
 LookupSymbol getLookupSymbol(Expression expression);
 Name getName(Expression expression);

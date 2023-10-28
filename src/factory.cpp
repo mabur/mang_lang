@@ -315,10 +315,6 @@ EvaluatedStack getEvaluatedStack(Expression expression) {
     return getExpression(expression, EVALUATED_STACK, storage.evaluated_stacks);
 }
 
-LookupChild getLookupChild(Expression expression) {
-    return getExpression(expression, LOOKUP_CHILD, storage.child_lookups);
-}
-
 FunctionApplication getFunctionApplication(Expression expression) {
     return getExpression(expression, FUNCTION_APPLICATION,
         storage.function_applications);

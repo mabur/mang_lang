@@ -165,7 +165,7 @@ template<typename Evaluator>
 Expression evaluateLookupChild(
     Evaluator evaluator, Expression lookup_child, Expression environment
 ) {
-    const auto lookup_child_struct = getLookupChild(lookup_child);
+    const auto lookup_child_struct = storage.child_lookups.at(lookup_child.index);
     const auto child = evaluator(lookup_child_struct.child, environment);
     const auto dictionary = getEvaluatedDictionary(child);
     return dictionary.lookup(lookup_child_struct.name);
