@@ -704,7 +704,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             }
         }
         else if (type == WHILE_END_STATEMENT) {
-            const auto end_statement = getWhileEndStatement(statement);
+            const auto end_statement = storage.while_end_statements.at(statement.index);
             i = end_statement.while_index_;
         }
         else if (type == FOR_END_STATEMENT) {
