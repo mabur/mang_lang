@@ -346,7 +346,7 @@ void serialize_types(std::string& s, Expression expression) {
 void serialize(std::string& s, Expression expression) {
     switch (expression.type) {
         case CHARACTER: serializeCharacter(s, getCharacter(expression)); return;
-        case CONDITIONAL: serializeConditional(s, getConditional(expression)); return;
+        case CONDITIONAL: serializeConditional(s, storage.conditionals.at(expression.index)); return;
         case IS: serializeIs(s, getIs(expression)); return;
         case DICTIONARY: serializeDictionary(s, getDictionary(expression)); return;
         case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); return;

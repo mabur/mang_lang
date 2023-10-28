@@ -271,10 +271,6 @@ Character getCharacter(Expression expression) {
     return static_cast<Character>(expression.index);
 }
 
-Conditional getConditional(Expression expression) {
-    return getExpression(expression, CONDITIONAL, storage.conditionals);
-}
-
 IsExpression getIs(Expression expression) {
     return getExpression(expression, IS, storage.is_expressions);
 }

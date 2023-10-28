@@ -432,7 +432,7 @@ Expression evaluateDynamicExpression(Expression expression, Expression environme
 Expression evaluateConditionalTypes(
     Expression conditional, Expression environment
 ) {
-    const auto conditional_struct = getConditional(conditional);
+    const auto conditional_struct = storage.conditionals.at(conditional.index);
     for (auto alternative = conditional_struct.alternative_first;
         alternative.index <= conditional_struct.alternative_last.index;
         ++alternative.index
@@ -454,7 +454,7 @@ Expression evaluateConditionalTypes(
 }
 
 Expression evaluateConditional(Expression conditional, Expression environment) {
-    const auto conditional_struct = getConditional(conditional);
+    const auto conditional_struct = storage.conditionals.at(conditional.index);
     for (auto a = conditional_struct.alternative_first;
         a.index <= conditional_struct.alternative_last.index;
         ++a.index

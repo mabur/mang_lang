@@ -59,7 +59,6 @@ ForStatement& getMutableForStatement(Expression expression);
 ForSimpleStatement& getMutableForSimpleStatement(Expression expression);
 Number getNumber(Expression expression);
 Character getCharacter(Expression expression);
-Conditional getConditional(Expression expression);
 IsExpression getIs(Expression expression);
 Alternative getAlternative(Expression expression);
 Dictionary getDictionary(Expression expression);
