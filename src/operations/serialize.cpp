@@ -349,7 +349,7 @@ void serialize(std::string& s, Expression expression) {
         case CONDITIONAL: serializeConditional(s, storage.conditionals.at(expression.index)); return;
         case IS: serializeIs(s, storage.is_expressions.at(expression.index)); return;
         case DICTIONARY: serializeDictionary(s, storage.dictionaries.at(expression.index)); return;
-        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); return;
+        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, storage.evaluated_dictionaries.at(expression.index)); return;
         case DEFINITION: serializeDefinition(s, storage.definitions.at(expression.index)); return;
         case PUT_ASSIGNMENT: serializePutAssignment(s, storage.put_assignments.at(expression.index)); return;
         case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, storage.put_each_assignments.at(expression.index)); return;
@@ -361,8 +361,8 @@ void serialize(std::string& s, Expression expression) {
         case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, storage.dictionary_functions.at(expression.index)); return;
         case FUNCTION_TUPLE: serializeFunctionTuple(s, storage.tuple_functions.at(expression.index)); return;
         case TABLE: serializeTable(s, expression); return;
-        case EVALUATED_TABLE: serializeEvaluatedTable(s, getEvaluatedTable(expression).rows); return;
-        case EVALUATED_TABLE_VIEW: serializeEvaluatedTable(s, getEvaluatedTableView(expression)); return;
+        case EVALUATED_TABLE: serializeEvaluatedTable(s, storage.evaluated_tables.at(expression.index).rows); return;
+        case EVALUATED_TABLE_VIEW: serializeEvaluatedTable(s, storage.evaluated_table_views.at(expression.index)); return;
         case TUPLE: serializeTuple(s, expression); return;
         case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize, expression); return;
         case STACK: serializeStack(s, expression); return;
@@ -372,7 +372,7 @@ void serialize(std::string& s, Expression expression) {
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.at(expression.index)); return;
         case NAME: serializeName(s, expression); return;
         case ARGUMENT: serializeArgument(s, storage.arguments.at(expression.index)); return;
-        case NUMBER: serializeNumber(s, getNumber(expression)); return;
+        case NUMBER: serializeNumber(s, storage.numbers.at(expression.index)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
         case STRING: serializeString(s, expression); return;
         case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, storage.dynamic_expressions.at(expression.index)); return;
