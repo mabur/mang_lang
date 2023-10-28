@@ -230,10 +230,10 @@ Expression takeTyped(Expression in) {
 
 Expression drop(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return getEvaluatedStack(in).rest;
-        case STRING: return getString(in).rest;
-        case EVALUATED_TABLE: return dropTable(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return dropTable(getEvaluatedTableView(in));
+        case EVALUATED_STACK: return storage.evaluated_stacks.at(in.index).rest;
+        case STRING: return storage.strings.at(in.index).rest;
+        case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
+        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.at(in.index));
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
