@@ -275,10 +275,6 @@ EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
     return getExpression(expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
 }
 
-Table getTable(Expression expression) {
-    return getExpression(expression, TABLE, storage.tables);
-}
-
 const EvaluatedTable& getEvaluatedTable(Expression expression) {
     return getImmutableExpressionReference(expression, EVALUATED_TABLE, storage.evaluated_tables);
 }

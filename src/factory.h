@@ -60,7 +60,6 @@ ForSimpleStatement& getMutableForSimpleStatement(Expression expression);
 Number getNumber(Expression expression);
 Character getCharacter(Expression expression);
 EvaluatedDictionary getEvaluatedDictionary(Expression expression);
-Table getTable(Expression expression);
 const EvaluatedTable& getEvaluatedTable(Expression expression);
 EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 EvaluatedTableView getEvaluatedTableView(Expression expression);

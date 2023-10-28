@@ -245,7 +245,7 @@ void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack)
 }
     
 void serializeTable(std::string& s, Expression t) {
-    const auto rows = getTable(t).rows;
+    const auto rows = storage.tables.at(t.index).rows;
     if (rows.empty()) {
         s.append("<>");
         return;

@@ -148,7 +148,7 @@ Expression evaluateTable(
     Expression table,
     Expression environment
 ) {
-    const auto table_struct = getTable(table);
+    const auto table_struct = storage.tables.at(table.index);
     auto rows = std::map<std::string, Row>{};
     for (const auto& row : table_struct.rows) {
         const auto key = evaluator(row.key, environment);
