@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-DropAssignment getDropAssignment(Expression expression) {
-    return getExpression(expression, DROP_ASSIGNMENT, storage.drop_assignments);
-}
-
 WhileStatement getWhileStatement(Expression expression) {
     return getExpression(expression, WHILE_STATEMENT, storage.while_statements);
 }

@@ -54,7 +54,6 @@ BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
 
-DropAssignment getDropAssignment(Expression expression);
 WhileStatement getWhileStatement(Expression expression);
 WhileStatement& getMutableWhileStatement(Expression expression);
 ForStatement getForStatement(Expression expression);
