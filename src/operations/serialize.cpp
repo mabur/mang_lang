@@ -38,7 +38,7 @@ void serializeConditional(std::string& s, const Conditional& conditional) {
         a.index <= conditional.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         serialize(s, alternative.left);
         s.append(" then ");
         serialize(s, alternative.right);
@@ -56,7 +56,7 @@ void serializeIs(std::string& s, const IsExpression& is_expression) {
         a.index <= is_expression.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         serialize(s, alternative.left);
         s.append(" then ");
         serialize(s, alternative.right);

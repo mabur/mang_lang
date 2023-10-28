@@ -437,14 +437,14 @@ Expression evaluateConditionalTypes(
         alternative.index <= conditional_struct.alternative_last.index;
         ++alternative.index
     ) {
-        evaluate_types(getAlternative(alternative).left, environment);
+        evaluate_types(storage.alternatives.at(alternative.index).left, environment);
     }
     const auto else_expression = evaluate_types(conditional_struct.expression_else, environment);
     for (auto a = conditional_struct.alternative_first;
         a.index <= conditional_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         const auto alternative_expression = evaluate_types(
             alternative.right, environment
         );
@@ -459,7 +459,7 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
         a.index <= conditional_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         const auto left_value = evaluate(alternative.left, environment);
         if (boolean(left_value)) {
             return evaluate(alternative.right, environment);
@@ -477,7 +477,7 @@ Expression evaluateIsTypes(
         a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         evaluate_types(alternative.left, environment);
     }
     const auto else_expression = evaluate_types(is_struct.expression_else, environment);
@@ -485,7 +485,7 @@ Expression evaluateIsTypes(
         a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         const auto alternative_expression = evaluate_types(alternative.right, environment);
         checkTypes(else_expression, alternative_expression, "is");
     }
@@ -499,7 +499,7 @@ Expression evaluateIs(Expression is, Expression environment) {
         a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = getAlternative(a);
+        const auto alternative = storage.alternatives.at(a.index);
         const auto left_value = evaluate(alternative.left, environment);
         if (isEqual(value, left_value)) {
             return evaluate(alternative.right, environment);
