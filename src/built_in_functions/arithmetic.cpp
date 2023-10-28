@@ -132,22 +132,22 @@ Expression less(Expression in) {
 
 Expression sqrt(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "sqrt");
-    return makeNumber(std::sqrt(getNumber(in)));
+    return makeNumber(std::sqrt(storage.numbers.at(in.index)));
 }
 
 Expression round(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round");
-    return makeNumber(std::round(getNumber(in)));
+    return makeNumber(std::round(storage.numbers.at(in.index)));
 }
 
 Expression round_up(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_up");
-    return makeNumber(std::ceil(getNumber(in)));
+    return makeNumber(std::ceil(storage.numbers.at(in.index)));
 }
 
 Expression round_down(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_down");
-    return makeNumber(std::floor(getNumber(in)));
+    return makeNumber(std::floor(storage.numbers.at(in.index)));
 }
 
 Expression ascii_number(Expression in) {
@@ -156,7 +156,7 @@ Expression ascii_number(Expression in) {
 
 Expression ascii_character(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "ascii_character");
-    return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
+    return makeCharacter(CodeRange{}, static_cast<char>(storage.numbers.at(in.index)));
 }
 
 Expression FunctionNumberToNumber::operator()(Expression in) const {
