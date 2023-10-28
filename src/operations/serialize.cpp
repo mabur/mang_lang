@@ -130,7 +130,7 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
 
 template<typename Serializer>
 void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t) {
-    const auto expressions = getEvaluatedTuple(t).expressions;
+    const auto& expressions = storage.evaluated_tuples.at(t.index).expressions;
     if (expressions.empty()) {
         s.append("()");
         return;
@@ -262,7 +262,7 @@ void serializeTable(std::string& s, Expression t) {
 }
 
 void serializeTypesEvaluatedTable(std::string& s, Expression t) {
-    const auto& rows = getEvaluatedTable(t).rows;
+    const auto& rows = storage.evaluated_tables.at(t.index).rows;
     if (rows.empty()) {
         s.append("<>");
         return;
@@ -294,7 +294,7 @@ void serializeEvaluatedTable(std::string& s, const Table& table) {
 
 void serializeTypesEvaluatedStack(std::string& s, Expression e) {
     s.append("[");
-    serialize_types(s, getEvaluatedStack(e).top);
+    serialize_types(s, storage.evaluated_stacks.at(e.index).top);
     s.append("]");
 }
 
