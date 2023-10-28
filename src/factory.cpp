@@ -287,10 +287,6 @@ EvaluatedTableView getEvaluatedTableView(Expression expression) {
     return getExpression(expression, EVALUATED_TABLE_VIEW, storage.evaluated_table_views);
 }
 
-Tuple getTuple(Expression expression) {
-    return getExpression(expression, TUPLE, storage.tuples);
-}
-
 EvaluatedTuple getEvaluatedTuple(Expression expression) {
     return getExpression(expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }

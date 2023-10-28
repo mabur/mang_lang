@@ -63,7 +63,6 @@ EvaluatedDictionary getEvaluatedDictionary(Expression expression);
 const EvaluatedTable& getEvaluatedTable(Expression expression);
 EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 EvaluatedTableView getEvaluatedTableView(Expression expression);
-Tuple getTuple(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);
 Function getFunction(Expression expression);
 FunctionBuiltIn getFunctionBuiltIn(Expression expression);

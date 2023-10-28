@@ -131,7 +131,7 @@ template<typename Evaluator>
 Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
-    const auto tuple_struct = getTuple(tuple);
+    const auto tuple_struct = storage.tuples.at(tuple.index);
     auto evaluated_expressions = std::vector<Expression>{};
     evaluated_expressions.reserve(tuple_struct.expressions.size());
     for (const auto& expression : tuple_struct.expressions) {

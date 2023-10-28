@@ -173,7 +173,7 @@ void serializeDictionary(std::string& s, const Dictionary& dictionary) {
 }
 
 void serializeTuple(std::string& s, Expression t) {
-    const auto expressions = getTuple(t).expressions;
+    const auto expressions = storage.tuples.at(t.index).expressions;
     if (expressions.empty()) {
         s.append("()");
         return;
