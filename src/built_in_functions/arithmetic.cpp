@@ -87,7 +87,9 @@ Expression makeNumber(double x) {
 template <typename BinaryOperation>
 Expression binaryOperation(Expression in, BinaryOperation operation) {
     const auto tuple = getBinaryTuple(in);
-    return makeNumber(operation(getNumber(tuple.left), getNumber(tuple.right)));
+    const auto left = storage.numbers.at(tuple.left.index);
+    const auto right = storage.numbers.at(tuple.right.index);
+    return makeNumber(operation(left, right));
 }
 
 } // namespace
