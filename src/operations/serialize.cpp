@@ -334,7 +334,7 @@ void serializeString(std::string& s, Expression expression) {
 
 void serialize_types(std::string& s, Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, getEvaluatedDictionary(expression)); return;
+        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.at(expression.index)); return;
         case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize_types, expression); return;
         case EVALUATED_STACK: serializeTypesEvaluatedStack(s, expression); return;
         case EVALUATED_TABLE: serializeTypesEvaluatedTable(s, expression); return;
