@@ -351,7 +351,7 @@ void serialize(std::string& s, Expression expression) {
         case DICTIONARY: serializeDictionary(s, getDictionary(expression)); return;
         case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, getEvaluatedDictionary(expression)); return;
         case DEFINITION: serializeDefinition(s, storage.definitions.at(expression.index)); return;
-        case PUT_ASSIGNMENT: serializePutAssignment(s, getPutAssignment(expression)); return;
+        case PUT_ASSIGNMENT: serializePutAssignment(s, storage.put_assignments.at(expression.index)); return;
         case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, getPutEachAssignment(expression)); return;
         case DROP_ASSIGNMENT: serializeDropAssignment(s, getDropAssignment(expression)); return;
         case WHILE_STATEMENT: serializeWhileStatement(s, getWhileStatement(expression)); return;

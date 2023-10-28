@@ -560,7 +560,7 @@ Expression evaluateDictionaryTypes(
             }
         }
         else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = getPutAssignment(statement);
+            const auto put_assignment = storage.put_assignments.at(statement.index);
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name_index);
@@ -639,7 +639,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = getPutAssignment(statement);
+            const auto put_assignment = storage.put_assignments.at(statement.index);
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name_index);

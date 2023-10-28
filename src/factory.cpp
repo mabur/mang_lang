@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-PutAssignment getPutAssignment(Expression expression) {
-    return getExpression(expression, PUT_ASSIGNMENT, storage.put_assignments);
-}
-
 PutEachAssignment getPutEachAssignment(Expression expression) {
     return getExpression(expression, PUT_EACH_ASSIGNMENT, storage.put_each_assignments);
 }
