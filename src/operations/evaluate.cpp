@@ -471,7 +471,7 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
 Expression evaluateIsTypes(
     Expression is, Expression environment
 ) {
-    const auto is_struct = getIs(is);
+    const auto is_struct = storage.is_expressions.at(is.index);
     evaluate_types(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
         a.index <= is_struct.alternative_last.index;
@@ -493,7 +493,7 @@ Expression evaluateIsTypes(
 }
 
 Expression evaluateIs(Expression is, Expression environment) {
-    const auto is_struct = getIs(is);
+    const auto is_struct = storage.is_expressions.at(is.index);
     const auto value = evaluate(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
         a.index <= is_struct.alternative_last.index;
