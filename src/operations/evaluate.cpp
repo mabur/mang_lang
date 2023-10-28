@@ -30,8 +30,8 @@ void checkTypesEvaluatedTable(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::string& description) {
-    const auto tuple_super = getEvaluatedTuple(super);
-    const auto tuple_sub = getEvaluatedTuple(sub);
+    const auto tuple_super = storage.evaluated_tuples.at(super.index);
+    const auto tuple_sub = storage.evaluated_tuples.at(sub.index);
     if (tuple_super.expressions.size() != tuple_sub.expressions.size()) {
         throw std::runtime_error(
             "Static type error in " + description + ". Inconsistent tuple size."
