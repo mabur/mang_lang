@@ -285,7 +285,7 @@ Expression parseDictionary(CodeRange code) {
                 const auto while_index = while_indices.back();
                 while_indices.pop_back();
                 const auto while_statement_pointer = statements.at(while_index);
-                auto& while_statement = getMutableWhileStatement(while_statement_pointer);
+                auto& while_statement = storage.while_statements.at(while_statement_pointer.index);
                 while_statement.end_index_ = end_index;
                 statements.push_back(parseWhileEndStatement(code, while_index));
             } else {
