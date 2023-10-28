@@ -317,17 +317,19 @@ void booleanTypes(Expression expression) {
 }
 
 bool boolean(Expression expression) {
-    switch (expression.type) {
-        case EVALUATED_TABLE: return !storage.evaluated_tables.at(expression.index).empty();
-        case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.at(expression.index).empty();
-        case NUMBER: return static_cast<bool>(getNumber(expression));
+    const auto type = expression.type;
+    const auto index = expression.index;
+    switch (type) {
+        case EVALUATED_TABLE: return !storage.evaluated_tables.at(index).empty();
+        case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.at(index).empty();
+        case NUMBER: return static_cast<bool>(storage.numbers.at(index));
         case YES: return true;
         case NO: return false;
         case EVALUATED_STACK: return true;
         case EMPTY_STACK: return false;
         case STRING: return true;
         case EMPTY_STRING: return false;
-        default: throw UnexpectedExpression(expression.type, "boolean operation");
+        default: throw UnexpectedExpression(type, "boolean operation");
     }
 }
 
