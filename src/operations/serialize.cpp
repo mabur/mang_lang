@@ -205,7 +205,7 @@ void serializeCharacter(std::string& s, Character character) {
 
 void serializeFunction(std::string& s, const Function& function) {
     s.append("in ");
-    serializeArgument(s, getArgument(function.argument));
+    serializeArgument(s, storage.arguments.at(function.argument.index));
     s.append(" out ");
     serialize(s, function.body);
 }
@@ -371,7 +371,7 @@ void serialize(std::string& s, Expression expression) {
         case FUNCTION_APPLICATION: serializeFunctionApplication(s, getFunctionApplication(expression)); return;
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.at(expression.index)); return;
         case NAME: serializeName(s, expression); return;
-        case ARGUMENT: serializeArgument(s, getArgument(expression)); return;
+        case ARGUMENT: serializeArgument(s, storage.arguments.at(expression.index)); return;
         case NUMBER: serializeNumber(s, getNumber(expression)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
         case STRING: serializeString(s, expression); return;

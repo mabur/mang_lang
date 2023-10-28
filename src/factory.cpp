@@ -320,10 +320,6 @@ Name getName(Expression expression) {
     return getExpression(expression, NAME, storage.names);
 }
 
-Argument getArgument(Expression expression) {
-    return getExpression(expression, ARGUMENT, storage.arguments);
-}
-
 String getString(Expression expression) {
     return getExpression(expression, STRING, storage.strings);
 }
