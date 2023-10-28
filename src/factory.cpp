@@ -255,10 +255,6 @@ Character getCharacter(Expression expression) {
     return static_cast<Character>(expression.index);
 }
 
-EvaluatedDictionary getEvaluatedDictionary(Expression expression) {
-    return getExpression(expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
-}
-
 const EvaluatedTable& getEvaluatedTable(Expression expression) {
     return getImmutableExpressionReference(expression, EVALUATED_TABLE, storage.evaluated_tables);
 }

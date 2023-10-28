@@ -55,7 +55,6 @@ void clearMemory();
 std::string getLog();
 
 Character getCharacter(Expression expression);
-EvaluatedDictionary getEvaluatedDictionary(Expression expression);
 const EvaluatedTable& getEvaluatedTable(Expression expression);
 EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 EvaluatedTableView getEvaluatedTableView(Expression expression);
