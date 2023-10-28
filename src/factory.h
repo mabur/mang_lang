@@ -54,7 +54,6 @@ BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
 
-TypedExpression getTypedExpression(Expression expression);
 Definition getDefinition(Expression expression);
 PutAssignment getPutAssignment(Expression expression);
 PutEachAssignment getPutEachAssignment(Expression expression);

@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-TypedExpression getTypedExpression(Expression expression) {
-    return getExpression(expression, TYPED_EXPRESSION, storage.typed_expressions);
-}
-
 Definition getDefinition(Expression expression) {
     return getExpression(expression, DEFINITION, storage.definitions);
 }

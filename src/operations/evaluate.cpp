@@ -512,7 +512,7 @@ template<typename Evaluator>
 Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
-    const auto expression_struct = getTypedExpression(expression);
+    const auto expression_struct = storage.typed_expressions.at(expression.index);
     const auto type = evaluator(expression_struct.type, environment);
     const auto value = evaluator(expression_struct.value, environment);
     checkTypes(type, value, "typed expression");
