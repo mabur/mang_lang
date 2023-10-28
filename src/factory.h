@@ -71,7 +71,6 @@ FunctionTuple getFunctionTuple(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
 FunctionApplication getFunctionApplication(Expression expression);
-LookupSymbol getLookupSymbol(Expression expression);
 Name getName(Expression expression);
 Argument getArgument(Expression expression);
 String getString(Expression expression);

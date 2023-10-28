@@ -320,10 +320,6 @@ FunctionApplication getFunctionApplication(Expression expression) {
         storage.function_applications);
 }
 
-LookupSymbol getLookupSymbol(Expression expression) {
-    return getExpression(expression, LOOKUP_SYMBOL, storage.symbol_lookups);
-}
-
 Name getName(Expression expression) {
     return getExpression(expression, NAME, storage.names);
 }
