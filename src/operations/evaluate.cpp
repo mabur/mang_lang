@@ -19,8 +19,8 @@ void checkTypesEvaluatedStack(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedTable(Expression super, Expression sub, const std::string& description) {
-    const auto table_super = storage.evaluated_tables.at(super.index);
-    const auto table_sub = storage.evaluated_tables.at(sub.index);
+    const auto& table_super = storage.evaluated_tables.at(super.index);
+    const auto& table_sub = storage.evaluated_tables.at(sub.index);
     if (table_super.empty()) return;
     if (table_sub.empty()) return;
     const auto row_super = table_super.begin()->second;
@@ -30,8 +30,8 @@ void checkTypesEvaluatedTable(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::string& description) {
-    const auto tuple_super = storage.evaluated_tuples.at(super.index);
-    const auto tuple_sub = storage.evaluated_tuples.at(sub.index);
+    const auto& tuple_super = storage.evaluated_tuples.at(super.index);
+    const auto& tuple_sub = storage.evaluated_tuples.at(sub.index);
     if (tuple_super.expressions.size() != tuple_sub.expressions.size()) {
         throw std::runtime_error(
             "Static type error in " + description + ". Inconsistent tuple size."
@@ -44,8 +44,8 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
-    const auto dictionary_super = storage.evaluated_dictionaries.at(super.index);
-    const auto dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
+    const auto& dictionary_super = storage.evaluated_dictionaries.at(super.index);
+    const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
     for (const auto& definition_super : dictionary_super.definitions) {
         const auto name_super = definition_super.name;
         const auto value_sub = dictionary_sub.optionalLookup(name_super);
