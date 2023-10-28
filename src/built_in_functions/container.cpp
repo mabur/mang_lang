@@ -142,12 +142,12 @@ Expression putTyped(Expression in) {
     switch (collection.type) {
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
-        case STRING: return collection;
+        case STRING: return collection; // TODO: type check item
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
-        case YES: return item;
-        case NO: return item;
+        case YES: return item; // TODO: type check item
+        case NO: return item;// TODO: type check item
         default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
 }
