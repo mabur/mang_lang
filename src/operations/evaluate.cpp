@@ -294,7 +294,7 @@ Expression lookupDictionary(Expression name, Expression expression) {
 Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
-    const auto function_struct = getFunctionBuiltIn(function);
+    const auto function_struct = storage.built_in_functions.at(function.index);
     return function_struct.function(input);
 }
 

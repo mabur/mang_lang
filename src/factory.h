@@ -65,7 +65,6 @@ EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 EvaluatedTableView getEvaluatedTableView(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);
 Function getFunction(Expression expression);
-FunctionBuiltIn getFunctionBuiltIn(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
 Name getName(Expression expression);
