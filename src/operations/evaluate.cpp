@@ -591,7 +591,7 @@ Expression evaluateDictionaryTypes(
             setDictionaryDefinition(result, drop_assignment.name_index, new_value);
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = getWhileStatement(statement);
+            const auto while_statement = storage.while_statements.at(statement.index);
             booleanTypes(evaluate_types(while_statement.expression, result));
         }
         else if (type == FOR_STATEMENT) {
@@ -676,7 +676,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = getWhileStatement(statement);
+            const auto while_statement = storage.while_statements.at(statement.index);
             if (boolean(evaluate(while_statement.expression, result))) {
                 i += 1;
             } else {

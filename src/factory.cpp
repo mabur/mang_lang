@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-WhileStatement getWhileStatement(Expression expression) {
-    return getExpression(expression, WHILE_STATEMENT, storage.while_statements);
-}
-
 WhileStatement& getMutableWhileStatement(Expression expression) {
     return getMutableExpressionReference(expression, WHILE_STATEMENT, storage.while_statements);
 }
