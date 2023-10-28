@@ -55,7 +55,6 @@ void clearMemory();
 std::string getLog();
 
 WhileStatement& getMutableWhileStatement(Expression expression);
-ForSimpleStatement getForSimpleStatement(Expression expression);
 ForStatement& getMutableForStatement(Expression expression);
 ForSimpleStatement& getMutableForSimpleStatement(Expression expression);
 WhileEndStatement getWhileEndStatement(Expression expression);
