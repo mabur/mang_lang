@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-Number getNumber(Expression expression) {
-    return getExpression(expression, NUMBER, storage.numbers);
-}
-
 Character getCharacter(Expression expression) {
     if (expression.type != CHARACTER) {
         throw std::runtime_error{

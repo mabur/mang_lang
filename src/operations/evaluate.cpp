@@ -343,7 +343,16 @@ size_t getIndex(Number number) {
 
 Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto tuple_struct = getEvaluatedTuple(tuple);
-    const auto number = getNumber(input);
+    if (input.type != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a type error."} +
+                "\nIt happens when indexing a tuple. " +
+                "\nThe index is expected to be a " + NAMES[NUMBER] + "," +
+                "\nbut now it is a" + NAMES[input.type] +
+                ".\n"
+        );
+    }
+    const auto number = storage.numbers.at(input.index);
     const auto i = getIndex(number);
     try {
         return tuple_struct.expressions.at(i);
@@ -737,7 +746,16 @@ Expression applyTableIndexing(Expression table, Expression key) {
 }
 
 Expression applyStackIndexing(Expression stack, Expression input) {
-    const auto number = getNumber(input);
+    if (input.type != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens when indexing a stack. " +
+                "\nThe index is expected to be a " + NAMES[NUMBER] + "," +
+                "\nbut now it is a" + NAMES[input.type] +
+                ".\n"
+        );
+    }
+    const auto number = storage.numbers.at(input.index);
     const auto index = getIndex(number);
     auto stack_struct = getEvaluatedStack(stack);
     for (size_t i = 0; i < index; ++i) {
@@ -750,7 +768,16 @@ Expression applyStackIndexing(Expression stack, Expression input) {
 }
 
 Expression applyStringIndexing(Expression string, Expression input) {
-    const auto number = getNumber(input);
+    if (input.type != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens when indexing a string. " +
+                "\nThe index is expected to be a " + NAMES[NUMBER] + "," +
+                "\nbut now it is a" + NAMES[input.type] +
+                ".\n"
+        );
+    }
+    const auto number = storage.numbers.at(input.index);
     const auto index = getIndex(number);
     auto string_struct = getString(string);
     for (size_t i = 0; i < index; ++i) {

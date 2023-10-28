@@ -54,7 +54,6 @@ BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
 
-Number getNumber(Expression expression);
 Character getCharacter(Expression expression);
 EvaluatedDictionary getEvaluatedDictionary(Expression expression);
 const EvaluatedTable& getEvaluatedTable(Expression expression);
