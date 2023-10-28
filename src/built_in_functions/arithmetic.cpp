@@ -151,6 +151,7 @@ Expression round_down(Expression in) {
 }
 
 Expression ascii_number(Expression in) {
+    checkDynamicTypeUnaryFunction(in, CHARACTER, "ascii_number");
     return makeNumber(getCharacter(in));
 }
 
