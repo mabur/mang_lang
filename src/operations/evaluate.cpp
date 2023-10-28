@@ -425,7 +425,8 @@ Expression evaluateDynamicExpressionTyped(Expression expression) {
 }
 
 Expression evaluateDynamicExpression(Expression expression, Expression environment) {
-    return evaluate(getDynamicExpression(expression).expression, environment);
+    const auto inner_expression = storage.dynamic_expressions.at(expression.index).expression;
+    return evaluate(inner_expression, environment);
 }
 
 Expression evaluateConditionalTypes(

@@ -375,7 +375,7 @@ void serialize(std::string& s, Expression expression) {
         case NUMBER: serializeNumber(s, getNumber(expression)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
         case STRING: serializeString(s, expression); return;
-        case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, getDynamicExpression(expression)); return;
+        case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, storage.dynamic_expressions.at(expression.index)); return;
         case TYPED_EXPRESSION: serializeTypedExpression(s, getTypedExpression(expression)); return;
         case EMPTY_STACK: s.append("[]"); return;
         case YES: s.append("yes"); return;

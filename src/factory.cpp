@@ -245,10 +245,6 @@ Expression makeString(CodeRange code, String expression) {
 
 // GETTERS
 
-DynamicExpression getDynamicExpression(Expression expression) {
-    return getExpression(expression, DYNAMIC_EXPRESSION, storage.dynamic_expressions);
-}
-
 TypedExpression getTypedExpression(Expression expression) {
     return getExpression(expression, TYPED_EXPRESSION, storage.typed_expressions);
 }
