@@ -571,7 +571,7 @@ Expression evaluateDictionaryTypes(
             setDictionaryDefinition(result, put_assignment.name_index, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
-            const auto put_each_assignment = getPutEachAssignment(statement);
+            const auto put_each_assignment = storage.put_each_assignments.at(statement.index);
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
             {
@@ -651,7 +651,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
-            const auto put_each_assignment = getPutEachAssignment(statement);
+            const auto put_each_assignment = storage.put_each_assignments.at(statement.index);
             const auto right_expression = put_each_assignment.expression;
             for (
                 auto container = evaluate(right_expression, result);
