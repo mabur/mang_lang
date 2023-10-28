@@ -186,15 +186,17 @@ Expression dropNumber(Expression in) {
 }
 
 Expression take(Expression in) {
-    switch (in.type) {
-        case EVALUATED_STACK: return getEvaluatedStack(in).top;
-        case STRING: return getString(in).top;
-        case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
+    const auto type = in.type;
+    const auto index = in.index;
+    switch (type) {
+        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
+        case STRING: return storage.strings.at(index).top;
+        case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
+        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.at(index));
         case NUMBER: return makeNumber({}, 1);
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "take");
+        default: throw UnexpectedExpression(type, "take");
     }
 }
 
