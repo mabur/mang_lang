@@ -283,7 +283,7 @@ Expression lookupDictionary(Expression name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(getName(name), "environment of type " + NAMES[expression.type]);
     }
-    const auto dictionary = getEvaluatedDictionary(expression);
+    const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
     const auto result = dictionary.optionalLookup(name);
     if (result) {
         return *result;
