@@ -356,7 +356,7 @@ size_t getIndex(Number number) {
 }
 
 Expression applyTupleIndexing(Expression tuple, Expression input) {
-    const auto tuple_struct = getEvaluatedTuple(tuple);
+    const auto& tuple_struct = storage.evaluated_tuples.at(tuple.index);
     if (input.type != NUMBER) {
         throw std::runtime_error(
             std::string{"\n\nI have found a type error."} +
@@ -748,7 +748,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 }
 
 Expression applyTableIndexing(Expression table, Expression key) {
-    const auto table_struct = getEvaluatedTable(table);
+    const auto& table_struct = storage.evaluated_tables.at(table.index);
     std::string k;
     serialize(k, key);
     try {
@@ -771,7 +771,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
     }
     const auto number = storage.numbers.at(input.index);
     const auto index = getIndex(number);
-    auto stack_struct = getEvaluatedStack(stack);
+    auto stack_struct = storage.evaluated_stacks.at(stack.index);
     for (size_t i = 0; i < index; ++i) {
         if (stack_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("Stack index out of range");
@@ -793,7 +793,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
     }
     const auto number = storage.numbers.at(input.index);
     const auto index = getIndex(number);
-    auto string_struct = getString(string);
+    auto string_struct = storage.strings.at(string.index);
     for (size_t i = 0; i < index; ++i) {
         if (string_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("String index out of range");
