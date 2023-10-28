@@ -223,7 +223,7 @@ Expression applyFunctionTuple(
     Expression function,
     Expression input
 ) {
-    const auto function_struct = getFunctionTuple(function);
+    const auto function_struct = storage.tuple_functions.at(function.index);
     auto tuple = getEvaluatedTuple(input);
 
     const auto first_argument = function_struct.first_argument;
@@ -270,7 +270,7 @@ Expression evaluateFunctionDictionary(
 Expression evaluateFunctionTuple(
     Expression function_tuple, Expression environment
 ) {
-    const auto function_tuple_struct = getFunctionTuple(function_tuple);
+    const auto function_tuple_struct = storage.tuple_functions.at(function_tuple.index);
     return makeFunctionTuple(function_tuple.range, {
         environment,
         function_tuple_struct.first_argument,

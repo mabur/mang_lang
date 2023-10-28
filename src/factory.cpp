@@ -303,10 +303,6 @@ FunctionDictionary getFunctionDictionary(Expression expression) {
     return getExpression(expression, FUNCTION_DICTIONARY, storage.dictionary_functions);
 }
 
-FunctionTuple getFunctionTuple(Expression expression) {
-    return getExpression(expression, FUNCTION_TUPLE, storage.tuple_functions);
-}
-
 Stack getStack(Expression expression) {
     return getExpression(expression, STACK, storage.stacks);
 }

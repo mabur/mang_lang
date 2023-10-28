@@ -67,7 +67,6 @@ EvaluatedTuple getEvaluatedTuple(Expression expression);
 Function getFunction(Expression expression);
 FunctionBuiltIn getFunctionBuiltIn(Expression expression);
 FunctionDictionary getFunctionDictionary(Expression expression);
-FunctionTuple getFunctionTuple(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
 FunctionApplication getFunctionApplication(Expression expression);
