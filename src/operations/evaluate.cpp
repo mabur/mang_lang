@@ -318,8 +318,8 @@ void booleanTypes(Expression expression) {
 
 bool boolean(Expression expression) {
     switch (expression.type) {
-        case EVALUATED_TABLE: return !getEvaluatedTable(expression).empty();
-        case EVALUATED_TABLE_VIEW: return !getEvaluatedTableView(expression).empty();
+        case EVALUATED_TABLE: return !storage.evaluated_tables.at(expression.index).empty();
+        case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.at(expression.index).empty();
         case NUMBER: return static_cast<bool>(getNumber(expression));
         case YES: return true;
         case NO: return false;
