@@ -437,8 +437,8 @@ bool isEqual(Expression left, Expression right) {
     }
     if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
         return allOfVectors(
-            getEvaluatedTuple(left).expressions,
-            getEvaluatedTuple(right).expressions,
+            storage.evaluated_tuples.at(left.index).expressions,
+            storage.evaluated_tuples.at(right.index).expressions,
             isEqual
         );
     }
