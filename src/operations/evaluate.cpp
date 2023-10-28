@@ -708,7 +708,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i = end_statement.while_index_;
         }
         else if (type == FOR_END_STATEMENT) {
-            const auto end_statement = getForEndStatement(statement);
+            const auto end_statement = storage.for_end_statements.at(statement.index);
             i = end_statement.for_index_;
             const auto name_index = getContainerNameIndex(statements.at(i));
             const auto old_container = getDictionaryDefinition(result, name_index);

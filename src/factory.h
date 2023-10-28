@@ -57,7 +57,6 @@ std::string getLog();
 WhileStatement& getMutableWhileStatement(Expression expression);
 ForStatement& getMutableForStatement(Expression expression);
 ForSimpleStatement& getMutableForSimpleStatement(Expression expression);
-ForEndStatement getForEndStatement(Expression expression);
 Number getNumber(Expression expression);
 Character getCharacter(Expression expression);
 Conditional getConditional(Expression expression);

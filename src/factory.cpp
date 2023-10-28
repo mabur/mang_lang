@@ -257,10 +257,6 @@ ForSimpleStatement& getMutableForSimpleStatement(Expression expression) {
     return getMutableExpressionReference(expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
 }
 
-ForEndStatement getForEndStatement(Expression expression) {
-    return getExpression(expression, FOR_END_STATEMENT, storage.for_end_statements);
-}
-
 Number getNumber(Expression expression) {
     return getExpression(expression, NUMBER, storage.numbers);
 }
