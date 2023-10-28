@@ -215,13 +215,15 @@ struct String {
 };
 
 // TODO: make cheaper to copy.
-// Use index range for expressions, or fixed size on stack.
+// Have multiple versions of Tuple each with a fixed size on the stack.
+// 2 & 3 are the most common sizes.
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
 // TODO: make cheaper to copy.
-// Use index range for expressions, or fixed size on stack.
+// Have multiple versions of Tuple each with a fixed size on the stack.
+// 2 & 3 are the most common sizes.
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
