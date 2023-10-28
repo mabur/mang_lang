@@ -108,7 +108,18 @@ Expression clearTyped(Expression in) {
 }
 
 Expression putNumber(Expression collection, Expression item) {
-    return makeNumber({}, getNumber(collection) + getNumber(item));
+    if (item.type != ANY && item.type != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens for the operation put!(NUMBER item). " +
+                "\nIt expects the item to be a " + NAMES[NUMBER] + "," +
+                "\nbut now it got a " + NAMES[item.type] +
+                ".\n"
+        );
+    }
+    return makeNumber(
+        {}, storage.numbers.at(collection.index) + storage.numbers.at(item.index)
+    );
 }
 
 Expression putBoolean(Expression, Expression item) {
