@@ -182,7 +182,7 @@ Expression dropTable(const T& table) {
 }
 
 Expression dropNumber(Expression in) {
-    return makeNumber({}, getNumber(in) - 1);
+    return makeNumber({}, storage.numbers.at(in.index) - 1);
 }
 
 Expression take(Expression in) {
