@@ -44,8 +44,8 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
-    const auto dictionary_super = getEvaluatedDictionary(super);
-    const auto dictionary_sub = getEvaluatedDictionary(sub);
+    const auto dictionary_super = storage.evaluated_dictionaries.at(super.index);
+    const auto dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
     for (const auto& definition_super : dictionary_super.definitions) {
         const auto name_super = definition_super.name;
         const auto value_sub = dictionary_sub.optionalLookup(name_super);
