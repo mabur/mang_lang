@@ -204,11 +204,17 @@ Expression applyFunctionDictionary(
     Expression function,
     Expression input
 ) {
+    if (input.type != EVALUATED_DICTIONARY) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a type error."} +
+                "\nIt happens when calling a function that is expecting a dictionary as input. " +
+                "\nBut now it got a" + NAMES[input.type] +
+                ".\n"
+        );
+    }
     const auto function_struct = storage.dictionary_functions.at(function.index);
-    const auto evaluated_dictionary = getEvaluatedDictionary(input);
+    const auto evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
     for (auto i = function_struct.first_argument.index; i < function_struct.last_argument.index; ++i) {
-    //for (const auto& a : function_struct.arguments) {
-        //const auto argument = getArgument(a);
         const auto argument = storage.arguments.at(i);
         const auto expression = evaluated_dictionary.lookup(argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
