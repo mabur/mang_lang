@@ -120,7 +120,15 @@ Expression evaluateStack(Evaluator evaluator,
     // Allocation:
     auto items = std::vector<Expression>{};
     while (stack.type != EMPTY_STACK) {
-        const auto stack_struct = getStack(stack);
+        if (stack.type != STACK) {
+            throw std::runtime_error(
+                std::string{"\n\nI have found a type error."} +
+                "\nIt happens in evaluateStack. " +
+                "\nInstead of a stack I got a " + NAMES[stack.type] +
+                ".\n"
+            );
+        }
+        const auto stack_struct = storage.stacks.at(stack.index);
         const auto& top = stack_struct.top;
         const auto& rest = stack_struct.rest;
         items.push_back(evaluator(top, environment));

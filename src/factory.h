@@ -57,7 +57,6 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function);
 BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function);
 
 Character getCharacter(Expression expression);
-Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);
 Name getName(Expression expression);
 String getString(Expression expression);

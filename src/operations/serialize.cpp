@@ -189,7 +189,15 @@ void serializeTuple(std::string& s, Expression t) {
 void serializeStack(std::string& s, Expression expression) {
     s.append("[");
     while (expression.type != EMPTY_STACK) {
-        const auto stack = getStack(expression);
+        if (expression.type != STACK) {
+            throw std::runtime_error(
+                std::string{"\n\nI have found a type error."} +
+                    "\nIt happens in serializeStack. " +
+                    "\nInstead of a stack I got a " + NAMES[expression.type] +
+                    ".\n"
+            );
+        }
+        const auto stack = storage.stacks.at(expression.index);
         serialize(s, stack.top);
         s.append(" ");
         expression = stack.rest;
