@@ -291,10 +291,6 @@ Character getCharacter(Expression expression) {
     return static_cast<Character>(expression.index);
 }
 
-EvaluatedTuple getEvaluatedTuple(Expression expression) {
-    return getExpression(expression, EVALUATED_TUPLE, storage.evaluated_tuples);
-}
-
 Stack getStack(Expression expression) {
     return getExpression(expression, STACK, storage.stacks);
 }
