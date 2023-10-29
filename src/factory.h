@@ -50,9 +50,11 @@ struct BinaryTuple {
     Expression right;
 };
 
-BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
+
+BinaryTuple getDynamicBinaryTuple(Expression in);
+BinaryTuple getStaticBinaryTuple(Expression in);
 
 Character getCharacter(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);

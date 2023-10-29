@@ -73,7 +73,14 @@ typename ArrayType::value_type getExpression(
 
 } // namespace
 
-BinaryTuple getBinaryTuple(Expression in) {
+BinaryTuple getDynamicBinaryTuple(Expression in) {
+    const auto tuple = getEvaluatedTuple(in);
+    const auto left = tuple.expressions.at(0);
+    const auto right = tuple.expressions.at(1);
+    return BinaryTuple{left, right};
+}
+
+BinaryTuple getStaticBinaryTuple(Expression in) {
     const auto tuple = getEvaluatedTuple(in);
     const auto left = tuple.expressions.at(0);
     const auto right = tuple.expressions.at(1);

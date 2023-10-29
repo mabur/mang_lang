@@ -33,7 +33,7 @@ void checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const
 }
 
 void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const std::string& function) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getStaticBinaryTuple(in);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     if (left != ANY && left != expected) {
@@ -57,7 +57,7 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
 }
 
 void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, const std::string& function) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     if (left != expected) {
@@ -86,7 +86,7 @@ Expression makeNumber(double x) {
 
 template <typename BinaryOperation>
 Expression binaryOperation(Expression in, BinaryOperation operation) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in);
     const auto left = storage.numbers.at(tuple.left.index);
     const auto right = storage.numbers.at(tuple.right.index);
     return makeNumber(operation(left, right));
@@ -123,7 +123,7 @@ Expression mod(Expression in) {
 
 Expression less(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "less");
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in);
     const auto left = storage.numbers.at(tuple.left.index);
     const auto right = storage.numbers.at(tuple.right.index);
     return left < right ?

@@ -42,7 +42,7 @@ Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
 }
 
 Expression putTable(Expression table, Expression item) {
-    const auto tuple = getBinaryTuple(item);
+    const auto tuple = getDynamicBinaryTuple(item);
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
@@ -56,7 +56,7 @@ Expression putTableTyped(Expression table, Expression item) {
     if (item.type == ANY) {
         return table;
     }
-    const auto tuple = getBinaryTuple(item);
+    const auto tuple = getStaticBinaryTuple(item);
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
@@ -127,7 +127,7 @@ Expression putBoolean(Expression, Expression item) {
 }
 
 Expression put(Expression in) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in);
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
@@ -144,7 +144,7 @@ Expression put(Expression in) {
 }
 
 Expression putTyped(Expression in) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getStaticBinaryTuple(in);
     const auto item = tuple.left;
     const auto collection = tuple.right;
     if (item.type == ANY) {
