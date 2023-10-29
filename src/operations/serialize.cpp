@@ -309,7 +309,13 @@ void serializeTypesEvaluatedStack(std::string& s, Expression e) {
 void serializeEvaluatedStack(std::string& s, Expression expression) {
     s.append("[");
     while (expression.type != EMPTY_STACK) {
-        const auto stack = getEvaluatedStack(expression);
+        if (expression.type != EVALUATED_STACK) {
+            throw std::runtime_error{
+                "I found an error while serializing a stack. "
+                "Instead of a stack I got a " + NAMES[expression.type]
+            };
+        }
+        const auto stack = storage.evaluated_stacks.at(expression.index);
         serialize(s, stack.top);
         s.append(" ");
         expression = stack.rest;
