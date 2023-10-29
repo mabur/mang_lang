@@ -410,11 +410,11 @@ Expression applyTableIndexingTypes(Expression table) {
 }
 
 Expression applyStackIndexingTypes(Expression stack) {
-    return getEvaluatedStack(stack).top;
+    return storage.evaluated_stacks.at(stack.index).top;
 }
 
 Expression applyStringIndexingTypes(Expression string) {
-    return getString(string).top;
+    return storage.strings.at(string.index).top;
 }
 
 template<typename Vector, typename Predicate>
