@@ -323,9 +323,24 @@ void serializeNumber(std::string& s, Number number) {
 void serializeString(std::string& s, Expression expression) {
     s.append("\"");
     while (expression.type != EMPTY_STRING) {
-        const auto string = getString(expression);
-        s.push_back(getCharacter(string.top));
-        expression = string.rest;
+        if (expression.type != STRING) {
+            throw std::runtime_error{
+                "I found an error while serializing a string. "
+                "Instead of a string I got a " + NAMES[expression.type]
+            };
+        }
+        const auto string = storage.strings.at(expression.index);
+        const auto top = string.top;
+        const auto rest = string.rest;
+        if (top.type != CHARACTER) {
+            throw std::runtime_error{
+                "I found an error while serializing a string. "
+                "Each item in the string should be a character, "
+                "but I found a " + NAMES[top.type]
+            };
+        }
+        s.push_back(getCharacter(top));
+        expression = rest;
     }
     s.append("\"");
 }
