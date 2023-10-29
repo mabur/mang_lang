@@ -522,17 +522,23 @@ Expression parseDynamicExpression(CodeRange code) {
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
-    auto value = Expression{EMPTY_STRING, 0, {first, first + 1}};
+    auto characters = std::vector<Expression>{};
     for (; code.first->character != '"'; ++code.first) {
-        auto item = makeCharacter(
+        auto character = makeCharacter(
             CodeRange{code.first, code.first + 1},
-            {code.first->character}
+            code.first->character
         );
-        value = putString(value, item);
+        characters.push_back(character);
+    }
+    std::reverse(characters.begin(), characters.end());
+    auto string = Expression{EMPTY_STRING, 0, {first, first + 1}};
+    for (const auto  character : characters) {
+        string = putString(string, character);
     }
     code = parseCharacter(code, '"');
     const auto last = code.begin();
-    return reverseString(CodeRange{first, last}, value);
+    string.range = CodeRange{first, last};
+    return string;
 }
 
 } // namespace
