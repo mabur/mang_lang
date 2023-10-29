@@ -10,20 +10,6 @@
 
 namespace {
 
-template<typename Predicate, typename Getter>
-bool allOfPairs(Expression left, Expression right, Predicate predicate, int empty_type, Getter getter) {
-    while (left.type != empty_type && right.type != empty_type) {
-        const auto left_container = getter(left);
-        const auto right_container = getter(right);
-        if (!predicate(left_container.top, right_container.top)) {
-            return false;
-        }
-        left = left_container.rest;
-        right = right_container.rest;
-    }
-    return left.type == empty_type && right.type == empty_type;
-}
-
 void checkTypes(Expression super, Expression sub, const std::string& description);
 
 void checkTypesEvaluatedStack(Expression super, Expression sub, const std::string& description) {
@@ -444,6 +430,22 @@ bool allOfVectors(const Vector& left, const Vector& right, Predicate predicate) 
     return true;
 }
 
+bool isEqual(Expression left, Expression right);
+
+template<typename Getter>
+bool isPairwiseEqual(Expression left, Expression right, int empty_type, Getter getter) {
+    while (left.type != empty_type && right.type != empty_type) {
+        const auto left_container = getter(left);
+        const auto right_container = getter(right);
+        if (!isEqual(left_container.top, right_container.top)) {
+            return false;
+        }
+        left = left_container.rest;
+        right = right_container.rest;
+    }
+    return left.type == empty_type && right.type == empty_type;
+}
+
 bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
@@ -463,13 +465,13 @@ bool isEqual(Expression left, Expression right) {
         return true;
     }
     if (left_type == EVALUATED_STACK && right_type == EVALUATED_STACK) {
-        return allOfPairs(left, right, isEqual, EMPTY_STACK, getEvaluatedStack);
+        return isPairwiseEqual(left, right, EMPTY_STACK, getEvaluatedStack);
     }
     if (left_type == EMPTY_STRING && right_type == EMPTY_STRING) {
         return true;
     }
     if (left_type == STRING && right_type == STRING) {
-        return allOfPairs(left, right, isEqual, EMPTY_STRING, getString);
+        return isPairwiseEqual(left, right, EMPTY_STRING, getString);
     }
     if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
         return allOfVectors(
