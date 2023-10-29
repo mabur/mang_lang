@@ -274,8 +274,26 @@ Expression get(Expression in) {
 }
 
 Expression getTyped(Expression in) {
-    const auto tuple = getEvaluatedTuple(in);
-    return tuple.expressions.at(2);
+    if (in.type != EVALUATED_TUPLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens for the function get!(table key default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got a " + NAMES[in.type] +
+                ".\n"
+        );
+    }
+    const auto& expressions = storage.evaluated_tuples.at(in.index).expressions;
+    if (expressions.size() != 3) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens for the function get!(table key default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got " + std::to_string(expressions.size()) + "items" +
+                ".\n"
+        );
+    }
+    return expressions.at(2);
 }
 
 }
