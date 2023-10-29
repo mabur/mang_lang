@@ -30,7 +30,6 @@ Expression putString(Expression rest, Expression top);
 Expression putStack(Expression rest, Expression top);
 Expression putEvaluatedStack(Expression rest, Expression top);
 
-Expression reverseStack(CodeRange code, Expression stack);
 Expression reverseEvaluatedStack(CodeRange code, Expression stack);
 
 namespace container_functions {

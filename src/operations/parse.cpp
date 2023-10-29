@@ -400,16 +400,22 @@ Expression parseStack(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
-    auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
+    auto items = std::vector<Expression>{};
     while (!::startsWith(code, ']')) {
         throwIfEmpty(code);
-        auto expression = parseExpression(code);
-        code.first = end(expression);
-        stack = putStack(stack, expression);
+        auto item = parseExpression(code);
+        code.first = end(item);
         code = parseWhiteSpace(code);
+        items.push_back(item);
+    }
+    std::reverse(items.begin(), items.end());
+    auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
+    for (const auto& item : items) {
+        stack = putStack(stack, item);
     }
     code = parseCharacter(code, ']');
-    return reverseStack(CodeRange{first, code.first}, stack);
+    stack.range = CodeRange{first, code.first};
+    return stack;
 }
 
 Expression parseTuple(CodeRange code) {
@@ -532,7 +538,7 @@ Expression parseString(CodeRange code) {
     }
     std::reverse(characters.begin(), characters.end());
     auto string = Expression{EMPTY_STRING, 0, {first, first + 1}};
-    for (const auto  character : characters) {
+    for (const auto& character : characters) {
         string = putString(string, character);
     }
     code = parseCharacter(code, '"');

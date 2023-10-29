@@ -26,11 +26,6 @@ Expression putEvaluatedStack(Expression rest, Expression top) {
         EvaluatedStack{top, rest});
 }
 
-Expression reverseStack(CodeRange code, Expression stack) {
-    const auto init = Expression{EMPTY_STACK, 0, code};
-    return leftFold(init, stack, putStack, EMPTY_STACK, getStack);
-}
-
 Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
     const auto init = Expression{EMPTY_STACK, 0, code};
     return leftFold(init, stack, putEvaluatedStack, EMPTY_STACK, getEvaluatedStack);
