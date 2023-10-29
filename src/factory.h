@@ -53,8 +53,8 @@ struct BinaryTuple {
 void clearMemory();
 std::string getLog();
 
-BinaryTuple getDynamicBinaryTuple(Expression in);
-BinaryTuple getStaticBinaryTuple(Expression in);
+BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function);
+BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function);
 
 Character getCharacter(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);

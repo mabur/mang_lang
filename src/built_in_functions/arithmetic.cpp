@@ -33,7 +33,7 @@ void checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const
 }
 
 void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const std::string& function) {
-    const auto tuple = getStaticBinaryTuple(in);
+    const auto tuple = getStaticBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     if (left != ANY && left != expected) {
@@ -57,7 +57,7 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
 }
 
 void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, const std::string& function) {
-    const auto tuple = getDynamicBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     if (left != expected) {
@@ -85,8 +85,8 @@ Expression makeNumber(double x) {
 }
 
 template <typename BinaryOperation>
-Expression binaryOperation(Expression in, BinaryOperation operation) {
-    const auto tuple = getDynamicBinaryTuple(in);
+Expression binaryOperation(Expression in, BinaryOperation operation, const std::string& function) {
+    const auto tuple = getDynamicBinaryTuple(in, function);
     const auto left = storage.numbers.at(tuple.left.index);
     const auto right = storage.numbers.at(tuple.right.index);
     return makeNumber(operation(left, right));
@@ -96,34 +96,34 @@ Expression binaryOperation(Expression in, BinaryOperation operation) {
 
 Expression add(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "add");
-    return binaryOperation(in, std::plus<>());
+    return binaryOperation(in, std::plus<>(), "add");
 }
 
 Expression mul(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mul");
-    return binaryOperation(in, std::multiplies<>());
+    return binaryOperation(in, std::multiplies<>(), "mul");
 }
 
 Expression sub(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "sub");
-    return binaryOperation(in, std::minus<>());
+    return binaryOperation(in, std::minus<>(), "sub");
 }
 
 Expression div(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "div");
-    return binaryOperation(in, std::divides<>());
+    return binaryOperation(in, std::divides<>(), "div");
 }
 
 Expression mod(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mod");
     return binaryOperation(
-        in, [](double a, double b){return std::fmod(a, b);}
+        in, [](double a, double b){return std::fmod(a, b);}, "mod"
     );
 }
 
 Expression less(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "less");
-    const auto tuple = getDynamicBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in, "less");
     const auto left = storage.numbers.at(tuple.left.index);
     const auto right = storage.numbers.at(tuple.right.index);
     return left < right ?
