@@ -55,7 +55,6 @@ void clearMemory();
 std::string getLog();
 
 Character getCharacter(Expression expression);
-EvaluatedTable& getMutableEvaluatedTable(Expression expression);
 EvaluatedTuple getEvaluatedTuple(Expression expression);
 Stack getStack(Expression expression);
 EvaluatedStack getEvaluatedStack(Expression expression);

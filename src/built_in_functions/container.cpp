@@ -59,7 +59,7 @@ Expression putTableTyped(Expression table, Expression item) {
     const auto tuple = getBinaryTuple(item);
     const auto key = tuple.left;
     const auto value = tuple.right;
-    auto& rows = getMutableEvaluatedTable(table).rows;
+    auto& rows = storage.evaluated_tables.at(table.index).rows;
     std::string s;
     serialize_types(s, key);
     rows[s] = {key, value};

@@ -255,10 +255,6 @@ Character getCharacter(Expression expression) {
     return static_cast<Character>(expression.index);
 }
 
-EvaluatedTable& getMutableEvaluatedTable(Expression expression) {
-    return getMutableExpressionReference(expression, EVALUATED_TABLE, storage.evaluated_tables);
-}
-
 EvaluatedTuple getEvaluatedTuple(Expression expression) {
     return getExpression(expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }
