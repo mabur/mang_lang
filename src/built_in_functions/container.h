@@ -2,16 +2,6 @@
 
 #include "../expression.h"
 
-template<typename T, typename Operation, typename Getter>
-T leftFold(T value, Expression expression, Operation operation, int empty_type, Getter getter) {
-    while (expression.type != empty_type) {
-        const auto container = getter(expression);
-        value = operation(value, container.top);
-        expression = container.rest;
-    }
-    return value;
-}
-
 template<typename Predicate, typename Getter>
 bool allOfPairs(Expression left, Expression right, Predicate predicate, int empty_type, Getter getter) {
     while (left.type != empty_type && right.type != empty_type) {

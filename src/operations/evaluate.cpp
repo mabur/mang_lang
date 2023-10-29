@@ -117,14 +117,21 @@ template<typename Evaluator>
 Expression evaluateStack(Evaluator evaluator,
     Expression stack, Expression environment
 ) {
-    const auto op = [&](Expression rest, Expression top) -> Expression {
-        const auto evaluated_top = evaluator(top, environment);
-        return putEvaluatedStack(rest, evaluated_top);
-    };
-    const auto code = stack.range;
-    const auto init = Expression{EMPTY_STACK, 0, code};
-    const auto output = leftFold(init, stack, op, EMPTY_STACK, getStack);
-    return reverseEvaluatedStack(code, output);
+    // Allocation:
+    auto items = std::vector<Expression>{};
+    while (stack.type != EMPTY_STACK) {
+        const auto stack_struct = getStack(stack);
+        const auto& top = stack_struct.top;
+        const auto& rest = stack_struct.rest;
+        items.push_back(evaluator(top, environment));
+        stack = rest;
+    }
+    std::reverse(items.begin(), items.end());
+    auto evaluated_stack = Expression{EMPTY_STACK, 0, stack.range};
+    for (const auto& item : items) {
+        evaluated_stack = putEvaluatedStack(evaluated_stack, item);
+    }
+    return evaluated_stack;
 }
 
 template<typename Evaluator>

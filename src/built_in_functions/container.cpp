@@ -26,11 +26,6 @@ Expression putEvaluatedStack(Expression rest, Expression top) {
         EvaluatedStack{top, rest});
 }
 
-Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
-    const auto init = Expression{EMPTY_STACK, 0, code};
-    return leftFold(init, stack, putEvaluatedStack, EMPTY_STACK, getEvaluatedStack);
-}
-
 Expression putTable(Expression table, Expression item) {
     const auto tuple = getDynamicBinaryTuple(item, "put table");
     const auto key = tuple.left;
