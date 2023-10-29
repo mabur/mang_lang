@@ -237,9 +237,16 @@ Expression applyFunctionTuple(
     Expression function,
     Expression input
 ) {
+    if (input.type != EVALUATED_TUPLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a type error."} +
+                "\nIt happens when trying to call a function that takes a tuple. " +
+                "\nInstead of a tuple I got a" + NAMES[input.type] +
+                ".\n"
+        );
+    }
+    auto tuple = storage.evaluated_tuples.at(input.index);
     const auto function_struct = storage.tuple_functions.at(function.index);
-    auto tuple = getEvaluatedTuple(input);
-
     const auto first_argument = function_struct.first_argument;
     const auto last_argument = function_struct.last_argument;
     const auto num_inputs = last_argument.index - first_argument.index;
