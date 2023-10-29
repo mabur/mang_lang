@@ -20,8 +20,6 @@ Expression putString(Expression rest, Expression top);
 Expression putStack(Expression rest, Expression top);
 Expression putEvaluatedStack(Expression rest, Expression top);
 
-Expression reverseEvaluatedStack(CodeRange code, Expression stack);
-
 namespace container_functions {
 
 Expression clear(Expression in);
