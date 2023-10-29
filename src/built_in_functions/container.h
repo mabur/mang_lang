@@ -45,5 +45,6 @@ Expression takeTyped(Expression in);
 Expression drop(Expression in);
 Expression dropTyped(Expression in);
 Expression get(Expression in);
+Expression getTyped(Expression in);
 
 }

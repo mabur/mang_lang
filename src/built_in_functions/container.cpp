@@ -273,4 +273,9 @@ Expression get(Expression in) {
         tuple.expressions.at(2) : iterator->second.value;
 }
 
+Expression getTyped(Expression in) {
+    const auto tuple = getEvaluatedTuple(in);
+    return tuple.expressions.at(2);
+}
+
 }

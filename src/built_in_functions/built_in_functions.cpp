@@ -43,7 +43,7 @@ Expression builtInsTypes() {
         {makeName({}, "put"),         define(container_functions::putTyped), i++},
         {makeName({}, "take"),        define(container_functions::takeTyped), i++},
         {makeName({}, "drop"),        define(container_functions::dropTyped), i++},
-        {makeName({}, "get"),         define(container_functions::get), i++},
+        {makeName({}, "get"),         define(container_functions::getTyped), i++},
         {makeName({}, "add"),         define(arithmetic::FunctionNumberNumberToNumber{"add"}), i++},
         {makeName({}, "mul"),         define(arithmetic::FunctionNumberNumberToNumber{"mul"}), i++},
         {makeName({}, "sub"),         define(arithmetic::FunctionNumberNumberToNumber{"sub"}), i++},
