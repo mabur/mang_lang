@@ -814,7 +814,14 @@ Expression applyStackIndexing(Expression stack, Expression input) {
         if (stack_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("Stack index out of range");
         }
-        stack_struct = getEvaluatedStack(stack_struct.rest);
+        if (stack_struct.rest.type != EVALUATED_STACK) {
+            throw std::runtime_error(
+                "I found a type error while indexing a stack. "
+                "Instead of a stack I encountered a " +
+                NAMES[stack_struct.rest.type]
+            );
+        }
+        stack_struct = storage.evaluated_stacks.at(stack_struct.rest.index);
     }
     return stack_struct.top;
 }
@@ -836,7 +843,14 @@ Expression applyStringIndexing(Expression string, Expression input) {
         if (string_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("String index out of range");
         }
-        string_struct = getString(string_struct.rest);
+        if (string_struct.rest.type != STRING) {
+            throw std::runtime_error(
+                "I found a type error while indexing a string. " 
+                "Instead of a string I encountered a " +
+                NAMES[string_struct.rest.type]
+            );
+        }
+        string_struct = storage.strings.at(string_struct.rest.index);
     }
     return string_struct.top;
 }
