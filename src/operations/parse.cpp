@@ -396,7 +396,7 @@ Expression parseAnyFunction(CodeRange code) {
     return parseFunction(code);
 }
 
-Expression parseStackNew(CodeRange code) {
+Expression parseStack(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
@@ -548,7 +548,7 @@ Expression parseExpression(CodeRange code) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         const auto c = code.first->character;
-        if (c == '[') {return parseStackNew(code);}
+        if (c == '[') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}
         if (c == '<') {return parseTable(code);}
