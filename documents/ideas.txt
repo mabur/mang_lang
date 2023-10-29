@@ -210,7 +210,10 @@ LANGUAGE SYNTAX & SEMANTICS
   - expression
 
 SYSTEM IMPLEMENTATION
-* TODO: inline factories, and check types and throw specific error messages.
+* TODO:
+  - Inline factories
+  - Check types and throw specific error messages
+  - Store known epxression members as indices?
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s
 * Static evaluation of names:
