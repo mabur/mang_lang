@@ -246,10 +246,11 @@ Expression makeString(CodeRange code, String expression) {
 // GETTERS
 
 Character getCharacter(Expression expression) {
-    if (expression.type != CHARACTER) {
+    if (expression.index > 127) {
         throw std::runtime_error{
-            "getExpression expected " + NAMES[CHARACTER]
-                + " got " + NAMES[expression.type]
+            "I found an error while retrieving a character. "
+            "A character should have an ASCII value in the range 0-127. "
+            "But I found one with the ASCII value " + std::to_string(expression.index)
         };
     }
     return static_cast<Character>(expression.index);
