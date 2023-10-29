@@ -261,23 +261,50 @@ Expression dropTyped(Expression in) {
 }
 
 Expression get(Expression in) {
-    const auto tuple = getEvaluatedTuple(in);
-    const auto key = tuple.expressions.at(0);
-    const auto table = tuple.expressions.at(1);
-    std::string s;
-    serialize(s, key);
-    const auto name = s;
-    const auto& rows = getEvaluatedTable(table).rows;
+    if (in.type != EVALUATED_TUPLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got a " + NAMES[in.type] +
+                ".\n"
+        );
+    }
+    const auto& expressions = storage.evaluated_tuples.at(in.index).expressions;
+    if (expressions.size() != 3) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got " + std::to_string(expressions.size()) + "items" +
+                ".\n"
+        );
+    }
+    const auto key = expressions.at(0);
+    const auto table = expressions.at(1);
+    const auto default_value = expressions.at(2);
+    if (table.type != EVALUATED_TABLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple where the second item is a table," +
+                "\nbut now it got a " + NAMES[table.type] +
+                ".\n"
+        );
+    }
+    std::string name;
+    serialize(name, key);
+    const auto& rows = storage.evaluated_tables.at(table.index).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?
-        tuple.expressions.at(2) : iterator->second.value;
+        default_value : iterator->second.value;
 }
 
 Expression getTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
         throw std::runtime_error(
             std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the function get!(table key default). " +
+                "\nIt happens for the function get!(key table default). " +
                 "\nIt expects a tuple of three items," +
                 "\nbut now it got a " + NAMES[in.type] +
                 ".\n"
@@ -287,13 +314,24 @@ Expression getTyped(Expression in) {
     if (expressions.size() != 3) {
         throw std::runtime_error(
             std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the function get!(table key default). " +
+                "\nIt happens for the function get!(key table default). " +
                 "\nIt expects a tuple of three items," +
                 "\nbut now it got " + std::to_string(expressions.size()) + "items" +
                 ".\n"
         );
     }
-    return expressions.at(2);
+    const auto table = expressions.at(1);
+    const auto default_value = expressions.at(2);
+    if (table.type != EVALUATED_TABLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple where the second item is a table," +
+                "\nbut now it got a " + NAMES[table.type] +
+                ".\n"
+        );
+    }
+    return default_value;
 }
 
 }
