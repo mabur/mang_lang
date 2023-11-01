@@ -195,7 +195,7 @@ struct FunctionTuple {
 };
 
 struct LookupChild {
-    Expression name;
+    size_t name;
     Expression child;
 };
 

@@ -144,7 +144,7 @@ void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t
 }
 
 void serializeLookupChild(std::string& s, const LookupChild& lookup_child) {
-    serializeName(s, lookup_child.name.index);
+    serializeName(s, lookup_child.name);
     s.append("@");
     serialize(s, lookup_child.child);
 }

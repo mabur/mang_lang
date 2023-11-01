@@ -467,7 +467,7 @@ Expression parseSubstitution(CodeRange code) {
         code = parseWhiteSpace(code);
         auto child = parseExpression(code);
         code.first = end(child);
-        return makeLookupChild(CodeRange{first, code.first}, {name, child});
+        return makeLookupChild(CodeRange{first, code.first}, {name.index, child});
     }
     if (startsWith(code, '!') || startsWith(code, '?')) {
         code = parseCharacter(code);

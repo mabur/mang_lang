@@ -196,7 +196,7 @@ Expression evaluateLookupChild(
         );
     }
     const auto dictionary = storage.evaluated_dictionaries.at(child.index);
-    return dictionary.lookup(lookup_child_struct.name.index);
+    return dictionary.lookup(lookup_child_struct.name);
 }
 
 template<typename Evaluator>
