@@ -139,7 +139,7 @@ using Name = std::string;
 
 struct Argument {
     Expression type;
-    Expression name;
+    size_t name;
 };
 
 // TODO: type alias instead of struct?
@@ -195,18 +195,18 @@ struct FunctionTuple {
 };
 
 struct LookupChild {
-    Expression name;
+    size_t name;
     Expression child;
 };
 
 struct FunctionApplication {
-    Expression name;
+    size_t name;
     Expression child;
 };
 
 // TODO: type alias instead of struct?
 struct LookupSymbol {
-    Expression name;
+    size_t name;
 };
 
 struct String {
@@ -215,13 +215,15 @@ struct String {
 };
 
 // TODO: make cheaper to copy.
-// Use index range for expressions, or fixed size on stack.
+// Have multiple versions of Tuple each with a fixed size on the stack.
+// 2 & 3 are the most common sizes.
 struct Tuple {
     std::vector<Expression> expressions;
 };
 
 // TODO: make cheaper to copy.
-// Use index range for expressions, or fixed size on stack.
+// Have multiple versions of Tuple each with a fixed size on the stack.
+// 2 & 3 are the most common sizes.
 struct EvaluatedTuple {
     std::vector<Expression> expressions;
 };
@@ -239,25 +241,25 @@ struct EvaluatedStack {
 // STATEMENTS BEGIN
 
 struct Definition {
-    Expression name;
+    size_t name;
     Expression expression;
     size_t name_index;
 };
 
 struct PutAssignment {
-    Expression name;
+    size_t name;
     Expression expression;
     size_t name_index;
 };
 
 struct PutEachAssignment {
-    Expression name;
+    size_t name;
     Expression expression;
     size_t name_index;
 };
 
 struct DropAssignment {
-    Expression name;
+    size_t name;
     size_t name_index;
 };
 
@@ -267,15 +269,15 @@ struct WhileStatement {
 };
 
 struct ForStatement {
-    Expression name_item;
-    Expression name_container;
+    size_t name_item;
+    size_t name_container;
     size_t end_index_;
     size_t name_index_item;
     size_t name_index_container;
 };
 
 struct ForSimpleStatement {
-    Expression name_container;
+    size_t name_container;
     size_t end_index_;
     size_t name_index;
 };
@@ -308,8 +310,8 @@ struct EvaluatedDictionary {
     Expression environment;
     std::vector<Definition> definitions;
 
-    const Expression* optionalLookup(Expression key) const;
-    Expression lookup(Expression key) const;
+    const Expression* optionalLookup(size_t name) const;
+    Expression lookup(size_t name) const;
 };
 
 struct Row {

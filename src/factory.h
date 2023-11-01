@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "expression.h"
 
 struct Storage {
@@ -45,54 +43,10 @@ struct Storage {
 
 extern Storage storage;
 
-struct BinaryTuple {
-    Expression left;
-    Expression right;
-};
-
-BinaryTuple getBinaryTuple(Expression in);
 void clearMemory();
 std::string getLog();
 
-DynamicExpression getDynamicExpression(Expression expression);
-TypedExpression getTypedExpression(Expression expression);
-Definition getDefinition(Expression expression);
-PutAssignment getPutAssignment(Expression expression);
-PutEachAssignment getPutEachAssignment(Expression expression);
-DropAssignment getDropAssignment(Expression expression);
-WhileStatement getWhileStatement(Expression expression);
-WhileStatement& getMutableWhileStatement(Expression expression);
-ForStatement getForStatement(Expression expression);
-ForSimpleStatement getForSimpleStatement(Expression expression);
-ForStatement& getMutableForStatement(Expression expression);
-ForSimpleStatement& getMutableForSimpleStatement(Expression expression);
-WhileEndStatement getWhileEndStatement(Expression expression);
-ForEndStatement getForEndStatement(Expression expression);
-Number getNumber(Expression expression);
 Character getCharacter(Expression expression);
-Conditional getConditional(Expression expression);
-IsExpression getIs(Expression expression);
-Alternative getAlternative(Expression expression);
-Dictionary getDictionary(Expression expression);
-EvaluatedDictionary getEvaluatedDictionary(Expression expression);
-Table getTable(Expression expression);
-const EvaluatedTable& getEvaluatedTable(Expression expression);
-EvaluatedTable& getMutableEvaluatedTable(Expression expression);
-EvaluatedTableView getEvaluatedTableView(Expression expression);
-Tuple getTuple(Expression expression);
-EvaluatedTuple getEvaluatedTuple(Expression expression);
-Function getFunction(Expression expression);
-FunctionBuiltIn getFunctionBuiltIn(Expression expression);
-FunctionDictionary getFunctionDictionary(Expression expression);
-FunctionTuple getFunctionTuple(Expression expression);
-Stack getStack(Expression expression);
-EvaluatedStack getEvaluatedStack(Expression expression);
-LookupChild getLookupChild(Expression expression);
-FunctionApplication getFunctionApplication(Expression expression);
-LookupSymbol getLookupSymbol(Expression expression);
-Name getName(Expression expression);
-Argument getArgument(Expression expression);
-String getString(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeCharacter(CodeRange code, Character expression);
@@ -129,11 +83,3 @@ Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression)
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
 Expression makeString(CodeRange code, String expression);
-
-void setDictionaryDefinition(
-    Expression evaluated_dictionary, size_t name_index, Expression value
-);
-
-Expression getDictionaryDefinition(
-    Expression evaluated_dictionary, size_t name_index
-);

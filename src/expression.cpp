@@ -23,19 +23,19 @@ MissingKey::MissingKey(
     : std::runtime_error("Cannot find key " + key + " in table")
 {}
 
-const Expression* EvaluatedDictionary::optionalLookup(Expression key) const {
+const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
     for (const auto& definition: definitions) {
-        if (definition.name.index == key.index) {
+        if (definition.name == name) {
             return &definition.expression;
         }
     }
     return nullptr;
 }
 
-Expression EvaluatedDictionary::lookup(Expression key) const {
-    const auto expression = optionalLookup(key);
+Expression EvaluatedDictionary::lookup(size_t name) const {
+    const auto expression = optionalLookup(name);
     if (expression) {
         return *expression;
     }
-    throw MissingSymbol(getName(key), "dictionary");
+    throw MissingSymbol(storage.names.at(name), "dictionary");
 }

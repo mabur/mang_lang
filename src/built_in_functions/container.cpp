@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "binary_tuple.h"
 #include "../operations/serialize.h"
 #include "../expression.h"
 #include "../factory.h"
@@ -26,26 +27,11 @@ Expression putEvaluatedStack(Expression rest, Expression top) {
         EvaluatedStack{top, rest});
 }
 
-Expression reverseString(CodeRange code, Expression string) {
-    const auto init = Expression{EMPTY_STRING, 0, code};
-    return leftFold(init, string, putString, EMPTY_STRING, getString);
-}
-
-Expression reverseStack(CodeRange code, Expression stack) {
-    const auto init = Expression{EMPTY_STACK, 0, code};
-    return leftFold(init, stack, putStack, EMPTY_STACK, getStack);
-}
-
-Expression reverseEvaluatedStack(CodeRange code, Expression stack) {
-    const auto init = Expression{EMPTY_STACK, 0, code};
-    return leftFold(init, stack, putEvaluatedStack, EMPTY_STACK, getEvaluatedStack);
-}
-
 Expression putTable(Expression table, Expression item) {
-    const auto tuple = getBinaryTuple(item);
+    const auto tuple = getDynamicBinaryTuple(item, "put table");
     const auto key = tuple.left;
     const auto value = tuple.right;
-    auto& rows = getMutableEvaluatedTable(table).rows;
+    auto& rows = storage.evaluated_tables.at(table.index).rows;
     std::string s;
     serialize(s, key);
     rows[s] = {key, value};
@@ -56,10 +42,10 @@ Expression putTableTyped(Expression table, Expression item) {
     if (item.type == ANY) {
         return table;
     }
-    const auto tuple = getBinaryTuple(item);
+    const auto tuple = getStaticBinaryTuple(item, "putTable");
     const auto key = tuple.left;
     const auto value = tuple.right;
-    auto& rows = getMutableEvaluatedTable(table).rows;
+    auto& rows = storage.evaluated_tables.at(table.index).rows;
     std::string s;
     serialize_types(s, key);
     rows[s] = {key, value};
@@ -108,7 +94,18 @@ Expression clearTyped(Expression in) {
 }
 
 Expression putNumber(Expression collection, Expression item) {
-    return makeNumber({}, getNumber(collection) + getNumber(item));
+    if (item.type != ANY && item.type != NUMBER) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens for the operation put!(NUMBER item). " +
+                "\nIt expects the item to be a " + NAMES[NUMBER] + "," +
+                "\nbut now it got a " + NAMES[item.type] +
+                ".\n"
+        );
+    }
+    return makeNumber(
+        {}, storage.numbers.at(collection.index) + storage.numbers.at(item.index)
+    );
 }
 
 Expression putBoolean(Expression, Expression item) {
@@ -116,7 +113,7 @@ Expression putBoolean(Expression, Expression item) {
 }
 
 Expression put(Expression in) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getDynamicBinaryTuple(in, "put");
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
@@ -133,7 +130,7 @@ Expression put(Expression in) {
 }
 
 Expression putTyped(Expression in) {
-    const auto tuple = getBinaryTuple(in);
+    const auto tuple = getStaticBinaryTuple(in, "put");
     const auto item = tuple.left;
     const auto collection = tuple.right;
     if (item.type == ANY) {
@@ -142,12 +139,12 @@ Expression putTyped(Expression in) {
     switch (collection.type) {
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
-        case STRING: return collection;
+        case STRING: return collection; // TODO: type check item
         case EMPTY_STRING: return putString(collection, item);
         case EVALUATED_TABLE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
-        case YES: return item;
-        case NO: return item;
+        case YES: return item; // TODO: type check item
+        case NO: return item;// TODO: type check item
         default: throw UnexpectedExpression(in.type, "putTyped operation");
     }
 }
@@ -182,43 +179,47 @@ Expression dropTable(const T& table) {
 }
 
 Expression dropNumber(Expression in) {
-    return makeNumber({}, getNumber(in) - 1);
+    return makeNumber({}, storage.numbers.at(in.index) - 1);
 }
 
 Expression take(Expression in) {
-    switch (in.type) {
-        case EVALUATED_STACK: return getEvaluatedStack(in).top;
-        case STRING: return getString(in).top;
-        case EVALUATED_TABLE: return takeTable(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return takeTable(getEvaluatedTableView(in));
+    const auto type = in.type;
+    const auto index = in.index;
+    switch (type) {
+        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
+        case STRING: return storage.strings.at(index).top;
+        case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
+        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.at(index));
         case NUMBER: return makeNumber({}, 1);
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "take");
+        default: throw UnexpectedExpression(type, "take");
     }
 }
 
 Expression takeTyped(Expression in) {
-    switch (in.type) {
-        case EVALUATED_STACK: return getEvaluatedStack(in).top;
-        case STRING: return getString(in).top;
-        case EVALUATED_TABLE: return takeTableTyped(getEvaluatedTable(in), in);
-        case EVALUATED_TABLE_VIEW: return takeTableTyped(getEvaluatedTableView(in), in);
+    const auto type = in.type;
+    const auto index = in.index;
+    switch (type) {
+        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
+        case STRING: return storage.strings.at(index).top;
+        case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
+        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.at(index), in);
         case EMPTY_STACK: return Expression{ANY, 0, in.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "take");
+        default: throw UnexpectedExpression(type, "take");
     }
 }
 
 Expression drop(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return getEvaluatedStack(in).rest;
-        case STRING: return getString(in).rest;
-        case EVALUATED_TABLE: return dropTable(getEvaluatedTable(in));
-        case EVALUATED_TABLE_VIEW: return dropTable(getEvaluatedTableView(in));
+        case EVALUATED_STACK: return storage.evaluated_stacks.at(in.index).rest;
+        case STRING: return storage.strings.at(in.index).rest;
+        case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
+        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.at(in.index));
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
@@ -246,16 +247,77 @@ Expression dropTyped(Expression in) {
 }
 
 Expression get(Expression in) {
-    const auto tuple = getEvaluatedTuple(in);
-    const auto key = tuple.expressions.at(0);
-    const auto table = tuple.expressions.at(1);
-    std::string s;
-    serialize(s, key);
-    const auto name = s;
-    const auto& rows = getEvaluatedTable(table).rows;
+    if (in.type != EVALUATED_TUPLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got a " + NAMES[in.type] +
+                ".\n"
+        );
+    }
+    const auto& expressions = storage.evaluated_tuples.at(in.index).expressions;
+    if (expressions.size() != 3) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got " + std::to_string(expressions.size()) + "items" +
+                ".\n"
+        );
+    }
+    const auto key = expressions.at(0);
+    const auto table = expressions.at(1);
+    const auto default_value = expressions.at(2);
+    if (table.type != EVALUATED_TABLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple where the second item is a table," +
+                "\nbut now it got a " + NAMES[table.type] +
+                ".\n"
+        );
+    }
+    std::string name;
+    serialize(name, key);
+    const auto& rows = storage.evaluated_tables.at(table.index).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?
-        tuple.expressions.at(2) : iterator->second.value;
+        default_value : iterator->second.value;
+}
+
+Expression getTyped(Expression in) {
+    if (in.type != EVALUATED_TUPLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got a " + NAMES[in.type] +
+                ".\n"
+        );
+    }
+    const auto& expressions = storage.evaluated_tuples.at(in.index).expressions;
+    if (expressions.size() != 3) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a static type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple of three items," +
+                "\nbut now it got " + std::to_string(expressions.size()) + "items" +
+                ".\n"
+        );
+    }
+    const auto table = expressions.at(1);
+    const auto default_value = expressions.at(2);
+    if (table.type != EVALUATED_TABLE) {
+        throw std::runtime_error(
+            std::string{"\n\nI have found a dynamic type error."} +
+                "\nIt happens for the function get!(key table default). " +
+                "\nIt expects a tuple where the second item is a table," +
+                "\nbut now it got a " + NAMES[table.type] +
+                ".\n"
+        );
+    }
+    return default_value;
 }
 
 }

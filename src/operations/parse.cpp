@@ -125,15 +125,15 @@ Expression parseArgument(CodeRange code) {
         auto second_name = parseName(code);
         code.first = end(second_name);
         const auto type = makeLookupSymbol(
-            CodeRange{first, end(first_name)}, {first_name}
+            CodeRange{first, end(first_name)}, {first_name.index}
         );
         return makeArgument(
-            CodeRange{first, code.first}, Argument{type, second_name}
+            CodeRange{first, code.first}, Argument{type, second_name.index}
         );
     }
     else {
         return makeArgument(
-            CodeRange{first, code.first}, Argument{{}, first_name}
+            CodeRange{first, code.first}, Argument{{}, first_name.index}
         );   
     }
 }
@@ -152,7 +152,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDefinition(
             CodeRange{first, code.first},
-            Definition{name, expression, indexer.getIndex(name.index)}
+            Definition{name.index, expression, indexer.getIndex(name.index)}
         );
     }
     else if (startsWith(code, '-')) {
@@ -160,7 +160,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDropAssignment(
             CodeRange{first, code.first},
-            DropAssignment{name, indexer.getIndex(name.index)}
+            DropAssignment{name.index, indexer.getIndex(name.index)}
         );
     }
     else if (startsWith(code, "+=")) {
@@ -171,7 +171,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutAssignment(
             CodeRange{first, code.first},
-            PutAssignment{name, expression, indexer.getIndex(name.index)}
+            PutAssignment{name.index, expression, indexer.getIndex(name.index)}
         );
     }
     else {
@@ -182,7 +182,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutEachAssignment(
             CodeRange{first, code.first},
-            PutEachAssignment{name, expression, indexer.getIndex(name.index)}
+            PutEachAssignment{name.index, expression, indexer.getIndex(name.index)}
         );
     }
 }
@@ -212,12 +212,12 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
         const auto first_name_index = indexer.getIndex(first_name.index);
         const auto second_name_index = indexer.getIndex(second_name.index);
         return makeForStatement(CodeRange{first, code.first},
-            ForStatement{first_name, second_name, 0, first_name_index, second_name_index}
+            ForStatement{first_name.index, second_name.index, 0, first_name_index, second_name_index}
         );
     }
     else {
         return makeForSimpleStatement(CodeRange{first, code.first},
-            ForSimpleStatement{first_name, 0, indexer.getIndex(first_name.index)}
+            ForSimpleStatement{first_name.index, 0, indexer.getIndex(first_name.index)}
         );
     }
 }
@@ -285,7 +285,7 @@ Expression parseDictionary(CodeRange code) {
                 const auto while_index = while_indices.back();
                 while_indices.pop_back();
                 const auto while_statement_pointer = statements.at(while_index);
-                auto& while_statement = getMutableWhileStatement(while_statement_pointer);
+                auto& while_statement = storage.while_statements.at(while_statement_pointer.index);
                 while_statement.end_index_ = end_index;
                 statements.push_back(parseWhileEndStatement(code, while_index));
             } else {
@@ -294,11 +294,11 @@ Expression parseDictionary(CodeRange code) {
                 for_indices.pop_back();
                 const auto for_statement_pointer = statements.at(for_index);
                 if (for_statement_pointer.type == FOR_STATEMENT) {
-                    auto& for_statement = getMutableForStatement(for_statement_pointer);
+                    auto& for_statement = storage.for_statements.at(for_statement_pointer.index);
                     for_statement.end_index_ = end_index;
                 }
                 else if (for_statement_pointer.type == FOR_SIMPLE_STATEMENT) {
-                    auto& for_statement = getMutableForSimpleStatement(for_statement_pointer);
+                    auto& for_statement = storage.for_simple_statements.at(for_statement_pointer.index);
                     for_statement.end_index_ = end_index;
                 }
                 statements.push_back(parseForEndStatement(code, for_index));
@@ -396,20 +396,26 @@ Expression parseAnyFunction(CodeRange code) {
     return parseFunction(code);
 }
 
-Expression parseStackNew(CodeRange code) {
+Expression parseStack(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
-    auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
+    auto items = std::vector<Expression>{};
     while (!::startsWith(code, ']')) {
         throwIfEmpty(code);
-        auto expression = parseExpression(code);
-        code.first = end(expression);
-        stack = putStack(stack, expression);
+        auto item = parseExpression(code);
+        code.first = end(item);
         code = parseWhiteSpace(code);
+        items.push_back(item);
+    }
+    std::reverse(items.begin(), items.end());
+    auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
+    for (const auto& item : items) {
+        stack = putStack(stack, item);
     }
     code = parseCharacter(code, ']');
-    return reverseStack(CodeRange{first, code.first}, stack);
+    stack.range = CodeRange{first, code.first};
+    return stack;
 }
 
 Expression parseTuple(CodeRange code) {
@@ -461,22 +467,22 @@ Expression parseSubstitution(CodeRange code) {
         code = parseWhiteSpace(code);
         auto child = parseExpression(code);
         code.first = end(child);
-        return makeLookupChild(CodeRange{first, code.first}, {name, child});
+        return makeLookupChild(CodeRange{first, code.first}, {name.index, child});
     }
     if (startsWith(code, '!') || startsWith(code, '?')) {
         code = parseCharacter(code);
         auto child = parseExpression(code);
         code.first = end(child);
-        return makeFunctionApplication(CodeRange{first, code.first}, {name, child});
+        return makeFunctionApplication(CodeRange{first, code.first}, {name.index, child});
     }
     if (startsWith(code, ':')) {
         code = parseCharacter(code);
         auto value = parseExpression(code);
         code.first = end(value);
-        const auto type = makeLookupSymbol(CodeRange{first, end(name)}, {name});
+        const auto type = makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
         return makeTypedExpression(CodeRange{first, code.first}, {type, value});
     }
-    return makeLookupSymbol(CodeRange{first, end(name)}, {name});
+    return makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
 }
 
 Expression parseNumber(CodeRange code) {
@@ -522,17 +528,23 @@ Expression parseDynamicExpression(CodeRange code) {
 Expression parseString(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '"');
-    auto value = Expression{EMPTY_STRING, 0, {first, first + 1}};
+    auto characters = std::vector<Expression>{};
     for (; code.first->character != '"'; ++code.first) {
-        auto item = makeCharacter(
+        auto character = makeCharacter(
             CodeRange{code.first, code.first + 1},
-            {code.first->character}
+            code.first->character
         );
-        value = putString(value, item);
+        characters.push_back(character);
+    }
+    std::reverse(characters.begin(), characters.end());
+    auto string = Expression{EMPTY_STRING, 0, {first, first + 1}};
+    for (const auto& character : characters) {
+        string = putString(string, character);
     }
     code = parseCharacter(code, '"');
     const auto last = code.begin();
-    return reverseString(CodeRange{first, last}, value);
+    string.range = CodeRange{first, last};
+    return string;
 }
 
 } // namespace
@@ -542,7 +554,7 @@ Expression parseExpression(CodeRange code) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         const auto c = code.first->character;
-        if (c == '[') {return parseStackNew(code);}
+        if (c == '[') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}
         if (c == '<') {return parseTable(code);}
