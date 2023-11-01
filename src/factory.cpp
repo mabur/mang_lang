@@ -242,27 +242,3 @@ Character getCharacter(Expression expression) {
     }
     return static_cast<Character>(expression.index);
 }
-
-void setDictionaryDefinition(
-    Expression evaluated_dictionary, size_t name_index, Expression value
-) {
-    if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        throw std::runtime_error{
-            "setDictionaryDefinition expected " + NAMES[EVALUATED_DICTIONARY]
-            + " got " + NAMES[evaluated_dictionary.type]
-        };
-    }
-    storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name_index].expression = value;
-}
-
-Expression getDictionaryDefinition(
-    Expression evaluated_dictionary, size_t name_index
-) {
-    if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        throw std::runtime_error{
-            "getDictionaryDefinition expected " + NAMES[EVALUATED_DICTIONARY]
-            + " got " + NAMES[evaluated_dictionary.type]
-        };
-    }
-    return storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name_index).expression;
-}
