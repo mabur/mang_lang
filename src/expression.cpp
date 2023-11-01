@@ -25,7 +25,7 @@ MissingKey::MissingKey(
 
 const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
     for (const auto& definition: definitions) {
-        if (definition.name.index == name) {
+        if (definition.name == name) {
             return &definition.expression;
         }
     }

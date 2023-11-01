@@ -241,7 +241,7 @@ struct EvaluatedStack {
 // STATEMENTS BEGIN
 
 struct Definition {
-    Expression name;
+    size_t name;
     Expression expression;
     size_t name_index;
 };

@@ -67,7 +67,7 @@ void serializeIs(std::string& s, const IsExpression& is_expression) {
 }
 
 void serializeDefinition(std::string& s, const Definition& element) {
-    serializeName(s, element.name.index);
+    serializeName(s, element.name);
     s.append("=");
     serialize(s, element.expression);
     s.append(" ");
@@ -120,7 +120,7 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
     }
     s.append("{");
     for (const auto& pair : dictionary.definitions) {
-        serializeName(s, pair.name.index);
+        serializeName(s, pair.name);
         s.append("=");
         serializer(s, pair.expression);
         s.append(" ");

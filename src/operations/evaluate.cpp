@@ -48,19 +48,14 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
     const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
     for (const auto& definition_super : dictionary_super.definitions) {
         const auto name_super = definition_super.name;
-        if (name_super.type != NAME) {
-            throw std::runtime_error(
-                "Internal error in checkTypesEvaluatedDictionary"
-            );
-        }
-        const auto value_sub = dictionary_sub.optionalLookup(name_super.index);
+        const auto value_sub = dictionary_sub.optionalLookup(name_super);
         if (value_sub) {
             checkTypes(definition_super.expression, *value_sub, description);
         }
         else {
             throw std::runtime_error(
                 "Static type error in " + description +
-                    ". Could not find name " + getName(name_super) +
+                    ". Could not find name " + storage.names.at(name_super) +
                     " in dictionary" + describeLocation(sub.range) 
             );            
         }
@@ -219,7 +214,7 @@ Expression applyFunction(
     const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument.index);
     checkArgument(evaluator, argument, input, function_struct.environment);
-    const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
+    const auto definitions = std::vector<Definition>{{argument.name.index, input, 0}};
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
@@ -286,7 +281,7 @@ Expression applyFunctionTuple(
         const auto argument = storage.arguments.at(argument_index + i);
         const auto expression = tuple.expressions.at(i);
         checkArgument(evaluator, argument, expression, function_struct.environment);
-        definitions.at(i) = Definition{argument.name, expression, i};
+        definitions.at(i) = Definition{argument.name.index, expression, i};
     }
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
@@ -639,7 +634,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.at(statement.index);
             definitions.at(for_statement.name_index_item) = Definition{
-                for_statement.name_item,
+                for_statement.name_item.index,
                 Expression{ANY, 0, statement.range},
                 for_statement.name_index_item
             };
