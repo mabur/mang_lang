@@ -7,8 +7,8 @@
 
 namespace {
 
-void serializeName(std::string& s, Expression name) {
-    s.append(getName(name));
+void serializeName(std::string& s, size_t name) {
+    s.append(storage.names.at(name));
 }
 
 void serializeArgument(std::string& s, Argument a) {
@@ -67,28 +67,28 @@ void serializeIs(std::string& s, const IsExpression& is_expression) {
 }
 
 void serializeDefinition(std::string& s, const Definition& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.index);
     s.append("=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializePutAssignment(std::string& s, const PutAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.index);
     s.append("+=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializePutEachAssignment(std::string& s, const PutEachAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.index);
     s.append("++=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializeDropAssignment(std::string& s, const DropAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.index);
     s.append("-- ");
 }
 
@@ -120,7 +120,7 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
     }
     s.append("{");
     for (const auto& pair : dictionary.definitions) {
-        serializeName(s, pair.name);
+        serializeName(s, pair.name.index);
         s.append("=");
         serializer(s, pair.expression);
         s.append(" ");
@@ -144,19 +144,19 @@ void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t
 }
 
 void serializeLookupChild(std::string& s, const LookupChild& lookup_child) {
-    serializeName(s, lookup_child.name);
+    serializeName(s, lookup_child.name.index);
     s.append("@");
     serialize(s, lookup_child.child);
 }
 
 void serializeFunctionApplication(std::string& s, const FunctionApplication& function_application) {
-    serializeName(s, function_application.name);
+    serializeName(s, function_application.name.index);
     s.append("!");
     serialize(s, function_application.child);
 }
 
 void serializeLookupSymbol(std::string& s, const LookupSymbol& lookup_symbol) {
-    serializeName(s, lookup_symbol.name);
+    serializeName(s, lookup_symbol.name.index);
 }
     
 void serializeDictionary(std::string& s, const Dictionary& dictionary) {
@@ -399,7 +399,7 @@ void serialize(std::string& s, Expression expression) {
         case LOOKUP_CHILD: serializeLookupChild(s, storage.child_lookups.at(expression.index)); return;
         case FUNCTION_APPLICATION: serializeFunctionApplication(s, storage.function_applications.at(expression.index)); return;
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.at(expression.index)); return;
-        case NAME: serializeName(s, expression); return;
+        case NAME: serializeName(s, expression.index); return;
         case ARGUMENT: serializeArgument(s, storage.arguments.at(expression.index)); return;
         case NUMBER: serializeNumber(s, storage.numbers.at(expression.index)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
