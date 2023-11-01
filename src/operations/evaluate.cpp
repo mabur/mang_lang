@@ -417,20 +417,19 @@ Expression applyStringIndexingTypes(Expression string) {
     return storage.strings.at(string.index).top;
 }
 
-template<typename Vector, typename Predicate>
-bool allOfVectors(const Vector& left, const Vector& right, Predicate predicate) {
+bool isEqual(Expression left, Expression right);
+
+bool isTuplePairwiseEqual(const std::vector<Expression>& left, const std::vector<Expression>& right) {
     if (left.size() != right.size()) {
         return false;
     }
     for (size_t i = 0; i < left.size(); ++i) {
-        if (!predicate(left.at(i), right.at(i))) {
+        if (!isEqual(left.at(i), right.at(i))) {
             return false;
         }
     }
     return true;
 }
-
-bool isEqual(Expression left, Expression right);
 
 bool isStackPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STACK && right.type != EMPTY_STACK) {
@@ -487,10 +486,9 @@ bool isEqual(Expression left, Expression right) {
         return isStringPairwiseEqual(left, right);
     }
     if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
-        return allOfVectors(
+        return isTuplePairwiseEqual(
             storage.evaluated_tuples.at(left.index).expressions,
-            storage.evaluated_tuples.at(right.index).expressions,
-            isEqual
+            storage.evaluated_tuples.at(right.index).expressions
         );
     }
     return false;
