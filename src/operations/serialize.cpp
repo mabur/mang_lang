@@ -67,28 +67,28 @@ void serializeIs(std::string& s, const IsExpression& is_expression) {
 }
 
 void serializeDefinition(std::string& s, const Definition& element) {
-    s.append(getName(element.name));
+    serializeName(s, element.name);
     s.append("=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializePutAssignment(std::string& s, const PutAssignment& element) {
-    s.append(getName(element.name));
+    serializeName(s, element.name);
     s.append("+=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializePutEachAssignment(std::string& s, const PutEachAssignment& element) {
-    s.append(getName(element.name));
+    serializeName(s, element.name);
     s.append("++=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializeDropAssignment(std::string& s, const DropAssignment& element) {
-    s.append(getName(element.name));
+    serializeName(s, element.name);
     s.append("-- ");
 }
 
@@ -120,7 +120,7 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
     }
     s.append("{");
     for (const auto& pair : dictionary.definitions) {
-        s.append(getName(pair.name));
+        serializeName(s, pair.name);
         s.append("=");
         serializer(s, pair.expression);
         s.append(" ");
