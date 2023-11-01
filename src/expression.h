@@ -200,7 +200,7 @@ struct LookupChild {
 };
 
 struct FunctionApplication {
-    Expression name;
+    size_t name;
     Expression child;
 };
 
