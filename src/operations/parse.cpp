@@ -128,12 +128,12 @@ Expression parseArgument(CodeRange code) {
             CodeRange{first, end(first_name)}, {first_name.index}
         );
         return makeArgument(
-            CodeRange{first, code.first}, Argument{type, second_name}
+            CodeRange{first, code.first}, Argument{type, second_name.index}
         );
     }
     else {
         return makeArgument(
-            CodeRange{first, code.first}, Argument{{}, first_name}
+            CodeRange{first, code.first}, Argument{{}, first_name.index}
         );   
     }
 }

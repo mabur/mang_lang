@@ -214,7 +214,7 @@ Expression applyFunction(
     const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument.index);
     checkArgument(evaluator, argument, input, function_struct.environment);
-    const auto definitions = std::vector<Definition>{{argument.name.index, input, 0}};
+    const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
@@ -239,12 +239,7 @@ Expression applyFunctionDictionary(
     const auto evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
     for (auto i = function_struct.first_argument.index; i < function_struct.last_argument.index; ++i) {
         const auto argument = storage.arguments.at(i);
-        if (argument.name.type != NAME) {
-            throw std::runtime_error(
-                "Internal error in applyFunctionDictionary"
-            );
-        }
-        const auto expression = evaluated_dictionary.lookup(argument.name.index);
+        const auto expression = evaluated_dictionary.lookup(argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
@@ -281,7 +276,7 @@ Expression applyFunctionTuple(
         const auto argument = storage.arguments.at(argument_index + i);
         const auto expression = tuple.expressions.at(i);
         checkArgument(evaluator, argument, expression, function_struct.environment);
-        definitions.at(i) = Definition{argument.name.index, expression, i};
+        definitions.at(i) = Definition{argument.name, expression, i};
     }
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}

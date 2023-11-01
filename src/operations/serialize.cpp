@@ -15,10 +15,10 @@ void serializeArgument(std::string& s, Argument a) {
     if (a.type.type != ANY) {
         serialize(s, a.type);
         s.append(":");
-        serializeName(s, a.name.index);
+        serializeName(s, a.name);
         return;
     }
-    serializeName(s, a.name.index);
+    serializeName(s, a.name);
 }
 
 void serializeDynamicExpression(std::string& s, const DynamicExpression& dynamic_expression) {

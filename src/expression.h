@@ -139,7 +139,7 @@ using Name = std::string;
 
 struct Argument {
     Expression type;
-    Expression name;
+    size_t name;
 };
 
 // TODO: type alias instead of struct?
