@@ -23,54 +23,6 @@ Expression makeExpression(
     return storage.expressions.back();
 }
 
-template<typename ArrayType>
-typename ArrayType::value_type& getMutableExpressionReference(
-    Expression expression,
-    ExpressionType type,
-    ArrayType& array
-) {
-    if (expression.type != type) {
-        throw std::runtime_error{
-            "getMutableExpressionReference expected " + NAMES[type]
-            + " got " + NAMES[expression.type]
-        };
-    }
-    assert(expression.type == type);
-    return array.at(expression.index);
-}
-
-template<typename ArrayType>
-const typename ArrayType::value_type& getImmutableExpressionReference(
-    Expression expression,
-    ExpressionType type,
-    ArrayType& array
-) {
-    if (expression.type != type) {
-        throw std::runtime_error{
-            "getMutableExpressionReference expected " + NAMES[type]
-                + " got " + NAMES[expression.type]
-        };
-    }
-    assert(expression.type == type);
-    return array.at(expression.index);
-}
-
-template<typename ArrayType>
-typename ArrayType::value_type getExpression(
-    Expression expression,
-    ExpressionType type,
-    const ArrayType& array
-) {
-    if (expression.type != type) {
-        throw std::runtime_error{
-            "getExpression expected " + NAMES[type]
-            + " got " + NAMES[expression.type]
-        };
-    }
-    assert(expression.type == type);
-    return array.at(expression.index);
-}
-
 } // namespace
 
 BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
@@ -289,10 +241,6 @@ Character getCharacter(Expression expression) {
         };
     }
     return static_cast<Character>(expression.index);
-}
-
-Name getName(Expression expression) {
-    return getExpression(expression, NAME, storage.names);
 }
 
 void setDictionaryDefinition(

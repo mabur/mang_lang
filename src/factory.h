@@ -57,7 +57,6 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function);
 BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function);
 
 Character getCharacter(Expression expression);
-Name getName(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeCharacter(CodeRange code, Character expression);
