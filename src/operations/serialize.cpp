@@ -15,10 +15,10 @@ void serializeArgument(std::string& s, Argument a) {
     if (a.type.type != ANY) {
         serialize(s, a.type);
         s.append(":");
-        serialize(s, a.name);
+        serializeName(s, a.name.index);
         return;
     }
-    serialize(s, a.name);
+    serializeName(s, a.name.index);
 }
 
 void serializeDynamicExpression(std::string& s, const DynamicExpression& dynamic_expression) {
@@ -100,15 +100,15 @@ void serializeWhileStatement(std::string& s, const WhileStatement& element) {
 
 void serializeForStatement(std::string& s, const ForStatement& element) {
     s.append("for ");
-    serialize(s, element.name_item);
+    serializeName(s, element.name_item.index);
     s.append(" in ");
-    serialize(s, element.name_container);
+    serializeName(s, element.name_container.index);
     s.append(" ");
 }
 
 void serializeForSimpleStatement(std::string& s, const ForSimpleStatement& element) {
     s.append("for ");
-    serialize(s, element.name_container);
+    serializeName(s, element.name_container.index);
     s.append(" ");
 }
 
