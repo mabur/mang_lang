@@ -310,8 +310,8 @@ struct EvaluatedDictionary {
     Expression environment;
     std::vector<Definition> definitions;
 
-    const Expression* optionalLookup(Expression key) const;
-    Expression lookup(Expression key) const;
+    const Expression* optionalLookup(size_t name) const;
+    Expression lookup(size_t name) const;
 };
 
 struct Row {

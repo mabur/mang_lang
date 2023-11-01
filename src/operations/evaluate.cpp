@@ -48,7 +48,12 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
     const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
     for (const auto& definition_super : dictionary_super.definitions) {
         const auto name_super = definition_super.name;
-        const auto value_sub = dictionary_sub.optionalLookup(name_super);
+        if (name_super.type != NAME) {
+            throw std::runtime_error(
+                "Internal error in checkTypesEvaluatedDictionary"
+            );
+        }
+        const auto value_sub = dictionary_sub.optionalLookup(name_super.index);
         if (value_sub) {
             checkTypes(definition_super.expression, *value_sub, description);
         }
@@ -191,7 +196,7 @@ Expression evaluateLookupChild(
         );
     }
     const auto dictionary = storage.evaluated_dictionaries.at(child.index);
-    return dictionary.lookup(lookup_child_struct.name);
+    return dictionary.lookup(lookup_child_struct.name.index);
 }
 
 template<typename Evaluator>
@@ -239,7 +244,12 @@ Expression applyFunctionDictionary(
     const auto evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
     for (auto i = function_struct.first_argument.index; i < function_struct.last_argument.index; ++i) {
         const auto argument = storage.arguments.at(i);
-        const auto expression = evaluated_dictionary.lookup(argument.name);
+        if (argument.name.type != NAME) {
+            throw std::runtime_error(
+                "Internal error in applyFunctionDictionary"
+            );
+        }
+        const auto expression = evaluated_dictionary.lookup(argument.name.index);
         checkArgument(evaluator, argument, expression, function_struct.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
@@ -315,9 +325,9 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(Expression name, Expression expression) {
+Expression lookupDictionary(size_t name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(getName(name), "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(storage.names.at(name), "environment of type " + NAMES[expression.type]);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
     const auto result = dictionary.optionalLookup(name);
@@ -894,7 +904,7 @@ Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
     const auto function_application_struct = storage.function_applications.at(function_application.index);
-    const auto function = lookupDictionary(function_application_struct.name, environment);
+    const auto function = lookupDictionary(function_application_struct.name.index, environment);
     const auto input = evaluate_types(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate_types, function, input);
@@ -918,7 +928,7 @@ Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
     const auto function_application_struct = storage.function_applications.at(function_application.index);
-    const auto function = lookupDictionary(function_application_struct.name, environment);
+    const auto function = lookupDictionary(function_application_struct.name.index, environment);
     const auto input = evaluate(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate, function, input);
@@ -959,7 +969,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name.index, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
@@ -999,7 +1009,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name.index, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);
