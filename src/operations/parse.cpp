@@ -212,7 +212,7 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
         const auto first_name_index = indexer.getIndex(first_name.index);
         const auto second_name_index = indexer.getIndex(second_name.index);
         return makeForStatement(CodeRange{first, code.first},
-            ForStatement{first_name, second_name, 0, first_name_index, second_name_index}
+            ForStatement{first_name.index, second_name.index, 0, first_name_index, second_name_index}
         );
     }
     else {

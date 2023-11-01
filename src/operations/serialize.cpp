@@ -100,9 +100,9 @@ void serializeWhileStatement(std::string& s, const WhileStatement& element) {
 
 void serializeForStatement(std::string& s, const ForStatement& element) {
     s.append("for ");
-    serializeName(s, element.name_item.index);
+    serializeName(s, element.name_item);
     s.append(" in ");
-    serializeName(s, element.name_container.index);
+    serializeName(s, element.name_container);
     s.append(" ");
 }
 

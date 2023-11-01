@@ -629,7 +629,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.at(statement.index);
             definitions.at(for_statement.name_index_item) = Definition{
-                for_statement.name_item.index,
+                for_statement.name_item,
                 Expression{ANY, 0, statement.range},
                 for_statement.name_index_item
             };
