@@ -433,8 +433,20 @@ bool isTuplePairwiseEqual(const std::vector<Expression>& left, const std::vector
 
 bool isStackPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STACK && right.type != EMPTY_STACK) {
-        const auto left_container = getEvaluatedStack(left);
-        const auto right_container = getEvaluatedStack(right);
+        if (left.type != EVALUATED_STACK) {
+            throw std::runtime_error{
+                "Internal error detected in isStackPairwiseEqual. "
+                "Expected a stack but got a " + NAMES[left.type]
+            };
+        }
+        if (right.type != EVALUATED_STACK) {
+            throw std::runtime_error{
+                "Internal error detected in isStackPairwiseEqual. "
+                "Expected a stack but got a " + NAMES[right.type]
+            };
+        }
+        const auto left_container = storage.evaluated_stacks.at(left.index);
+        const auto right_container = storage.evaluated_stacks.at(right.index);
         if (!isEqual(left_container.top, right_container.top)) {
             return false;
         }
@@ -446,8 +458,20 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
 
 bool isStringPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
-        const auto left_container = getString(left);
-        const auto right_container = getString(right);
+        if (left.type != STRING) {
+            throw std::runtime_error{
+                "Internal error detected in isStringPairwiseEqual. "
+                "Expected a string but got a " + NAMES[left.type]
+            };
+        }
+        if (right.type != STRING) {
+            throw std::runtime_error{
+                "Internal error detected in isStringPairwiseEqual. "
+                "Expected a string but got a " + NAMES[right.type]
+            };
+        }
+        const auto left_container = storage.strings.at(left.index);
+        const auto right_container = storage.strings.at(right.index);
         if (!isEqual(left_container.top, right_container.top)) {
             return false;
         }

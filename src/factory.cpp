@@ -291,16 +291,8 @@ Character getCharacter(Expression expression) {
     return static_cast<Character>(expression.index);
 }
 
-EvaluatedStack getEvaluatedStack(Expression expression) {
-    return getExpression(expression, EVALUATED_STACK, storage.evaluated_stacks);
-}
-
 Name getName(Expression expression) {
     return getExpression(expression, NAME, storage.names);
-}
-
-String getString(Expression expression) {
-    return getExpression(expression, STRING, storage.strings);
 }
 
 void setDictionaryDefinition(
