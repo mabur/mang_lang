@@ -217,7 +217,7 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
     }
     else {
         return makeForSimpleStatement(CodeRange{first, code.first},
-            ForSimpleStatement{first_name, 0, indexer.getIndex(first_name.index)}
+            ForSimpleStatement{first_name.index, 0, indexer.getIndex(first_name.index)}
         );
     }
 }

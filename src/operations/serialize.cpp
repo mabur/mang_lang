@@ -108,7 +108,7 @@ void serializeForStatement(std::string& s, const ForStatement& element) {
 
 void serializeForSimpleStatement(std::string& s, const ForSimpleStatement& element) {
     s.append("for ");
-    serializeName(s, element.name_container.index);
+    serializeName(s, element.name_container);
     s.append(" ");
 }
 
