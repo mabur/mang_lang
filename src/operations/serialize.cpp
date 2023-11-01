@@ -81,7 +81,7 @@ void serializePutAssignment(std::string& s, const PutAssignment& element) {
 }
 
 void serializePutEachAssignment(std::string& s, const PutEachAssignment& element) {
-    serializeName(s, element.name.index);
+    serializeName(s, element.name);
     s.append("++=");
     serialize(s, element.expression);
     s.append(" ");
