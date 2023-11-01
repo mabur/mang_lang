@@ -160,7 +160,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDropAssignment(
             CodeRange{first, code.first},
-            DropAssignment{name, indexer.getIndex(name.index)}
+            DropAssignment{name.index, indexer.getIndex(name.index)}
         );
     }
     else if (startsWith(code, "+=")) {
