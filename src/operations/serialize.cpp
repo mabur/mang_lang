@@ -156,7 +156,7 @@ void serializeFunctionApplication(std::string& s, const FunctionApplication& fun
 }
 
 void serializeLookupSymbol(std::string& s, const LookupSymbol& lookup_symbol) {
-    serializeName(s, lookup_symbol.name.index);
+    serializeName(s, lookup_symbol.name);
 }
     
 void serializeDictionary(std::string& s, const Dictionary& dictionary) {

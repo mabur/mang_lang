@@ -206,7 +206,7 @@ struct FunctionApplication {
 
 // TODO: type alias instead of struct?
 struct LookupSymbol {
-    Expression name;
+    size_t name;
 };
 
 struct String {

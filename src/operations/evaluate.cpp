@@ -969,7 +969,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name.index, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
@@ -1009,7 +1009,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name.index, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);

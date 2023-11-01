@@ -125,7 +125,7 @@ Expression parseArgument(CodeRange code) {
         auto second_name = parseName(code);
         code.first = end(second_name);
         const auto type = makeLookupSymbol(
-            CodeRange{first, end(first_name)}, {first_name}
+            CodeRange{first, end(first_name)}, {first_name.index}
         );
         return makeArgument(
             CodeRange{first, code.first}, Argument{type, second_name}
@@ -479,10 +479,10 @@ Expression parseSubstitution(CodeRange code) {
         code = parseCharacter(code);
         auto value = parseExpression(code);
         code.first = end(value);
-        const auto type = makeLookupSymbol(CodeRange{first, end(name)}, {name});
+        const auto type = makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
         return makeTypedExpression(CodeRange{first, code.first}, {type, value});
     }
-    return makeLookupSymbol(CodeRange{first, end(name)}, {name});
+    return makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
 }
 
 Expression parseNumber(CodeRange code) {
