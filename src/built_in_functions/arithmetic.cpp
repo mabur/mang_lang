@@ -3,6 +3,7 @@
 #include <cmath>
 #include <functional>
 
+#include "binary_tuple.h"
 #include "../factory.h"
 
 namespace arithmetic {
