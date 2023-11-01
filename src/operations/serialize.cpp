@@ -399,7 +399,6 @@ void serialize(std::string& s, Expression expression) {
         case LOOKUP_CHILD: serializeLookupChild(s, storage.child_lookups.at(expression.index)); return;
         case FUNCTION_APPLICATION: serializeFunctionApplication(s, storage.function_applications.at(expression.index)); return;
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.at(expression.index)); return;
-        case NAME: serializeName(s, expression.index); return;
         case ARGUMENT: serializeArgument(s, storage.arguments.at(expression.index)); return;
         case NUMBER: serializeNumber(s, storage.numbers.at(expression.index)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
