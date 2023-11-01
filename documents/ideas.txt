@@ -211,7 +211,7 @@ LANGUAGE SYNTAX & SEMANTICS
 
 SYSTEM IMPLEMENTATION
 * Optimization:
-  - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s
+  - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s
 * Static evaluation of names:
   - Current O(parents * members)
   - In practice I guess the slow parts are:
