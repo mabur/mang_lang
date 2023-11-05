@@ -384,7 +384,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code.first = end(body);
     return makeFunctionTuple(
         CodeRange{first, code.begin()},
-        {Expression{}, first_argument, last_argument, body}
+        {Expression{}, first_argument.index, last_argument.index, body}
     );
 }
 

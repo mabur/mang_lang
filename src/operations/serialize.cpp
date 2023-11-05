@@ -238,11 +238,11 @@ void serializeFunctionDictionary(std::string& s, const FunctionDictionary& funct
 void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack) {
     s.append("in ");
     s.append("(");
-    for (auto i = function_stack.first_argument.index; i < function_stack.last_argument.index; ++i) {
+    for (auto i = function_stack.first_argument; i < function_stack.last_argument; ++i) {
         serializeArgument(s, storage.arguments.at(i));
         s.append(" ");
     }
-    if (function_stack.first_argument.index == function_stack.last_argument.index) {
+    if (function_stack.first_argument == function_stack.last_argument) {
         s.append(")");
     }
     else {

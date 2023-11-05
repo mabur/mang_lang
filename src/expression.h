@@ -189,8 +189,8 @@ struct FunctionDictionary {
 
 struct FunctionTuple {
     Expression environment;
-    Expression first_argument;
-    Expression last_argument; // Exclusive, to handle empty range
+    size_t first_argument;
+    size_t last_argument; // Exclusive, to handle empty range
     Expression body;
 };
 

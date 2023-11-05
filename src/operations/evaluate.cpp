@@ -264,13 +264,13 @@ Expression applyFunctionTuple(
     const auto function_struct = storage.tuple_functions.at(function.index);
     const auto first_argument = function_struct.first_argument;
     const auto last_argument = function_struct.last_argument;
-    const auto num_inputs = last_argument.index - first_argument.index;
+    const auto num_inputs = last_argument - first_argument;
     
     if (num_inputs != tuple.expressions.size()) {
         throw std::runtime_error{"Wrong number of input to function_struct"};
     }
 
-    auto argument_index = first_argument.index;
+    auto argument_index = first_argument;
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.at(argument_index + i);
