@@ -20,9 +20,11 @@ std::string reformat(std::string code) {
 
 std::string evaluate_types(std::string code) {
     const auto built_ins = builtInsTypes();
-    const auto standard_library = evaluate_types(parse(STANDARD_LIBRARY), built_ins);
+    const auto std_ast = parse(STANDARD_LIBRARY);
+    const auto code_ast = parse(code);
+    const auto standard_library = evaluate_types(std_ast, built_ins);
     std::string result;
-    serialize_types(result, evaluate_types(parse(code), standard_library));
+    serialize_types(result, evaluate_types(code_ast, standard_library));
     clearMemory();
     return result;
 }
