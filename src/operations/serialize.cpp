@@ -213,7 +213,7 @@ void serializeCharacter(std::string& s, Character character) {
 
 void serializeFunction(std::string& s, const Function& function) {
     s.append("in ");
-    serializeArgument(s, storage.arguments.at(function.argument.index));
+    serializeArgument(s, storage.arguments.at(function.argument));
     s.append(" out ");
     serialize(s, function.body);
 }

@@ -212,7 +212,7 @@ Expression applyFunction(
     Expression input
 ) {
     const auto function_struct = storage.functions.at(function.index);
-    const auto argument = storage.arguments.at(function_struct.argument.index);
+    const auto argument = storage.arguments.at(function_struct.argument);
     checkArgument(evaluator, argument, input, function_struct.environment);
     const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
     const auto middle = makeEvaluatedDictionary(input.range,

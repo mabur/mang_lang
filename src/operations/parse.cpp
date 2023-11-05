@@ -328,7 +328,7 @@ Expression parseFunction(CodeRange code) {
     code.first = end(body);
     return makeFunction(
         CodeRange{first, code.begin()},
-        {Expression{}, argument, body}
+        {Expression{}, argument.index, body}
     );
 }
 

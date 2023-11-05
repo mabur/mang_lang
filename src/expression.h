@@ -172,7 +172,7 @@ struct IsExpression {
 
 struct Function {
     Expression environment;
-    Expression argument;
+    size_t argument;
     Expression body;
 };
 
