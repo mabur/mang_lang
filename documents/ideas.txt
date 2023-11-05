@@ -215,6 +215,10 @@ SYSTEM IMPLEMENTATION
 * Static evaluation of names:
   - Crafting Interpreters says that it is common to resolve names either during parsing or as separate pass.
     - They recommend evaluating and storing the number of steps to reach the right ancestor.
+  - Probably better to have separate pass after parsing that does:
+    - Name resolution for dictionary-definitions.
+    - Loop resolution for dictionaries.
+    - Name resolution in general.
   - Current O(parents * members)
   - In practice I guess the slow parts are:
     - Jumping around in memory
