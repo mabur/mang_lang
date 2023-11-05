@@ -148,7 +148,7 @@ struct DynamicExpression {
 };
 
 struct TypedExpression {
-    Expression type;
+    size_t type_name;
     Expression value;
 };
 

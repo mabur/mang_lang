@@ -479,8 +479,7 @@ Expression parseSubstitution(CodeRange code) {
         code = parseCharacter(code);
         auto value = parseExpression(code);
         code.first = end(value);
-        const auto type = makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
-        return makeTypedExpression(CodeRange{first, code.first}, {type, value});
+        return makeTypedExpression(CodeRange{first, code.first}, {name.index, value});
     }
     return makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
 }

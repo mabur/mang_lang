@@ -611,7 +611,7 @@ Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
     const auto expression_struct = storage.typed_expressions.at(expression.index);
-    const auto type = evaluator(expression_struct.type, environment);
+    const auto type = lookupDictionary(expression_struct.type_name, environment);
     const auto value = evaluator(expression_struct.value, environment);
     checkTypes(type, value, "typed expression");
     return value;
