@@ -6,6 +6,7 @@
 #include "operations/parse.h"
 #include "operations/serialize.h"
 
+static
 Expression parse(const std::string& string) {
     const auto result = makeCodeCharacters(string);
     return parseExpression({result.data(), result.data() + result.size()});
