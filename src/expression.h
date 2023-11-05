@@ -138,7 +138,7 @@ using Character = char;
 using Name = std::string;
 
 struct Argument {
-    Expression type;
+    Expression type; // Optional
     size_t name;
 };
 
