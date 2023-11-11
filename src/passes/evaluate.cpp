@@ -147,6 +147,7 @@ Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
     const auto tuple_struct = storage.tuples.at(tuple.index);
+    // Allocation:
     auto evaluated_expressions = std::vector<Expression>{};
     evaluated_expressions.reserve(tuple_struct.expressions.size());
     for (const auto& expression : tuple_struct.expressions) {
@@ -164,6 +165,7 @@ Expression evaluateTable(
     Expression environment
 ) {
     const auto table_struct = storage.tables.at(table.index);
+    // Allocation:
     auto rows = std::map<std::string, Row>{};
     for (const auto& row : table_struct.rows) {
         const auto key = evaluator(row.key, environment);
