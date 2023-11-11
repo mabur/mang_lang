@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "operations/serialize.h"
+#include "passes/serialize.h"
 
 Storage storage;
 

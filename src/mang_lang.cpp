@@ -2,9 +2,9 @@
 #include "factory.h"
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
-#include "operations/evaluate.h"
-#include "operations/parse.h"
-#include "operations/serialize.h"
+#include "passes/evaluate.h"
+#include "passes/parse.h"
+#include "passes/serialize.h"
 
 static
 Expression parse(const std::string& string) {

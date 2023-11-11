@@ -8,9 +8,9 @@ add_library(shared
         built_in_functions/binary_tuple.cpp
         built_in_functions/built_in_functions.cpp
         built_in_functions/container.cpp
-        operations/evaluate.cpp
-        operations/parse.cpp
-        operations/serialize.cpp
+        passes/evaluate.cpp
+        passes/parse.cpp
+        passes/serialize.cpp
         expression.cpp
         factory.cpp
         mang_lang.cpp

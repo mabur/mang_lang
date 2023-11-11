@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "binary_tuple.h"
-#include "../operations/serialize.h"
+#include "../passes/serialize.h"
 #include "../expression.h"
 #include "../factory.h"
 
