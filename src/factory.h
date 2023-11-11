@@ -38,13 +38,11 @@ struct Storage {
     std::vector<PutEachAssignment> put_each_assignments;
     std::vector<DropAssignment> drop_assignments;
     std::vector<String> strings;
-    std::vector<Expression> expressions;
 };
 
 extern Storage storage;
 
 void clearMemory();
-std::string getLog();
 
 Character getCharacter(Expression expression);
 

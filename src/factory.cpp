@@ -19,23 +19,13 @@ Expression makeExpression(
     ArrayType& array
 ) {
     array.emplace_back(expression);
-    storage.expressions.push_back(Expression{type, array.size() - 1, code});
-    return storage.expressions.back();
+    return Expression{type, array.size() - 1, code};
 }
 
 } // namespace
 
 void clearMemory() {
     storage = Storage{};
-}
-
-std::string getLog() {
-    std::string log;
-    for (const auto expression : storage.expressions) {
-        serialize(log, expression);
-        log.append("\n");
-    }
-    return log;
 }
 
 // MAKERS:
@@ -139,8 +129,7 @@ Expression makeName(CodeRange code, Name expression) {
         return makeExpression(code, expression, NAME, storage.names);
     }
     else {
-        storage.expressions.push_back(Expression{NAME, name_index->second, code});
-        return storage.expressions.back();
+        return Expression{NAME, name_index->second, code};
     }
 }
 

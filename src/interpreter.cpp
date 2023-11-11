@@ -3,11 +3,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "factory.h"
 #include "mang_lang.h"
 
 namespace CommandLineArgumentIndex {
-    enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH, LOG_PATH};
+    enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
 }
 
 int main(int argc,  char **argv) {
@@ -49,18 +48,5 @@ int main(int argc,  char **argv) {
         cout << "Done." << endl;
     } catch (const std::runtime_error& e) {
         cout << e.what() << endl;
-    }
-    if (argc < CommandLineArgumentIndex::LOG_PATH + 1) {
-        cout << "Skipping logging." << endl;
-    } else {
-        cout << "Getting log ... ";
-        const auto log = getLog();
-        cout << "Done." << endl;
-        const auto log_file_path = argv[CommandLineArgumentIndex::LOG_PATH];
-        cout << "Writing log to " << log_file_path << " ... ";
-        auto log_file = ofstream{log_file_path};
-        log_file << log;
-        log_file.close();
-        cout << "Done." << endl;
     }
 }
