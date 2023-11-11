@@ -265,6 +265,8 @@ Expression parseDictionary(CodeRange code) {
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = std::vector<Expression>{};
+    // TODO: replace while and for indices with single index,
+    // then look at type tag at that index to determine if it is while or for.
     auto while_indices = std::vector<size_t>{};
     auto for_indices = std::vector<size_t>{};
     auto indexer = DictionaryNameIndexer{};
