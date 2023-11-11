@@ -219,6 +219,10 @@ SYSTEM IMPLEMENTATION
     - Name resolution for dictionary-definitions.
     - Loop resolution for dictionaries.
     - Name resolution in general.
+    - Name for this pass: (name) bind/binding, (name) resolve/resolution, semantic analysis.
+  - Links:
+      https://craftinginterpreters.com/resolving-and-binding.html
+      https://news.ycombinator.com/item?id=15218533
   - Current O(parents * members)
   - In practice I guess the slow parts are:
     - Jumping around in memory
