@@ -227,25 +227,25 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
     }
 }
 
-Expression parseWhileEndStatement(CodeRange code, size_t while_index) {
+Expression parseWhileEndStatement(CodeRange code, size_t start_index) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeWhileEndStatement(CodeRange{first, code.first}, {while_index});
+    return makeWhileEndStatement(CodeRange{first, code.first}, {start_index});
 }
 
-Expression parseForEndStatement(CodeRange code, size_t for_index) {
+Expression parseForEndStatement(CodeRange code, size_t start_index) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeForEndStatement(CodeRange{first, code.first}, {for_index});
+    return makeForEndStatement(CodeRange{first, code.first}, {start_index});
 }
 
-Expression parseForSimpleEndStatement(CodeRange code, size_t for_index) {
+Expression parseForSimpleEndStatement(CodeRange code, size_t start_index) {
     auto first = code.begin();
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeForSimpleEndStatement(CodeRange{first, code.first}, {for_index});
+    return makeForSimpleEndStatement(CodeRange{first, code.first}, {start_index});
 }
 
 Expression parseReturnStatement(CodeRange code) {
