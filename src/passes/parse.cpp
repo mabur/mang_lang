@@ -248,45 +248,38 @@ Expression parseDictionary(CodeRange code) {
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = std::vector<Expression>{};
-    auto loop_indices = std::vector<size_t>{};
+    auto loop_start_indices = std::vector<size_t>{};
     auto indexer = DictionaryNameIndexer{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         if (isKeyword(code, "while")) {
-            loop_indices.push_back(statements.size());
+            loop_start_indices.push_back(statements.size());
             statements.push_back(parseWhileStatement(code));
         }
         else if (isKeyword(code, "for")) {
-            loop_indices.push_back(statements.size());
+            loop_start_indices.push_back(statements.size());
             statements.push_back(parseForStatement(code, indexer));
         }
         else if (isKeyword(code, "end")) {
-            if (loop_indices.empty()) {
+            const auto loop_end_index = statements.size();
+            if (loop_start_indices.empty()) {
                 throw ParseException("end not matching while or for", code);
             }
-            if (statements.at(loop_indices.back()).type == WHILE_STATEMENT) {
-                const auto end_index = statements.size();
-                const auto while_index = loop_indices.back();
-                loop_indices.pop_back();
-                const auto while_statement_pointer = statements.at(while_index);
-                auto& while_statement = storage.while_statements.at(while_statement_pointer.index);
-                while_statement.end_index_ = end_index;
-                statements.push_back(parseWhileEndStatement(code, while_index));
+            const auto loop_start_index = loop_start_indices.back();
+            loop_start_indices.pop_back();
+            const auto start_expression = statements.at(loop_start_index);
+            if (start_expression.type == WHILE_STATEMENT) {
+                storage.while_statements.at(start_expression.index).end_index_ = loop_end_index;
+                statements.push_back(parseWhileEndStatement(code, loop_start_index));
+            } else if (start_expression.type == FOR_STATEMENT) {
+                storage.for_statements.at(start_expression.index).end_index_ = loop_end_index;
+                statements.push_back(parseForEndStatement(code, loop_start_index));
+            } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
+                storage.for_simple_statements.at(start_expression.index).end_index_ = loop_end_index;
+                statements.push_back(parseForEndStatement(code, loop_start_index));
             } else {
-                const auto end_index = statements.size();
-                const auto for_index = loop_indices.back();
-                loop_indices.pop_back();
-                const auto for_statement_pointer = statements.at(for_index);
-                if (for_statement_pointer.type == FOR_STATEMENT) {
-                    auto& for_statement = storage.for_statements.at(for_statement_pointer.index);
-                    for_statement.end_index_ = end_index;
-                }
-                else if (for_statement_pointer.type == FOR_SIMPLE_STATEMENT) {
-                    auto& for_statement = storage.for_simple_statements.at(for_statement_pointer.index);
-                    for_statement.end_index_ = end_index;
-                }
-                statements.push_back(parseForEndStatement(code, for_index));
+                throw ParseException("Unexpected start type for loop", code);
             }
         }
         else if (isKeyword(code, "return")) {
