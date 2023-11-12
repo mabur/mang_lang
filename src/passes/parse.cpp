@@ -10,16 +10,22 @@
 namespace {
 
 struct DictionaryNameIndexer {
-    std::unordered_map<size_t, size_t> index_from_name;
+    BoundLocalName getBoundLocalName(Expression name) {
+        return BoundLocalName{name.index, getDictionaryIndex(name.index)};
+    }
+    size_t definitionCount() const {
+        return count;
+    }
+private:
     size_t count = 0;
-
-    size_t getIndex(size_t name) {
-        const auto it = index_from_name.find(name);
-        if (it != index_from_name.end()) {
+    std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
+    size_t getDictionaryIndex(size_t global_index) {
+        const auto it = dictionary_index_from_global_index.find(global_index);
+        if (it != dictionary_index_from_global_index.end()) {
             return it->second;
         }
         else {
-            index_from_name[name] = count;
+            dictionary_index_from_global_index[global_index] = count;
             return count++;
         }
     }
@@ -152,7 +158,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDefinition(
             CodeRange{first, code.first},
-            Definition{{name.index, indexer.getIndex(name.index)}, expression}
+            Definition{indexer.getBoundLocalName(name), expression}
         );
     }
     else if (startsWith(code, '-')) {
@@ -160,7 +166,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDropAssignment(
             CodeRange{first, code.first},
-            DropAssignment{name.index, indexer.getIndex(name.index)}
+            DropAssignment{indexer.getBoundLocalName(name)}
         );
     }
     else if (startsWith(code, "+=")) {
@@ -171,7 +177,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutAssignment(
             CodeRange{first, code.first},
-            PutAssignment{{name.index, indexer.getIndex(name.index)}, expression}
+            PutAssignment{indexer.getBoundLocalName(name), expression}
         );
     }
     else {
@@ -182,7 +188,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutEachAssignment(
             CodeRange{first, code.first},
-            PutEachAssignment{{name.index, indexer.getIndex(name.index)}, expression}
+            PutEachAssignment{indexer.getBoundLocalName(name), expression}
         );
     }
 }
@@ -198,10 +204,10 @@ Expression parseWhileStatement(CodeRange code) {
 }
 
 Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
-    auto first = code.begin();
+    const auto first = code.begin();
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
-    auto first_name = parseName(code);
+    const auto first_name = parseName(code);
     code.first = end(first_name);
     code = parseWhiteSpace(code);
     if (isKeyword(code, "in")) {
@@ -209,20 +215,18 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         auto second_name = parseName(code);
         code.first = end(second_name);
-        const auto first_name_index = indexer.getIndex(first_name.index);
-        const auto second_name_index = indexer.getIndex(second_name.index);
         return makeForStatement(
             CodeRange{first, code.first},
             ForStatement{
-                {first_name.index, first_name_index},
-                {second_name.index, second_name_index},
+                indexer.getBoundLocalName(first_name),
+                indexer.getBoundLocalName(second_name),
                 0,
             }
         );
     }
     else {
         return makeForSimpleStatement(CodeRange{first, code.first},
-            ForSimpleStatement{{first_name.index, indexer.getIndex(first_name.index)}, 0}
+            ForSimpleStatement{indexer.getBoundLocalName(first_name), 0}
         );
     }
 }
@@ -304,7 +308,7 @@ Expression parseDictionary(CodeRange code) {
     }
     code = parseCharacter(code, '}');
     return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{statements, indexer.count}
+        CodeRange{first, code.begin()}, Dictionary{statements, indexer.definitionCount()}
     );
 }
 

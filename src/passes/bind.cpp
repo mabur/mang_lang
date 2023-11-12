@@ -9,16 +9,16 @@
 namespace {
 
 struct DictionaryNameIndexer {
-    std::unordered_map<size_t, size_t> index_from_name;
+    std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
     size_t count = 0;
 
-    size_t getIndex(size_t name) {
-        const auto it = index_from_name.find(name);
-        if (it != index_from_name.end()) {
+    size_t getDictionaryIndex(size_t name) {
+        const auto it = dictionary_index_from_global_index.find(name);
+        if (it != dictionary_index_from_global_index.end()) {
             return it->second;
         }
         else {
-            index_from_name[name] = count;
+            dictionary_index_from_global_index[name] = count;
             return count++;
         }
     }
