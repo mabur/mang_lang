@@ -240,10 +240,14 @@ struct EvaluatedStack {
 
 // STATEMENTS BEGIN
 
+struct BoundLocalName {
+    size_t global_index; // Index to this name in the global storage.
+    size_t dictionary_index; // Index to this name and its data in the dictionary.
+};
+
 struct Definition {
-    size_t name;
+    BoundLocalName name;
     Expression expression;
-    size_t name_index;
 };
 
 struct PutAssignment {

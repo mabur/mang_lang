@@ -7,18 +7,16 @@
 Definition makeDefinitionBuiltIn(const std::string& name, std::function<Expression(Expression)> function) {
     static size_t i = 0;
     return {
-        makeName(CodeRange{}, name).index,
+        {makeName(CodeRange{}, name).index, i++},
         makeFunctionBuiltIn(CodeRange{}, {function}),
-        i++
     };
 }
 
 Definition makeDefinitionBuiltInTyped(const std::string& name, std::function<Expression(Expression)> function) {
     static size_t i = 0;
     return {
-        makeName(CodeRange{}, name).index,
-        makeFunctionBuiltIn(CodeRange{}, {function}),
-        i++
+        {makeName(CodeRange{}, name).index, i++},
+        makeFunctionBuiltIn(CodeRange{}, {function})
     };
 }
 

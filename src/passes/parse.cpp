@@ -152,7 +152,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDefinition(
             CodeRange{first, code.first},
-            Definition{name.index, expression, indexer.getIndex(name.index)}
+            Definition{{name.index, indexer.getIndex(name.index)}, expression}
         );
     }
     else if (startsWith(code, '-')) {

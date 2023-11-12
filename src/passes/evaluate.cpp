@@ -47,7 +47,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
     const auto& dictionary_super = storage.evaluated_dictionaries.at(super.index);
     const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
     for (const auto& definition_super : dictionary_super.definitions) {
-        const auto name_super = definition_super.name;
+        const auto name_super = definition_super.name.global_index;
         const auto value_sub = dictionary_sub.optionalLookup(name_super);
         if (value_sub) {
             checkTypes(definition_super.expression, *value_sub, description);
@@ -216,7 +216,7 @@ Expression applyFunction(
     const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument);
     checkArgument(evaluator, argument, input, function_struct.environment);
-    const auto definitions = std::vector<Definition>{{argument.name, input, 0}};
+    const auto definitions = std::vector<Definition>{{{argument.name, 0}, input}};
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
@@ -278,7 +278,7 @@ Expression applyFunctionTuple(
         const auto argument = storage.arguments.at(argument_index + i);
         const auto expression = tuple.expressions.at(i);
         checkArgument(evaluator, argument, expression, function_struct.environment);
-        definitions.at(i) = Definition{argument.name, expression, i};
+        definitions.at(i) = Definition{{argument.name, i}, expression};
     }
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
@@ -626,14 +626,13 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         if (type == DEFINITION) {
             auto definition = storage.definitions.at(statement.index);
             definition.expression = Expression{ANY, 0, statement.range};
-            definitions.at(definition.name_index) = definition;
+            definitions.at(definition.name.dictionary_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.at(statement.index);
             definitions.at(for_statement.name_index_item) = Definition{
-                for_statement.name_item,
+                {for_statement.name_item, for_statement.name_index_item},
                 Expression{ANY, 0, statement.range},
-                for_statement.name_index_item
             };
         }
     }
@@ -680,7 +679,7 @@ Expression evaluateDictionaryTypes(
             const auto value = evaluate_types(right_expression, result);
             // TODO: is this a principled approach?
             if (value.type != ANY) {
-                setDictionaryDefinition(result, definition.name_index, value);
+                setDictionaryDefinition(result, definition.name.dictionary_index, value);
             }
         }
         else if (type == PUT_ASSIGNMENT) {
@@ -759,7 +758,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto definition = storage.definitions.at(statement.index);
             const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
-            setDictionaryDefinition(result, definition.name_index, value);
+            setDictionaryDefinition(result, definition.name.dictionary_index, value);
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
