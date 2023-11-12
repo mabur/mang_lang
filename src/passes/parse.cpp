@@ -242,58 +242,41 @@ Expression parseReturnStatement(CodeRange code) {
     code = parseWhiteSpace(code);
     return Expression{RETURN_STATEMENT, 0, CodeRange{first, code.first}};
 }
-    
-bool isEndMatchingWhile(
-    const std::vector<size_t>& while_indices,
-    const std::vector<size_t>& for_indices,
-    CodeRange code
-) {
-    if (while_indices.empty() && for_indices.empty()) {
-        throw ParseException("end not matching while or for", code);
-    }
-    if (while_indices.empty()) {
-        return false;
-    }
-    if (for_indices.empty()) {
-        return true;
-    }
-    return while_indices.back() > for_indices.back();
-}
 
 Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = std::vector<Expression>{};
-    // TODO: replace while and for indices with single index,
-    // then look at type tag at that index to determine if it is while or for.
-    auto while_indices = std::vector<size_t>{};
-    auto for_indices = std::vector<size_t>{};
+    auto loop_indices = std::vector<size_t>{};
     auto indexer = DictionaryNameIndexer{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         if (isKeyword(code, "while")) {
-            while_indices.push_back(statements.size());
+            loop_indices.push_back(statements.size());
             statements.push_back(parseWhileStatement(code));
         }
         else if (isKeyword(code, "for")) {
-            for_indices.push_back(statements.size());
+            loop_indices.push_back(statements.size());
             statements.push_back(parseForStatement(code, indexer));
         }
         else if (isKeyword(code, "end")) {
-            if (isEndMatchingWhile(while_indices, for_indices, code)) {
+            if (loop_indices.empty()) {
+                throw ParseException("end not matching while or for", code);
+            }
+            if (statements.at(loop_indices.back()).type == WHILE_STATEMENT) {
                 const auto end_index = statements.size();
-                const auto while_index = while_indices.back();
-                while_indices.pop_back();
+                const auto while_index = loop_indices.back();
+                loop_indices.pop_back();
                 const auto while_statement_pointer = statements.at(while_index);
                 auto& while_statement = storage.while_statements.at(while_statement_pointer.index);
                 while_statement.end_index_ = end_index;
                 statements.push_back(parseWhileEndStatement(code, while_index));
             } else {
                 const auto end_index = statements.size();
-                const auto for_index = for_indices.back();
-                for_indices.pop_back();
+                const auto for_index = loop_indices.back();
+                loop_indices.pop_back();
                 const auto for_statement_pointer = statements.at(for_index);
                 if (for_statement_pointer.type == FOR_STATEMENT) {
                     auto& for_statement = storage.for_statements.at(for_statement_pointer.index);
