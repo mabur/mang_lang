@@ -698,13 +698,13 @@ Expression evaluateDictionaryTypes(
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
             {
-                const auto current = getDictionaryDefinition(result, put_each_assignment.name_index);
+                const auto current = getDictionaryDefinition(result, put_each_assignment.name.dictionary_index);
                 const auto value = container_functions::takeTyped(container);
                 const auto tuple = makeEvaluatedTuple(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::putTyped(tuple);
-                setDictionaryDefinition(result, put_each_assignment.name_index, new_value);
+                setDictionaryDefinition(result, put_each_assignment.name.dictionary_index, new_value);
             }
         }
         else if (type == DROP_ASSIGNMENT) {
@@ -781,13 +781,13 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 boolean(container);
                 container = container_functions::drop(container)
             ) {
-                const auto current = getDictionaryDefinition(result, put_each_assignment.name_index);
+                const auto current = getDictionaryDefinition(result, put_each_assignment.name.dictionary_index);
                 const auto value = container_functions::take(container);
                 const auto tuple = makeEvaluatedTuple(
                     {}, EvaluatedTuple{{value, current}}
                 );
                 const auto new_value = container_functions::put(tuple);
-                setDictionaryDefinition(result, put_each_assignment.name_index, new_value);
+                setDictionaryDefinition(result, put_each_assignment.name.dictionary_index, new_value);
             }
             i += 1;
         }
