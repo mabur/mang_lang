@@ -795,7 +795,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             if (boolean(evaluate(while_statement.expression, result))) {
                 i += 1;
             } else {
-                i = while_statement.end_index_ + 1;
+                i = while_statement.end_index + 1;
             }
         }
         else if (type == FOR_STATEMENT) {
@@ -806,7 +806,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 setDictionaryDefinition(result, for_statement.item_name, value);
                 i += 1;
             } else {
-                i = for_statement.end_index_ + 1;
+                i = for_statement.end_index + 1;
             }
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
@@ -815,16 +815,16 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             if (boolean(container)) {
                 i += 1;
             } else {
-                i = for_statement.end_index_ + 1;
+                i = for_statement.end_index + 1;
             }
         }
         else if (type == WHILE_END_STATEMENT) {
             const auto end_statement = storage.while_end_statements.at(statement.index);
-            i = end_statement.while_index_;
+            i = end_statement.start_index;
         }
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = storage.for_end_statements.at(statement.index);
-            i = end_statement.for_index_;
+            i = end_statement.start_index;
             const auto name_index = storage.for_statements.at(statements.at(i).index).container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
@@ -832,7 +832,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == FOR_SIMPLE_END_STATEMENT) {
             const auto end_statement = storage.for_simple_end_statements.at(statement.index);
-            i = end_statement.for_index_;
+            i = end_statement.start_index;
             const auto name_index = storage.for_simple_statements.at(statements.at(i).index).container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);

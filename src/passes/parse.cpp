@@ -282,13 +282,13 @@ Expression parseDictionary(CodeRange code) {
             loop_start_indices.pop_back();
             const auto start_expression = statements.at(loop_start_index);
             if (start_expression.type == WHILE_STATEMENT) {
-                storage.while_statements.at(start_expression.index).end_index_ = loop_end_index;
+                storage.while_statements.at(start_expression.index).end_index = loop_end_index;
                 statements.push_back(parseWhileEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_STATEMENT) {
-                storage.for_statements.at(start_expression.index).end_index_ = loop_end_index;
+                storage.for_statements.at(start_expression.index).end_index = loop_end_index;
                 statements.push_back(parseForEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
-                storage.for_simple_statements.at(start_expression.index).end_index_ = loop_end_index;
+                storage.for_simple_statements.at(start_expression.index).end_index = loop_end_index;
                 statements.push_back(parseForSimpleEndStatement(code, loop_start_index));
             } else {
                 throw ParseException("Unexpected start type for loop", code);

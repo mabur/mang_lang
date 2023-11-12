@@ -268,30 +268,30 @@ struct DropAssignment {
 
 struct WhileStatement {
     Expression expression;
-    size_t end_index_;
+    size_t end_index;
 };
 
 struct ForStatement {
     BoundLocalName item_name;
     BoundLocalName container_name;
-    size_t end_index_;
+    size_t end_index;
 };
 
 struct ForSimpleStatement {
     BoundLocalName container_name;
-    size_t end_index_;
+    size_t end_index;
 };
 
 struct WhileEndStatement {
-    size_t while_index_;
+    size_t start_index;
 };
 
 struct ForEndStatement {
-    size_t for_index_;
+    size_t start_index;
 };
 
 struct ForSimpleEndStatement {
-    size_t for_index_;
+    size_t start_index;
 };
 
 // STATEMENTS END
