@@ -278,9 +278,8 @@ struct ForStatement {
 };
 
 struct ForSimpleStatement {
-    size_t name_container;
+    BoundLocalName container_name;
     size_t end_index_;
-    size_t name_index;
 };
 
 struct WhileEndStatement {

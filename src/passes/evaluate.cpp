@@ -726,7 +726,7 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.at(statement.index);
-            const auto container = getDictionaryDefinition(result, for_statement.name_index);
+            const auto container = getDictionaryDefinition(result, for_statement.container_name.dictionary_index);
             booleanTypes(container);
         }
         else if (type == RETURN_STATEMENT) {
@@ -738,7 +738,7 @@ Expression evaluateDictionaryTypes(
 size_t getContainerNameIndex(Expression expression) {
     switch (expression.type) {
         case FOR_STATEMENT: return storage.for_statements.at(expression.index).name_index_container;
-        case FOR_SIMPLE_STATEMENT: return storage.for_simple_statements.at(expression.index).name_index;
+        case FOR_SIMPLE_STATEMENT: return storage.for_simple_statements.at(expression.index).container_name.dictionary_index;
         default: throw UnexpectedExpression(expression.type, "getContainerNameIndex");
     }
 }
@@ -819,7 +819,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.at(statement.index);
-            const auto container = getDictionaryDefinition(result, for_statement.name_index);
+            const auto container = getDictionaryDefinition(result, for_statement.container_name.dictionary_index);
             if (boolean(container)) {
                 i += 1;
             } else {
