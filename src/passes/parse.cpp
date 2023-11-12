@@ -152,7 +152,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDefinition(
             CodeRange{first, code.first},
-            Definition{name.index, expression, indexer.getIndex(name.index)}
+            Definition{{name.index, indexer.getIndex(name.index)}, expression}
         );
     }
     else if (startsWith(code, '-')) {
@@ -171,7 +171,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutAssignment(
             CodeRange{first, code.first},
-            PutAssignment{name.index, expression, indexer.getIndex(name.index)}
+            PutAssignment{{name.index, indexer.getIndex(name.index)}, expression}
         );
     }
     else {
@@ -182,7 +182,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutEachAssignment(
             CodeRange{first, code.first},
-            PutEachAssignment{name.index, expression, indexer.getIndex(name.index)}
+            PutEachAssignment{{name.index, indexer.getIndex(name.index)}, expression}
         );
     }
 }
@@ -211,13 +211,18 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
         code.first = end(second_name);
         const auto first_name_index = indexer.getIndex(first_name.index);
         const auto second_name_index = indexer.getIndex(second_name.index);
-        return makeForStatement(CodeRange{first, code.first},
-            ForStatement{first_name.index, second_name.index, 0, first_name_index, second_name_index}
+        return makeForStatement(
+            CodeRange{first, code.first},
+            ForStatement{
+                {first_name.index, first_name_index},
+                {second_name.index, second_name_index},
+                0,
+            }
         );
     }
     else {
         return makeForSimpleStatement(CodeRange{first, code.first},
-            ForSimpleStatement{first_name.index, 0, indexer.getIndex(first_name.index)}
+            ForSimpleStatement{{first_name.index, indexer.getIndex(first_name.index)}, 0}
         );
     }
 }
@@ -234,6 +239,13 @@ Expression parseForEndStatement(CodeRange code, size_t for_index) {
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
     return makeForEndStatement(CodeRange{first, code.first}, {for_index});
+}
+
+Expression parseForSimpleEndStatement(CodeRange code, size_t for_index) {
+    auto first = code.begin();
+    code = parseKeyword(code, "end");
+    code = parseWhiteSpace(code);
+    return makeForSimpleEndStatement(CodeRange{first, code.first}, {for_index});
 }
 
 Expression parseReturnStatement(CodeRange code) {
@@ -277,7 +289,7 @@ Expression parseDictionary(CodeRange code) {
                 statements.push_back(parseForEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
                 storage.for_simple_statements.at(start_expression.index).end_index_ = loop_end_index;
-                statements.push_back(parseForEndStatement(code, loop_start_index));
+                statements.push_back(parseForSimpleEndStatement(code, loop_start_index));
             } else {
                 throw ParseException("Unexpected start type for loop", code);
             }

@@ -173,6 +173,10 @@ Expression makeForEndStatement(CodeRange code, ForEndStatement expression) {
     return makeExpression(code, expression, FOR_END_STATEMENT, storage.for_end_statements);
 }
 
+Expression makeForSimpleEndStatement(CodeRange code, ForSimpleEndStatement expression) {
+    return makeExpression(code, expression, FOR_SIMPLE_END_STATEMENT, storage.for_simple_end_statements);
+}
+
 Expression makeString(CodeRange code, String expression) {
     return makeExpression(code, expression, STRING, storage.strings);
 }

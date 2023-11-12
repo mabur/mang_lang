@@ -67,28 +67,28 @@ void serializeIs(std::string& s, const IsExpression& is_expression) {
 }
 
 void serializeDefinition(std::string& s, const Definition& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.global_index);
     s.append("=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializePutAssignment(std::string& s, const PutAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.global_index);
     s.append("+=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializePutEachAssignment(std::string& s, const PutEachAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.global_index);
     s.append("++=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
 void serializeDropAssignment(std::string& s, const DropAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.global_index);
     s.append("-- ");
 }
 
@@ -100,15 +100,15 @@ void serializeWhileStatement(std::string& s, const WhileStatement& element) {
 
 void serializeForStatement(std::string& s, const ForStatement& element) {
     s.append("for ");
-    serializeName(s, element.name_item);
+    serializeName(s, element.item_name.global_index);
     s.append(" in ");
-    serializeName(s, element.name_container);
+    serializeName(s, element.container_name.global_index);
     s.append(" ");
 }
 
 void serializeForSimpleStatement(std::string& s, const ForSimpleStatement& element) {
     s.append("for ");
-    serializeName(s, element.name_container);
+    serializeName(s, element.container_name.global_index);
     s.append(" ");
 }
 
@@ -120,7 +120,7 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
     }
     s.append("{");
     for (const auto& pair : dictionary.definitions) {
-        serializeName(s, pair.name);
+        serializeName(s, pair.name.global_index);
         s.append("=");
         serializer(s, pair.expression);
         s.append(" ");
@@ -409,6 +409,7 @@ void serialize(std::string& s, Expression expression) {
         case NO: s.append("no"); return;
         case WHILE_END_STATEMENT: s.append("end "); return;
         case FOR_END_STATEMENT: s.append("end "); return;
+        case FOR_SIMPLE_END_STATEMENT: s.append("end "); return;
         case RETURN_STATEMENT: s.append("return "); return;
         default: s.append(NAMES[expression.type]); return;
     }

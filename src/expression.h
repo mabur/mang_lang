@@ -42,6 +42,7 @@ enum ExpressionType {
     FOR_SIMPLE_STATEMENT,
     WHILE_END_STATEMENT,
     FOR_END_STATEMENT,
+    FOR_SIMPLE_END_STATEMENT,
     RETURN_STATEMENT,
     NUMBER,
     STRING,
@@ -86,6 +87,7 @@ const auto NAMES = std::vector<std::string>{
     "FOR_SIMPLE_STATEMENT,",
     "WHILE_END_STATEMENT",
     "FOR_END_STATEMENT",
+    "FOR_SIMPLE_END_STATEMENT",
     "RETURN_STATEMENT",
     "NUMBER",
     "STRING",
@@ -240,27 +242,28 @@ struct EvaluatedStack {
 
 // STATEMENTS BEGIN
 
+struct BoundLocalName {
+    size_t global_index; // Index to this name in the global storage.
+    size_t dictionary_index; // Index to this name and its data in the dictionary.
+};
+
 struct Definition {
-    size_t name;
+    BoundLocalName name;
     Expression expression;
-    size_t name_index;
 };
 
 struct PutAssignment {
-    size_t name;
+    BoundLocalName name;
     Expression expression;
-    size_t name_index;
 };
 
 struct PutEachAssignment {
-    size_t name;
+    BoundLocalName name;
     Expression expression;
-    size_t name_index;
 };
 
 struct DropAssignment {
-    size_t name;
-    size_t name_index;
+    BoundLocalName name;
 };
 
 struct WhileStatement {
@@ -269,17 +272,14 @@ struct WhileStatement {
 };
 
 struct ForStatement {
-    size_t name_item;
-    size_t name_container;
+    BoundLocalName item_name;
+    BoundLocalName container_name;
     size_t end_index_;
-    size_t name_index_item;
-    size_t name_index_container;
 };
 
 struct ForSimpleStatement {
-    size_t name_container;
+    BoundLocalName container_name;
     size_t end_index_;
-    size_t name_index;
 };
 
 struct WhileEndStatement {
@@ -287,6 +287,10 @@ struct WhileEndStatement {
 };
 
 struct ForEndStatement {
+    size_t for_index_;
+};
+
+struct ForSimpleEndStatement {
     size_t for_index_;
 };
 
