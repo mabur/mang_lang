@@ -270,11 +270,9 @@ struct WhileStatement {
 };
 
 struct ForStatement {
-    size_t name_item;
-    size_t name_container;
+    BoundLocalName item_name;
+    BoundLocalName container_name;
     size_t end_index_;
-    size_t name_index_item;
-    size_t name_index_container;
 };
 
 struct ForSimpleStatement {

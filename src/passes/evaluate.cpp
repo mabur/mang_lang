@@ -630,8 +630,8 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.at(statement.index);
-            definitions.at(for_statement.name_index_item) = Definition{
-                {for_statement.name_item, for_statement.name_index_item},
+            definitions.at(for_statement.item_name.dictionary_index) = Definition{
+                for_statement.item_name,
                 Expression{ANY, 0, statement.range},
             };
         }
@@ -719,10 +719,10 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.at(statement.index);
-            const auto container = getDictionaryDefinition(result, for_statement.name_index_container);
+            const auto container = getDictionaryDefinition(result, for_statement.container_name.dictionary_index);
             booleanTypes(container);
             const auto value = container_functions::takeTyped(container);
-            setDictionaryDefinition(result, for_statement.name_index_item, value);
+            setDictionaryDefinition(result, for_statement.item_name.dictionary_index, value);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.at(statement.index);
@@ -737,7 +737,7 @@ Expression evaluateDictionaryTypes(
 
 size_t getContainerNameIndex(Expression expression) {
     switch (expression.type) {
-        case FOR_STATEMENT: return storage.for_statements.at(expression.index).name_index_container;
+        case FOR_STATEMENT: return storage.for_statements.at(expression.index).container_name.dictionary_index;
         case FOR_SIMPLE_STATEMENT: return storage.for_simple_statements.at(expression.index).container_name.dictionary_index;
         default: throw UnexpectedExpression(expression.type, "getContainerNameIndex");
     }
@@ -808,10 +808,10 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.at(statement.index);
-            const auto container = getDictionaryDefinition(result, for_statement.name_index_container);
+            const auto container = getDictionaryDefinition(result, for_statement.container_name.dictionary_index);
             if (boolean(container)) {
                 const auto value = container_functions::take(container);
-                setDictionaryDefinition(result, for_statement.name_index_item, value);
+                setDictionaryDefinition(result, for_statement.item_name.dictionary_index, value);
                 i += 1;
             } else {
                 i = for_statement.end_index_ + 1;
