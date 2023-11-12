@@ -241,6 +241,13 @@ Expression parseForEndStatement(CodeRange code, size_t for_index) {
     return makeForEndStatement(CodeRange{first, code.first}, {for_index});
 }
 
+Expression parseForSimpleEndStatement(CodeRange code, size_t for_index) {
+    auto first = code.begin();
+    code = parseKeyword(code, "end");
+    code = parseWhiteSpace(code);
+    return makeForSimpleEndStatement(CodeRange{first, code.first}, {for_index});
+}
+
 Expression parseReturnStatement(CodeRange code) {
     auto first = code.begin();
     code = parseKeyword(code, "return");
@@ -282,7 +289,7 @@ Expression parseDictionary(CodeRange code) {
                 statements.push_back(parseForEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
                 storage.for_simple_statements.at(start_expression.index).end_index_ = loop_end_index;
-                statements.push_back(parseForEndStatement(code, loop_start_index));
+                statements.push_back(parseForSimpleEndStatement(code, loop_start_index));
             } else {
                 throw ParseException("Unexpected start type for loop", code);
             }

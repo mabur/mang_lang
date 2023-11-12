@@ -735,14 +735,6 @@ Expression evaluateDictionaryTypes(
     return result;
 }
 
-BoundLocalName getContainerNameIndex(Expression expression) {
-    switch (expression.type) {
-        case FOR_STATEMENT: return storage.for_statements.at(expression.index).container_name;
-        case FOR_SIMPLE_STATEMENT: return storage.for_simple_statements.at(expression.index).container_name;
-        default: throw UnexpectedExpression(expression.type, "getContainerNameIndex");
-    }
-}
-
 Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
     const auto initial_definitions = initializeDefinitions(dictionary_struct);
@@ -833,7 +825,15 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = storage.for_end_statements.at(statement.index);
             i = end_statement.for_index_;
-            const auto name_index = getContainerNameIndex(statements.at(i));
+            const auto name_index = storage.for_statements.at(statements.at(i).index).container_name;
+            const auto old_container = getDictionaryDefinition(result, name_index);
+            const auto new_container = container_functions::drop(old_container);
+            setDictionaryDefinition(result, name_index, new_container);
+        }
+        else if (type == FOR_SIMPLE_END_STATEMENT) {
+            const auto end_statement = storage.for_simple_end_statements.at(statement.index);
+            i = end_statement.for_index_;
+            const auto name_index = storage.for_simple_statements.at(statements.at(i).index).container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);

@@ -33,6 +33,7 @@ struct Storage {
     std::vector<ForSimpleStatement> for_simple_statements;
     std::vector<WhileEndStatement> while_end_statements;
     std::vector<ForEndStatement> for_end_statements;
+    std::vector<ForSimpleEndStatement> for_simple_end_statements;
     std::vector<Definition> definitions;
     std::vector<PutAssignment> put_assignments;
     std::vector<PutEachAssignment> put_each_assignments;
@@ -80,4 +81,5 @@ Expression makeForStatement(CodeRange code, ForStatement expression);
 Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression);
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
+Expression makeForSimpleEndStatement(CodeRange code, ForSimpleEndStatement expression);
 Expression makeString(CodeRange code, String expression);

@@ -409,6 +409,7 @@ void serialize(std::string& s, Expression expression) {
         case NO: s.append("no"); return;
         case WHILE_END_STATEMENT: s.append("end "); return;
         case FOR_END_STATEMENT: s.append("end "); return;
+        case FOR_SIMPLE_END_STATEMENT: s.append("end "); return;
         case RETURN_STATEMENT: s.append("return "); return;
         default: s.append(NAMES[expression.type]); return;
     }
