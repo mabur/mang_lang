@@ -13,11 +13,10 @@ struct DictionaryNameIndexer {
     BoundLocalName getBoundLocalName(Expression name) {
         return BoundLocalName{name.index, getDictionaryIndex(name.index)};
     }
-    size_t definitionCount() const {
-        return count;
+    size_t size() const {
+        return dictionary_index_from_global_index.size();
     }
 private:
-    size_t count = 0;
     std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
     size_t getDictionaryIndex(size_t global_index) {
         const auto it = dictionary_index_from_global_index.find(global_index);
@@ -25,8 +24,9 @@ private:
             return it->second;
         }
         else {
+            const auto count = size();
             dictionary_index_from_global_index[global_index] = count;
-            return count++;
+            return count;
         }
     }
 };
@@ -308,7 +308,7 @@ Expression parseDictionary(CodeRange code) {
     }
     code = parseCharacter(code, '}');
     return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{statements, indexer.definitionCount()}
+        CodeRange{first, code.begin()}, Dictionary{statements, indexer.size()}
     );
 }
 
