@@ -88,7 +88,7 @@ void serializePutEachAssignment(std::string& s, const PutEachAssignment& element
 }
 
 void serializeDropAssignment(std::string& s, const DropAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.global_index);
     s.append("-- ");
 }
 

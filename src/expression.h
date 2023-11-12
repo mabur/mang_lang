@@ -261,8 +261,7 @@ struct PutEachAssignment {
 };
 
 struct DropAssignment {
-    size_t name;
-    size_t name_index;
+    BoundLocalName name;
 };
 
 struct WhileStatement {

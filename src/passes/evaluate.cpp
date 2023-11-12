@@ -709,9 +709,9 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = storage.drop_assignments.at(statement.index);
-            const auto current = getDictionaryDefinition(result, drop_assignment.name_index);
+            const auto current = getDictionaryDefinition(result, drop_assignment.name.dictionary_index);
             const auto new_value = container_functions::dropTyped(current);
-            setDictionaryDefinition(result, drop_assignment.name_index, new_value);
+            setDictionaryDefinition(result, drop_assignment.name.dictionary_index, new_value);
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.at(statement.index);
@@ -793,9 +793,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = storage.drop_assignments.at(statement.index);
-            const auto current = getDictionaryDefinition(result, drop_assignment.name_index);
+            const auto current = getDictionaryDefinition(result, drop_assignment.name.dictionary_index);
             const auto new_value = container_functions::drop(current);
-            setDictionaryDefinition(result, drop_assignment.name_index, new_value);
+            setDictionaryDefinition(result, drop_assignment.name.dictionary_index, new_value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
