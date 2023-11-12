@@ -251,9 +251,8 @@ struct Definition {
 };
 
 struct PutAssignment {
-    size_t name;
+    BoundLocalName name;
     Expression expression;
-    size_t name_index;
 };
 
 struct PutEachAssignment {

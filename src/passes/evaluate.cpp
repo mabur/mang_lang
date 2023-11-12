@@ -686,12 +686,12 @@ Expression evaluateDictionaryTypes(
             const auto put_assignment = storage.put_assignments.at(statement.index);
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
-            const auto current = getDictionaryDefinition(result, put_assignment.name_index);
+            const auto current = getDictionaryDefinition(result, put_assignment.name.dictionary_index);
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::putTyped(tuple);
-            setDictionaryDefinition(result, put_assignment.name_index, new_value);
+            setDictionaryDefinition(result, put_assignment.name.dictionary_index, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = storage.put_each_assignments.at(statement.index);
@@ -765,12 +765,12 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto put_assignment = storage.put_assignments.at(statement.index);
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
-            const auto current = getDictionaryDefinition(result, put_assignment.name_index);
+            const auto current = getDictionaryDefinition(result, put_assignment.name.dictionary_index);
             const auto tuple = makeEvaluatedTuple(
                 {}, EvaluatedTuple{{value, current}}
             );
             const auto new_value = container_functions::put(tuple);
-            setDictionaryDefinition(result, put_assignment.name_index, new_value);
+            setDictionaryDefinition(result, put_assignment.name.dictionary_index, new_value);
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {

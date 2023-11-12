@@ -74,7 +74,7 @@ void serializeDefinition(std::string& s, const Definition& element) {
 }
 
 void serializePutAssignment(std::string& s, const PutAssignment& element) {
-    serializeName(s, element.name);
+    serializeName(s, element.name.global_index);
     s.append("+=");
     serialize(s, element.expression);
     s.append(" ");

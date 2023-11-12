@@ -171,7 +171,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutAssignment(
             CodeRange{first, code.first},
-            PutAssignment{name.index, expression, indexer.getIndex(name.index)}
+            PutAssignment{{name.index, indexer.getIndex(name.index)}, expression}
         );
     }
     else {
