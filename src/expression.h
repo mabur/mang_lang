@@ -139,6 +139,11 @@ using Number = double;
 using Character = char;
 using Name = std::string;
 
+struct BoundLocalName {
+    size_t global_index; // Index to this name in the global storage.
+    size_t dictionary_index; // Index to this name and its data in the dictionary.
+};
+
 struct Argument {
     Expression type; // Optional
     size_t name;
@@ -241,11 +246,6 @@ struct EvaluatedStack {
 };
 
 // STATEMENTS BEGIN
-
-struct BoundLocalName {
-    size_t global_index; // Index to this name in the global storage.
-    size_t dictionary_index; // Index to this name and its data in the dictionary.
-};
 
 struct Definition {
     BoundLocalName name;
