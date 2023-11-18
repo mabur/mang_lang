@@ -216,9 +216,8 @@ struct FunctionApplication {
     Expression child;
 };
 
-// TODO: type alias instead of struct?
 struct LookupSymbol {
-    size_t name;
+    BoundGlobalName name;
 };
 
 struct String {
