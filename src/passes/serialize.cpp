@@ -150,7 +150,7 @@ void serializeLookupChild(std::string& s, const LookupChild& lookup_child) {
 }
 
 void serializeFunctionApplication(std::string& s, const FunctionApplication& function_application) {
-    serializeName(s, function_application.name);
+    serializeName(s, function_application.name.global_index);
     s.append("!");
     serialize(s, function_application.child);
 }

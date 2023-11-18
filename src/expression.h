@@ -212,7 +212,7 @@ struct LookupChild {
 };
 
 struct FunctionApplication {
-    size_t name;
+    BoundGlobalName name;
     Expression child;
 };
 

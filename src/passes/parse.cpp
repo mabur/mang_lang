@@ -504,7 +504,9 @@ Expression parseSubstitution(CodeRange code) {
         code = parseCharacter(code);
         auto child = parseExpression(code);
         code.first = end(child);
-        return makeFunctionApplication(CodeRange{first, code.first}, {name.index, child});
+        return makeFunctionApplication(
+            CodeRange{first, code.first}, {BoundGlobalName{name.index}, child}
+        );
     }
     if (startsWith(code, ':')) {
         code = parseCharacter(code);

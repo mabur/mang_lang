@@ -919,7 +919,7 @@ Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
     const auto function_application_struct = storage.function_applications.at(function_application.index);
-    const auto function = lookupDictionary(function_application_struct.name, environment);
+    const auto function = lookupDictionary(function_application_struct.name.global_index, environment);
     const auto input = evaluate_types(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate_types, function, input);
@@ -943,7 +943,7 @@ Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
     const auto function_application_struct = storage.function_applications.at(function_application.index);
-    const auto function = lookupDictionary(function_application_struct.name, environment);
+    const auto function = lookupDictionary(function_application_struct.name.global_index, environment);
     const auto input = evaluate(function_application_struct.child, environment);
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate, function, input);
