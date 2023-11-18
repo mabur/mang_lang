@@ -9,15 +9,18 @@
 
 namespace {
 
+BoundLocalName getUnboundLocalName(Expression name) {
+    return BoundLocalName{name.index, 0};
+}
+
 struct DictionaryNameIndexer {
-    BoundLocalName getBoundLocalName(Expression name) {
-        return BoundLocalName{name.index, getDictionaryIndex(name.index)};
-    }
     size_t size() const {
         return dictionary_index_from_global_index.size();
     }
+    void bindName(BoundLocalName& name) {
+        name.dictionary_index = getDictionaryIndex(name.global_index);
+    }
 private:
-    std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
     size_t getDictionaryIndex(size_t global_index) {
         const auto it = dictionary_index_from_global_index.find(global_index);
         if (it != dictionary_index_from_global_index.end()) {
@@ -29,6 +32,7 @@ private:
             return count;
         }
     }
+    std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
 };
 
 const CodeCharacter* end(Expression expression) {
@@ -144,7 +148,7 @@ Expression parseArgument(CodeRange code) {
     }
 }
 
-Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
+Expression parseNamedElement(CodeRange code) {
     auto first = code.begin();
     auto name = parseName(code);
     code.first = end(name);
@@ -158,7 +162,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDefinition(
             CodeRange{first, code.first},
-            Definition{indexer.getBoundLocalName(name), expression}
+            Definition{getUnboundLocalName(name), expression}
         );
     }
     else if (startsWith(code, '-')) {
@@ -166,7 +170,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makeDropAssignment(
             CodeRange{first, code.first},
-            DropAssignment{indexer.getBoundLocalName(name)}
+            DropAssignment{getUnboundLocalName(name)}
         );
     }
     else if (startsWith(code, "+=")) {
@@ -177,7 +181,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutAssignment(
             CodeRange{first, code.first},
-            PutAssignment{indexer.getBoundLocalName(name), expression}
+            PutAssignment{getUnboundLocalName(name), expression}
         );
     }
     else {
@@ -188,7 +192,7 @@ Expression parseNamedElement(CodeRange code, DictionaryNameIndexer& indexer) {
         code = parseWhiteSpace(code);
         return makePutEachAssignment(
             CodeRange{first, code.first},
-            PutEachAssignment{indexer.getBoundLocalName(name), expression}
+            PutEachAssignment{getUnboundLocalName(name), expression}
         );
     }
 }
@@ -203,7 +207,7 @@ Expression parseWhileStatement(CodeRange code) {
     return makeWhileStatement(CodeRange{first, code.first}, {expression, 0});
 }
 
-Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
+Expression parseForStatement(CodeRange code) {
     const auto first = code.begin();
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
@@ -218,15 +222,15 @@ Expression parseForStatement(CodeRange code, DictionaryNameIndexer& indexer) {
         return makeForStatement(
             CodeRange{first, code.first},
             ForStatement{
-                indexer.getBoundLocalName(first_name),
-                indexer.getBoundLocalName(second_name),
+                getUnboundLocalName(first_name),
+                getUnboundLocalName(second_name),
                 0,
             }
         );
     }
     else {
         return makeForSimpleStatement(CodeRange{first, code.first},
-            ForSimpleStatement{indexer.getBoundLocalName(first_name), 0}
+            ForSimpleStatement{getUnboundLocalName(first_name), 0}
         );
     }
 }
@@ -265,7 +269,6 @@ Expression parseDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     auto statements = std::vector<Expression>{};
     auto loop_start_indices = std::vector<size_t>{};
-    auto indexer = DictionaryNameIndexer{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
@@ -275,7 +278,7 @@ Expression parseDictionary(CodeRange code) {
         }
         else if (isKeyword(code, "for")) {
             loop_start_indices.push_back(statements.size());
-            statements.push_back(parseForStatement(code, indexer));
+            statements.push_back(parseForStatement(code));
         }
         else if (isKeyword(code, "end")) {
             const auto loop_end_index = statements.size();
@@ -302,11 +305,42 @@ Expression parseDictionary(CodeRange code) {
             statements.push_back(parseReturnStatement(code));
         }
         else {
-            statements.push_back(parseNamedElement(code, indexer));
+            statements.push_back(parseNamedElement(code));
         }
         code.first = end(statements.back());
     }
     code = parseCharacter(code, '}');
+    
+    // Bind names:
+    auto indexer = DictionaryNameIndexer{};
+    for (auto& statement : statements) {
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            auto& definition = storage.definitions.at(statement.index);
+            indexer.bindName(definition.name);
+        }
+        else if (type == PUT_ASSIGNMENT) {
+            auto& put_assignment = storage.put_assignments.at(statement.index);
+            indexer.bindName(put_assignment.name);
+        }
+        else if (type == PUT_EACH_ASSIGNMENT) {
+            auto& put_each_assignment = storage.put_each_assignments.at(statement.index);
+            indexer.bindName(put_each_assignment.name);
+        }
+        else if (type == DROP_ASSIGNMENT) {
+            auto& drop_assignment = storage.drop_assignments.at(statement.index);
+            indexer.bindName(drop_assignment.name);
+        }
+        else if (type == FOR_STATEMENT) {
+            auto& for_statement = storage.for_statements.at(statement.index);
+            indexer.bindName(for_statement.item_name);
+            indexer.bindName(for_statement.container_name);
+        }
+        else if (type == FOR_SIMPLE_STATEMENT) {
+            auto& for_statement = storage.for_simple_statements.at(statement.index);
+            indexer.bindName(for_statement.container_name);
+        }
+    }
     return makeDictionary(
         CodeRange{first, code.begin()}, Dictionary{statements, indexer.size()}
     );
