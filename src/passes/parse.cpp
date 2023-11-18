@@ -263,6 +263,39 @@ Expression parseReturnStatement(CodeRange code) {
     return Expression{RETURN_STATEMENT, 0, CodeRange{first, code.first}};
 }
 
+void bindDictionaryNames(Dictionary& dictionary_struct) {
+    auto indexer = DictionaryNameIndexer{};
+    for (auto& statement : dictionary_struct.statements) {
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            auto& definition = storage.definitions.at(statement.index);
+            indexer.bindName(definition.name);
+        }
+        else if (type == PUT_ASSIGNMENT) {
+            auto& put_assignment = storage.put_assignments.at(statement.index);
+            indexer.bindName(put_assignment.name);
+        }
+        else if (type == PUT_EACH_ASSIGNMENT) {
+            auto& put_each_assignment = storage.put_each_assignments.at(statement.index);
+            indexer.bindName(put_each_assignment.name);
+        }
+        else if (type == DROP_ASSIGNMENT) {
+            auto& drop_assignment = storage.drop_assignments.at(statement.index);
+            indexer.bindName(drop_assignment.name);
+        }
+        else if (type == FOR_STATEMENT) {
+            auto& for_statement = storage.for_statements.at(statement.index);
+            indexer.bindName(for_statement.item_name);
+            indexer.bindName(for_statement.container_name);
+        }
+        else if (type == FOR_SIMPLE_STATEMENT) {
+            auto& for_statement = storage.for_simple_statements.at(statement.index);
+            indexer.bindName(for_statement.container_name);
+        }
+    }
+    dictionary_struct.definition_count = indexer.size();
+}
+
 Expression parseDictionary(CodeRange code) {
     auto first = code.begin();
     code = parseCharacter(code, '{');
@@ -311,9 +344,9 @@ Expression parseDictionary(CodeRange code) {
     }
     code = parseCharacter(code, '}');
 
-    return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{statements, 0}
-    );
+    auto dictionary = Dictionary{statements, 0};
+    bindDictionaryNames(dictionary);
+    return makeDictionary(CodeRange{first, code.begin()}, dictionary);
 }
 
 Expression parseFunction(CodeRange code) {
