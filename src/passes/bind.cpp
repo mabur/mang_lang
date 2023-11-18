@@ -31,19 +31,16 @@ private:
 
 void bindFunctionDictionary(Expression function_dictionary, Expression environment) {
     const auto function_dictionary_struct = storage.dictionary_functions.at(function_dictionary.index);
-    // TODO: add arguments to environment.
     bind(function_dictionary_struct.body, environment);
 }
 
 void bindFunctionTuple(Expression function_tuple, Expression environment) {
     const auto function_tuple_struct = storage.tuple_functions.at(function_tuple.index);
-    // TODO: add arguments to environment.
     bind(function_tuple_struct.body, environment);
 }
 
 void bindFunction(Expression function, Expression environment) {
     const auto function_struct = storage.functions.at(function.index);
-    // TODO: add argument to environment.
     bind(function_struct.body, environment);
 }
 
