@@ -317,16 +317,29 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(const BoundGlobalName& name, Expression expression) {
+struct LookupResult {
+    Expression expression;
+    size_t steps;
+};
+
+LookupResult lookupDictionaryFirstTime(
+    const BoundGlobalName& name, size_t steps, Expression expression
+) {
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
     const auto result = dictionary.optionalLookup(name.global_index);
     if (result) {
-        return *result;
+        return LookupResult{*result, steps};
     }
-    return lookupDictionary(name, dictionary.environment);
+    return lookupDictionaryFirstTime(name, steps + 1, dictionary.environment);
+}
+
+Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
+    const auto result = lookupDictionaryFirstTime(name, 0, expression);
+    name.parent_steps = result.steps;
+    return result.expression;
 }
 
 Expression applyFunctionBuiltIn(
