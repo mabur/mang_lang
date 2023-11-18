@@ -317,12 +317,12 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(size_t name, Expression expression) {
+Expression lookupDictionary(const BoundGlobalName& name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(storage.names.at(name), "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
-    const auto result = dictionary.optionalLookup(name);
+    const auto result = dictionary.optionalLookup(name.global_index);
     if (result) {
         return *result;
     }
@@ -612,9 +612,10 @@ template<typename Evaluator>
 Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
-    const auto expression_struct = storage.typed_expressions.at(expression.index);
-    const auto type = lookupDictionary(expression_struct.type_name.global_index, environment);
-    const auto value = evaluator(expression_struct.value, environment);
+    const auto type = lookupDictionary(
+        storage.typed_expressions.at(expression.index).type_name, environment
+    );
+    const auto value = evaluator(storage.typed_expressions.at(expression.index).value, environment);
     checkTypes(type, value, "typed expression");
     return value;
 }
@@ -918,9 +919,13 @@ Expression applyStringIndexing(Expression string, Expression input) {
 Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
-    const auto function_application_struct = storage.function_applications.at(function_application.index);
-    const auto function = lookupDictionary(function_application_struct.name.global_index, environment);
-    const auto input = evaluate_types(function_application_struct.child, environment);
+    const auto function = lookupDictionary(
+        storage.function_applications.at(function_application.index).name, environment
+    );
+    const auto input = evaluate_types(
+        storage.function_applications.at(function_application.index).child,
+        environment
+    );
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
@@ -942,9 +947,14 @@ Expression evaluateFunctionApplicationTypes(
 Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
-    const auto function_application_struct = storage.function_applications.at(function_application.index);
-    const auto function = lookupDictionary(function_application_struct.name.global_index, environment);
-    const auto input = evaluate(function_application_struct.child, environment);
+    const auto function = lookupDictionary(
+        storage.function_applications.at(function_application.index).name,
+        environment
+    );
+    const auto input = evaluate(
+        storage.function_applications.at(function_application.index).child,
+        environment
+    );
     switch (function.type) {
         case FUNCTION: return applyFunction(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
@@ -984,7 +994,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name.global_index, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
@@ -1024,7 +1034,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name.global_index, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);
