@@ -38,7 +38,7 @@ int main(int argc,  char **argv) {
         const auto result = evaluate_all(code);
         const auto end = std::chrono::steady_clock::now();
         const auto duration_total = std::chrono::duration<double>{end - start};
-        cout << "Done. " << std::fixed << std::setprecision(1)
+        cout << "Done. " << std::fixed << std::setprecision(2)
             << duration_total.count() << " seconds." << endl;
         
         cout << "Writing result to " << output_file_path << " ... ";
