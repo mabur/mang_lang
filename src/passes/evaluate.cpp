@@ -336,10 +336,33 @@ LookupResult lookupDictionaryFirstTime(
     return lookupDictionaryFirstTime(name, steps + 1, dictionary.environment);
 }
 
+Expression lookupDictionarySecondTime(
+    const BoundGlobalName& name, int steps, Expression expression
+) {
+    if (expression.type != EVALUATED_DICTIONARY) {
+        throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
+    }
+    const auto &dictionary = storage.evaluated_dictionaries.at(
+        expression.index);
+    if (steps == 0) {
+        const auto result = dictionary.optionalLookup(name.global_index);
+        if (result) {
+            return *result;
+        }
+        throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
+    }
+    return lookupDictionarySecondTime(name, steps - 1, dictionary.environment);
+}
+
 Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
-    const auto result = lookupDictionaryFirstTime(name, 0, expression);
-    name.parent_steps = result.steps;
-    return result.expression;
+    if (name.parent_steps == -1) {
+        const auto result = lookupDictionaryFirstTime(name, 0, expression);
+        name.parent_steps = result.steps;
+        return result.expression;
+    }
+    else {
+        return lookupDictionarySecondTime(name, name.parent_steps, expression);
+    }
 }
 
 Expression applyFunctionBuiltIn(
