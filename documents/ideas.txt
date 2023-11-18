@@ -220,6 +220,8 @@ SYSTEM IMPLEMENTATION
     - Loop resolution for dictionaries.
     - Name resolution in general.
     - Name for this pass: (name) bind/binding, (name) resolve/resolution, semantic analysis.
+  - Could be easy to start by not having separate pass but compute it the first time that we look up in evaluation,
+    and then set the steps to parent. Then if the steps are set we can use that the next time we do lookup.
   - Links:
       https://craftinginterpreters.com/resolving-and-binding.html
       https://news.ycombinator.com/item?id=15218533
