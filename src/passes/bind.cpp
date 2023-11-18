@@ -44,12 +44,6 @@ void bindFunction(Expression function, Expression environment) {
     bind(function_struct.body, environment);
 }
 
-void bindLookupSymbol(Expression expression, Expression environment) {
-    (void)expression;
-    (void)environment;
-    // TODO: resolve and bind name.
-}
-
 void bindStack(Expression stack, Expression environment) {
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
@@ -88,12 +82,6 @@ void bindLookupChild(Expression lookup_child, Expression environment) {
     bind(lookup_child_struct.child, environment);
 }
 
-void bindTypedExpression(Expression expression, Expression environment) {
-    const auto expression_struct = storage.typed_expressions.at(expression.index);
-    // TODO: resolve type_name and bind it.
-    bind(expression_struct.value, environment);
-}
-
 void bindDynamicExpression(Expression expression, Expression environment) {
     const auto inner_expression = storage.dynamic_expressions.at(expression.index).expression;
     bind(inner_expression, environment);
@@ -124,6 +112,18 @@ void bindIs(Expression is, Expression environment) {
         bind(alternative.right, environment);
     }
     bind(is_struct.expression_else, environment);
+}
+
+void bindLookupSymbol(Expression expression, Expression environment) {
+    (void)expression;
+    (void)environment;
+    // TODO: resolve and bind name.
+}
+
+void bindTypedExpression(Expression expression, Expression environment) {
+    const auto expression_struct = storage.typed_expressions.at(expression.index);
+    // TODO: resolve type_name and bind it.
+    bind(expression_struct.value, environment);
 }
 
 void bindFunctionApplication(
