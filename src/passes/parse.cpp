@@ -310,39 +310,9 @@ Expression parseDictionary(CodeRange code) {
         code.first = end(statements.back());
     }
     code = parseCharacter(code, '}');
-    
-    // Bind names:
-    auto indexer = DictionaryNameIndexer{};
-    for (auto& statement : statements) {
-        const auto type = statement.type;
-        if (type == DEFINITION) {
-            auto& definition = storage.definitions.at(statement.index);
-            indexer.bindName(definition.name);
-        }
-        else if (type == PUT_ASSIGNMENT) {
-            auto& put_assignment = storage.put_assignments.at(statement.index);
-            indexer.bindName(put_assignment.name);
-        }
-        else if (type == PUT_EACH_ASSIGNMENT) {
-            auto& put_each_assignment = storage.put_each_assignments.at(statement.index);
-            indexer.bindName(put_each_assignment.name);
-        }
-        else if (type == DROP_ASSIGNMENT) {
-            auto& drop_assignment = storage.drop_assignments.at(statement.index);
-            indexer.bindName(drop_assignment.name);
-        }
-        else if (type == FOR_STATEMENT) {
-            auto& for_statement = storage.for_statements.at(statement.index);
-            indexer.bindName(for_statement.item_name);
-            indexer.bindName(for_statement.container_name);
-        }
-        else if (type == FOR_SIMPLE_STATEMENT) {
-            auto& for_statement = storage.for_simple_statements.at(statement.index);
-            indexer.bindName(for_statement.container_name);
-        }
-    }
+
     return makeDictionary(
-        CodeRange{first, code.begin()}, Dictionary{statements, indexer.size()}
+        CodeRange{first, code.begin()}, Dictionary{statements, 0}
     );
 }
 

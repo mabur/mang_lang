@@ -5,23 +5,28 @@
 #include "../expression.h"
 #include "../factory.h"
 
-
 namespace {
 
 struct DictionaryNameIndexer {
-    std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
-    size_t count = 0;
-
-    size_t getDictionaryIndex(size_t name) {
-        const auto it = dictionary_index_from_global_index.find(name);
+    size_t size() const {
+        return dictionary_index_from_global_index.size();
+    }
+    void bindName(BoundLocalName& name) {
+        name.dictionary_index = getDictionaryIndex(name.global_index);
+    }
+private:
+    size_t getDictionaryIndex(size_t global_index) {
+        const auto it = dictionary_index_from_global_index.find(global_index);
         if (it != dictionary_index_from_global_index.end()) {
             return it->second;
         }
         else {
-            dictionary_index_from_global_index[name] = count;
-            return count++;
+            const auto count = size();
+            dictionary_index_from_global_index[global_index] = count;
+            return count;
         }
     }
+    std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
 };
 
 void bindFunctionDictionary(Expression function_dictionary, Expression environment) {
@@ -132,6 +137,47 @@ void bindFunctionApplication(
     bind(function_application_struct.child, environment);
 }
 
+void bindDictionary(Expression dictionary, Expression environment) {
+    auto& dictionary_struct = storage.dictionaries.at(dictionary.index);
+    auto indexer = DictionaryNameIndexer{};
+    for (auto& statement : dictionary_struct.statements) {
+        const auto type = statement.type;
+        if (type == DEFINITION) {
+            auto& definition = storage.definitions.at(statement.index);
+            indexer.bindName(definition.name);
+            bind(definition.expression, environment);
+        }
+        else if (type == PUT_ASSIGNMENT) {
+            auto& put_assignment = storage.put_assignments.at(statement.index);
+            indexer.bindName(put_assignment.name);
+            bind(put_assignment.expression, environment);
+        }
+        else if (type == PUT_EACH_ASSIGNMENT) {
+            auto& put_each_assignment = storage.put_each_assignments.at(statement.index);
+            indexer.bindName(put_each_assignment.name);
+            bind(put_each_assignment.expression, environment);
+        }
+        else if (type == DROP_ASSIGNMENT) {
+            auto& drop_assignment = storage.drop_assignments.at(statement.index);
+            indexer.bindName(drop_assignment.name);
+        }
+        else if (type == FOR_STATEMENT) {
+            auto& for_statement = storage.for_statements.at(statement.index);
+            indexer.bindName(for_statement.item_name);
+            indexer.bindName(for_statement.container_name);
+        }
+        else if (type == FOR_SIMPLE_STATEMENT) {
+            auto& for_statement = storage.for_simple_statements.at(statement.index);
+            indexer.bindName(for_statement.container_name);
+        }
+        else if (type == WHILE_STATEMENT) {
+            const auto while_statement = storage.while_statements.at(statement.index);
+            bind(while_statement.expression, environment);
+        }
+    }
+    dictionary_struct.definition_count = indexer.size();
+}
+
 } // namespace
 
 void bind(Expression expression, Expression environment) {
@@ -159,7 +205,7 @@ void bind(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return bindDynamicExpression(expression, environment);
         case CONDITIONAL: return bindConditional(expression, environment);
         case IS: return bindIs(expression, environment);
-        case DICTIONARY: return; // TODO
+        case DICTIONARY: return bindDictionary(expression, environment);
         case FUNCTION_APPLICATION: return bindFunctionApplication(expression, environment);
 
         default: throw UnexpectedExpression(expression.type, "bind operation");
