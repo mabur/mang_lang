@@ -139,6 +139,11 @@ using Number = double;
 using Character = char;
 using Name = std::string;
 
+struct BoundGlobalName {
+    size_t global_index; // Index to this name in the global storage.
+    int parent_steps = -1; // Number of steps to parent. -1 if unresolved yet.
+};
+
 struct BoundLocalName {
     size_t global_index; // Index to this name in the global storage.
     size_t dictionary_index; // Index to this name and its data in the dictionary.
@@ -155,7 +160,7 @@ struct DynamicExpression {
 };
 
 struct TypedExpression {
-    size_t type_name;
+    BoundGlobalName type_name;
     Expression value;
 };
 

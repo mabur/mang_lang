@@ -27,7 +27,7 @@ void serializeDynamicExpression(std::string& s, const DynamicExpression& dynamic
 }
 
 void serializeTypedExpression(std::string& s, const TypedExpression& typed_expression) {
-    serializeName(s, typed_expression.type_name);
+    serializeName(s, typed_expression.type_name.global_index);
     s.append(":");
     serialize(s, typed_expression.value);
 }

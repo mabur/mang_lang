@@ -510,7 +510,9 @@ Expression parseSubstitution(CodeRange code) {
         code = parseCharacter(code);
         auto value = parseExpression(code);
         code.first = end(value);
-        return makeTypedExpression(CodeRange{first, code.first}, {name.index, value});
+        return makeTypedExpression(
+            CodeRange{first, code.first}, {BoundGlobalName{name.index}, value}
+        );
     }
     return makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
 }
