@@ -216,6 +216,7 @@ Expression applyFunction(
     const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument);
     checkArgument(evaluator, argument, input, function_struct.environment);
+    // Allocation:
     const auto definitions = std::vector<Definition>{{{argument.name, 0}, input}};
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
@@ -273,6 +274,7 @@ Expression applyFunctionTuple(
     }
 
     auto argument_index = first_argument;
+    // Allocation:
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.at(argument_index + i);
@@ -657,6 +659,7 @@ Expression evaluateTypedExpression(
 }
 
 std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
+    // Allocation:
     auto definitions = std::vector<Definition>(dictionary.definition_count);
     for (const auto& statement : dictionary.statements) {
         const auto type = statement.type;
@@ -789,6 +792,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto definition = storage.definitions.at(statement.index);
             const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
+            // Bottleneck:
             setDictionaryDefinition(result, definition.name, value);
             i += 1;
         }
