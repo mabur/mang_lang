@@ -213,6 +213,19 @@ SYSTEM IMPLEMENTATION
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s
+* Improve EvaluatedDictionary.
+  - EvaluatedDictionary is used both during evaluation and after evaluation.
+  - During evaluation the "values" change but not the "keys" of the "definitions".
+  - EvaluatedDictionary & Dictionary do need the same Definition.
+  - For the "definitions" inside EvaluatedDictionary
+    we do not need to explicitly store the local index.
+  - Example: struct EvaluatedDictionary {
+      Expression environment;
+      size_t name_first; // Index to constant names/keys. Could possible be shared across instances.
+      size_t name_last;  // Index to constant names/keys. Could possible be shared across instances.
+      size_t dictionary_expression_first;  // Index to values/expression that can change during the evaluation.
+      size_t dictionary_expression_last;   // Index to values/expression that can change during the evaluation.
+    };
 * Static evaluation of names:
   - Crafting Interpreters says that it is common to resolve names either during parsing or as separate pass.
     - They recommend evaluating and storing the number of steps to reach the right ancestor.
