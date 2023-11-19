@@ -14,11 +14,11 @@ namespace {
 template<typename ElementType, typename ArrayType>
 Expression makeExpression(
     CodeRange code,
-    ElementType expression,
+    ElementType&& expression,
     ExpressionType type,
     ArrayType& array
 ) {
-    array.emplace_back(expression);
+    array.emplace_back(std::move(expression));
     return Expression{type, array.size() - 1, code};
 }
 
@@ -59,7 +59,7 @@ Expression makeAlternative(CodeRange code, Alternative expression) {
 }
 
 Expression makeDictionary(CodeRange code, Dictionary expression) {
-    return makeExpression(code, expression, DICTIONARY, storage.dictionaries);
+    return makeExpression(code, std::move(expression), DICTIONARY, storage.dictionaries);
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {

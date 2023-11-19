@@ -302,7 +302,7 @@ struct ForSimpleEndStatement {
 
 // TODO: make cheaper to copy.
 struct Dictionary {
-    Dictionary(const Dictionary&) = default;
+    Dictionary(const Dictionary&) = delete;
     Dictionary(Dictionary&&) = default;
     Dictionary& operator=(const Dictionary&) = default;
     Dictionary& operator=(Dictionary&&) = default;

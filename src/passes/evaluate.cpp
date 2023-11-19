@@ -703,12 +703,13 @@ Expression getDictionaryDefinition(
 Expression evaluateDictionaryTypes(
     Expression dictionary, Expression environment
 ) {
-    const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
-    const auto initial_definitions = initializeDefinitions(dictionary_struct);
+    const auto initial_definitions = initializeDefinitions(
+        storage.dictionaries.at(dictionary.index)
+    );
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
-    for (const auto& statement : dictionary_struct.statements) {
+    for (const auto& statement : storage.dictionaries.at(dictionary.index).statements) {
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = storage.definitions.at(statement.index);
@@ -773,12 +774,13 @@ Expression evaluateDictionaryTypes(
 }
 
 Expression evaluateDictionary(Expression dictionary, Expression environment) {
-    const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
-    const auto initial_definitions = initializeDefinitions(dictionary_struct);
+    const auto initial_definitions = initializeDefinitions(
+        storage.dictionaries.at(dictionary.index)
+    );
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
-    const auto& statements = dictionary_struct.statements;
+    const auto& statements = storage.dictionaries.at(dictionary.index).statements;
     auto i = size_t{0};
     while (i < statements.size()) {
         const auto statement = statements.at(i);

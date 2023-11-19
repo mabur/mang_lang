@@ -346,7 +346,7 @@ Expression parseDictionary(CodeRange code) {
 
     auto dictionary = Dictionary{statements, 0};
     bindDictionaryNames(dictionary);
-    return makeDictionary(CodeRange{first, code.begin()}, dictionary);
+    return makeDictionary(CodeRange{first, code.begin()}, std::move(dictionary));
 }
 
 Expression parseFunction(CodeRange code) {
