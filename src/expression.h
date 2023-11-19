@@ -320,6 +320,11 @@ struct Dictionary {
 // and not just definitions.
 // Bottleneck.
 struct EvaluatedDictionary {
+    EvaluatedDictionary(const EvaluatedDictionary&) = delete;
+    EvaluatedDictionary(EvaluatedDictionary&&) = default;
+    EvaluatedDictionary& operator=(const EvaluatedDictionary&) = delete;
+    EvaluatedDictionary& operator=(EvaluatedDictionary&&) = default;
+
     Expression environment;
     std::vector<Definition> definitions;
 

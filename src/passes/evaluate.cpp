@@ -192,7 +192,7 @@ Expression evaluateLookupChild(
                 ".\n"
         );
     }
-    const auto dictionary = storage.evaluated_dictionaries.at(child.index);
+    const auto& dictionary = storage.evaluated_dictionaries.at(child.index);
     return dictionary.lookup(lookup_child_struct.name);
 }
 
@@ -238,7 +238,7 @@ Expression applyFunctionDictionary(
         );
     }
     const auto function_struct = storage.dictionary_functions.at(function.index);
-    const auto evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
+    const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
     for (auto i = function_struct.first_argument; i < function_struct.last_argument; ++i) {
         const auto argument = storage.arguments.at(i);
         const auto expression = evaluated_dictionary.lookup(argument.name);
