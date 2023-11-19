@@ -304,7 +304,7 @@ struct ForSimpleEndStatement {
 struct Dictionary {
     Dictionary(const Dictionary&) = delete;
     Dictionary(Dictionary&&) = default;
-    Dictionary& operator=(const Dictionary&) = default;
+    Dictionary& operator=(const Dictionary&) = delete;
     Dictionary& operator=(Dictionary&&) = default;
 
     std::vector<Expression> statements;
