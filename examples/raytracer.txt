@@ -131,8 +131,8 @@ writePixel = in (String:image Number:x Number:y Number:width Number:height World
 }
 
 writeImage = in World:world out String:image@{
-    WIDTH = 32
-    HEIGHT = 20
+    WIDTH = 64
+    HEIGHT = 40
     image = ""
     image ++= "P3"
     image += newline
