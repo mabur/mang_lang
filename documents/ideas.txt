@@ -212,7 +212,7 @@ LANGUAGE SYNTAX & SEMANTICS
 SYSTEM IMPLEMENTATION
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
-  - Raytracer 64x40: 3.5s -> 3.4s
+  - Raytracer 64x40: 3.5s -> 3.4s -> 2.6s
 * Static evaluation of names:
   - Crafting Interpreters says that it is common to resolve names either during parsing or as separate pass.
     - They recommend evaluating and storing the number of steps to reach the right ancestor.
