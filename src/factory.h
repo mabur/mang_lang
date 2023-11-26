@@ -64,6 +64,7 @@ Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression)
 Expression makeFunctionTuple(CodeRange code, FunctionTuple expression);
 Expression makeTuple(CodeRange code, Tuple expression);
 Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression);
+Expression makeEvaluatedTuple2(Expression a, Expression b);
 Expression makeStack(CodeRange code, Stack expression);
 Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression);
 Expression makeTable(CodeRange code, Table expression);

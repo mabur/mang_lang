@@ -745,13 +745,7 @@ Expression evaluateDictionaryTypes(
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
-            const auto first = storage.expressions.size();
-            storage.expressions.push_back(value);
-            storage.expressions.push_back(current);
-            const auto last = storage.expressions.size();
-            const auto tuple = makeEvaluatedTuple(
-                {}, EvaluatedTuple{first, last}
-            );
+            const auto tuple = makeEvaluatedTuple2(value, current);
             const auto new_value = container_functions::putTyped(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
         }
@@ -762,13 +756,7 @@ Expression evaluateDictionaryTypes(
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::takeTyped(container);
-                const auto first = storage.expressions.size();
-                storage.expressions.push_back(value);
-                storage.expressions.push_back(current);
-                const auto last = storage.expressions.size();
-                const auto tuple = makeEvaluatedTuple(
-                    {}, EvaluatedTuple{first, last}
-                );
+                const auto tuple = makeEvaluatedTuple2(value, current);
                 const auto new_value = container_functions::putTyped(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
             }
@@ -833,13 +821,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
-            const auto first = storage.expressions.size();
-            storage.expressions.push_back(value);
-            storage.expressions.push_back(current);
-            const auto last = storage.expressions.size();
-            const auto tuple = makeEvaluatedTuple(
-                {}, EvaluatedTuple{first, last}
-            );
+            const auto tuple = makeEvaluatedTuple2(value, current);
             const auto new_value = container_functions::put(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
             i += 1;
@@ -854,13 +836,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             ) {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::take(container);
-                const auto first = storage.expressions.size();
-                storage.expressions.push_back(value);
-                storage.expressions.push_back(current);
-                const auto last = storage.expressions.size();
-                const auto tuple = makeEvaluatedTuple(
-                    {}, EvaluatedTuple{first, last}
-                );
+                const auto tuple = makeEvaluatedTuple2(value, current);
                 const auto new_value = container_functions::put(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
             }

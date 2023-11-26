@@ -155,29 +155,17 @@ Expression takeTable(const T& table) {
         throw std::runtime_error("Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
-    const auto first = storage.expressions.size();
-    storage.expressions.push_back(pair.key);
-    storage.expressions.push_back(pair.value);
-    const auto last = storage.expressions.size();
-    return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
+    return makeEvaluatedTuple2(pair.key, pair.value);
 }
 
 template<typename T>
 Expression takeTableTyped(const T& table, Expression expression) {
     const auto range = expression.range;
     if (table.empty()) {
-        const auto first = storage.expressions.size();
-        storage.expressions.push_back(Expression{ANY, 0, range});
-        storage.expressions.push_back(Expression{ANY, 0, range});
-        const auto last = storage.expressions.size();
-        return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
+        return makeEvaluatedTuple2(Expression{ANY, 0, range}, Expression{ANY, 0, range});
     }
     const auto& pair = table.begin()->second;
-    const auto first = storage.expressions.size();
-    storage.expressions.push_back(pair.key);
-    storage.expressions.push_back(pair.value);
-    const auto last = storage.expressions.size();
-    return makeEvaluatedTuple(range, EvaluatedTuple{first, last});
+    return makeEvaluatedTuple2(pair.key, pair.value);
 }
 
 template<typename T>

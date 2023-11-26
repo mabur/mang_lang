@@ -90,6 +90,14 @@ Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression) {
     return makeExpression(code, expression, EVALUATED_TUPLE, storage.evaluated_tuples);
 }
 
+Expression makeEvaluatedTuple2(Expression a, Expression b) {
+    const auto first = storage.expressions.size();
+    storage.expressions.push_back(a);
+    storage.expressions.push_back(b);
+    const auto last = storage.expressions.size();
+    return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
+}
+
 Expression makeStack(CodeRange code, Stack expression) {
     return makeExpression(code, expression, STACK, storage.stacks);
 }
