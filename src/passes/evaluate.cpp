@@ -713,7 +713,8 @@ Expression evaluateDictionaryTypes(
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
-    for (size_t i = storage.dictionaries.at(dictionary.index).statement_first; i < storage.dictionaries.at(dictionary.index).statement_last; ++i) {
+    const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
+    for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
         const auto statement = storage.statements.at(i);
         const auto type = statement.type;
         if (type == DEFINITION) {
