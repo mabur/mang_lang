@@ -231,6 +231,7 @@ struct Tuple {
 };
 
 // TODO: add special case for tuple of size 2.
+// TODO: merge with Tuple for storage but keep type-code to know if it is evaluated.
 struct EvaluatedTuple {
     size_t first;
     size_t last;
@@ -241,6 +242,7 @@ struct Stack {
     Expression rest;
 };
 
+// TODO: merge with Stack for storage but keep type-code to know if it is evaluated.
 struct EvaluatedStack {
     Expression top;
     Expression rest;
