@@ -151,6 +151,7 @@ Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
     const auto tuple_struct = storage.tuples.at(tuple.index);
+    // TODO: allocate on storage.expressions directly.
     // Allocation:
     auto evaluated_expressions = std::vector<Expression>{};
     evaluated_expressions.reserve(tuple_struct.last - tuple_struct.first);
@@ -226,6 +227,7 @@ Expression applyFunction(
     const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument);
     checkArgument(evaluator, argument, input, function_struct.environment);
+    // TODO: allocate on storage.definitions directly.
     // Allocation:
     const auto definitions = std::vector<Definition>{{{argument.name, 0}, input}};
     const auto middle = makeEvaluatedDictionary(input.range,
@@ -285,6 +287,7 @@ Expression applyFunctionTuple(
     }
 
     auto argument_index = first_argument;
+    // TODO: allocate on storage.definitions directly.
     // Allocation:
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
@@ -673,6 +676,7 @@ Expression evaluateTypedExpression(
 }
 
 std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
+    // TODO: allocate on storage.expressions directly.
     // Allocation:
     auto definitions = std::vector<Definition>(dictionary.definition_count);
     for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
@@ -721,6 +725,7 @@ Expression getDictionaryDefinition(
 Expression evaluateDictionaryTypes(
     Expression dictionary, Expression environment
 ) {
+    // TODO: allocate on storage.definitions directly.
     const auto initial_definitions = initializeDefinitions(
         storage.dictionaries.at(dictionary.index)
     );
