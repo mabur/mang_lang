@@ -130,13 +130,14 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
 
 template<typename Serializer>
 void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t) {
-    const auto& expressions = storage.evaluated_tuples.at(t.index).expressions;
-    if (expressions.empty()) {
+    const auto evaluated_tuple = storage.evaluated_tuples.at(t.index);
+    if (evaluated_tuple.first == evaluated_tuple.last) {
         s.append("()");
         return;
     }
     s.append("(");
-    for (const auto& expression : expressions) {
+    for (size_t i = evaluated_tuple.first; i < evaluated_tuple.last; ++i) {
+        const auto expression = storage.expressions.at(i);
         serializer(s, expression);
         s.append(" ");
     }

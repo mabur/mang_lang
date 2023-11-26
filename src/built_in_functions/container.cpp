@@ -155,22 +155,29 @@ Expression takeTable(const T& table) {
         throw std::runtime_error("Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
-    return makeEvaluatedTuple({}, EvaluatedTuple{{pair.key, pair.value}});
+    const auto first = storage.expressions.size();
+    storage.expressions.push_back(pair.key);
+    storage.expressions.push_back(pair.value);
+    const auto last = storage.expressions.size();
+    return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
 }
 
 template<typename T>
 Expression takeTableTyped(const T& table, Expression expression) {
     const auto range = expression.range;
     if (table.empty()) {
-        return makeEvaluatedTuple(
-            {},
-            EvaluatedTuple{{Expression{ANY, 0, range}, Expression{ANY, 0, range}}}
-        );
+        const auto first = storage.expressions.size();
+        storage.expressions.push_back(Expression{ANY, 0, range});
+        storage.expressions.push_back(Expression{ANY, 0, range});
+        const auto last = storage.expressions.size();
+        return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
     }
     const auto& pair = table.begin()->second;
-    return makeEvaluatedTuple(
-        range, EvaluatedTuple{{pair.key, pair.value}}
-    );
+    const auto first = storage.expressions.size();
+    storage.expressions.push_back(pair.key);
+    storage.expressions.push_back(pair.value);
+    const auto last = storage.expressions.size();
+    return makeEvaluatedTuple(range, EvaluatedTuple{first, last});
 }
 
 template<typename T>
@@ -256,19 +263,20 @@ Expression get(Expression in) {
                 ".\n"
         );
     }
-    const auto& expressions = storage.evaluated_tuples.at(in.index).expressions;
-    if (expressions.size() != 3) {
+    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
+    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    if (count != 3) {
         throw std::runtime_error(
             std::string{"\n\nI have found a dynamic type error."} +
                 "\nIt happens for the function get!(key table default). " +
                 "\nIt expects a tuple of three items," +
-                "\nbut now it got " + std::to_string(expressions.size()) + "items" +
+                "\nbut now it got " + std::to_string(count) + "items" +
                 ".\n"
         );
     }
-    const auto key = expressions.at(0);
-    const auto table = expressions.at(1);
-    const auto default_value = expressions.at(2);
+    const auto key = storage.expressions.at(evaluated_tuple.first + 0);
+    const auto table = storage.expressions.at(evaluated_tuple.first + 1);
+    const auto default_value = storage.expressions.at(evaluated_tuple.first + 2);
     if (table.type != EVALUATED_TABLE) {
         throw std::runtime_error(
             std::string{"\n\nI have found a dynamic type error."} +
@@ -296,18 +304,19 @@ Expression getTyped(Expression in) {
                 ".\n"
         );
     }
-    const auto& expressions = storage.evaluated_tuples.at(in.index).expressions;
-    if (expressions.size() != 3) {
+    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
+    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    if (count != 3) {
         throw std::runtime_error(
             std::string{"\n\nI have found a static type error."} +
                 "\nIt happens for the function get!(key table default). " +
                 "\nIt expects a tuple of three items," +
-                "\nbut now it got " + std::to_string(expressions.size()) + "items" +
+                "\nbut now it got " + std::to_string(count) + "items" +
                 ".\n"
         );
     }
-    const auto table = expressions.at(1);
-    const auto default_value = expressions.at(2);
+    const auto table = storage.expressions.at(evaluated_tuple.first + 1);
+    const auto default_value = storage.expressions.at(evaluated_tuple.first + 2);
     if (table.type != EVALUATED_TABLE) {
         throw std::runtime_error(
             std::string{"\n\nI have found a dynamic type error."} +

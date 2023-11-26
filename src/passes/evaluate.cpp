@@ -32,14 +32,18 @@ void checkTypesEvaluatedTable(Expression super, Expression sub, const std::strin
 void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::string& description) {
     const auto& tuple_super = storage.evaluated_tuples.at(super.index);
     const auto& tuple_sub = storage.evaluated_tuples.at(sub.index);
-    if (tuple_super.expressions.size() != tuple_sub.expressions.size()) {
+    const auto super_count = tuple_super.last - tuple_super.first;
+    const auto sub_count = tuple_sub.last - tuple_sub.first;
+    if (super_count != sub_count) {
         throw std::runtime_error(
             "Static type error in " + description + ". Inconsistent tuple size."
         );
     }
-    const auto count = tuple_super.expressions.size();
+    const auto count = super_count;
     for (size_t i = 0; i < count; ++i) {
-        checkTypes(tuple_super.expressions.at(i), tuple_sub.expressions.at(i), description);
+        const auto super_expression = storage.expressions.at(tuple_super.first + i);
+        const auto sub_expression = storage.expressions.at(tuple_sub.first + i);
+        checkTypes(super_expression, sub_expression, description);
     }
 }
 
@@ -155,7 +159,12 @@ Expression evaluateTuple(
         evaluated_expressions.push_back(evaluator(expression, environment));
     }
     const auto code = tuple.range;
-    return makeEvaluatedTuple(code, EvaluatedTuple{evaluated_expressions});
+    const auto first = storage.expressions.size();
+    for (const auto expression : evaluated_expressions) {
+        storage.expressions.push_back(expression);
+    }
+    const auto last = storage.expressions.size();
+    return makeEvaluatedTuple(code, EvaluatedTuple{first, last});
 }
 
 template<typename Evaluator, typename Serializer>
@@ -264,13 +273,14 @@ Expression applyFunctionTuple(
                 ".\n"
         );
     }
-    auto tuple = storage.evaluated_tuples.at(input.index);
+    const auto tuple = storage.evaluated_tuples.at(input.index);
+    const auto tuple_count = tuple.last - tuple.first;
     const auto function_struct = storage.tuple_functions.at(function.index);
     const auto first_argument = function_struct.first_argument;
     const auto last_argument = function_struct.last_argument;
     const auto num_inputs = last_argument - first_argument;
     
-    if (num_inputs != tuple.expressions.size()) {
+    if (num_inputs != tuple_count) {
         throw std::runtime_error{"Wrong number of input to function_struct"};
     }
 
@@ -279,7 +289,7 @@ Expression applyFunctionTuple(
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.at(argument_index + i);
-        const auto expression = tuple.expressions.at(i);
+        const auto expression = storage.expressions.at(tuple.first + i);
         checkArgument(evaluator, argument, expression, function_struct.environment);
         definitions.at(i) = Definition{{argument.name, i}, expression};
     }
@@ -431,15 +441,14 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
     }
     const auto number = storage.numbers.at(input.index);
     const auto i = getIndex(number);
-    try {
-        return tuple_struct.expressions.at(i);
-    }
-    catch (const std::out_of_range&) {
+    const auto count = tuple_struct.last - tuple_struct.first;
+    if (i >= count) {
         throw std::runtime_error(
-            "Tuple of size " + std::to_string(tuple_struct.expressions.size()) +
+            "Tuple of size " + std::to_string(count) +
                 " indexed with " + std::to_string(i)
         );
     }
+    return storage.expressions.at(tuple_struct.first + i);
 }
 
 Expression applyTableIndexingTypes(Expression table) {
@@ -460,12 +469,16 @@ Expression applyStringIndexingTypes(Expression string) {
 
 bool isEqual(Expression left, Expression right);
 
-bool isTuplePairwiseEqual(const std::vector<Expression>& left, const std::vector<Expression>& right) {
-    if (left.size() != right.size()) {
+bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
+    const auto left_count = left.last - left.first;
+    const auto right_count = right.last - right.first;
+    if (left_count != right_count) {
         return false;
     }
-    for (size_t i = 0; i < left.size(); ++i) {
-        if (!isEqual(left.at(i), right.at(i))) {
+    for (size_t i = 0; i < left_count; ++i) {
+        const auto left_item = storage.expressions.at(left.first + i);
+        const auto right_item = storage.expressions.at(right.first + i);
+        if (!isEqual(left_item, right_item)) {
             return false;
         }
     }
@@ -552,8 +565,8 @@ bool isEqual(Expression left, Expression right) {
     }
     if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
         return isTuplePairwiseEqual(
-            storage.evaluated_tuples.at(left.index).expressions,
-            storage.evaluated_tuples.at(right.index).expressions
+            storage.evaluated_tuples.at(left.index),
+            storage.evaluated_tuples.at(right.index)
         );
     }
     return false;
@@ -732,8 +745,12 @@ Expression evaluateDictionaryTypes(
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
+            const auto first = storage.expressions.size();
+            storage.expressions.push_back(value);
+            storage.expressions.push_back(current);
+            const auto last = storage.expressions.size();
             const auto tuple = makeEvaluatedTuple(
-                {}, EvaluatedTuple{{value, current}}
+                {}, EvaluatedTuple{first, last}
             );
             const auto new_value = container_functions::putTyped(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
@@ -745,8 +762,12 @@ Expression evaluateDictionaryTypes(
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::takeTyped(container);
+                const auto first = storage.expressions.size();
+                storage.expressions.push_back(value);
+                storage.expressions.push_back(current);
+                const auto last = storage.expressions.size();
                 const auto tuple = makeEvaluatedTuple(
-                    {}, EvaluatedTuple{{value, current}}
+                    {}, EvaluatedTuple{first, last}
                 );
                 const auto new_value = container_functions::putTyped(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
@@ -812,8 +833,12 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
+            const auto first = storage.expressions.size();
+            storage.expressions.push_back(value);
+            storage.expressions.push_back(current);
+            const auto last = storage.expressions.size();
             const auto tuple = makeEvaluatedTuple(
-                {}, EvaluatedTuple{{value, current}}
+                {}, EvaluatedTuple{first, last}
             );
             const auto new_value = container_functions::put(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
@@ -829,8 +854,12 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             ) {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::take(container);
+                const auto first = storage.expressions.size();
+                storage.expressions.push_back(value);
+                storage.expressions.push_back(current);
+                const auto last = storage.expressions.size();
                 const auto tuple = makeEvaluatedTuple(
-                    {}, EvaluatedTuple{{value, current}}
+                    {}, EvaluatedTuple{first, last}
                 );
                 const auto new_value = container_functions::put(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);

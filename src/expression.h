@@ -230,11 +230,10 @@ struct Tuple {
     size_t last;
 };
 
-// TODO: make cheaper to copy.
-// Have multiple versions of Tuple each with a fixed size on the stack.
-// 2 & 3 are the most common sizes.
+// TODO: add special case for tuple of size 2.
 struct EvaluatedTuple {
-    std::vector<Expression> expressions;
+    size_t first;
+    size_t last;
 };
 
 struct Stack {
