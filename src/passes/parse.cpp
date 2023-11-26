@@ -469,8 +469,13 @@ Expression parseTuple(CodeRange code) {
         expressions.push_back(expression);
         code = parseWhiteSpace(code);
     }
+    const auto first_expression = storage.expressions.size();
+    for (const auto expression : expressions) {
+        storage.expressions.push_back(expression);
+    }
+    const auto last_expression = storage.expressions.size();
     code = parseCharacter(code, ')');
-    return makeTuple(CodeRange{first, code.first}, Tuple{expressions});
+    return makeTuple(CodeRange{first, code.first}, Tuple{first_expression, last_expression});
 }
 
 Expression parseTable(CodeRange code) {

@@ -225,11 +225,9 @@ struct String {
     Expression rest;
 };
 
-// TODO: make cheaper to copy.
-// Have multiple versions of Tuple each with a fixed size on the stack.
-// 2 & 3 are the most common sizes.
 struct Tuple {
-    std::vector<Expression> expressions;
+    size_t first;
+    size_t last;
 };
 
 // TODO: make cheaper to copy.

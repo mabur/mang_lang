@@ -149,8 +149,9 @@ Expression evaluateTuple(
     const auto tuple_struct = storage.tuples.at(tuple.index);
     // Allocation:
     auto evaluated_expressions = std::vector<Expression>{};
-    evaluated_expressions.reserve(tuple_struct.expressions.size());
-    for (const auto& expression : tuple_struct.expressions) {
+    evaluated_expressions.reserve(tuple_struct.last - tuple_struct.first);
+    for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
+        const auto expression = storage.expressions.at(i);
         evaluated_expressions.push_back(evaluator(expression, environment));
     }
     const auto code = tuple.range;

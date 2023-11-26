@@ -39,6 +39,7 @@ struct Storage {
     std::vector<PutEachAssignment> put_each_assignments;
     std::vector<DropAssignment> drop_assignments;
     std::vector<Expression> statements;
+    std::vector<Expression> expressions;
     std::vector<String> strings;
 };
 

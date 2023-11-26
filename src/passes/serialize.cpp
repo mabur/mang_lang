@@ -165,6 +165,7 @@ void serializeDictionary(std::string& s, const Dictionary& dictionary) {
         const auto statement = storage.statements.at(i);
         serialize(s, statement);
     }
+    // TODO: handle by early return.
     if (dictionary.statement_first == dictionary.statement_last) {
         s.append("}");
     }
@@ -174,13 +175,14 @@ void serializeDictionary(std::string& s, const Dictionary& dictionary) {
 }
 
 void serializeTuple(std::string& s, Expression t) {
-    const auto expressions = storage.tuples.at(t.index).expressions;
-    if (expressions.empty()) {
+    const auto tuple_struct = storage.tuples.at(t.index);
+    if (tuple_struct.first == tuple_struct.last) {
         s.append("()");
         return;
     }
     s.append("(");
-    for (const auto& expression : expressions) {
+    for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
+        const auto expression = storage.expressions.at(i);
         serialize(s, expression);
         s.append(" ");
     }
