@@ -265,7 +265,9 @@ Expression parseReturnStatement(CodeRange code) {
 
 void bindDictionaryNames(Dictionary& dictionary_struct) {
     auto indexer = DictionaryNameIndexer{};
-    for (auto& statement : dictionary_struct.statements) {
+    
+    for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
+        const auto statement = storage.statements.at(i);
         const auto type = statement.type;
         if (type == DEFINITION) {
             auto& definition = storage.definitions.at(statement.index);
@@ -343,8 +345,14 @@ Expression parseDictionary(CodeRange code) {
         code.first = end(statements.back());
     }
     code = parseCharacter(code, '}');
+    
+    const auto statements_first = storage.statements.size();
+    for (const auto statement : statements) {
+        storage.statements.push_back(statement);
+    }
+    const auto statements_last = storage.statements.size();
 
-    auto dictionary = Dictionary{statements, 0};
+    auto dictionary = Dictionary{statements_first, statements_last, 0};
     bindDictionaryNames(dictionary);
     return makeDictionary(CodeRange{first, code.begin()}, std::move(dictionary));
 }

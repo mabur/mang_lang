@@ -661,7 +661,8 @@ Expression evaluateTypedExpression(
 std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     // Allocation:
     auto definitions = std::vector<Definition>(dictionary.definition_count);
-    for (const auto& statement : dictionary.statements) {
+    for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
+        const auto statement = storage.statements.at(i);
         const auto type = statement.type;
         if (type == DEFINITION) {
             auto definition = storage.definitions.at(statement.index);
@@ -712,7 +713,8 @@ Expression evaluateDictionaryTypes(
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
-    for (const auto& statement : storage.dictionaries.at(dictionary.index).statements) {
+    for (size_t i = storage.dictionaries.at(dictionary.index).statement_first; i < storage.dictionaries.at(dictionary.index).statement_last; ++i) {
+        const auto statement = storage.statements.at(i);
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = storage.definitions.at(statement.index);
@@ -783,10 +785,17 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
-    const auto& statements = storage.dictionaries.at(dictionary.index).statements;
+
+    const auto statement_first = storage.dictionaries.at(dictionary.index).statement_first;
+    const auto statement_last = storage.dictionaries.at(dictionary.index).statement_last;
+    const auto statement_count = statement_last - statement_first;
+    
+    // TODO: make more robust:
+    const auto statements = storage.statements.data() + storage.dictionaries.at(dictionary.index).statement_first;
+    
     auto i = size_t{0};
-    while (i < statements.size()) {
-        const auto statement = statements.at(i);
+    while (i < statement_count) {
+        const auto statement = statements[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = storage.definitions.at(statement.index);
@@ -868,7 +877,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = storage.for_end_statements.at(statement.index);
             i = end_statement.start_index;
-            const auto name_index = storage.for_statements.at(statements.at(i).index).container_name;
+            const auto name_index = storage.for_statements.at(statements[i].index).container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);
@@ -876,7 +885,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_SIMPLE_END_STATEMENT) {
             const auto end_statement = storage.for_simple_end_statements.at(statement.index);
             i = end_statement.start_index;
-            const auto name_index = storage.for_simple_statements.at(statements.at(i).index).container_name;
+            const auto name_index = storage.for_simple_statements.at(statements[i].index).container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);

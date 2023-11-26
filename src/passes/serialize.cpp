@@ -161,10 +161,11 @@ void serializeLookupSymbol(std::string& s, const LookupSymbol& lookup_symbol) {
     
 void serializeDictionary(std::string& s, const Dictionary& dictionary) {
     s.append("{");
-    for (const auto& statement : dictionary.statements) {
+    for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
+        const auto statement = storage.statements.at(i);
         serialize(s, statement);
     }
-    if (dictionary.statements.empty()) {
+    if (dictionary.statement_first == dictionary.statement_last) {
         s.append("}");
     }
     else {

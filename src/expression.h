@@ -300,21 +300,9 @@ struct ForSimpleEndStatement {
 
 // STATEMENTS END
 
-// TODO: make cheaper to copy.
-/*
 struct Dictionary {
     size_t statement_first;
     size_t statement_last;
-    size_t definition_count;
-};
- */
-struct Dictionary {
-    Dictionary(const Dictionary&) = delete;
-    Dictionary(Dictionary&&) = default;
-    Dictionary& operator=(const Dictionary&) = delete;
-    Dictionary& operator=(Dictionary&&) = default;
-
-    std::vector<Expression> statements;
     size_t definition_count;
 };
 
