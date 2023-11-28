@@ -316,18 +316,6 @@ SYSTEM IMPLEMENTATION
   - Tables (done)
   - Functions (todo)
     - Sets environment and taret types for input.
-* Error handling:
-  - Add error messages as comments in source code.
-    - Add (line) comments
-    - // PARSE ERROR   ^ expected closing brace }
-    - Remove old error message comments when there are no error messages.
-  - Output logs
-  - Make "1 2" throw a parse error
-  - c++ add systematic error messages when parsing fails
-    - Print all sub-expressions that it parsed
-  - Better error messages
-  - Article: "Concepts error messages for humans"
-  - Tests for syntax error and run-time error.
 * Fix FunctionDictionary closure
 * Rename to Mangelang?
 * Can expression trees be implemented more like values and less like pointers? More like lisp?
@@ -343,6 +331,24 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Serializing: tree -> manglang code. (EBNF?, same as above?)
   - Evaluation: tree -> tree. (graphical nodes? algebra)
 
+ERROR HANDLING
+* Tests for syntax error and run-time error.
+  - Testing book suggested to add information to Exceptions to make them easier to test:
+    e.message (free form message that is shown to user but not tested)
+    e.code_range
+    e.error_type (parsing, static type error, dynamic type error, out of range, ...)
+    e.expected_type
+    e.actual_type
+* Add error messages as comments in source code.
+  - Add (line) comments
+  - // PARSE ERROR   ^ expected closing brace }
+  - Remove old error message comments when there are no error messages.
+* Output logs
+* Make "1 2" throw a parse error
+* c++ add systematic error messages when parsing fails
+  - Print all sub-expressions that it parsed
+* Better error messages
+* Article: "Concepts error messages for humans"
 
 TOOLS:
 * Command line interface for reading source from file and piping it to interpretor
