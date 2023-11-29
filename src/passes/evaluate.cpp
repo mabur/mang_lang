@@ -286,6 +286,7 @@ Expression applyFunctionTuple(
 
     auto argument_index = first_argument;
     // TODO: allocate on storage.definitions directly.
+    // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
