@@ -224,7 +224,8 @@ Expression applyFunction(
     const auto function_struct = storage.functions.at(function.index);
     const auto argument = storage.arguments.at(function_struct.argument);
     checkArgument(evaluator, argument, input, function_struct.environment);
-    // TODO: allocate on storage.definitions directly.
+    // TODO: allocate on storage.definitions directly?
+    // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
     const auto definitions = std::vector<Definition>{{{argument.name, 0}, input}};
     const auto middle = makeEvaluatedDictionary(input.range,
