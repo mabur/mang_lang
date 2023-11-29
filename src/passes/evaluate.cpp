@@ -151,20 +151,17 @@ Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
     const auto tuple_struct = storage.tuples.at(tuple.index);
-    // TODO: allocate on storage.expressions directly.
+    const auto tuple_count = tuple_struct.last - tuple_struct.first;
+    const auto first = storage.expressions.size();
     // Allocation:
-    auto evaluated_expressions = std::vector<Expression>{};
-    evaluated_expressions.reserve(tuple_struct.last - tuple_struct.first);
-    for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
-        const auto expression = storage.expressions.at(i);
-        evaluated_expressions.push_back(evaluator(expression, environment));
+    storage.expressions.resize(storage.expressions.size() + tuple_count);
+    const auto last = storage.expressions.size();
+    for (size_t i = 0; i < tuple_count; ++i) {
+        const auto expression = storage.expressions.at(tuple_struct.first + i);
+        const auto evaluated_expression = evaluator(expression, environment);
+        storage.expressions.at(first + i) = evaluated_expression;
     }
     const auto code = tuple.range;
-    const auto first = storage.expressions.size();
-    for (const auto expression : evaluated_expressions) {
-        storage.expressions.push_back(expression);
-    }
-    const auto last = storage.expressions.size();
     return makeEvaluatedTuple(code, EvaluatedTuple{first, last});
 }
 
