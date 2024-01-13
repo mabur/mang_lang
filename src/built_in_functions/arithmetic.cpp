@@ -88,8 +88,8 @@ Expression makeNumber(double x) {
 template <typename BinaryOperation>
 Expression binaryOperation(Expression in, BinaryOperation operation, const std::string& function) {
     const auto tuple = getDynamicBinaryTuple(in, function);
-    const auto left = storage.numbers.at(tuple.left.index);
-    const auto right = storage.numbers.at(tuple.right.index);
+    const auto left = getNumber(tuple.left);
+    const auto right = getNumber(tuple.right);
     return makeNumber(operation(left, right));
 }
 
@@ -125,30 +125,30 @@ Expression mod(Expression in) {
 Expression less(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "less");
     const auto tuple = getDynamicBinaryTuple(in, "less");
-    const auto left = storage.numbers.at(tuple.left.index);
-    const auto right = storage.numbers.at(tuple.right.index);
+    const auto left = getNumber(tuple.left);
+    const auto right = getNumber(tuple.right);
     return left < right ?
         Expression{YES, 0, CodeRange{}} : Expression{NO, 0, CodeRange{}};
 }
 
 Expression sqrt(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "sqrt");
-    return makeNumber(std::sqrt(storage.numbers.at(in.index)));
+    return makeNumber(std::sqrt(getNumber(in)));
 }
 
 Expression round(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round");
-    return makeNumber(std::round(storage.numbers.at(in.index)));
+    return makeNumber(std::round(getNumber(in)));
 }
 
 Expression round_up(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_up");
-    return makeNumber(std::ceil(storage.numbers.at(in.index)));
+    return makeNumber(std::ceil(getNumber(in)));
 }
 
 Expression round_down(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_down");
-    return makeNumber(std::floor(storage.numbers.at(in.index)));
+    return makeNumber(std::floor(getNumber(in)));
 }
 
 Expression ascii_number(Expression in) {
@@ -158,7 +158,7 @@ Expression ascii_number(Expression in) {
 
 Expression ascii_character(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "ascii_character");
-    return makeCharacter(CodeRange{}, static_cast<char>(storage.numbers.at(in.index)));
+    return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
 }
 
 Expression FunctionNumberToNumber::operator()(Expression in) const {

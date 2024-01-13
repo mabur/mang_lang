@@ -201,3 +201,7 @@ Character getCharacter(Expression expression) {
     }
     return static_cast<Character>(expression.index);
 }
+
+Number getNumber(Expression expression) {
+    return storage.numbers.at(expression.index);
+}

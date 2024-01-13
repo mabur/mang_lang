@@ -48,6 +48,7 @@ extern Storage storage;
 void clearMemory();
 
 Character getCharacter(Expression expression);
+Number getNumber(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeCharacter(CodeRange code, Character expression);

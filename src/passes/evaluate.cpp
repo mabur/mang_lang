@@ -411,7 +411,7 @@ bool boolean(Expression expression) {
     switch (type) {
         case EVALUATED_TABLE: return !storage.evaluated_tables.at(index).empty();
         case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.at(index).empty();
-        case NUMBER: return static_cast<bool>(storage.numbers.at(index));
+        case NUMBER: return static_cast<bool>(getNumber(expression));
         case YES: return true;
         case NO: return false;
         case EVALUATED_STACK: return true;
@@ -441,7 +441,7 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
                 ".\n"
         );
     }
-    const auto number = storage.numbers.at(input.index);
+    const auto number = getNumber(input);
     const auto i = getIndex(number);
     const auto count = tuple_struct.last - tuple_struct.first;
     if (i >= count) {
@@ -542,7 +542,7 @@ bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
-        return storage.numbers.at(left.index) == storage.numbers.at(right.index);
+        return getNumber(left) == getNumber(right);
     }
     if (left_type == CHARACTER && right_type == CHARACTER) {
         return getCharacter(left) == getCharacter(right);
@@ -930,7 +930,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
                 ".\n"
         );
     }
-    const auto number = storage.numbers.at(input.index);
+    const auto number = getNumber(input);
     const auto index = getIndex(number);
     auto stack_struct = storage.evaluated_stacks.at(stack.index);
     for (size_t i = 0; i < index; ++i) {
@@ -959,7 +959,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
                 ".\n"
         );
     }
-    const auto number = storage.numbers.at(input.index);
+    const auto number = getNumber(input);
     const auto index = getIndex(number);
     auto string_struct = storage.strings.at(string.index);
     for (size_t i = 0; i < index; ++i) {

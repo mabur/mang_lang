@@ -103,9 +103,7 @@ Expression putNumber(Expression collection, Expression item) {
                 ".\n"
         );
     }
-    return makeNumber(
-        {}, storage.numbers.at(collection.index) + storage.numbers.at(item.index)
-    );
+    return makeNumber({}, getNumber(collection) + getNumber(item));
 }
 
 Expression putBoolean(Expression, Expression item) {
@@ -174,7 +172,7 @@ Expression dropTable(const T& table) {
 }
 
 Expression dropNumber(Expression in) {
-    return makeNumber({}, storage.numbers.at(in.index) - 1);
+    return makeNumber({}, getNumber(in) - 1);
 }
 
 Expression take(Expression in) {

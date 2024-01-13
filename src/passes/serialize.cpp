@@ -403,7 +403,7 @@ void serialize(std::string& s, Expression expression) {
         case LOOKUP_CHILD: serializeLookupChild(s, storage.child_lookups.at(expression.index)); return;
         case FUNCTION_APPLICATION: serializeFunctionApplication(s, storage.function_applications.at(expression.index)); return;
         case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.at(expression.index)); return;
-        case NUMBER: serializeNumber(s, storage.numbers.at(expression.index)); return;
+        case NUMBER: serializeNumber(s, getNumber(expression)); return;
         case EMPTY_STRING: serializeString(s, expression); return;
         case STRING: serializeString(s, expression); return;
         case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, storage.dynamic_expressions.at(expression.index)); return;
