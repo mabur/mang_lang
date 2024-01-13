@@ -216,6 +216,7 @@ SYSTEM IMPLEMENTATION
 * Packing Expressions:
   - Pack double for Number directly in index for Expression, to avoid one indirection.
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
+* Add arrays
 * Improve EvaluatedDictionary.
   - EvaluatedDictionary is used both during evaluation and after evaluation.
   - During evaluation the "values" change but not the "keys" of the "definitions".
