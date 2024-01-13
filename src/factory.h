@@ -27,7 +27,6 @@ struct Storage {
     std::vector<Name> names;
     std::unordered_map<Name, size_t> name_indices;
     std::vector<Argument> arguments;
-    std::vector<Number> numbers;
     std::vector<WhileStatement> while_statements;
     std::vector<ForStatement> for_statements;
     std::vector<ForSimpleStatement> for_simple_statements;

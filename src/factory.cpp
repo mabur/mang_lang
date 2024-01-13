@@ -31,7 +31,12 @@ void clearMemory() {
 // MAKERS:
 
 Expression makeNumber(CodeRange code, Number expression) {
-    return makeExpression(code, expression, NUMBER, storage.numbers);
+    static_assert(sizeof(Number) == sizeof(size_t), "");
+    auto result = Expression{};
+    result.type = NUMBER;
+    result.range = code;
+    memcpy(&result.index, &expression, sizeof(Number));
+    return result;
 }
 
 Expression makeCharacter(CodeRange code, Character expression) {
@@ -203,5 +208,8 @@ Character getCharacter(Expression expression) {
 }
 
 Number getNumber(Expression expression) {
-    return storage.numbers.at(expression.index);
+    static_assert(sizeof(Number) == sizeof(size_t), "");
+    Number result;
+    memcpy(&result, &expression.index, sizeof(Number));
+    return result;
 }

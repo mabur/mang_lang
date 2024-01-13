@@ -214,7 +214,6 @@ SYSTEM IMPLEMENTATION
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
 * Packing Expressions:
-  - Pack double for Number directly in index for Expression, to avoid one indirection.
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
 * Add arrays
 * Improve EvaluatedDictionary.
