@@ -126,9 +126,9 @@ struct MissingKey : public std::runtime_error
 // TODO: Pack tighter?
 // Bit size           Current  Pack1  Pack2
 // Expression::type        16      4      4
-// Expression::index       32     32   32-4
-// Expression::range       64   32-4      0
-// Expression             128     64     32
+// Expression::index       64     64   64-4
+// Expression::range      128     32      0
+// Expression             256    128     64
 struct Expression {
     ExpressionType type = ANY;
     size_t index = 0;
