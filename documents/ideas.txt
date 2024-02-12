@@ -46,6 +46,11 @@ TYPE SYSTEM
             - Concrete stacks, [...]
           - Generic table, Table[]
             - Concrete tables, Table[...]
+      - Could have "objects" that receive messages to represent e.g. a graphical screen with messages like:
+        - put!((x y r g b) screen)
+        - put!((fill _ _  r g b) screen)
+        - But for screens an array is probably a simpler abstraction
+        - put!((x y (r g b)) screen)
       - Inhomogenouse & static containers / data structures
         - Concrete dictionaries (specifies the sufficient members)
         - Concrete tuples (specifies the sufficient members)
@@ -108,6 +113,9 @@ STANDARD LIBRARY
 * Make algorithms more similar to STL:
   - Let them take the "init container".
   - Add array containers/iterators that put new items in-place, similar to tables.
+    - put!((index value) array)
+    - put!((x y value) image) ?
+    - get!(index array default_value)
   - Then the same base algorithm can be used for both in-place (transform) and new allocation (map).
 * all_of, any_of, none_of
 * Interface for containers:
@@ -260,6 +268,8 @@ SYSTEM IMPLEMENTATION
     - Generic dictionaries is so far also the only thing that is causing the supertype:subtype relation to not be symmetric,
       which could be a sign of complexity.
   - Store a name-to-index hash-map for each dictionary type.
+  - Use a bitset to store what names are in a dictionary.
+    - Compare bitset vs sorted array of indices.
   - Add a new expression EvaluatedName
     - Store both name and also index and perhaps steps to parent.
     - Compute it during type-evaluation phase.
