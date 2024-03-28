@@ -389,6 +389,7 @@ SIMILAR LANGUAGES
 * Lisp family: https://en.wikipedia.org/wiki/Lisp_(programming_language)
 * Json: https://www.json.org/
 
+* Nickel https://nickel-lang.org/
 * Nix https://nixos.wiki/wiki/Overview_of_the_Nix_Language
 * HCL / Terraform language https://github.com/hashicorp/hcl https://www.terraform.io/language
 * Jsonnet https://jsonnet.org/
