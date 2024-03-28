@@ -267,6 +267,10 @@ SYSTEM IMPLEMENTATION
     - Could stop supporting typed generic dictionaries and require dynamic ANY for them.
     - Generic dictionaries is so far also the only thing that is causing the supertype:subtype relation to not be symmetric,
       which could be a sign of complexity.
+    - Allow private fields that are only present during the dictionary evaluation phase,
+      but removed after the dictionary has been evaluated.
+      publix x = 1
+      _x = 1
   - Store a name-to-index hash-map for each dictionary type.
   - Use a bitset to store what names are in a dictionary.
     - Compare bitset vs sorted array of indices.
