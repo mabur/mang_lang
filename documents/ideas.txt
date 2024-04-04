@@ -182,7 +182,11 @@ LANGUAGE SYNTAX & SEMANTICS
     - Define generic programming axioms for containers using predecessor!
     - https://en.wikipedia.org/wiki/List_(abstract_data_type)
 * Indexing
-  - Allow both container!index and index!container. Second version is good for multiple indexing of images x!y!image.
+  - Allow both container!index and index!container. Second version is good for
+    - multiple indexing of images x!y!image.
+    - xs = map!(0, points)
+    - Remove need for get0, ...
+    - Could support literal indexing for 0-9: 0!container, 9!container, to simplify parsing rules.
   - Could also have index@container and x@y@image.
   - What about tables? When to return key-value-tuple and when to just return value?
     - get0,..., can already be used for tables. Mirror that behaviour.
