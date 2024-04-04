@@ -1,7 +1,6 @@
 #include "factory.h"
 
-#include <cassert>
-#include <iostream>
+#include <cstring>
 #include <unordered_map>
 #include <vector>
 
