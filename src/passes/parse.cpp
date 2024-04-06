@@ -81,6 +81,7 @@ Expression parseConditional(CodeRange code) {
     code.first = end(expression_else);
     code = parseWhiteSpace(code);
 
+    // TODO: verify parsing of nested alternatives. This looks suspicious.
     return makeConditional(
         CodeRange{first, code.begin()},
         Conditional{alternatives.front(), alternatives.back(), expression_else}
@@ -109,6 +110,7 @@ Expression parseIs(CodeRange code) {
     code.first = end(expression_else);
     code = parseWhiteSpace(code);
 
+    // TODO: verify parsing of nested alternatives. This looks suspicious.
     return makeIs(
         CodeRange{first, code.begin()},
         IsExpression{input, alternatives.front(), alternatives.back(), expression_else}

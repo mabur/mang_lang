@@ -429,6 +429,9 @@ int main() {
         {R"(if yes then "" else "a")", R"("")"},
         {R"(if yes then "a" else "")", R"("a")"},
     });
+    test.evaluate_all("nested conditional", {
+        {"if 0 then if 1 then 2 else 3 4 then 5 else 6", "5"},
+    });
     test.reformat("is", {
         {"is 0 0 then 0 else 0", "is 0 0 then 0 else 0"},
         {"is 0 0 then 0 1 then 1 else 0", "is 0 0 then 0 1 then 1 else 0"},
