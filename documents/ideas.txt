@@ -310,6 +310,7 @@ SYSTEM IMPLEMENTATION
   - Think of input and output of bytecode interpreter as flattened and efficient tree representation.
   - Compare iterators over an array.
 * https://www.reddit.com/r/ProgrammingLanguages/comments/ugysu5/functional_language_for_data_descriptionconfig/
+* Jonathan Blow - Writing a Book - https://www.youtube.com/watch?v=ydg9ZmQL2II
 * Data & code in multiple files:
   - Importing source files.
   - Reading text file. Interpret text file as manglang source, but surround it with "" to make a string.
