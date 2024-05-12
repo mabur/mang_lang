@@ -376,6 +376,7 @@ TOOLS:
 * Command line interface for reading source from file and piping it to interpretor
 * Web interpreter using wasm.
 * Code formatting
+  - https://yorickpeterse.com/articles/how-to-write-a-code-formatter/
   - Indentaiton and line breaks.
   - Colors and syntax high-lighting.
   - Implement tool that takes a source file and outputs an html.
