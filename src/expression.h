@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -188,7 +187,7 @@ struct Function {
     Expression body;
 };
 
-typedef std::function<Expression(Expression)> FunctionPointer;
+typedef Expression (*FunctionPointer)(Expression);
 
 struct FunctionBuiltIn {
     FunctionPointer function;
