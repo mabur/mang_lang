@@ -100,9 +100,19 @@ Expression add(Expression in) {
     return binaryOperation(in, std::plus<>(), "add");
 }
 
+Expression addTyped(Expression in) {
+    checkStaticTypeBinaryFunction(in, NUMBER, "add");
+    return makeNumber(1);
+}
+
 Expression mul(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mul");
     return binaryOperation(in, std::multiplies<>(), "mul");
+}
+
+Expression mulTyped(Expression in) {
+    checkStaticTypeBinaryFunction(in, NUMBER, "mul");
+    return makeNumber(1);
 }
 
 Expression sub(Expression in) {
@@ -110,9 +120,19 @@ Expression sub(Expression in) {
     return binaryOperation(in, std::minus<>(), "sub");
 }
 
+Expression subTyped(Expression in) {
+    checkStaticTypeBinaryFunction(in, NUMBER, "sub");
+    return makeNumber(1);
+}
+
 Expression div(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "div");
     return binaryOperation(in, std::divides<>(), "div");
+}
+
+Expression divTyped(Expression in) {
+    checkStaticTypeBinaryFunction(in, NUMBER, "div");
+    return makeNumber(1);
 }
 
 Expression mod(Expression in) {
@@ -120,6 +140,11 @@ Expression mod(Expression in) {
     return binaryOperation(
         in, [](double a, double b){return std::fmod(a, b);}, "mod"
     );
+}
+
+Expression modTyped(Expression in) {
+    checkStaticTypeBinaryFunction(in, NUMBER, "mod");
+    return makeNumber(1);
 }
 
 Expression less(Expression in) {
@@ -178,11 +203,6 @@ Expression FunctionCharacterToNumber::operator()(Expression in) const {
 Expression FunctionNumberNumberToBoolean::operator()(Expression in) const {
     checkStaticTypeBinaryFunction(in, NUMBER, name);
     return Expression{YES, 0, CodeRange{}};
-}
-
-Expression FunctionNumberNumberToNumber::operator()(Expression in) const {
-    checkStaticTypeBinaryFunction(in, NUMBER, name);
-    return makeNumber(1);
 }
 
 }

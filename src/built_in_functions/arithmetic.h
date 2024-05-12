@@ -7,10 +7,16 @@ struct Expression;
 namespace arithmetic {
 
 Expression add(Expression in);
+Expression addTyped(Expression in);
 Expression mul(Expression in);
+Expression mulTyped(Expression in);
 Expression sub(Expression in);
+Expression subTyped(Expression in);
 Expression div(Expression in);
+Expression divTyped(Expression in);
 Expression mod(Expression in);
+Expression modTyped(Expression in);
+
 Expression less(Expression in);
 
 Expression sqrt(Expression in);
@@ -33,11 +39,6 @@ struct FunctionNumberToCharacter {
 struct FunctionCharacterToNumber {
     std::string name;
     Expression operator()(Expression in) const;
-};
-
-struct FunctionNumberNumberToNumber {
-    std::string name;
-    Expression operator()(Expression in) const;    
 };
 
 struct FunctionNumberNumberToBoolean {
