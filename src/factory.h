@@ -17,8 +17,8 @@ struct Storage {
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
     DARRAY(Function) functions;
-    
-    std::vector<FunctionBuiltIn> built_in_functions;
+
+    DARRAY(FunctionBuiltIn) built_in_functions;
     
     DARRAY(FunctionDictionary) dictionary_functions;
     DARRAY(FunctionTuple) tuple_functions;

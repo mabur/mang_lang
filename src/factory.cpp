@@ -78,9 +78,7 @@ Expression makeFunction(CodeRange code, Function expression) {
 }
 
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression) {
-    //return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
-    storage.built_in_functions.emplace_back(std::move(expression));
-    return Expression{FUNCTION_BUILT_IN, storage.built_in_functions.size() - 1, code};
+    return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
 }
 
 Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression) {

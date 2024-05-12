@@ -386,7 +386,7 @@ Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
 Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
-    const auto function_struct = storage.built_in_functions.at(function.index);
+    const auto function_struct = storage.built_in_functions.data[function.index];
     return function_struct.function(input);
 }
 
