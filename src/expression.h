@@ -188,8 +188,10 @@ struct Function {
     Expression body;
 };
 
+typedef std::function<Expression(Expression)> FunctionPointer;
+
 struct FunctionBuiltIn {
-    std::function<Expression(Expression)> function;
+    FunctionPointer function;
 };
 
 struct FunctionDictionary {

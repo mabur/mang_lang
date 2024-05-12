@@ -4,7 +4,7 @@
 #include "arithmetic.h"
 #include "container.h"
 
-Definition makeDefinitionBuiltIn(const std::string& name, std::function<Expression(Expression)> function) {
+Definition makeDefinitionBuiltIn(const std::string& name, FunctionPointer function) {
     static size_t i = 0;
     return {
         {makeName(CodeRange{}, name).index, i++},
@@ -12,7 +12,7 @@ Definition makeDefinitionBuiltIn(const std::string& name, std::function<Expressi
     };
 }
 
-Definition makeDefinitionBuiltInTyped(const std::string& name, std::function<Expression(Expression)> function) {
+Definition makeDefinitionBuiltInTyped(const std::string& name, FunctionPointer function) {
     static size_t i = 0;
     return {
         {makeName(CodeRange{}, name).index, i++},
