@@ -21,16 +21,16 @@ Expression less(Expression in);
 Expression lessTyped(Expression in);
 
 Expression sqrt(Expression in);
+Expression sqrtTyped(Expression in);
 Expression round(Expression in);
+Expression roundTyped(Expression in);
 Expression round_up(Expression in);
+Expression round_upTyped(Expression in);
 Expression round_down(Expression in);
+Expression round_downTyped(Expression in);
+
 Expression ascii_number(Expression in);
 Expression ascii_character(Expression in);
-
-struct FunctionNumberToNumber {
-    std::string name;
-    Expression operator()(Expression in) const;
-};
 
 struct FunctionNumberToCharacter {
     std::string name;
