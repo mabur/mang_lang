@@ -26,7 +26,44 @@ Expression makeExpression(
 } // namespace
 
 void clearMemory() {
-    storage = Storage{};
+    FREE_DARRAY(storage.dynamic_expressions);
+    FREE_DARRAY(storage.typed_expressions);
+    FREE_DARRAY(storage.dictionaries);
+    FREE_DARRAY(storage.conditionals);
+    FREE_DARRAY(storage.is_expressions);
+    FREE_DARRAY(storage.alternatives);
+    FREE_DARRAY(storage.functions);
+    FREE_DARRAY(storage.built_in_functions);
+    FREE_DARRAY(storage.dictionary_functions);
+    FREE_DARRAY(storage.tuple_functions);
+    FREE_DARRAY(storage.tuples);
+    FREE_DARRAY(storage.evaluated_tuples);
+    FREE_DARRAY(storage.stacks);
+    FREE_DARRAY(storage.evaluated_stacks);
+    FREE_DARRAY(storage.evaluated_table_views);
+    FREE_DARRAY(storage.child_lookups);
+    FREE_DARRAY(storage.function_applications);
+    FREE_DARRAY(storage.symbol_lookups);
+    FREE_DARRAY(storage.arguments);
+    FREE_DARRAY(storage.while_statements);
+    FREE_DARRAY(storage.for_statements);
+    FREE_DARRAY(storage.for_simple_statements);
+    FREE_DARRAY(storage.while_end_statements);
+    FREE_DARRAY(storage.for_end_statements);
+    FREE_DARRAY(storage.for_simple_end_statements);
+    FREE_DARRAY(storage.definitions);
+    FREE_DARRAY(storage.put_assignments);
+    FREE_DARRAY(storage.put_each_assignments);
+    FREE_DARRAY(storage.drop_assignments);
+    FREE_DARRAY(storage.statements);
+    FREE_DARRAY(storage.expressions);
+    FREE_DARRAY(storage.strings);
+    
+    storage.names.clear();
+    storage.name_indices.clear();
+    storage.evaluated_dictionaries.clear();
+    storage.tables.clear();
+    storage.evaluated_tables.clear();
 }
 
 // MAKERS:
