@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string.h>
 
+#include <carma/carma.h>
+
 #include "../built_in_functions/container.h"
 #include "../factory.h"
 #include "serialize.h"

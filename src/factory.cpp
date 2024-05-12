@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <carma/carma.h>
+
 #include "passes/serialize.h"
 
 Storage storage;

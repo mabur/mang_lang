@@ -2,8 +2,6 @@
 
 #include "expression.h"
 
-#include <carma/carma.h>
-
 #define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
 
 struct Storage {
@@ -17,9 +15,7 @@ struct Storage {
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
     DARRAY(Function) functions;
-
     DARRAY(FunctionBuiltIn) built_in_functions;
-    
     DARRAY(FunctionDictionary) dictionary_functions;
     DARRAY(FunctionTuple) tuple_functions;
     DARRAY(Tuple) tuples;

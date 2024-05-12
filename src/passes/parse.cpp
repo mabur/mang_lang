@@ -4,6 +4,8 @@
 #include <limits>
 #include <unordered_map>
 
+#include <carma/carma.h>
+
 #include "../factory.h"
 #include "../built_in_functions/container.h"
 
