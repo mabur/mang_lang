@@ -7,9 +7,6 @@
 struct Storage {
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;
-    
-    std::vector<EvaluatedDictionary> evaluated_dictionaries;
-    
     DARRAY(Dictionary) dictionaries;
     DARRAY(Conditional) conditionals;
     DARRAY(IsExpression) is_expressions;
@@ -22,18 +19,10 @@ struct Storage {
     DARRAY(EvaluatedTuple) evaluated_tuples;
     DARRAY(Stack) stacks;
     DARRAY(EvaluatedStack) evaluated_stacks;
-    
-    std::vector<Table> tables;
-    std::vector<EvaluatedTable> evaluated_tables;
-    
     DARRAY(EvaluatedTableView) evaluated_table_views;
     DARRAY(LookupChild) child_lookups;
     DARRAY(FunctionApplication) function_applications;
     DARRAY(LookupSymbol) symbol_lookups;
-    
-    std::vector<Name> names;
-    std::unordered_map<Name, size_t> name_indices;
-    
     DARRAY(Argument) arguments;
     DARRAY(WhileStatement) while_statements;
     DARRAY(ForStatement) for_statements;
@@ -48,6 +37,12 @@ struct Storage {
     DARRAY(Expression) statements;
     DARRAY(Expression) expressions;
     DARRAY(String) strings;
+
+    std::vector<Name> names;
+    std::unordered_map<Name, size_t> name_indices;
+    std::vector<EvaluatedDictionary> evaluated_dictionaries;
+    std::vector<Table> tables;
+    std::vector<EvaluatedTable> evaluated_tables;
 };
 
 extern Storage storage;
