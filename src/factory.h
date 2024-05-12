@@ -2,44 +2,56 @@
 
 #include "expression.h"
 
+#include <carma/carma.h>
+
+#define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
+
 struct Storage {
-    std::vector<DynamicExpression> dynamic_expressions;
-    std::vector<TypedExpression> typed_expressions;
+    DARRAY(DynamicExpression) dynamic_expressions;
+    DARRAY(TypedExpression) typed_expressions;
+    
     std::vector<EvaluatedDictionary> evaluated_dictionaries;
-    std::vector<Dictionary> dictionaries;
-    std::vector<Conditional> conditionals;
-    std::vector<IsExpression> is_expressions;
-    std::vector<Alternative> alternatives;
-    std::vector<Function> functions;
+    
+    DARRAY(Dictionary) dictionaries;
+    DARRAY(Conditional) conditionals;
+    DARRAY(IsExpression) is_expressions;
+    DARRAY(Alternative) alternatives;
+    DARRAY(Function) functions;
+    
     std::vector<FunctionBuiltIn> built_in_functions;
-    std::vector<FunctionDictionary> dictionary_functions;
-    std::vector<FunctionTuple> tuple_functions;
-    std::vector<Tuple> tuples;
-    std::vector<EvaluatedTuple> evaluated_tuples;
-    std::vector<Stack> stacks;
-    std::vector<EvaluatedStack> evaluated_stacks;
+    
+    DARRAY(FunctionDictionary) dictionary_functions;
+    DARRAY(FunctionTuple) tuple_functions;
+    DARRAY(Tuple) tuples;
+    DARRAY(EvaluatedTuple) evaluated_tuples;
+    DARRAY(Stack) stacks;
+    DARRAY(EvaluatedStack) evaluated_stacks;
+    
     std::vector<Table> tables;
     std::vector<EvaluatedTable> evaluated_tables;
-    std::vector<EvaluatedTableView> evaluated_table_views;
-    std::vector<LookupChild> child_lookups;
-    std::vector<FunctionApplication> function_applications;
-    std::vector<LookupSymbol> symbol_lookups;
+    
+    DARRAY(EvaluatedTableView) evaluated_table_views;
+    DARRAY(LookupChild) child_lookups;
+    DARRAY(FunctionApplication) function_applications;
+    DARRAY(LookupSymbol) symbol_lookups;
+    
     std::vector<Name> names;
     std::unordered_map<Name, size_t> name_indices;
-    std::vector<Argument> arguments;
-    std::vector<WhileStatement> while_statements;
-    std::vector<ForStatement> for_statements;
-    std::vector<ForSimpleStatement> for_simple_statements;
-    std::vector<WhileEndStatement> while_end_statements;
-    std::vector<ForEndStatement> for_end_statements;
-    std::vector<ForSimpleEndStatement> for_simple_end_statements;
-    std::vector<Definition> definitions;
-    std::vector<PutAssignment> put_assignments;
-    std::vector<PutEachAssignment> put_each_assignments;
-    std::vector<DropAssignment> drop_assignments;
-    std::vector<Expression> statements;
-    std::vector<Expression> expressions;
-    std::vector<String> strings;
+    
+    DARRAY(Argument) arguments;
+    DARRAY(WhileStatement) while_statements;
+    DARRAY(ForStatement) for_statements;
+    DARRAY(ForSimpleStatement) for_simple_statements;
+    DARRAY(WhileEndStatement) while_end_statements;
+    DARRAY(ForEndStatement) for_end_statements;
+    DARRAY(ForSimpleEndStatement) for_simple_end_statements;
+    DARRAY(Definition) definitions;
+    DARRAY(PutAssignment) put_assignments;
+    DARRAY(PutEachAssignment) put_each_assignments;
+    DARRAY(DropAssignment) drop_assignments;
+    DARRAY(Expression) statements;
+    DARRAY(Expression) expressions;
+    DARRAY(String) strings;
 };
 
 extern Storage storage;

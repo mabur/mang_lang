@@ -17,8 +17,8 @@ Expression makeExpression(
     ExpressionType type,
     ArrayType& array
 ) {
-    array.emplace_back(std::move(expression));
-    return Expression{type, array.size() - 1, code};
+    APPEND(array, expression);
+    return Expression{type, array.count - 1, code};
 }
 
 } // namespace
@@ -67,7 +67,10 @@ Expression makeDictionary(CodeRange code, Dictionary expression) {
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
-    return makeExpression(code, expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
+    //return makeExpression(code, expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
+
+    storage.evaluated_dictionaries.emplace_back(std::move(expression));
+    return Expression{EVALUATED_DICTIONARY, storage.evaluated_dictionaries.size() - 1, code};
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
@@ -75,7 +78,9 @@ Expression makeFunction(CodeRange code, Function expression) {
 }
 
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression) {
-    return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
+    //return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
+    storage.built_in_functions.emplace_back(std::move(expression));
+    return Expression{FUNCTION_BUILT_IN, storage.built_in_functions.size() - 1, code};
 }
 
 Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression) {
@@ -95,10 +100,10 @@ Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression) {
 }
 
 Expression makeEvaluatedTuple2(Expression a, Expression b) {
-    const auto first = storage.expressions.size();
-    storage.expressions.push_back(a);
-    storage.expressions.push_back(b);
-    const auto last = storage.expressions.size();
+    const auto first = storage.expressions.count;
+    APPEND(storage.expressions, a);
+    APPEND(storage.expressions, b);
+    const auto last = storage.expressions.count;
     return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
 }
 
@@ -111,11 +116,17 @@ Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
 }
 
 Expression makeTable(CodeRange code, Table expression) {
-    return makeExpression(code, expression, TABLE, storage.tables);
+    //return makeExpression(code, expression, TABLE, storage.tables);
+
+    storage.tables.emplace_back(std::move(expression));
+    return Expression{TABLE, storage.tables.size() - 1, code};
 }
 
 Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
-    return makeExpression(code, expression, EVALUATED_TABLE, storage.evaluated_tables);
+    //return makeExpression(code, expression, EVALUATED_TABLE, storage.evaluated_tables);
+
+    storage.evaluated_tables.emplace_back(std::move(expression));
+    return Expression{EVALUATED_TABLE, storage.evaluated_tables.size() - 1, code};
 }
 
 Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression) {
@@ -138,7 +149,10 @@ Expression makeName(CodeRange code, Name expression) {
     const auto name_index = storage.name_indices.find(expression);
     if (name_index == storage.name_indices.end()) {
         storage.name_indices[expression] = storage.names.size();
-        return makeExpression(code, expression, NAME, storage.names);
+        //return makeExpression(code, expression, NAME, storage.names);
+
+        storage.names.emplace_back(std::move(expression));
+        return Expression{NAME, storage.names.size() - 1, code};
     }
     else {
         return Expression{NAME, name_index->second, code};

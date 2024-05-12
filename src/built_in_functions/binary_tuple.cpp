@@ -10,7 +10,7 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
                 "but it got a " + NAMES[in.type]
         };
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto tuple_count = evaluated_tuple.last - evaluated_tuple.first;
     if (tuple_count != 2) {
         throw std::runtime_error{
@@ -19,8 +19,8 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
                 "but it got " + std::to_string(tuple_count) + " items."
         };
     }
-    const auto left = storage.expressions.at(evaluated_tuple.first + 0);
-    const auto right = storage.expressions.at(evaluated_tuple.first + 1);
+    const auto left = storage.expressions.data[evaluated_tuple.first + 0];
+    const auto right = storage.expressions.data[evaluated_tuple.first + 1];
     return BinaryTuple{left, right};
 }
 
@@ -32,7 +32,7 @@ BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function) {
                 "but it got a " + NAMES[in.type]
         };
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.last - evaluated_tuple.first;
     if (count != 2) {
         throw std::runtime_error{
@@ -41,7 +41,7 @@ BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function) {
                 "but it got " + std::to_string(count) + " items."
         };
     }
-    const auto left = storage.expressions.at(evaluated_tuple.first + 0);
-    const auto right = storage.expressions.at(evaluated_tuple.first + 1);
+    const auto left = storage.expressions.data[evaluated_tuple.first + 0];
+    const auto right = storage.expressions.data[evaluated_tuple.first + 1];
     return BinaryTuple{left, right};
 }

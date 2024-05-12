@@ -269,31 +269,31 @@ void bindDictionaryNames(Dictionary& dictionary_struct) {
     auto indexer = DictionaryNameIndexer{};
     
     for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
-        const auto statement = storage.statements.at(i);
+        const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
-            auto& definition = storage.definitions.at(statement.index);
+            auto& definition = storage.definitions.data[statement.index];
             indexer.bindName(definition.name);
         }
         else if (type == PUT_ASSIGNMENT) {
-            auto& put_assignment = storage.put_assignments.at(statement.index);
+            auto& put_assignment = storage.put_assignments.data[statement.index];
             indexer.bindName(put_assignment.name);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
-            auto& put_each_assignment = storage.put_each_assignments.at(statement.index);
+            auto& put_each_assignment = storage.put_each_assignments.data[statement.index];
             indexer.bindName(put_each_assignment.name);
         }
         else if (type == DROP_ASSIGNMENT) {
-            auto& drop_assignment = storage.drop_assignments.at(statement.index);
+            auto& drop_assignment = storage.drop_assignments.data[statement.index];
             indexer.bindName(drop_assignment.name);
         }
         else if (type == FOR_STATEMENT) {
-            auto& for_statement = storage.for_statements.at(statement.index);
+            auto& for_statement = storage.for_statements.data[statement.index];
             indexer.bindName(for_statement.item_name);
             indexer.bindName(for_statement.container_name);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
-            auto& for_statement = storage.for_simple_statements.at(statement.index);
+            auto& for_statement = storage.for_simple_statements.data[statement.index];
             indexer.bindName(for_statement.container_name);
         }
     }
@@ -326,13 +326,13 @@ Expression parseDictionary(CodeRange code) {
             loop_start_indices.pop_back();
             const auto start_expression = statements.at(loop_start_index);
             if (start_expression.type == WHILE_STATEMENT) {
-                storage.while_statements.at(start_expression.index).end_index = loop_end_index;
+                storage.while_statements.data[start_expression.index].end_index = loop_end_index;
                 statements.push_back(parseWhileEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_STATEMENT) {
-                storage.for_statements.at(start_expression.index).end_index = loop_end_index;
+                storage.for_statements.data[start_expression.index].end_index = loop_end_index;
                 statements.push_back(parseForEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
-                storage.for_simple_statements.at(start_expression.index).end_index = loop_end_index;
+                storage.for_simple_statements.data[start_expression.index].end_index = loop_end_index;
                 statements.push_back(parseForSimpleEndStatement(code, loop_start_index));
             } else {
                 throw ParseException("Unexpected start type for loop", code);
@@ -348,11 +348,11 @@ Expression parseDictionary(CodeRange code) {
     }
     code = parseCharacter(code, '}');
     
-    const auto statements_first = storage.statements.size();
+    const auto statements_first = storage.statements.count;
     for (const auto statement : statements) {
-        storage.statements.push_back(statement);
+        APPEND(storage.statements, statement);
     }
-    const auto statements_last = storage.statements.size();
+    const auto statements_last = storage.statements.count;
 
     auto dictionary = Dictionary{statements_first, statements_last, 0};
     bindDictionaryNames(dictionary);
@@ -379,7 +379,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     
     const auto first_argument = Expression{
-        ARGUMENT, storage.arguments.size(), CodeRange{}
+        ARGUMENT, storage.arguments.count, CodeRange{}
     };
     auto last_argument = first_argument;
     
@@ -407,7 +407,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code = parseWhiteSpace(code);
 
     const auto first_argument = Expression{
-        ARGUMENT, storage.arguments.size(), CodeRange{}
+        ARGUMENT, storage.arguments.count, CodeRange{}
     };
     auto last_argument = first_argument;
     
@@ -471,11 +471,11 @@ Expression parseTuple(CodeRange code) {
         expressions.push_back(expression);
         code = parseWhiteSpace(code);
     }
-    const auto first_expression = storage.expressions.size();
+    const auto first_expression = storage.expressions.count;
     for (const auto expression : expressions) {
-        storage.expressions.push_back(expression);
+        APPEND(storage.expressions, expression);
     }
-    const auto last_expression = storage.expressions.size();
+    const auto last_expression = storage.expressions.count;
     code = parseCharacter(code, ')');
     return makeTuple(CodeRange{first, code.first}, Tuple{first_expression, last_expression});
 }

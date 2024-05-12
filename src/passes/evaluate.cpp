@@ -13,8 +13,8 @@ namespace {
 void checkTypes(Expression super, Expression sub, const std::string& description);
 
 void checkTypesEvaluatedStack(Expression super, Expression sub, const std::string& description) {
-    const auto stack_super = storage.evaluated_stacks.at(super.index).top;
-    const auto stack_sub = storage.evaluated_stacks.at(sub.index).top;
+    const auto stack_super = storage.evaluated_stacks.data[super.index].top;
+    const auto stack_sub = storage.evaluated_stacks.data[sub.index].top;
     checkTypes(stack_super, stack_sub, description);
 }
 
@@ -30,8 +30,8 @@ void checkTypesEvaluatedTable(Expression super, Expression sub, const std::strin
 }
 
 void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::string& description) {
-    const auto& tuple_super = storage.evaluated_tuples.at(super.index);
-    const auto& tuple_sub = storage.evaluated_tuples.at(sub.index);
+    const auto& tuple_super = storage.evaluated_tuples.data[super.index];
+    const auto& tuple_sub = storage.evaluated_tuples.data[sub.index];
     const auto super_count = tuple_super.last - tuple_super.first;
     const auto sub_count = tuple_sub.last - tuple_sub.first;
     if (super_count != sub_count) {
@@ -41,8 +41,8 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
     }
     const auto count = super_count;
     for (size_t i = 0; i < count; ++i) {
-        const auto super_expression = storage.expressions.at(tuple_super.first + i);
-        const auto sub_expression = storage.expressions.at(tuple_sub.first + i);
+        const auto super_expression = storage.expressions.data[tuple_super.first + i];
+        const auto sub_expression = storage.expressions.data[tuple_sub.first + i];
         checkTypes(super_expression, sub_expression, description);
     }
 }
@@ -132,7 +132,7 @@ Expression evaluateStack(Evaluator evaluator,
                 ".\n"
             );
         }
-        const auto stack_struct = storage.stacks.at(stack.index);
+        const auto stack_struct = storage.stacks.data[stack.index];
         const auto& top = stack_struct.top;
         const auto& rest = stack_struct.rest;
         items.push_back(evaluator(top, environment));
@@ -150,16 +150,20 @@ template<typename Evaluator>
 Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
-    const auto tuple_struct = storage.tuples.at(tuple.index);
+    const auto tuple_struct = storage.tuples.data[tuple.index];
     const auto tuple_count = tuple_struct.last - tuple_struct.first;
-    const auto first = storage.expressions.size();
+    const auto first = storage.expressions.count;
     // Allocation:
-    storage.expressions.resize(storage.expressions.size() + tuple_count);
-    const auto last = storage.expressions.size();
+    //storage.expressions.resize(storage.expressions.count + tuple_count);
+    // Brute-force resize:
     for (size_t i = 0; i < tuple_count; ++i) {
-        const auto expression = storage.expressions.at(tuple_struct.first + i);
+        APPEND(storage.expressions, Expression{});
+    }
+    const auto last = storage.expressions.count;
+    for (size_t i = 0; i < tuple_count; ++i) {
+        const auto expression = storage.expressions.data[tuple_struct.first + i];
         const auto evaluated_expression = evaluator(expression, environment);
-        storage.expressions.at(first + i) = evaluated_expression;
+        storage.expressions.data[first + i] = evaluated_expression;
     }
     const auto code = tuple.range;
     return makeEvaluatedTuple(code, EvaluatedTuple{first, last});
@@ -190,7 +194,7 @@ template<typename Evaluator>
 Expression evaluateLookupChild(
     Evaluator evaluator, Expression lookup_child, Expression environment
 ) {
-    const auto lookup_child_struct = storage.child_lookups.at(lookup_child.index);
+    const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
     if (child.type != EVALUATED_DICTIONARY) {
         throw std::runtime_error(
@@ -221,8 +225,8 @@ Expression applyFunction(
     Expression function,
     Expression input
 ) {
-    const auto function_struct = storage.functions.at(function.index);
-    const auto argument = storage.arguments.at(function_struct.argument);
+    const auto function_struct = storage.functions.data[function.index];
+    const auto argument = storage.arguments.data[function_struct.argument];
     checkArgument(evaluator, argument, input, function_struct.environment);
     // TODO: allocate on storage.definitions directly?
     // This is a trade-off between heap fragmentation and automated memory cleanup.
@@ -248,10 +252,10 @@ Expression applyFunctionDictionary(
                 ".\n"
         );
     }
-    const auto function_struct = storage.dictionary_functions.at(function.index);
+    const auto function_struct = storage.dictionary_functions.data[function.index];
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
     for (auto i = function_struct.first_argument; i < function_struct.last_argument; ++i) {
-        const auto argument = storage.arguments.at(i);
+        const auto argument = storage.arguments.data[i];
         const auto expression = evaluated_dictionary.lookup(argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
     }
@@ -273,9 +277,9 @@ Expression applyFunctionTuple(
                 ".\n"
         );
     }
-    const auto tuple = storage.evaluated_tuples.at(input.index);
+    const auto tuple = storage.evaluated_tuples.data[input.index];
     const auto tuple_count = tuple.last - tuple.first;
-    const auto function_struct = storage.tuple_functions.at(function.index);
+    const auto function_struct = storage.tuple_functions.data[function.index];
     const auto first_argument = function_struct.first_argument;
     const auto last_argument = function_struct.last_argument;
     const auto num_inputs = last_argument - first_argument;
@@ -290,8 +294,8 @@ Expression applyFunctionTuple(
     // Allocation:
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto argument = storage.arguments.at(argument_index + i);
-        const auto expression = storage.expressions.at(tuple.first + i);
+        const auto argument = storage.arguments.data[argument_index + i];
+        const auto expression = storage.expressions.data[tuple.first + i];
         checkArgument(evaluator, argument, expression, function_struct.environment);
         definitions.at(i) = Definition{{argument.name, i}, expression};
     }
@@ -302,7 +306,7 @@ Expression applyFunctionTuple(
 }
 
 Expression evaluateFunction(Expression function, Expression environment) {
-    const auto function_struct = storage.functions.at(function.index);
+    const auto function_struct = storage.functions.data[function.index];
     return makeFunction(function.range, {
         environment, function_struct.argument, function_struct.body
     });
@@ -311,7 +315,7 @@ Expression evaluateFunction(Expression function, Expression environment) {
 Expression evaluateFunctionDictionary(
     Expression function_dictionary, Expression environment
 ) {
-    const auto function_dictionary_struct = storage.dictionary_functions.at(function_dictionary.index);
+    const auto function_dictionary_struct = storage.dictionary_functions.data[function_dictionary.index];
     return makeFunctionDictionary(function_dictionary.range, {
         environment,
         function_dictionary_struct.first_argument,
@@ -323,7 +327,7 @@ Expression evaluateFunctionDictionary(
 Expression evaluateFunctionTuple(
     Expression function_tuple, Expression environment
 ) {
-    const auto function_tuple_struct = storage.tuple_functions.at(function_tuple.index);
+    const auto function_tuple_struct = storage.tuple_functions.data[function_tuple.index];
     return makeFunctionTuple(function_tuple.range, {
         environment,
         function_tuple_struct.first_argument,
@@ -357,8 +361,7 @@ Expression lookupDictionarySecondTime(
     if (expression.type != EVALUATED_DICTIONARY) {
         throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
     }
-    const auto &dictionary = storage.evaluated_dictionaries.at(
-        expression.index);
+    const auto &dictionary = storage.evaluated_dictionaries.at(expression.index);
     if (steps == 0) {
         const auto result = dictionary.optionalLookup(name.global_index);
         if (result) {
@@ -410,7 +413,7 @@ bool boolean(Expression expression) {
     const auto index = expression.index;
     switch (type) {
         case EVALUATED_TABLE: return !storage.evaluated_tables.at(index).empty();
-        case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.at(index).empty();
+        case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.data[index].empty();
         case NUMBER: return static_cast<bool>(getNumber(expression));
         case YES: return true;
         case NO: return false;
@@ -431,7 +434,7 @@ size_t getIndex(Number number) {
 }
 
 Expression applyTupleIndexing(Expression tuple, Expression input) {
-    const auto& tuple_struct = storage.evaluated_tuples.at(tuple.index);
+    const auto& tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
         throw std::runtime_error(
             std::string{"\n\nI have found a type error."} +
@@ -450,7 +453,7 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
                 " indexed with " + std::to_string(i)
         );
     }
-    return storage.expressions.at(tuple_struct.first + i);
+    return storage.expressions.data[tuple_struct.first + i];
 }
 
 Expression applyTableIndexingTypes(Expression table) {
@@ -462,11 +465,11 @@ Expression applyTableIndexingTypes(Expression table) {
 }
 
 Expression applyStackIndexingTypes(Expression stack) {
-    return storage.evaluated_stacks.at(stack.index).top;
+    return storage.evaluated_stacks.data[stack.index].top;
 }
 
 Expression applyStringIndexingTypes(Expression string) {
-    return storage.strings.at(string.index).top;
+    return storage.strings.data[string.index].top;
 }
 
 bool isEqual(Expression left, Expression right);
@@ -478,8 +481,8 @@ bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
         return false;
     }
     for (size_t i = 0; i < left_count; ++i) {
-        const auto left_item = storage.expressions.at(left.first + i);
-        const auto right_item = storage.expressions.at(right.first + i);
+        const auto left_item = storage.expressions.data[left.first + i];
+        const auto right_item = storage.expressions.data[right.first + i];
         if (!isEqual(left_item, right_item)) {
             return false;
         }
@@ -501,8 +504,8 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
                 "Expected a stack but got a " + NAMES[right.type]
             };
         }
-        const auto left_container = storage.evaluated_stacks.at(left.index);
-        const auto right_container = storage.evaluated_stacks.at(right.index);
+        const auto left_container = storage.evaluated_stacks.data[left.index];
+        const auto right_container = storage.evaluated_stacks.data[right.index];
         if (!isEqual(left_container.top, right_container.top)) {
             return false;
         }
@@ -526,8 +529,8 @@ bool isStringPairwiseEqual(Expression left, Expression right) {
                 "Expected a string but got a " + NAMES[right.type]
             };
         }
-        const auto left_container = storage.strings.at(left.index);
-        const auto right_container = storage.strings.at(right.index);
+        const auto left_container = storage.strings.data[left.index];
+        const auto right_container = storage.strings.data[right.index];
         if (!isEqual(left_container.top, right_container.top)) {
             return false;
         }
@@ -567,8 +570,8 @@ bool isEqual(Expression left, Expression right) {
     }
     if (left_type == EVALUATED_TUPLE && right_type == EVALUATED_TUPLE) {
         return isTuplePairwiseEqual(
-            storage.evaluated_tuples.at(left.index),
-            storage.evaluated_tuples.at(right.index)
+            storage.evaluated_tuples.data[left.index],
+            storage.evaluated_tuples.data[right.index]
         );
     }
     return false;
@@ -579,26 +582,26 @@ Expression evaluateDynamicExpressionTyped(Expression expression) {
 }
 
 Expression evaluateDynamicExpression(Expression expression, Expression environment) {
-    const auto inner_expression = storage.dynamic_expressions.at(expression.index).expression;
+    const auto inner_expression = storage.dynamic_expressions.data[expression.index].expression;
     return evaluate(inner_expression, environment);
 }
 
 Expression evaluateConditionalTypes(
     Expression conditional, Expression environment
 ) {
-    const auto conditional_struct = storage.conditionals.at(conditional.index);
+    const auto conditional_struct = storage.conditionals.data[conditional.index];
     for (auto alternative = conditional_struct.alternative_first;
         alternative.index <= conditional_struct.alternative_last.index;
         ++alternative.index
     ) {
-        evaluate_types(storage.alternatives.at(alternative.index).left, environment);
+        evaluate_types(storage.alternatives.data[alternative.index].left, environment);
     }
     const auto else_expression = evaluate_types(conditional_struct.expression_else, environment);
     for (auto a = conditional_struct.alternative_first;
         a.index <= conditional_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         const auto alternative_expression = evaluate_types(
             alternative.right, environment
         );
@@ -608,12 +611,12 @@ Expression evaluateConditionalTypes(
 }
 
 Expression evaluateConditional(Expression conditional, Expression environment) {
-    const auto conditional_struct = storage.conditionals.at(conditional.index);
+    const auto conditional_struct = storage.conditionals.data[conditional.index];
     for (auto a = conditional_struct.alternative_first;
         a.index <= conditional_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         const auto left_value = evaluate(alternative.left, environment);
         if (boolean(left_value)) {
             return evaluate(alternative.right, environment);
@@ -625,13 +628,13 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
 Expression evaluateIsTypes(
     Expression is, Expression environment
 ) {
-    const auto is_struct = storage.is_expressions.at(is.index);
+    const auto is_struct = storage.is_expressions.data[is.index];
     evaluate_types(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
         a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         evaluate_types(alternative.left, environment);
     }
     const auto else_expression = evaluate_types(is_struct.expression_else, environment);
@@ -639,7 +642,7 @@ Expression evaluateIsTypes(
         a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         const auto alternative_expression = evaluate_types(alternative.right, environment);
         checkTypes(else_expression, alternative_expression, "is");
     }
@@ -647,13 +650,13 @@ Expression evaluateIsTypes(
 }
 
 Expression evaluateIs(Expression is, Expression environment) {
-    const auto is_struct = storage.is_expressions.at(is.index);
+    const auto is_struct = storage.is_expressions.data[is.index];
     const auto value = evaluate(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
         a.index <= is_struct.alternative_last.index;
         ++a.index
     ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         const auto left_value = evaluate(alternative.left, environment);
         if (isEqual(value, left_value)) {
             return evaluate(alternative.right, environment);
@@ -667,9 +670,9 @@ Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
     const auto type = lookupDictionary(
-        storage.typed_expressions.at(expression.index).type_name, environment
+        storage.typed_expressions.data[expression.index].type_name, environment
     );
-    const auto value = evaluator(storage.typed_expressions.at(expression.index).value, environment);
+    const auto value = evaluator(storage.typed_expressions.data[expression.index].value, environment);
     checkTypes(type, value, "typed expression");
     return value;
 }
@@ -679,15 +682,15 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     // Allocation:
     auto definitions = std::vector<Definition>(dictionary.definition_count);
     for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
-        const auto statement = storage.statements.at(i);
+        const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
-            auto definition = storage.definitions.at(statement.index);
+            auto definition = storage.definitions.data[statement.index];
             definition.expression = Expression{ANY, 0, statement.range};
             definitions.at(definition.name.dictionary_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = storage.for_statements.at(statement.index);
+            const auto for_statement = storage.for_statements.data[statement.index];
             definitions.at(for_statement.item_name.dictionary_index) = Definition{
                 for_statement.item_name,
                 Expression{ANY, 0, statement.range},
@@ -726,17 +729,17 @@ Expression evaluateDictionaryTypes(
 ) {
     // TODO: allocate on storage.definitions directly.
     const auto initial_definitions = initializeDefinitions(
-        storage.dictionaries.at(dictionary.index)
+        storage.dictionaries.data[dictionary.index]
     );
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
-    const auto dictionary_struct = storage.dictionaries.at(dictionary.index);
+    const auto dictionary_struct = storage.dictionaries.data[dictionary.index];
     for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
-        const auto statement = storage.statements.at(i);
+        const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
-            const auto definition = storage.definitions.at(statement.index);
+            const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
             // TODO: is this a principled approach?
@@ -745,7 +748,7 @@ Expression evaluateDictionaryTypes(
             }
         }
         else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = storage.put_assignments.at(statement.index);
+            const auto put_assignment = storage.put_assignments.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
@@ -754,7 +757,7 @@ Expression evaluateDictionaryTypes(
             setDictionaryDefinition(result, put_assignment.name, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
-            const auto put_each_assignment = storage.put_each_assignments.at(statement.index);
+            const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
             {
@@ -766,24 +769,24 @@ Expression evaluateDictionaryTypes(
             }
         }
         else if (type == DROP_ASSIGNMENT) {
-            const auto drop_assignment = storage.drop_assignments.at(statement.index);
+            const auto drop_assignment = storage.drop_assignments.data[statement.index];
             const auto current = getDictionaryDefinition(result, drop_assignment.name);
             const auto new_value = container_functions::dropTyped(current);
             setDictionaryDefinition(result, drop_assignment.name, new_value);
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = storage.while_statements.at(statement.index);
+            const auto while_statement = storage.while_statements.data[statement.index];
             booleanTypes(evaluate_types(while_statement.expression, result));
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = storage.for_statements.at(statement.index);
+            const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             booleanTypes(container);
             const auto value = container_functions::takeTyped(container);
             setDictionaryDefinition(result, for_statement.item_name, value);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
-            const auto for_statement = storage.for_simple_statements.at(statement.index);
+            const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             booleanTypes(container);
         }
@@ -795,25 +798,25 @@ Expression evaluateDictionaryTypes(
 
 Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto initial_definitions = initializeDefinitions(
-        storage.dictionaries.at(dictionary.index)
+        storage.dictionaries.data[dictionary.index]
     );
     const auto result = makeEvaluatedDictionary(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
 
-    const auto statement_first = storage.dictionaries.at(dictionary.index).statement_first;
-    const auto statement_last = storage.dictionaries.at(dictionary.index).statement_last;
+    const auto statement_first = storage.dictionaries.data[dictionary.index].statement_first;
+    const auto statement_last = storage.dictionaries.data[dictionary.index].statement_last;
     const auto statement_count = statement_last - statement_first;
     
     // TODO: make more robust:
-    const auto statements = storage.statements.data() + storage.dictionaries.at(dictionary.index).statement_first;
+    const auto statements = storage.statements.data + storage.dictionaries.data[dictionary.index].statement_first;
     
     auto i = size_t{0};
     while (i < statement_count) {
         const auto statement = statements[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
-            const auto definition = storage.definitions.at(statement.index);
+            const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
             // Bottleneck:
@@ -821,7 +824,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i += 1;
         }
         else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = storage.put_assignments.at(statement.index);
+            const auto put_assignment = storage.put_assignments.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
@@ -831,7 +834,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i += 1;
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
-            const auto put_each_assignment = storage.put_each_assignments.at(statement.index);
+            const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             for (
                 auto container = evaluate(right_expression, result);
@@ -847,14 +850,14 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i += 1;
         }
         else if (type == DROP_ASSIGNMENT) {
-            const auto drop_assignment = storage.drop_assignments.at(statement.index);
+            const auto drop_assignment = storage.drop_assignments.data[statement.index];
             const auto current = getDictionaryDefinition(result, drop_assignment.name);
             const auto new_value = container_functions::drop(current);
             setDictionaryDefinition(result, drop_assignment.name, new_value);
             i += 1;
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = storage.while_statements.at(statement.index);
+            const auto while_statement = storage.while_statements.data[statement.index];
             if (boolean(evaluate(while_statement.expression, result))) {
                 i += 1;
             } else {
@@ -862,7 +865,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             }
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = storage.for_statements.at(statement.index);
+            const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             if (boolean(container)) {
                 const auto value = container_functions::take(container);
@@ -873,7 +876,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             }
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
-            const auto for_statement = storage.for_simple_statements.at(statement.index);
+            const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             if (boolean(container)) {
                 i += 1;
@@ -882,21 +885,21 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             }
         }
         else if (type == WHILE_END_STATEMENT) {
-            const auto end_statement = storage.while_end_statements.at(statement.index);
+            const auto end_statement = storage.while_end_statements.data[statement.index];
             i = end_statement.start_index;
         }
         else if (type == FOR_END_STATEMENT) {
-            const auto end_statement = storage.for_end_statements.at(statement.index);
+            const auto end_statement = storage.for_end_statements.data[statement.index];
             i = end_statement.start_index;
-            const auto name_index = storage.for_statements.at(statements[i].index).container_name;
+            const auto name_index = storage.for_statements.data[statements[i].index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);
         }
         else if (type == FOR_SIMPLE_END_STATEMENT) {
-            const auto end_statement = storage.for_simple_end_statements.at(statement.index);
+            const auto end_statement = storage.for_simple_end_statements.data[statement.index];
             i = end_statement.start_index;
-            const auto name_index = storage.for_simple_statements.at(statements[i].index).container_name;
+            const auto name_index = storage.for_simple_statements.data[statements[i].index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);
@@ -932,7 +935,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
-    auto stack_struct = storage.evaluated_stacks.at(stack.index);
+    auto stack_struct = storage.evaluated_stacks.data[stack.index];
     for (size_t i = 0; i < index; ++i) {
         if (stack_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("Stack index out of range");
@@ -944,7 +947,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
                 NAMES[stack_struct.rest.type]
             );
         }
-        stack_struct = storage.evaluated_stacks.at(stack_struct.rest.index);
+        stack_struct = storage.evaluated_stacks.data[stack_struct.rest.index];
     }
     return stack_struct.top;
 }
@@ -961,7 +964,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
-    auto string_struct = storage.strings.at(string.index);
+    auto string_struct = storage.strings.data[string.index];
     for (size_t i = 0; i < index; ++i) {
         if (string_struct.rest.type == EMPTY_STACK) {
             throw std::runtime_error("String index out of range");
@@ -973,7 +976,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
                 NAMES[string_struct.rest.type]
             );
         }
-        string_struct = storage.strings.at(string_struct.rest.index);
+        string_struct = storage.strings.data[string_struct.rest.index];
     }
     return string_struct.top;
 }
@@ -982,10 +985,10 @@ Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
     const auto function = lookupDictionary(
-        storage.function_applications.at(function_application.index).name, environment
+        storage.function_applications.data[function_application.index].name, environment
     );
     const auto input = evaluate_types(
-        storage.function_applications.at(function_application.index).child,
+        storage.function_applications.data[function_application.index].child,
         environment
     );
     switch (function.type) {
@@ -1010,11 +1013,11 @@ Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
     const auto function = lookupDictionary(
-        storage.function_applications.at(function_application.index).name,
+        storage.function_applications.data[function_application.index].name,
         environment
     );
     const auto input = evaluate(
-        storage.function_applications.at(function_application.index).child,
+        storage.function_applications.data[function_application.index].child,
         environment
     );
     switch (function.type) {
@@ -1056,7 +1059,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.data[expression.index].name, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
@@ -1096,7 +1099,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.at(expression.index).name, environment);
+        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.data[expression.index].name, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);

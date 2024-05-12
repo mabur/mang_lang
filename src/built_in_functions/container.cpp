@@ -179,10 +179,10 @@ Expression take(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
-        case STRING: return storage.strings.at(index).top;
+        case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
+        case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
-        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.at(index));
+        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.data[index]);
         case NUMBER: return makeNumber({}, 1);
         case YES: return in;
         case NO: return in;
@@ -194,10 +194,10 @@ Expression takeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
-        case STRING: return storage.strings.at(index).top;
+        case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
+        case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
-        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.at(index), in);
+        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.data[index], in);
         case EMPTY_STACK: return Expression{ANY, 0, in.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
         case NUMBER: return in;
@@ -209,10 +209,10 @@ Expression takeTyped(Expression in) {
 
 Expression drop(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return storage.evaluated_stacks.at(in.index).rest;
-        case STRING: return storage.strings.at(in.index).rest;
+        case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
+        case STRING: return storage.strings.data[in.index].rest;
         case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
-        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.at(in.index));
+        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.data[in.index]);
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
@@ -249,7 +249,7 @@ Expression get(Expression in) {
                 ".\n"
         );
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.last - evaluated_tuple.first;
     if (count != 3) {
         throw std::runtime_error(
@@ -260,9 +260,9 @@ Expression get(Expression in) {
                 ".\n"
         );
     }
-    const auto key = storage.expressions.at(evaluated_tuple.first + 0);
-    const auto table = storage.expressions.at(evaluated_tuple.first + 1);
-    const auto default_value = storage.expressions.at(evaluated_tuple.first + 2);
+    const auto key = storage.expressions.data[evaluated_tuple.first + 0];
+    const auto table = storage.expressions.data[evaluated_tuple.first + 1];
+    const auto default_value = storage.expressions.data[evaluated_tuple.first + 2];
     if (table.type != EVALUATED_TABLE) {
         throw std::runtime_error(
             std::string{"\n\nI have found a dynamic type error."} +
@@ -290,7 +290,7 @@ Expression getTyped(Expression in) {
                 ".\n"
         );
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.last - evaluated_tuple.first;
     if (count != 3) {
         throw std::runtime_error(
@@ -301,8 +301,8 @@ Expression getTyped(Expression in) {
                 ".\n"
         );
     }
-    const auto table = storage.expressions.at(evaluated_tuple.first + 1);
-    const auto default_value = storage.expressions.at(evaluated_tuple.first + 2);
+    const auto table = storage.expressions.data[evaluated_tuple.first + 1];
+    const auto default_value = storage.expressions.data[evaluated_tuple.first + 2];
     if (table.type != EVALUATED_TABLE) {
         throw std::runtime_error(
             std::string{"\n\nI have found a dynamic type error."} +

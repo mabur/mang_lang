@@ -30,17 +30,17 @@ private:
 };
 
 void bindFunctionDictionary(Expression function_dictionary, Expression environment) {
-    const auto function_dictionary_struct = storage.dictionary_functions.at(function_dictionary.index);
+    const auto function_dictionary_struct = storage.dictionary_functions.data[function_dictionary.index];
     bind(function_dictionary_struct.body, environment);
 }
 
 void bindFunctionTuple(Expression function_tuple, Expression environment) {
-    const auto function_tuple_struct = storage.tuple_functions.at(function_tuple.index);
+    const auto function_tuple_struct = storage.tuple_functions.data[function_tuple.index];
     bind(function_tuple_struct.body, environment);
 }
 
 void bindFunction(Expression function, Expression environment) {
-    const auto function_struct = storage.functions.at(function.index);
+    const auto function_struct = storage.functions.data[function.index];
     bind(function_struct.body, environment);
 }
 
@@ -54,7 +54,7 @@ void bindStack(Expression stack, Expression environment) {
                     ".\n"
             );
         }
-        const auto stack_struct = storage.stacks.at(stack.index);
+        const auto stack_struct = storage.stacks.data[stack.index];
         const auto top = stack_struct.top;
         const auto rest = stack_struct.rest;
         bind(top, environment);
@@ -63,9 +63,9 @@ void bindStack(Expression stack, Expression environment) {
 }
 
 void bindTuple(Expression tuple, Expression environment) {
-    const auto tuple_struct = storage.tuples.at(tuple.index);
+    const auto tuple_struct = storage.tuples.data[tuple.index];
     for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
-        const auto expression = storage.expressions.at(i);
+        const auto expression = storage.expressions.data[i];
         bind(expression, environment);
     }
 }
@@ -79,22 +79,22 @@ void bindTable(Expression table, Expression environment) {
 }
 
 void bindLookupChild(Expression lookup_child, Expression environment) {
-    const auto lookup_child_struct = storage.child_lookups.at(lookup_child.index);
+    const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     bind(lookup_child_struct.child, environment);
 }
 
 void bindDynamicExpression(Expression expression, Expression environment) {
-    const auto inner_expression = storage.dynamic_expressions.at(expression.index).expression;
+    const auto inner_expression = storage.dynamic_expressions.data[expression.index].expression;
     bind(inner_expression, environment);
 }
 
 void bindConditional(Expression conditional, Expression environment) {
-    const auto conditional_struct = storage.conditionals.at(conditional.index);
+    const auto conditional_struct = storage.conditionals.data[conditional.index];
     for (auto a = conditional_struct.alternative_first;
         a.index <= conditional_struct.alternative_last.index;
         ++a.index
         ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         bind(alternative.left, environment);
         bind(alternative.right, environment);
     }
@@ -102,13 +102,13 @@ void bindConditional(Expression conditional, Expression environment) {
 }
 
 void bindIs(Expression is, Expression environment) {
-    const auto is_struct = storage.is_expressions.at(is.index);
+    const auto is_struct = storage.is_expressions.data[is.index];
     bind(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
         a.index <= is_struct.alternative_last.index;
         ++a.index
         ) {
-        const auto alternative = storage.alternatives.at(a.index);
+        const auto alternative = storage.alternatives.data[a.index];
         bind(alternative.left, environment);
         bind(alternative.right, environment);
     }
@@ -122,7 +122,7 @@ void bindLookupSymbol(Expression expression, Expression environment) {
 }
 
 void bindTypedExpression(Expression expression, Expression environment) {
-    const auto expression_struct = storage.typed_expressions.at(expression.index);
+    const auto expression_struct = storage.typed_expressions.data[expression.index];
     // TODO: resolve type_name and bind it.
     bind(expression_struct.value, environment);
 }
@@ -130,47 +130,47 @@ void bindTypedExpression(Expression expression, Expression environment) {
 void bindFunctionApplication(
     Expression function_application, Expression environment
 ) {
-    const auto function_application_struct = storage.function_applications.at(function_application.index);
+    const auto function_application_struct = storage.function_applications.data[function_application.index];
     // TODO: resolve and bind function name.
     bind(function_application_struct.child, environment);
 }
 
 void bindDictionary(Expression dictionary, Expression environment) {
-    auto& dictionary_struct = storage.dictionaries.at(dictionary.index);
+    auto& dictionary_struct = storage.dictionaries.data[dictionary.index];
     auto indexer = DictionaryNameIndexer{};
     for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
-        const auto statement = storage.statements.at(i);
+        const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
-            auto& definition = storage.definitions.at(statement.index);
+            auto& definition = storage.definitions.data[statement.index];
             indexer.bindName(definition.name);
             bind(definition.expression, environment);
         }
         else if (type == PUT_ASSIGNMENT) {
-            auto& put_assignment = storage.put_assignments.at(statement.index);
+            auto& put_assignment = storage.put_assignments.data[statement.index];
             indexer.bindName(put_assignment.name);
             bind(put_assignment.expression, environment);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
-            auto& put_each_assignment = storage.put_each_assignments.at(statement.index);
+            auto& put_each_assignment = storage.put_each_assignments.data[statement.index];
             indexer.bindName(put_each_assignment.name);
             bind(put_each_assignment.expression, environment);
         }
         else if (type == DROP_ASSIGNMENT) {
-            auto& drop_assignment = storage.drop_assignments.at(statement.index);
+            auto& drop_assignment = storage.drop_assignments.data[statement.index];
             indexer.bindName(drop_assignment.name);
         }
         else if (type == FOR_STATEMENT) {
-            auto& for_statement = storage.for_statements.at(statement.index);
+            auto& for_statement = storage.for_statements.data[statement.index];
             indexer.bindName(for_statement.item_name);
             indexer.bindName(for_statement.container_name);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
-            auto& for_statement = storage.for_simple_statements.at(statement.index);
+            auto& for_statement = storage.for_simple_statements.data[statement.index];
             indexer.bindName(for_statement.container_name);
         }
         else if (type == WHILE_STATEMENT) {
-            const auto while_statement = storage.while_statements.at(statement.index);
+            const auto while_statement = storage.while_statements.data[statement.index];
             bind(while_statement.expression, environment);
         }
     }
