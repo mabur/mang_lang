@@ -1,7 +1,7 @@
 #include "arithmetic.h"
 
 #include <cmath>
-#include <functional>
+#include <string>
 
 #include "binary_tuple.h"
 #include "../factory.h"
@@ -208,18 +208,19 @@ Expression ascii_number(Expression in) {
     return makeNumber(getCharacter(in));
 }
 
+Expression ascii_numberTyped(Expression in) {
+    checkStaticTypeUnaryFunction(in, CHARACTER, "ascii_number");
+    return makeNumber(1);
+}
+
 Expression ascii_character(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "ascii_character");
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
 }
 
-Expression FunctionNumberToCharacter::operator()(Expression in) const {
-    checkStaticTypeUnaryFunction(in, NUMBER, name);
+Expression ascii_characterTyped(Expression in) {
+    checkStaticTypeUnaryFunction(in, NUMBER, "ascii_character");
     return makeCharacter(CodeRange{}, 'a');
-}
-Expression FunctionCharacterToNumber::operator()(Expression in) const {
-    checkStaticTypeUnaryFunction(in, CHARACTER, name);
-    return makeNumber(1);
 }
 
 }

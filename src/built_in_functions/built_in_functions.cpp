@@ -62,8 +62,8 @@ Expression builtInsTypes() {
         makeDefinitionBuiltInTyped("round_up",   arithmetic::round_upTyped),
         makeDefinitionBuiltInTyped("round_down", arithmetic::round_downTyped),
         makeDefinitionBuiltInTyped("sqrt",       arithmetic::sqrtTyped),
-        makeDefinitionBuiltInTyped("number",     arithmetic::FunctionCharacterToNumber{"number"}),
-        makeDefinitionBuiltInTyped("character",  arithmetic::FunctionNumberToCharacter{"character"}),
+        makeDefinitionBuiltInTyped("number",     arithmetic::ascii_numberTyped),
+        makeDefinitionBuiltInTyped("character",  arithmetic::ascii_characterTyped),
     };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
