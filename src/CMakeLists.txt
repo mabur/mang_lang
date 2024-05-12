@@ -21,8 +21,20 @@ add_library(shared
 add_executable(manglang interpreter.cpp)
 add_executable(tests tests.cpp)
 
-target_link_libraries(manglang shared)
-target_link_libraries(tests shared)
+include(FetchContent)
+FetchContent_Declare(
+        carma
+        GIT_REPOSITORY https://github.com/mabur/carma.git
+        GIT_TAG 796cbe0ab98a9ff9c0734f473825b925f53cf600
+)
+FetchContent_MakeAvailable(carma)
+
+target_include_directories(manglang PRIVATE ${carma_SOURCE_DIR})
+target_include_directories(shared PRIVATE ${carma_SOURCE_DIR})
+target_include_directories(tests PRIVATE ${carma_SOURCE_DIR})
+
+target_link_libraries(manglang shared carma)
+target_link_libraries(tests shared carma)
 
 if (NOT MSVC)
         target_compile_options(shared PRIVATE -Wall -pedantic -Werror)
