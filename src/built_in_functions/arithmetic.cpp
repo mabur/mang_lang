@@ -158,6 +158,11 @@ Expression less(Expression in) {
         Expression{YES, 0, CodeRange{}} : Expression{NO, 0, CodeRange{}};
 }
 
+Expression lessTyped(Expression in) {
+    checkStaticTypeBinaryFunction(in, NUMBER, "less");
+    return Expression{YES, 0, CodeRange{}};
+}
+
 Expression sqrt(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "sqrt");
     return makeNumber(std::sqrt(getNumber(in)));
@@ -200,11 +205,6 @@ Expression FunctionNumberToCharacter::operator()(Expression in) const {
 Expression FunctionCharacterToNumber::operator()(Expression in) const {
     checkStaticTypeUnaryFunction(in, CHARACTER, name);
     return makeNumber(1);
-}
-
-Expression FunctionNumberNumberToBoolean::operator()(Expression in) const {
-    checkStaticTypeBinaryFunction(in, NUMBER, name);
-    return Expression{YES, 0, CodeRange{}};
 }
 
 }

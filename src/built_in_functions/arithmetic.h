@@ -18,6 +18,7 @@ Expression mod(Expression in);
 Expression modTyped(Expression in);
 
 Expression less(Expression in);
+Expression lessTyped(Expression in);
 
 Expression sqrt(Expression in);
 Expression round(Expression in);
@@ -37,11 +38,6 @@ struct FunctionNumberToCharacter {
 };
 
 struct FunctionCharacterToNumber {
-    std::string name;
-    Expression operator()(Expression in) const;
-};
-
-struct FunctionNumberNumberToBoolean {
     std::string name;
     Expression operator()(Expression in) const;
 };

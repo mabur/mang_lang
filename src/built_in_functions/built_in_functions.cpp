@@ -57,7 +57,7 @@ Expression builtInsTypes() {
         makeDefinitionBuiltInTyped("sub",        arithmetic::subTyped),
         makeDefinitionBuiltInTyped("div",        arithmetic::divTyped),
         makeDefinitionBuiltInTyped("mod",        arithmetic::modTyped),
-        makeDefinitionBuiltInTyped("less",       arithmetic::FunctionNumberNumberToBoolean{"less"}),
+        makeDefinitionBuiltInTyped("less",       arithmetic::lessTyped),
         makeDefinitionBuiltInTyped("round",      arithmetic::FunctionNumberToNumber{"round"}),
         makeDefinitionBuiltInTyped("round_up",   arithmetic::FunctionNumberToNumber{"round_up"}),
         makeDefinitionBuiltInTyped("round_down", arithmetic::FunctionNumberToNumber{"round_down"}),
