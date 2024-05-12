@@ -135,11 +135,13 @@ Expression divTyped(Expression in) {
     return makeNumber(1);
 }
 
+double myMod(double a, double b) {
+    return std::fmod(a, b);
+}
+
 Expression mod(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mod");
-    return binaryOperation(
-        in, [](double a, double b){return std::fmod(a, b);}, "mod"
-    );
+    return binaryOperation(in, myMod, "mod");
 }
 
 Expression modTyped(Expression in) {
