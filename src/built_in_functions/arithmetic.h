@@ -22,14 +22,14 @@ Expression sqrt(Expression in);
 Expression sqrtTyped(Expression in);
 Expression round(Expression in);
 Expression roundTyped(Expression in);
-Expression round_up(Expression in);
-Expression round_upTyped(Expression in);
-Expression round_down(Expression in);
-Expression round_downTyped(Expression in);
+Expression roundUp(Expression in);
+Expression roundUpTyped(Expression in);
+Expression roundDown(Expression in);
+Expression roundDownTyped(Expression in);
 
-Expression ascii_number(Expression in);
-Expression ascii_numberTyped(Expression in);
-Expression ascii_character(Expression in);
-Expression ascii_characterTyped(Expression in);
+Expression asciiNumber(Expression in);
+Expression asciiNumberTyped(Expression in);
+Expression asciiCharacter(Expression in);
+Expression asciiCharacterTyped(Expression in);
 
 }

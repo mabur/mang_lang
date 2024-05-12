@@ -34,11 +34,11 @@ Expression builtIns() {
         makeDefinitionBuiltIn("mod",        arithmetic::mod),
         makeDefinitionBuiltIn("less",       arithmetic::less),
         makeDefinitionBuiltIn("round",      arithmetic::round),
-        makeDefinitionBuiltIn("round_up",   arithmetic::round_up),
-        makeDefinitionBuiltIn("round_down", arithmetic::round_down),
+        makeDefinitionBuiltIn("round_up",   arithmetic::roundUp),
+        makeDefinitionBuiltIn("round_down", arithmetic::roundDown),
         makeDefinitionBuiltIn("sqrt",       arithmetic::sqrt),
-        makeDefinitionBuiltIn("number",     arithmetic::ascii_number),
-        makeDefinitionBuiltIn("character",  arithmetic::ascii_character),
+        makeDefinitionBuiltIn("number",     arithmetic::asciiNumber),
+        makeDefinitionBuiltIn("character",  arithmetic::asciiCharacter),
     };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
@@ -59,11 +59,11 @@ Expression builtInsTypes() {
         makeDefinitionBuiltInTyped("mod",        arithmetic::modTyped),
         makeDefinitionBuiltInTyped("less",       arithmetic::lessTyped),
         makeDefinitionBuiltInTyped("round",      arithmetic::roundTyped),
-        makeDefinitionBuiltInTyped("round_up",   arithmetic::round_upTyped),
-        makeDefinitionBuiltInTyped("round_down", arithmetic::round_downTyped),
+        makeDefinitionBuiltInTyped("round_up",   arithmetic::roundUpTyped),
+        makeDefinitionBuiltInTyped("round_down", arithmetic::roundDownTyped),
         makeDefinitionBuiltInTyped("sqrt",       arithmetic::sqrtTyped),
-        makeDefinitionBuiltInTyped("number",     arithmetic::ascii_numberTyped),
-        makeDefinitionBuiltInTyped("character",  arithmetic::ascii_characterTyped),
+        makeDefinitionBuiltInTyped("number",     arithmetic::asciiNumberTyped),
+        makeDefinitionBuiltInTyped("character",  arithmetic::asciiCharacterTyped),
     };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}

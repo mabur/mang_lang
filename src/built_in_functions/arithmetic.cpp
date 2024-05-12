@@ -183,42 +183,42 @@ Expression roundTyped(Expression in) {
     return makeNumber(1);
 }
 
-Expression round_up(Expression in) {
+Expression roundUp(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_up");
     return makeNumber(std::ceil(getNumber(in)));
 }
 
-Expression round_upTyped(Expression in) {
+Expression roundUpTyped(Expression in) {
     checkStaticTypeUnaryFunction(in, NUMBER, "round_up");
     return makeNumber(1);
 }
 
-Expression round_down(Expression in) {
+Expression roundDown(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_down");
     return makeNumber(std::floor(getNumber(in)));
 }
 
-Expression round_downTyped(Expression in) {
+Expression roundDownTyped(Expression in) {
     checkStaticTypeUnaryFunction(in, NUMBER, "round_down");
     return makeNumber(1);
 }
 
-Expression ascii_number(Expression in) {
+Expression asciiNumber(Expression in) {
     checkDynamicTypeUnaryFunction(in, CHARACTER, "ascii_number");
     return makeNumber(getCharacter(in));
 }
 
-Expression ascii_numberTyped(Expression in) {
+Expression asciiNumberTyped(Expression in) {
     checkStaticTypeUnaryFunction(in, CHARACTER, "ascii_number");
     return makeNumber(1);
 }
 
-Expression ascii_character(Expression in) {
+Expression asciiCharacter(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "ascii_character");
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
 }
 
-Expression ascii_characterTyped(Expression in) {
+Expression asciiCharacterTyped(Expression in) {
     checkStaticTypeUnaryFunction(in, NUMBER, "ascii_character");
     return makeCharacter(CodeRange{}, 'a');
 }
