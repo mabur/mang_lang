@@ -15,6 +15,10 @@ void replaceBack(SerializedString base, char tail) {
     base.back() = tail;
 }
 
+void append(SerializedString base, char tail) {
+    base += tail;
+}
+
 void serializeName(SerializedString s, size_t name) {
     concatcstring(s, storage.names.at(name).c_str());
 }
@@ -218,9 +222,9 @@ void serializeStack(SerializedString s, Expression expression) {
 }
 
 void serializeCharacter(SerializedString s, Character character) {
-    s += '\'';
-    s += character;
-    s += '\'';
+    append(s, '\'');
+    append(s, character);
+    append(s, '\'');
 }
 
 void serializeFunction(SerializedString s, const Function& function) {
