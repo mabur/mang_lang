@@ -184,9 +184,9 @@ Expression evaluateTable(
     for (const auto& row : table_struct.rows) {
         const auto key = evaluator(row.key, environment);
         const auto value = evaluator(row.value, environment);
-        std::string serialized_key;
-        serializer(serialized_key, key);
-        rows[serialized_key] = {key, value};
+        auto serialized_key = SerializedString{};
+        auto result = makeStdString(serializer(serialized_key, key));
+        rows[result] = {key, value};
     }
     const auto code = table.range;
     return makeEvaluatedTable(code, EvaluatedTable{rows});
@@ -915,7 +915,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
-    std::string buffer;
+    auto buffer = SerializedString{};
     auto k = makeStdString(serialize(buffer, key));
     try {
         return table_struct.rows.at(k).value;

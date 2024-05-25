@@ -4,10 +4,15 @@
 
 struct Expression;
 
-using SerializedString = std::string&;
+//using SerializedString = std::string&;
+struct SerializedString {
+    char* data;
+    size_t count;
+    size_t capacity;
+};
 
 inline std::string makeStdString(SerializedString s) {
-    return s;
+    return std::string(s.data, s.count);
 }
 
 SerializedString serialize_types(SerializedString s, Expression expression);

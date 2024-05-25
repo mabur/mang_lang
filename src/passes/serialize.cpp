@@ -3,21 +3,23 @@
 #include <limits>
 #include <sstream>
 
+#include <carma/carma.h>
+
 #include "../factory.h"
 
 namespace {
 
 SerializedString concatcstring(SerializedString base, const char* tail) {
-    base.append(tail);
+    //base.append(tail);
+    for (auto it = tail; *it != '\0'; ++it) {
+        APPEND(base, *it);
+    }
     return base;
 }
 
 void replaceBack(SerializedString base, char tail) {
-    base.back() = tail;
-}
-
-void append(SerializedString base, char tail) {
-    base += tail;
+    //base.back() = tail;
+    base.data[base.count - 1] = tail;
 }
 
 SerializedString serializeName(SerializedString s, size_t name) {
@@ -175,7 +177,7 @@ SerializedString serializeEvaluatedTuple(SerializedString s, Serializer serializ
 SerializedString serializeLookupChild(SerializedString s, const LookupChild& lookup_child) {
     s = serializeName(s, lookup_child.name);
     s = concatcstring(s, "@");
-    serialize(s, lookup_child.child);
+    s = serialize(s, lookup_child.child);
     return s;
 }
 
@@ -244,9 +246,9 @@ SerializedString serializeStack(SerializedString s, Expression expression) {
 }
 
 SerializedString serializeCharacter(SerializedString s, Character character) {
-    append(s, '\'');
-    append(s, character);
-    append(s, '\'');
+    APPEND(s, '\'');
+    APPEND(s, character);
+    APPEND(s, '\'');
     return s;
 }
 
@@ -400,7 +402,7 @@ SerializedString serializeString(SerializedString s, Expression expression) {
                 "but I found a " + NAMES[top.type]
             };
         }
-        s.push_back(getCharacter(top));
+        APPEND(s, getCharacter(top));
         expression = rest;
     }
     s = concatcstring(s, "\"");
