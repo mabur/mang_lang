@@ -300,7 +300,7 @@ void serializeEvaluatedTable(SerializedString s, const Table& table) {
     concatcstring(s, "<");
     for (const auto& row : table) {
         concatcstring(s, "(");
-        s.append(row.first);
+        concatcstring(s, row.first.c_str());
         concatcstring(s, " ");
         serialize(s, row.second.value);
         concatcstring(s, ") ");
@@ -339,7 +339,7 @@ void serializeNumber(SerializedString s, Number number) {
     std::stringstream stream;
     stream.precision(std::numeric_limits<double>::digits10 + 1);
     stream << number;
-    s.append(stream.str());
+    concatcstring(s, stream.str().c_str());
 }
 
 void serializeString(SerializedString s, Expression expression) {
@@ -376,7 +376,7 @@ void serialize_types(SerializedString s, Expression expression) {
         case EVALUATED_STACK: serializeTypesEvaluatedStack(s, expression); return;
         case EVALUATED_TABLE: serializeTypesEvaluatedTable(s, expression); return;
         // TODO: EVALUATED_TABLE_VIEW?
-        default: s.append(NAMES[expression.type]); return;
+        default: concatcstring(s, NAMES[expression.type].c_str()); return;
     }
 }
 
@@ -419,6 +419,6 @@ void serialize(SerializedString s, Expression expression) {
         case FOR_END_STATEMENT: concatcstring(s, "end "); return;
         case FOR_SIMPLE_END_STATEMENT: concatcstring(s, "end "); return;
         case RETURN_STATEMENT: concatcstring(s, "return "); return;
-        default: s.append(NAMES[expression.type]); return;
+        default: concatcstring(s, NAMES[expression.type].c_str()); return;
     }
 }
