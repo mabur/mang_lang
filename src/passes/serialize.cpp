@@ -7,11 +7,11 @@
 
 namespace {
 
-void serializeName(std::string& s, size_t name) {
+void serializeName(SerializedString s, size_t name) {
     s.append(storage.names.at(name));
 }
 
-void serializeArgument(std::string& s, Argument a) {
+void serializeArgument(SerializedString s, Argument a) {
     if (a.type.type != ANY) {
         serialize(s, a.type);
         s.append(":");
@@ -21,18 +21,18 @@ void serializeArgument(std::string& s, Argument a) {
     serializeName(s, a.name);
 }
 
-void serializeDynamicExpression(std::string& s, const DynamicExpression& dynamic_expression) {
+void serializeDynamicExpression(SerializedString s, const DynamicExpression& dynamic_expression) {
     s.append("dynamic ");
     serialize(s, dynamic_expression.expression);
 }
 
-void serializeTypedExpression(std::string& s, const TypedExpression& typed_expression) {
+void serializeTypedExpression(SerializedString s, const TypedExpression& typed_expression) {
     serializeName(s, typed_expression.type_name.global_index);
     s.append(":");
     serialize(s, typed_expression.value);
 }
 
-void serializeConditional(std::string& s, const Conditional& conditional) {
+void serializeConditional(SerializedString s, const Conditional& conditional) {
     s.append("if ");
     for (auto a = conditional.alternative_first;
         a.index <= conditional.alternative_last.index;
@@ -48,7 +48,7 @@ void serializeConditional(std::string& s, const Conditional& conditional) {
     serialize(s, conditional.expression_else);
 }
 
-void serializeIs(std::string& s, const IsExpression& is_expression) {
+void serializeIs(SerializedString s, const IsExpression& is_expression) {
     s.append("is ");
     serialize(s, is_expression.input);
     s.append(" ");
@@ -66,39 +66,39 @@ void serializeIs(std::string& s, const IsExpression& is_expression) {
     serialize(s, is_expression.expression_else);
 }
 
-void serializeDefinition(std::string& s, const Definition& element) {
+void serializeDefinition(SerializedString s, const Definition& element) {
     serializeName(s, element.name.global_index);
     s.append("=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
-void serializePutAssignment(std::string& s, const PutAssignment& element) {
+void serializePutAssignment(SerializedString s, const PutAssignment& element) {
     serializeName(s, element.name.global_index);
     s.append("+=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
-void serializePutEachAssignment(std::string& s, const PutEachAssignment& element) {
+void serializePutEachAssignment(SerializedString s, const PutEachAssignment& element) {
     serializeName(s, element.name.global_index);
     s.append("++=");
     serialize(s, element.expression);
     s.append(" ");
 }
 
-void serializeDropAssignment(std::string& s, const DropAssignment& element) {
+void serializeDropAssignment(SerializedString s, const DropAssignment& element) {
     serializeName(s, element.name.global_index);
     s.append("-- ");
 }
 
-void serializeWhileStatement(std::string& s, const WhileStatement& element) {
+void serializeWhileStatement(SerializedString s, const WhileStatement& element) {
     s.append("while ");
     serialize(s, element.expression);
     s.append(" ");
 }
 
-void serializeForStatement(std::string& s, const ForStatement& element) {
+void serializeForStatement(SerializedString s, const ForStatement& element) {
     s.append("for ");
     serializeName(s, element.item_name.global_index);
     s.append(" in ");
@@ -106,14 +106,14 @@ void serializeForStatement(std::string& s, const ForStatement& element) {
     s.append(" ");
 }
 
-void serializeForSimpleStatement(std::string& s, const ForSimpleStatement& element) {
+void serializeForSimpleStatement(SerializedString s, const ForSimpleStatement& element) {
     s.append("for ");
     serializeName(s, element.container_name.global_index);
     s.append(" ");
 }
 
 template<typename Serializer>
-void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const EvaluatedDictionary& dictionary) {
+void serializeEvaluatedDictionary(SerializedString s, Serializer serializer, const EvaluatedDictionary& dictionary) {
     if (dictionary.definitions.empty()) {
         s.append("{}");
         return;
@@ -129,7 +129,7 @@ void serializeEvaluatedDictionary(std::string& s, Serializer serializer, const E
 }
 
 template<typename Serializer>
-void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t) {
+void serializeEvaluatedTuple(SerializedString s, Serializer serializer, Expression t) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[t.index];
     if (evaluated_tuple.first == evaluated_tuple.last) {
         s.append("()");
@@ -144,23 +144,23 @@ void serializeEvaluatedTuple(std::string& s, Serializer serializer, Expression t
     s.back() = ')';
 }
 
-void serializeLookupChild(std::string& s, const LookupChild& lookup_child) {
+void serializeLookupChild(SerializedString s, const LookupChild& lookup_child) {
     serializeName(s, lookup_child.name);
     s.append("@");
     serialize(s, lookup_child.child);
 }
 
-void serializeFunctionApplication(std::string& s, const FunctionApplication& function_application) {
+void serializeFunctionApplication(SerializedString s, const FunctionApplication& function_application) {
     serializeName(s, function_application.name.global_index);
     s.append("!");
     serialize(s, function_application.child);
 }
 
-void serializeLookupSymbol(std::string& s, const LookupSymbol& lookup_symbol) {
+void serializeLookupSymbol(SerializedString s, const LookupSymbol& lookup_symbol) {
     serializeName(s, lookup_symbol.name.global_index);
 }
     
-void serializeDictionary(std::string& s, const Dictionary& dictionary) {
+void serializeDictionary(SerializedString s, const Dictionary& dictionary) {
     s.append("{");
     for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
         const auto statement = storage.statements.data[i];
@@ -175,7 +175,7 @@ void serializeDictionary(std::string& s, const Dictionary& dictionary) {
     }
 }
 
-void serializeTuple(std::string& s, Expression t) {
+void serializeTuple(SerializedString s, Expression t) {
     const auto tuple_struct = storage.tuples.data[t.index];
     if (tuple_struct.first == tuple_struct.last) {
         s.append("()");
@@ -190,7 +190,7 @@ void serializeTuple(std::string& s, Expression t) {
     s.back() = ')';
 }
 
-void serializeStack(std::string& s, Expression expression) {
+void serializeStack(SerializedString s, Expression expression) {
     s.append("[");
     while (expression.type != EMPTY_STACK) {
         if (expression.type != STACK) {
@@ -209,20 +209,20 @@ void serializeStack(std::string& s, Expression expression) {
     s.back() = ']';
 }
 
-void serializeCharacter(std::string& s, Character character) {
+void serializeCharacter(SerializedString s, Character character) {
     s += '\'';
     s += character;
     s += '\'';
 }
 
-void serializeFunction(std::string& s, const Function& function) {
+void serializeFunction(SerializedString s, const Function& function) {
     s.append("in ");
     serializeArgument(s, storage.arguments.data[function.argument]);
     s.append(" out ");
     serialize(s, function.body);
 }
 
-void serializeFunctionDictionary(std::string& s, const FunctionDictionary& function_dictionary) {
+void serializeFunctionDictionary(SerializedString s, const FunctionDictionary& function_dictionary) {
     s.append("in ");
     s.append("{");
     for (auto i = function_dictionary.first_argument; i < function_dictionary.last_argument; ++i) {
@@ -239,7 +239,7 @@ void serializeFunctionDictionary(std::string& s, const FunctionDictionary& funct
     serialize(s, function_dictionary.body);
 }
 
-void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack) {
+void serializeFunctionTuple(SerializedString s, const FunctionTuple& function_stack) {
     s.append("in ");
     s.append("(");
     for (auto i = function_stack.first_argument; i < function_stack.last_argument; ++i) {
@@ -256,7 +256,7 @@ void serializeFunctionTuple(std::string& s, const FunctionTuple& function_stack)
     serialize(s, function_stack.body);
 }
     
-void serializeTable(std::string& s, Expression t) {
+void serializeTable(SerializedString s, Expression t) {
     const auto rows = storage.tables.at(t.index).rows;
     if (rows.empty()) {
         s.append("<>");
@@ -273,7 +273,7 @@ void serializeTable(std::string& s, Expression t) {
     s.back() = '>';
 }
 
-void serializeTypesEvaluatedTable(std::string& s, Expression t) {
+void serializeTypesEvaluatedTable(SerializedString s, Expression t) {
     const auto& rows = storage.evaluated_tables.at(t.index).rows;
     if (rows.empty()) {
         s.append("<>");
@@ -288,7 +288,7 @@ void serializeTypesEvaluatedTable(std::string& s, Expression t) {
 }
 
 template<typename Table>
-void serializeEvaluatedTable(std::string& s, const Table& table) {
+void serializeEvaluatedTable(SerializedString s, const Table& table) {
     if (table.empty()) {
         s.append("<>");
         return;
@@ -304,13 +304,13 @@ void serializeEvaluatedTable(std::string& s, const Table& table) {
     s.back() = '>';
 }
 
-void serializeTypesEvaluatedStack(std::string& s, Expression e) {
+void serializeTypesEvaluatedStack(SerializedString s, Expression e) {
     s.append("[");
     serialize_types(s, storage.evaluated_stacks.data[e.index].top);
     s.append("]");
 }
 
-void serializeEvaluatedStack(std::string& s, Expression expression) {
+void serializeEvaluatedStack(SerializedString s, Expression expression) {
     s.append("[");
     while (expression.type != EMPTY_STACK) {
         if (expression.type != EVALUATED_STACK) {
@@ -327,7 +327,7 @@ void serializeEvaluatedStack(std::string& s, Expression expression) {
     s.back() = ']';
 }
 
-void serializeNumber(std::string& s, Number number) {
+void serializeNumber(SerializedString s, Number number) {
     if (number != number) {
         s.append("nan");
         return;
@@ -338,7 +338,7 @@ void serializeNumber(std::string& s, Number number) {
     s.append(stream.str());
 }
 
-void serializeString(std::string& s, Expression expression) {
+void serializeString(SerializedString s, Expression expression) {
     s.append("\"");
     while (expression.type != EMPTY_STRING) {
         if (expression.type != STRING) {
@@ -365,7 +365,7 @@ void serializeString(std::string& s, Expression expression) {
 
 } // namespace
 
-void serialize_types(std::string& s, Expression expression) {
+void serialize_types(SerializedString s, Expression expression) {
     switch (expression.type) {
         case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.at(expression.index)); return;
         case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize_types, expression); return;
@@ -376,7 +376,7 @@ void serialize_types(std::string& s, Expression expression) {
     }
 }
 
-void serialize(std::string& s, Expression expression) {
+void serialize(SerializedString s, Expression expression) {
     switch (expression.type) {
         case CHARACTER: serializeCharacter(s, getCharacter(expression)); return;
         case CONDITIONAL: serializeConditional(s, storage.conditionals.data[expression.index]); return;

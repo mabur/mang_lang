@@ -4,5 +4,7 @@
 
 struct Expression;
 
-void serialize_types(std::string& s, Expression expression);
-void serialize(std::string& s, Expression expression);
+using SerializedString = std::string&;
+
+void serialize_types(SerializedString s, Expression expression);
+void serialize(SerializedString s, Expression expression);
