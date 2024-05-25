@@ -11,6 +11,10 @@ void concatcstring(SerializedString base, const char* tail) {
     base.append(tail);
 }
 
+void replaceBack(SerializedString base, char tail) {
+    base.back() = tail;
+}
+
 void serializeName(SerializedString s, size_t name) {
     concatcstring(s, storage.names.at(name).c_str());
 }
@@ -129,7 +133,7 @@ void serializeEvaluatedDictionary(SerializedString s, Serializer serializer, con
         serializer(s, pair.expression);
         concatcstring(s, " ");
     }
-    s.back() = '}';
+    replaceBack(s, '}');
 }
 
 template<typename Serializer>
@@ -145,7 +149,7 @@ void serializeEvaluatedTuple(SerializedString s, Serializer serializer, Expressi
         serializer(s, expression);
         concatcstring(s, " ");
     }
-    s.back() = ')';
+    replaceBack(s, ')');
 }
 
 void serializeLookupChild(SerializedString s, const LookupChild& lookup_child) {
@@ -175,7 +179,7 @@ void serializeDictionary(SerializedString s, const Dictionary& dictionary) {
         concatcstring(s, "}");
     }
     else {
-        s.back() = '}';
+        replaceBack(s, '}');
     }
 }
 
@@ -191,7 +195,7 @@ void serializeTuple(SerializedString s, Expression t) {
         serialize(s, expression);
         concatcstring(s, " ");
     }
-    s.back() = ')';
+    replaceBack(s, ')');
 }
 
 void serializeStack(SerializedString s, Expression expression) {
@@ -210,7 +214,7 @@ void serializeStack(SerializedString s, Expression expression) {
         concatcstring(s, " ");
         expression = stack.rest;
     }
-    s.back() = ']';
+    replaceBack(s, ']');
 }
 
 void serializeCharacter(SerializedString s, Character character) {
@@ -237,7 +241,7 @@ void serializeFunctionDictionary(SerializedString s, const FunctionDictionary& f
         concatcstring(s, "}");
     }
     else {
-        s.back() = '}';
+        replaceBack(s, '}');
     }
     concatcstring(s, " out ");
     serialize(s, function_dictionary.body);
@@ -254,7 +258,7 @@ void serializeFunctionTuple(SerializedString s, const FunctionTuple& function_st
         concatcstring(s, ")");
     }
     else {
-        s.back() = ')';
+        replaceBack(s, ')');
     }
     concatcstring(s, " out ");
     serialize(s, function_stack.body);
@@ -274,7 +278,7 @@ void serializeTable(SerializedString s, Expression t) {
         serialize(s, row.value);
         concatcstring(s, ") ");
     }
-    s.back() = '>';
+    replaceBack(s, '>');
 }
 
 void serializeTypesEvaluatedTable(SerializedString s, Expression t) {
@@ -305,7 +309,7 @@ void serializeEvaluatedTable(SerializedString s, const Table& table) {
         serialize(s, row.second.value);
         concatcstring(s, ") ");
     }
-    s.back() = '>';
+    replaceBack(s, '>');
 }
 
 void serializeTypesEvaluatedStack(SerializedString s, Expression e) {
@@ -328,7 +332,7 @@ void serializeEvaluatedStack(SerializedString s, Expression expression) {
         concatcstring(s, " ");
         expression = stack.rest;
     }
-    s.back() = ']';
+    replaceBack(s, ']');
 }
 
 void serializeNumber(SerializedString s, Number number) {
