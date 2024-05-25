@@ -7,8 +7,9 @@
 
 namespace {
 
-void concatcstring(SerializedString base, const char* tail) {
+SerializedString concatcstring(SerializedString base, const char* tail) {
     base.append(tail);
+    return base;
 }
 
 void replaceBack(SerializedString base, char tail) {
@@ -19,32 +20,36 @@ void append(SerializedString base, char tail) {
     base += tail;
 }
 
-void serializeName(SerializedString s, size_t name) {
+SerializedString serializeName(SerializedString s, size_t name) {
     concatcstring(s, storage.names.at(name).c_str());
+    return s;
 }
 
-void serializeArgument(SerializedString s, Argument a) {
+SerializedString serializeArgument(SerializedString s, Argument a) {
     if (a.type.type != ANY) {
         serialize(s, a.type);
         concatcstring(s, ":");
         serializeName(s, a.name);
-        return;
+        return s;
     }
     serializeName(s, a.name);
+    return s;
 }
 
-void serializeDynamicExpression(SerializedString s, const DynamicExpression& dynamic_expression) {
+SerializedString serializeDynamicExpression(SerializedString s, const DynamicExpression& dynamic_expression) {
     concatcstring(s, "dynamic ");
     serialize(s, dynamic_expression.expression);
+    return s;
 }
 
-void serializeTypedExpression(SerializedString s, const TypedExpression& typed_expression) {
+SerializedString serializeTypedExpression(SerializedString s, const TypedExpression& typed_expression) {
     serializeName(s, typed_expression.type_name.global_index);
     concatcstring(s, ":");
     serialize(s, typed_expression.value);
+    return s;
 }
 
-void serializeConditional(SerializedString s, const Conditional& conditional) {
+SerializedString serializeConditional(SerializedString s, const Conditional& conditional) {
     concatcstring(s, "if ");
     for (auto a = conditional.alternative_first;
         a.index <= conditional.alternative_last.index;
@@ -58,9 +63,10 @@ void serializeConditional(SerializedString s, const Conditional& conditional) {
     }
     concatcstring(s, "else ");
     serialize(s, conditional.expression_else);
+    return s;
 }
 
-void serializeIs(SerializedString s, const IsExpression& is_expression) {
+SerializedString serializeIs(SerializedString s, const IsExpression& is_expression) {
     concatcstring(s, "is ");
     serialize(s, is_expression.input);
     concatcstring(s, " ");
@@ -76,59 +82,67 @@ void serializeIs(SerializedString s, const IsExpression& is_expression) {
     }
     concatcstring(s, "else ");
     serialize(s, is_expression.expression_else);
+    return s;
 }
 
-void serializeDefinition(SerializedString s, const Definition& element) {
+SerializedString serializeDefinition(SerializedString s, const Definition& element) {
     serializeName(s, element.name.global_index);
     concatcstring(s, "=");
     serialize(s, element.expression);
     concatcstring(s, " ");
+    return s;
 }
 
-void serializePutAssignment(SerializedString s, const PutAssignment& element) {
+SerializedString serializePutAssignment(SerializedString s, const PutAssignment& element) {
     serializeName(s, element.name.global_index);
     concatcstring(s, "+=");
     serialize(s, element.expression);
     concatcstring(s, " ");
+    return s;
 }
 
-void serializePutEachAssignment(SerializedString s, const PutEachAssignment& element) {
+SerializedString serializePutEachAssignment(SerializedString s, const PutEachAssignment& element) {
     serializeName(s, element.name.global_index);
     concatcstring(s, "++=");
     serialize(s, element.expression);
     concatcstring(s, " ");
+    return s;
 }
 
-void serializeDropAssignment(SerializedString s, const DropAssignment& element) {
+SerializedString serializeDropAssignment(SerializedString s, const DropAssignment& element) {
     serializeName(s, element.name.global_index);
     concatcstring(s, "-- ");
+    return s;
 }
 
-void serializeWhileStatement(SerializedString s, const WhileStatement& element) {
+SerializedString serializeWhileStatement(SerializedString s, const WhileStatement& element) {
     concatcstring(s, "while ");
     serialize(s, element.expression);
     concatcstring(s, " ");
+    return s;
 }
 
-void serializeForStatement(SerializedString s, const ForStatement& element) {
+SerializedString serializeForStatement(SerializedString s, const ForStatement& element) {
     concatcstring(s, "for ");
     serializeName(s, element.item_name.global_index);
     concatcstring(s, " in ");
     serializeName(s, element.container_name.global_index);
     concatcstring(s, " ");
+    return s;
 }
 
-void serializeForSimpleStatement(SerializedString s, const ForSimpleStatement& element) {
+SerializedString serializeForSimpleStatement(SerializedString s, const ForSimpleStatement& element) {
     concatcstring(s, "for ");
     serializeName(s, element.container_name.global_index);
     concatcstring(s, " ");
+    return s;
 }
 
 template<typename Serializer>
-void serializeEvaluatedDictionary(SerializedString s, Serializer serializer, const EvaluatedDictionary& dictionary) {
+SerializedString serializeEvaluatedDictionary(SerializedString s, Serializer serializer, const EvaluatedDictionary& dictionary) {
     if (dictionary.definitions.empty()) {
         concatcstring(s, "{}");
-        return;
+        return s;
     }
     concatcstring(s, "{");
     for (const auto& pair : dictionary.definitions) {
@@ -138,14 +152,15 @@ void serializeEvaluatedDictionary(SerializedString s, Serializer serializer, con
         concatcstring(s, " ");
     }
     replaceBack(s, '}');
+    return s;
 }
 
 template<typename Serializer>
-void serializeEvaluatedTuple(SerializedString s, Serializer serializer, Expression t) {
+SerializedString serializeEvaluatedTuple(SerializedString s, Serializer serializer, Expression t) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[t.index];
     if (evaluated_tuple.first == evaluated_tuple.last) {
         concatcstring(s, "()");
-        return;
+        return s;
     }
     concatcstring(s, "(");
     for (size_t i = evaluated_tuple.first; i < evaluated_tuple.last; ++i) {
@@ -154,25 +169,29 @@ void serializeEvaluatedTuple(SerializedString s, Serializer serializer, Expressi
         concatcstring(s, " ");
     }
     replaceBack(s, ')');
+    return s;
 }
 
-void serializeLookupChild(SerializedString s, const LookupChild& lookup_child) {
+SerializedString serializeLookupChild(SerializedString s, const LookupChild& lookup_child) {
     serializeName(s, lookup_child.name);
     concatcstring(s, "@");
     serialize(s, lookup_child.child);
+    return s;
 }
 
-void serializeFunctionApplication(SerializedString s, const FunctionApplication& function_application) {
+SerializedString serializeFunctionApplication(SerializedString s, const FunctionApplication& function_application) {
     serializeName(s, function_application.name.global_index);
     concatcstring(s, "!");
     serialize(s, function_application.child);
+    return s;
 }
 
-void serializeLookupSymbol(SerializedString s, const LookupSymbol& lookup_symbol) {
+SerializedString serializeLookupSymbol(SerializedString s, const LookupSymbol& lookup_symbol) {
     serializeName(s, lookup_symbol.name.global_index);
+    return s;
 }
     
-void serializeDictionary(SerializedString s, const Dictionary& dictionary) {
+SerializedString serializeDictionary(SerializedString s, const Dictionary& dictionary) {
     concatcstring(s, "{");
     for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
         const auto statement = storage.statements.data[i];
@@ -185,13 +204,14 @@ void serializeDictionary(SerializedString s, const Dictionary& dictionary) {
     else {
         replaceBack(s, '}');
     }
+    return s;
 }
 
-void serializeTuple(SerializedString s, Expression t) {
+SerializedString serializeTuple(SerializedString s, Expression t) {
     const auto tuple_struct = storage.tuples.data[t.index];
     if (tuple_struct.first == tuple_struct.last) {
         concatcstring(s, "()");
-        return;
+        return s;
     }
     concatcstring(s, "(");
     for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
@@ -200,9 +220,10 @@ void serializeTuple(SerializedString s, Expression t) {
         concatcstring(s, " ");
     }
     replaceBack(s, ')');
+    return s;
 }
 
-void serializeStack(SerializedString s, Expression expression) {
+SerializedString serializeStack(SerializedString s, Expression expression) {
     concatcstring(s, "[");
     while (expression.type != EMPTY_STACK) {
         if (expression.type != STACK) {
@@ -219,22 +240,25 @@ void serializeStack(SerializedString s, Expression expression) {
         expression = stack.rest;
     }
     replaceBack(s, ']');
+    return s;
 }
 
-void serializeCharacter(SerializedString s, Character character) {
+SerializedString serializeCharacter(SerializedString s, Character character) {
     append(s, '\'');
     append(s, character);
     append(s, '\'');
+    return s;
 }
 
-void serializeFunction(SerializedString s, const Function& function) {
+SerializedString serializeFunction(SerializedString s, const Function& function) {
     concatcstring(s, "in ");
     serializeArgument(s, storage.arguments.data[function.argument]);
     concatcstring(s, " out ");
     serialize(s, function.body);
+    return s;
 }
 
-void serializeFunctionDictionary(SerializedString s, const FunctionDictionary& function_dictionary) {
+SerializedString serializeFunctionDictionary(SerializedString s, const FunctionDictionary& function_dictionary) {
     concatcstring(s, "in ");
     concatcstring(s, "{");
     for (auto i = function_dictionary.first_argument; i < function_dictionary.last_argument; ++i) {
@@ -249,9 +273,10 @@ void serializeFunctionDictionary(SerializedString s, const FunctionDictionary& f
     }
     concatcstring(s, " out ");
     serialize(s, function_dictionary.body);
+    return s;
 }
 
-void serializeFunctionTuple(SerializedString s, const FunctionTuple& function_stack) {
+SerializedString serializeFunctionTuple(SerializedString s, const FunctionTuple& function_stack) {
     concatcstring(s, "in ");
     concatcstring(s, "(");
     for (auto i = function_stack.first_argument; i < function_stack.last_argument; ++i) {
@@ -266,13 +291,13 @@ void serializeFunctionTuple(SerializedString s, const FunctionTuple& function_st
     }
     concatcstring(s, " out ");
     serialize(s, function_stack.body);
+    return s;
 }
     
-void serializeTable(SerializedString s, Expression t) {
+SerializedString serializeTable(SerializedString s, Expression t) {
     const auto rows = storage.tables.at(t.index).rows;
     if (rows.empty()) {
-        concatcstring(s, "<>");
-        return;
+        return concatcstring(s, "<>");
     }
     concatcstring(s, "<");
     for (const auto& row : rows) {
@@ -283,13 +308,14 @@ void serializeTable(SerializedString s, Expression t) {
         concatcstring(s, ") ");
     }
     replaceBack(s, '>');
+    return s;
 }
 
-void serializeTypesEvaluatedTable(SerializedString s, Expression t) {
+SerializedString serializeTypesEvaluatedTable(SerializedString s, Expression t) {
     const auto& rows = storage.evaluated_tables.at(t.index).rows;
     if (rows.empty()) {
         concatcstring(s, "<>");
-        return;
+        return s;
     }
     const auto& row = rows.begin()->second;
     concatcstring(s, "<(");
@@ -297,13 +323,14 @@ void serializeTypesEvaluatedTable(SerializedString s, Expression t) {
     concatcstring(s, " ");
     serialize_types(s, row.value);
     concatcstring(s, ")>");
+    return s;
 }
 
 template<typename Table>
-void serializeEvaluatedTable(SerializedString s, const Table& table) {
+SerializedString serializeEvaluatedTable(SerializedString s, const Table& table) {
     if (table.empty()) {
         concatcstring(s, "<>");
-        return;
+        return s;
     }
     concatcstring(s, "<");
     for (const auto& row : table) {
@@ -314,15 +341,17 @@ void serializeEvaluatedTable(SerializedString s, const Table& table) {
         concatcstring(s, ") ");
     }
     replaceBack(s, '>');
+    return s;
 }
 
-void serializeTypesEvaluatedStack(SerializedString s, Expression e) {
+SerializedString serializeTypesEvaluatedStack(SerializedString s, Expression e) {
     concatcstring(s, "[");
     serialize_types(s, storage.evaluated_stacks.data[e.index].top);
     concatcstring(s, "]");
+    return s;
 }
 
-void serializeEvaluatedStack(SerializedString s, Expression expression) {
+SerializedString serializeEvaluatedStack(SerializedString s, Expression expression) {
     concatcstring(s, "[");
     while (expression.type != EMPTY_STACK) {
         if (expression.type != EVALUATED_STACK) {
@@ -337,20 +366,22 @@ void serializeEvaluatedStack(SerializedString s, Expression expression) {
         expression = stack.rest;
     }
     replaceBack(s, ']');
+    return s;
 }
 
-void serializeNumber(SerializedString s, Number number) {
+SerializedString serializeNumber(SerializedString s, Number number) {
     if (number != number) {
         concatcstring(s, "nan");
-        return;
+        return s;
     }
     std::stringstream stream;
     stream.precision(std::numeric_limits<double>::digits10 + 1);
     stream << number;
     concatcstring(s, stream.str().c_str());
+    return s;
 }
 
-void serializeString(SerializedString s, Expression expression) {
+SerializedString serializeString(SerializedString s, Expression expression) {
     concatcstring(s, "\"");
     while (expression.type != EMPTY_STRING) {
         if (expression.type != STRING) {
@@ -373,60 +404,61 @@ void serializeString(SerializedString s, Expression expression) {
         expression = rest;
     }
     concatcstring(s, "\"");
+    return s;
 }
 
 } // namespace
 
-void serialize_types(SerializedString s, Expression expression) {
+SerializedString serialize_types(SerializedString s, Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.at(expression.index)); return;
-        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize_types, expression); return;
-        case EVALUATED_STACK: serializeTypesEvaluatedStack(s, expression); return;
-        case EVALUATED_TABLE: serializeTypesEvaluatedTable(s, expression); return;
+        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.at(expression.index));
+        case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize_types, expression);
+        case EVALUATED_STACK: return serializeTypesEvaluatedStack(s, expression);
+        case EVALUATED_TABLE: return serializeTypesEvaluatedTable(s, expression);
         // TODO: EVALUATED_TABLE_VIEW?
-        default: concatcstring(s, NAMES[expression.type].c_str()); return;
+        default: concatcstring(s, NAMES[expression.type].c_str()); return s;
     }
 }
 
-void serialize(SerializedString s, Expression expression) {
+SerializedString serialize(SerializedString s, Expression expression) {
     switch (expression.type) {
-        case CHARACTER: serializeCharacter(s, getCharacter(expression)); return;
-        case CONDITIONAL: serializeConditional(s, storage.conditionals.data[expression.index]); return;
-        case IS: serializeIs(s, storage.is_expressions.data[expression.index]); return;
-        case DICTIONARY: serializeDictionary(s, storage.dictionaries.data[expression.index]); return;
-        case EVALUATED_DICTIONARY: serializeEvaluatedDictionary(s, serialize, storage.evaluated_dictionaries.at(expression.index)); return;
-        case DEFINITION: serializeDefinition(s, storage.definitions.data[expression.index]); return;
-        case PUT_ASSIGNMENT: serializePutAssignment(s, storage.put_assignments.data[expression.index]); return;
-        case PUT_EACH_ASSIGNMENT: serializePutEachAssignment(s, storage.put_each_assignments.data[expression.index]); return;
-        case DROP_ASSIGNMENT: serializeDropAssignment(s, storage.drop_assignments.data[expression.index]); return;
-        case WHILE_STATEMENT: serializeWhileStatement(s, storage.while_statements.data[expression.index]); return;
-        case FOR_STATEMENT: serializeForStatement(s, storage.for_statements.data[expression.index]); return;
-        case FOR_SIMPLE_STATEMENT: serializeForSimpleStatement(s, storage.for_simple_statements.data[expression.index]); return;
-        case FUNCTION: serializeFunction(s, storage.functions.data[expression.index]); return;
-        case FUNCTION_DICTIONARY: serializeFunctionDictionary(s, storage.dictionary_functions.data[expression.index]); return;
-        case FUNCTION_TUPLE: serializeFunctionTuple(s, storage.tuple_functions.data[expression.index]); return;
-        case TABLE: serializeTable(s, expression); return;
-        case EVALUATED_TABLE: serializeEvaluatedTable(s, storage.evaluated_tables.at(expression.index).rows); return;
-        case EVALUATED_TABLE_VIEW: serializeEvaluatedTable(s, storage.evaluated_table_views.data[expression.index]); return;
-        case TUPLE: serializeTuple(s, expression); return;
-        case EVALUATED_TUPLE: serializeEvaluatedTuple(s, serialize, expression); return;
-        case STACK: serializeStack(s, expression); return;
-        case EVALUATED_STACK: serializeEvaluatedStack(s, expression); return;
-        case LOOKUP_CHILD: serializeLookupChild(s, storage.child_lookups.data[expression.index]); return;
-        case FUNCTION_APPLICATION: serializeFunctionApplication(s, storage.function_applications.data[expression.index]); return;
-        case LOOKUP_SYMBOL: serializeLookupSymbol(s, storage.symbol_lookups.data[expression.index]); return;
-        case NUMBER: serializeNumber(s, getNumber(expression)); return;
-        case EMPTY_STRING: serializeString(s, expression); return;
-        case STRING: serializeString(s, expression); return;
-        case DYNAMIC_EXPRESSION: serializeDynamicExpression(s, storage.dynamic_expressions.data[expression.index]); return;
-        case TYPED_EXPRESSION: serializeTypedExpression(s, storage.typed_expressions.data[expression.index]); return;
-        case EMPTY_STACK: concatcstring(s, "[]"); return;
-        case YES: concatcstring(s, "yes"); return;
-        case NO: concatcstring(s, "no"); return;
-        case WHILE_END_STATEMENT: concatcstring(s, "end "); return;
-        case FOR_END_STATEMENT: concatcstring(s, "end "); return;
-        case FOR_SIMPLE_END_STATEMENT: concatcstring(s, "end "); return;
-        case RETURN_STATEMENT: concatcstring(s, "return "); return;
-        default: concatcstring(s, NAMES[expression.type].c_str()); return;
+        case CHARACTER: return serializeCharacter(s, getCharacter(expression));
+        case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
+        case IS: return serializeIs(s, storage.is_expressions.data[expression.index]);
+        case DICTIONARY: return serializeDictionary(s, storage.dictionaries.data[expression.index]);
+        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize, storage.evaluated_dictionaries.at(expression.index));
+        case DEFINITION: return serializeDefinition(s, storage.definitions.data[expression.index]);
+        case PUT_ASSIGNMENT: return serializePutAssignment(s, storage.put_assignments.data[expression.index]);
+        case PUT_EACH_ASSIGNMENT: return serializePutEachAssignment(s, storage.put_each_assignments.data[expression.index]);
+        case DROP_ASSIGNMENT: return serializeDropAssignment(s, storage.drop_assignments.data[expression.index]);
+        case WHILE_STATEMENT: return serializeWhileStatement(s, storage.while_statements.data[expression.index]);
+        case FOR_STATEMENT: return serializeForStatement(s, storage.for_statements.data[expression.index]);
+        case FOR_SIMPLE_STATEMENT: return serializeForSimpleStatement(s, storage.for_simple_statements.data[expression.index]);
+        case FUNCTION: return serializeFunction(s, storage.functions.data[expression.index]);
+        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(s, storage.dictionary_functions.data[expression.index]);
+        case FUNCTION_TUPLE: return serializeFunctionTuple(s, storage.tuple_functions.data[expression.index]);
+        case TABLE: return serializeTable(s, expression);
+        case EVALUATED_TABLE: return serializeEvaluatedTable(s, storage.evaluated_tables.at(expression.index).rows);
+        case EVALUATED_TABLE_VIEW: return serializeEvaluatedTable(s, storage.evaluated_table_views.data[expression.index]);
+        case TUPLE: return serializeTuple(s, expression);
+        case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize, expression);
+        case STACK: return serializeStack(s, expression);
+        case EVALUATED_STACK: return serializeEvaluatedStack(s, expression);
+        case LOOKUP_CHILD: return serializeLookupChild(s, storage.child_lookups.data[expression.index]);
+        case FUNCTION_APPLICATION: return serializeFunctionApplication(s, storage.function_applications.data[expression.index]);
+        case LOOKUP_SYMBOL: return serializeLookupSymbol(s, storage.symbol_lookups.data[expression.index]);
+        case NUMBER: return serializeNumber(s, getNumber(expression));
+        case EMPTY_STRING: return serializeString(s, expression);
+        case STRING: return serializeString(s, expression);
+        case DYNAMIC_EXPRESSION: return serializeDynamicExpression(s, storage.dynamic_expressions.data[expression.index]);
+        case TYPED_EXPRESSION: return serializeTypedExpression(s, storage.typed_expressions.data[expression.index]);
+        case EMPTY_STACK: return concatcstring(s, "[]");
+        case YES: return concatcstring(s, "yes");
+        case NO: return concatcstring(s, "no");
+        case WHILE_END_STATEMENT: return concatcstring(s, "end ");
+        case FOR_END_STATEMENT: return concatcstring(s, "end ");
+        case FOR_SIMPLE_END_STATEMENT: return concatcstring(s, "end ");
+        case RETURN_STATEMENT: return concatcstring(s, "return ");
+        default: return concatcstring(s, NAMES[expression.type].c_str());
     }
 }

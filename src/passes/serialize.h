@@ -6,5 +6,5 @@ struct Expression;
 
 using SerializedString = std::string&;
 
-void serialize_types(SerializedString s, Expression expression);
-void serialize(SerializedString s, Expression expression);
+SerializedString serialize_types(SerializedString s, Expression expression);
+SerializedString serialize(SerializedString s, Expression expression);
