@@ -33,7 +33,7 @@ Expression putTable(Expression table, Expression item) {
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
     std::string s;
-    serialize(s, key);
+    s = serialize(s, key);
     rows[s] = {key, value};
     return table;
 }
@@ -47,7 +47,7 @@ Expression putTableTyped(Expression table, Expression item) {
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
     std::string s;
-    serialize_types(s, key);
+    s = serialize_types(s, key);
     rows[s] = {key, value};
     return table;
 }
@@ -273,7 +273,7 @@ Expression get(Expression in) {
         );
     }
     std::string name;
-    serialize(name, key);
+    name = serialize(name, key);
     const auto& rows = storage.evaluated_tables.at(table.index).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?

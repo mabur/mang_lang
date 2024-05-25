@@ -27,25 +27,25 @@ SerializedString serializeName(SerializedString s, size_t name) {
 
 SerializedString serializeArgument(SerializedString s, Argument a) {
     if (a.type.type != ANY) {
-        serialize(s, a.type);
+        s = serialize(s, a.type);
         concatcstring(s, ":");
-        serializeName(s, a.name);
+        s = serializeName(s, a.name);
         return s;
     }
-    serializeName(s, a.name);
+    s = serializeName(s, a.name);
     return s;
 }
 
 SerializedString serializeDynamicExpression(SerializedString s, const DynamicExpression& dynamic_expression) {
     concatcstring(s, "dynamic ");
-    serialize(s, dynamic_expression.expression);
+    s = serialize(s, dynamic_expression.expression);
     return s;
 }
 
 SerializedString serializeTypedExpression(SerializedString s, const TypedExpression& typed_expression) {
-    serializeName(s, typed_expression.type_name.global_index);
+    s = serializeName(s, typed_expression.type_name.global_index);
     concatcstring(s, ":");
-    serialize(s, typed_expression.value);
+    s = serialize(s, typed_expression.value);
     return s;
 }
 
@@ -56,84 +56,84 @@ SerializedString serializeConditional(SerializedString s, const Conditional& con
         ++a.index
     ) {
         const auto alternative = storage.alternatives.data[a.index];
-        serialize(s, alternative.left);
+        s = serialize(s, alternative.left);
         concatcstring(s, " then ");
-        serialize(s, alternative.right);
+        s = serialize(s, alternative.right);
         concatcstring(s, " ");
     }
     concatcstring(s, "else ");
-    serialize(s, conditional.expression_else);
+    s = serialize(s, conditional.expression_else);
     return s;
 }
 
 SerializedString serializeIs(SerializedString s, const IsExpression& is_expression) {
     concatcstring(s, "is ");
-    serialize(s, is_expression.input);
+    s = serialize(s, is_expression.input);
     concatcstring(s, " ");
     for (auto a = is_expression.alternative_first;
         a.index <= is_expression.alternative_last.index;
         ++a.index
     ) {
         const auto alternative = storage.alternatives.data[a.index];
-        serialize(s, alternative.left);
+        s = serialize(s, alternative.left);
         concatcstring(s, " then ");
-        serialize(s, alternative.right);
+        s = serialize(s, alternative.right);
         concatcstring(s, " ");
     }
     concatcstring(s, "else ");
-    serialize(s, is_expression.expression_else);
+    s = serialize(s, is_expression.expression_else);
     return s;
 }
 
 SerializedString serializeDefinition(SerializedString s, const Definition& element) {
-    serializeName(s, element.name.global_index);
+    s = serializeName(s, element.name.global_index);
     concatcstring(s, "=");
-    serialize(s, element.expression);
+    s = serialize(s, element.expression);
     concatcstring(s, " ");
     return s;
 }
 
 SerializedString serializePutAssignment(SerializedString s, const PutAssignment& element) {
-    serializeName(s, element.name.global_index);
+    s = serializeName(s, element.name.global_index);
     concatcstring(s, "+=");
-    serialize(s, element.expression);
+    s = serialize(s, element.expression);
     concatcstring(s, " ");
     return s;
 }
 
 SerializedString serializePutEachAssignment(SerializedString s, const PutEachAssignment& element) {
-    serializeName(s, element.name.global_index);
+    s = serializeName(s, element.name.global_index);
     concatcstring(s, "++=");
-    serialize(s, element.expression);
+    s = serialize(s, element.expression);
     concatcstring(s, " ");
     return s;
 }
 
 SerializedString serializeDropAssignment(SerializedString s, const DropAssignment& element) {
-    serializeName(s, element.name.global_index);
+    s = serializeName(s, element.name.global_index);
     concatcstring(s, "-- ");
     return s;
 }
 
 SerializedString serializeWhileStatement(SerializedString s, const WhileStatement& element) {
     concatcstring(s, "while ");
-    serialize(s, element.expression);
+    s = serialize(s, element.expression);
     concatcstring(s, " ");
     return s;
 }
 
 SerializedString serializeForStatement(SerializedString s, const ForStatement& element) {
     concatcstring(s, "for ");
-    serializeName(s, element.item_name.global_index);
+    s = serializeName(s, element.item_name.global_index);
     concatcstring(s, " in ");
-    serializeName(s, element.container_name.global_index);
+    s = serializeName(s, element.container_name.global_index);
     concatcstring(s, " ");
     return s;
 }
 
 SerializedString serializeForSimpleStatement(SerializedString s, const ForSimpleStatement& element) {
     concatcstring(s, "for ");
-    serializeName(s, element.container_name.global_index);
+    s = serializeName(s, element.container_name.global_index);
     concatcstring(s, " ");
     return s;
 }
@@ -146,9 +146,9 @@ SerializedString serializeEvaluatedDictionary(SerializedString s, Serializer ser
     }
     concatcstring(s, "{");
     for (const auto& pair : dictionary.definitions) {
-        serializeName(s, pair.name.global_index);
+        s = serializeName(s, pair.name.global_index);
         concatcstring(s, "=");
-        serializer(s, pair.expression);
+        s = serializer(s, pair.expression);
         concatcstring(s, " ");
     }
     replaceBack(s, '}');
@@ -165,7 +165,7 @@ SerializedString serializeEvaluatedTuple(SerializedString s, Serializer serializ
     concatcstring(s, "(");
     for (size_t i = evaluated_tuple.first; i < evaluated_tuple.last; ++i) {
         const auto expression = storage.expressions.data[i];
-        serializer(s, expression);
+        s = serializer(s, expression);
         concatcstring(s, " ");
     }
     replaceBack(s, ')');
@@ -173,21 +173,21 @@ SerializedString serializeEvaluatedTuple(SerializedString s, Serializer serializ
 }
 
 SerializedString serializeLookupChild(SerializedString s, const LookupChild& lookup_child) {
-    serializeName(s, lookup_child.name);
+    s = serializeName(s, lookup_child.name);
     concatcstring(s, "@");
     serialize(s, lookup_child.child);
     return s;
 }
 
 SerializedString serializeFunctionApplication(SerializedString s, const FunctionApplication& function_application) {
-    serializeName(s, function_application.name.global_index);
+    s = serializeName(s, function_application.name.global_index);
     concatcstring(s, "!");
-    serialize(s, function_application.child);
+    s = serialize(s, function_application.child);
     return s;
 }
 
 SerializedString serializeLookupSymbol(SerializedString s, const LookupSymbol& lookup_symbol) {
-    serializeName(s, lookup_symbol.name.global_index);
+    s = serializeName(s, lookup_symbol.name.global_index);
     return s;
 }
     
@@ -195,7 +195,7 @@ SerializedString serializeDictionary(SerializedString s, const Dictionary& dicti
     concatcstring(s, "{");
     for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
         const auto statement = storage.statements.data[i];
-        serialize(s, statement);
+        s = serialize(s, statement);
     }
     // TODO: handle by early return.
     if (dictionary.statement_first == dictionary.statement_last) {
@@ -216,7 +216,7 @@ SerializedString serializeTuple(SerializedString s, Expression t) {
     concatcstring(s, "(");
     for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
         const auto expression = storage.expressions.data[i];
-        serialize(s, expression);
+        s = serialize(s, expression);
         concatcstring(s, " ");
     }
     replaceBack(s, ')');
@@ -235,7 +235,7 @@ SerializedString serializeStack(SerializedString s, Expression expression) {
             );
         }
         const auto stack = storage.stacks.data[expression.index];
-        serialize(s, stack.top);
+        s = serialize(s, stack.top);
         concatcstring(s, " ");
         expression = stack.rest;
     }
@@ -252,9 +252,9 @@ SerializedString serializeCharacter(SerializedString s, Character character) {
 
 SerializedString serializeFunction(SerializedString s, const Function& function) {
     concatcstring(s, "in ");
-    serializeArgument(s, storage.arguments.data[function.argument]);
+    s = serializeArgument(s, storage.arguments.data[function.argument]);
     concatcstring(s, " out ");
-    serialize(s, function.body);
+    s = serialize(s, function.body);
     return s;
 }
 
@@ -262,7 +262,7 @@ SerializedString serializeFunctionDictionary(SerializedString s, const FunctionD
     concatcstring(s, "in ");
     concatcstring(s, "{");
     for (auto i = function_dictionary.first_argument; i < function_dictionary.last_argument; ++i) {
-        serializeArgument(s, storage.arguments.data[i]);
+        s = serializeArgument(s, storage.arguments.data[i]);
         concatcstring(s, " ");
     }
     if (function_dictionary.first_argument == function_dictionary.last_argument) {
@@ -272,7 +272,7 @@ SerializedString serializeFunctionDictionary(SerializedString s, const FunctionD
         replaceBack(s, '}');
     }
     concatcstring(s, " out ");
-    serialize(s, function_dictionary.body);
+    s = serialize(s, function_dictionary.body);
     return s;
 }
 
@@ -280,7 +280,7 @@ SerializedString serializeFunctionTuple(SerializedString s, const FunctionTuple&
     concatcstring(s, "in ");
     concatcstring(s, "(");
     for (auto i = function_stack.first_argument; i < function_stack.last_argument; ++i) {
-        serializeArgument(s, storage.arguments.data[i]);
+        s = serializeArgument(s, storage.arguments.data[i]);
         concatcstring(s, " ");
     }
     if (function_stack.first_argument == function_stack.last_argument) {
@@ -290,7 +290,7 @@ SerializedString serializeFunctionTuple(SerializedString s, const FunctionTuple&
         replaceBack(s, ')');
     }
     concatcstring(s, " out ");
-    serialize(s, function_stack.body);
+    s = serialize(s, function_stack.body);
     return s;
 }
     
@@ -302,9 +302,9 @@ SerializedString serializeTable(SerializedString s, Expression t) {
     concatcstring(s, "<");
     for (const auto& row : rows) {
         concatcstring(s, "(");
-        serialize(s, row.key);
+        s = serialize(s, row.key);
         concatcstring(s, " ");
-        serialize(s, row.value);
+        s = serialize(s, row.value);
         concatcstring(s, ") ");
     }
     replaceBack(s, '>');
@@ -319,9 +319,9 @@ SerializedString serializeTypesEvaluatedTable(SerializedString s, Expression t) 
     }
     const auto& row = rows.begin()->second;
     concatcstring(s, "<(");
-    serialize_types(s, row.key);
+    s = serialize_types(s, row.key);
     concatcstring(s, " ");
-    serialize_types(s, row.value);
+    s = serialize_types(s, row.value);
     concatcstring(s, ")>");
     return s;
 }
@@ -337,7 +337,7 @@ SerializedString serializeEvaluatedTable(SerializedString s, const Table& table)
         concatcstring(s, "(");
         concatcstring(s, row.first.c_str());
         concatcstring(s, " ");
-        serialize(s, row.second.value);
+        s = serialize(s, row.second.value);
         concatcstring(s, ") ");
     }
     replaceBack(s, '>');
@@ -346,7 +346,7 @@ SerializedString serializeEvaluatedTable(SerializedString s, const Table& table)
 
 SerializedString serializeTypesEvaluatedStack(SerializedString s, Expression e) {
     concatcstring(s, "[");
-    serialize_types(s, storage.evaluated_stacks.data[e.index].top);
+    s = serialize_types(s, storage.evaluated_stacks.data[e.index].top);
     concatcstring(s, "]");
     return s;
 }
@@ -361,7 +361,7 @@ SerializedString serializeEvaluatedStack(SerializedString s, Expression expressi
             };
         }
         const auto stack = storage.evaluated_stacks.data[expression.index];
-        serialize(s, stack.top);
+        s = serialize(s, stack.top);
         concatcstring(s, " ");
         expression = stack.rest;
     }
