@@ -14,8 +14,8 @@ Expression parse(const std::string& string) {
 }
 
 std::string reformat(std::string code) {
-    std::string result;
-    result = serialize(result, parse(code));
+    std::string buffer;
+    auto result = makeStdString(serialize(buffer, parse(code)));
     clearMemory();
     return result;
 }
@@ -27,8 +27,8 @@ std::string evaluate_types(std::string code) {
     // bind(std_ast, built_ins);
     // bind(code_ast, std_ast);
     const auto standard_library = evaluate_types(std_ast, built_ins);
-    std::string result;
-    result = serialize_types(result, evaluate_types(code_ast, standard_library));
+    std::string buffer;
+    auto result = makeStdString(serialize_types(buffer, evaluate_types(code_ast, standard_library)));
     clearMemory();
     return result;
 }
@@ -44,8 +44,8 @@ std::string evaluate_all(std::string code) {
     const auto code_checked = evaluate_types(code_ast, std_checked);
     const auto std_evaluated = evaluate(std_ast, built_ins);
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
-    std::string result;
-    result = serialize(result, code_evaluated);
+    std::string buffer;
+    auto result = makeStdString(serialize(buffer, code_evaluated));
     clearMemory();
     std::ignore = code_checked;
     return result;

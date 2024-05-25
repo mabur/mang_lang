@@ -915,8 +915,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
-    std::string k;
-    k = serialize(k, key);
+    std::string buffer;
+    auto k = makeStdString(serialize(buffer, key));
     try {
         return table_struct.rows.at(k).value;
     }
