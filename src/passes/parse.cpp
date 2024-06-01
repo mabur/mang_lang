@@ -52,16 +52,16 @@ Expression parseCharacterExpression(CodeRange code) {
 }
 
 Expression parseAlternative(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     auto left = parseExpression(code);
-    code.first = end(left);
+    code = lastPart(code, left.range);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "then");
     code = parseWhiteSpace(code);
     auto right = parseExpression(code);
-    code.first = end(right);
+    code = lastPart(code, right.range);
     code = parseWhiteSpace(code);
-    return makeAlternative({first, code.first}, Alternative{left, right});
+    return makeAlternative(firstPart(whole, code), Alternative{left, right});
 }
 
 Expression parseConditional(CodeRange code) {

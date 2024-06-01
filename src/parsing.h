@@ -26,6 +26,14 @@ struct CodeRange {
     size_t size() const {return last - first;}
 };
 
+inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
+    return CodeRange{whole.begin(), last_part.begin()};
+}
+
+inline CodeRange lastPart(CodeRange whole, CodeRange first_part) {
+    return CodeRange{first_part.end(), whole.end()};
+}
+
 CodeRange dropFirst(CodeRange code);
 
 struct ParseException : public std::runtime_error
