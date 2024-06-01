@@ -31,13 +31,9 @@ std::string describeLocation(CodeRange code);
 void throwIfEmpty(CodeRange code);
 void throwParseException(CodeRange code);
 
-char rawCharacter(CodeCharacter c);
-
 std::string rawString(CodeRange code);
 
 std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
-
-bool haveSameCharacters(char a, CodeCharacter b);
 
 bool isDigit(CodeCharacter c);
 

@@ -21,6 +21,7 @@ ParseException::ParseException(const std::string& description, CodeRange code)
     : std::runtime_error(description + describeLocation(code))
 {}
 
+static
 char rawCharacter(CodeCharacter c) {
     return c.character;
 }
@@ -66,6 +67,7 @@ bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }
 
+static
 bool haveSameCharacters(char a, CodeCharacter b) {
     return a == b.character;
 }
