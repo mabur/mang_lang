@@ -3,6 +3,13 @@
 
 #include <carma/carma.h>
 
+CodeRange dropFirst(CodeRange code) {
+    if (!code.empty()) {
+        code.first++;    
+    }
+    return code;
+}
+
 std::string serializeCodeCharacter(const CodeCharacter* c) {
     return "row " + std::to_string(c->row + 1) + " and column "
         + std::to_string(c->column + 1);
@@ -107,9 +114,7 @@ CodeRange parseWhiteSpace(CodeRange code) {
 
 CodeRange parseCharacter(CodeRange code) {
     throwIfEmpty(code);
-    auto it = code.begin();
-    ++it;
-    return CodeRange{it, code.end()};
+    return dropFirst(code);
 }
 
 CodeRange parseCharacter(CodeRange code, char expected) {

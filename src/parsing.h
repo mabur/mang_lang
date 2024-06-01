@@ -11,6 +11,7 @@ struct CodeCharacter {
     size_t column = 0;
 };
 
+// TODO: merge CodeCharacters & CodeRange
 struct CodeCharacters {
     CodeCharacter* data;
     size_t count;
@@ -24,6 +25,8 @@ struct CodeRange {
     bool empty() const {return first == last;}
     size_t size() const {return last - first;}
 };
+
+CodeRange dropFirst(CodeRange code);
 
 struct ParseException : public std::runtime_error
 {
