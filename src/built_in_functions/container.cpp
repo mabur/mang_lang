@@ -9,8 +9,8 @@
 
 // Note that we need code range since we use this during parsing.
 CodeRange addCodeRanges(Expression rest, Expression top) {
-    const auto first_character = std::min(rest.range.first, top.range.first);
-    const auto last_character = std::max(rest.range.last, top.range.last);
+    const auto first_character = std::min(rest.range.begin(), top.range.begin());
+    const auto last_character = std::max(rest.range.end(), top.range.end());
     return CodeRange{first_character, last_character};
 }
 
