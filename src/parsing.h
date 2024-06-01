@@ -79,14 +79,10 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
-    auto it = code.first;
-    if (code.empty()) {
-        return code;
+    if (!code.empty() && predicate(*code.first)) {
+        return dropFirst(code);
     }
-    if (predicate(*it)) {
-        ++it;
-    }
-    return CodeRange{it, code.end()};
+    return code;
 }
 
 CodeRange parseKeyword(CodeRange code, const std::string& keyword);
