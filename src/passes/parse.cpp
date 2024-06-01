@@ -37,10 +37,6 @@ private:
     std::unordered_map<size_t, size_t> dictionary_index_from_global_index;
 };
 
-const CodeCharacter* end(Expression expression) {
-    return expression.range.last;
-}
-
 Expression parseCharacterExpression(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '\'');
@@ -139,7 +135,7 @@ Expression parseArgument(CodeRange code) {
         auto second_name = parseName(code);
         code = lastPart(code, second_name.range);
         const auto type = makeLookupSymbol(
-            CodeRange{whole.first, end(first_name)}, {first_name.index}
+            CodeRange{whole.first, first_name.range.last}, {first_name.index}
         );
         return makeArgument(
             firstPart(whole, code), Argument{type, second_name.index}
