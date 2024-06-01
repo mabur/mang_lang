@@ -78,8 +78,8 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
     auto it = code.first;
-    if (it == code.last) {
-        return {it, code.end()};
+    if (code.empty()) {
+        return code;
     }
     if (predicate(*it)) {
         ++it;
