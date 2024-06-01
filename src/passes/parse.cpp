@@ -74,13 +74,13 @@ Expression parseConditional(CodeRange code) {
 
     while (!isKeyword(code, "else")) {
         alternatives.push_back(parseAlternative(code));
-        code.first = end(alternatives.back());
+        code = lastPart(code, alternatives.back().range);
     }
 
     code = parseKeyword(code, "else");
     code = parseWhiteSpace(code);
     auto expression_else = parseExpression(code);
-    code.first = end(expression_else);
+    code = lastPart(code, expression_else.range);
     code = parseWhiteSpace(code);
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
@@ -96,20 +96,20 @@ Expression parseIs(CodeRange code) {
     code = parseKeyword(code, "is");
     code = parseWhiteSpace(code);
     auto input = parseExpression(code);
-    code.first = end(input);
+    code = lastPart(code, input.range);
     code = parseWhiteSpace(code);
     
     auto alternatives = std::vector<Expression>{};
 
     while (!isKeyword(code, "else")) {
         alternatives.push_back(parseAlternative(code));
-        code.first = end(alternatives.back());
+        code = lastPart(code, alternatives.back().range);
     }
 
     code = parseKeyword(code, "else");
     code = parseWhiteSpace(code);
     auto expression_else = parseExpression(code);
-    code.first = end(expression_else);
+    code = lastPart(code, expression_else.range);
     code = parseWhiteSpace(code);
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
@@ -131,13 +131,13 @@ Expression parseName(CodeRange code) {
 Expression parseArgument(CodeRange code) {
     auto whole = code;
     auto first_name = parseName(code);
-    code.first = end(first_name);
+    code = lastPart(code, first_name.range);
     code = parseWhiteSpace(code);
     if (startsWith(code, ':')) {
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
         auto second_name = parseName(code);
-        code.first = end(second_name);
+        code = lastPart(code, second_name.range);
         const auto type = makeLookupSymbol(
             CodeRange{whole.first, end(first_name)}, {first_name.index}
         );
@@ -155,14 +155,14 @@ Expression parseArgument(CodeRange code) {
 Expression parseNamedElement(CodeRange code) {
     auto whole = code;
     auto name = parseName(code);
-    code.first = end(name);
+    code = lastPart(code, name.range);
     code = parseWhiteSpace(code);
     
     if (startsWith(code, '=')) {
         code = parseCharacter(code, '=');
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
-        code.first = end(expression);
+        code = lastPart(code, expression.range);
         code = parseWhiteSpace(code);
         return makeDefinition(
             firstPart(whole, code),
@@ -181,7 +181,7 @@ Expression parseNamedElement(CodeRange code) {
         code = parseKeyword(code, "+=");
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
-        code.first = end(expression);
+        code = lastPart(code, expression.range);
         code = parseWhiteSpace(code);
         return makePutAssignment(
             firstPart(whole, code),
@@ -192,7 +192,7 @@ Expression parseNamedElement(CodeRange code) {
         code = parseKeyword(code, "++=");
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
-        code.first = end(expression);
+        code = lastPart(code, expression.range);
         code = parseWhiteSpace(code);
         return makePutEachAssignment(
             firstPart(whole, code),
@@ -206,7 +206,7 @@ Expression parseWhileStatement(CodeRange code) {
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
-    code.first = end(expression);
+    code = lastPart(code, expression.range);
     code = parseWhiteSpace(code);
     return makeWhileStatement(firstPart(whole, code), {expression, 0});
 }
@@ -216,13 +216,13 @@ Expression parseForStatement(CodeRange code) {
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
     const auto first_name = parseName(code);
-    code.first = end(first_name);
+    code = lastPart(code, first_name.range);
     code = parseWhiteSpace(code);
     if (isKeyword(code, "in")) {
         code = parseKeyword(code, "in");
         code = parseWhiteSpace(code);
         auto second_name = parseName(code);
-        code.first = end(second_name);
+        code = lastPart(code, second_name.range);
         return makeForStatement(
             firstPart(whole, code),
             ForStatement{
@@ -346,7 +346,7 @@ Expression parseDictionary(CodeRange code) {
         else {
             statements.push_back(parseNamedElement(code));
         }
-        code.first = end(statements.back());
+        code = lastPart(code, statements.back().range);
     }
     code = parseCharacter(code, '}');
     
@@ -364,11 +364,11 @@ Expression parseDictionary(CodeRange code) {
 Expression parseFunction(CodeRange code) {
     auto whole = code;
     auto argument = parseArgument(code);
-    code.first = end(argument);
+    code = lastPart(code, argument.range);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
-    code.first = end(body);
+    code = lastPart(code, body.range);
     return makeFunction(
         firstPart(whole, code),
         {Expression{}, argument.index, body}
@@ -388,7 +388,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         throwIfEmpty(code);
         const auto argument = parseArgument(code);
-        code.first = end(argument);
+        code = lastPart(code, argument.range);
         ++last_argument.index;
         code = parseWhiteSpace(code);
     }
@@ -396,7 +396,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
-    code.first = end(body);
+    code = lastPart(code, body.range);
     return makeFunctionDictionary(
         firstPart(whole, code),
         {Expression{}, first_argument.index, last_argument.index, body}
@@ -416,7 +416,7 @@ Expression parseFunctionTuple(CodeRange code) {
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         const auto name = parseArgument(code);
-        code.first = end(name);
+        code = lastPart(code, name.range);
         ++last_argument.index;
         code = parseWhiteSpace(code);
     }
@@ -424,7 +424,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
-    code.first = end(body);
+    code = lastPart(code, body.range);
     return makeFunctionTuple(
         firstPart(whole, code),
         {Expression{}, first_argument.index, last_argument.index, body}
@@ -447,7 +447,7 @@ Expression parseStack(CodeRange code) {
     while (!::startsWith(code, ']')) {
         throwIfEmpty(code);
         auto item = parseExpression(code);
-        code.first = end(item);
+        code = lastPart(code, item.range);
         code = parseWhiteSpace(code);
         items.push_back(item);
     }
@@ -469,7 +469,7 @@ Expression parseTuple(CodeRange code) {
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
-        code.first = end(expression);
+        code = lastPart(code, expression.range);
         expressions.push_back(expression);
         code = parseWhiteSpace(code);
     }
@@ -492,10 +492,10 @@ Expression parseTable(CodeRange code) {
         code = parseCharacter(code, '(');
         code = parseWhiteSpace(code);
         const auto key = parseExpression(code);
-        code.first = end(key);
+        code = lastPart(code, key.range);
         code = parseWhiteSpace(code);
         const auto value = parseExpression(code);
-        code.first = end(value);
+        code = lastPart(code, value.range);
         code = parseWhiteSpace(code);
         code = parseCharacter(code, ')');
         code = parseWhiteSpace(code);
@@ -508,19 +508,19 @@ Expression parseTable(CodeRange code) {
 Expression parseSubstitution(CodeRange code) {
     auto whole = code;
     auto name = parseName(code);
-    code.first = end(name);
+    code = lastPart(code, name.range);
     code = parseWhiteSpace(code);
     if (startsWith(code, '@')) {
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
         auto child = parseExpression(code);
-        code.first = end(child);
+        code = lastPart(code, child.range);
         return makeLookupChild(firstPart(whole, code), {name.index, child});
     }
     if (startsWith(code, '!') || startsWith(code, '?')) {
         code = parseCharacter(code);
         auto child = parseExpression(code);
-        code.first = end(child);
+        code = lastPart(code, child.range);
         return makeFunctionApplication(
             firstPart(whole, code), {BoundGlobalName{name.index}, child}
         );
@@ -528,7 +528,7 @@ Expression parseSubstitution(CodeRange code) {
     if (startsWith(code, ':')) {
         code = parseCharacter(code);
         auto value = parseExpression(code);
-        code.first = end(value);
+        code = lastPart(code, value.range);
         return makeTypedExpression(
             firstPart(whole, code), {BoundGlobalName{name.index}, value}
         );
@@ -570,7 +570,7 @@ Expression parseDynamicExpression(CodeRange code) {
     auto whole = code;
     code = parseKeyword(code, "dynamic");
     auto inner_expression = parseExpression(code);
-    code.first = end(inner_expression);
+    code = lastPart(code, inner_expression.range);
     return makeDynamicExpression(
         firstPart(whole, code), DynamicExpression{inner_expression}
     );
