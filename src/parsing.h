@@ -72,8 +72,7 @@ CodeRange parseCharacter(CodeRange code, Predicate predicate) {
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
-    ++it;
-    return CodeRange{it, code.end()};
+    return dropFirst(code);
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c);
