@@ -130,14 +130,10 @@ CodeRange parseCharacter(CodeRange code, char expected) {
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
-    if (code.empty()) {
-        return code;
+    if (!code.empty() && code.begin()->character == c) {
+        return dropFirst(code);
     }
-    auto it = code.begin();
-    if (it->character == c) {
-        ++it;
-    }
-    return CodeRange{it, code.end()};
+    return code;
 }
 
 CodeRange parseKeyword(CodeRange code, const std::string& keyword) {
