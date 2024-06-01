@@ -1,7 +1,5 @@
 #include "parsing.h"
 #include <algorithm>
-#include <cassert>
-#include <iostream>
 
 std::string serializeCodeCharacter(const CodeCharacter* c) {
     return "row " + std::to_string(c->row + 1) + " and column "
