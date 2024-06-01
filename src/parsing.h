@@ -37,7 +37,7 @@ std::string rawString(CodeRange code);
 
 std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
 
-bool haveSameCharacters(CodeCharacter a, CodeCharacter b);
+bool haveSameCharacters(char a, CodeCharacter b);
 
 bool isDigit(CodeCharacter c);
 
