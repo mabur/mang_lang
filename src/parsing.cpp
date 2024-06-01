@@ -124,10 +124,9 @@ CodeRange parseCharacter(CodeRange code, char expected) {
     if (it->character != expected) {
         const auto description = std::string{"Parsing expected \'"}
             + expected + "\' but got \'" + actual + "\'";
-        throw ParseException(description, CodeRange{it, code.end()});
+        throw ParseException(description, code);
     }
-    ++it;
-    return CodeRange{it, code.end()};
+    return dropFirst(code);
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
