@@ -42,13 +42,13 @@ const CodeCharacter* end(Expression expression) {
 }
 
 Expression parseCharacterExpression(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '\'');
     const auto it = code.begin();
     code = parseCharacter(code);
     const auto value = it->character;
     code = parseCharacter(code, '\'');
-    return makeCharacter(CodeRange{first, code.begin()}, {value});
+    return makeCharacter(firstPart(whole, code), {value});
 }
 
 Expression parseAlternative(CodeRange code) {
@@ -65,7 +65,7 @@ Expression parseAlternative(CodeRange code) {
 }
 
 Expression parseConditional(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
 
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
@@ -85,13 +85,13 @@ Expression parseConditional(CodeRange code) {
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
     return makeConditional(
-        CodeRange{first, code.begin()},
+        firstPart(whole, code),
         Conditional{alternatives.front(), alternatives.back(), expression_else}
     );
 }
 
 Expression parseIs(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
 
     code = parseKeyword(code, "is");
     code = parseWhiteSpace(code);
@@ -114,22 +114,22 @@ Expression parseIs(CodeRange code) {
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
     return makeIs(
-        CodeRange{first, code.begin()},
+        firstPart(whole, code),
         IsExpression{input, alternatives.front(), alternatives.back(), expression_else}
     );
 }
 
 Expression parseName(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseWhile(code, isNameCharacter);
     return makeName(
-        CodeRange{first, code.first},
-        rawString({first, code.first})
+        firstPart(whole, code),
+        rawString(firstPart(whole, code))
     );
 }
 
 Expression parseArgument(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     auto first_name = parseName(code);
     code.first = end(first_name);
     code = parseWhiteSpace(code);
@@ -139,21 +139,21 @@ Expression parseArgument(CodeRange code) {
         auto second_name = parseName(code);
         code.first = end(second_name);
         const auto type = makeLookupSymbol(
-            CodeRange{first, end(first_name)}, {first_name.index}
+            CodeRange{whole.first, end(first_name)}, {first_name.index}
         );
         return makeArgument(
-            CodeRange{first, code.first}, Argument{type, second_name.index}
+            firstPart(whole, code), Argument{type, second_name.index}
         );
     }
     else {
         return makeArgument(
-            CodeRange{first, code.first}, Argument{{}, first_name.index}
+            firstPart(whole, code), Argument{{}, first_name.index}
         );   
     }
 }
 
 Expression parseNamedElement(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     auto name = parseName(code);
     code.first = end(name);
     code = parseWhiteSpace(code);
@@ -165,7 +165,7 @@ Expression parseNamedElement(CodeRange code) {
         code.first = end(expression);
         code = parseWhiteSpace(code);
         return makeDefinition(
-            CodeRange{first, code.first},
+            firstPart(whole, code),
             Definition{getUnboundLocalName(name), expression}
         );
     }
@@ -173,7 +173,7 @@ Expression parseNamedElement(CodeRange code) {
         code = parseKeyword(code, "--");
         code = parseWhiteSpace(code);
         return makeDropAssignment(
-            CodeRange{first, code.first},
+            firstPart(whole, code),
             DropAssignment{getUnboundLocalName(name)}
         );
     }
@@ -184,7 +184,7 @@ Expression parseNamedElement(CodeRange code) {
         code.first = end(expression);
         code = parseWhiteSpace(code);
         return makePutAssignment(
-            CodeRange{first, code.first},
+            firstPart(whole, code),
             PutAssignment{getUnboundLocalName(name), expression}
         );
     }
@@ -195,24 +195,24 @@ Expression parseNamedElement(CodeRange code) {
         code.first = end(expression);
         code = parseWhiteSpace(code);
         return makePutEachAssignment(
-            CodeRange{first, code.first},
+            firstPart(whole, code),
             PutEachAssignment{getUnboundLocalName(name), expression}
         );
     }
 }
 
 Expression parseWhileStatement(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
     code.first = end(expression);
     code = parseWhiteSpace(code);
-    return makeWhileStatement(CodeRange{first, code.first}, {expression, 0});
+    return makeWhileStatement(firstPart(whole, code), {expression, 0});
 }
 
 Expression parseForStatement(CodeRange code) {
-    const auto first = code.begin();
+    const auto whole = code;
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
     const auto first_name = parseName(code);
@@ -224,7 +224,7 @@ Expression parseForStatement(CodeRange code) {
         auto second_name = parseName(code);
         code.first = end(second_name);
         return makeForStatement(
-            CodeRange{first, code.first},
+            firstPart(whole, code),
             ForStatement{
                 getUnboundLocalName(first_name),
                 getUnboundLocalName(second_name),
@@ -233,38 +233,38 @@ Expression parseForStatement(CodeRange code) {
         );
     }
     else {
-        return makeForSimpleStatement(CodeRange{first, code.first},
+        return makeForSimpleStatement(firstPart(whole, code),
             ForSimpleStatement{getUnboundLocalName(first_name), 0}
         );
     }
 }
 
 Expression parseWhileEndStatement(CodeRange code, size_t start_index) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeWhileEndStatement(CodeRange{first, code.first}, {start_index});
+    return makeWhileEndStatement(firstPart(whole, code), {start_index});
 }
 
 Expression parseForEndStatement(CodeRange code, size_t start_index) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeForEndStatement(CodeRange{first, code.first}, {start_index});
+    return makeForEndStatement(firstPart(whole, code), {start_index});
 }
 
 Expression parseForSimpleEndStatement(CodeRange code, size_t start_index) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeForSimpleEndStatement(CodeRange{first, code.first}, {start_index});
+    return makeForSimpleEndStatement(firstPart(whole, code), {start_index});
 }
 
 Expression parseReturnStatement(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseKeyword(code, "return");
     code = parseWhiteSpace(code);
-    return Expression{RETURN_STATEMENT, 0, CodeRange{first, code.first}};
+    return Expression{RETURN_STATEMENT, 0, firstPart(whole, code)};
 }
 
 void bindDictionaryNames(Dictionary& dictionary_struct) {
@@ -303,7 +303,7 @@ void bindDictionaryNames(Dictionary& dictionary_struct) {
 }
 
 Expression parseDictionary(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = std::vector<Expression>{};
@@ -358,11 +358,11 @@ Expression parseDictionary(CodeRange code) {
 
     auto dictionary = Dictionary{statements_first, statements_last, 0};
     bindDictionaryNames(dictionary);
-    return makeDictionary(CodeRange{first, code.begin()}, std::move(dictionary));
+    return makeDictionary(firstPart(whole, code), std::move(dictionary));
 }
 
 Expression parseFunction(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     auto argument = parseArgument(code);
     code.first = end(argument);
     code = parseWhiteSpace(code);
@@ -370,13 +370,13 @@ Expression parseFunction(CodeRange code) {
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunction(
-        CodeRange{first, code.begin()},
+        firstPart(whole, code),
         {Expression{}, argument.index, body}
     );
 }
 
 Expression parseFunctionDictionary(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     
@@ -398,13 +398,13 @@ Expression parseFunctionDictionary(CodeRange code) {
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunctionDictionary(
-        CodeRange{first, code.begin()},
+        firstPart(whole, code),
         {Expression{}, first_argument.index, last_argument.index, body}
     );
 }
 
 Expression parseFunctionTuple(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
 
@@ -426,7 +426,7 @@ Expression parseFunctionTuple(CodeRange code) {
     auto body = parseExpression(code);
     code.first = end(body);
     return makeFunctionTuple(
-        CodeRange{first, code.begin()},
+        firstPart(whole, code),
         {Expression{}, first_argument.index, last_argument.index, body}
     );
 }
@@ -440,7 +440,7 @@ Expression parseAnyFunction(CodeRange code) {
 }
 
 Expression parseStack(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
     auto items = std::vector<Expression>{};
@@ -457,12 +457,12 @@ Expression parseStack(CodeRange code) {
         stack = putStack(stack, item);
     }
     code = parseCharacter(code, ']');
-    stack.range = CodeRange{first, code.first};
+    stack.range = firstPart(whole, code);
     return stack;
 }
 
 Expression parseTuple(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
     auto expressions = std::vector<Expression>{};
@@ -479,11 +479,11 @@ Expression parseTuple(CodeRange code) {
     }
     const auto last_expression = storage.expressions.count;
     code = parseCharacter(code, ')');
-    return makeTuple(CodeRange{first, code.first}, Tuple{first_expression, last_expression});
+    return makeTuple(firstPart(whole, code), Tuple{first_expression, last_expression});
 }
 
 Expression parseTable(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '<');
     code = parseWhiteSpace(code);
     auto rows = std::vector<Row>{};
@@ -502,11 +502,11 @@ Expression parseTable(CodeRange code) {
         rows.push_back({key, value});
     }
     code = parseCharacter(code, '>');
-    return makeTable(CodeRange{first, code.first}, Table{rows});
+    return makeTable(firstPart(whole, code), Table{rows});
 }
 
 Expression parseSubstitution(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     auto name = parseName(code);
     code.first = end(name);
     code = parseWhiteSpace(code);
@@ -515,14 +515,14 @@ Expression parseSubstitution(CodeRange code) {
         code = parseWhiteSpace(code);
         auto child = parseExpression(code);
         code.first = end(child);
-        return makeLookupChild(CodeRange{first, code.first}, {name.index, child});
+        return makeLookupChild(firstPart(whole, code), {name.index, child});
     }
     if (startsWith(code, '!') || startsWith(code, '?')) {
         code = parseCharacter(code);
         auto child = parseExpression(code);
         code.first = end(child);
         return makeFunctionApplication(
-            CodeRange{first, code.first}, {BoundGlobalName{name.index}, child}
+            firstPart(whole, code), {BoundGlobalName{name.index}, child}
         );
     }
     if (startsWith(code, ':')) {
@@ -530,21 +530,21 @@ Expression parseSubstitution(CodeRange code) {
         auto value = parseExpression(code);
         code.first = end(value);
         return makeTypedExpression(
-            CodeRange{first, code.first}, {BoundGlobalName{name.index}, value}
+            firstPart(whole, code), {BoundGlobalName{name.index}, value}
         );
     }
-    return makeLookupSymbol(CodeRange{first, end(name)}, {name.index});
+    return makeLookupSymbol(CodeRange{whole.first, end(name)}, {name.index});
 }
 
 Expression parseNumber(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseOptionalCharacter(code, isSign);
     code = parseCharacter(code, isDigit);
     code = parseWhile(code, isDigit);
     code = parseOptionalCharacter(code, '.');
     code = parseWhile(code, isDigit);
-    const auto value = std::stod(rawString({first, code.first}));
-    return makeNumber(CodeRange{first, code.first}, {value});
+    const auto value = std::stod(rawString(firstPart(whole, code)));
+    return makeNumber(firstPart(whole, code), {value});
 }
 
 CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
@@ -567,17 +567,17 @@ Expression parseNegInf(CodeRange code) {
 }
 
 Expression parseDynamicExpression(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseKeyword(code, "dynamic");
     auto inner_expression = parseExpression(code);
     code.first = end(inner_expression);
     return makeDynamicExpression(
-        CodeRange{first, code.begin()}, DynamicExpression{inner_expression}
+        firstPart(whole, code), DynamicExpression{inner_expression}
     );
 }
 
 Expression parseString(CodeRange code) {
-    auto first = code.begin();
+    auto whole = code;
     code = parseCharacter(code, '"');
     auto characters = std::vector<Expression>{};
     for (; code.first->character != '"'; ++code.first) {
@@ -588,13 +588,12 @@ Expression parseString(CodeRange code) {
         characters.push_back(character);
     }
     std::reverse(characters.begin(), characters.end());
-    auto string = Expression{EMPTY_STRING, 0, {first, first + 1}};
+    auto string = Expression{EMPTY_STRING, 0, {whole.first, whole.first + 1}};
     for (const auto& character : characters) {
         string = putString(string, character);
     }
     code = parseCharacter(code, '"');
-    const auto last = code.begin();
-    string.range = CodeRange{first, last};
+    string.range = firstPart(whole, code);
     return string;
 }
 
