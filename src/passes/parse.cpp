@@ -533,7 +533,7 @@ Expression parseSubstitution(CodeRange code) {
             firstPart(whole, code), {BoundGlobalName{name.index}, value}
         );
     }
-    return makeLookupSymbol(CodeRange{whole.first, end(name)}, {name.index});
+    return makeLookupSymbol(name.range, {name.index});
 }
 
 Expression parseNumber(CodeRange code) {
