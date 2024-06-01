@@ -11,6 +11,11 @@ struct CodeCharacter {
     size_t column = 0;
 };
 
+struct CodeCharacters {
+    CodeCharacter* data;
+    size_t count;
+};
+
 struct CodeRange {
     const CodeCharacter* first = nullptr;
     const CodeCharacter* last = nullptr;
@@ -33,7 +38,7 @@ void throwParseException(CodeRange code);
 
 std::string rawString(CodeRange code);
 
-std::vector<CodeCharacter> makeCodeCharacters(const std::string& string);
+CodeCharacters makeCodeCharacters(const std::string& string);
 
 bool isDigit(CodeCharacter c);
 

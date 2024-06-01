@@ -7,10 +7,14 @@
 #include "passes/parse.h"
 #include "passes/serialize.h"
 
+#include <carma/carma.h>
+
 static
 Expression parse(const std::string& string) {
-    const auto result = makeCodeCharacters(string);
-    return parseExpression({result.data(), result.data() + result.size()});
+    auto c = makeCodeCharacters(string);
+    auto expression = parseExpression({c.data, c.data + c.count});
+    FREE_RANGE(c);
+    return expression;
 }
 
 std::string reformat(std::string code) {

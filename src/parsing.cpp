@@ -1,6 +1,8 @@
 #include "parsing.h"
 #include <algorithm>
 
+#include <carma/carma.h>
+
 std::string serializeCodeCharacter(const CodeCharacter* c) {
     return "row " + std::to_string(c->row + 1) + " and column "
         + std::to_string(c->column + 1);
@@ -30,12 +32,16 @@ std::string rawString(CodeRange code) {
     return s;
 }
 
-std::vector<CodeCharacter> makeCodeCharacters(const std::string& string) {
-    auto result = std::vector<CodeCharacter>{};
+CodeCharacters makeCodeCharacters(const std::string& string) {
+    auto result = CodeCharacters{};
+    INIT_RANGE(result, string.size());
+    
     auto column = size_t{0};
     auto row = size_t{0};
+    auto index = size_t{0};
     for (const auto& character : string) {
-        result.push_back(CodeCharacter{character, row, column});
+        result.data[index] = CodeCharacter{character, row, column};
+        ++index;
         ++column;
         if (character == '\n') {
             ++row;
