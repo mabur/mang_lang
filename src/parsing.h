@@ -107,5 +107,7 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    return makeCodeRange(std::find_if_not(code.begin(), code.end(), predicate), code.end());
+    for (; !code.empty() && predicate(*code.begin()); ++code.data) {
+    }
+    return code;
 }
