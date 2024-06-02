@@ -5,7 +5,7 @@
 
 CodeRange dropFirst(CodeRange code) {
     if (!code.empty()) {
-        code.first++;    
+        code.data++;    
     }
     return code;
 }

@@ -576,15 +576,15 @@ Expression parseString(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '"');
     auto characters = std::vector<Expression>{};
-    for (; code.first->character != '"'; ++code.first) {
+    for (; code.data->character != '"'; ++code.data) {
         auto character = makeCharacter(
-            CodeRange{code.first, code.first + 1},
-            code.first->character
+            CodeRange{code.data, code.data + 1},
+            code.data->character
         );
         characters.push_back(character);
     }
     std::reverse(characters.begin(), characters.end());
-    auto string = Expression{EMPTY_STRING, 0, {whole.first, whole.first + 1}};
+    auto string = Expression{EMPTY_STRING, 0, {whole.data, whole.data + 1}};
     for (const auto& character : characters) {
         string = putString(string, character);
     }
@@ -599,7 +599,7 @@ Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        const auto c = code.first->character;
+        const auto c = code.data->character;
         if (c == '[') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}

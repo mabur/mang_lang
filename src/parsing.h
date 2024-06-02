@@ -18,12 +18,12 @@ struct CodeCharacters {
 };
 
 struct CodeRange {
-    const CodeCharacter* first = nullptr;
+    const CodeCharacter* data = nullptr;
     const CodeCharacter* last = nullptr;
-    const CodeCharacter* begin() const {return first;}
+    const CodeCharacter* begin() const {return data;}
     const CodeCharacter* end() const {return last;}
-    bool empty() const {return first == last;}
-    size_t size() const {return last - first;}
+    bool empty() const {return data == last;}
+    size_t size() const {return last - data;}
 };
 
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
@@ -87,7 +87,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
-    if (!code.empty() && predicate(*code.first)) {
+    if (!code.empty() && predicate(*code.data)) {
         return dropFirst(code);
     }
     return code;
