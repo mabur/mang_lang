@@ -12,7 +12,7 @@
 static
 Expression parse(const std::string& string) {
     auto c = makeCodeCharacters(string);
-    auto expression = parseExpression({c.data, c.data + c.count});
+    auto expression = parseExpression(makeCodeRange(c.data, c.data + c.count));
     FREE_RANGE(c);
     return expression;
 }
