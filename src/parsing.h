@@ -32,7 +32,7 @@ CodeRange makeCodeRange(const CodeCharacter* data, size_t count) {
 }
 
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return CodeRange{whole.begin(), last_part.begin()};
+    return makeCodeRange(whole.begin(), whole.size() - last_part.size());
 }
 
 inline CodeRange lastPart(CodeRange whole, CodeRange first_part) {
