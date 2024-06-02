@@ -3,13 +3,6 @@
 
 #include <carma/carma.h>
 
-CodeRange dropFirst(CodeRange code) {
-    if (!code.empty()) {
-        code.data++;    
-    }
-    return code;
-}
-
 std::string serializeCodeCharacter(const CodeCharacter* c) {
     return "row " + std::to_string(c->row + 1) + " and column "
         + std::to_string(c->column + 1);

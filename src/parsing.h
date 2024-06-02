@@ -39,7 +39,11 @@ inline CodeRange lastPart(CodeRange whole, CodeRange first_part) {
     return CodeRange{first_part.end(), whole.end()};
 }
 
-CodeRange dropFirst(CodeRange code);
+inline
+CodeRange dropFirst(CodeRange code) {
+    code.data++;
+    return code;
+}
 
 struct ParseException : public std::runtime_error
 {
