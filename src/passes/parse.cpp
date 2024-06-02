@@ -44,7 +44,7 @@ Expression parseCharacterExpression(CodeRange code) {
     code = parseCharacter(code);
     const auto value = it->character;
     code = parseCharacter(code, '\'');
-    return makeCharacter(firstPart(whole, code), {value});
+    return makeCharacter(firstPart(whole, code), value);
 }
 
 Expression parseAlternative(CodeRange code) {
@@ -354,7 +354,7 @@ Expression parseDictionary(CodeRange code) {
 
     auto dictionary = Dictionary{statements_first, statements_last, 0};
     bindDictionaryNames(dictionary);
-    return makeDictionary(firstPart(whole, code), std::move(dictionary));
+    return makeDictionary(firstPart(whole, code), dictionary);
 }
 
 Expression parseFunction(CodeRange code) {
@@ -540,7 +540,7 @@ Expression parseNumber(CodeRange code) {
     code = parseOptionalCharacter(code, '.');
     code = parseWhile(code, isDigit);
     const auto value = std::stod(rawString(firstPart(whole, code)));
-    return makeNumber(firstPart(whole, code), {value});
+    return makeNumber(firstPart(whole, code), value);
 }
 
 CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
@@ -558,7 +558,7 @@ Expression parseNo(CodeRange code) {
 Expression parseNegInf(CodeRange code) {
     return makeNumber(
         parseKeyWordContent(code, "-inf"),
-        {-std::numeric_limits<double>::infinity()}
+        -std::numeric_limits<double>::infinity()
     );
 }
 

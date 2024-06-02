@@ -17,14 +17,14 @@ Expression parse(const std::string& string) {
     return expression;
 }
 
-std::string reformat(std::string code) {
+std::string reformat(const std::string& code) {
     auto buffer = SerializedString{};
     auto result = makeStdString(serialize(buffer, parse(code)));
     clearMemory();
     return result;
 }
 
-std::string evaluate_types(std::string code) {
+std::string evaluate_types(const std::string& code) {
     const auto built_ins = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);
     const auto code_ast = parse(code);
@@ -37,7 +37,7 @@ std::string evaluate_types(std::string code) {
     return result;
 }
 
-std::string evaluate_all(std::string code) {
+std::string evaluate_all(const std::string& code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);

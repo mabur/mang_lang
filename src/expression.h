@@ -98,12 +98,6 @@ const auto NAMES = std::vector<std::string>{
     "ANY",
 };
 
-struct StaticTypeError : public std::runtime_error
-{
-    StaticTypeError(ExpressionType type, const std::string& location);
-    using runtime_error::runtime_error;
-};
-
 struct UnexpectedExpression : public std::runtime_error
 {
     UnexpectedExpression(ExpressionType type, const std::string& location);

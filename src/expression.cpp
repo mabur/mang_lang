@@ -3,11 +3,6 @@
 
 #include "factory.h"
 
-StaticTypeError::StaticTypeError(
-    ExpressionType type, const std::string& location)
-    : std::runtime_error("Static type error " + NAMES[type] + " for " + location)
-{}
-
 UnexpectedExpression::UnexpectedExpression(
     ExpressionType type, const std::string& location)
     : std::runtime_error("Unexpected expression " + NAMES[type] + " for " + location)

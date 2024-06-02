@@ -102,7 +102,7 @@ Expression makeAlternative(CodeRange code, Alternative expression) {
 }
 
 Expression makeDictionary(CodeRange code, Dictionary expression) {
-    return makeExpression(code, std::move(expression), DICTIONARY, storage.dictionaries);
+    return makeExpression(code, expression, DICTIONARY, storage.dictionaries);
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {

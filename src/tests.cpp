@@ -19,18 +19,18 @@ struct Test {
         cout << "Duration " << std::fixed << std::setprecision(1)
             << duration_total.count() << " seconds." << endl;
     }
-    size_t exitCode() {
+    int exitCode() const {
         return num_bad_total;
     }
-    size_t num_good_total= 0;
-    size_t num_bad_total = 0;
+    int num_good_total= 0;
+    int num_bad_total = 0;
     std::chrono::duration<double> duration_total = {};
 
     template<typename Input, typename Output>
     void parameterizedTest(
         std::function<Output(Input)> function,
-        std::string function_name,
-        std::string case_name,
+        const std::string& function_name,
+        const std::string& case_name,
         std::initializer_list<std::pair<Input, Output>> data
     ) {
         using namespace std;
@@ -70,17 +70,17 @@ struct Test {
 struct MangLangTest : public Test {
     using InputOutputList = std::initializer_list<std::pair<std::string, std::string>>;
 
-    void reformat(std::string case_name, InputOutputList data) {
+    void reformat(const std::string& case_name, InputOutputList data) {
         parameterizedTest<std::string, std::string>(
             ::reformat, "reformat", case_name, data
         );
     }
-    void evaluate_types(std::string case_name, InputOutputList data) {
+    void evaluate_types(const std::string& case_name, InputOutputList data) {
         parameterizedTest<std::string, std::string>(
             ::evaluate_types, "evaluate types", case_name, data
         );
     }
-    void evaluate_all(std::string case_name, InputOutputList data) {
+    void evaluate_all(const std::string& case_name, InputOutputList data) {
         parameterizedTest<std::string, std::string>(
             ::evaluate_all, "evaluate_all", case_name, data
         );

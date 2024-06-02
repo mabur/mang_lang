@@ -106,10 +106,6 @@ Expression putNumber(Expression collection, Expression item) {
     return makeNumber({}, getNumber(collection) + getNumber(item));
 }
 
-Expression putBoolean(Expression, Expression item) {
-    return item;
-}
-
 Expression put(Expression in) {
     const auto tuple = getDynamicBinaryTuple(in, "put");
     const auto item = tuple.left;
