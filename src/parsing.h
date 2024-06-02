@@ -106,7 +106,7 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    for (; !code.empty() && predicate(*code.begin()); ++code.data) {
+    for (; !code.empty() && predicate(*code.begin()); code = dropFirst(code)) {
     }
     return code;
 }

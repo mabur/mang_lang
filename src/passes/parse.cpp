@@ -577,7 +577,7 @@ Expression parseString(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '"');
     auto characters = std::vector<Expression>{};
-    for (; code.data->character != '"'; ++code.data) {
+    for (; code.data->character != '"'; code = dropFirst(code)) {
         auto character = makeCharacter(
             makeCodeRange(code.data, 1),
             code.data->character
