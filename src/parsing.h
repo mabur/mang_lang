@@ -31,6 +31,11 @@ CodeRange makeCodeRange(const CodeCharacter* first, const CodeCharacter* last) {
     return CodeRange{first, last};
 }
 
+inline
+CodeRange makeCodeRange(const CodeCharacter* data, size_t count) {
+    return CodeRange{data, data + count};
+}
+
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return makeCodeRange(whole.begin(), last_part.begin());
 }
