@@ -11,7 +11,7 @@
 CodeRange addCodeRanges(Expression rest, Expression top) {
     const auto first_character = std::min(rest.range.begin(), top.range.begin());
     const auto last_character = std::max(rest.range.end(), top.range.end());
-    return CodeRange{first_character, last_character};
+    return makeCodeRange(first_character, last_character);
 }
 
 Expression putString(Expression rest, Expression top) {

@@ -26,12 +26,17 @@ struct CodeRange {
     size_t size() const {return last - data;}
 };
 
+inline
+CodeRange makeCodeRange(const CodeCharacter* first, const CodeCharacter* last) {
+    return CodeRange{first, last};
+}
+
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return CodeRange{whole.begin(), last_part.begin()};
+    return makeCodeRange(whole.begin(), last_part.begin());
 }
 
 inline CodeRange lastPart(CodeRange whole, CodeRange first_part) {
-    return CodeRange{first_part.end(), whole.end()};
+    return makeCodeRange(first_part.end(), whole.end());
 }
 
 CodeRange dropFirst(CodeRange code);
@@ -97,5 +102,5 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    return CodeRange{std::find_if_not(code.begin(), code.end(), predicate), code.end()};
+    return makeCodeRange(std::find_if_not(code.begin(), code.end(), predicate), code.end());
 }

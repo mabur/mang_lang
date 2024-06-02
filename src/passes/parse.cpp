@@ -578,13 +578,13 @@ Expression parseString(CodeRange code) {
     auto characters = std::vector<Expression>{};
     for (; code.data->character != '"'; ++code.data) {
         auto character = makeCharacter(
-            CodeRange{code.data, code.data + 1},
+            makeCodeRange(code.data, code.data + 1),
             code.data->character
         );
         characters.push_back(character);
     }
     std::reverse(characters.begin(), characters.end());
-    auto string = Expression{EMPTY_STRING, 0, {whole.data, whole.data + 1}};
+    auto string = Expression{EMPTY_STRING, 0, makeCodeRange(whole.data, whole.data + 1)};
     for (const auto& character : characters) {
         string = putString(string, character);
     }
