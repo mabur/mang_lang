@@ -22,8 +22,8 @@ struct CodeRange {
     const CodeCharacter* last = nullptr;
     const CodeCharacter* begin() const {return data;}
     const CodeCharacter* end() const {return last;}
-    bool empty() const {return data == last;}
-    size_t size() const {return last - data;}
+    bool empty() const {return data == end();}
+    size_t size() const {return end() - begin();}
 };
 
 inline
