@@ -544,7 +544,8 @@ Expression parseNumber(CodeRange code) {
 }
 
 CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
-    return makeCodeRange(code.begin(), parseKeyword(code, keyword).begin());
+    auto tail = parseKeyword(code, keyword);
+    return firstPart(code, tail);
 }
 
 Expression parseYes(CodeRange code) {
