@@ -135,7 +135,7 @@ Expression parseArgument(CodeRange code) {
         auto second_name = parseName(code);
         code = lastPart(code, second_name.range);
         const auto type = makeLookupSymbol(
-            CodeRange{whole.first, first_name.range.last}, {first_name.index}
+            first_name.range, {first_name.index}
         );
         return makeArgument(
             firstPart(whole, code), Argument{type, second_name.index}
