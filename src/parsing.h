@@ -27,21 +27,16 @@ struct CodeRange {
 };
 
 inline
-CodeRange makeCodeRange(const CodeCharacter* first, const CodeCharacter* last) {
-    return CodeRange{first, last};
-}
-
-inline
 CodeRange makeCodeRange(const CodeCharacter* data, size_t count) {
     return CodeRange{data, data + count};
 }
 
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return makeCodeRange(whole.begin(), last_part.begin());
+    return CodeRange{whole.begin(), last_part.begin()};
 }
 
 inline CodeRange lastPart(CodeRange whole, CodeRange first_part) {
-    return makeCodeRange(first_part.end(), whole.end());
+    return CodeRange{first_part.end(), whole.end()};
 }
 
 CodeRange dropFirst(CodeRange code);
