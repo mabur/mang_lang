@@ -1,30 +1,20 @@
 #include "container.h"
 
-#include <algorithm>
-
 #include "binary_tuple.h"
 #include "../passes/serialize.h"
 #include "../expression.h"
 #include "../factory.h"
 
-// Note that we need code range since we use this during parsing.
-CodeRange addCodeRanges(Expression rest, Expression top) {
-    const auto first_character = std::min(rest.range.begin(), top.range.begin());
-    const auto last_character = std::max(rest.range.end(), top.range.end());
-    return makeCodeRange(first_character, last_character);
-}
-
 Expression putString(Expression rest, Expression top) {
-    return makeString(addCodeRanges(top, rest), String{top, rest});
+    return makeString(rest.range, String{top, rest});
 }
 
 Expression putStack(Expression rest, Expression top) {
-    return makeStack(addCodeRanges(top, rest), Stack{top, rest});
+    return makeStack(rest.range, Stack{top, rest});
 }
 
 Expression putEvaluatedStack(Expression rest, Expression top) {
-    return makeEvaluatedStack(addCodeRanges(top, rest),
-        EvaluatedStack{top, rest});
+    return makeEvaluatedStack(rest.range, EvaluatedStack{top, rest});
 }
 
 Expression putTable(Expression table, Expression item) {
