@@ -6,7 +6,7 @@
 
 Definition makeDefinitionBuiltIn(const std::string& name, FunctionPointer function) {
     static size_t i = 0;
-    return {
+    return Definition{
         {makeName(CodeRange{}, name).index, i++},
         makeFunctionBuiltIn(CodeRange{}, {function}),
     };
@@ -14,7 +14,7 @@ Definition makeDefinitionBuiltIn(const std::string& name, FunctionPointer functi
 
 Definition makeDefinitionBuiltInTyped(const std::string& name, FunctionPointer function) {
     static size_t i = 0;
-    return {
+    return Definition{
         {makeName(CodeRange{}, name).index, i++},
         makeFunctionBuiltIn(CodeRange{}, {function})
     };

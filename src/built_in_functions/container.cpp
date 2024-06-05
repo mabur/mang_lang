@@ -93,7 +93,7 @@ Expression putNumber(Expression collection, Expression item) {
                 ".\n"
         );
     }
-    return makeNumber({}, getNumber(collection) + getNumber(item));
+    return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
 }
 
 Expression put(Expression in) {
@@ -154,11 +154,11 @@ Expression takeTableTyped(const T& table, Expression expression) {
 
 template<typename T>
 Expression dropTable(const T& table) {
-    return makeEvaluatedTableView({}, EvaluatedTableView{++table.begin(), table.end()});
+    return makeEvaluatedTableView(CodeRange{}, EvaluatedTableView{++table.begin(), table.end()});
 }
 
 Expression dropNumber(Expression in) {
-    return makeNumber({}, getNumber(in) - 1);
+    return makeNumber(CodeRange{}, getNumber(in) - 1);
 }
 
 Expression take(Expression in) {
@@ -169,7 +169,7 @@ Expression take(Expression in) {
         case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
         case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.data[index]);
-        case NUMBER: return makeNumber({}, 1);
+        case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
         default: throw UnexpectedExpression(type, "take");

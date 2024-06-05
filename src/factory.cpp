@@ -141,7 +141,7 @@ Expression makeEvaluatedTuple2(Expression a, Expression b) {
     APPEND(storage.expressions, a);
     APPEND(storage.expressions, b);
     const auto last = storage.expressions.count;
-    return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
+    return makeEvaluatedTuple(CodeRange{}, EvaluatedTuple{first, last});
 }
 
 Expression makeStack(CodeRange code, Stack expression) {

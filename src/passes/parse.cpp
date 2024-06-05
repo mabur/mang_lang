@@ -622,7 +622,7 @@ Expression parseExpression(CodeRange code) {
         if (isdigit(c) || c == '+' || c == '-') {return parseNumber(code);}
         if (isalpha(c) || c == '_') {return parseSubstitution(code);}
         throwParseException(code);
-        return {};
+        return Expression{};
     } catch (const std::runtime_error& e) {
         std::cout << "Exception while parsing: " << e.what();
         throw e;
