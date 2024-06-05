@@ -35,8 +35,9 @@ inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return makeCodeRange(whole.begin(), whole.size() - last_part.size());
 }
 
-inline CodeRange lastPart(CodeRange whole, CodeRange first_part) {
-    return CodeRange{first_part.end(), whole.end()};
+inline CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
+    auto count1 = static_cast<size_t>(std::distance(middle_part.end(), whole.end()));
+    return makeCodeRange(middle_part.end(), count1);
 }
 
 inline
