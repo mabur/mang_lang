@@ -28,7 +28,7 @@ char rawCharacter(CodeCharacter c) {
 
 std::string rawString(CodeRange code) {
     auto s = std::string{};
-    std::transform(code.data, code.end(), std::back_inserter(s), rawCharacter);
+    std::transform(code.data, code.data + code.count, std::back_inserter(s), rawCharacter);
     return s;
 }
 
