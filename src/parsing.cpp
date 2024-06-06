@@ -24,14 +24,12 @@ ParseException::ParseException(const std::string& description, CodeRange code)
     : std::runtime_error(description + describeLocation(code))
 {}
 
-static
-char rawCharacter(CodeCharacter c) {
-    return c.character;
-}
-
 std::string rawString(CodeRange code) {
     auto s = std::string{};
-    std::transform(code.data, code.data + code.count, std::back_inserter(s), rawCharacter);
+    s.reserve(code.count);
+    FOR_EACH(c, code) {
+        s.push_back(c->character);
+    }
     return s;
 }
 
