@@ -20,7 +20,7 @@ struct CodeCharacters {
 };
 
 struct CodeRange {
-    const CodeCharacter* data = nullptr;
+    const CodeCharacter* data;
     size_t count;
 };
 
