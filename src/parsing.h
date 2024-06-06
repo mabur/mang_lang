@@ -20,12 +20,12 @@ struct CodeCharacters {
 };
 
 struct CodeRange {
-    const CodeCharacter* data;
+    CodeCharacter* data;
     size_t count;
 };
 
 inline
-CodeRange makeCodeRange(const CodeCharacter* data, size_t count) {
+CodeRange makeCodeRange(CodeCharacter* data, size_t count) {
     return CodeRange{data, count};
 }
 
