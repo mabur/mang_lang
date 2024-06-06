@@ -98,7 +98,7 @@ bool startsWith(CodeRange code, const std::string& word) {
 }
 
 bool startsWith(CodeRange code, char c) {
-    return !code.empty() && code.data->character == c;
+    return !IS_EMPTY(code) && code.data->character == c;
 }
 
 CodeRange parseWhiteSpace(CodeRange code) {
@@ -123,7 +123,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
-    if (!code.empty() && code.data->character == c) {
+    if (!IS_EMPTY(code) && code.data->character == c) {
         return dropFirst(code);
     }
     return code;
@@ -142,7 +142,7 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword) {
 }
 
 void throwIfEmpty(CodeRange code) {
-    if (code.empty()) {
+    if (IS_EMPTY(code)) {
         throw ParseException(
             "Unexpected end of source while parsing", code
         );

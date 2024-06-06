@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <carma/carma.h>
+
 struct CodeCharacter {
     char character = 'a';
     size_t row = 0;
@@ -22,7 +24,6 @@ struct CodeRange {
     size_t count;
 
     const CodeCharacter* end() const {return data + count;}
-    bool empty() const {return data == end();}
 };
 
 inline
@@ -97,7 +98,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
-    if (!code.empty() && predicate(*code.data)) {
+    if (!IS_EMPTY(code) && predicate(*code.data)) {
         return dropFirst(code);
     }
     return code;
@@ -107,7 +108,7 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    for (; !code.empty() && predicate(*code.data); code = dropFirst(code)) {
+    for (; !IS_EMPTY(code) && predicate(*code.data); code = dropFirst(code)) {
     }
     return code;
 }
