@@ -77,7 +77,7 @@ bool haveSameCharacters(char a, CodeCharacter b) {
 }
 
 bool isKeyword(CodeRange code, const std::string& word) {
-    if (code.size() < word.size()) {
+    if (code.count < word.size()) {
         return false;
     }
     if (!std::equal(word.begin(), word.end(), code.begin(), haveSameCharacters)) {
@@ -91,7 +91,7 @@ bool isKeyword(CodeRange code, const std::string& word) {
 }
 
 bool startsWith(CodeRange code, const std::string& word) {
-    if (code.size() < word.size()) {
+    if (code.count < word.size()) {
         return false;
     }
     return std::equal(word.begin(), word.end(), code.begin(), haveSameCharacters);
@@ -130,7 +130,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c) {
 }
 
 CodeRange parseKeyword(CodeRange code, const std::string& keyword) {
-    if (code.size() < keyword.size()) {
+    if (code.count < keyword.size()) {
         throw ParseException(
             "Reached end of file when parsing " + keyword, code
         );
