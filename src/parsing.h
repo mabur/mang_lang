@@ -19,16 +19,16 @@ struct CodeCharacters {
 
 struct CodeRange {
     const CodeCharacter* data = nullptr;
-    const CodeCharacter* last = nullptr;
+    size_t count;
     const CodeCharacter* begin() const {return data;}
-    const CodeCharacter* end() const {return last;}
+    const CodeCharacter* end() const {return data + count;}
     bool empty() const {return data == end();}
     size_t size() const {return end() - begin();}
 };
 
 inline
 CodeRange makeCodeRange(const CodeCharacter* data, size_t count) {
-    return CodeRange{data, data + count};
+    return CodeRange{data, count};
 }
 
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
@@ -43,6 +43,7 @@ inline CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
 inline
 CodeRange dropFirst(CodeRange code) {
     code.data++;
+    code.count--;
     return code;
 }
 
