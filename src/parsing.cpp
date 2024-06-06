@@ -83,10 +83,10 @@ bool isKeyword(CodeRange code, const std::string& word) {
     if (!std::equal(word.begin(), word.end(), code.data, haveSameCharacters)) {
         return false;
     }
-    const auto after = code.data + word.size();
-    if (after == code.end()) {
+    if (code.count == word.size()) {
         return true;
     }
+    const auto after = code.data + word.size();
     return !isNameCharacter(*after);
 }
 
