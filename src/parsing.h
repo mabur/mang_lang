@@ -13,12 +13,6 @@ struct CodeCharacter {
     size_t column = 0;
 };
 
-// TODO: merge CodeCharacters & CodeRange
-struct CodeCharacters {
-    CodeCharacter* data;
-    size_t count;
-};
-
 struct CodeRange {
     CodeCharacter* data;
     size_t count;
@@ -60,7 +54,7 @@ void throwParseException(CodeRange code);
 
 std::string rawString(CodeRange code);
 
-CodeCharacters makeCodeCharacters(const std::string& string);
+CodeRange makeCodeCharacters(const std::string& string);
 
 bool isDigit(CodeCharacter c);
 

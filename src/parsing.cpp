@@ -35,8 +35,8 @@ std::string rawString(CodeRange code) {
     return s;
 }
 
-CodeCharacters makeCodeCharacters(const std::string& string) {
-    auto result = CodeCharacters{};
+CodeRange makeCodeCharacters(const std::string& string) {
+    auto result = CodeRange{};
     INIT_RANGE(result, string.size());
     
     auto column = size_t{0};
