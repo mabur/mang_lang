@@ -22,8 +22,6 @@ struct CodeCharacters {
 struct CodeRange {
     const CodeCharacter* data = nullptr;
     size_t count;
-
-    const CodeCharacter* end() const {return data + count;}
 };
 
 inline

@@ -9,12 +9,15 @@ std::string serializeCodeCharacter(const CodeCharacter* c) {
 }
 
 std::string describeLocation(CodeRange code) {
-    if (code.data == nullptr || code.end() == nullptr) {
+    if (code.count == 0) {
         return " at unknown location.";
+    }
+    if (code.count == 1) {
+        return " at " + serializeCodeCharacter(code.data);
     }
     return " between " +
         serializeCodeCharacter(code.data) + " and " +
-        serializeCodeCharacter(code.end());
+        serializeCodeCharacter(code.data + code.count - 1);
 }
 
 ParseException::ParseException(const std::string& description, CodeRange code)
