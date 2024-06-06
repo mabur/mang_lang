@@ -40,7 +40,7 @@ private:
 Expression parseCharacterExpression(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '\'');
-    const auto it = code.begin();
+    const auto it = code.data;
     code = parseCharacter(code);
     const auto value = it->character;
     code = parseCharacter(code, '\'');

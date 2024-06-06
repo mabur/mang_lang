@@ -20,7 +20,7 @@ struct CodeCharacters {
 struct CodeRange {
     const CodeCharacter* data = nullptr;
     size_t count;
-    const CodeCharacter* begin() const {return data;}
+
     const CodeCharacter* end() const {return data + count;}
     bool empty() const {return data == end();}
 };
@@ -31,7 +31,7 @@ CodeRange makeCodeRange(const CodeCharacter* data, size_t count) {
 }
 
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return makeCodeRange(whole.begin(), whole.count - last_part.count);
+    return makeCodeRange(whole.data, whole.count - last_part.count);
 }
 
 inline CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
@@ -86,7 +86,7 @@ CodeRange parseCharacter(CodeRange code, char expected);
 template<typename Predicate>
 CodeRange parseCharacter(CodeRange code, Predicate predicate) {
     throwIfEmpty(code);
-    auto it = code.begin();
+    auto it = code.data;
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
@@ -107,7 +107,7 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    for (; !code.empty() && predicate(*code.begin()); code = dropFirst(code)) {
+    for (; !code.empty() && predicate(*code.data); code = dropFirst(code)) {
     }
     return code;
 }

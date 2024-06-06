@@ -9,11 +9,11 @@ std::string serializeCodeCharacter(const CodeCharacter* c) {
 }
 
 std::string describeLocation(CodeRange code) {
-    if (code.begin() == nullptr || code.end() == nullptr) {
+    if (code.data == nullptr || code.end() == nullptr) {
         return " at unknown location.";
     }
     return " between " +
-        serializeCodeCharacter(code.begin()) + " and " +
+        serializeCodeCharacter(code.data) + " and " +
         serializeCodeCharacter(code.end());
 }
 
@@ -28,7 +28,7 @@ char rawCharacter(CodeCharacter c) {
 
 std::string rawString(CodeRange code) {
     auto s = std::string{};
-    std::transform(code.begin(), code.end(), std::back_inserter(s), rawCharacter);
+    std::transform(code.data, code.end(), std::back_inserter(s), rawCharacter);
     return s;
 }
 
@@ -80,10 +80,10 @@ bool isKeyword(CodeRange code, const std::string& word) {
     if (code.count < word.size()) {
         return false;
     }
-    if (!std::equal(word.begin(), word.end(), code.begin(), haveSameCharacters)) {
+    if (!std::equal(word.begin(), word.end(), code.data, haveSameCharacters)) {
         return false;
     }
-    const auto after = code.begin() + word.size();
+    const auto after = code.data + word.size();
     if (after == code.end()) {
         return true;
     }
@@ -94,11 +94,11 @@ bool startsWith(CodeRange code, const std::string& word) {
     if (code.count < word.size()) {
         return false;
     }
-    return std::equal(word.begin(), word.end(), code.begin(), haveSameCharacters);
+    return std::equal(word.begin(), word.end(), code.data, haveSameCharacters);
 }
 
 bool startsWith(CodeRange code, char c) {
-    return !code.empty() && code.begin()->character == c;
+    return !code.empty() && code.data->character == c;
 }
 
 CodeRange parseWhiteSpace(CodeRange code) {
@@ -112,7 +112,7 @@ CodeRange parseCharacter(CodeRange code) {
 
 CodeRange parseCharacter(CodeRange code, char expected) {
     throwIfEmpty(code);
-    auto it = code.begin();
+    auto it = code.data;
     const auto actual = it->character;
     if (it->character != expected) {
         const auto description = std::string{"Parsing expected \'"}
@@ -123,7 +123,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
-    if (!code.empty() && code.begin()->character == c) {
+    if (!code.empty() && code.data->character == c) {
         return dropFirst(code);
     }
     return code;
