@@ -83,23 +83,24 @@ bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }
 
-static
-bool haveSameCharacters(char a, CodeCharacter b) {
-    return a == b.character;
-}
-
-bool isKeyword(CodeRange code, const std::string& word) {
-    if (code.count < word.size()) {
+bool isKeyword(CodeRange code, const char* word) {
+    auto it = word;
+    for (; *it != '\0'; ++it) {
+        if (IS_EMPTY(code)) {
+            return false;
+        }
+        if (*it != code.data[0].character) {
+            return false;
+        }
+        DROP_FIRST(code);
+    }
+    if (*it != '\0') {
         return false;
     }
-    if (!std::equal(word.begin(), word.end(), code.data, haveSameCharacters)) {
-        return false;
-    }
-    if (code.count == word.size()) {
+    if (IS_EMPTY(code)) {
         return true;
     }
-    const auto after = code.data + word.size();
-    return !isNameCharacter(*after);
+    return !isNameCharacter(*code.data);
 }
 
 bool startsWith(CodeRange code, const char* word) {

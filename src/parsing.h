@@ -47,7 +47,7 @@ bool isNameCharacter(CodeCharacter c);
 
 bool isWhiteSpace(CodeCharacter c);
 
-bool isKeyword(CodeRange code, const std::string& word);
+bool isKeyword(CodeRange code, const char* word);
 
 bool startsWith(CodeRange code, const char* word);
 
