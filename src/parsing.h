@@ -18,20 +18,15 @@ struct CodeRange {
     size_t count;
 };
 
-inline
-CodeRange makeCodeRange(CodeCharacter* data, size_t count) {
-    return CodeRange{data, count};
-}
-
 inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return makeCodeRange(whole.data, whole.count - last_part.count);
+    return CodeRange{whole.data, whole.count - last_part.count};
 }
 
 inline CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
     auto whole_end = whole.data + whole.count;
     auto middle_part_end = middle_part.data + middle_part.count;
     auto count = static_cast<size_t>(whole_end - middle_part_end);
-    return makeCodeRange(middle_part_end, count);
+    return CodeRange{middle_part_end, count};
 }
 
 struct ParseException : public std::runtime_error
