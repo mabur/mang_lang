@@ -102,11 +102,18 @@ bool isKeyword(CodeRange code, const std::string& word) {
     return !isNameCharacter(*after);
 }
 
-bool startsWith(CodeRange code, const std::string& word) {
-    if (code.count < word.size()) {
-        return false;
+bool startsWith(CodeRange code, const char* word) {
+    auto it = word;
+    for (; *it != '\0'; ++it) {
+        if (IS_EMPTY(code)) {
+            return false;
+        }
+        if (*it != code.data[0].character) {
+            return false;
+        }
+        DROP_FIRST(code);
     }
-    return std::equal(word.begin(), word.end(), code.data, haveSameCharacters);
+    return *it == '\0';
 }
 
 bool startsWith(CodeRange code, char c) {

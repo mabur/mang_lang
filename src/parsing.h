@@ -49,7 +49,7 @@ bool isWhiteSpace(CodeCharacter c);
 
 bool isKeyword(CodeRange code, const std::string& word);
 
-bool startsWith(CodeRange code, const std::string& word);
+bool startsWith(CodeRange code, const char* word);
 
 bool startsWith(CodeRange code, char c);
 
