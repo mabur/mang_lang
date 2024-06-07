@@ -108,7 +108,8 @@ CodeRange parseWhiteSpace(CodeRange code) {
 
 CodeRange parseCharacter(CodeRange code) {
     throwIfEmpty(code);
-    return dropFirst(code);
+    DROP_FIRST(code);
+    return code;
 }
 
 CodeRange parseCharacter(CodeRange code, char expected) {
@@ -120,12 +121,13 @@ CodeRange parseCharacter(CodeRange code, char expected) {
             + expected + "\' but got \'" + actual + "\'";
         throw ParseException(description, code);
     }
-    return dropFirst(code);
+    DROP_FIRST(code);
+    return code;
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
     if (!IS_EMPTY(code) && code.data->character == c) {
-        return dropFirst(code);
+        DROP_FIRST(code);
     }
     return code;
 }

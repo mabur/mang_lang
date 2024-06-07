@@ -34,13 +34,6 @@ inline CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
     return makeCodeRange(middle_part_end, count);
 }
 
-inline
-CodeRange dropFirst(CodeRange code) {
-    code.data++;
-    code.count--;
-    return code;
-}
-
 struct ParseException : public std::runtime_error
 {
     ParseException(const std::string& description, CodeRange code);
@@ -85,7 +78,8 @@ CodeRange parseCharacter(CodeRange code, Predicate predicate) {
     if (!predicate(*it)) {
         throw ParseException(std::string{"Parser got unexpected char"} + it->character);
     }
-    return dropFirst(code);
+    DROP_FIRST(code);
+    return code;
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c);
@@ -93,7 +87,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
     if (!IS_EMPTY(code) && predicate(*code.data)) {
-        return dropFirst(code);
+        DROP_FIRST(code);
     }
     return code;
 }
@@ -102,7 +96,8 @@ CodeRange parseKeyword(CodeRange code, const std::string& keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    for (; !IS_EMPTY(code) && predicate(*code.data); code = dropFirst(code)) {
+    while (!IS_EMPTY(code) && predicate(*code.data)) {
+        DROP_FIRST(code);
     }
     return code;
 }

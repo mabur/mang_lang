@@ -577,12 +577,13 @@ Expression parseString(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '"');
     auto characters = std::vector<Expression>{};
-    for (; code.data->character != '"'; code = dropFirst(code)) {
+    while (code.data->character != '"') {
         auto character = makeCharacter(
             makeCodeRange(code.data, 1),
             code.data->character
         );
         characters.push_back(character);
+        DROP_FIRST(code);
     }
     std::reverse(characters.begin(), characters.end());
     auto string = Expression{EMPTY_STRING, 0, makeCodeRange(whole.data, 1)};
