@@ -83,38 +83,35 @@ bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }
 
+struct CString {
+    const char* data;
+    size_t count;
+};
+
 bool isKeyword(CodeRange code, const char* word) {
-    auto it = word;
-    for (; *it != '\0'; ++it) {
-        if (IS_EMPTY(code)) {
+    auto word_range = CString{word, strlen(word)};
+    FOR_EACH2(it0, it1, code, word_range) {
+        if (it0->character != *it1) {
             return false;
         }
-        if (*it != code.data[0].character) {
-            return false;
-        }
-        DROP_FIRST(code);
     }
-    if (*it != '\0') {
+    if (it1 != END_POINTER(word_range)) {
         return false;
     }
-    if (IS_EMPTY(code)) {
+    if (it0 == END_POINTER(code)) {
         return true;
     }
-    return !isNameCharacter(*code.data);
+    return !isNameCharacter(*it0);
 }
 
 bool startsWith(CodeRange code, const char* word) {
-    auto it = word;
-    for (; *it != '\0'; ++it) {
-        if (IS_EMPTY(code)) {
+    auto word_range = CString{word, strlen(word)};
+    FOR_EACH2(it0, it1, code, word_range) {
+        if (it0->character != *it1) {
             return false;
         }
-        if (*it != code.data[0].character) {
-            return false;
-        }
-        DROP_FIRST(code);
     }
-    return *it == '\0';
+    return it1 == END_POINTER(word_range);
 }
 
 bool startsWith(CodeRange code, char c) {
