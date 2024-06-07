@@ -3,6 +3,17 @@
 
 #include <carma/carma.h>
 
+CodeRange firstPart(CodeRange whole, CodeRange last_part) {
+    return CodeRange{whole.data, whole.count - last_part.count};
+}
+
+CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
+    auto whole_end = whole.data + whole.count;
+    auto middle_part_end = middle_part.data + middle_part.count;
+    auto count = static_cast<size_t>(whole_end - middle_part_end);
+    return CodeRange{middle_part_end, count};
+}
+
 std::string serializeCodeCharacter(const CodeCharacter* c) {
     return "row " + std::to_string(c->row + 1) + " and column "
         + std::to_string(c->column + 1);

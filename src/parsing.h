@@ -18,16 +18,9 @@ struct CodeRange {
     size_t count;
 };
 
-inline CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return CodeRange{whole.data, whole.count - last_part.count};
-}
+CodeRange firstPart(CodeRange whole, CodeRange last_part);
 
-inline CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
-    auto whole_end = whole.data + whole.count;
-    auto middle_part_end = middle_part.data + middle_part.count;
-    auto count = static_cast<size_t>(whole_end - middle_part_end);
-    return CodeRange{middle_part_end, count};
-}
+CodeRange lastPart(CodeRange whole, CodeRange middle_part);
 
 struct ParseException : public std::runtime_error
 {
