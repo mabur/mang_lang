@@ -80,7 +80,7 @@ CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
     return code;
 }
 
-CodeRange parseKeyword(CodeRange code, const std::string& keyword);
+CodeRange parseKeyword(CodeRange code, const char* keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {

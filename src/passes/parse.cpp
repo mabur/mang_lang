@@ -543,7 +543,7 @@ Expression parseNumber(CodeRange code) {
     return makeNumber(firstPart(whole, code), value);
 }
 
-CodeRange parseKeyWordContent(CodeRange code, std::string keyword) {
+CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
     auto tail = parseKeyword(code, keyword);
     return firstPart(code, tail);
 }
