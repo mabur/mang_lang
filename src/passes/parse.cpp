@@ -303,54 +303,52 @@ Expression parseDictionary(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
-    auto statements = std::vector<Expression>{};
+    auto statements = Expressions{};
     auto loop_start_indices = std::vector<size_t>{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         if (isKeyword(code, "while")) {
-            loop_start_indices.push_back(statements.size());
-            statements.push_back(parseWhileStatement(code));
+            loop_start_indices.push_back(statements.count);
+            APPEND(statements, parseWhileStatement(code));
         }
         else if (isKeyword(code, "for")) {
-            loop_start_indices.push_back(statements.size());
-            statements.push_back(parseForStatement(code));
+            loop_start_indices.push_back(statements.count);
+            APPEND(statements, parseForStatement(code));
         }
         else if (isKeyword(code, "end")) {
-            const auto loop_end_index = statements.size();
+            const auto loop_end_index = statements.count;
             if (loop_start_indices.empty()) {
                 throw ParseException("end not matching while or for", code);
             }
             const auto loop_start_index = loop_start_indices.back();
             loop_start_indices.pop_back();
-            const auto start_expression = statements.at(loop_start_index);
+            const auto start_expression = statements.data[loop_start_index];
             if (start_expression.type == WHILE_STATEMENT) {
                 storage.while_statements.data[start_expression.index].end_index = loop_end_index;
-                statements.push_back(parseWhileEndStatement(code, loop_start_index));
+                APPEND(statements, parseWhileEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_STATEMENT) {
                 storage.for_statements.data[start_expression.index].end_index = loop_end_index;
-                statements.push_back(parseForEndStatement(code, loop_start_index));
+                APPEND(statements, parseForEndStatement(code, loop_start_index));
             } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
                 storage.for_simple_statements.data[start_expression.index].end_index = loop_end_index;
-                statements.push_back(parseForSimpleEndStatement(code, loop_start_index));
+                APPEND(statements, parseForSimpleEndStatement(code, loop_start_index));
             } else {
                 throw ParseException("Unexpected start type for loop", code);
             }
         }
         else if (isKeyword(code, "return")) {
-            statements.push_back(parseReturnStatement(code));
+            APPEND(statements, parseReturnStatement(code));
         }
         else {
-            statements.push_back(parseNamedElement(code));
+            APPEND(statements, parseNamedElement(code));
         }
-        code = lastPart(code, statements.back().range);
+        code = lastPart(code, LAST_ITEM(statements).range);
     }
     code = parseCharacter(code, '}');
     
     const auto statements_first = storage.statements.count;
-    for (const auto statement : statements) {
-        APPEND(storage.statements, statement);
-    }
+    CONCAT(storage.statements, statements);
     const auto statements_last = storage.statements.count;
 
     auto dictionary = Dictionary{statements_first, statements_last, 0};
