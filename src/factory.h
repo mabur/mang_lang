@@ -4,6 +4,12 @@
 
 #define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
 
+struct Expressions {
+    Expression* data;
+    size_t count;
+    size_t capacity;
+};
+
 struct Storage {
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;

@@ -66,11 +66,11 @@ Expression parseConditional(CodeRange code) {
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
     
-    auto alternatives = std::vector<Expression>{};
+    auto alternatives = Expressions{};
 
     while (!isKeyword(code, "else")) {
-        alternatives.push_back(parseAlternative(code));
-        code = lastPart(code, alternatives.back().range);
+        APPEND(alternatives, parseAlternative(code));
+        code = lastPart(code, LAST_ITEM(alternatives).range);
     }
 
     code = parseKeyword(code, "else");
@@ -80,9 +80,10 @@ Expression parseConditional(CodeRange code) {
     code = parseWhiteSpace(code);
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
+    // TODO: make it more explicit that we require at least one alternative.
     return makeConditional(
         firstPart(whole, code),
-        Conditional{alternatives.front(), alternatives.back(), expression_else}
+        Conditional{FIRST_ITEM(alternatives), LAST_ITEM(alternatives), expression_else}
     );
 }
 
