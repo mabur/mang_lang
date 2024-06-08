@@ -438,18 +438,18 @@ Expression parseStack(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '[');
     code = parseWhiteSpace(code);
-    auto items = std::vector<Expression>{};
+    auto items = Expressions{};
     while (!::startsWith(code, ']')) {
         throwIfEmpty(code);
         auto item = parseExpression(code);
         code = lastPart(code, item.range);
         code = parseWhiteSpace(code);
-        items.push_back(item);
+        APPEND(items, item);
     }
-    std::reverse(items.begin(), items.end());
+    std::reverse(BEGIN_POINTER(items), END_POINTER(items));
     auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
-    for (const auto& item : items) {
-        stack = putStack(stack, item);
+    FOR_EACH(it, items){
+        stack = putStack(stack, *it);
     }
     code = parseCharacter(code, ']');
     stack.range = firstPart(whole, code);
@@ -460,18 +460,16 @@ Expression parseTuple(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '(');
     code = parseWhiteSpace(code);
-    auto expressions = std::vector<Expression>{};
+    auto expressions = Expressions{};
     while (!::startsWith(code, ')')) {
         throwIfEmpty(code);
         auto expression = parseExpression(code);
         code = lastPart(code, expression.range);
-        expressions.push_back(expression);
+        APPEND(expressions, expression);
         code = parseWhiteSpace(code);
     }
     const auto first_expression = storage.expressions.count;
-    for (const auto expression : expressions) {
-        APPEND(storage.expressions, expression);
-    }
+    CONCAT(storage.expressions,  expressions);
     const auto last_expression = storage.expressions.count;
     code = parseCharacter(code, ')');
     return makeTuple(firstPart(whole, code), Tuple{first_expression, last_expression});
