@@ -573,19 +573,19 @@ Expression parseDynamicExpression(CodeRange code) {
 Expression parseString(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '"');
-    auto characters = std::vector<Expression>{};
+    auto characters = Expressions{};
     while (code.data->character != '"') {
         auto character = makeCharacter(
             CodeRange{code.data, 1},
             code.data->character
         );
-        characters.push_back(character);
+        APPEND(characters, character);
         DROP_FIRST(code);
     }
-    std::reverse(characters.begin(), characters.end());
+    std::reverse(BEGIN_POINTER(characters), END_POINTER(characters));
     auto string = Expression{EMPTY_STRING, 0, CodeRange{whole.data, 1}};
-    for (const auto& character : characters) {
-        string = putString(string, character);
+    FOR_EACH(it, characters) {
+        string = putString(string, *it);
     }
     code = parseCharacter(code, '"');
     string.range = firstPart(whole, code);
