@@ -96,11 +96,11 @@ Expression parseIs(CodeRange code) {
     code = lastPart(code, input.range);
     code = parseWhiteSpace(code);
     
-    auto alternatives = std::vector<Expression>{};
+    auto alternatives = Expressions{};
 
     while (!isKeyword(code, "else")) {
-        alternatives.push_back(parseAlternative(code));
-        code = lastPart(code, alternatives.back().range);
+        APPEND(alternatives, parseAlternative(code));
+        code = lastPart(code, LAST_ITEM(alternatives).range);
     }
 
     code = parseKeyword(code, "else");
@@ -112,7 +112,7 @@ Expression parseIs(CodeRange code) {
     // TODO: verify parsing of nested alternatives. This looks suspicious.
     return makeIs(
         firstPart(whole, code),
-        IsExpression{input, alternatives.front(), alternatives.back(), expression_else}
+        IsExpression{input, FIRST_ITEM(alternatives), LAST_ITEM(alternatives), expression_else}
     );
 }
 
