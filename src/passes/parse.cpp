@@ -303,30 +303,36 @@ void bindDictionaryNames(Dictionary& dictionary_struct) {
     dictionary_struct.definition_count = indexer.size();
 }
 
+struct Indices {
+    size_t* data;
+    size_t count;
+    size_t capacity;
+};
+
 Expression parseDictionary(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = Expressions{};
-    auto loop_start_indices = std::vector<size_t>{};
+    auto loop_start_indices = Indices{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
         if (isKeyword(code, "while")) {
-            loop_start_indices.push_back(statements.count);
+            APPEND(loop_start_indices, statements.count);
             APPEND(statements, parseWhileStatement(code));
         }
         else if (isKeyword(code, "for")) {
-            loop_start_indices.push_back(statements.count);
+            APPEND(loop_start_indices, statements.count);
             APPEND(statements, parseForStatement(code));
         }
         else if (isKeyword(code, "end")) {
             const auto loop_end_index = statements.count;
-            if (loop_start_indices.empty()) {
+            if (IS_EMPTY(loop_start_indices)) {
                 throw ParseException("end not matching while or for", code);
             }
-            const auto loop_start_index = loop_start_indices.back();
-            loop_start_indices.pop_back();
+            const auto loop_start_index = LAST_ITEM(loop_start_indices);
+            DROP_LAST(loop_start_indices);
             const auto start_expression = statements.data[loop_start_index];
             if (start_expression.type == WHILE_STATEMENT) {
                 storage.while_statements.data[start_expression.index].end_index = loop_end_index;
@@ -353,9 +359,11 @@ Expression parseDictionary(CodeRange code) {
     
     const auto statements_first = storage.statements.count;
     CONCAT(storage.statements, statements);
-    FREE_RANGE(statements);
     const auto statements_last = storage.statements.count;
 
+    FREE_RANGE(statements);
+    FREE_RANGE(loop_start_indices);
+    
     auto dictionary = Dictionary{statements_first, statements_last, 0};
     bindDictionaryNames(dictionary);
     return makeDictionary(firstPart(whole, code), dictionary);
