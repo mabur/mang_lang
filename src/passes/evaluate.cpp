@@ -186,7 +186,9 @@ Expression evaluateTable(
         const auto key = evaluator(row.key, environment);
         const auto value = evaluator(row.value, environment);
         auto serialized_key = DynamicString{};
-        auto result = makeStdString(serializer(serialized_key, key));
+        serialized_key = serializer(serialized_key, key);
+        auto result = makeStdString(serialized_key);
+        FREE_DARRAY(serialized_key);
         rows[result] = {key, value};
     }
     const auto code = table.range;
