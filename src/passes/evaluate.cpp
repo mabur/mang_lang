@@ -185,7 +185,7 @@ Expression evaluateTable(
     for (const auto& row : table_struct.rows) {
         const auto key = evaluator(row.key, environment);
         const auto value = evaluator(row.value, environment);
-        auto serialized_key = SerializedString{};
+        auto serialized_key = DynamicString{};
         auto result = makeStdString(serializer(serialized_key, key));
         rows[result] = {key, value};
     }
@@ -916,7 +916,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto k = makeStdString(serialize(buffer, key));
     try {
         return table_struct.rows.at(k).value;

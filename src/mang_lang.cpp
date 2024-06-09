@@ -19,7 +19,7 @@ Expression parse(const std::string& string) {
 }
 
 std::string reformat(const std::string& code) {
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto result = makeStdString(serialize(buffer, parse(code)));
     clearMemory();
     return result;
@@ -32,7 +32,7 @@ std::string evaluate_types(const std::string& code) {
     // bind(std_ast, built_ins);
     // bind(code_ast, std_ast);
     const auto standard_library = evaluate_types(std_ast, built_ins);
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto result = makeStdString(serialize_types(buffer, evaluate_types(code_ast, standard_library)));
     clearMemory();
     return result;
@@ -49,7 +49,7 @@ std::string evaluate_all(const std::string& code) {
     const auto code_checked = evaluate_types(code_ast, std_checked);
     const auto std_evaluated = evaluate(std_ast, built_ins);
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto result = makeStdString(serialize(buffer, code_evaluated));
     clearMemory();
     std::ignore = code_checked;

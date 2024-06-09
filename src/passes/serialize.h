@@ -3,7 +3,7 @@
 #include <string>
 
 struct Expression;
-struct SerializedString;
+struct DynamicString;
 
-SerializedString serialize_types(SerializedString s, Expression expression);
-SerializedString serialize(SerializedString s, Expression expression);
+DynamicString serialize_types(DynamicString s, Expression expression);
+DynamicString serialize(DynamicString s, Expression expression);

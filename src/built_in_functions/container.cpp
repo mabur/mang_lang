@@ -23,7 +23,7 @@ Expression putTable(Expression table, Expression item) {
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto s = makeStdString(serialize(buffer, key));
     rows[s] = {key, value};
     return table;
@@ -37,7 +37,7 @@ Expression putTableTyped(Expression table, Expression item) {
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto s = makeStdString(serialize_types(buffer, key));
     rows[s] = {key, value};
     return table;
@@ -259,7 +259,7 @@ Expression get(Expression in) {
                 ".\n"
         );
     }
-    auto buffer = SerializedString{};
+    auto buffer = DynamicString{};
     auto name = makeStdString(serialize(buffer, key));
     const auto& rows = storage.evaluated_tables.at(table.index).rows;
     const auto iterator = rows.find(name);

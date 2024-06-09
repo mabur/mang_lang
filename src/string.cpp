@@ -1,5 +1,5 @@
 #include "string.h"
 
-std::string makeStdString(SerializedString s) {
+std::string makeStdString(DynamicString s) {
     return std::string(s.data, s.count);
 }

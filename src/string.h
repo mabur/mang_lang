@@ -8,10 +8,10 @@ struct CString {
     size_t count;
 };
 
-struct SerializedString {
+struct DynamicString {
     char* data;
     size_t count;
     size_t capacity;
 };
 
-std::string makeStdString(SerializedString s);
+std::string makeStdString(DynamicString s);
