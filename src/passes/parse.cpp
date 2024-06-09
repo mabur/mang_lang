@@ -85,7 +85,7 @@ Expression parseConditional(CodeRange code) {
         firstPart(whole, code),
         Conditional{FIRST_ITEM(alternatives), LAST_ITEM(alternatives), expression_else}
     );
-    FREE_RANGE(alternatives);
+    FREE_DARRAY(alternatives);
     return result;
 }
 
@@ -116,7 +116,7 @@ Expression parseIs(CodeRange code) {
         firstPart(whole, code),
         IsExpression{input, FIRST_ITEM(alternatives), LAST_ITEM(alternatives), expression_else}
     );
-    FREE_RANGE(alternatives);
+    FREE_DARRAY(alternatives);
     return result;
 }
 
@@ -361,8 +361,8 @@ Expression parseDictionary(CodeRange code) {
     CONCAT(storage.statements, statements);
     const auto statements_last = storage.statements.count;
 
-    FREE_RANGE(statements);
-    FREE_RANGE(loop_start_indices);
+    FREE_DARRAY(statements);
+    FREE_DARRAY(loop_start_indices);
     
     auto dictionary = Dictionary{statements_first, statements_last, 0};
     bindDictionaryNames(dictionary);
@@ -463,7 +463,7 @@ Expression parseStack(CodeRange code) {
     FOR_EACH_REVERSE(it, items){
         stack = putStack(stack, *it);
     }
-    FREE_RANGE(items);
+    FREE_DARRAY(items);
     code = parseCharacter(code, ']');
     stack.range = firstPart(whole, code);
     return stack;
@@ -483,7 +483,7 @@ Expression parseTuple(CodeRange code) {
     }
     const auto first_expression = storage.expressions.count;
     CONCAT(storage.expressions,  expressions);
-    FREE_RANGE(expressions);
+    FREE_DARRAY(expressions);
     const auto last_expression = storage.expressions.count;
     code = parseCharacter(code, ')');
     return makeTuple(firstPart(whole, code), Tuple{first_expression, last_expression});
@@ -600,7 +600,7 @@ Expression parseString(CodeRange code) {
     FOR_EACH_REVERSE(it, characters) {
         string = putString(string, *it);
     }
-    FREE_RANGE(characters);
+    FREE_DARRAY(characters);
     code = parseCharacter(code, '"');
     string.range = firstPart(whole, code);
     return string;

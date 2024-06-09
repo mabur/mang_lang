@@ -144,7 +144,7 @@ Expression evaluateStack(Evaluator evaluator,
     FOR_EACH_REVERSE(it, items) {
         evaluated_stack = putEvaluatedStack(evaluated_stack, *it);
     }
-    FREE_RANGE(items);
+    FREE_DARRAY(items);
     return evaluated_stack;
 }
 
