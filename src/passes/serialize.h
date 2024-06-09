@@ -4,7 +4,6 @@
 
 struct Expression;
 
-//using SerializedString = std::string&;
 struct SerializedString {
     char* data;
     size_t count;

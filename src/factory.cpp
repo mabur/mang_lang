@@ -106,8 +106,6 @@ Expression makeDictionary(CodeRange code, Dictionary expression) {
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
-    //return makeExpression(code, expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
-
     storage.evaluated_dictionaries.emplace_back(std::move(expression));
     return Expression{EVALUATED_DICTIONARY, storage.evaluated_dictionaries.size() - 1, code};
 }
@@ -153,15 +151,11 @@ Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
 }
 
 Expression makeTable(CodeRange code, Table expression) {
-    //return makeExpression(code, expression, TABLE, storage.tables);
-
     storage.tables.emplace_back(std::move(expression));
     return Expression{TABLE, storage.tables.size() - 1, code};
 }
 
 Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
-    //return makeExpression(code, expression, EVALUATED_TABLE, storage.evaluated_tables);
-
     storage.evaluated_tables.emplace_back(std::move(expression));
     return Expression{EVALUATED_TABLE, storage.evaluated_tables.size() - 1, code};
 }
@@ -186,8 +180,6 @@ Expression makeName(CodeRange code, Name expression) {
     const auto name_index = storage.name_indices.find(expression);
     if (name_index == storage.name_indices.end()) {
         storage.name_indices[expression] = storage.names.size();
-        //return makeExpression(code, expression, NAME, storage.names);
-
         storage.names.emplace_back(std::move(expression));
         return Expression{NAME, storage.names.size() - 1, code};
     }
