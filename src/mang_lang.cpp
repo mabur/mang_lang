@@ -20,7 +20,9 @@ Expression parse(const std::string& string) {
 
 std::string reformat(const std::string& code) {
     auto buffer = DynamicString{};
-    auto result = makeStdString(serialize(buffer, parse(code)));
+    buffer = serialize(buffer, parse(code));
+    auto result = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     clearMemory();
     return result;
 }
