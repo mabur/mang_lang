@@ -18,8 +18,7 @@ SerializedString concatcstring(SerializedString base, const char* tail) {
 }
 
 void replaceBack(SerializedString base, char tail) {
-    //base.back() = tail;
-    base.data[base.count - 1] = tail;
+    LAST_ITEM(base) = tail;
 }
 
 SerializedString serializeName(SerializedString s, size_t name) {
