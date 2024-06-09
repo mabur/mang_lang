@@ -84,7 +84,7 @@ bool isWhiteSpace(CodeCharacter c) {
 }
 
 bool isKeyword(CodeRange code, const char* word) {
-    auto word_range = CString{word, strlen(word)};
+    auto word_range = StaticString{word, strlen(word)};
     FOR_EACH2(it0, it1, code, word_range) {
         if (it0->character != *it1) {
             return false;
@@ -100,7 +100,7 @@ bool isKeyword(CodeRange code, const char* word) {
 }
 
 bool startsWith(CodeRange code, const char* word) {
-    auto word_range = CString{word, strlen(word)};
+    auto word_range = StaticString{word, strlen(word)};
     FOR_EACH2(it0, it1, code, word_range) {
         if (it0->character != *it1) {
             return false;

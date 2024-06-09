@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <string>
 
-struct CString {
+struct StaticString {
     const char* data;
     size_t count;
 };
