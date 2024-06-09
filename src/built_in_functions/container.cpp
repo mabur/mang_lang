@@ -264,7 +264,9 @@ Expression get(Expression in) {
         );
     }
     auto buffer = DynamicString{};
-    auto name = makeStdString(serialize(buffer, key));
+    buffer = serialize(buffer, key);
+    auto name = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     const auto& rows = storage.evaluated_tables.at(table.index).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?
