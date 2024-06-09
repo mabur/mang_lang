@@ -919,7 +919,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
     auto buffer = DynamicString{};
-    auto k = makeStdString(serialize(buffer, key));
+    buffer = serialize(buffer, key);
+    auto k = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     try {
         return table_struct.rows.at(k).value;
     }
