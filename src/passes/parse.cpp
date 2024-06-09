@@ -459,9 +459,8 @@ Expression parseStack(CodeRange code) {
         code = parseWhiteSpace(code);
         APPEND(items, item);
     }
-    std::reverse(BEGIN_POINTER(items), END_POINTER(items));
     auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
-    FOR_EACH(it, items){
+    FOR_EACH_REVERSE(it, items){
         stack = putStack(stack, *it);
     }
     FREE_RANGE(items);
@@ -597,9 +596,8 @@ Expression parseString(CodeRange code) {
         APPEND(characters, character);
         DROP_FIRST(code);
     }
-    std::reverse(BEGIN_POINTER(characters), END_POINTER(characters));
     auto string = Expression{EMPTY_STRING, 0, CodeRange{whole.data, 1}};
-    FOR_EACH(it, characters) {
+    FOR_EACH_REVERSE(it, characters) {
         string = putString(string, *it);
     }
     FREE_RANGE(characters);
