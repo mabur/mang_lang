@@ -54,7 +54,9 @@ std::string evaluate_all(const std::string& code) {
     const auto std_evaluated = evaluate(std_ast, built_ins);
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
     auto buffer = DynamicString{};
-    auto result = makeStdString(serialize(buffer, code_evaluated));
+    buffer = serialize(buffer, code_evaluated);
+    auto result = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     clearMemory();
     std::ignore = code_checked;
     return result;
