@@ -16,6 +16,7 @@ add_library(shared
         factory.cpp
         mang_lang.cpp
         parsing.cpp
+        string.cpp
         )
 
 add_executable(manglang interpreter.cpp)

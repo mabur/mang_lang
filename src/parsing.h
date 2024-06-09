@@ -7,6 +7,8 @@
 
 #include <carma/carma.h>
 
+#include "string.h"
+
 struct CodeCharacter {
     char character = 'a';
     size_t row = 0;

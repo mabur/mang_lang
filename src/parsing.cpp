@@ -83,11 +83,6 @@ bool isWhiteSpace(CodeCharacter c) {
     return isspace(c.character);
 }
 
-struct CString {
-    const char* data;
-    size_t count;
-};
-
 bool isKeyword(CodeRange code, const char* word) {
     auto word_range = CString{word, strlen(word)};
     FOR_EACH2(it0, it1, code, word_range) {
