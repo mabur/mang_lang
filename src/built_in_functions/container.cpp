@@ -24,7 +24,9 @@ Expression putTable(Expression table, Expression item) {
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
     auto buffer = DynamicString{};
-    auto s = makeStdString(serialize(buffer, key));
+    buffer = serialize(buffer, key);
+    auto s = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     rows[s] = {key, value};
     return table;
 }
