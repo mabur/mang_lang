@@ -6,6 +6,7 @@
 #include "passes/evaluate.h"
 #include "passes/parse.h"
 #include "passes/serialize.h"
+#include "string.h"
 
 #include <carma/carma.h>
 

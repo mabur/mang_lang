@@ -4,6 +4,7 @@
 #include "../passes/serialize.h"
 #include "../expression.h"
 #include "../factory.h"
+#include "../string.h"
 
 Expression putString(Expression rest, Expression top) {
     return makeString(rest.range, String{top, rest});

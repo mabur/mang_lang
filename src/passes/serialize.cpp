@@ -6,6 +6,7 @@
 #include <carma/carma.h>
 
 #include "../factory.h"
+#include "../string.h"
 
 namespace {
 
