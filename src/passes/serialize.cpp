@@ -10,7 +10,6 @@
 namespace {
 
 SerializedString concatcstring(SerializedString base, const char* tail) {
-    //base.append(tail);
     for (auto it = tail; *it != '\0'; ++it) {
         APPEND(base, *it);
     }
