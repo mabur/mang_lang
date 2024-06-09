@@ -124,7 +124,7 @@ Expression evaluateStack(Evaluator evaluator,
     Expression stack, Expression environment
 ) {
     // Allocation:
-    auto items = std::vector<Expression>{};
+    auto items = Expressions{};
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
             throw std::runtime_error(
@@ -137,14 +137,14 @@ Expression evaluateStack(Evaluator evaluator,
         const auto stack_struct = storage.stacks.data[stack.index];
         const auto& top = stack_struct.top;
         const auto& rest = stack_struct.rest;
-        items.push_back(evaluator(top, environment));
+        APPEND(items, evaluator(top, environment));
         stack = rest;
     }
-    std::reverse(items.begin(), items.end());
     auto evaluated_stack = Expression{EMPTY_STACK, 0, stack.range};
-    for (const auto& item : items) {
-        evaluated_stack = putEvaluatedStack(evaluated_stack, item);
+    FOR_EACH_REVERSE(it, items) {
+        evaluated_stack = putEvaluatedStack(evaluated_stack, *it);
     }
+    FREE_RANGE(items);
     return evaluated_stack;
 }
 
