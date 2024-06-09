@@ -5,6 +5,7 @@
 #include "container.h"
 
 Definition makeDefinitionBuiltIn(const std::string& name, FunctionPointer function) {
+    // TODO: do not have i as static, to support initializing manglang multiple times.
     static size_t i = 0;
     return Definition{
         {makeName(CodeRange{}, name).index, i++},
@@ -13,6 +14,7 @@ Definition makeDefinitionBuiltIn(const std::string& name, FunctionPointer functi
 }
 
 Definition makeDefinitionBuiltInTyped(const std::string& name, FunctionPointer function) {
+    // TODO: do not have i as static, to support initializing manglang multiple times.
     static size_t i = 0;
     return Definition{
         {makeName(CodeRange{}, name).index, i++},
