@@ -16,4 +16,4 @@ struct DynamicString {
 
 StaticString makeStaticString(const char* s);
 std::string makeStdString(DynamicString s);
-DynamicString concatcstring(DynamicString base, const char* tail);
+DynamicString concatenate(DynamicString base, const char* tail);
