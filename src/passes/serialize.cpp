@@ -11,9 +11,7 @@
 namespace {
 
 DynamicString concatcstring(DynamicString base, const char* tail) {
-    for (auto it = tail; *it != '\0'; ++it) {
-        APPEND(base, *it);
-    }
+    CONCAT(base, makeStaticString(tail));
     return base;
 }
 
