@@ -16,10 +16,6 @@ SerializedString concatcstring(SerializedString base, const char* tail) {
     return base;
 }
 
-void replaceBack(SerializedString base, char tail) {
-    LAST_ITEM(base) = tail;
-}
-
 SerializedString serializeName(SerializedString s, size_t name) {
     s = concatcstring(s, storage.names.at(name).c_str());
     return s;
@@ -151,7 +147,7 @@ SerializedString serializeEvaluatedDictionary(SerializedString s, Serializer ser
         s = serializer(s, pair.expression);
         s = concatcstring(s, " ");
     }
-    replaceBack(s, '}');
+    LAST_ITEM(s) = '}';
     return s;
 }
 
@@ -168,7 +164,7 @@ SerializedString serializeEvaluatedTuple(SerializedString s, Serializer serializ
         s = serializer(s, expression);
         s = concatcstring(s, " ");
     }
-    replaceBack(s, ')');
+    LAST_ITEM(s) = ')';
     return s;
 }
 
@@ -202,7 +198,7 @@ SerializedString serializeDictionary(SerializedString s, const Dictionary& dicti
         s = concatcstring(s, "}");
     }
     else {
-        replaceBack(s, '}');
+        LAST_ITEM(s) = '}';
     }
     return s;
 }
@@ -219,7 +215,7 @@ SerializedString serializeTuple(SerializedString s, Expression t) {
         s = serialize(s, expression);
         s = concatcstring(s, " ");
     }
-    replaceBack(s, ')');
+    LAST_ITEM(s) = ')';
     return s;
 }
 
@@ -239,7 +235,7 @@ SerializedString serializeStack(SerializedString s, Expression expression) {
         s = concatcstring(s, " ");
         expression = stack.rest;
     }
-    replaceBack(s, ']');
+    LAST_ITEM(s) = ']';
     return s;
 }
 
@@ -269,7 +265,7 @@ SerializedString serializeFunctionDictionary(SerializedString s, const FunctionD
         s = concatcstring(s, "}");
     }
     else {
-        replaceBack(s, '}');
+        LAST_ITEM(s) = '}';
     }
     s = concatcstring(s, " out ");
     s = serialize(s, function_dictionary.body);
@@ -287,7 +283,7 @@ SerializedString serializeFunctionTuple(SerializedString s, const FunctionTuple&
         s = concatcstring(s, ")");
     }
     else {
-        replaceBack(s, ')');
+        LAST_ITEM(s) = ')';
     }
     s = concatcstring(s, " out ");
     s = serialize(s, function_stack.body);
@@ -307,7 +303,7 @@ SerializedString serializeTable(SerializedString s, Expression t) {
         s = serialize(s, row.value);
         s = concatcstring(s, ") ");
     }
-    replaceBack(s, '>');
+    LAST_ITEM(s) = '>';
     return s;
 }
 
@@ -340,7 +336,7 @@ SerializedString serializeEvaluatedTable(SerializedString s, const Table& table)
         s = serialize(s, row.second.value);
         s = concatcstring(s, ") ");
     }
-    replaceBack(s, '>');
+    LAST_ITEM(s) = '>';
     return s;
 }
 
@@ -365,7 +361,7 @@ SerializedString serializeEvaluatedStack(SerializedString s, Expression expressi
         s = concatcstring(s, " ");
         expression = stack.rest;
     }
-    replaceBack(s, ']');
+    LAST_ITEM(s) = ']';
     return s;
 }
 
