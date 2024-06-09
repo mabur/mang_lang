@@ -40,7 +40,9 @@ Expression putTableTyped(Expression table, Expression item) {
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
     auto buffer = DynamicString{};
-    auto s = makeStdString(serialize_types(buffer, key));
+    buffer = serialize_types(buffer, key);
+    auto s = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     rows[s] = {key, value};
     return table;
 }
