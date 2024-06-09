@@ -10,11 +10,6 @@
 
 namespace {
 
-DynamicString concatcstring(DynamicString base, const char* tail) {
-    CONCAT(base, makeStaticString(tail));
-    return base;
-}
-
 DynamicString serializeName(DynamicString s, size_t name) {
     s = concatcstring(s, storage.names.at(name).c_str());
     return s;
