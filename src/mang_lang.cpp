@@ -35,7 +35,9 @@ std::string evaluate_types(const std::string& code) {
     // bind(code_ast, std_ast);
     const auto standard_library = evaluate_types(std_ast, built_ins);
     auto buffer = DynamicString{};
-    auto result = makeStdString(serialize_types(buffer, evaluate_types(code_ast, standard_library)));
+    buffer = serialize_types(buffer, evaluate_types(code_ast, standard_library));
+    auto result = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     clearMemory();
     return result;
 }
