@@ -14,4 +14,5 @@ struct DynamicString {
     size_t capacity;
 };
 
+StaticString makeStaticString(const char* s);
 std::string makeStdString(DynamicString s);
