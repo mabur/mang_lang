@@ -379,6 +379,8 @@ TOOLS:
   - https://yorickpeterse.com/articles/how-to-write-a-code-formatter/
   - Indentaiton and line breaks.
   - Colors and syntax high-lighting.
+    - Textmate grammars seem to be much easier than LSP or Treesitter.
+    - Textmate grammars are supported by for example Sublime and Vscode.
   - Implement tool that takes a source file and outputs an html.
   - Homepage
   - Start by describing rules for wrapping different expressions.
