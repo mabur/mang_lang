@@ -4,20 +4,24 @@
 
 BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error{
-            "I found a dynamic type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got a " + NAMES[in.type]
-        };
+        throwException(
+            "I found a dynamic type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got a %s",
+            function.c_str(),
+            NAMES[in.type].c_str()
+        );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
-    const auto tuple_count = evaluated_tuple.last - evaluated_tuple.first;
-    if (tuple_count != 2) {
-        throw std::runtime_error{
-            "I found a dynamic type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got " + std::to_string(tuple_count) + " items."
-        };
+    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    if (count != 2) {
+        throwException(
+            "I found a dynamic type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got %zu items.",
+            function.c_str(),
+            count
+        );
     }
     const auto left = storage.expressions.data[evaluated_tuple.first + 0];
     const auto right = storage.expressions.data[evaluated_tuple.first + 1];
@@ -26,20 +30,24 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
 
 BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function) {
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error{
-            "I found a static type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got a " + NAMES[in.type]
-        };
+        throwException(
+            "I found a static type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got a %s",
+            function.c_str(),
+            NAMES[in.type].c_str()
+        );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.last - evaluated_tuple.first;
     if (count != 2) {
-        throw std::runtime_error{
-            "I found a static type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got " + std::to_string(count) + " items."
-        };
+        throwException(
+            "I found a static type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got %zu items.",
+            function.c_str(),
+            count
+        );
     }
     const auto left = storage.expressions.data[evaluated_tuple.first + 0];
     const auto right = storage.expressions.data[evaluated_tuple.first + 1];
