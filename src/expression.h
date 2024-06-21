@@ -100,7 +100,7 @@ const auto NAMES = std::vector<std::string>{
 
 struct UnexpectedExpression : public std::runtime_error
 {
-    UnexpectedExpression(ExpressionType type, const std::string& location);
+    UnexpectedExpression(ExpressionType type, const char* location);
     using runtime_error::runtime_error;
 };
 

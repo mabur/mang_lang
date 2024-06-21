@@ -4,7 +4,7 @@
 #include "factory.h"
 
 UnexpectedExpression::UnexpectedExpression(
-    ExpressionType type, const std::string& location)
+    ExpressionType type, const char* location)
     : std::runtime_error("Unexpected expression " + NAMES[type] + " for " + location)
 {}
 
