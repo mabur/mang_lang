@@ -755,10 +755,14 @@ void setDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name, Expression value
 ) {
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        throw std::runtime_error{
-            "setDictionaryDefinition expected " + NAMES[EVALUATED_DICTIONARY]
-                + " got " + NAMES[evaluated_dictionary.type]
-        };
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "setDictionaryDefinition expected %s got %s",
+            NAMES[EVALUATED_DICTIONARY].c_str(),
+            NAMES[evaluated_dictionary.type].c_str()
+        );
+        throw std::runtime_error(message.data);
     }
     storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name.dictionary_index].expression = value;
 }
@@ -767,10 +771,14 @@ Expression getDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name
 ) {
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        throw std::runtime_error{
-            "getDictionaryDefinition expected " + NAMES[EVALUATED_DICTIONARY]
-                + " got " + NAMES[evaluated_dictionary.type]
-        };
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "getDictionaryDefinition expected %s got %s",
+            NAMES[EVALUATED_DICTIONARY].c_str(),
+            NAMES[evaluated_dictionary.type].c_str()
+        );
+        throw std::runtime_error(message.data);
     }
     return storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name.dictionary_index).expression;
 }
@@ -998,11 +1006,14 @@ Expression applyStackIndexing(Expression stack, Expression input) {
             throw std::runtime_error("Stack index out of range");
         }
         if (stack_struct.rest.type != EVALUATED_STACK) {
-            throw std::runtime_error(
-                "I found a type error while indexing a stack. "
-                "Instead of a stack I encountered a " +
-                NAMES[stack_struct.rest.type]
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
+                "I found a type error while indexing a stack. \n"
+                "Instead of a stack I encountered a %s",
+                NAMES[stack_struct.rest.type].c_str()
             );
+            throw std::runtime_error(message.data);
         }
         stack_struct = storage.evaluated_stacks.data[stack_struct.rest.index];
     }
@@ -1031,11 +1042,14 @@ Expression applyStringIndexing(Expression string, Expression input) {
             throw std::runtime_error("String index out of range");
         }
         if (string_struct.rest.type != STRING) {
-            throw std::runtime_error(
-                "I found a type error while indexing a string. " 
-                "Instead of a string I encountered a " +
-                NAMES[string_struct.rest.type]
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
+                "I found a type error while indexing a string. \n"
+                "Instead of a string I encountered a %s",
+                NAMES[string_struct.rest.type].c_str()
             );
+            throw std::runtime_error(message.data);
         }
         string_struct = storage.strings.data[string_struct.rest.index];
     }
