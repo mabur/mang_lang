@@ -217,11 +217,11 @@ DynamicString serializeStack(DynamicString s, Expression expression) {
     s = concatenate(s, "[");
     while (expression.type != EMPTY_STACK) {
         if (expression.type != STACK) {
-            throw std::runtime_error(
-                std::string{"\n\nI have found a type error."} +
-                    "\nIt happens in serializeStack. " +
-                    "\nInstead of a stack I got a " + NAMES[expression.type] +
-                    ".\n"
+            throwException(
+                "\n\nI have found a type error.\n"
+                "It happens in serializeStack.\n"
+                "Instead of a stack I got a %s\n",
+                NAMES[expression.type].c_str()
             );
         }
         const auto stack = storage.stacks.data[expression.index];
@@ -345,10 +345,11 @@ DynamicString serializeEvaluatedStack(DynamicString s, Expression expression) {
     s = concatenate(s, "[");
     while (expression.type != EMPTY_STACK) {
         if (expression.type != EVALUATED_STACK) {
-            throw std::runtime_error{
-                "I found an error while serializing a stack. "
-                "Instead of a stack I got a " + NAMES[expression.type]
-            };
+            throwException(
+                "I found an error while serializing a stack.\n"
+                "Instead of a stack I got a %s.",
+                NAMES[expression.type].c_str()
+            );
         }
         const auto stack = storage.evaluated_stacks.data[expression.index];
         s = serialize(s, stack.top);
@@ -375,20 +376,22 @@ DynamicString serializeString(DynamicString s, Expression expression) {
     s = concatenate(s, "\"");
     while (expression.type != EMPTY_STRING) {
         if (expression.type != STRING) {
-            throw std::runtime_error{
-                "I found an error while serializing a string. "
-                "Instead of a string I got a " + NAMES[expression.type]
-            };
+            throwException(
+                "I found an error while serializing a string.\n"
+                "Instead of a string I got a %s",
+                NAMES[expression.type].c_str()
+            );
         }
         const auto string = storage.strings.data[expression.index];
         const auto top = string.top;
         const auto rest = string.rest;
         if (top.type != CHARACTER) {
-            throw std::runtime_error{
-                "I found an error while serializing a string. "
-                "Each item in the string should be a character, "
-                "but I found a " + NAMES[top.type]
-            };
+            throwException(
+                "I found an error while serializing a string.\n"
+                "Each item in the string should be a character,\n"
+                "but I found a %s",
+                NAMES[top.type].c_str()
+            );
         }
         APPEND(s, getCharacter(top));
         expression = rest;
