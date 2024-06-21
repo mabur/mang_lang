@@ -9,8 +9,8 @@ UnexpectedExpression::UnexpectedExpression(
 {}
 
 MissingSymbol::MissingSymbol(
-    const std::string& symbol, const std::string& location)
-    : std::runtime_error("Cannot find symbol " + symbol + " in " + location)
+    const std::string& symbol, Expression parent)
+    : std::runtime_error("Cannot find symbol " + symbol + " in environment of type " + NAMES[parent.type])
 {}
 
 const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {

@@ -98,6 +98,8 @@ const auto NAMES = std::vector<std::string>{
     "ANY",
 };
 
+struct Expression;
+
 struct UnexpectedExpression : public std::runtime_error
 {
     UnexpectedExpression(ExpressionType type, const char* location);
@@ -106,7 +108,7 @@ struct UnexpectedExpression : public std::runtime_error
 
 struct MissingSymbol : public std::runtime_error
 {
-    MissingSymbol(const std::string& symbol, const std::string& location);
+    MissingSymbol(const std::string& symbol, Expression parent);
     using runtime_error::runtime_error;
 };
 

@@ -372,7 +372,7 @@ LookupResult lookupDictionaryFirstTime(
     const BoundGlobalName& name, size_t steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(storage.names.at(name.global_index), expression);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
     const auto result = dictionary.optionalLookup(name.global_index);
@@ -386,7 +386,7 @@ Expression lookupDictionarySecondTime(
     const BoundGlobalName& name, int steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(storage.names.at(name.global_index), expression);
     }
     const auto &dictionary = storage.evaluated_dictionaries.at(expression.index);
     if (steps == 0) {
@@ -394,7 +394,7 @@ Expression lookupDictionarySecondTime(
         if (result) {
             return *result;
         }
-        throw MissingSymbol(storage.names.at(name.global_index), "environment of type " + NAMES[expression.type]);
+        throw MissingSymbol(storage.names.at(name.global_index), expression);
     }
     return lookupDictionarySecondTime(name, steps - 1, dictionary.environment);
 }
