@@ -528,16 +528,24 @@ bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
 bool isStackPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STACK && right.type != EMPTY_STACK) {
         if (left.type != EVALUATED_STACK) {
-            throw std::runtime_error{
-                "Internal error detected in isStackPairwiseEqual. "
-                "Expected a stack but got a " + NAMES[left.type]
-            };
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
+                "Internal error detected in isStackPairwiseEqual.\n"
+                "Expected a stack but got a %s",
+                NAMES[left.type].c_str()
+            );
+            throw std::runtime_error(message.data);
         }
         if (right.type != EVALUATED_STACK) {
-            throw std::runtime_error{
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
                 "Internal error detected in isStackPairwiseEqual. "
-                "Expected a stack but got a " + NAMES[right.type]
-            };
+                "Expected a stack but got a %s",
+                NAMES[right.type].c_str()
+            );
+            throw std::runtime_error(message.data);
         }
         const auto left_container = storage.evaluated_stacks.data[left.index];
         const auto right_container = storage.evaluated_stacks.data[right.index];
@@ -553,16 +561,24 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
 bool isStringPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
         if (left.type != STRING) {
-            throw std::runtime_error{
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
                 "Internal error detected in isStringPairwiseEqual. "
-                "Expected a string but got a " + NAMES[left.type]
-            };
+                "Expected a stack but got a %s",
+                NAMES[left.type].c_str()
+            );
+            throw std::runtime_error(message.data);
         }
         if (right.type != STRING) {
-            throw std::runtime_error{
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
                 "Internal error detected in isStringPairwiseEqual. "
-                "Expected a string but got a " + NAMES[right.type]
-            };
+                "Expected a stack but got a %s",
+                NAMES[right.type].c_str()
+            );
+            throw std::runtime_error(message.data);
         }
         const auto left_container = storage.strings.data[left.index];
         const auto right_container = storage.strings.data[right.index];
