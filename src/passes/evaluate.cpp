@@ -38,9 +38,11 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* desc
     const auto super_count = tuple_super.last - tuple_super.first;
     const auto sub_count = tuple_sub.last - tuple_sub.first;
     if (super_count != sub_count) {
-        throw std::runtime_error(
-            "Static type error in " + std::string{description} + ". Inconsistent tuple size."
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message, "Static type error in %s. Inconsistent tuple size.", description
         );
+        throw std::runtime_error(message.data);
     }
     const auto count = super_count;
     for (size_t i = 0; i < count; ++i) {
@@ -60,11 +62,15 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
             checkTypes(definition_super.expression, *value_sub, description);
         }
         else {
-            throw std::runtime_error(
-                "Static type error in " + std::string{description} +
-                    ". Could not find name " + storage.names.at(name_super) +
-                    " in dictionary" + describeLocation(sub.range) 
-            );            
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
+                "Static type error in %s. Could not find name %s in dictionary %s",
+                description,
+                storage.names.at(name_super).c_str(),
+                describeLocation(sub.range).c_str()
+            );
+            throw std::runtime_error(message.data);
         }
     }
 }
@@ -112,12 +118,16 @@ void checkTypes(Expression super, Expression sub, const char* description) {
         checkTypesEvaluatedDictionary(super, sub, description);
         return;
     }
-    throw std::runtime_error(
-        "Static type error in " + std::string{description} +
-        describeLocation(super.range) +
-        ". " + NAMES[super.type] +
-        " is not a supertype for " + NAMES[sub.type]
+    static auto message = DynamicString{};
+    FORMAT_STRING(
+        message,
+        "Static type error in %s at %s. %s is not a supertype for %s",
+        description,
+        describeLocation(super.range).c_str(),
+        NAMES[super.type].c_str(),
+        NAMES[sub.type].c_str()
     );
+    throw std::runtime_error(message.data);
 }
 
 template<typename Evaluator>
@@ -128,12 +138,15 @@ Expression evaluateStack(Evaluator evaluator,
     auto items = Expressions{};
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
-            throw std::runtime_error(
-                std::string{"\n\nI have found a type error."} +
-                "\nIt happens in evaluateStack. " +
-                "\nInstead of a stack I got a " + NAMES[stack.type] +
-                ".\n"
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
+                "\n\nI have found a type error.\n"
+                "It happens in evaluateStack.\n" 
+                "Instead of a stack I got a %s.\n",
+                NAMES[stack.type].c_str()
             );
+            throw std::runtime_error(message.data);
         }
         const auto stack_struct = storage.stacks.data[stack.index];
         const auto& top = stack_struct.top;
@@ -202,12 +215,15 @@ Expression evaluateLookupChild(
     const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
     if (child.type != EVALUATED_DICTIONARY) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a type error."} +
-                "\nIt happens when trying to lookup a child in a dictionary, " +
-                "\nbut instead of a dictionary I got a" + NAMES[child.type] +
-                ".\n"
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "\n\nI have found a type error.\n"
+            "It happens when trying to lookup a child in a dictionary,\n"
+            "but instead of a dictionary I got a %s.\n",
+            NAMES[child.type].c_str()
         );
+        throw std::runtime_error(message.data);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(child.index);
     return dictionary.lookup(lookup_child_struct.name);
@@ -250,12 +266,15 @@ Expression applyFunctionDictionary(
     Expression input
 ) {
     if (input.type != EVALUATED_DICTIONARY) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a type error."} +
-                "\nIt happens when calling a function that is expecting a dictionary as input. " +
-                "\nBut now it got a" + NAMES[input.type] +
-                ".\n"
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "\n\nI have found a type error.\n"
+            "It happens when calling a function that is expecting a dictionary as input.\n"
+            "But now it got a %s.\n",
+            NAMES[input.type].c_str()
         );
+        throw std::runtime_error(message.data);
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
@@ -275,12 +294,15 @@ Expression applyFunctionTuple(
     Expression input
 ) {
     if (input.type != EVALUATED_TUPLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a type error."} +
-                "\nIt happens when trying to call a function that takes a tuple. " +
-                "\nInstead of a tuple I got a" + NAMES[input.type] +
-                ".\n"
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "\n\nI have found a type error.\n"
+            "It happens when trying to call a function that takes a tuple.\n"
+            "Instead of a tuple I got a %s.\n",
+            NAMES[input.type].c_str()
         );
+        throw std::runtime_error(message.data);
     }
     const auto tuple = storage.evaluated_tuples.data[input.index];
     const auto tuple_count = tuple.last - tuple.first;
@@ -406,10 +428,15 @@ void booleanTypes(Expression expression) {
         case STRING: return;
         case EMPTY_STRING: return;
         case ANY: return;
-        default: throw std::runtime_error(
-                std::string{"Static type error.\n"} +
-                    "Cannot convert type " + NAMES[expression.type] + " to boolean."
+        default:
+            static auto message = DynamicString{};
+            FORMAT_STRING(
+                message,
+                "Static type error.\n"
+                "Cannot convert type %s to boolean.",
+                NAMES[expression.type].c_str()
             );
+            throw std::runtime_error(message.data);
     }
 }
 
@@ -441,22 +468,25 @@ size_t getIndex(Number number) {
 Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto& tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a type error."} +
-                "\nIt happens when indexing a tuple. " +
-                "\nThe index is expected to be a " + NAMES[NUMBER] + "," +
-                "\nbut now it is a" + NAMES[input.type] +
-                ".\n"
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "\n\nI have found a type error.\n"
+            "It happens when indexing a tuple.\n"
+            "The index is expected to be a %s,\n"
+            "but now it is a %s.\n",
+            NAMES[NUMBER].c_str(),
+            NAMES[input.type].c_str()
         );
+        throw std::runtime_error(message.data);
     }
     const auto number = getNumber(input);
     const auto i = getIndex(number);
     const auto count = tuple_struct.last - tuple_struct.first;
     if (i >= count) {
-        throw std::runtime_error(
-            "Tuple of size " + std::to_string(count) +
-                " indexed with " + std::to_string(i)
-        );
+        static auto message = DynamicString{};
+        FORMAT_STRING(message, "Tuple of size %zu indexed with %zu" , count, i);
+        throw std::runtime_error(message.data);
     }
     return storage.expressions.data[tuple_struct.first + i];
 }
@@ -932,13 +962,17 @@ Expression applyTableIndexing(Expression table, Expression key) {
 
 Expression applyStackIndexing(Expression stack, Expression input) {
     if (input.type != NUMBER) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens when indexing a stack. " +
-                "\nThe index is expected to be a " + NAMES[NUMBER] + "," +
-                "\nbut now it is a" + NAMES[input.type] +
-                ".\n"
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "\n\nI have found a dynamic type error.\n"
+            "It happens when indexing a stack.\n"
+            "The index is expected to be a %s,\n"
+            "but now it is a %s.\n",
+            NAMES[NUMBER].c_str(),
+            NAMES[input.type].c_str()
         );
+        throw std::runtime_error(message.data);
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
@@ -961,13 +995,17 @@ Expression applyStackIndexing(Expression stack, Expression input) {
 
 Expression applyStringIndexing(Expression string, Expression input) {
     if (input.type != NUMBER) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens when indexing a string. " +
-                "\nThe index is expected to be a " + NAMES[NUMBER] + "," +
-                "\nbut now it is a" + NAMES[input.type] +
-                ".\n"
+        static auto message = DynamicString{};
+        FORMAT_STRING(
+            message,
+            "\n\nI have found a dynamic type error.\n"
+            "It happens when indexing a string.\n"
+            "The index is expected to be a %s,\n"
+            "but now it is a %s.\n",
+            NAMES[NUMBER].c_str(),
+            NAMES[input.type].c_str()
         );
+        throw std::runtime_error(message.data);
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
