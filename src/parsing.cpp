@@ -32,10 +32,6 @@ std::string describeLocation(CodeRange code) {
         serializeCodeCharacter(code.data + code.count - 1);
 }
 
-ParseException::ParseException(const std::string& description, CodeRange code)
-    : std::runtime_error(description + describeLocation(code))
-{}
-
 std::string rawString(CodeRange code) {
     auto s = std::string{};
     s.reserve(code.count);
@@ -129,9 +125,12 @@ CodeRange parseCharacter(CodeRange code, char expected) {
     auto it = code.data;
     const auto actual = it->character;
     if (it->character != expected) {
-        const auto description = std::string{"Parsing expected \'"}
-            + expected + "\' but got \'" + actual + "\'";
-        throw ParseException(description, code);
+        throwException(
+            "Parsing expected \'%c\' but got \'%c\'",
+            expected,
+            actual,
+            describeLocation(code).c_str()
+        );
     }
     DROP_FIRST(code);
     return code;
@@ -148,8 +147,10 @@ CodeRange parseKeyword(CodeRange code, const char* keyword) {
     auto it = keyword;
     for (; *it != '\0'; ++it) {
         if (IS_EMPTY(code)) {
-            throw ParseException(
-                "Reached end of file when parsing " + std::string{keyword}, code
+            throwException(
+                "Reached end of file when parsing %s%s",
+                keyword,
+                describeLocation(code).c_str()
             );
         }
         code = parseCharacter(code, *it);
@@ -159,12 +160,12 @@ CodeRange parseKeyword(CodeRange code, const char* keyword) {
 
 void throwIfEmpty(CodeRange code) {
     if (IS_EMPTY(code)) {
-        throw ParseException(
-            "Unexpected end of source while parsing", code
+        throwException(
+            "Unexpected end of source while parsing%s", describeLocation(code).c_str()
         );
     }
 }
 
 void throwParseException(CodeRange code) {
-    throw ParseException("Does not recognize expression to parse", code);
+    throwException("Does not recognize expression to parse%s", describeLocation(code).c_str());
 }

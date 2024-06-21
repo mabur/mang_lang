@@ -24,12 +24,6 @@ CodeRange firstPart(CodeRange whole, CodeRange last_part);
 
 CodeRange lastPart(CodeRange whole, CodeRange middle_part);
 
-struct ParseException : public std::runtime_error
-{
-    ParseException(const std::string& description, CodeRange code);
-    using runtime_error::runtime_error;
-};
-
 std::string describeLocation(CodeRange code);
 
 void throwIfEmpty(CodeRange code);
@@ -66,7 +60,11 @@ CodeRange parseCharacter(CodeRange code, Predicate predicate) {
     throwIfEmpty(code);
     auto it = code.data;
     if (!predicate(*it)) {
-        throw ParseException(std::string{"Parser got unexpected char"} + it->character);
+        throwException(
+            "Parser got unexpected char%c%s",
+            it->character,
+            describeLocation(code).c_str()
+        );
     }
     DROP_FIRST(code);
     return code;
