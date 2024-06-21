@@ -11,24 +11,28 @@ namespace {
 
 void checkStaticTypeUnaryFunction(Expression in, ExpressionType expected, const std::string& function) {
     if (in.type != ANY && in.type != expected) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens when calling the built-in function " + function + ". " +
-                "\nThe function expects to be called with a " + NAMES[expected] + "," +
-                "\nbut now got " + NAMES[in.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a static type error.\n"
+            "It happens when calling the built-in function %s.\n"
+            "The function expects to be called with a %s,\n"
+            "but now got %s.\n",
+            function.c_str(),
+            NAMES[expected].c_str(),
+            NAMES[in.type].c_str()
         );
     }
 }
 
 void checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const std::string& function) {
     if (in.type != expected) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens when calling the built-in function " + function + ". " +
-                "\nThe function expects to be called with a " + NAMES[expected] + "," +
-                "\nbut now got " + NAMES[in.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "It happens when calling the built-in function %s.\n"
+            "The function expects to be called with a %s,\n"
+            "but now got %s.\n",
+            function.c_str(),
+            NAMES[expected].c_str(),
+            NAMES[in.type].c_str()
         );
     }
 }
@@ -38,21 +42,25 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     if (left != ANY && left != expected) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens when calling the built-in function " + function + ". " +
-                "\nThe function expects to be called with a tuple of two " + NAMES[expected] + "s," +
-                "\nbut now the first item in the tuple is " + NAMES[left] +
-                ".\n"
+        throwException(
+            "\n\nI have found a static type error.\n"
+            "It happens when calling the built-in function %s.\n"
+            "The function expects to be called with a tuple of two %ss,\n"
+            "but now the first item in the tuple is %s.\n",
+            function.c_str(),
+            NAMES[expected].c_str(),
+            NAMES[left].c_str()
         );
     }
     if (right != ANY && right != expected) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens when calling the built-in function " + function + ". " +
-                "\nThe function expects to be called with a tuple of two " + NAMES[expected] + "s," +
-                "\nbut now the second item in the tuple is " + NAMES[right] +
-                ".\n"
+        throwException(
+            "\n\nI have found a static type error.\n"
+            "It happens when calling the built-in function %s.\n"
+            "The function expects to be called with a tuple of two %ss,\n"
+            "but now the second item in the tuple is %s.\n",
+            function.c_str(),
+            NAMES[expected].c_str(),
+            NAMES[right].c_str()
         );
     }
 }
@@ -61,22 +69,26 @@ void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, cons
     const auto tuple = getDynamicBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
-    if (left != expected) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens when calling the built-in function " + function + ". " +
-                "\nThe function expects to be called with a tuple of two " + NAMES[expected] + "s," +
-                "\nbut now the first item in the tuple is " + NAMES[left] +
-                ".\n"
+    if (left != ANY && left != expected) {
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "It happens when calling the built-in function %s.\n"
+            "The function expects to be called with a tuple of two %ss,\n"
+            "but now the first item in the tuple is %s.\n",
+            function.c_str(),
+            NAMES[expected].c_str(),
+            NAMES[left].c_str()
         );
     }
-    if (right != expected) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens when calling the built-in function " + function + ". " +
-                "\nThe function expects to be called with a tuple of two " + NAMES[expected] + "s," +
-                "\nbut now the second item in the tuple is " + NAMES[right] +
-                ".\n"
+    if (right != ANY && right != expected) {
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "It happens when calling the built-in function %s.\n"
+            "The function expects to be called with a tuple of two %ss,\n"
+            "but now the second item in the tuple is %s.\n",
+            function.c_str(),
+            NAMES[expected].c_str(),
+            NAMES[right].c_str()
         );
     }
 }
