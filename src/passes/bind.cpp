@@ -47,11 +47,11 @@ void bindFunction(Expression function, Expression environment) {
 void bindStack(Expression stack, Expression environment) {
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
-            throw std::runtime_error(
-                std::string{"\n\nI have found a static type error."} +
-                    "\nIt happens in bindStack. " +
-                    "\nInstead of a stack I got a " + NAMES[stack.type] +
-                    ".\n"
+            throwException(
+                "\n\nI have found a static type error.\n"
+                "It happens in bindStack.\n"
+                "Instead of a stack I got a %s\n",
+                NAMES[stack.type].c_str()
             );
         }
         const auto stack_struct = storage.stacks.data[stack.index];
