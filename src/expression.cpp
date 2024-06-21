@@ -24,11 +24,9 @@ const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
 
 Expression EvaluatedDictionary::lookup(size_t name) const {
     const auto expression = optionalLookup(name);
-    if (expression) {
-        return *expression;
+    if (expression == nullptr) {
+        const auto name_c = storage.names.at(name).c_str();
+        throwException("Cannot find name %s in dictionary", name_c);
     }
-    const auto name_c = storage.names.at(name).c_str();
-    static auto message = DynamicString{};
-    FORMAT_STRING(message, "Cannot find name %s in dictionary", name_c);
-    throw std::runtime_error(message.data);
+    return *expression;
 }
