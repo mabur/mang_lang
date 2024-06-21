@@ -13,11 +13,6 @@ MissingSymbol::MissingSymbol(
     : std::runtime_error("Cannot find symbol " + symbol + " in " + location)
 {}
 
-MissingKey::MissingKey(
-    const std::string& key)
-    : std::runtime_error("Cannot find key " + key + " in table")
-{}
-
 const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
     for (const auto& definition: definitions) {
         if (definition.name.global_index == name) {

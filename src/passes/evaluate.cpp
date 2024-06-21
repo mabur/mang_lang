@@ -980,7 +980,7 @@ Expression applyTableIndexing(Expression table, Expression key) {
         return table_struct.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
-        throw MissingKey(k);
+        throw std::runtime_error("Cannot find key " + k + " in table");
     }
 }
 

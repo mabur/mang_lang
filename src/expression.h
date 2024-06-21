@@ -110,12 +110,6 @@ struct MissingSymbol : public std::runtime_error
     using runtime_error::runtime_error;
 };
 
-struct MissingKey : public std::runtime_error
-{
-    MissingKey(const std::string& key);
-    using runtime_error::runtime_error;
-};
-
 // TODO: Pack tighter?
 // Bit size           Current  Pack1  Pack2
 // Expression::type        16      4      4
