@@ -90,12 +90,13 @@ Expression clearTyped(Expression in) {
 
 Expression putNumber(Expression collection, Expression item) {
     if (item.type != ANY && item.type != NUMBER) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the operation put!(NUMBER item). " +
-                "\nIt expects the item to be a " + NAMES[NUMBER] + "," +
-                "\nbut now it got a " + NAMES[item.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a static type error.\n"
+            "It happens for the operation put!(NUMBER item).\n"
+            "It expects the item to be a %s,\n"
+            "but now it got a %s.\n",
+            NAMES[NUMBER].c_str(),
+            NAMES[item.type].c_str()
         );
     }
     return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
@@ -141,7 +142,7 @@ Expression putTyped(Expression in) {
 template<typename T>
 Expression takeTable(const T& table) {
     if (table.empty()) {
-        throw std::runtime_error("Cannot take item from empty table");
+        throwException("Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple2(pair.key, pair.value);
@@ -230,35 +231,35 @@ Expression dropTyped(Expression in) {
 
 Expression get(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got a " + NAMES[in.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got a %s.\n",
+            NAMES[in.type].c_str()
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.last - evaluated_tuple.first;
     if (count != 3) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got " + std::to_string(count) + "items" +
-                ".\n"
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got %zu items.\n",
+            count
         );
     }
     const auto key = storage.expressions.data[evaluated_tuple.first + 0];
     const auto table = storage.expressions.data[evaluated_tuple.first + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.first + 2];
     if (table.type != EVALUATED_TABLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple where the second item is a table," +
-                "\nbut now it got a " + NAMES[table.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple where the second item is a table,\n"
+            "but now it got a %s.\n",
+            NAMES[table.type].c_str()
         );
     }
     auto buffer = DynamicString{};
@@ -273,34 +274,34 @@ Expression get(Expression in) {
 
 Expression getTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got a " + NAMES[in.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a static type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got a %s.\n",
+            NAMES[in.type].c_str()
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.last - evaluated_tuple.first;
     if (count != 3) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got " + std::to_string(count) + "items" +
-                ".\n"
+        throwException(
+            "\n\nI have found a static type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got %zu items.\n",
+            count
         );
     }
     const auto table = storage.expressions.data[evaluated_tuple.first + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.first + 2];
     if (table.type != EVALUATED_TABLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple where the second item is a table," +
-                "\nbut now it got a " + NAMES[table.type] +
-                ".\n"
+        throwException(
+            "\n\nI have found a dynamic type error.\n"
+            "\nIt happens for the function get!(key table default).\n"
+            "It expects a tuple where the second item is a table,\n"
+            "but now it got a %s.\n",
+            NAMES[table.type].c_str()
         );
     }
     return default_value;
