@@ -59,8 +59,9 @@ Expression clear(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{NO, 0, CodeRange{}};
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "clear operation");
+        default: throwUnexpectedExpressionException(in.type, "clear operation");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression clearTyped(Expression in) {
@@ -73,7 +74,7 @@ Expression clearTyped(Expression in) {
     //    case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
     //    case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
     //    case NUMBER: return makeNumber(CodeRange{}, 0);
-    //    default: throw UnexpectedExpression(in.type, "clear operation");
+    //    default: throwUnexpectedExpressionException(in.type, "clear operation");
     //}
     switch (in.type) {
         case EVALUATED_STACK: return in;
@@ -84,8 +85,9 @@ Expression clearTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "clearTyped operation");
+        default: throwUnexpectedExpressionException(in.type, "clearTyped operation");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression putNumber(Expression collection, Expression item) {
@@ -115,8 +117,9 @@ Expression put(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: throw UnexpectedExpression(in.type, "put operation");
+        default: throwUnexpectedExpressionException(in.type, "put operation");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression putTyped(Expression in) {
@@ -135,8 +138,9 @@ Expression putTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: throw UnexpectedExpression(in.type, "putTyped operation");
+        default: throwUnexpectedExpressionException(in.type, "putTyped operation");
     }
+    return Expression{}; // Does not happen
 }
 
 template<typename T>
@@ -178,8 +182,9 @@ Expression take(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(type, "take");
+        default: throwUnexpectedExpressionException(type, "take");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression takeTyped(Expression in) {
@@ -195,8 +200,9 @@ Expression takeTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(type, "take");
+        default: throwUnexpectedExpressionException(type, "take");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression drop(Expression in) {
@@ -210,8 +216,9 @@ Expression drop(Expression in) {
         case NUMBER: return dropNumber(in);
         case NO: return in;
         case YES: return Expression{NO, 0, CodeRange{}};
-        default: throw UnexpectedExpression(in.type, "drop");
+        default: throwUnexpectedExpressionException(in.type, "drop");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression dropTyped(Expression in) {
@@ -225,8 +232,9 @@ Expression dropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: throw UnexpectedExpression(in.type, "drop typed");
+        default: throwUnexpectedExpressionException(in.type, "drop typed");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression get(Expression in) {

@@ -100,17 +100,7 @@ const auto NAMES = std::vector<std::string>{
 
 struct Expression;
 
-struct UnexpectedExpression : public std::runtime_error
-{
-    UnexpectedExpression(ExpressionType type, const char* location);
-    using runtime_error::runtime_error;
-};
-
-struct MissingSymbol : public std::runtime_error
-{
-    MissingSymbol(const std::string& symbol, Expression parent);
-    using runtime_error::runtime_error;
-};
+void throwUnexpectedExpressionException(ExpressionType type, const char* location);
 
 // TODO: Pack tighter?
 // Bit size           Current  Pack1  Pack2

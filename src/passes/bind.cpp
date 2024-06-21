@@ -207,6 +207,6 @@ void bind(Expression expression, Expression environment) {
         case DICTIONARY: return bindDictionary(expression, environment);
         case FUNCTION_APPLICATION: return bindFunctionApplication(expression, environment);
 
-        default: throw UnexpectedExpression(expression.type, "bind operation");
+        default: throwUnexpectedExpressionException(expression.type, "bind operation");
     }
 }

@@ -346,11 +346,17 @@ struct LookupResult {
     size_t steps;
 };
 
+static void throwMissingSymbolException(const std::string& symbol, Expression parent) {
+    throw std::runtime_error(
+        "Cannot find symbol " + symbol + " in environment of type " + NAMES[parent.type]
+    );
+}
+
 LookupResult lookupDictionaryFirstTime(
     const BoundGlobalName& name, size_t steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(storage.names.at(name.global_index), expression);
+        throwMissingSymbolException(storage.names.at(name.global_index), expression);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
     const auto result = dictionary.optionalLookup(name.global_index);
@@ -364,7 +370,7 @@ Expression lookupDictionarySecondTime(
     const BoundGlobalName& name, int steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throw MissingSymbol(storage.names.at(name.global_index), expression);
+        throwMissingSymbolException(storage.names.at(name.global_index), expression);
     }
     const auto &dictionary = storage.evaluated_dictionaries.at(expression.index);
     if (steps == 0) {
@@ -372,7 +378,7 @@ Expression lookupDictionarySecondTime(
         if (result) {
             return *result;
         }
-        throw MissingSymbol(storage.names.at(name.global_index), expression);
+        throwMissingSymbolException(storage.names.at(name.global_index), expression);
     }
     return lookupDictionarySecondTime(name, steps - 1, dictionary.environment);
 }
@@ -428,8 +434,9 @@ bool boolean(Expression expression) {
         case EMPTY_STACK: return false;
         case STRING: return true;
         case EMPTY_STRING: return false;
-        default: throw UnexpectedExpression(type, "boolean operation");
+        default: throwUnexpectedExpressionException(type, "boolean operation");
     }
+    return false; // Does not happen
 }
 
 size_t getIndex(Number number) {
@@ -1021,8 +1028,9 @@ Expression evaluateFunctionApplicationTypes(
         case EMPTY_STACK: return Expression{ANY, 0, function_application.range};
         case EMPTY_STRING: return Expression{CHARACTER, 0, function_application.range};
 
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplicationTypes");
+        default: throwUnexpectedExpressionException(function.type, "evaluateFunctionApplicationTypes");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression evaluateFunctionApplication(
@@ -1049,8 +1057,9 @@ Expression evaluateFunctionApplication(
         
         case EMPTY_STACK: throwException("I caught a run-time error when trying to index an empty stack.");
         case EMPTY_STRING: throwException("I caught a run-time error when trying to index an empty string.");
-        default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
+        default: throwUnexpectedExpressionException(function.type, "evaluateFunctionApplication");
     }
+    return Expression{}; // Does not happen
 }
 
 } // namespace
@@ -1091,8 +1100,9 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
         
-        default: throw UnexpectedExpression(expression.type, "evaluate types operation");
+        default: throwUnexpectedExpressionException(expression.type, "evaluate types operation");
     }
+    return Expression{}; // Does not happen
 }
 
 Expression evaluate(Expression expression, Expression environment) {
@@ -1131,6 +1141,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
 
-        default: throw UnexpectedExpression(expression.type, "evaluate operation");
+        default: throwUnexpectedExpressionException(expression.type, "evaluate operation");
     }
+    return Expression{}; // Does not happen
 }

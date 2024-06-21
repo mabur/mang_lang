@@ -3,15 +3,12 @@
 
 #include "factory.h"
 
-UnexpectedExpression::UnexpectedExpression(
-    ExpressionType type, const char* location)
-    : std::runtime_error("Unexpected expression " + NAMES[type] + " for " + location)
-{}
-
-MissingSymbol::MissingSymbol(
-    const std::string& symbol, Expression parent)
-    : std::runtime_error("Cannot find symbol " + symbol + " in environment of type " + NAMES[parent.type])
-{}
+void throwUnexpectedExpressionException(
+    ExpressionType type, const char* location) {
+    throw std::runtime_error(
+        "Unexpected expression " + NAMES[type] + " for " + location
+    );
+}
 
 const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
     for (const auto& definition: definitions) {
