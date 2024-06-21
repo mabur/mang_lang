@@ -38,11 +38,7 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* desc
     const auto super_count = tuple_super.last - tuple_super.first;
     const auto sub_count = tuple_sub.last - tuple_sub.first;
     if (super_count != sub_count) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message, "Static type error in %s. Inconsistent tuple size.", description
-        );
-        throw std::runtime_error(message.data);
+        throwException("Static type error in %s. Inconsistent tuple size.", description);
     }
     const auto count = super_count;
     for (size_t i = 0; i < count; ++i) {
@@ -62,15 +58,12 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
             checkTypes(definition_super.expression, *value_sub, description);
         }
         else {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "Static type error in %s. Could not find name %s in dictionary %s",
                 description,
                 storage.names.at(name_super).c_str(),
                 describeLocation(sub.range).c_str()
             );
-            throw std::runtime_error(message.data);
         }
     }
 }
@@ -118,16 +111,13 @@ void checkTypes(Expression super, Expression sub, const char* description) {
         checkTypesEvaluatedDictionary(super, sub, description);
         return;
     }
-    static auto message = DynamicString{};
-    FORMAT_STRING(
-        message,
+    throwException(
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
         describeLocation(super.range).c_str(),
         NAMES[super.type].c_str(),
         NAMES[sub.type].c_str()
     );
-    throw std::runtime_error(message.data);
 }
 
 template<typename Evaluator>
@@ -138,15 +128,12 @@ Expression evaluateStack(Evaluator evaluator,
     auto items = Expressions{};
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "\n\nI have found a type error.\n"
                 "It happens in evaluateStack.\n" 
                 "Instead of a stack I got a %s.\n",
                 NAMES[stack.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         const auto stack_struct = storage.stacks.data[stack.index];
         const auto& top = stack_struct.top;
@@ -215,15 +202,12 @@ Expression evaluateLookupChild(
     const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
     if (child.type != EVALUATED_DICTIONARY) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "\n\nI have found a type error.\n"
             "It happens when trying to lookup a child in a dictionary,\n"
             "but instead of a dictionary I got a %s.\n",
             NAMES[child.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(child.index);
     return dictionary.lookup(lookup_child_struct.name);
@@ -266,15 +250,12 @@ Expression applyFunctionDictionary(
     Expression input
 ) {
     if (input.type != EVALUATED_DICTIONARY) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "\n\nI have found a type error.\n"
             "It happens when calling a function that is expecting a dictionary as input.\n"
             "But now it got a %s.\n",
             NAMES[input.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
@@ -294,15 +275,12 @@ Expression applyFunctionTuple(
     Expression input
 ) {
     if (input.type != EVALUATED_TUPLE) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "\n\nI have found a type error.\n"
             "It happens when trying to call a function that takes a tuple.\n"
             "Instead of a tuple I got a %s.\n",
             NAMES[input.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     const auto tuple = storage.evaluated_tuples.data[input.index];
     const auto tuple_count = tuple.last - tuple.first;
@@ -312,7 +290,7 @@ Expression applyFunctionTuple(
     const auto num_inputs = last_argument - first_argument;
     
     if (num_inputs != tuple_count) {
-        throw std::runtime_error{"Wrong number of input to function_struct"};
+        throwException("Wrong number of input to function_struct");
     }
 
     auto argument_index = first_argument;
@@ -429,14 +407,11 @@ void booleanTypes(Expression expression) {
         case EMPTY_STRING: return;
         case ANY: return;
         default:
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "Static type error.\n"
                 "Cannot convert type %s to boolean.",
                 NAMES[expression.type].c_str()
             );
-            throw std::runtime_error(message.data);
     }
 }
 
@@ -468,9 +443,7 @@ size_t getIndex(Number number) {
 Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto& tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "\n\nI have found a type error.\n"
             "It happens when indexing a tuple.\n"
             "The index is expected to be a %s,\n"
@@ -478,15 +451,12 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
             NAMES[NUMBER].c_str(),
             NAMES[input.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     const auto number = getNumber(input);
     const auto i = getIndex(number);
     const auto count = tuple_struct.last - tuple_struct.first;
     if (i >= count) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(message, "Tuple of size %zu indexed with %zu" , count, i);
-        throw std::runtime_error(message.data);
+        throwException("Tuple of size %zu indexed with %zu" , count, i);
     }
     return storage.expressions.data[tuple_struct.first + i];
 }
@@ -528,24 +498,18 @@ bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
 bool isStackPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STACK && right.type != EMPTY_STACK) {
         if (left.type != EVALUATED_STACK) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "Internal error detected in isStackPairwiseEqual.\n"
                 "Expected a stack but got a %s",
                 NAMES[left.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         if (right.type != EVALUATED_STACK) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "Internal error detected in isStackPairwiseEqual. "
                 "Expected a stack but got a %s",
                 NAMES[right.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         const auto left_container = storage.evaluated_stacks.data[left.index];
         const auto right_container = storage.evaluated_stacks.data[right.index];
@@ -561,24 +525,18 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
 bool isStringPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
         if (left.type != STRING) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "Internal error detected in isStringPairwiseEqual. "
                 "Expected a stack but got a %s",
                 NAMES[left.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         if (right.type != STRING) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "Internal error detected in isStringPairwiseEqual. "
                 "Expected a stack but got a %s",
                 NAMES[right.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         const auto left_container = storage.strings.data[left.index];
         const auto right_container = storage.strings.data[right.index];
@@ -755,14 +713,11 @@ void setDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name, Expression value
 ) {
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "setDictionaryDefinition expected %s got %s",
             NAMES[EVALUATED_DICTIONARY].c_str(),
             NAMES[evaluated_dictionary.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name.dictionary_index].expression = value;
 }
@@ -771,14 +726,11 @@ Expression getDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name
 ) {
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "getDictionaryDefinition expected %s got %s",
             NAMES[EVALUATED_DICTIONARY].c_str(),
             NAMES[evaluated_dictionary.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     return storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name.dictionary_index).expression;
 }
@@ -980,15 +932,14 @@ Expression applyTableIndexing(Expression table, Expression key) {
         return table_struct.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
-        throw std::runtime_error("Cannot find key " + k + " in table");
+        throwException("Cannot find key %s in table", k.c_str());
     }
+    return Expression{}; // Never happens
 }
 
 Expression applyStackIndexing(Expression stack, Expression input) {
     if (input.type != NUMBER) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "\n\nI have found a dynamic type error.\n"
             "It happens when indexing a stack.\n"
             "The index is expected to be a %s,\n"
@@ -996,24 +947,20 @@ Expression applyStackIndexing(Expression stack, Expression input) {
             NAMES[NUMBER].c_str(),
             NAMES[input.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
     auto stack_struct = storage.evaluated_stacks.data[stack.index];
     for (size_t i = 0; i < index; ++i) {
         if (stack_struct.rest.type == EMPTY_STACK) {
-            throw std::runtime_error("Stack index out of range");
+            throwException("Stack index out of range");
         }
         if (stack_struct.rest.type != EVALUATED_STACK) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "I found a type error while indexing a stack. \n"
                 "Instead of a stack I encountered a %s",
                 NAMES[stack_struct.rest.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         stack_struct = storage.evaluated_stacks.data[stack_struct.rest.index];
     }
@@ -1022,9 +969,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
 
 Expression applyStringIndexing(Expression string, Expression input) {
     if (input.type != NUMBER) {
-        static auto message = DynamicString{};
-        FORMAT_STRING(
-            message,
+        throwException(
             "\n\nI have found a dynamic type error.\n"
             "It happens when indexing a string.\n"
             "The index is expected to be a %s,\n"
@@ -1032,24 +977,20 @@ Expression applyStringIndexing(Expression string, Expression input) {
             NAMES[NUMBER].c_str(),
             NAMES[input.type].c_str()
         );
-        throw std::runtime_error(message.data);
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
     auto string_struct = storage.strings.data[string.index];
     for (size_t i = 0; i < index; ++i) {
         if (string_struct.rest.type == EMPTY_STACK) {
-            throw std::runtime_error("String index out of range");
+            throwException("String index out of range");
         }
         if (string_struct.rest.type != STRING) {
-            static auto message = DynamicString{};
-            FORMAT_STRING(
-                message,
+            throwException(
                 "I found a type error while indexing a string. \n"
                 "Instead of a string I encountered a %s",
                 NAMES[string_struct.rest.type].c_str()
             );
-            throw std::runtime_error(message.data);
         }
         string_struct = storage.strings.data[string_struct.rest.index];
     }
