@@ -14,6 +14,7 @@ CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
     return CodeRange{middle_part_end, count};
 }
 
+static
 std::string serializeCodeCharacter(const CodeCharacter* c) {
     return "row " + std::to_string(c->row + 1) + " and column "
         + std::to_string(c->column + 1);
