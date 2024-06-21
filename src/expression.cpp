@@ -27,5 +27,8 @@ Expression EvaluatedDictionary::lookup(size_t name) const {
     if (expression) {
         return *expression;
     }
-    throw MissingSymbol(storage.names.at(name), "dictionary");
+    const auto name_c = storage.names.at(name).c_str();
+    static auto message = DynamicString{};
+    FORMAT_STRING(message, "Cannot find name %s in dictionary", name_c);
+    throw std::runtime_error(message.data);
 }
