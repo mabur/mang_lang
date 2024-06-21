@@ -441,8 +441,7 @@ bool boolean(Expression expression) {
 
 size_t getIndex(Number number) {
     if (number < 0) {
-        using namespace std;
-        throw runtime_error("Cannot have negative index: " + to_string(number));
+        throwException("Cannot have negative index: %f", number);
     }
     return static_cast<size_t>(number);
 }
