@@ -13,15 +13,15 @@
 
 namespace {
 
-void checkTypes(Expression super, Expression sub, const std::string& description);
+void checkTypes(Expression super, Expression sub, const char* description);
 
-void checkTypesEvaluatedStack(Expression super, Expression sub, const std::string& description) {
+void checkTypesEvaluatedStack(Expression super, Expression sub, const char* description) {
     const auto stack_super = storage.evaluated_stacks.data[super.index].top;
     const auto stack_sub = storage.evaluated_stacks.data[sub.index].top;
     checkTypes(stack_super, stack_sub, description);
 }
 
-void checkTypesEvaluatedTable(Expression super, Expression sub, const std::string& description) {
+void checkTypesEvaluatedTable(Expression super, Expression sub, const char* description) {
     const auto& table_super = storage.evaluated_tables.at(super.index);
     const auto& table_sub = storage.evaluated_tables.at(sub.index);
     if (table_super.empty()) return;
@@ -32,14 +32,14 @@ void checkTypesEvaluatedTable(Expression super, Expression sub, const std::strin
     checkTypes(row_super.value, row_sub.value, description);
 }
 
-void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::string& description) {
+void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
     const auto& tuple_super = storage.evaluated_tuples.data[super.index];
     const auto& tuple_sub = storage.evaluated_tuples.data[sub.index];
     const auto super_count = tuple_super.last - tuple_super.first;
     const auto sub_count = tuple_sub.last - tuple_sub.first;
     if (super_count != sub_count) {
         throw std::runtime_error(
-            "Static type error in " + description + ". Inconsistent tuple size."
+            "Static type error in " + std::string{description} + ". Inconsistent tuple size."
         );
     }
     const auto count = super_count;
@@ -50,7 +50,7 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const std::strin
     }
 }
 
-void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::string& description) {
+void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
     const auto& dictionary_super = storage.evaluated_dictionaries.at(super.index);
     const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
     for (const auto& definition_super : dictionary_super.definitions) {
@@ -61,7 +61,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
         }
         else {
             throw std::runtime_error(
-                "Static type error in " + description +
+                "Static type error in " + std::string{description} +
                     ". Could not find name " + storage.names.at(name_super) +
                     " in dictionary" + describeLocation(sub.range) 
             );            
@@ -69,7 +69,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const std::
     }
 }
 
-void checkTypes(Expression super, Expression sub, const std::string& description) {
+void checkTypes(Expression super, Expression sub, const char* description) {
     if (super.type == ANY || sub.type == ANY) return;
     
     if (super.type == NUMBER && sub.type == NUMBER) return;
@@ -113,7 +113,7 @@ void checkTypes(Expression super, Expression sub, const std::string& description
         return;
     }
     throw std::runtime_error(
-        "Static type error in " + description +
+        "Static type error in " + std::string{description} +
         describeLocation(super.range) +
         ". " + NAMES[super.type] +
         " is not a supertype for " + NAMES[sub.type]
