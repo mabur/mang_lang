@@ -1106,8 +1106,8 @@ Expression evaluateFunctionApplication(
         case EVALUATED_STACK: return applyStackIndexing(function, input);
         case STRING: return applyStringIndexing(function, input);
         
-        case EMPTY_STACK: throw std::runtime_error("I caught a run-time error when trying to index an empty stack.");
-        case EMPTY_STRING: throw std::runtime_error("I caught a run-time error when trying to index an empty string.");
+        case EMPTY_STACK: throwException("I caught a run-time error when trying to index an empty stack.");
+        case EMPTY_STRING: throwException("I caught a run-time error when trying to index an empty string.");
         default: throw UnexpectedExpression(function.type, "evaluateFunctionApplication");
     }
 }
