@@ -1,11 +1,7 @@
 #include "string.h"
 
-#include <string.h>
-
-#include <carma/carma.h>
-
-StaticString makeStaticString(const char* s) {
-    return StaticString{s, strlen(s)};
+ConstantString makeStaticString(const char* s) {
+    return ConstantString{s, strlen(s)};
 }
 
 std::string makeStdString(DynamicString s) {
