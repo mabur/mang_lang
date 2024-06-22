@@ -4,6 +4,8 @@
 
 #include <carma/carma_string.h>
 
+#include "parsing.h"
+
 void throwException(const char* format, ...) {
     va_list args0;
     va_list args1;
@@ -25,4 +27,22 @@ void throwException(const char* format, ...) {
     va_end(args1);
 
     throw std::runtime_error(string.data);
+}
+
+static
+std::string serializeCodeCharacter(const CodeCharacter* c) {
+    return "row " + std::to_string(c->row + 1) + " and column "
+        + std::to_string(c->column + 1);
+}
+
+std::string describeLocation(CodeRange code) {
+    if (code.count == 0) {
+        return " at unknown location.";
+    }
+    if (code.count == 1) {
+        return " at " + serializeCodeCharacter(code.data);
+    }
+    return " between " +
+        serializeCodeCharacter(code.data) + " and " +
+        serializeCodeCharacter(code.data + code.count - 1);
 }
