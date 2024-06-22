@@ -3,6 +3,8 @@
 
 #include <carma/carma.h>
 
+#include "exceptions.h"
+
 CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return CodeRange{whole.data, whole.count - last_part.count};
 }

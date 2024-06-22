@@ -7,6 +7,7 @@
 
 #include <carma/carma.h>
 
+#include "exceptions.h"
 #include "string.h"
 
 struct CodeCharacter {

@@ -6,6 +6,7 @@
 
 #include <carma/carma.h>
 
+#include "exceptions.h"
 #include "passes/serialize.h"
 
 Storage storage;

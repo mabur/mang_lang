@@ -2,6 +2,7 @@
 
 #include "binary_tuple.h"
 #include "../passes/serialize.h"
+#include "../exceptions.h"
 #include "../expression.h"
 #include "../factory.h"
 #include "../string.h"

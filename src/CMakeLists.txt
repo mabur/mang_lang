@@ -12,6 +12,7 @@ add_library(shared
         passes/evaluate.cpp
         passes/parse.cpp
         passes/serialize.cpp
+        exceptions.cpp
         expression.cpp
         factory.cpp
         mang_lang.cpp

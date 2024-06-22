@@ -4,6 +4,7 @@
 #include <string>
 
 #include "binary_tuple.h"
+#include "../exceptions.h"
 #include "../factory.h"
 
 namespace arithmetic {

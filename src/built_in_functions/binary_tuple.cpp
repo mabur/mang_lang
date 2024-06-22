@@ -1,5 +1,6 @@
 #include "binary_tuple.h"
 
+#include "../exceptions.h"
 #include "../factory.h"
 
 BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {

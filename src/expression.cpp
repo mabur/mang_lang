@@ -1,6 +1,7 @@
 #include "expression.h"
 #include <string.h>
 
+#include "exceptions.h"
 #include "factory.h"
 
 void throwUnexpectedExpressionException(

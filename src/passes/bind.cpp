@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "../exceptions.h"
 #include "../expression.h"
 #include "../factory.h"
 

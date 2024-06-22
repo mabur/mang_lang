@@ -6,6 +6,7 @@
 
 #include <carma/carma.h>
 
+#include "../exceptions.h"
 #include "../factory.h"
 #include "../built_in_functions/container.h"
 

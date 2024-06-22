@@ -7,6 +7,7 @@
 #include <carma/carma.h>
 
 #include "../built_in_functions/container.h"
+#include "../exceptions.h"
 #include "../factory.h"
 #include "../string.h"
 #include "serialize.h"

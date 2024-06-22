@@ -5,6 +5,7 @@
 
 #include <carma/carma.h>
 
+#include "../exceptions.h"
 #include "../factory.h"
 #include "../string.h"
 
