@@ -116,8 +116,8 @@ void checkTypes(Expression super, Expression sub, const char* description) {
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
         describeLocation(super.range),
-        NAMES[super.type].c_str(),
-        NAMES[sub.type].c_str()
+        getExpressionName(super.type),
+        getExpressionName(sub.type)
     );
 }
 
@@ -133,7 +133,7 @@ Expression evaluateStack(Evaluator evaluator,
                 "\n\nI have found a type error.\n"
                 "It happens in evaluateStack.\n" 
                 "Instead of a stack I got a %s.\n",
-                NAMES[stack.type].c_str()
+                getExpressionName(stack.type)
             );
         }
         const auto stack_struct = storage.stacks.data[stack.index];
@@ -207,7 +207,7 @@ Expression evaluateLookupChild(
             "\n\nI have found a type error.\n"
             "It happens when trying to lookup a child in a dictionary,\n"
             "but instead of a dictionary I got a %s.\n",
-            NAMES[child.type].c_str()
+            getExpressionName(child.type)
         );
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(child.index);
@@ -255,7 +255,7 @@ Expression applyFunctionDictionary(
             "\n\nI have found a type error.\n"
             "It happens when calling a function that is expecting a dictionary as input.\n"
             "But now it got a %s.\n",
-            NAMES[input.type].c_str()
+            getExpressionName(input.type)
         );
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
@@ -280,7 +280,7 @@ Expression applyFunctionTuple(
             "\n\nI have found a type error.\n"
             "It happens when trying to call a function that takes a tuple.\n"
             "Instead of a tuple I got a %s.\n",
-            NAMES[input.type].c_str()
+            getExpressionName(input.type)
         );
     }
     const auto tuple = storage.evaluated_tuples.data[input.index];
@@ -349,7 +349,7 @@ struct LookupResult {
 
 static void throwMissingSymbolException(const std::string& symbol, Expression parent) {
     throw std::runtime_error(
-        "Cannot find symbol " + symbol + " in environment of type " + NAMES[parent.type]
+        "Cannot find symbol " + symbol + " in environment of type " + getExpressionName(parent.type)
     );
 }
 
@@ -417,7 +417,7 @@ void booleanTypes(Expression expression) {
             throwException(
                 "Static type error.\n"
                 "Cannot convert type %s to boolean.",
-                NAMES[expression.type].c_str()
+                getExpressionName(expression.type)
             );
     }
 }
@@ -455,8 +455,8 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
             "It happens when indexing a tuple.\n"
             "The index is expected to be a %s,\n"
             "but now it is a %s.\n",
-            NAMES[NUMBER].c_str(),
-            NAMES[input.type].c_str()
+            getExpressionName(NUMBER),
+            getExpressionName(input.type)
         );
     }
     const auto number = getNumber(input);
@@ -508,14 +508,14 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
             throwException(
                 "Internal error detected in isStackPairwiseEqual.\n"
                 "Expected a stack but got a %s",
-                NAMES[left.type].c_str()
+                getExpressionName(left.type)
             );
         }
         if (right.type != EVALUATED_STACK) {
             throwException(
                 "Internal error detected in isStackPairwiseEqual. "
                 "Expected a stack but got a %s",
-                NAMES[right.type].c_str()
+                getExpressionName(right.type)
             );
         }
         const auto left_container = storage.evaluated_stacks.data[left.index];
@@ -535,14 +535,14 @@ bool isStringPairwiseEqual(Expression left, Expression right) {
             throwException(
                 "Internal error detected in isStringPairwiseEqual. "
                 "Expected a stack but got a %s",
-                NAMES[left.type].c_str()
+                getExpressionName(left.type)
             );
         }
         if (right.type != STRING) {
             throwException(
                 "Internal error detected in isStringPairwiseEqual. "
                 "Expected a stack but got a %s",
-                NAMES[right.type].c_str()
+                getExpressionName(right.type)
             );
         }
         const auto left_container = storage.strings.data[left.index];
@@ -722,8 +722,8 @@ void setDictionaryDefinition(
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
         throwException(
             "setDictionaryDefinition expected %s got %s",
-            NAMES[EVALUATED_DICTIONARY].c_str(),
-            NAMES[evaluated_dictionary.type].c_str()
+            getExpressionName(EVALUATED_DICTIONARY),
+            getExpressionName(evaluated_dictionary.type)
         );
     }
     storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name.dictionary_index].expression = value;
@@ -735,8 +735,8 @@ Expression getDictionaryDefinition(
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
         throwException(
             "getDictionaryDefinition expected %s got %s",
-            NAMES[EVALUATED_DICTIONARY].c_str(),
-            NAMES[evaluated_dictionary.type].c_str()
+            getExpressionName(EVALUATED_DICTIONARY),
+            getExpressionName(evaluated_dictionary.type)
         );
     }
     return storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name.dictionary_index).expression;
@@ -951,8 +951,8 @@ Expression applyStackIndexing(Expression stack, Expression input) {
             "It happens when indexing a stack.\n"
             "The index is expected to be a %s,\n"
             "but now it is a %s.\n",
-            NAMES[NUMBER].c_str(),
-            NAMES[input.type].c_str()
+            getExpressionName(NUMBER),
+            getExpressionName(input.type)
         );
     }
     const auto number = getNumber(input);
@@ -966,7 +966,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
             throwException(
                 "I found a type error while indexing a stack. \n"
                 "Instead of a stack I encountered a %s",
-                NAMES[stack_struct.rest.type].c_str()
+                getExpressionName(stack_struct.rest.type)
             );
         }
         stack_struct = storage.evaluated_stacks.data[stack_struct.rest.index];
@@ -981,8 +981,8 @@ Expression applyStringIndexing(Expression string, Expression input) {
             "It happens when indexing a string.\n"
             "The index is expected to be a %s,\n"
             "but now it is a %s.\n",
-            NAMES[NUMBER].c_str(),
-            NAMES[input.type].c_str()
+            getExpressionName(NUMBER),
+            getExpressionName(input.type)
         );
     }
     const auto number = getNumber(input);
@@ -996,7 +996,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
             throwException(
                 "I found a type error while indexing a string. \n"
                 "Instead of a string I encountered a %s",
-                NAMES[string_struct.rest.type].c_str()
+                getExpressionName(string_struct.rest.type)
             );
         }
         string_struct = storage.strings.data[string_struct.rest.index];
