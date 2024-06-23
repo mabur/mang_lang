@@ -4,43 +4,40 @@
 #include "arithmetic.h"
 #include "container.h"
 
-Definition makeDefinitionBuiltIn(const char* name, FunctionPointer function) {
-    // TODO: do not have i as static, to support initializing manglang multiple times.
-    static size_t i = 0;
+Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer function) {
     return Definition{
-        {makeName(CodeRange{}, Name{name}).index, i++},
+        {makeName(CodeRange{}, Name{name}).index, i},
         makeFunctionBuiltIn(CodeRange{}, {function}),
     };
 }
 
-Definition makeDefinitionBuiltInTyped(const char* name, FunctionPointer function) {
-    // TODO: do not have i as static, to support initializing manglang multiple times.
-    static size_t i = 0;
+Definition makeDefinitionBuiltInTyped(size_t i, const char* name, FunctionPointer function) {
     return Definition{
-        {makeName(CodeRange{}, Name{name}).index, i++},
+        {makeName(CodeRange{}, Name{name}).index, i},
         makeFunctionBuiltIn(CodeRange{}, {function})
     };
 }
 
 Expression builtIns() {
+    size_t i  = 0;
     const auto definitions = std::vector<Definition>{
-        makeDefinitionBuiltIn("clear",      container_functions::clear),
-        makeDefinitionBuiltIn("put",        container_functions::put),
-        makeDefinitionBuiltIn("take",       container_functions::take),
-        makeDefinitionBuiltIn("drop",       container_functions::drop),
-        makeDefinitionBuiltIn("get",        container_functions::get),
-        makeDefinitionBuiltIn("add",        arithmetic::add),
-        makeDefinitionBuiltIn("mul",        arithmetic::mul),
-        makeDefinitionBuiltIn("sub",        arithmetic::sub),
-        makeDefinitionBuiltIn("div",        arithmetic::div),
-        makeDefinitionBuiltIn("mod",        arithmetic::mod),
-        makeDefinitionBuiltIn("less",       arithmetic::less),
-        makeDefinitionBuiltIn("round",      arithmetic::round),
-        makeDefinitionBuiltIn("round_up",   arithmetic::roundUp),
-        makeDefinitionBuiltIn("round_down", arithmetic::roundDown),
-        makeDefinitionBuiltIn("sqrt",       arithmetic::sqrt),
-        makeDefinitionBuiltIn("number",     arithmetic::asciiNumber),
-        makeDefinitionBuiltIn("character",  arithmetic::asciiCharacter),
+        makeDefinitionBuiltIn(i++, "clear",      container_functions::clear),
+        makeDefinitionBuiltIn(i++, "put",        container_functions::put),
+        makeDefinitionBuiltIn(i++, "take",       container_functions::take),
+        makeDefinitionBuiltIn(i++, "drop",       container_functions::drop),
+        makeDefinitionBuiltIn(i++, "get",        container_functions::get),
+        makeDefinitionBuiltIn(i++, "add",        arithmetic::add),
+        makeDefinitionBuiltIn(i++, "mul",        arithmetic::mul),
+        makeDefinitionBuiltIn(i++, "sub",        arithmetic::sub),
+        makeDefinitionBuiltIn(i++, "div",        arithmetic::div),
+        makeDefinitionBuiltIn(i++, "mod",        arithmetic::mod),
+        makeDefinitionBuiltIn(i++, "less",       arithmetic::less),
+        makeDefinitionBuiltIn(i++, "round",      arithmetic::round),
+        makeDefinitionBuiltIn(i++, "round_up",   arithmetic::roundUp),
+        makeDefinitionBuiltIn(i++, "round_down", arithmetic::roundDown),
+        makeDefinitionBuiltIn(i++, "sqrt",       arithmetic::sqrt),
+        makeDefinitionBuiltIn(i++, "number",     arithmetic::asciiNumber),
+        makeDefinitionBuiltIn(i++, "character",  arithmetic::asciiCharacter),
     };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
@@ -48,24 +45,25 @@ Expression builtIns() {
 }
 
 Expression builtInsTypes() {
+    size_t i = 0;
     const auto definitions = std::vector<Definition>{
-        makeDefinitionBuiltInTyped("clear",      container_functions::clearTyped),
-        makeDefinitionBuiltInTyped("put",        container_functions::putTyped),
-        makeDefinitionBuiltInTyped("take",       container_functions::takeTyped),
-        makeDefinitionBuiltInTyped("drop",       container_functions::dropTyped),
-        makeDefinitionBuiltInTyped("get",        container_functions::getTyped),
-        makeDefinitionBuiltInTyped("add",        arithmetic::addTyped),
-        makeDefinitionBuiltInTyped("mul",        arithmetic::mulTyped),
-        makeDefinitionBuiltInTyped("sub",        arithmetic::subTyped),
-        makeDefinitionBuiltInTyped("div",        arithmetic::divTyped),
-        makeDefinitionBuiltInTyped("mod",        arithmetic::modTyped),
-        makeDefinitionBuiltInTyped("less",       arithmetic::lessTyped),
-        makeDefinitionBuiltInTyped("round",      arithmetic::roundTyped),
-        makeDefinitionBuiltInTyped("round_up",   arithmetic::roundUpTyped),
-        makeDefinitionBuiltInTyped("round_down", arithmetic::roundDownTyped),
-        makeDefinitionBuiltInTyped("sqrt",       arithmetic::sqrtTyped),
-        makeDefinitionBuiltInTyped("number",     arithmetic::asciiNumberTyped),
-        makeDefinitionBuiltInTyped("character",  arithmetic::asciiCharacterTyped),
+        makeDefinitionBuiltInTyped(i++, "clear",      container_functions::clearTyped),
+        makeDefinitionBuiltInTyped(i++, "put",        container_functions::putTyped),
+        makeDefinitionBuiltInTyped(i++, "take",       container_functions::takeTyped),
+        makeDefinitionBuiltInTyped(i++, "drop",       container_functions::dropTyped),
+        makeDefinitionBuiltInTyped(i++, "get",        container_functions::getTyped),
+        makeDefinitionBuiltInTyped(i++, "add",        arithmetic::addTyped),
+        makeDefinitionBuiltInTyped(i++, "mul",        arithmetic::mulTyped),
+        makeDefinitionBuiltInTyped(i++, "sub",        arithmetic::subTyped),
+        makeDefinitionBuiltInTyped(i++, "div",        arithmetic::divTyped),
+        makeDefinitionBuiltInTyped(i++, "mod",        arithmetic::modTyped),
+        makeDefinitionBuiltInTyped(i++, "less",       arithmetic::lessTyped),
+        makeDefinitionBuiltInTyped(i++, "round",      arithmetic::roundTyped),
+        makeDefinitionBuiltInTyped(i++, "round_up",   arithmetic::roundUpTyped),
+        makeDefinitionBuiltInTyped(i++, "round_down", arithmetic::roundDownTyped),
+        makeDefinitionBuiltInTyped(i++, "sqrt",       arithmetic::sqrtTyped),
+        makeDefinitionBuiltInTyped(i++, "number",     arithmetic::asciiNumberTyped),
+        makeDefinitionBuiltInTyped(i++, "character",  arithmetic::asciiCharacterTyped),
     };
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
