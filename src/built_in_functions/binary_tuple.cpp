@@ -10,7 +10,7 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const char* function) {
             "The function expected a tuple of two items, "
             "but it got a %s",
             function,
-            NAMES[in.type].c_str()
+            getExpressionName(in.type)
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
@@ -36,7 +36,7 @@ BinaryTuple getStaticBinaryTuple(Expression in, const char* function) {
             "The function expected a tuple of two items, "
             "but it got a %s",
             function,
-            NAMES[in.type].c_str()
+            getExpressionName(in.type)
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];

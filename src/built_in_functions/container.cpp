@@ -98,8 +98,8 @@ Expression putNumber(Expression collection, Expression item) {
             "It happens for the operation put!(NUMBER item).\n"
             "It expects the item to be a %s,\n"
             "but now it got a %s.\n",
-            NAMES[NUMBER].c_str(),
-            NAMES[item.type].c_str()
+            getExpressionName(NUMBER),
+            getExpressionName(item.type)
         );
     }
     return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
@@ -245,7 +245,7 @@ Expression get(Expression in) {
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
             "but now it got a %s.\n",
-            NAMES[in.type].c_str()
+            getExpressionName(in.type)
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
@@ -268,7 +268,7 @@ Expression get(Expression in) {
             "It happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
             "but now it got a %s.\n",
-            NAMES[table.type].c_str()
+            getExpressionName(table.type)
         );
     }
     auto buffer = DynamicString{};
@@ -288,7 +288,7 @@ Expression getTyped(Expression in) {
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
             "but now it got a %s.\n",
-            NAMES[in.type].c_str()
+            getExpressionName(in.type)
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
@@ -310,7 +310,7 @@ Expression getTyped(Expression in) {
             "\nIt happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
             "but now it got a %s.\n",
-            NAMES[table.type].c_str()
+            getExpressionName(table.type)
         );
     }
     return default_value;

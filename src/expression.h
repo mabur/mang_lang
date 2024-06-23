@@ -98,6 +98,8 @@ const auto NAMES = std::vector<std::string>{
     "ANY",
 };
 
+const char* getExpressionName(ExpressionType type);
+
 struct Expression;
 
 void throwUnexpectedExpressionException(ExpressionType type, const char* location);

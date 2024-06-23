@@ -18,8 +18,8 @@ void checkStaticTypeUnaryFunction(Expression in, ExpressionType expected, const 
             "The function expects to be called with a %s,\n"
             "but now got %s.\n",
             function,
-            NAMES[expected].c_str(),
-            NAMES[in.type].c_str()
+            getExpressionName(expected),
+            getExpressionName(in.type)
         );
     }
 }
@@ -32,8 +32,8 @@ void checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const
             "The function expects to be called with a %s,\n"
             "but now got %s.\n",
             function,
-            NAMES[expected].c_str(),
-            NAMES[in.type].c_str()
+            getExpressionName(expected),
+            getExpressionName(in.type)
         );
     }
 }
@@ -49,8 +49,8 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the first item in the tuple is %s.\n",
             function,
-            NAMES[expected].c_str(),
-            NAMES[left].c_str()
+            getExpressionName(expected),
+            getExpressionName(left)
         );
     }
     if (right != ANY && right != expected) {
@@ -60,8 +60,8 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the second item in the tuple is %s.\n",
             function,
-            NAMES[expected].c_str(),
-            NAMES[right].c_str()
+            getExpressionName(expected),
+            getExpressionName(right)
         );
     }
 }
@@ -77,8 +77,8 @@ void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, cons
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the first item in the tuple is %s.\n",
             function,
-            NAMES[expected].c_str(),
-            NAMES[left].c_str()
+            getExpressionName(expected),
+            getExpressionName(left)
         );
     }
     if (right != ANY && right != expected) {
@@ -88,8 +88,8 @@ void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, cons
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the second item in the tuple is %s.\n",
             function,
-            NAMES[expected].c_str(),
-            NAMES[right].c_str()
+            getExpressionName(expected),
+            getExpressionName(right)
         );
     }
 }
