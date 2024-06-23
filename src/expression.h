@@ -6,54 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "expression_type.h"
 #include "parsing.h"
-
-enum ExpressionType {
-    CHARACTER,
-    CONDITIONAL,
-    IS,
-    ALTERNATIVE,
-    TABLE,
-    EVALUATED_TABLE,
-    EVALUATED_TABLE_VIEW,
-    DICTIONARY,
-    EVALUATED_DICTIONARY,
-    TUPLE,
-    EVALUATED_TUPLE,
-    FUNCTION,
-    FUNCTION_BUILT_IN,
-    FUNCTION_DICTIONARY,
-    FUNCTION_TUPLE,
-    STACK,
-    EVALUATED_STACK,
-    EMPTY_STACK,
-    LOOKUP_CHILD,
-    FUNCTION_APPLICATION,
-    LOOKUP_SYMBOL,
-    NAME,
-    ARGUMENT,
-    DEFINITION,
-    PUT_ASSIGNMENT,
-    PUT_EACH_ASSIGNMENT,
-    DROP_ASSIGNMENT,
-    WHILE_STATEMENT,
-    FOR_STATEMENT,
-    FOR_SIMPLE_STATEMENT,
-    WHILE_END_STATEMENT,
-    FOR_END_STATEMENT,
-    FOR_SIMPLE_END_STATEMENT,
-    RETURN_STATEMENT,
-    NUMBER,
-    STRING,
-    EMPTY_STRING,
-    YES,
-    NO,
-    DYNAMIC_EXPRESSION,
-    TYPED_EXPRESSION,
-    ANY,
-};
-
-const char* getExpressionName(ExpressionType type);
 
 struct Expression;
 

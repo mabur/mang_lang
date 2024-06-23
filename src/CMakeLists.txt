@@ -14,6 +14,7 @@ add_library(shared
         passes/serialize.cpp
         exceptions.cpp
         expression.cpp
+        expression_type.cpp
         factory.cpp
         mang_lang.cpp
         parsing.cpp
