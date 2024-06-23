@@ -4,13 +4,6 @@
 #include "exceptions.h"
 #include "factory.h"
 
-void throwUnexpectedExpressionException(
-    ExpressionType type, const char* location) {
-    throw std::runtime_error(
-        std::string{"Unexpected expression "} + getExpressionName(type) + " for " + location
-    );
-}
-
 const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
     for (const auto& definition: definitions) {
         if (definition.name.global_index == name) {

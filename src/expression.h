@@ -9,10 +9,6 @@
 #include "expression_type.h"
 #include "parsing.h"
 
-struct Expression;
-
-void throwUnexpectedExpressionException(ExpressionType type, const char* location);
-
 // TODO: Pack tighter?
 // Bit size           Current  Pack1  Pack2
 // Expression::type        16      4      4

@@ -30,6 +30,13 @@ void throwException(const char* format, ...) {
     throw std::runtime_error(string.data);
 }
 
+void throwUnexpectedExpressionException(
+    ExpressionType type, const char* location) {
+    throw std::runtime_error(
+        std::string{"Unexpected expression "} + getExpressionName(type) + " for " + location
+    );
+}
+
 const char* describeLocation(CodeRange code) {
     static auto s = DynamicString{};
     if (code.count == 0) {
