@@ -10,35 +10,35 @@
 namespace arithmetic {
 namespace {
 
-void checkStaticTypeUnaryFunction(Expression in, ExpressionType expected, const std::string& function) {
+void checkStaticTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     if (in.type != ANY && in.type != expected) {
         throwException(
             "\n\nI have found a static type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a %s,\n"
             "but now got %s.\n",
-            function.c_str(),
+            function,
             NAMES[expected].c_str(),
             NAMES[in.type].c_str()
         );
     }
 }
 
-void checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const std::string& function) {
+void checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     if (in.type != expected) {
         throwException(
             "\n\nI have found a dynamic type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a %s,\n"
             "but now got %s.\n",
-            function.c_str(),
+            function,
             NAMES[expected].c_str(),
             NAMES[in.type].c_str()
         );
     }
 }
 
-void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const std::string& function) {
+void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
     const auto tuple = getStaticBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
@@ -48,7 +48,7 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the first item in the tuple is %s.\n",
-            function.c_str(),
+            function,
             NAMES[expected].c_str(),
             NAMES[left].c_str()
         );
@@ -59,14 +59,14 @@ void checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the second item in the tuple is %s.\n",
-            function.c_str(),
+            function,
             NAMES[expected].c_str(),
             NAMES[right].c_str()
         );
     }
 }
 
-void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, const std::string& function) {
+void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
     const auto tuple = getDynamicBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
@@ -76,7 +76,7 @@ void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, cons
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the first item in the tuple is %s.\n",
-            function.c_str(),
+            function,
             NAMES[expected].c_str(),
             NAMES[left].c_str()
         );
@@ -87,7 +87,7 @@ void checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, cons
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the second item in the tuple is %s.\n",
-            function.c_str(),
+            function,
             NAMES[expected].c_str(),
             NAMES[right].c_str()
         );
