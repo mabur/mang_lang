@@ -110,7 +110,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
     const auto actual = it->character;
     if (it->character != expected) {
         throwException(
-            "Parsing expected \'%c\' but got \'%c\'",
+            "Parsing expected \'%c\' but got \'%c\'%s",
             expected,
             actual,
             describeLocation(code).c_str()
