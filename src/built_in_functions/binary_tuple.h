@@ -9,5 +9,5 @@ struct BinaryTuple {
     Expression right;
 };
 
-BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function);
-BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function);
+BinaryTuple getDynamicBinaryTuple(Expression in, const char* function);
+BinaryTuple getStaticBinaryTuple(Expression in, const char* function);

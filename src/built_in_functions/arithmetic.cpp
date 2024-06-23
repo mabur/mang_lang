@@ -99,7 +99,7 @@ Expression makeNumber(double x) {
 }
 
 template <typename BinaryOperation>
-Expression binaryOperation(Expression in, BinaryOperation operation, const std::string& function) {
+Expression binaryOperation(Expression in, BinaryOperation operation, const char* function) {
     const auto tuple = getDynamicBinaryTuple(in, function);
     const auto left = getNumber(tuple.left);
     const auto right = getNumber(tuple.right);

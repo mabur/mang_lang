@@ -3,13 +3,13 @@
 #include "../exceptions.h"
 #include "../factory.h"
 
-BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
+BinaryTuple getDynamicBinaryTuple(Expression in, const char* function) {
     if (in.type != EVALUATED_TUPLE) {
         throwException(
             "I found a dynamic type error while calling the function %s. "
             "The function expected a tuple of two items, "
             "but it got a %s",
-            function.c_str(),
+            function,
             NAMES[in.type].c_str()
         );
     }
@@ -20,7 +20,7 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
             "I found a dynamic type error while calling the function %s. "
             "The function expected a tuple of two items, "
             "but it got %zu items.",
-            function.c_str(),
+            function,
             count
         );
     }
@@ -29,13 +29,13 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
     return BinaryTuple{left, right};
 }
 
-BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function) {
+BinaryTuple getStaticBinaryTuple(Expression in, const char* function) {
     if (in.type != EVALUATED_TUPLE) {
         throwException(
             "I found a static type error while calling the function %s. "
             "The function expected a tuple of two items, "
             "but it got a %s",
-            function.c_str(),
+            function,
             NAMES[in.type].c_str()
         );
     }
@@ -46,7 +46,7 @@ BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function) {
             "I found a static type error while calling the function %s. "
             "The function expected a tuple of two items, "
             "but it got %zu items.",
-            function.c_str(),
+            function,
             count
         );
     }
