@@ -4,20 +4,20 @@
 #include "arithmetic.h"
 #include "container.h"
 
-Definition makeDefinitionBuiltIn(const std::string& name, FunctionPointer function) {
+Definition makeDefinitionBuiltIn(const char* name, FunctionPointer function) {
     // TODO: do not have i as static, to support initializing manglang multiple times.
     static size_t i = 0;
     return Definition{
-        {makeName(CodeRange{}, name).index, i++},
+        {makeName(CodeRange{}, Name{name}).index, i++},
         makeFunctionBuiltIn(CodeRange{}, {function}),
     };
 }
 
-Definition makeDefinitionBuiltInTyped(const std::string& name, FunctionPointer function) {
+Definition makeDefinitionBuiltInTyped(const char* name, FunctionPointer function) {
     // TODO: do not have i as static, to support initializing manglang multiple times.
     static size_t i = 0;
     return Definition{
-        {makeName(CodeRange{}, name).index, i++},
+        {makeName(CodeRange{}, Name{name}).index, i++},
         makeFunctionBuiltIn(CodeRange{}, {function})
     };
 }
