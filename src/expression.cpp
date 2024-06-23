@@ -55,7 +55,7 @@ const char* getExpressionName(ExpressionType type) {
 void throwUnexpectedExpressionException(
     ExpressionType type, const char* location) {
     throw std::runtime_error(
-        "Unexpected expression " + NAMES[type] + " for " + location
+        std::string{"Unexpected expression "} + getExpressionName(type) + " for " + location
     );
 }
 
