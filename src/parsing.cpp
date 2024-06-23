@@ -113,7 +113,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
             "Parsing expected \'%c\' but got \'%c\'%s",
             expected,
             actual,
-            describeLocation(code).c_str()
+            describeLocation(code)
         );
     }
     DROP_FIRST(code);
@@ -134,7 +134,7 @@ CodeRange parseKeyword(CodeRange code, const char* keyword) {
             throwException(
                 "Reached end of file when parsing %s%s",
                 keyword,
-                describeLocation(code).c_str()
+                describeLocation(code)
             );
         }
         code = parseCharacter(code, *it);
@@ -145,11 +145,11 @@ CodeRange parseKeyword(CodeRange code, const char* keyword) {
 void throwIfEmpty(CodeRange code) {
     if (IS_EMPTY(code)) {
         throwException(
-            "Unexpected end of source while parsing%s", describeLocation(code).c_str()
+            "Unexpected end of source while parsing%s", describeLocation(code)
         );
     }
 }
 
 void throwParseException(CodeRange code) {
-    throwException("Does not recognize expression to parse%s", describeLocation(code).c_str());
+    throwException("Does not recognize expression to parse%s", describeLocation(code));
 }

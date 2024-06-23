@@ -6,4 +6,4 @@ struct CodeRange;
 
 void throwException(const char* format, ...);
 
-std::string describeLocation(CodeRange code);
+const char* describeLocation(CodeRange code);

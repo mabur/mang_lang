@@ -333,7 +333,7 @@ Expression parseDictionary(CodeRange code) {
                 throwException(
                     "I find a parsing error.\n"
                     "end is not matching a while or for%s",
-                    describeLocation(code).c_str()
+                    describeLocation(code)
                 );
             }
             const auto loop_start_index = LAST_ITEM(loop_start_indices);
@@ -351,7 +351,7 @@ Expression parseDictionary(CodeRange code) {
             } else {
                 throwException(
                     "Unexpected start type for loop%s",
-                    describeLocation(code).c_str()
+                    describeLocation(code)
                 );
             }
         }

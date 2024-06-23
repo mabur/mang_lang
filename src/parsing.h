@@ -25,7 +25,7 @@ CodeRange firstPart(CodeRange whole, CodeRange last_part);
 
 CodeRange lastPart(CodeRange whole, CodeRange middle_part);
 
-std::string describeLocation(CodeRange code);
+const char* describeLocation(CodeRange code);
 
 void throwIfEmpty(CodeRange code);
 void throwParseException(CodeRange code);
@@ -64,7 +64,7 @@ CodeRange parseCharacter(CodeRange code, Predicate predicate) {
         throwException(
             "Parser got unexpected char%c%s",
             it->character,
-            describeLocation(code).c_str()
+            describeLocation(code)
         );
     }
     DROP_FIRST(code);

@@ -30,20 +30,26 @@ void throwException(const char* format, ...) {
     throw std::runtime_error(string.data);
 }
 
-static
-std::string serializeCodeCharacter(const CodeCharacter* c) {
-    return "row " + std::to_string(c->row + 1) + " and column "
-        + std::to_string(c->column + 1);
-}
-
-std::string describeLocation(CodeRange code) {
+const char* describeLocation(CodeRange code) {
+    static auto s = DynamicString{};
     if (code.count == 0) {
-        return " at unknown location.";
+        FORMAT_STRING(s, " at unknown location.");
     }
-    if (code.count == 1) {
-        return " at " + serializeCodeCharacter(code.data);
+    else if (code.count == 1) {
+        auto first = code.data;
+        FORMAT_STRING(s, " at row %zu and column %zu", first->row + 1, first->column + 1);
     }
-    return " between " +
-        serializeCodeCharacter(code.data) + " and " +
-        serializeCodeCharacter(code.data + code.count - 1);
+    else {
+        auto first = code.data;
+        auto last = code.data + code.count - 1;
+        FORMAT_STRING(
+            s,
+            " between row %zu and column %zu and row %zu and column %zu",
+            first->row + 1,
+            first->column + 1,
+            last->row + 1,
+            last->column + 1
+        );
+    }
+    return s.data;
 }

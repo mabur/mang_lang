@@ -63,7 +63,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
                 "Static type error in %s. Could not find name %s in dictionary %s",
                 description,
                 storage.names.at(name_super).c_str(),
-                describeLocation(sub.range).c_str()
+                describeLocation(sub.range)
             );
         }
     }
@@ -115,7 +115,7 @@ void checkTypes(Expression super, Expression sub, const char* description) {
     throwException(
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
-        describeLocation(super.range).c_str(),
+        describeLocation(super.range),
         NAMES[super.type].c_str(),
         NAMES[sub.type].c_str()
     );
