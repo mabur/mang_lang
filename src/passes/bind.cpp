@@ -52,7 +52,7 @@ void bindStack(Expression stack, Expression environment) {
                 "\n\nI have found a static type error.\n"
                 "It happens in bindStack.\n"
                 "Instead of a stack I got a %s\n",
-                NAMES[stack.type].c_str()
+                getExpressionName(stack.type)
             );
         }
         const auto stack_struct = storage.stacks.data[stack.index];

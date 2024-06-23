@@ -222,7 +222,7 @@ DynamicString serializeStack(DynamicString s, Expression expression) {
                 "\n\nI have found a type error.\n"
                 "It happens in serializeStack.\n"
                 "Instead of a stack I got a %s\n",
-                NAMES[expression.type].c_str()
+                getExpressionName(expression.type)
             );
         }
         const auto stack = storage.stacks.data[expression.index];
@@ -349,7 +349,7 @@ DynamicString serializeEvaluatedStack(DynamicString s, Expression expression) {
             throwException(
                 "I found an error while serializing a stack.\n"
                 "Instead of a stack I got a %s.",
-                NAMES[expression.type].c_str()
+                getExpressionName(expression.type)
             );
         }
         const auto stack = storage.evaluated_stacks.data[expression.index];
@@ -380,7 +380,7 @@ DynamicString serializeString(DynamicString s, Expression expression) {
             throwException(
                 "I found an error while serializing a string.\n"
                 "Instead of a string I got a %s",
-                NAMES[expression.type].c_str()
+                getExpressionName(expression.type)
             );
         }
         const auto string = storage.strings.data[expression.index];
@@ -391,7 +391,7 @@ DynamicString serializeString(DynamicString s, Expression expression) {
                 "I found an error while serializing a string.\n"
                 "Each item in the string should be a character,\n"
                 "but I found a %s",
-                NAMES[top.type].c_str()
+                getExpressionName(top.type)
             );
         }
         APPEND(s, getCharacter(top));
@@ -410,7 +410,7 @@ DynamicString serialize_types(DynamicString s, Expression expression) {
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(s, expression);
         case EVALUATED_TABLE: return serializeTypesEvaluatedTable(s, expression);
         // TODO: EVALUATED_TABLE_VIEW?
-        default: s = concatenate(s, NAMES[expression.type].c_str()); return s;
+        default: s = concatenate(s, getExpressionName(expression.type)); return s;
     }
 }
 
@@ -453,6 +453,6 @@ DynamicString serialize(DynamicString s, Expression expression) {
         case FOR_END_STATEMENT: return s = concatenate(s, "end ");
         case FOR_SIMPLE_END_STATEMENT: return s = concatenate(s, "end ");
         case RETURN_STATEMENT: return s = concatenate(s, "return ");
-        default: return s = concatenate(s, NAMES[expression.type].c_str());
+        default: return s = concatenate(s, getExpressionName(expression.type));
     }
 }
