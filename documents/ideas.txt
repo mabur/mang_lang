@@ -175,7 +175,9 @@ STANDARD LIBRARY
 LANGUAGE SYNTAX & SEMANTICS
 * Besides dictionaries we can define symbols as function parameters.
   - What would it look like if we could only define symbols in dictionaries?
-  - f = {x=_0 y=_1 _out=add!(mul!(x x) mul!(x x))}
+    - f = {x=_0 y=_1 _out=add!(mul!(x x) mul!(x x))}
+  - Could also be used for local computations without in parameters
+    - {x=1.2 y=2.2 _out=add!(mul!(x x) mul!(x x))}
 * Generic container interface. Make operations like inc,dec,drop,put,+=,--,get0,take consistent with serialization.
   - What do we refer to as first and last of a stack?
   - Should "take" give first or last?
