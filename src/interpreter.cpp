@@ -10,6 +10,12 @@ namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
 }
 
+static
+std::string getOutputFilePathFromInputFilePath(const std::string& input_file_path) {
+    return input_file_path.substr(0, input_file_path.find_last_of('.'))
+        + "_evaluated.txt";
+}
+
 int main(int argc,  char **argv) {
     using namespace std;
     if (argc < CommandLineArgumentIndex::INPUT_PATH + 1) {
@@ -21,8 +27,7 @@ int main(int argc,  char **argv) {
     };
     auto output_file_path = std::string{};
     if (argc < CommandLineArgumentIndex::OUTPUT_PATH + 1) {
-        output_file_path = input_file_path.substr(0, input_file_path.find_last_of('.'))
-            + "_evaluated.txt";
+        output_file_path = getOutputFilePathFromInputFilePath(input_file_path);
     } else {
         output_file_path = argv[CommandLineArgumentIndex::OUTPUT_PATH];
     }
