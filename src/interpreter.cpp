@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "mang_lang.h"
+#include "string.h"
 
 namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
@@ -27,9 +28,9 @@ int main(int argc,  char **argv) {
     }
 
     cout << "Reading program from " << input_file_path << " ... ";
-    auto input_file = ifstream{input_file_path};
-    const auto code = string{(istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>()};
-    input_file.close();
+    auto code_carma = readTextFile(input_file_path.c_str());
+    const auto code = std::string(code_carma.data);
+    FREE_DARRAY(code_carma);
     cout << "Done." << endl;
 
     try {

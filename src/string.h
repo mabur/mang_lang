@@ -8,3 +8,4 @@
 ConstantString makeStaticString(const char* s);
 std::string makeStdString(DynamicString s);
 DynamicString concatenate(DynamicString base, const char* tail);
+DynamicString readTextFile(const char* file_path);
