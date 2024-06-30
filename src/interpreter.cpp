@@ -12,20 +12,12 @@ namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
 }
 
-#define DROP_LAST_UNTIL_ITEM_INCLUSIVE(range, item) do { \
-    FOR_EACH_BACKWARD(it, (range)) { \
-        DROP_BACK(range); \
-        if (*it == (item)) { \
-            break; \
-        } \
-    } \
-} while(0)
-
 static
 DynamicString getOutputFilePathFromInputFilePath(ConstantString input_file_path) {
     auto result = DynamicString{};
     CONCAT(result, input_file_path);
-    DROP_LAST_UNTIL_ITEM_INCLUSIVE(result, '.');
+    DROP_BACK_UNTIL_ITEM(result, '.');
+    DROP_BACK_WHILE_ITEM(result, '.');
     CONCAT(result, makeStaticString("_evaluated.txt"));
     APPEND(result, '\0');
     return result;
