@@ -4,7 +4,12 @@
 #include <stdlib.h>
 
 ConstantString makeStaticString(const char* s) {
-    return ConstantString{s, strlen(s)};
+    return ConstantString{s, strlen(s)}; // TODO: should it be +1? No.
+}
+
+DynamicString makeDynamicString(char* s) {
+    auto count = strlen(s);
+    return DynamicString{s, count, count}; // TODO: should it be +1? No.
 }
 
 std::string makeStdString(DynamicString s) {
