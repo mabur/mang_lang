@@ -1,7 +1,6 @@
 #include <chrono>
-#include <iomanip>
-#include <iostream>
 #include <fstream>
+#include <stdio.h>
 
 #include <carma/carma.h>
 #include <carma/carma_string.h>
@@ -35,7 +34,7 @@ DynamicString getOutputFilePathFromInputFilePath(ConstantString input_file_path)
 int main(int argc,  char **argv) {
     using namespace std;
     if (argc < CommandLineArgumentIndex::INPUT_PATH + 1) {
-        cout << "Expected input file." << endl;
+        printf("Expected input file.\n");
         return 1;
     }
     const auto input_file_path = makeStaticString(
@@ -47,28 +46,26 @@ int main(int argc,  char **argv) {
     } else {
         output_file_path = makeDynamicString(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
     }
-
-    cout << "Reading program from " << input_file_path.data << " ... ";
+    
+    printf("Reading program from %s ... ",  input_file_path.data);
     auto code_carma = readTextFile(input_file_path.data);
     const auto code = std::string(code_carma.data);
     FREE_DARRAY(code_carma);
-    cout << "Done." << endl;
+    printf("Done.\n");
 
     try {
-        cout << "Evaluating program ... ";
+        printf("Evaluating program ... ");
         const auto start = std::chrono::steady_clock::now();
         const auto result = evaluate_all(code);
         const auto end = std::chrono::steady_clock::now();
         const auto duration_total = std::chrono::duration<double>{end - start};
-        cout << "Done. " << std::fixed << std::setprecision(1)
-            << duration_total.count() << " seconds." << endl;
-        
-        cout << "Writing result to " << output_file_path.data << " ... ";
+        printf("Done in %.1f seconds.\n", duration_total.count());
+        printf("Writing result to %s ... ", output_file_path.data);
         auto output_file = ofstream{output_file_path.data};
         output_file << result;
         output_file.close();
-        cout << "Done." << endl;
+        printf("Done.\n");
     } catch (const std::runtime_error& e) {
-        cout << e.what() << endl;
+        printf("%s\n", e.what());
     }
 }
