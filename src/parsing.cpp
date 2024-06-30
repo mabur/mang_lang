@@ -100,7 +100,7 @@ CodeRange parseWhiteSpace(CodeRange code) {
 
 CodeRange parseCharacter(CodeRange code) {
     throwIfEmpty(code);
-    DROP_FIRST(code);
+    DROP_FRONT(code);
     return code;
 }
 
@@ -116,13 +116,13 @@ CodeRange parseCharacter(CodeRange code, char expected) {
             describeLocation(code)
         );
     }
-    DROP_FIRST(code);
+    DROP_FRONT(code);
     return code;
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
     if (!IS_EMPTY(code) && code.data->character == c) {
-        DROP_FIRST(code);
+        DROP_FRONT(code);
     }
     return code;
 }

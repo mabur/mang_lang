@@ -337,7 +337,7 @@ Expression parseDictionary(CodeRange code) {
                 );
             }
             const auto loop_start_index = LAST_ITEM(loop_start_indices);
-            DROP_LAST(loop_start_indices);
+            DROP_BACK(loop_start_indices);
             const auto start_expression = statements.data[loop_start_index];
             if (start_expression.type == WHILE_STATEMENT) {
                 storage.while_statements.data[start_expression.index].end_index = loop_end_index;
@@ -468,7 +468,7 @@ Expression parseStack(CodeRange code) {
         APPEND(items, item);
     }
     auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
-    FOR_EACH_REVERSE(it, items){
+    FOR_EACH_BACKWARD(it, items){
         stack = putStack(stack, *it);
     }
     FREE_DARRAY(items);
@@ -602,10 +602,10 @@ Expression parseString(CodeRange code) {
             code.data->character
         );
         APPEND(characters, character);
-        DROP_FIRST(code);
+        DROP_FRONT(code);
     }
     auto string = Expression{EMPTY_STRING, 0, CodeRange{whole.data, 1}};
-    FOR_EACH_REVERSE(it, characters) {
+    FOR_EACH_BACKWARD(it, characters) {
         string = putString(string, *it);
     }
     FREE_DARRAY(characters);

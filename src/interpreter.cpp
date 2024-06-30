@@ -13,8 +13,8 @@ namespace CommandLineArgumentIndex {
 }
 
 #define DROP_LAST_UNTIL_ITEM_INCLUSIVE(range, item) do { \
-    FOR_EACH_REVERSE(it, (range)) { \
-        DROP_LAST(range); \
+    FOR_EACH_BACKWARD(it, (range)) { \
+        DROP_BACK(range); \
         if (*it == (item)) { \
             break; \
         } \

@@ -67,7 +67,7 @@ CodeRange parseCharacter(CodeRange code, Predicate predicate) {
             describeLocation(code)
         );
     }
-    DROP_FIRST(code);
+    DROP_FRONT(code);
     return code;
 }
 
@@ -76,7 +76,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
     if (!IS_EMPTY(code) && predicate(*code.data)) {
-        DROP_FIRST(code);
+        DROP_FRONT(code);
     }
     return code;
 }
@@ -86,7 +86,7 @@ CodeRange parseKeyword(CodeRange code, const char* keyword);
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
     while (!IS_EMPTY(code) && predicate(*code.data)) {
-        DROP_FIRST(code);
+        DROP_FRONT(code);
     }
     return code;
 }

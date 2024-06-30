@@ -143,7 +143,7 @@ Expression evaluateStack(Evaluator evaluator,
         stack = rest;
     }
     auto evaluated_stack = Expression{EMPTY_STACK, 0, stack.range};
-    FOR_EACH_REVERSE(it, items) {
+    FOR_EACH_BACKWARD(it, items) {
         evaluated_stack = putEvaluatedStack(evaluated_stack, *it);
     }
     FREE_DARRAY(items);
