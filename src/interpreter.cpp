@@ -1,6 +1,6 @@
 #include <chrono>
-#include <fstream>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <carma/carma.h>
 #include <carma/carma_string.h>
@@ -50,11 +50,23 @@ int main(int argc,  char **argv) {
         const auto end = std::chrono::steady_clock::now();
         const auto duration_total = std::chrono::duration<double>{end - start};
         printf("Done in %.1f seconds.\n", duration_total.count());
+        
         printf("Writing result to %s ... ", output_file_path.data);
-        auto output_file = ofstream{output_file_path.data};
-        output_file << result.data;
-        output_file.close();
-        printf("Done.\n");
+        FILE *output_file = fopen(output_file_path.data, "w");
+        if (output_file != NULL) {
+            fprintf(output_file, "%s", result.data);
+            if (fclose(output_file) == 0) {
+                printf("Done.\n");
+            }
+            else {
+                perror("Error closing file");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else {
+            perror("Error opening file");
+            exit(EXIT_FAILURE);
+        }
     } catch (const std::runtime_error& e) {
         printf("%s\n", e.what());
     }
