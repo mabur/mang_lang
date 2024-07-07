@@ -11,14 +11,14 @@
 #include <carma/carma.h>
 
 static
-Expression parse(const std::string& string) {
+Expression parse(const char* string) {
     auto c = makeCodeCharacters(string);
     auto expression = parseExpression(c);
     FREE_RANGE(c);
     return expression;
 }
 
-DynamicString reformat(const std::string& code) {
+DynamicString reformat(const char* code) {
     auto buffer = DynamicString{};
     buffer = serialize(buffer, parse(code));
     APPEND(buffer, '\0');
@@ -30,9 +30,9 @@ DynamicString reformat(const std::string& code) {
     //return result;
 }
 
-DynamicString evaluate_types(const std::string& code) {
+DynamicString evaluate_types(const char* code) {
     const auto built_ins = builtInsTypes();
-    const auto std_ast = parse(STANDARD_LIBRARY);
+    const auto std_ast = parse(STANDARD_LIBRARY.c_str());
     const auto code_ast = parse(code);
     // bind(std_ast, built_ins);
     // bind(code_ast, std_ast);
@@ -48,10 +48,10 @@ DynamicString evaluate_types(const std::string& code) {
     //return result;
 }
 
-DynamicString evaluate_all(const std::string& code) {
+DynamicString evaluate_all(const char* code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
-    const auto std_ast = parse(STANDARD_LIBRARY);
+    const auto std_ast = parse(STANDARD_LIBRARY.c_str());
     const auto code_ast = parse(code);
     // bind(std_ast, built_ins_types);
     // bind(code_ast, std_ast);

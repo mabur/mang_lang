@@ -48,7 +48,7 @@ int main(int argc,  char **argv) {
     try {
         printf("Evaluating program ... ");
         const auto start = std::chrono::steady_clock::now();
-        const auto result = evaluate_all(code);
+        const auto result = evaluate_all(code.c_str());
         const auto end = std::chrono::steady_clock::now();
         const auto duration_total = std::chrono::duration<double>{end - start};
         printf("Done in %.1f seconds.\n", duration_total.count());

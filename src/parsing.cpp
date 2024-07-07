@@ -25,18 +25,19 @@ std::string rawString(CodeRange code) {
     return s;
 }
 
-CodeRange makeCodeCharacters(const std::string& string) {
+CodeRange makeCodeCharacters(const char* s) {
+    auto string = makeStaticString(s);
     auto result = CodeRange{};
-    INIT_RANGE(result, string.size());
+    INIT_RANGE(result, string.count);
     
     auto column = size_t{0};
     auto row = size_t{0};
     auto index = size_t{0};
-    for (const auto& character : string) {
-        result.data[index] = CodeCharacter{character, row, column};
+    FOR_EACH(character, string) {
+        result.data[index] = CodeCharacter{*character, row, column};
         ++index;
         ++column;
-        if (character == '\n') {
+        if (*character == '\n') {
             ++row;
             column = 0;
         }

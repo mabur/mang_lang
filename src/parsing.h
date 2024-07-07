@@ -32,7 +32,7 @@ void throwParseException(CodeRange code);
 
 std::string rawString(CodeRange code);
 
-CodeRange makeCodeCharacters(const std::string& string);
+CodeRange makeCodeCharacters(const char* s);
 
 bool isDigit(CodeCharacter c);
 
