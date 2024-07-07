@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
+#include "string.h"
 
-const char* reformat(const std::string& code);
-const char* evaluate_types(const std::string& code);
-const char* evaluate_all(const std::string& code);
+DynamicString reformat(const std::string& code);
+DynamicString evaluate_types(const std::string& code);
+DynamicString evaluate_all(const std::string& code);

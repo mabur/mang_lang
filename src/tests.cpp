@@ -46,13 +46,13 @@ struct Test {
             try {
                 const auto output_actual = function(input);
                 // TODO: we have hardcoded this for strings which is all we use.
-                if (strcmp(output_expected, output_actual) == 0) {
+                if (strcmp(output_expected, output_actual.data) == 0) {
                     ++num_good;
                 } else {
                     ++num_bad;
                     cout << endl << "" << function_name << "(" << input << ")"
                         << " expected " << output_expected << " got "
-                        << output_actual << endl;
+                        << output_actual.data << endl;
                 }
             } catch (const std::exception& e) {
                 ++num_bad;
@@ -71,17 +71,17 @@ struct Test {
     }
 
     void reformat(const char* case_name, InputOutputList data) {
-        parameterizedTest<const char*, const char*>(
+        parameterizedTest<const char*, DynamicString>(
             ::reformat, "reformat", case_name, data
         );
     }
     void evaluate_types(const char* case_name, InputOutputList data) {
-        parameterizedTest<const char*, const char*>(
+        parameterizedTest<const char*, DynamicString>(
             ::evaluate_types, "evaluate types", case_name, data
         );
     }
     void evaluate_all(const char* case_name, InputOutputList data) {
-        parameterizedTest<const char*, const char*>(
+        parameterizedTest<const char*, DynamicString>(
             ::evaluate_all, "evaluate_all", case_name, data
         );
     }

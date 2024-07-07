@@ -54,7 +54,7 @@ int main(int argc,  char **argv) {
         printf("Done in %.1f seconds.\n", duration_total.count());
         printf("Writing result to %s ... ", output_file_path.data);
         auto output_file = ofstream{output_file_path.data};
-        output_file << result;
+        output_file << result.data;
         output_file.close();
         printf("Done.\n");
     } catch (const std::runtime_error& e) {

@@ -18,19 +18,19 @@ Expression parse(const std::string& string) {
     return expression;
 }
 
-const char* reformat(const std::string& code) {
+DynamicString reformat(const std::string& code) {
     auto buffer = DynamicString{};
     buffer = serialize(buffer, parse(code));
     APPEND(buffer, '\0');
     clearMemory();
-    return buffer.data;
+    return buffer;
     //auto result = makeStdString(buffer);
     //FREE_DARRAY(buffer);
     //clearMemory();
     //return result;
 }
 
-const char* evaluate_types(const std::string& code) {
+DynamicString evaluate_types(const std::string& code) {
     const auto built_ins = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);
     const auto code_ast = parse(code);
@@ -41,14 +41,14 @@ const char* evaluate_types(const std::string& code) {
     buffer = serialize_types(buffer, evaluate_types(code_ast, standard_library));
     APPEND(buffer, '\0');
     clearMemory();
-    return buffer.data;
+    return buffer;
     //auto result = makeStdString(buffer);
     //FREE_DARRAY(buffer);
     //clearMemory();
     //return result;
 }
 
-const char* evaluate_all(const std::string& code) {
+DynamicString evaluate_all(const std::string& code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);
@@ -63,7 +63,7 @@ const char* evaluate_all(const std::string& code) {
     buffer = serialize(buffer, code_evaluated);
     APPEND(buffer, '\0');
     clearMemory();
-    return buffer.data;
+    return buffer;
     //auto result = makeStdString(buffer);
     //FREE_DARRAY(buffer);
     //clearMemory();
