@@ -68,20 +68,20 @@ struct Test {
 };
 
 struct MangLangTest : public Test {
-    using InputOutputList = std::initializer_list<std::pair<std::string, std::string>>;
+    using InputOutputList = std::initializer_list<std::pair<const char*, std::string>>;
 
     void reformat(const std::string& case_name, InputOutputList data) {
-        parameterizedTest<std::string, std::string>(
+        parameterizedTest<const char*, std::string>(
             ::reformat, "reformat", case_name, data
         );
     }
     void evaluate_types(const std::string& case_name, InputOutputList data) {
-        parameterizedTest<std::string, std::string>(
+        parameterizedTest<const char*, std::string>(
             ::evaluate_types, "evaluate types", case_name, data
         );
     }
     void evaluate_all(const std::string& case_name, InputOutputList data) {
-        parameterizedTest<std::string, std::string>(
+        parameterizedTest<const char*, std::string>(
             ::evaluate_all, "evaluate_all", case_name, data
         );
     }
