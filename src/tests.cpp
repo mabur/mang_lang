@@ -27,12 +27,14 @@ struct Test {
     int num_bad_total = 0;
     std::chrono::duration<double> duration_total = {};
 
+    using InputOutputList = std::initializer_list<std::pair<const char*, const char*>>;
+    
     template<typename Input, typename Output>
     void parameterizedTest(
         std::function<Output(Input)> function,
         const std::string& function_name,
         const std::string& case_name,
-        std::initializer_list<std::pair<Input, Output>> data
+        InputOutputList data
     ) {
         using namespace std;
         auto num_good = 0;
@@ -67,8 +69,6 @@ struct Test {
         num_good_total += num_good;
         num_bad_total += num_bad;
     }
-
-    using InputOutputList = std::initializer_list<std::pair<const char*, const char*>>;
 
     void reformat(const std::string& case_name, InputOutputList data) {
         parameterizedTest<const char*, const char*>(
