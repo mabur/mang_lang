@@ -67,9 +67,7 @@ struct Test {
         num_good_total += num_good;
         num_bad_total += num_bad;
     }
-};
 
-struct MangLangTest : public Test {
     using InputOutputList = std::initializer_list<std::pair<const char*, const char*>>;
 
     void reformat(const std::string& case_name, InputOutputList data) {
@@ -90,7 +88,7 @@ struct MangLangTest : public Test {
 };
 
 int main() {
-    MangLangTest test;
+    Test test;
     test.evaluate_all("number", {
         {"-1", "-1"},
         {"-1.0", "-1"},
