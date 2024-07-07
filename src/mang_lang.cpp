@@ -24,10 +24,6 @@ DynamicString reformat(const char* code) {
     APPEND(buffer, '\0');
     clearMemory();
     return buffer;
-    //auto result = makeStdString(buffer);
-    //FREE_DARRAY(buffer);
-    //clearMemory();
-    //return result;
 }
 
 DynamicString evaluate_types(const char* code) {
@@ -42,10 +38,6 @@ DynamicString evaluate_types(const char* code) {
     APPEND(buffer, '\0');
     clearMemory();
     return buffer;
-    //auto result = makeStdString(buffer);
-    //FREE_DARRAY(buffer);
-    //clearMemory();
-    //return result;
 }
 
 DynamicString evaluate_all(const char* code) {
@@ -59,14 +51,10 @@ DynamicString evaluate_all(const char* code) {
     const auto code_checked = evaluate_types(code_ast, std_checked);
     const auto std_evaluated = evaluate(std_ast, built_ins);
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
+    std::ignore = code_checked;
     auto buffer = DynamicString{};
     buffer = serialize(buffer, code_evaluated);
     APPEND(buffer, '\0');
     clearMemory();
     return buffer;
-    //auto result = makeStdString(buffer);
-    //FREE_DARRAY(buffer);
-    //clearMemory();
-    std::ignore = code_checked;
-    //return result;
 }
