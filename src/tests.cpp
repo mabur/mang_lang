@@ -32,8 +32,8 @@ struct Test {
     template<typename Input, typename Output>
     void parameterizedTest(
         std::function<Output(Input)> function,
-        const std::string& function_name,
-        const std::string& case_name,
+        const char* function_name,
+        const char* case_name,
         InputOutputList data
     ) {
         using namespace std;
@@ -70,17 +70,17 @@ struct Test {
         num_bad_total += num_bad;
     }
 
-    void reformat(const std::string& case_name, InputOutputList data) {
+    void reformat(const char* case_name, InputOutputList data) {
         parameterizedTest<const char*, const char*>(
             ::reformat, "reformat", case_name, data
         );
     }
-    void evaluate_types(const std::string& case_name, InputOutputList data) {
+    void evaluate_types(const char* case_name, InputOutputList data) {
         parameterizedTest<const char*, const char*>(
             ::evaluate_types, "evaluate types", case_name, data
         );
     }
-    void evaluate_all(const std::string& case_name, InputOutputList data) {
+    void evaluate_all(const char* case_name, InputOutputList data) {
         parameterizedTest<const char*, const char*>(
             ::evaluate_all, "evaluate_all", case_name, data
         );
