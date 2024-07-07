@@ -40,15 +40,13 @@ int main(int argc,  char **argv) {
     }
     
     printf("Reading program from %s ... ",  input_file_path.data);
-    auto code_carma = readTextFile(input_file_path.data);
-    const auto code = std::string(code_carma.data);
-    FREE_DARRAY(code_carma);
+    auto code = readTextFile(input_file_path.data);
     printf("Done.\n");
 
     try {
         printf("Evaluating program ... ");
         const auto start = std::chrono::steady_clock::now();
-        const auto result = evaluate_all(code.c_str());
+        const auto result = evaluate_all(code.data);
         const auto end = std::chrono::steady_clock::now();
         const auto duration_total = std::chrono::duration<double>{end - start};
         printf("Done in %.1f seconds.\n", duration_total.count());
