@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <string.h>
 #include <vector>
 
 struct Test {
@@ -42,7 +43,8 @@ struct Test {
             const auto& output_expected = test.second;
             try {
                 const auto output_actual = function(input);
-                if (output_expected == output_actual) {
+                // TODO: we have hardcoded this for strings which is all we use.
+                if (strcmp(output_expected, output_actual) == 0) {
                     ++num_good;
                 } else {
                     ++num_bad;
@@ -68,20 +70,20 @@ struct Test {
 };
 
 struct MangLangTest : public Test {
-    using InputOutputList = std::initializer_list<std::pair<const char*, std::string>>;
+    using InputOutputList = std::initializer_list<std::pair<const char*, const char*>>;
 
     void reformat(const std::string& case_name, InputOutputList data) {
-        parameterizedTest<const char*, std::string>(
+        parameterizedTest<const char*, const char*>(
             ::reformat, "reformat", case_name, data
         );
     }
     void evaluate_types(const std::string& case_name, InputOutputList data) {
-        parameterizedTest<const char*, std::string>(
+        parameterizedTest<const char*, const char*>(
             ::evaluate_types, "evaluate types", case_name, data
         );
     }
     void evaluate_all(const std::string& case_name, InputOutputList data) {
-        parameterizedTest<const char*, std::string>(
+        parameterizedTest<const char*, const char*>(
             ::evaluate_all, "evaluate_all", case_name, data
         );
     }

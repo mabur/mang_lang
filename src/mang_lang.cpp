@@ -18,16 +18,19 @@ Expression parse(const std::string& string) {
     return expression;
 }
 
-std::string reformat(const std::string& code) {
+const char* reformat(const std::string& code) {
     auto buffer = DynamicString{};
     buffer = serialize(buffer, parse(code));
-    auto result = makeStdString(buffer);
-    FREE_DARRAY(buffer);
+    APPEND(buffer, '\0');
     clearMemory();
-    return result;
+    return buffer.data;
+    //auto result = makeStdString(buffer);
+    //FREE_DARRAY(buffer);
+    //clearMemory();
+    //return result;
 }
 
-std::string evaluate_types(const std::string& code) {
+const char* evaluate_types(const std::string& code) {
     const auto built_ins = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);
     const auto code_ast = parse(code);
@@ -36,13 +39,16 @@ std::string evaluate_types(const std::string& code) {
     const auto standard_library = evaluate_types(std_ast, built_ins);
     auto buffer = DynamicString{};
     buffer = serialize_types(buffer, evaluate_types(code_ast, standard_library));
-    auto result = makeStdString(buffer);
-    FREE_DARRAY(buffer);
+    APPEND(buffer, '\0');
     clearMemory();
-    return result;
+    return buffer.data;
+    //auto result = makeStdString(buffer);
+    //FREE_DARRAY(buffer);
+    //clearMemory();
+    //return result;
 }
 
-std::string evaluate_all(const std::string& code) {
+const char* evaluate_all(const std::string& code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY);
@@ -55,9 +61,12 @@ std::string evaluate_all(const std::string& code) {
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
     auto buffer = DynamicString{};
     buffer = serialize(buffer, code_evaluated);
-    auto result = makeStdString(buffer);
-    FREE_DARRAY(buffer);
+    APPEND(buffer, '\0');
     clearMemory();
+    return buffer.data;
+    //auto result = makeStdString(buffer);
+    //FREE_DARRAY(buffer);
+    //clearMemory();
     std::ignore = code_checked;
-    return result;
+    //return result;
 }

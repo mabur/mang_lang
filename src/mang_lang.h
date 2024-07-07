@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
 
-std::string reformat(const std::string& code);
-std::string evaluate_types(const std::string& code);
-std::string evaluate_all(const std::string& code);
+const char* reformat(const std::string& code);
+const char* evaluate_types(const std::string& code);
+const char* evaluate_all(const std::string& code);
