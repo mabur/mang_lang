@@ -21,7 +21,6 @@ Expression parse(const char* string) {
 DynamicString reformat(const char* code) {
     auto buffer = DynamicString{};
     buffer = serialize(buffer, parse(code));
-    APPEND(buffer, '\0');
     clearMemory();
     return buffer;
 }
@@ -35,7 +34,6 @@ DynamicString evaluate_types(const char* code) {
     const auto standard_library = evaluate_types(std_ast, built_ins);
     auto buffer = DynamicString{};
     buffer = serialize_types(buffer, evaluate_types(code_ast, standard_library));
-    APPEND(buffer, '\0');
     clearMemory();
     return buffer;
 }
@@ -54,7 +52,6 @@ DynamicString evaluate_all(const char* code) {
     std::ignore = code_checked;
     auto buffer = DynamicString{};
     buffer = serialize(buffer, code_evaluated);
-    APPEND(buffer, '\0');
     clearMemory();
     return buffer;
 }

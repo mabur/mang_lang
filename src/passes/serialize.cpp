@@ -237,6 +237,8 @@ DynamicString serializeCharacter(DynamicString s, Character character) {
     APPEND(s, '\'');
     APPEND(s, character);
     APPEND(s, '\'');
+    APPEND(s, '\0');
+    DROP_BACK(s);
     return s;
 }
 
@@ -368,7 +370,7 @@ DynamicString serializeNumber(DynamicString s, Number number) {
     //FORMAT_STRING(s, "%.*g", DBL_DIG, number);
     auto serialized_number = DynamicString{};
     FORMAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
-    CONCAT(s, serialized_number);
+    CONCAT_CSTRING(s, serialized_number.data);
     FREE_DARRAY(serialized_number);
     return s;
 }
