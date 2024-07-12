@@ -446,13 +446,13 @@ DynamicString serialize(DynamicString s, Expression expression) {
         case STRING: return serializeString(s, expression);
         case DYNAMIC_EXPRESSION: return serializeDynamicExpression(s, storage.dynamic_expressions.data[expression.index]);
         case TYPED_EXPRESSION: return serializeTypedExpression(s, storage.typed_expressions.data[expression.index]);
-        case EMPTY_STACK: return s = concatenate(s, "[]");
-        case YES: return s = concatenate(s, "yes");
-        case NO: return s = concatenate(s, "no");
-        case WHILE_END_STATEMENT: return s = concatenate(s, "end ");
-        case FOR_END_STATEMENT: return s = concatenate(s, "end ");
-        case FOR_SIMPLE_END_STATEMENT: return s = concatenate(s, "end ");
-        case RETURN_STATEMENT: return s = concatenate(s, "return ");
-        default: return s = concatenate(s, getExpressionName(expression.type));
+        case EMPTY_STACK: return concatenate(s, "[]");
+        case YES: return concatenate(s, "yes");
+        case NO: return concatenate(s, "no");
+        case WHILE_END_STATEMENT: return concatenate(s, "end ");
+        case FOR_END_STATEMENT: return concatenate(s, "end ");
+        case FOR_SIMPLE_END_STATEMENT: return concatenate(s, "end ");
+        case RETURN_STATEMENT: return concatenate(s, "return ");
+        default: return concatenate(s, getExpressionName(expression.type));
     }
 }
