@@ -239,7 +239,8 @@ DynamicString serializeCharacter(DynamicString s, Character character) {
     APPEND(s, '\'');
     APPEND(s, '\0');
     DROP_BACK(s);
-    // TODO:
+    // TODO: figure out why this results in segmentation faults sometimes.
+    // Undefined behaviour?
     //FORMAT_STRING(s, "\'%c\'", character);
     return s;
 }
@@ -369,7 +370,8 @@ DynamicString serializeNumber(DynamicString s, Number number) {
         s = concatenate(s, "nan");
         return s;
     }
-    // TODO:
+    // TODO: figure out why this results in segmentation faults sometimes.
+    // Undefined behaviour?
     //FORMAT_STRING(s, "%.*g", DBL_DIG, number);
     auto serialized_number = DynamicString{};
     FORMAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
