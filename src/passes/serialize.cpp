@@ -1,7 +1,6 @@
 #include "serialize.h"
 
-#include <limits>
-#include <sstream>
+#include <float.h>
 
 #include <carma/carma.h>
 
@@ -366,10 +365,10 @@ DynamicString serializeNumber(DynamicString s, Number number) {
         s = concatenate(s, "nan");
         return s;
     }
-    std::stringstream stream;
-    stream.precision(std::numeric_limits<double>::digits10 + 1);
-    stream << number;
-    s = concatenate(s, stream.str().c_str());
+    auto serialized_number = DynamicString{};
+    FORMAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
+    CONCAT(s, serialized_number);
+    FREE_DARRAY(serialized_number);
     return s;
 }
 
