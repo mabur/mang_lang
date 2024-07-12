@@ -410,7 +410,7 @@ DynamicString serialize_types(DynamicString s, Expression expression) {
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(s, expression);
         case EVALUATED_TABLE: return serializeTypesEvaluatedTable(s, expression);
         // TODO: EVALUATED_TABLE_VIEW?
-        default: s = concatenate(s, getExpressionName(expression.type)); return s;
+        default: return concatenate(s, getExpressionName(expression.type)); return s;
     }
 }
 
