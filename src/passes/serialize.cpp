@@ -365,6 +365,7 @@ DynamicString serializeNumber(DynamicString s, Number number) {
         s = concatenate(s, "nan");
         return s;
     }
+    //FORMAT_STRING(s, "%.*g", DBL_DIG, number);
     auto serialized_number = DynamicString{};
     FORMAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
     CONCAT(s, serialized_number);

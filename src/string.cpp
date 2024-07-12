@@ -17,7 +17,7 @@ std::string makeStdString(DynamicString s) {
 }
 
 DynamicString concatenate(DynamicString base, const char* tail) {
-    CONCAT(base, makeStaticString(tail));
+    CONCAT_CSTRING(base, tail);
     return base;
 }
 
