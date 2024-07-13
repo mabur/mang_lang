@@ -1,0 +1,103 @@
+TRANSPILING MANGLANG TO C
+* EvaluatedDict
+  - Are like struct in C.
+  - Require member lookup @ <-> .
+* Dict in evaluation
+  - Require symbol lookup in current scope or parent.
+  - Require while loops.
+  - Are like scopes within functions in C.
+* Closures / nested functions.
+  - Are not in C.
+  - Would goto be an option?
+* Goto-option
+  - Main is entry point.
+  - Define all symbols used in manglang within the scope of main.
+  - Define all functions used in manglang using goto and labels inside main.
+  - Define structs that are implicitly used in manglang as structs above main.
+* Serialize at the end somehow
+  - Build a parallel serialization-object while evaluating,
+    that is used to serialize at the end.
+
+
+EXAMPLE - single dict
+
+// Manglang
+{a=1 b=a}
+
+// c
+struct S0 {
+  int a;
+  int b;
+};
+void printS0(S0*);
+int main() {
+  S0 v0;
+  v0.a = 1;
+  v0.b = v0.a;
+  prints0(&v0);
+}
+
+EXAMPLE - nested dicts
+
+// Manglang
+{a=1 b={c=a}}
+
+// C
+struct S0 {
+  double c;
+};
+struct S1 {
+  double a;
+  S0 b;
+};
+void printS0(S0*);
+void printS1(S1*);
+int main() {
+  S1 v0;
+  v0.a = 1;
+  S0 v1;
+  v1.c = v0.a;
+  v0.b = v1;
+  printS1(&v0);
+}
+
+EXAMPLE - while
+// Manglang
+{s=0 i=2 while i s += i end}
+
+// C
+struct S0 {
+  double s;
+  double i;
+};
+void printS0(S0*);
+int main(){
+  S0 v0;
+  v0.s = 0;
+  v0.i = 2;
+  while (v0.i) {
+    v0.s += v0.i
+  }
+  printS0(&v0);
+}
+
+EXAMPLE - tuple
+// Manglang
+(1 2)
+
+// C
+struct T0 {
+  double data0;
+  double data1;
+};
+void printT0(T0*);
+int main() {
+  T0 v0;
+  v0.data0 = 1;
+  v0.data1 = 2;
+  printT0(&v0);
+}
+
+EXAMPLE - function
+// Manglang
+{x=1 f=in x out mul!(x x)}
