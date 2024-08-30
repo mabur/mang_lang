@@ -1,0 +1,115 @@
+TRANSPILING MANGLANG TO C++
+* EvaluatedDict
+  - Are like a struct.
+  - Require member lookup @ <-> .
+* Dict in evaluation
+  - Require symbol lookup in current scope or parent.
+  - Require while loops.
+  - Are like scopes within functions.
+* Closures / nested functions.
+  - use lambda functions
+* Serialize at the end somehow
+  - Build a parallel serialization-object while evaluating,
+    that is used to serialize at the end.
+
+// Manglang
+// 3
+// C++
+// makeNumber(3)
+
+// Manglang
+// (3)
+// C++
+// Tuple1{makeNumber(3)}
+
+// Manglang
+(1 2)
+// C++
+Tuple2{makeNumber(1), makeNumber(2)}
+
+// Manglang
+x
+// C++
+x
+
+// Manglang
+child@parent
+// C++
+parent.child
+
+// Manglang
+mul!(x x)
+// C++
+applyFunction(mul, Tuple2{x, x})
+
+// Manglang
+in x out mul!(x x)
+// C++
+makeFunction([=](auto x) {
+  return applyFunction(mul, Tuple2{x, x});
+})
+
+// Manglang
+// {a=3}
+// C++
+[=](){
+  auto a = makeNumber(3);
+  return Dictionary_a{a};
+}()
+
+// Manglang
+{a=1 b=a}
+// C++
+[=](){
+  auto a = makeNumber(1);
+  auto b = a;
+  return Dictionary_a_b{a, b};
+}()
+
+// Manglang
+{a=1 b={c=a}}
+// C++
+[=](){
+  auto a = makeNumber(1);
+  auto b = [=](){
+    auto c = a;
+    return Dictionary_c{c};
+  }();
+  return Dictionary_a_b{a, b};
+}()
+
+// Manglang
+{s=0 i=2 while i s += i end}
+// C++
+[=](){
+  auto s = makeNumber(0);
+  auto i = makeNumber(2);
+  while (makeBoolean(i)) {
+    increment(s, i);
+  }
+  return Dictionary_s_i{s, i};
+}()
+
+// Manglang
+{x=1 f=in x out mul!(x x)}
+// C++
+[=](){
+  auto x = makeNumber(1);
+  auto f = makeFunction([=](auto x) {
+    return mul(Tuple2{x, x});
+  }
+  );
+  return Dictionary_x_f{x, f};
+}()
+
+// Manglang
+{x=1 f=in y out mul!(x y) z=f!3}
+// C++
+[=](){
+  auto x = makeNumber(1);
+  auto f = makeFunction([=](auto y) {
+    return mul((Tuple2){x, y});
+  };
+  auto z = applyFunction(f, makeNumber(3));
+  return Dictionary_x_f_z{x, f, z};
+}

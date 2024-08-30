@@ -7,7 +7,7 @@ TRANSPILING MANGLANG TO C
   - Require while loops.
   - Are like scopes within functions in C.
 * Closures / nested functions.
-  - Are not in C.
+  - Are not in C, but in Gnu C and C++.
   - Would goto be an option?
 * Goto-option
   - Main is entry point.
@@ -25,16 +25,14 @@ EXAMPLE - single dict
 {a=1 b=a}
 
 // c
-struct S0 {
-  int a;
-  int b;
+struct S_a_b {
+  Expression a;
+  Expression b;
 };
-void printS0(S0*);
 int main() {
-  S0 v0;
-  v0.a = 1;
-  v0.b = v0.a;
-  prints0(&v0);
+  Expression a = makeNumber(1);
+  Expression b = a;
+  print(serialize((S_a_b){a, b}));
 }
 
 EXAMPLE - nested dicts
@@ -43,22 +41,20 @@ EXAMPLE - nested dicts
 {a=1 b={c=a}}
 
 // C
-struct S0 {
-  double c;
+struct S_c {
+  Expression c;
 };
-struct S1 {
-  double a;
-  S0 b;
+struct S_a_b {
+  Expression a;
+  Expression b;
 };
-void printS0(S0*);
-void printS1(S1*);
 int main() {
-  S1 v0;
-  v0.a = 1;
-  S0 v1;
-  v1.c = v0.a;
-  v0.b = v1;
-  printS1(&v0);
+  Expression a = makeNumber(1);
+  {
+    Expression c = a;
+  }
+  Expression b = makeS_c((S_c){c});
+  print(serialize(makeS_a_b((S_a_b){a, b})));
 }
 
 EXAMPLE - while
@@ -66,19 +62,17 @@ EXAMPLE - while
 {s=0 i=2 while i s += i end}
 
 // C
-struct S0 {
-  double s;
-  double i;
+struct S_s_i {
+  Expression s;
+  Expression i;
 };
-void printS0(S0*);
 int main(){
-  S0 v0;
-  v0.s = 0;
-  v0.i = 2;
-  while (v0.i) {
-    v0.s += v0.i
+  Expression s = makeNumber(0);
+  Expression i = makeNumber(2);
+  while (makeBoolean(i)) {
+    increment(s, i);
   }
-  printS0(&v0);
+  print(serialize((S_s_i){s, i}));
 }
 
 EXAMPLE - tuple
@@ -86,18 +80,48 @@ EXAMPLE - tuple
 (1 2)
 
 // C
-struct T0 {
-  double data0;
-  double data1;
-};
-void printT0(T0*);
 int main() {
-  T0 v0;
-  v0.data0 = 1;
-  v0.data1 = 2;
-  printT0(&v0);
+  printT0((T2){1, 2});
 }
 
 EXAMPLE - function
 // Manglang
 {x=1 f=in x out mul!(x x)}
+struct S0 {
+  int x;
+  void* f(void*);
+};
+struct T0 {
+  void* data0;
+  void* data1;
+};
+void* F0(void* x) {
+    return mul((T0){x, x});
+}
+void printS0(S0*);
+int main() {
+  S0 s0;
+  so.x = 1;
+  s0.f = F0;
+  printS0(&s0);
+}
+
+EXAMPLE - function closure
+// Manglang
+{x=1 f=in y out mul!(x y) z=f!3}
+struct S_x_f_z {
+  Expression x;
+  Expression f;
+  Expression z;
+};
+void serializeS_x_f_z(S0);
+int main() {
+  Expression x = makeNumber(1);
+  Expression f_transform(Expression y) {
+    return mul((T2){x, y});
+  };
+  Expression f = makeFunction(f_transform);
+  Expression z = applyFunction(f, addNumber(3));
+  print(serializeS_x_f_z((S_x_f_z){x,f,z}));
+}
+
