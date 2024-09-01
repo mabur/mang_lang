@@ -173,6 +173,30 @@ STANDARD LIBRARY
 
 
 LANGUAGE SYNTAX & SEMANTICS
+* Rework for loops.
+for it in [3 8 9]
+  sum += take!it
+  sum += *it
+end
+
+for it in 9
+  sum += it
+end
+
+for _ in not?has_collision?intersection
+  return
+end
+
+when not?has_collision?intersection
+  return
+end
+
+* Consider syntax similar to Brett Slatkin, Haskell, Elm, Lisp, Python
+  - Trade less noise for non-nested function calls, but more noise for nested function calls and collections
+  - f x y
+  - list a b
+  - Nested function calls or collections can either bind in a fixed way: f x y -> f(x,y)   f(g x) -> f(g(x))   f(list x y)
+  - Nested function calls or collections could also not be allowed.
 * Besides dictionaries we can define symbols as function parameters.
   - What would it look like if we could only define symbols in dictionaries?
     - f = {x=in!0 y=in!1 out=add!(mul!(x x) mul!(x x))}
