@@ -409,6 +409,8 @@ TOOLS:
 * Web interpreter using wasm.
 * Code formatting
   - https://yorickpeterse.com/articles/how-to-write-a-code-formatter/
+  - https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf
+  - https://lindig.github.io/papers/strictly-pretty-2000.pdf
   - Indentaiton and line breaks.
   - Colors and syntax high-lighting.
     - Textmate grammars seem to be much easier than LSP or Treesitter.
