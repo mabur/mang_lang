@@ -305,8 +305,8 @@ SYSTEM IMPLEMENTATION
       which could be a sign of complexity.
     - Allow private fields that are only present during the dictionary evaluation phase,
       but removed after the dictionary has been evaluated.
-      publix x = 1
-      _x = 1
+      Can annotate private with _ like in python (good), or case like in Go or keyword.
+      {_c = 1 x = _c y = _c}
   - Store a name-to-index hash-map for each dictionary type.
   - Use a bitset to store what names are in a dictionary.
     - Compare bitset vs sorted array of indices.
