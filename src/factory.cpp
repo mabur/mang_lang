@@ -177,15 +177,20 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, storage.symbol_lookups);
 }
 
+size_t findNameIndex(Name name) {
+    const auto name_index = storage.name_indices.find(name);
+    return name_index == storage.name_indices.end() ? SIZE_MAX : name_index->second;
+}
+
 Expression makeName(CodeRange code, Name expression) {
-    const auto name_index = storage.name_indices.find(expression);
-    if (name_index == storage.name_indices.end()) {
+    const auto name_index = findNameIndex(expression);
+    if (name_index == SIZE_MAX) {
         storage.name_indices[expression] = storage.names.size();
         storage.names.emplace_back(std::move(expression));
         return Expression{NAME, storage.names.size() - 1, code};
     }
     else {
-        return Expression{NAME, name_index->second, code};
+        return Expression{NAME, name_index, code};
     }
 }
 
