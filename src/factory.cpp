@@ -186,7 +186,7 @@ Expression makeName(CodeRange code, Name expression) {
     const auto name_index = findNameIndex(expression);
     if (name_index == SIZE_MAX) {
         storage.name_indices[expression] = storage.names.size();
-        storage.names.emplace_back(std::move(expression));
+        storage.names.emplace_back(std::string(expression.data(), expression.size()));
         return Expression{NAME, storage.names.size() - 1, code};
     }
     else {
