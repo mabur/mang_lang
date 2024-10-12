@@ -273,10 +273,20 @@ SYSTEM IMPLEMENTATION
     - Requires shipping a C++ compiler
   * Lua
     + Simple and embeddable
-  * LuaJit
+    + Well known
+    + vcpkg
+    * Modes
+      * Lua Interpreter (fast)
+      * LuaJIT Interpreter (faster)
+      * LuaJit JIT (fastest)
   * Wren
-    + Simple and embeddable
-    - Small language
+    + Small language
+    + vcpkg
+    - Peculiar OOP syntax and semantics
+    - Few users
+  * Janet
+    * Lisp
+    - Few users
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
