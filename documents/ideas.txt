@@ -254,6 +254,29 @@ end
   - expression
 
 SYSTEM IMPLEMENTATION
+* Transpile to:
+  * LLVM
+    + Performance
+    + Well known
+    - Complicated
+  * Webassembly
+    + Well known
+    - Low level
+  * C
+    + Performance
+    + Well known language
+    - Difficult with closures
+    - Requires shipping a C compiler
+  * C++
+    + Performance
+    + Well known language
+    - Requires shipping a C++ compiler
+  * Lua
+    + Simple and embeddable
+  * LuaJit
+  * Wren
+    + Simple and embeddable
+    - Small language
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
