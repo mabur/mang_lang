@@ -271,7 +271,7 @@ SYSTEM IMPLEMENTATION
     + Performance
     + Well known language
     - Requires shipping a C++ compiler
-  * Lua
+  * Lua !
     + Simple and embeddable
     + Well known
     + vcpkg
