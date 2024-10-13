@@ -43,19 +43,19 @@ const char* describeLocation(CodeRange code) {
         FORMAT_STRING(s, " at unknown location.");
     }
     else if (code.count == 1) {
-        auto first = code.data;
-        FORMAT_STRING(s, " at row %zu and column %zu", first->row + 1, first->column + 1);
+        auto first = FIRST_ITEM(code);
+        FORMAT_STRING(s, " at row %zu and column %zu", first.row + 1, first.column + 1);
     }
     else {
-        auto first = code.data;
-        auto last = code.data + code.count - 1;
+        auto first = FIRST_ITEM(code);
+        auto last = LAST_ITEM(code);
         FORMAT_STRING(
             s,
             " between row %zu and column %zu and row %zu and column %zu",
-            first->row + 1,
-            first->column + 1,
-            last->row + 1,
-            last->column + 1
+            first.row + 1,
+            first.column + 1,
+            last.row + 1,
+            last.column + 1
         );
     }
     return s.data;
