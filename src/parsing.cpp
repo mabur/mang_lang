@@ -163,3 +163,7 @@ CodeRange parseRawNumber(CodeRange code) {
     code = parseWhile(code, isDigit);
     return firstPart(whole, code);
 }
+
+CodeRange parseRawName(CodeRange code) {
+    return parseWhile(code, isNameCharacter);    
+}

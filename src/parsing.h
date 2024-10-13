@@ -58,3 +58,5 @@ CodeRange parseWhile(CodeRange code, Predicate predicate) {
 }
 
 CodeRange parseRawNumber(CodeRange code);
+
+CodeRange parseRawName(CodeRange code);

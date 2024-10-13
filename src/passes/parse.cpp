@@ -123,7 +123,7 @@ Expression parseIs(CodeRange code) {
 
 Expression parseName(CodeRange code) {
     auto whole = code;
-    code = parseWhile(code, isNameCharacter);
+    code = parseRawName(code);
     return makeName(
         firstPart(whole, code),
         rawString(firstPart(whole, code))
