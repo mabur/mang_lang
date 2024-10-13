@@ -8,6 +8,7 @@
 
 #include "exceptions.h"
 #include "passes/serialize.h"
+#include "string.h"
 
 Storage storage;
 

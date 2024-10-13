@@ -7,19 +7,9 @@
 
 #include <carma/carma.h>
 
+#include "expression.h"
 #include "exceptions.h"
 #include "string.h"
-
-struct CodeCharacter {
-    char character = 'a';
-    size_t row = 0;
-    size_t column = 0;
-};
-
-struct CodeRange {
-    CodeCharacter* data;
-    size_t count;
-};
 
 CodeRange firstPart(CodeRange whole, CodeRange last_part);
 

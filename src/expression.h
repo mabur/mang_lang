@@ -7,7 +7,17 @@
 #include <vector>
 
 #include "expression_type.h"
-#include "parsing.h"
+
+struct CodeCharacter {
+    char character = 'a';
+    size_t row = 0;
+    size_t column = 0;
+};
+
+struct CodeRange {
+    CodeCharacter* data;
+    size_t count;
+};
 
 // TODO: Pack tighter?
 // Bit size           Current  Pack1  Pack2
