@@ -26,24 +26,24 @@ std::string rawString(CodeRange code) {
     return s;
 }
 
-bool isDigit(CodeCharacter c) {
-    return isdigit(c.character);
+bool isDigit(char c) {
+    return isdigit(c);
 }
 
-bool isSign(CodeCharacter c) {
-    return c.character == '+' || c.character == '-';
+bool isSign(char c) {
+    return c == '+' || c == '-';
 }
 
-bool isLetter(CodeCharacter c) {
-    return std::isalpha(c.character);
+bool isLetter(char c) {
+    return std::isalpha(c);
 }
 
-bool isNameCharacter(CodeCharacter c) {
-    return isLetter(c) || isDigit(c) || c.character == '_';
+bool isNameCharacter(char c) {
+    return isLetter(c) || isDigit(c) || c == '_';
 }
 
-bool isWhiteSpace(CodeCharacter c) {
-    return isspace(c.character);
+bool isWhiteSpace(char c) {
+    return isspace(c);
 }
 
 bool isKeyword(CodeRange code, const char* word) {
@@ -59,7 +59,7 @@ bool isKeyword(CodeRange code, const char* word) {
     if (it0 == END_POINTER(code)) {
         return true;
     }
-    return !isNameCharacter(*it0);
+    return !isNameCharacter(it0->character);
 }
 
 bool startsWith(CodeRange code, const char* word) {

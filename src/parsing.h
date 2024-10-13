@@ -9,6 +9,7 @@
 
 #include "expression.h"
 #include "exceptions.h"
+#include "factory.h"
 #include "string.h"
 
 CodeRange firstPart(CodeRange whole, CodeRange last_part);
@@ -22,15 +23,15 @@ void throwParseException(CodeRange code);
 
 std::string rawString(CodeRange code);
 
-bool isDigit(CodeCharacter c);
+bool isDigit(char c);
 
-bool isSign(CodeCharacter c);
+bool isSign(char c);
 
-bool isLetter(CodeCharacter c);
+bool isLetter(char c);
 
-bool isNameCharacter(CodeCharacter c);
+bool isNameCharacter(char c);
 
-bool isWhiteSpace(CodeCharacter c);
+bool isWhiteSpace(char c);
 
 bool isKeyword(CodeRange code, const char* word);
 
@@ -47,13 +48,9 @@ CodeRange parseCharacter(CodeRange code, char expected);
 template<typename Predicate>
 CodeRange parseCharacter(CodeRange code, Predicate predicate) {
     throwIfEmpty(code);
-    auto it = code.data;
-    if (!predicate(*it)) {
-        throwException(
-            "Parser got unexpected char%c%s",
-            it->character,
-            describeLocation(code)
-        );
+    auto c = firstCharacter(code);
+    if (!predicate(c)) {
+        throwException("Parser got unexpected char%c%s", c, describeLocation(code));
     }
     DROP_FRONT(code);
     return code;
@@ -63,7 +60,7 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 template<typename Predicate>
 CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
-    if (!IS_EMPTY(code) && predicate(*code.data)) {
+    if (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
         DROP_FRONT(code);
     }
     return code;
@@ -73,7 +70,7 @@ CodeRange parseKeyword(CodeRange code, const char* keyword);
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    while (!IS_EMPTY(code) && predicate(*code.data)) {
+    while (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
         DROP_FRONT(code);
     }
     return code;
