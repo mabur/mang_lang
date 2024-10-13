@@ -7,6 +7,14 @@
 #include "factory.h"
 
 template<typename Predicate>
+CodeRange parseWhile(CodeRange code, Predicate predicate) {
+    while (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
+        DROP_FRONT(code);
+    }
+    return code;
+}
+
+template<typename Predicate>
 CodeRange parseCharacterIf(CodeRange code, Predicate predicate) {
     throwIfEmpty(code);
     auto c = firstCharacter(code);

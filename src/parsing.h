@@ -49,14 +49,6 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 CodeRange parseKeyword(CodeRange code, const char* keyword);
 
-template<typename Predicate>
-CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    while (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
-        DROP_FRONT(code);
-    }
-    return code;
-}
-
 CodeRange parseRawNumber(CodeRange code);
 
 CodeRange parseRawName(CodeRange code);
