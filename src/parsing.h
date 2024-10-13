@@ -46,7 +46,7 @@ CodeRange parseCharacter(CodeRange code);
 CodeRange parseCharacter(CodeRange code, char expected);
 
 template<typename Predicate>
-CodeRange parseCharacter(CodeRange code, Predicate predicate) {
+CodeRange parseCharacterIf(CodeRange code, Predicate predicate) {
     throwIfEmpty(code);
     auto c = firstCharacter(code);
     if (!predicate(c)) {

@@ -554,7 +554,7 @@ Expression parseSubstitution(CodeRange code) {
 Expression parseNumber(CodeRange code) {
     auto whole = code;
     code = parseOptionalCharacter(code, isSign);
-    code = parseCharacter(code, isDigit);
+    code = parseCharacterIf(code, isDigit);
     code = parseWhile(code, isDigit);
     code = parseOptionalCharacter(code, '.');
     code = parseWhile(code, isDigit);
