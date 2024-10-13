@@ -59,7 +59,7 @@ CodeRange parseCharacterIf(CodeRange code, Predicate predicate) {
 CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 template<typename Predicate>
-CodeRange parseOptionalCharacter(CodeRange code, Predicate predicate) {
+CodeRange parseOptionalCharacterIf(CodeRange code, Predicate predicate) {
     if (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
         DROP_FRONT(code);
     }
