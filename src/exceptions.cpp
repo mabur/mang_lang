@@ -4,6 +4,7 @@
 
 #include <carma/carma_string.h>
 
+#include "expression.h"
 #include "parsing.h"
 
 void throwException(const char* format, ...) {

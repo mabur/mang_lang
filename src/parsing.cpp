@@ -1,10 +1,13 @@
 #include "parsing.h"
-#include <algorithm>
+
+#include <string>
 
 #include <carma/carma.h>
 
+#include "expression.h"
 #include "exceptions.h"
 #include "factory.h"
+#include "string.h"
 
 template<typename Predicate>
 CodeRange parseWhile(CodeRange code, Predicate predicate) {
