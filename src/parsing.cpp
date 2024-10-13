@@ -7,6 +7,17 @@
 #include "factory.h"
 
 template<typename Predicate>
+CodeRange parseCharacterIf(CodeRange code, Predicate predicate) {
+    throwIfEmpty(code);
+    auto c = firstCharacter(code);
+    if (!predicate(c)) {
+        throwException("Parser got unexpected char%c%s", c, describeLocation(code));
+    }
+    DROP_FRONT(code);
+    return code;
+}
+
+template<typename Predicate>
 CodeRange parseOptionalCharacterIf(CodeRange code, Predicate predicate) {
     if (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
         DROP_FRONT(code);

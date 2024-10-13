@@ -45,17 +45,6 @@ CodeRange parseCharacter(CodeRange code);
 
 CodeRange parseCharacter(CodeRange code, char expected);
 
-template<typename Predicate>
-CodeRange parseCharacterIf(CodeRange code, Predicate predicate) {
-    throwIfEmpty(code);
-    auto c = firstCharacter(code);
-    if (!predicate(c)) {
-        throwException("Parser got unexpected char%c%s", c, describeLocation(code));
-    }
-    DROP_FRONT(code);
-    return code;
-}
-
 CodeRange parseOptionalCharacter(CodeRange code, char c);
 
 CodeRange parseKeyword(CodeRange code, const char* keyword);
