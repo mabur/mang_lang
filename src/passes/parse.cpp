@@ -552,14 +552,9 @@ Expression parseSubstitution(CodeRange code) {
 }
 
 Expression parseNumber(CodeRange code) {
-    auto whole = code;
-    code = parseOptionalCharacterIf(code, isSign);
-    code = parseCharacterIf(code, isDigit);
-    code = parseWhile(code, isDigit);
-    code = parseOptionalCharacter(code, '.');
-    code = parseWhile(code, isDigit);
-    const auto value = std::stod(rawString(firstPart(whole, code)));
-    return makeNumber(firstPart(whole, code), value);
+    code = parseRawNumber(code);
+    const auto value = std::stod(rawString(code));
+    return makeNumber(code, value);
 }
 
 CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {

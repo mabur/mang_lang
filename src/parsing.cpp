@@ -134,3 +134,13 @@ void throwIfEmpty(CodeRange code) {
 void throwParseException(CodeRange code) {
     throwException("Does not recognize expression to parse%s", describeLocation(code));
 }
+
+CodeRange parseRawNumber(CodeRange code) {
+    auto whole = code;
+    code = parseOptionalCharacterIf(code, isSign);
+    code = parseCharacterIf(code, isDigit);
+    code = parseWhile(code, isDigit);
+    code = parseOptionalCharacter(code, '.');
+    code = parseWhile(code, isDigit);
+    return firstPart(whole, code);
+}

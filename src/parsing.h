@@ -75,3 +75,5 @@ CodeRange parseWhile(CodeRange code, Predicate predicate) {
     }
     return code;
 }
+
+CodeRange parseRawNumber(CodeRange code);
