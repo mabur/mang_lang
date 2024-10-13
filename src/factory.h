@@ -99,3 +99,5 @@ Expression makeForSimpleEndStatement(CodeRange code, ForSimpleEndStatement expre
 Expression makeString(CodeRange code, String expression);
 
 CodeRange makeCodeCharacters(const char* s);
+
+char firstCharacter(CodeRange code);

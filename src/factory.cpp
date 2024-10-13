@@ -282,3 +282,7 @@ CodeRange makeCodeCharacters(const char* s) {
     }
     return result;
 }
+
+char firstCharacter(CodeRange code) {
+    return code.data->character;
+}

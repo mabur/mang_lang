@@ -4,6 +4,7 @@
 #include <carma/carma.h>
 
 #include "exceptions.h"
+#include "factory.h"
 
 CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return CodeRange{whole.data, whole.count - last_part.count};
@@ -72,7 +73,7 @@ bool startsWith(CodeRange code, const char* word) {
 }
 
 bool startsWith(CodeRange code, char c) {
-    return !IS_EMPTY(code) && code.data->character == c;
+    return !IS_EMPTY(code) && firstCharacter(code) == c;
 }
 
 CodeRange parseWhiteSpace(CodeRange code) {
@@ -87,9 +88,8 @@ CodeRange parseCharacter(CodeRange code) {
 
 CodeRange parseCharacter(CodeRange code, char expected) {
     throwIfEmpty(code);
-    auto it = code.data;
-    const auto actual = it->character;
-    if (it->character != expected) {
+    const auto actual = firstCharacter(code);
+    if (actual != expected) {
         throwException(
             "Parsing expected \'%c\' but got \'%c\'%s",
             expected,
@@ -102,7 +102,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
 }
 
 CodeRange parseOptionalCharacter(CodeRange code, char c) {
-    if (!IS_EMPTY(code) && code.data->character == c) {
+    if (!IS_EMPTY(code) && firstCharacter(code) == c) {
         DROP_FRONT(code);
     }
     return code;

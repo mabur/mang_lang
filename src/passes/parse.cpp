@@ -41,9 +41,8 @@ private:
 Expression parseCharacterExpression(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '\'');
-    const auto it = code.data;
+    auto value = firstCharacter(code);
     code = parseCharacter(code);
-    const auto value = it->character;
     code = parseCharacter(code, '\'');
     return makeCharacter(firstPart(whole, code), value);
 }
@@ -596,11 +595,12 @@ Expression parseString(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '"');
     auto characters = Expressions{};
-    while (code.data->character != '"') {
-        auto character = makeCharacter(
-            CodeRange{code.data, 1},
-            code.data->character
-        );
+    for (;;) {
+        auto c = firstCharacter(code);
+        if (c == '"') {
+            break;
+        }
+        auto character = makeCharacter(CodeRange{code.data, 1}, c);
         APPEND(characters, character);
         DROP_FRONT(code);
     }
@@ -620,7 +620,7 @@ Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
-        const auto c = code.data->character;
+        const auto c = firstCharacter(code);
         if (c == '[') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}
         if (c == '(') {return parseTuple(code);}
