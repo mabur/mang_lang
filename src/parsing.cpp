@@ -6,6 +6,14 @@
 #include "exceptions.h"
 #include "factory.h"
 
+template<typename Predicate>
+CodeRange parseOptionalCharacterIf(CodeRange code, Predicate predicate) {
+    if (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
+        DROP_FRONT(code);
+    }
+    return code;
+}
+
 CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return CodeRange{whole.data, whole.count - last_part.count};
 }
