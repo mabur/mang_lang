@@ -56,22 +56,27 @@ std::string rawString(CodeRange code) {
     return s;
 }
 
+static
 bool isDigit(char c) {
     return isdigit(c);
 }
 
+static
 bool isSign(char c) {
     return c == '+' || c == '-';
 }
 
+static
 bool isLetter(char c) {
     return std::isalpha(c);
 }
 
+static
 bool isNameCharacter(char c) {
     return isLetter(c) || isDigit(c) || c == '_';
 }
 
+static
 bool isWhiteSpace(char c) {
     return isspace(c);
 }
