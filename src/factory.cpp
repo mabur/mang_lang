@@ -262,3 +262,23 @@ Number getNumber(Expression expression) {
     memcpy(&result, &expression.index, sizeof(Number));
     return result;
 }
+
+CodeRange makeCodeCharacters(const char* s) {
+    auto string = makeStaticString(s);
+    auto result = CodeRange{};
+    INIT_RANGE(result, string.count);
+
+    auto column = size_t{0};
+    auto row = size_t{0};
+    auto index = size_t{0};
+    FOR_EACH(character, string) {
+        result.data[index] = CodeCharacter{*character, row, column};
+        ++index;
+        ++column;
+        if (*character == '\n') {
+            ++row;
+            column = 0;
+        }
+    }
+    return result;
+}

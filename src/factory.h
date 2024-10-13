@@ -97,3 +97,5 @@ Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
 Expression makeForSimpleEndStatement(CodeRange code, ForSimpleEndStatement expression);
 Expression makeString(CodeRange code, String expression);
+
+CodeRange makeCodeCharacters(const char* s);

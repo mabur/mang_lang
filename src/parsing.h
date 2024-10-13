@@ -32,8 +32,6 @@ void throwParseException(CodeRange code);
 
 std::string rawString(CodeRange code);
 
-CodeRange makeCodeCharacters(const char* s);
-
 bool isDigit(CodeCharacter c);
 
 bool isSign(CodeCharacter c);
