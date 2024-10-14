@@ -587,6 +587,10 @@ Expression parseDynamicExpression(CodeRange code) {
     );
 }
 
+CodeRange rangeOfFirst(CodeRange code) {
+    return CodeRange{code.data, 1};
+}
+
 Expression parseString(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '"');
@@ -596,11 +600,11 @@ Expression parseString(CodeRange code) {
         if (c == '"') {
             break;
         }
-        auto character = makeCharacter(CodeRange{code.data, 1}, c);
+        auto character = makeCharacter(rangeOfFirst(code), c);
         APPEND(characters, character);
         DROP_FRONT(code);
     }
-    auto string = Expression{EMPTY_STRING, 0, CodeRange{whole.data, 1}};
+    auto string = Expression{EMPTY_STRING, 0, rangeOfFirst(whole)};
     FOR_EACH_BACKWARD(it, characters) {
         string = putString(string, *it);
     }
