@@ -26,8 +26,8 @@ struct CodeRange {
 // Bit size           Current  Pack1  Pack2
 // Expression::type        16      4      4
 // Expression::index       64     64   64-4
-// Expression::range      128     32      0
-// Expression             256    128     64
+// Expression::range       32     32      0
+// Expression             128    128     64
 struct Expression {
     ExpressionType type = ANY;
     size_t index = 0;
