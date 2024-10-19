@@ -11,8 +11,10 @@ struct Expressions {
 };
 
 struct Storage {
-    // TODO: store the source code and CodeRanges here as well.
-    DARRAY(CodeCharacter) code_characters;
+    // SOA for CodeCharacter:
+    DARRAY(char) code_characters;
+    DARRAY(CharacterIndex) code_rows;
+    DARRAY(CharacterIndex) code_columns;
 
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;

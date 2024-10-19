@@ -29,6 +29,8 @@ Expression makeExpression(
 
 void clearMemory() {
     FREE_DARRAY(storage.code_characters);
+    FREE_DARRAY(storage.code_rows);
+    FREE_DARRAY(storage.code_columns);
     
     FREE_DARRAY(storage.dynamic_expressions);
     FREE_DARRAY(storage.typed_expressions);
@@ -275,8 +277,9 @@ CodeRange makeCodeCharacters(const char* s) {
     auto column = CharacterIndex{0};
     auto row = CharacterIndex{0};
     FOR_EACH(character, string) {
-        auto item = CodeCharacter{*character, row, column};
-        APPEND(storage.code_characters, item);
+        APPEND(storage.code_characters, *character);
+        APPEND(storage.code_rows, row);
+        APPEND(storage.code_columns, column);
         ++column;
         if (*character == '\n') {
             ++row;
@@ -287,25 +290,25 @@ CodeRange makeCodeCharacters(const char* s) {
 }
 
 char firstCharacter(CodeRange code) {
-    return storage.code_characters.data[code.data].character;
+    return storage.code_characters.data[code.data];
 }
 
 size_t firstColumn(CodeRange code) {
-    return storage.code_characters.data[code.data].column + 1;
+    return storage.code_columns.data[code.data] + 1;
 }
 
 size_t firstRow(CodeRange code) {
-    return storage.code_characters.data[code.data].row + 1;
+    return storage.code_rows.data[code.data] + 1;
 }
 
 char lastCharacter(CodeRange code) {
-    return storage.code_characters.data[code.data + code.count - 1].character;
+    return storage.code_characters.data[code.data + code.count - 1];
 }
 
 size_t lastColumn(CodeRange code) {
-    return storage.code_characters.data[code.data + code.count - 1].column + 1;
+    return storage.code_columns.data[code.data + code.count - 1] + 1;
 }
 
 size_t lastRow(CodeRange code) {
-    return storage.code_characters.data[code.data + code.count - 1].row + 1;
+    return storage.code_rows.data[code.data + code.count - 1] + 1;
 }
