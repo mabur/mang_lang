@@ -28,6 +28,8 @@ Expression makeExpression(
 } // namespace
 
 void clearMemory() {
+    FREE_DARRAY(storage.code_characters);
+    
     FREE_DARRAY(storage.dynamic_expressions);
     FREE_DARRAY(storage.typed_expressions);
     FREE_DARRAY(storage.dictionaries);
