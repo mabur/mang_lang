@@ -68,12 +68,14 @@ struct Alternative {
     Expression right;
 };
 
+// TODO: use carma like struct for index range
 struct Conditional {
     Expression alternative_first;
     Expression alternative_last;
     Expression expression_else;
 };
 
+// TODO: use carma like struct for index range
 struct IsExpression {
     Expression input;
     Expression alternative_first;
@@ -93,6 +95,7 @@ struct FunctionBuiltIn {
     FunctionPointer function;
 };
 
+// TODO: use carma like struct for index range
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
     size_t first_argument;
@@ -100,6 +103,7 @@ struct FunctionDictionary {
     Expression body;
 };
 
+// TODO: use carma like struct for index range
 struct FunctionTuple {
     Expression environment;
     size_t first_argument;
@@ -126,6 +130,7 @@ struct String {
     Expression rest;
 };
 
+// TODO: use carma like struct for index range
 struct Tuple {
     size_t first;
     size_t last;
@@ -133,6 +138,7 @@ struct Tuple {
 
 // TODO: add special case for tuple of size 2.
 // TODO: merge with Tuple for storage but keep type-code to know if it is evaluated.
+// TODO: use carma like struct for index range
 struct EvaluatedTuple {
     size_t first;
     size_t last;
@@ -200,6 +206,7 @@ struct ForSimpleEndStatement {
 
 // STATEMENTS END
 
+// TODO: use carma like struct for index range
 struct Dictionary {
     size_t statement_first;
     size_t statement_last;
@@ -230,6 +237,7 @@ struct EvaluatedDictionary {
     EvaluatedDictionary& operator=(EvaluatedDictionary&&) = default;
 
     Expression environment;
+    // TODO: use carma like struct for index range
     std::vector<Definition> definitions;
 
     const Expression* optionalLookup(size_t name) const;
