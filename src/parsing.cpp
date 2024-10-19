@@ -48,12 +48,7 @@ CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
 }
 
 std::string rawString(CodeRange code) {
-    auto s = std::string{};
-    s.reserve(code.count);
-    FOR_EACH(c, code) {
-        s.push_back(storage.code_characters.data[c]);
-    }
-    return s;
+    return std::string(storage.code_characters.data + code.data, code.count);
 }
 
 static
