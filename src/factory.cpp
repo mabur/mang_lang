@@ -268,15 +268,13 @@ Number getNumber(Expression expression) {
 
 CodeRange makeCodeCharacters(const char* s) {
     auto string = makeStaticString(s);
-    auto result = CodeRange{};
-    INIT_RANGE(result, string.count);
+    auto result = CodeRange{storage.code_characters.count, string.count};
 
     auto column = size_t{0};
     auto row = size_t{0};
-    auto index = size_t{0};
     FOR_EACH(character, string) {
-        result.data[index] = CodeCharacter{*character, row, column};
-        ++index;
+        auto item = CodeCharacter{*character, row, column};
+        APPEND(storage.code_characters, item);
         ++column;
         if (*character == '\n') {
             ++row;
@@ -287,25 +285,25 @@ CodeRange makeCodeCharacters(const char* s) {
 }
 
 char firstCharacter(CodeRange code) {
-    return FIRST_ITEM(code).character;
+    return storage.code_characters.data[code.data].character;
 }
 
 size_t firstColumn(CodeRange code) {
-    return FIRST_ITEM(code).column + 1;
+    return storage.code_characters.data[code.data].column + 1;
 }
 
 size_t firstRow(CodeRange code) {
-    return FIRST_ITEM(code).row + 1;
+    return storage.code_characters.data[code.data].row + 1;
 }
 
 char lastCharacter(CodeRange code) {
-    return LAST_ITEM(code).character;
+    return storage.code_characters.data[code.data + code.count - 1].character;
 }
 
 size_t lastColumn(CodeRange code) {
-    return LAST_ITEM(code).column + 1;
+    return storage.code_characters.data[code.data + code.count - 1].column + 1;
 }
 
 size_t lastRow(CodeRange code) {
-    return LAST_ITEM(code).row + 1;
+    return storage.code_characters.data[code.data + code.count - 1].row + 1;
 }

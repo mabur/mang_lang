@@ -14,8 +14,6 @@ static
 Expression parse(const char* string) {
     auto c = makeCodeCharacters(string);
     auto expression = parseExpression(c);
-    // TODO: is it safe to free here?
-    FREE_RANGE(c);
     return expression;
 }
 

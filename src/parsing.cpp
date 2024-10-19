@@ -51,7 +51,7 @@ std::string rawString(CodeRange code) {
     auto s = std::string{};
     s.reserve(code.count);
     FOR_EACH(c, code) {
-        s.push_back(c->character);
+        s.push_back(storage.code_characters.data[c].character);
     }
     return s;
 }
@@ -84,7 +84,7 @@ bool isWhiteSpace(char c) {
 bool isKeyword(CodeRange code, const char* word) {
     auto word_range = makeStaticString(word);
     FOR_EACH2(it0, it1, code, word_range) {
-        if (it0->character != *it1) {
+        if (storage.code_characters.data[it0].character != *it1) {
             return false;
         }
     }
@@ -94,13 +94,13 @@ bool isKeyword(CodeRange code, const char* word) {
     if (it0 == END_POINTER(code)) {
         return true;
     }
-    return !isNameCharacter(it0->character);
+    return !isNameCharacter(storage.code_characters.data[it0].character);
 }
 
 bool startsWith(CodeRange code, const char* word) {
     auto word_range = makeStaticString(word);
     FOR_EACH2(it0, it1, code, word_range) {
-        if (it0->character != *it1) {
+        if (storage.code_characters.data[it0].character != *it1) {
             return false;
         }
     }

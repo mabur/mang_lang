@@ -15,8 +15,7 @@ struct CodeCharacter {
 };
 
 struct CodeRange {
-    // TODO: Take an index to the data and store all CodeCharacters in array in Storage.
-    CodeCharacter* data;
+    size_t data;
     size_t count;
 };
 
