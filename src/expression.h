@@ -2,21 +2,24 @@
 
 #include <map>
 #include <stdexcept>
+#include <stdint.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 #include "expression_type.h"
 
+typedef uint16_t CharacterIndex;
+
 struct CodeCharacter {
     char character = 'a';
-    size_t row = 0;
-    size_t column = 0;
+    CharacterIndex row = 0;
+    CharacterIndex column = 0;
 };
 
 struct CodeRange {
-    size_t data;
-    size_t count;
+    CharacterIndex data;
+    CharacterIndex count;
 };
 
 // TODO: Pack tighter?

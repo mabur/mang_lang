@@ -268,10 +268,12 @@ Number getNumber(Expression expression) {
 
 CodeRange makeCodeCharacters(const char* s) {
     auto string = makeStaticString(s);
-    auto result = CodeRange{storage.code_characters.count, string.count};
-
-    auto column = size_t{0};
-    auto row = size_t{0};
+    auto result = CodeRange{
+        CharacterIndex(storage.code_characters.count),
+        CharacterIndex(string.count)
+    };
+    auto column = CharacterIndex{0};
+    auto row = CharacterIndex{0};
     FOR_EACH(character, string) {
         auto item = CodeCharacter{*character, row, column};
         APPEND(storage.code_characters, item);

@@ -37,13 +37,13 @@ CodeRange parseOptionalCharacterIf(CodeRange code, Predicate predicate) {
 }
 
 CodeRange firstPart(CodeRange whole, CodeRange last_part) {
-    return CodeRange{whole.data, whole.count - last_part.count};
+    return CodeRange{whole.data, CharacterIndex(whole.count - last_part.count)};
 }
 
 CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
     auto whole_end = whole.data + whole.count;
-    auto middle_part_end = middle_part.data + middle_part.count;
-    auto count = static_cast<size_t>(whole_end - middle_part_end);
+    auto middle_part_end = CharacterIndex(middle_part.data + middle_part.count);
+    auto count = CharacterIndex(whole_end - middle_part_end);
     return CodeRange{middle_part_end, count};
 }
 
