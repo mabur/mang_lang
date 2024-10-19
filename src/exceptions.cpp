@@ -5,6 +5,7 @@
 #include <carma/carma_string.h>
 
 #include "expression.h"
+#include "factory.h"
 #include "parsing.h"
 
 void throwException(const char* format, ...) {
@@ -44,19 +45,21 @@ const char* describeLocation(CodeRange code) {
         FORMAT_STRING(s, " at unknown location.");
     }
     else if (code.count == 1) {
-        auto first = FIRST_ITEM(code);
-        FORMAT_STRING(s, " at row %zu and column %zu", first.row + 1, first.column + 1);
+        FORMAT_STRING(
+            s,
+            " at row %zu and column %zu",
+            firstRow(code),
+            firstColumn(code)
+        );
     }
     else {
-        auto first = FIRST_ITEM(code);
-        auto last = LAST_ITEM(code);
         FORMAT_STRING(
             s,
             " between row %zu and column %zu and row %zu and column %zu",
-            first.row + 1,
-            first.column + 1,
-            last.row + 1,
-            last.column + 1
+            firstRow(code),
+            firstColumn(code),
+            lastRow(code),
+            lastColumn(code)
         );
     }
     return s.data;

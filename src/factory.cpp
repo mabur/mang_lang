@@ -287,5 +287,25 @@ CodeRange makeCodeCharacters(const char* s) {
 }
 
 char firstCharacter(CodeRange code) {
-    return code.data->character;
+    return FIRST_ITEM(code).character;
+}
+
+size_t firstColumn(CodeRange code) {
+    return FIRST_ITEM(code).column + 1;
+}
+
+size_t firstRow(CodeRange code) {
+    return FIRST_ITEM(code).row + 1;
+}
+
+char lastCharacter(CodeRange code) {
+    return LAST_ITEM(code).character;
+}
+
+size_t lastColumn(CodeRange code) {
+    return LAST_ITEM(code).column + 1;
+}
+
+size_t lastRow(CodeRange code) {
+    return LAST_ITEM(code).row + 1;
 }

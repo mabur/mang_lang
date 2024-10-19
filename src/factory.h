@@ -102,3 +102,8 @@ Expression makeString(CodeRange code, String expression);
 CodeRange makeCodeCharacters(const char* s);
 
 char firstCharacter(CodeRange code);
+size_t firstColumn(CodeRange code);
+size_t firstRow(CodeRange code);
+char lastCharacter(CodeRange code);
+size_t lastColumn(CodeRange code);
+size_t lastRow(CodeRange code);
