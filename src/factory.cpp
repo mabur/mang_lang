@@ -274,8 +274,8 @@ CodeRange makeCodeCharacters(const char* s) {
         CharacterIndex(storage.code_characters.count),
         CharacterIndex(string.count)
     };
-    auto column = CharacterIndex{0};
-    auto row = CharacterIndex{0};
+    auto column = CharacterIndex{1};
+    auto row = CharacterIndex{1};
     FOR_EACH(character, string) {
         APPEND(storage.code_characters, *character);
         APPEND(storage.code_rows, row);
@@ -283,7 +283,7 @@ CodeRange makeCodeCharacters(const char* s) {
         ++column;
         if (*character == '\n') {
             ++row;
-            column = 0;
+            column = 1;
         }
     }
     return result;
@@ -294,11 +294,11 @@ char firstCharacter(CodeRange code) {
 }
 
 size_t firstColumn(CodeRange code) {
-    return storage.code_columns.data[code.data] + 1;
+    return storage.code_columns.data[code.data];
 }
 
 size_t firstRow(CodeRange code) {
-    return storage.code_rows.data[code.data] + 1;
+    return storage.code_rows.data[code.data];
 }
 
 char lastCharacter(CodeRange code) {
@@ -306,9 +306,9 @@ char lastCharacter(CodeRange code) {
 }
 
 size_t lastColumn(CodeRange code) {
-    return storage.code_columns.data[code.data + code.count - 1] + 1;
+    return storage.code_columns.data[code.data + code.count - 1];
 }
 
 size_t lastRow(CodeRange code) {
-    return storage.code_rows.data[code.data + code.count - 1] + 1;
+    return storage.code_rows.data[code.data + code.count - 1];
 }
