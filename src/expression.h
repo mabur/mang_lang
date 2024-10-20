@@ -77,11 +77,9 @@ struct Conditional {
     Expression expression_else;
 };
 
-// TODO: use carma like struct for index range
 struct IsExpression {
     Expression input;
-    size_t alternative_first;
-    size_t alternative_last;
+    Indices alternative;
     Expression expression_else;
 };
 

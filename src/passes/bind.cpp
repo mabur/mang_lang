@@ -104,10 +104,7 @@ void bindConditional(Expression conditional, Expression environment) {
 void bindIs(Expression is, Expression environment) {
     const auto is_struct = storage.is_expressions.data[is.index];
     bind(is_struct.input, environment);
-    for (auto a = is_struct.alternative_first;
-        a <= is_struct.alternative_last;
-        ++a
-        ) {
+    FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
         bind(alternative.left, environment);
         bind(alternative.right, environment);

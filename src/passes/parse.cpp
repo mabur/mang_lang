@@ -115,12 +115,13 @@ Expression parseIs(CodeRange code) {
     code = parseWhiteSpace(code);
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
+    auto first_index = FIRST_ITEM(alternatives).index;
+    auto last_index = LAST_ITEM(alternatives).index;
     auto result = makeIs(
         firstPart(whole, code),
         IsExpression{
             input,
-            FIRST_ITEM(alternatives).index,
-            LAST_ITEM(alternatives).index,
+            Indices{first_index, last_index - first_index + 1},
             expression_else
         }
     );

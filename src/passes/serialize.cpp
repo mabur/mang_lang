@@ -57,10 +57,7 @@ DynamicString serializeIs(DynamicString s, const IsExpression& is_expression) {
     s = concatenate(s, "is ");
     s = serialize(s, is_expression.input);
     s = concatenate(s, " ");
-    for (auto a = is_expression.alternative_first;
-        a <= is_expression.alternative_last;
-        ++a
-    ) {
+    FOR_EACH(a, is_expression.alternative) {
         const auto alternative = storage.alternatives.data[a];
         s = serialize(s, alternative.left);
         s = concatenate(s, " then ");
