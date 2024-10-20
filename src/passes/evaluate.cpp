@@ -142,7 +142,7 @@ Expression evaluateStack(Evaluator evaluator,
         APPEND(items, evaluator(top, environment));
         stack = rest;
     }
-    auto evaluated_stack = Expression{EMPTY_STACK, 0, stack.range};
+    auto evaluated_stack = Expression{0, stack.range, EMPTY_STACK};
     FOR_EACH_BACKWARD(it, items) {
         evaluated_stack = putEvaluatedStack(evaluated_stack, *it);
     }
@@ -471,7 +471,7 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
 Expression applyTableIndexingTypes(Expression table) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
     if (table_struct.rows.empty()) {
-        return Expression{ANY, 0, table.range};
+        return Expression{0, table.range, ANY};
     }
     return table_struct.begin()->second.value;
 }
@@ -594,7 +594,7 @@ bool isEqual(Expression left, Expression right) {
 }
 
 Expression evaluateDynamicExpressionTyped(Expression expression) {
-    return Expression{ANY, 0, expression.range};
+    return Expression{0, expression.range, ANY};
 }
 
 Expression evaluateDynamicExpression(Expression expression, Expression environment) {
@@ -702,14 +702,14 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
         const auto type = statement.type;
         if (type == DEFINITION) {
             auto definition = storage.definitions.data[statement.index];
-            definition.expression = Expression{ANY, 0, statement.range};
+            definition.expression = Expression{0, statement.range, ANY};
             definitions.at(definition.name.dictionary_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.data[statement.index];
             definitions.at(for_statement.item_name.dictionary_index) = Definition{
                 for_statement.item_name,
-                Expression{ANY, 0, statement.range},
+                Expression{0, statement.range, ANY},
             };
         }
     }
@@ -1025,8 +1025,8 @@ Expression evaluateFunctionApplicationTypes(
         case EVALUATED_STACK: return applyStackIndexingTypes(function);
         case STRING: return applyStringIndexingTypes(function);
 
-        case EMPTY_STACK: return Expression{ANY, 0, function_application.range};
-        case EMPTY_STRING: return Expression{CHARACTER, 0, function_application.range};
+        case EMPTY_STACK: return Expression{0, function_application.range, ANY};
+        case EMPTY_STRING: return Expression{0, function_application.range, CHARACTER};
 
         default: throwUnexpectedExpressionException(function.type, "evaluateFunctionApplicationTypes");
     }

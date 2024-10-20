@@ -168,12 +168,12 @@ Expression less(Expression in) {
     const auto left = getNumber(tuple.left);
     const auto right = getNumber(tuple.right);
     return left < right ?
-        Expression{YES, 0, CodeRange{}} : Expression{NO, 0, CodeRange{}};
+        Expression{0, CodeRange{}, YES} : Expression{0, CodeRange{}, NO};
 }
 
 Expression lessTyped(Expression in) {
     checkStaticTypeBinaryFunction(in, NUMBER, "less");
-    return Expression{YES, 0, CodeRange{}};
+    return Expression{0, CodeRange{}, YES};
 }
 
 Expression sqrt(Expression in) {

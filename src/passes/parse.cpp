@@ -268,7 +268,7 @@ Expression parseReturnStatement(CodeRange code) {
     auto whole = code;
     code = parseKeyword(code, "return");
     code = parseWhiteSpace(code);
-    return Expression{RETURN_STATEMENT, 0, firstPart(whole, code)};
+    return Expression{0, firstPart(whole, code), RETURN_STATEMENT};
 }
 
 void bindDictionaryNames(Dictionary& dictionary_struct) {
@@ -399,7 +399,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseWhiteSpace(code);
     
     const auto first_argument = Expression{
-        ARGUMENT, storage.arguments.count, CodeRange{}
+        storage.arguments.count, CodeRange{}, ARGUMENT
     };
     auto last_argument = first_argument;
     
@@ -427,7 +427,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code = parseWhiteSpace(code);
 
     const auto first_argument = Expression{
-        ARGUMENT, storage.arguments.count, CodeRange{}
+        storage.arguments.count, CodeRange{}, ARGUMENT
     };
     auto last_argument = first_argument;
     
@@ -469,7 +469,7 @@ Expression parseStack(CodeRange code) {
         code = parseWhiteSpace(code);
         APPEND(items, item);
     }
-    auto stack = Expression{EMPTY_STACK, 0, CodeRange{}};
+    auto stack = Expression{0, CodeRange{}, EMPTY_STACK};
     FOR_EACH_BACKWARD(it, items){
         stack = putStack(stack, *it);
     }
@@ -565,11 +565,11 @@ CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
 }
 
 Expression parseYes(CodeRange code) {
-    return Expression{YES, 0, parseKeyWordContent(code, "yes")};
+    return Expression{0, parseKeyWordContent(code, "yes"), YES};
 }
 
 Expression parseNo(CodeRange code) {
-    return Expression{NO, 0, parseKeyWordContent(code, "no")};
+    return Expression{0, parseKeyWordContent(code, "no"), NO};
 }
 
 Expression parseNegInf(CodeRange code) {
@@ -606,7 +606,7 @@ Expression parseString(CodeRange code) {
         APPEND(characters, character);
         DROP_FRONT(code);
     }
-    auto string = Expression{EMPTY_STRING, 0, rangeOfFirst(whole)};
+    auto string = Expression{0, rangeOfFirst(whole), EMPTY_STRING};
     FOR_EACH_BACKWARD(it, characters) {
         string = putString(string, *it);
     }

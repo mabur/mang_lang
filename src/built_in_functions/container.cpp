@@ -52,13 +52,13 @@ namespace container_functions {
 
 Expression clear(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return Expression{EMPTY_STACK, 0, CodeRange{}};
-        case EMPTY_STACK: return Expression{EMPTY_STACK, 0, CodeRange{}};
-        case STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
-        case EMPTY_STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
+        case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
+        case EMPTY_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
+        case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
+        case EMPTY_STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
         case NUMBER: return makeNumber(CodeRange{}, 0);
-        case YES: return Expression{NO, 0, CodeRange{}};
+        case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
         default: throwUnexpectedExpressionException(in.type, "clear operation");
     }
@@ -157,7 +157,7 @@ template<typename T>
 Expression takeTableTyped(const T& table, Expression expression) {
     const auto range = expression.range;
     if (table.empty()) {
-        return makeEvaluatedTuple2(Expression{ANY, 0, range}, Expression{ANY, 0, range});
+        return makeEvaluatedTuple2(Expression{0, range, ANY}, Expression{0, range, ANY});
     }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple2(pair.key, pair.value);
@@ -196,8 +196,8 @@ Expression takeTyped(Expression in) {
         case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
         case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.data[index], in);
-        case EMPTY_STACK: return Expression{ANY, 0, in.range};
-        case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
+        case EMPTY_STACK: return Expression{0, in.range, ANY};
+        case EMPTY_STRING: return Expression{0, in.range, CHARACTER};
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
@@ -216,7 +216,7 @@ Expression drop(Expression in) {
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
         case NO: return in;
-        case YES: return Expression{NO, 0, CodeRange{}};
+        case YES: return Expression{0, CodeRange{}, NO};
         default: throwUnexpectedExpressionException(in.type, "drop");
     }
     return Expression{}; // Does not happen

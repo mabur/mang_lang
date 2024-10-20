@@ -22,7 +22,7 @@ Expression makeExpression(
     ArrayType& array
 ) {
     APPEND(array, expression);
-    return Expression{type, array.count - 1, code};
+    return Expression{array.count - 1, code, type};
 }
 
 } // namespace
@@ -84,7 +84,7 @@ Expression makeNumber(CodeRange code, Number expression) {
 }
 
 Expression makeCharacter(CodeRange code, Character expression) {
-    return Expression{CHARACTER, static_cast<size_t>(expression), code};
+    return Expression{static_cast<size_t>(expression), code, CHARACTER};
 }
 
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression) {
@@ -113,7 +113,7 @@ Expression makeDictionary(CodeRange code, Dictionary expression) {
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
     storage.evaluated_dictionaries.emplace_back(std::move(expression));
-    return Expression{EVALUATED_DICTIONARY, storage.evaluated_dictionaries.size() - 1, code};
+    return Expression{storage.evaluated_dictionaries.size() - 1, code, EVALUATED_DICTIONARY};
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
@@ -158,12 +158,12 @@ Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
 
 Expression makeTable(CodeRange code, Table expression) {
     storage.tables.emplace_back(std::move(expression));
-    return Expression{TABLE, storage.tables.size() - 1, code};
+    return Expression{storage.tables.size() - 1, code, TABLE};
 }
 
 Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
     storage.evaluated_tables.emplace_back(std::move(expression));
-    return Expression{EVALUATED_TABLE, storage.evaluated_tables.size() - 1, code};
+    return Expression{storage.evaluated_tables.size() - 1, code, EVALUATED_TABLE};
 }
 
 Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression) {
@@ -194,10 +194,10 @@ Expression makeName(CodeRange code, const char* data, size_t count) {
     if (name_index == SIZE_MAX) {
         storage.name_indices[expression] = storage.names.size();
         storage.names.emplace_back(expression);
-        return Expression{NAME, storage.names.size() - 1, code};
+        return Expression{storage.names.size() - 1, code, NAME};
     }
     else {
-        return Expression{NAME, name_index, code};
+        return Expression{name_index, code, NAME};
     }
 }
 
