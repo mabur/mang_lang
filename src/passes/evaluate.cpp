@@ -153,24 +153,20 @@ template<typename Evaluator>
 Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
-    const auto tuple_struct = storage.tuples.data[tuple.index];
-    const auto tuple_count = tuple_struct.indices.count;
-    const auto first = storage.expressions.count;
+    auto tuple_struct = storage.tuples.data[tuple.index];
+    auto tuple_count = tuple_struct.indices.count;
+    auto first = storage.expressions.count;
+    auto target_indices = Indices{first, tuple_count};
     // Allocation:
-    //storage.expressions.resize(storage.expressions.count + tuple_count);
-    // Brute-force resize:
-    for (size_t i = 0; i < tuple_count; ++i) {
+    FOR_EACH(i, target_indices) {
         APPEND(storage.expressions, Expression{});
     }
-    const auto last = storage.expressions.count;
-    auto target_indices = Indices{first, last - first};
     FOR_EACH2(target_index, source_index, target_indices, tuple_struct.indices) {
-        const auto expression = storage.expressions.data[source_index];
-        const auto evaluated_expression = evaluator(expression, environment);
+        auto expression = storage.expressions.data[source_index];
+        auto evaluated_expression = evaluator(expression, environment);
         storage.expressions.data[target_index] = evaluated_expression;
     }
-    const auto code = tuple.range;
-    return makeEvaluatedTuple(code, EvaluatedTuple{target_indices});
+    return makeEvaluatedTuple(tuple.range, EvaluatedTuple{target_indices});
 }
 
 template<typename Evaluator, typename Serializer>
