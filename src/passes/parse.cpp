@@ -124,10 +124,8 @@ Expression parseIs(CodeRange code) {
 Expression parseName(CodeRange code) {
     auto whole = code;
     code = parseRawName(code);
-    return makeName(
-        firstPart(whole, code),
-        rawString(firstPart(whole, code))
-    );
+    auto first_part = firstPart(whole, code);
+    return makeName(first_part, rawString(first_part));
 }
 
 Expression parseArgument(CodeRange code) {
