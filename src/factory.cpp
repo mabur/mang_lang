@@ -187,7 +187,8 @@ size_t findNameIndex(Name name) {
     return name_index == storage.name_indices.end() ? SIZE_MAX : name_index->second;
 }
 
-Expression makeName(CodeRange code, Name expression) {
+Expression makeName(CodeRange code, const char* data, size_t count) {
+    auto expression = std::string(data, count);
     const auto name_index = findNameIndex(expression);
     if (name_index == SIZE_MAX) {
         storage.name_indices[expression] = storage.names.size();

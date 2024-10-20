@@ -91,7 +91,7 @@ Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression)
 Expression makeLookupChild(CodeRange code, LookupChild expression);
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression);
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression);
-Expression makeName(CodeRange code, Name expression);
+Expression makeName(CodeRange code, const char* data, size_t count);
 Expression makeArgument(CodeRange code, Argument expression);
 Expression makeDefinition(CodeRange code, Definition expression);
 Expression makePutAssignment(CodeRange code, PutAssignment expression);

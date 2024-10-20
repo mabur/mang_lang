@@ -1,5 +1,7 @@
 #include "built_in_functions.h"
 
+#include <string.h>
+
 #include "../factory.h"
 #include "arithmetic.h"
 #include "container.h"
@@ -7,7 +9,7 @@
 static
 Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer function) {
     return Definition{
-        {makeName(CodeRange{}, Name{name}).index, i},
+        {makeName(CodeRange{}, name, strlen(name)).index, i},
         makeFunctionBuiltIn(CodeRange{}, {function}),
     };
 }
