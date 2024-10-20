@@ -36,7 +36,6 @@ struct Expression {
 
 using Number = double;
 using Character = char;
-using Name = std::string;
 
 struct BoundGlobalName {
     size_t global_index; // Index to this name in the global storage.

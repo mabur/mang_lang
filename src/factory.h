@@ -1,8 +1,12 @@
 #pragma once
 
+#include <string>
+
 #include "expression.h"
 
 #define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
+
+typedef std::string Name;
 
 struct Expressions {
     Expression* data;
