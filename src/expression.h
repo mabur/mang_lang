@@ -69,8 +69,8 @@ struct Alternative {
 
 // TODO: use carma like struct for index range
 struct Conditional {
-    Expression alternative_first;
-    Expression alternative_last;
+    size_t alternative_first;
+    size_t alternative_last;
     Expression expression_else;
 };
 

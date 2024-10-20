@@ -92,10 +92,10 @@ void bindDynamicExpression(Expression expression, Expression environment) {
 void bindConditional(Expression conditional, Expression environment) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
     for (auto a = conditional_struct.alternative_first;
-        a.index <= conditional_struct.alternative_last.index;
-        ++a.index
+        a <= conditional_struct.alternative_last;
+        ++a
         ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         bind(alternative.left, environment);
         bind(alternative.right, environment);
     }

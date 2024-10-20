@@ -42,10 +42,10 @@ DynamicString serializeTypedExpression(DynamicString s, const TypedExpression& t
 DynamicString serializeConditional(DynamicString s, const Conditional& conditional) {
     s = concatenate(s, "if ");
     for (auto a = conditional.alternative_first;
-        a.index <= conditional.alternative_last.index;
-        ++a.index
+        a <= conditional.alternative_last;
+        ++a
     ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         s = serialize(s, alternative.left);
         s = concatenate(s, " then ");
         s = serialize(s, alternative.right);

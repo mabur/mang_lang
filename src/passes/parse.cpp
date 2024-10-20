@@ -84,7 +84,11 @@ Expression parseConditional(CodeRange code) {
     // TODO: make it more explicit that we require at least one alternative.
     auto result = makeConditional(
         firstPart(whole, code),
-        Conditional{FIRST_ITEM(alternatives), LAST_ITEM(alternatives), expression_else}
+        Conditional{
+            FIRST_ITEM(alternatives).index,
+            LAST_ITEM(alternatives).index,
+            expression_else
+        }
     );
     FREE_DARRAY(alternatives);
     return result;
