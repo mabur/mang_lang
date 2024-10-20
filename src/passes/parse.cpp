@@ -82,13 +82,11 @@ Expression parseConditional(CodeRange code) {
 
     // TODO: verify parsing of nested alternatives. This looks suspicious.
     // TODO: make it more explicit that we require at least one alternative.
+    auto first_index = FIRST_ITEM(alternatives).index;
+    auto last_index = LAST_ITEM(alternatives).index;
     auto result = makeConditional(
         firstPart(whole, code),
-        Conditional{
-            FIRST_ITEM(alternatives).index,
-            LAST_ITEM(alternatives).index,
-            expression_else
-        }
+        Conditional{Indices{first_index, last_index - first_index + 1}, expression_else}
     );
     FREE_DARRAY(alternatives);
     return result;

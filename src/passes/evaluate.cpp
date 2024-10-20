@@ -606,17 +606,11 @@ Expression evaluateConditionalTypes(
     Expression conditional, Expression environment
 ) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
-    for (auto alternative = conditional_struct.alternative_first;
-        alternative <= conditional_struct.alternative_last;
-        ++alternative
-    ) {
-        evaluate_types(storage.alternatives.data[alternative].left, environment);
+    FOR_EACH(a, conditional_struct.alternatives) {
+        evaluate_types(storage.alternatives.data[a].left, environment);
     }
     const auto else_expression = evaluate_types(conditional_struct.expression_else, environment);
-    for (auto a = conditional_struct.alternative_first;
-        a <= conditional_struct.alternative_last;
-        ++a
-    ) {
+    FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(
             alternative.right, environment
@@ -628,10 +622,7 @@ Expression evaluateConditionalTypes(
 
 Expression evaluateConditional(Expression conditional, Expression environment) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
-    for (auto a = conditional_struct.alternative_first;
-        a <= conditional_struct.alternative_last;
-        ++a
-    ) {
+    FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto left_value = evaluate(alternative.left, environment);
         if (boolean(left_value)) {

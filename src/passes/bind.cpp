@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include <carma/carma.h>
+
 #include "../exceptions.h"
 #include "../expression.h"
 #include "../factory.h"
@@ -91,10 +93,7 @@ void bindDynamicExpression(Expression expression, Expression environment) {
 
 void bindConditional(Expression conditional, Expression environment) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
-    for (auto a = conditional_struct.alternative_first;
-        a <= conditional_struct.alternative_last;
-        ++a
-        ) {
+    FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         bind(alternative.left, environment);
         bind(alternative.right, environment);

@@ -41,10 +41,7 @@ DynamicString serializeTypedExpression(DynamicString s, const TypedExpression& t
 
 DynamicString serializeConditional(DynamicString s, const Conditional& conditional) {
     s = concatenate(s, "if ");
-    for (auto a = conditional.alternative_first;
-        a <= conditional.alternative_last;
-        ++a
-    ) {
+    FOR_EACH(a, conditional.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         s = serialize(s, alternative.left);
         s = concatenate(s, " then ");

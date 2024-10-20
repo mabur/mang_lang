@@ -37,6 +37,11 @@ struct Expression {
 using Number = double;
 using Character = char;
 
+struct Indices {
+    size_t data;
+    size_t count;
+};
+
 struct BoundGlobalName {
     size_t global_index; // Index to this name in the global storage.
     int parent_steps = -1; // Number of steps to parent. -1 if unresolved yet.
@@ -67,10 +72,8 @@ struct Alternative {
     Expression right;
 };
 
-// TODO: use carma like struct for index range
 struct Conditional {
-    size_t alternative_first;
-    size_t alternative_last;
+    Indices alternatives;
     Expression expression_else;
 };
 
