@@ -482,14 +482,12 @@ Expression applyStringIndexingTypes(Expression string) {
 bool isEqual(Expression left, Expression right);
 
 bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
-    const auto left_count = left.indices.count;
-    const auto right_count = right.indices.count;
-    if (left_count != right_count) {
+    if (left.indices.count != right.indices.count) {
         return false;
     }
-    for (size_t i = 0; i < left_count; ++i) {
-        const auto left_item = storage.expressions.data[left.indices.data + i];
-        const auto right_item = storage.expressions.data[right.indices.data + i];
+    FOR_EACH2(left_index, right_index, left.indices, right.indices) {
+        auto left_item = storage.expressions.data[left_index];
+        auto right_item = storage.expressions.data[right_index];
         if (!isEqual(left_item, right_item)) {
             return false;
         }
