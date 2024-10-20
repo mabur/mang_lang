@@ -41,10 +41,9 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* desc
     if (super_count != sub_count) {
         throwException("Static type error in %s. Inconsistent tuple size.", description);
     }
-    const auto count = super_count;
-    for (size_t i = 0; i < count; ++i) {
-        const auto super_expression = storage.expressions.data[tuple_super.indices.data + i];
-        const auto sub_expression = storage.expressions.data[tuple_sub.indices.data + i];
+    FOR_EACH2(super_index, sub_index, tuple_super.indices, tuple_sub.indices) {
+        const auto super_expression = storage.expressions.data[super_index];
+        const auto sub_expression = storage.expressions.data[sub_index];
         checkTypes(super_expression, sub_expression, description);
     }
 }
