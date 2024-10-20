@@ -193,12 +193,12 @@ DynamicString serializeDictionary(DynamicString s, const Dictionary& dictionary)
 
 DynamicString serializeTuple(DynamicString s, Expression t) {
     const auto tuple_struct = storage.tuples.data[t.index];
-    if (tuple_struct.first == tuple_struct.last) {
+    if (IS_EMPTY(tuple_struct.indices)) {
         s = concatenate(s, "()");
         return s;
     }
     s = concatenate(s, "(");
-    for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
+    FOR_EACH(i, tuple_struct.indices) {
         const auto expression = storage.expressions.data[i];
         s = serialize(s, expression);
         s = concatenate(s, " ");

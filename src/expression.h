@@ -126,10 +126,8 @@ struct String {
     Expression rest;
 };
 
-// TODO: use carma like struct for index range
 struct Tuple {
-    size_t first;
-    size_t last;
+    Indices indices;
 };
 
 // TODO: add special case for tuple of size 2.

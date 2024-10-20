@@ -509,7 +509,10 @@ Expression parseTuple(CodeRange code) {
     FREE_DARRAY(expressions);
     const auto last_expression = storage.expressions.count;
     code = parseCharacter(code, ')');
-    return makeTuple(firstPart(whole, code), Tuple{first_expression, last_expression});
+    return makeTuple(
+        firstPart(whole, code),
+        Tuple{Indices{first_expression, last_expression - first_expression}}
+    );
 }
 
 Expression parseTable(CodeRange code) {

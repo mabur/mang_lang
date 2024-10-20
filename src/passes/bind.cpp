@@ -67,7 +67,7 @@ void bindStack(Expression stack, Expression environment) {
 
 void bindTuple(Expression tuple, Expression environment) {
     const auto tuple_struct = storage.tuples.data[tuple.index];
-    for (size_t i = tuple_struct.first; i < tuple_struct.last; ++i) {
+    FOR_EACH(i, tuple_struct.indices) {
         const auto expression = storage.expressions.data[i];
         bind(expression, environment);
     }

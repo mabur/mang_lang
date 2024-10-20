@@ -155,7 +155,7 @@ Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
     const auto tuple_struct = storage.tuples.data[tuple.index];
-    const auto tuple_count = tuple_struct.last - tuple_struct.first;
+    const auto tuple_count = tuple_struct.indices.count;
     const auto first = storage.expressions.count;
     // Allocation:
     //storage.expressions.resize(storage.expressions.count + tuple_count);
@@ -165,7 +165,7 @@ Expression evaluateTuple(
     }
     const auto last = storage.expressions.count;
     for (size_t i = 0; i < tuple_count; ++i) {
-        const auto expression = storage.expressions.data[tuple_struct.first + i];
+        const auto expression = storage.expressions.data[tuple_struct.indices.data + i];
         const auto evaluated_expression = evaluator(expression, environment);
         storage.expressions.data[first + i] = evaluated_expression;
     }
