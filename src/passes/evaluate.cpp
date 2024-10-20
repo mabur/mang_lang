@@ -163,13 +163,14 @@ Expression evaluateTuple(
         APPEND(storage.expressions, Expression{});
     }
     const auto last = storage.expressions.count;
-    for (size_t i = 0; i < tuple_count; ++i) {
-        const auto expression = storage.expressions.data[tuple_struct.indices.data + i];
+    auto target_indices = Indices{first, last - first};
+    FOR_EACH2(target_index, source_index, target_indices, tuple_struct.indices) {
+        const auto expression = storage.expressions.data[source_index];
         const auto evaluated_expression = evaluator(expression, environment);
-        storage.expressions.data[first + i] = evaluated_expression;
+        storage.expressions.data[target_index] = evaluated_expression;
     }
     const auto code = tuple.range;
-    return makeEvaluatedTuple(code, EvaluatedTuple{Indices{first, last - first}});
+    return makeEvaluatedTuple(code, EvaluatedTuple{target_indices});
 }
 
 template<typename Evaluator, typename Serializer>
