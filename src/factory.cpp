@@ -182,7 +182,8 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, storage.symbol_lookups);
 }
 
-size_t findNameIndex(Name name) {
+static
+size_t findNameIndex(std::string name) {
     const auto name_index = storage.name_indices.find(name);
     return name_index == storage.name_indices.end() ? SIZE_MAX : name_index->second;
 }

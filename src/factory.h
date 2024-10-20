@@ -6,8 +6,6 @@
 
 #define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
 
-typedef std::string Name;
-
 struct Expressions {
     Expression* data;
     size_t count;
@@ -53,8 +51,8 @@ struct Storage {
     DARRAY(Expression) expressions;
     DARRAY(String) strings;
 
-    std::vector<Name> names;
-    std::unordered_map<Name, size_t> name_indices;
+    std::vector<std::string> names;
+    std::unordered_map<std::string, size_t> name_indices;
     std::vector<EvaluatedDictionary> evaluated_dictionaries;
     std::vector<Table> tables;
     std::vector<EvaluatedTable> evaluated_tables;
