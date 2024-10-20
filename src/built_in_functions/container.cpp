@@ -249,7 +249,7 @@ Expression get(Expression in) {
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
         throwException(
             "\n\nI have found a dynamic type error.\n"
@@ -259,9 +259,9 @@ Expression get(Expression in) {
             count
         );
     }
-    const auto key = storage.expressions.data[evaluated_tuple.first + 0];
-    const auto table = storage.expressions.data[evaluated_tuple.first + 1];
-    const auto default_value = storage.expressions.data[evaluated_tuple.first + 2];
+    const auto key = storage.expressions.data[evaluated_tuple.indices.data + 0];
+    const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
+    const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
         throwException(
             "\n\nI have found a dynamic type error.\n"
@@ -292,7 +292,7 @@ Expression getTyped(Expression in) {
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
         throwException(
             "\n\nI have found a static type error.\n"
@@ -302,8 +302,8 @@ Expression getTyped(Expression in) {
             count
         );
     }
-    const auto table = storage.expressions.data[evaluated_tuple.first + 1];
-    const auto default_value = storage.expressions.data[evaluated_tuple.first + 2];
+    const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
+    const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
         throwException(
             "\n\nI have found a dynamic type error.\n"

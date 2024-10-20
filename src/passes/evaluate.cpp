@@ -36,15 +36,15 @@ void checkTypesEvaluatedTable(Expression super, Expression sub, const char* desc
 void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
     const auto& tuple_super = storage.evaluated_tuples.data[super.index];
     const auto& tuple_sub = storage.evaluated_tuples.data[sub.index];
-    const auto super_count = tuple_super.last - tuple_super.first;
-    const auto sub_count = tuple_sub.last - tuple_sub.first;
+    const auto super_count = tuple_super.indices.count;
+    const auto sub_count = tuple_sub.indices.count;
     if (super_count != sub_count) {
         throwException("Static type error in %s. Inconsistent tuple size.", description);
     }
     const auto count = super_count;
     for (size_t i = 0; i < count; ++i) {
-        const auto super_expression = storage.expressions.data[tuple_super.first + i];
-        const auto sub_expression = storage.expressions.data[tuple_sub.first + i];
+        const auto super_expression = storage.expressions.data[tuple_super.indices.data + i];
+        const auto sub_expression = storage.expressions.data[tuple_sub.indices.data + i];
         checkTypes(super_expression, sub_expression, description);
     }
 }
@@ -170,7 +170,7 @@ Expression evaluateTuple(
         storage.expressions.data[first + i] = evaluated_expression;
     }
     const auto code = tuple.range;
-    return makeEvaluatedTuple(code, EvaluatedTuple{first, last});
+    return makeEvaluatedTuple(code, EvaluatedTuple{Indices{first, last - first}});
 }
 
 template<typename Evaluator, typename Serializer>
@@ -284,7 +284,7 @@ Expression applyFunctionTuple(
         );
     }
     const auto tuple = storage.evaluated_tuples.data[input.index];
-    const auto tuple_count = tuple.last - tuple.first;
+    const auto tuple_count = tuple.indices.count;
     const auto function_struct = storage.tuple_functions.data[function.index];
     const auto first_argument = BEGIN_POINTER(function_struct.arguments);
     const auto last_argument = END_POINTER(function_struct.arguments);
@@ -301,7 +301,7 @@ Expression applyFunctionTuple(
     auto definitions = std::vector<Definition>(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.data[argument_index + i];
-        const auto expression = storage.expressions.data[tuple.first + i];
+        const auto expression = storage.expressions.data[tuple.indices.data + i];
         checkArgument(evaluator, argument, expression, function_struct.environment);
         definitions.at(i) = Definition{{argument.name, i}, expression};
     }
@@ -457,11 +457,11 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
     }
     const auto number = getNumber(input);
     const auto i = getIndex(number);
-    const auto count = tuple_struct.last - tuple_struct.first;
+    const auto count = tuple_struct.indices.count;
     if (i >= count) {
         throwException("Tuple of size %zu indexed with %zu" , count, i);
     }
-    return storage.expressions.data[tuple_struct.first + i];
+    return storage.expressions.data[tuple_struct.indices.data + i];
 }
 
 Expression applyTableIndexingTypes(Expression table) {
@@ -483,14 +483,14 @@ Expression applyStringIndexingTypes(Expression string) {
 bool isEqual(Expression left, Expression right);
 
 bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
-    const auto left_count = left.last - left.first;
-    const auto right_count = right.last - right.first;
+    const auto left_count = left.indices.count;
+    const auto right_count = right.indices.count;
     if (left_count != right_count) {
         return false;
     }
     for (size_t i = 0; i < left_count; ++i) {
-        const auto left_item = storage.expressions.data[left.first + i];
-        const auto right_item = storage.expressions.data[right.first + i];
+        const auto left_item = storage.expressions.data[left.indices.data + i];
+        const auto right_item = storage.expressions.data[right.indices.data + i];
         if (!isEqual(left_item, right_item)) {
             return false;
         }

@@ -142,12 +142,12 @@ DynamicString serializeEvaluatedDictionary(DynamicString s, Serializer serialize
 template<typename Serializer>
 DynamicString serializeEvaluatedTuple(DynamicString s, Serializer serializer, Expression t) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[t.index];
-    if (evaluated_tuple.first == evaluated_tuple.last) {
+    if (IS_EMPTY(evaluated_tuple.indices)) {
         s = concatenate(s, "()");
         return s;
     }
     s = concatenate(s, "(");
-    for (size_t i = evaluated_tuple.first; i < evaluated_tuple.last; ++i) {
+    FOR_EACH(i, evaluated_tuple.indices) {
         const auto expression = storage.expressions.data[i];
         s = serializer(s, expression);
         s = concatenate(s, " ");

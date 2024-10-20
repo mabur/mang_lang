@@ -132,10 +132,8 @@ struct Tuple {
 
 // TODO: add special case for tuple of size 2.
 // TODO: merge with Tuple for storage but keep type-code to know if it is evaluated.
-// TODO: use carma like struct for index range
 struct EvaluatedTuple {
-    size_t first;
-    size_t last;
+    Indices indices;
 };
 
 struct Stack {

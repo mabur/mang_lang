@@ -14,7 +14,7 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const char* function) {
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto count = evaluated_tuple.indices.count;
     if (count != 2) {
         throwException(
             "I found a dynamic type error while calling the function %s. "
@@ -24,8 +24,8 @@ BinaryTuple getDynamicBinaryTuple(Expression in, const char* function) {
             count
         );
     }
-    const auto left = storage.expressions.data[evaluated_tuple.first + 0];
-    const auto right = storage.expressions.data[evaluated_tuple.first + 1];
+    const auto left = storage.expressions.data[evaluated_tuple.indices.data + 0];
+    const auto right = storage.expressions.data[evaluated_tuple.indices.data + 1];
     return BinaryTuple{left, right};
 }
 
@@ -40,7 +40,7 @@ BinaryTuple getStaticBinaryTuple(Expression in, const char* function) {
         );
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto count = evaluated_tuple.indices.count;
     if (count != 2) {
         throwException(
             "I found a static type error while calling the function %s. "
@@ -50,7 +50,7 @@ BinaryTuple getStaticBinaryTuple(Expression in, const char* function) {
             count
         );
     }
-    const auto left = storage.expressions.data[evaluated_tuple.first + 0];
-    const auto right = storage.expressions.data[evaluated_tuple.first + 1];
+    const auto left = storage.expressions.data[evaluated_tuple.indices.data + 0];
+    const auto right = storage.expressions.data[evaluated_tuple.indices.data + 1];
     return BinaryTuple{left, right};
 }
