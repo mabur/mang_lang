@@ -106,10 +106,10 @@ void bindIs(Expression is, Expression environment) {
     const auto is_struct = storage.is_expressions.data[is.index];
     bind(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
-        a.index <= is_struct.alternative_last.index;
-        ++a.index
+        a <= is_struct.alternative_last;
+        ++a
         ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         bind(alternative.left, environment);
         bind(alternative.right, environment);
     }

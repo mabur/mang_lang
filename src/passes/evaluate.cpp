@@ -647,18 +647,18 @@ Expression evaluateIsTypes(
     const auto is_struct = storage.is_expressions.data[is.index];
     evaluate_types(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
-        a.index <= is_struct.alternative_last.index;
-        ++a.index
+        a <= is_struct.alternative_last;
+        ++a
     ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         evaluate_types(alternative.left, environment);
     }
     const auto else_expression = evaluate_types(is_struct.expression_else, environment);
     for (auto a = is_struct.alternative_first;
-        a.index <= is_struct.alternative_last.index;
-        ++a.index
+        a <= is_struct.alternative_last;
+        ++a
     ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(alternative.right, environment);
         checkTypes(else_expression, alternative_expression, "is");
     }
@@ -669,10 +669,10 @@ Expression evaluateIs(Expression is, Expression environment) {
     const auto is_struct = storage.is_expressions.data[is.index];
     const auto value = evaluate(is_struct.input, environment);
     for (auto a = is_struct.alternative_first;
-        a.index <= is_struct.alternative_last.index;
-        ++a.index
+        a <= is_struct.alternative_last;
+        ++a
     ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         const auto left_value = evaluate(alternative.left, environment);
         if (isEqual(value, left_value)) {
             return evaluate(alternative.right, environment);

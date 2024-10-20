@@ -61,10 +61,10 @@ DynamicString serializeIs(DynamicString s, const IsExpression& is_expression) {
     s = serialize(s, is_expression.input);
     s = concatenate(s, " ");
     for (auto a = is_expression.alternative_first;
-        a.index <= is_expression.alternative_last.index;
-        ++a.index
+        a <= is_expression.alternative_last;
+        ++a
     ) {
-        const auto alternative = storage.alternatives.data[a.index];
+        const auto alternative = storage.alternatives.data[a];
         s = serialize(s, alternative.left);
         s = concatenate(s, " then ");
         s = serialize(s, alternative.right);

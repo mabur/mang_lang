@@ -119,7 +119,12 @@ Expression parseIs(CodeRange code) {
     // TODO: verify parsing of nested alternatives. This looks suspicious.
     auto result = makeIs(
         firstPart(whole, code),
-        IsExpression{input, FIRST_ITEM(alternatives), LAST_ITEM(alternatives), expression_else}
+        IsExpression{
+            input,
+            FIRST_ITEM(alternatives).index,
+            LAST_ITEM(alternatives).index,
+            expression_else
+        }
     );
     FREE_DARRAY(alternatives);
     return result;
