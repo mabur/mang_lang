@@ -250,11 +250,11 @@ DynamicString serializeFunction(DynamicString s, const Function& function) {
 DynamicString serializeFunctionDictionary(DynamicString s, const FunctionDictionary& function_dictionary) {
     s = concatenate(s, "in ");
     s = concatenate(s, "{");
-    for (auto i = function_dictionary.first_argument; i < function_dictionary.last_argument; ++i) {
+    FOR_EACH(i, function_dictionary.arguments) {
         s = serializeArgument(s, storage.arguments.data[i]);
         s = concatenate(s, " ");
     }
-    if (function_dictionary.first_argument == function_dictionary.last_argument) {
+    if (IS_EMPTY(function_dictionary.arguments)) {
         s = concatenate(s, "}");
     }
     else {

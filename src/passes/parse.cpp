@@ -314,7 +314,7 @@ void bindDictionaryNames(Dictionary& dictionary_struct) {
     dictionary_struct.definition_count = indexer.size();
 }
 
-struct Indices {
+struct DynamicIndices {
     size_t* data;
     size_t count;
     size_t capacity;
@@ -325,7 +325,7 @@ Expression parseDictionary(CodeRange code) {
     code = parseCharacter(code, '{');
     code = parseWhiteSpace(code);
     auto statements = Expressions{};
-    auto loop_start_indices = Indices{};
+    auto loop_start_indices = DynamicIndices{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         throwIfEmpty(code);
@@ -423,9 +423,14 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
+    auto indices = Indices{first_argument.index, last_argument.index - first_argument.index};
     return makeFunctionDictionary(
         firstPart(whole, code),
-        {Expression{}, first_argument.index, last_argument.index, body}
+        FunctionDictionary{
+            Expression{},
+            indices,
+            body
+        }
     );
 }
 

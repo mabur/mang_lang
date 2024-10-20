@@ -98,8 +98,7 @@ struct FunctionBuiltIn {
 // TODO: use carma like struct for index range
 struct FunctionDictionary {
     Expression environment; // TODO: use this.
-    size_t first_argument;
-    size_t last_argument; // Exclusive, to handle empty range
+    Indices arguments;
     Expression body;
 };
 

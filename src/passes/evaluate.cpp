@@ -260,7 +260,7 @@ Expression applyFunctionDictionary(
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
-    for (auto i = function_struct.first_argument; i < function_struct.last_argument; ++i) {
+    FOR_EACH(i, function_struct.arguments) {
         const auto argument = storage.arguments.data[i];
         const auto expression = evaluated_dictionary.lookup(argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
@@ -324,8 +324,7 @@ Expression evaluateFunctionDictionary(
     const auto function_dictionary_struct = storage.dictionary_functions.data[function_dictionary.index];
     return makeFunctionDictionary(function_dictionary.range, {
         environment,
-        function_dictionary_struct.first_argument,
-        function_dictionary_struct.last_argument,
+        function_dictionary_struct.arguments,
         function_dictionary_struct.body
     });
 }
