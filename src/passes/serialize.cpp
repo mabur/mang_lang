@@ -268,11 +268,11 @@ DynamicString serializeFunctionDictionary(DynamicString s, const FunctionDiction
 DynamicString serializeFunctionTuple(DynamicString s, const FunctionTuple& function_stack) {
     s = concatenate(s, "in ");
     s = concatenate(s, "(");
-    for (auto i = function_stack.first_argument; i < function_stack.last_argument; ++i) {
+    FOR_EACH(i, function_stack.arguments) {
         s = serializeArgument(s, storage.arguments.data[i]);
         s = concatenate(s, " ");
     }
-    if (function_stack.first_argument == function_stack.last_argument) {
+    if (IS_EMPTY(function_stack.arguments)) {
         s = concatenate(s, ")");
     }
     else {

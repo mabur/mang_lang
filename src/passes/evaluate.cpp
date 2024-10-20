@@ -286,8 +286,8 @@ Expression applyFunctionTuple(
     const auto tuple = storage.evaluated_tuples.data[input.index];
     const auto tuple_count = tuple.last - tuple.first;
     const auto function_struct = storage.tuple_functions.data[function.index];
-    const auto first_argument = function_struct.first_argument;
-    const auto last_argument = function_struct.last_argument;
+    const auto first_argument = BEGIN_POINTER(function_struct.arguments);
+    const auto last_argument = END_POINTER(function_struct.arguments);
     const auto num_inputs = last_argument - first_argument;
     
     if (num_inputs != tuple_count) {
@@ -334,10 +334,7 @@ Expression evaluateFunctionTuple(
 ) {
     const auto function_tuple_struct = storage.tuple_functions.data[function_tuple.index];
     return makeFunctionTuple(function_tuple.range, {
-        environment,
-        function_tuple_struct.first_argument,
-        function_tuple_struct.last_argument,
-        function_tuple_struct.body
+        environment, function_tuple_struct.arguments, function_tuple_struct.body
     });
 }
 

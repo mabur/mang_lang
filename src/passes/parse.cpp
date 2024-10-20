@@ -458,7 +458,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code = lastPart(code, body.range);
     return makeFunctionTuple(
         firstPart(whole, code),
-        {Expression{}, first_argument.index, last_argument.index, body}
+        {Expression{}, Indices{first_argument.index, last_argument.index - first_argument.index}, body}
     );
 }
 
