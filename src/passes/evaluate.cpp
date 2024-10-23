@@ -295,12 +295,13 @@ Expression applyFunctionTuple(
     // TODO: allocate on storage.definitions directly.
     // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
-    auto definitions = std::vector<Definition>(num_inputs);
+    auto definitions = std::vector<Definition>{};
+    definitions.reserve(num_inputs);
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.data[argument_index + i];
         const auto expression = storage.expressions.data[tuple.indices.data + i];
         checkArgument(evaluator, argument, expression, function_struct.environment);
-        definitions.at(i) = Definition{{argument.name, i}, expression};
+        definitions.push_back(Definition{BoundLocalName{argument.name, i}, expression});
     }
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
