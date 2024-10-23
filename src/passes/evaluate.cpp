@@ -881,7 +881,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = storage.for_end_statements.data[statement.index];
             i = end_statement.start_index;
-            const auto name_index = storage.for_statements.data[statements[i].index].container_name;
+            const auto start_statement = statements[i];
+            const auto name_index = storage.for_statements.data[start_statement.index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);
@@ -889,7 +890,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_SIMPLE_END_STATEMENT) {
             const auto end_statement = storage.for_simple_end_statements.data[statement.index];
             i = end_statement.start_index;
-            const auto name_index = storage.for_simple_statements.data[statements[i].index].container_name;
+            const auto start_statement = statements[i];
+            const auto name_index = storage.for_simple_statements.data[start_statement.index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);
