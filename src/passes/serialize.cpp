@@ -177,12 +177,12 @@ DynamicString serializeLookupSymbol(DynamicString s, const LookupSymbol& lookup_
     
 DynamicString serializeDictionary(DynamicString s, const Dictionary& dictionary) {
     s = concatenate(s, "{");
-    for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
+    FOR_EACH(i, dictionary.statements) {
         const auto statement = storage.statements.data[i];
         s = serialize(s, statement);
     }
     // TODO: handle by early return.
-    if (dictionary.statement_first == dictionary.statement_last) {
+    if (IS_EMPTY(dictionary.statements)) {
         s = concatenate(s, "}");
     }
     else {

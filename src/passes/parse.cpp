@@ -281,8 +281,8 @@ Expression parseReturnStatement(CodeRange code) {
 
 void bindDictionaryNames(Dictionary& dictionary_struct) {
     auto indexer = DictionaryNameIndexer{};
-    
-    for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
+
+    FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
@@ -382,7 +382,7 @@ Expression parseDictionary(CodeRange code) {
     FREE_DARRAY(statements);
     FREE_DARRAY(loop_start_indices);
     
-    auto dictionary = Dictionary{statements_first, statements_last, 0};
+    auto dictionary = Dictionary{Indices{statements_first, statements_last - statements_first}, 0};
     bindDictionaryNames(dictionary);
     return makeDictionary(firstPart(whole, code), dictionary);
 }

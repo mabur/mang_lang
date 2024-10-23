@@ -669,7 +669,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     // TODO: allocate on storage.expressions directly.
     // Allocation:
     auto definitions = std::vector<Definition>(dictionary.definition_count);
-    for (size_t i = dictionary.statement_first; i < dictionary.statement_last; ++i) {
+    FOR_EACH(i, dictionary.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
@@ -725,7 +725,7 @@ Expression evaluateDictionaryTypes(
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
     const auto dictionary_struct = storage.dictionaries.data[dictionary.index];
-    for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
+    FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
@@ -794,12 +794,12 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         dictionary.range, EvaluatedDictionary{environment, initial_definitions}
     );
 
-    const auto statement_first = storage.dictionaries.data[dictionary.index].statement_first;
-    const auto statement_last = storage.dictionaries.data[dictionary.index].statement_last;
+    const auto statement_first = BEGIN_POINTER(storage.dictionaries.data[dictionary.index].statements);
+    const auto statement_last = END_POINTER(storage.dictionaries.data[dictionary.index].statements);
     const auto statement_count = statement_last - statement_first;
     
     // TODO: make more robust:
-    const auto statements = storage.statements.data + storage.dictionaries.data[dictionary.index].statement_first;
+    const auto statements = storage.statements.data + statement_first;
     
     auto i = size_t{0};
     while (i < statement_count) {

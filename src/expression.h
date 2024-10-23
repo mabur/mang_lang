@@ -198,10 +198,8 @@ struct ForSimpleEndStatement {
 
 // STATEMENTS END
 
-// TODO: use carma like struct for index range
 struct Dictionary {
-    size_t statement_first;
-    size_t statement_last;
+    Indices statements;
     size_t definition_count;
 };
 

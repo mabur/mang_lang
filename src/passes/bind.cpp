@@ -135,7 +135,7 @@ void bindFunctionApplication(
 void bindDictionary(Expression dictionary, Expression environment) {
     auto& dictionary_struct = storage.dictionaries.data[dictionary.index];
     auto indexer = DictionaryNameIndexer{};
-    for (size_t i = dictionary_struct.statement_first; i < dictionary_struct.statement_last; ++i) {
+    FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
