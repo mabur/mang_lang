@@ -16,25 +16,24 @@ Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer fun
 
 Expression builtIns() {
     size_t i  = 0;
-    const auto definitions = std::vector<Definition>{
-        makeDefinitionBuiltIn(i++, "clear",      container_functions::clear),
-        makeDefinitionBuiltIn(i++, "put",        container_functions::put),
-        makeDefinitionBuiltIn(i++, "take",       container_functions::take),
-        makeDefinitionBuiltIn(i++, "drop",       container_functions::drop),
-        makeDefinitionBuiltIn(i++, "get",        container_functions::get),
-        makeDefinitionBuiltIn(i++, "add",        arithmetic::add),
-        makeDefinitionBuiltIn(i++, "mul",        arithmetic::mul),
-        makeDefinitionBuiltIn(i++, "sub",        arithmetic::sub),
-        makeDefinitionBuiltIn(i++, "div",        arithmetic::div),
-        makeDefinitionBuiltIn(i++, "mod",        arithmetic::mod),
-        makeDefinitionBuiltIn(i++, "less",       arithmetic::less),
-        makeDefinitionBuiltIn(i++, "round",      arithmetic::round),
-        makeDefinitionBuiltIn(i++, "round_up",   arithmetic::roundUp),
-        makeDefinitionBuiltIn(i++, "round_down", arithmetic::roundDown),
-        makeDefinitionBuiltIn(i++, "sqrt",       arithmetic::sqrt),
-        makeDefinitionBuiltIn(i++, "number",     arithmetic::asciiNumber),
-        makeDefinitionBuiltIn(i++, "character",  arithmetic::asciiCharacter),
-    };
+    auto definitions = std::vector<Definition>{};
+    definitions.push_back(makeDefinitionBuiltIn(i++, "clear",      container_functions::clear));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "put",        container_functions::put));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "take",       container_functions::take));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "drop",       container_functions::drop));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "get",        container_functions::get));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "add",        arithmetic::add));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "mul",        arithmetic::mul));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "sub",        arithmetic::sub));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "div",        arithmetic::div));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "mod",        arithmetic::mod));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "less",       arithmetic::less));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "round",      arithmetic::round));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "round_up",   arithmetic::roundUp));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "round_down", arithmetic::roundDown));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "sqrt",       arithmetic::sqrt));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "number",     arithmetic::asciiNumber));
+    definitions.push_back(makeDefinitionBuiltIn(i++, "character",  arithmetic::asciiCharacter));
     return makeEvaluatedDictionary(CodeRange{},
         EvaluatedDictionary{Expression{}, definitions}
     );
