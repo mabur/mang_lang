@@ -672,19 +672,21 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
     // Allocation:
     auto definitions = std::vector<Definition>(dictionary.definition_count);
     FOR_EACH(i, dictionary.statements) {
-        const auto statement = storage.statements.data[i];
-        const auto type = statement.type;
+        auto statement = storage.statements.data[i];
+        auto type = statement.type;
         if (type == DEFINITION) {
             auto definition = storage.definitions.data[statement.index];
             definition.expression = Expression{0, statement.range, ANY};
-            definitions.at(definition.name.dictionary_index) = definition;
+            auto dictionary_index = definition.name.dictionary_index;
+            definitions.at(dictionary_index) = definition;
         }
         else if (type == FOR_STATEMENT) {
-            const auto for_statement = storage.for_statements.data[statement.index];
+            auto for_statement = storage.for_statements.data[statement.index];
+            auto dictionary_index = for_statement.item_name.dictionary_index;
             auto definition = Definition{
                 for_statement.item_name, Expression{0, statement.range, ANY}
             };
-            definitions.at(for_statement.item_name.dictionary_index) = definition;
+            definitions.at(dictionary_index) = definition;
         }
     }
     return definitions;
