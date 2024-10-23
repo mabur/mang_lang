@@ -233,7 +233,8 @@ Expression applyFunction(
     // TODO: allocate on storage.definitions directly?
     // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
-    const auto definitions = std::vector<Definition>{{{argument.name, 0}, input}};
+    auto definitions = std::vector<Definition>{};
+    definitions.push_back(Definition{BoundLocalName{argument.name, 0}, input});
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
