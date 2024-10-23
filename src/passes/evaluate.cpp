@@ -798,12 +798,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto statement_last = END_POINTER(storage.dictionaries.data[dictionary.index].statements);
     const auto statement_count = statement_last - statement_first;
     
-    // TODO: make more robust:
-    const auto statements = storage.statements.data + statement_first;
-    
     auto i = size_t{0};
     while (i < statement_count) {
-        const auto statement = statements[i];
+        const auto statement = *(storage.statements.data + statement_first + i);
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = storage.definitions.data[statement.index];
@@ -881,7 +878,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_END_STATEMENT) {
             const auto end_statement = storage.for_end_statements.data[statement.index];
             i = end_statement.start_index;
-            const auto start_statement = statements[i];
+            const auto start_statement = *(storage.statements.data + statement_first + i);
             const auto name_index = storage.for_statements.data[start_statement.index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
@@ -890,7 +887,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_SIMPLE_END_STATEMENT) {
             const auto end_statement = storage.for_simple_end_statements.data[statement.index];
             i = end_statement.start_index;
-            const auto start_statement = statements[i];
+            const auto start_statement = *(storage.statements.data + statement_first + i);
             const auto name_index = storage.for_simple_statements.data[start_statement.index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
