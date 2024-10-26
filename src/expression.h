@@ -203,29 +203,7 @@ struct Dictionary {
     size_t definition_count;
 };
 
-// TODO: make cheaper to copy.
-// Bottleneck.
-// Use index range for definitions.
-// But then need to know all members of the dictionary before it is evaluated.
-// so that they are all added together, at least the first time.
-// Alternatively, use unordered_map for fast lookup of all names
-// and not just definitions.
-// Bottleneck.
-/*
 struct EvaluatedDictionary {
-    Expression environment;
-    size_t name_first; // Index to constant names/keys. Could possibly be shared across instances.
-    size_t name_last;  // Index to constant names/keys. Could possibly be shared across instances.
-    size_t value_first; // Index to values/expression that can change during the evaluation.
-    size_t value_last;  // Index to values/expression that can change during the evaluation.
-};
- */
-struct EvaluatedDictionary {
-    EvaluatedDictionary(const EvaluatedDictionary&) = delete;
-    EvaluatedDictionary(EvaluatedDictionary&&) = default;
-    EvaluatedDictionary& operator=(const EvaluatedDictionary&) = delete;
-    EvaluatedDictionary& operator=(EvaluatedDictionary&&) = default;
-
     Expression environment;
     Indices definitions;
 
