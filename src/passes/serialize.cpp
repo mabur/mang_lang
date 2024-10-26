@@ -407,7 +407,7 @@ DynamicString serializeString(DynamicString s, Expression expression) {
 
 DynamicString serialize_types(DynamicString s, Expression expression) {
     switch (expression.type) {
-        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.at(expression.index));
+        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.data[expression.index]);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize_types, expression);
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(s, expression);
         case EVALUATED_TABLE: return serializeTypesEvaluatedTable(s, expression);
@@ -422,7 +422,7 @@ DynamicString serialize(DynamicString s, Expression expression) {
         case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
         case IS: return serializeIs(s, storage.is_expressions.data[expression.index]);
         case DICTIONARY: return serializeDictionary(s, storage.dictionaries.data[expression.index]);
-        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize, storage.evaluated_dictionaries.at(expression.index));
+        case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize, storage.evaluated_dictionaries.data[expression.index]);
         case DEFINITION: return serializeDefinition(s, storage.definitions.data[expression.index]);
         case PUT_ASSIGNMENT: return serializePutAssignment(s, storage.put_assignments.data[expression.index]);
         case PUT_EACH_ASSIGNMENT: return serializePutEachAssignment(s, storage.put_each_assignments.data[expression.index]);

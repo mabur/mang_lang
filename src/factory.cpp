@@ -35,6 +35,7 @@ void clearMemory() {
     FREE_DARRAY(storage.dynamic_expressions);
     FREE_DARRAY(storage.typed_expressions);
     FREE_DARRAY(storage.dictionaries);
+    FREE_DARRAY(storage.evaluated_dictionaries);
     FREE_DARRAY(storage.conditionals);
     FREE_DARRAY(storage.is_expressions);
     FREE_DARRAY(storage.alternatives);
@@ -67,7 +68,6 @@ void clearMemory() {
     
     storage.names.clear();
     storage.name_indices.clear();
-    storage.evaluated_dictionaries.clear();
     storage.tables.clear();
     storage.evaluated_tables.clear();
 }
@@ -112,8 +112,7 @@ Expression makeDictionary(CodeRange code, Dictionary expression) {
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
-    storage.evaluated_dictionaries.emplace_back(std::move(expression));
-    return Expression{storage.evaluated_dictionaries.size() - 1, code, EVALUATED_DICTIONARY};
+    return makeExpression(code, expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
 }
 
 Expression makeFunction(CodeRange code, Function expression) {

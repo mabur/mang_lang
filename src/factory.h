@@ -21,6 +21,7 @@ struct Storage {
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;
     DARRAY(Dictionary) dictionaries;
+    DARRAY(EvaluatedDictionary) evaluated_dictionaries;
     DARRAY(Conditional) conditionals;
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
@@ -53,7 +54,6 @@ struct Storage {
 
     std::vector<std::string> names;
     std::unordered_map<std::string, size_t> name_indices;
-    std::vector<EvaluatedDictionary> evaluated_dictionaries;
     std::vector<Table> tables;
     std::vector<EvaluatedTable> evaluated_tables;
 };

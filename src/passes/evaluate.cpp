@@ -68,8 +68,8 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* desc
 }
 
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
-    const auto& dictionary_super = storage.evaluated_dictionaries.at(super.index);
-    const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
+    const auto& dictionary_super = storage.evaluated_dictionaries.data[super.index];
+    const auto& dictionary_sub = storage.evaluated_dictionaries.data[sub.index];
     FOR_EACH(i, dictionary_super.definitions) {
         auto definition_super = storage.definitions.data[i];
         const auto name_super = definition_super.name.global_index;
@@ -226,7 +226,7 @@ Expression evaluateLookupChild(
             getExpressionName(child.type)
         );
     }
-    const auto& dictionary = storage.evaluated_dictionaries.at(child.index);
+    const auto& dictionary = storage.evaluated_dictionaries.data[child.index];
     return lookup(dictionary, lookup_child_struct.name);
 }
 
@@ -278,7 +278,7 @@ Expression applyFunctionDictionary(
         );
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
-    const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
+    const auto& evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
     FOR_EACH(i, function_struct.arguments) {
         const auto argument = storage.arguments.data[i];
         const auto expression = lookup(evaluated_dictionary, argument.name);
@@ -376,7 +376,7 @@ LookupResult lookupDictionaryFirstTime(
     if (expression.type != EVALUATED_DICTIONARY) {
         throwMissingSymbolException(storage.names.at(name.global_index), expression);
     }
-    const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
+    const auto& dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
     if (result) {
         return LookupResult{*result, steps};
@@ -390,7 +390,7 @@ Expression lookupDictionarySecondTime(
     if (expression.type != EVALUATED_DICTIONARY) {
         throwMissingSymbolException(storage.names.at(name.global_index), expression);
     }
-    const auto &dictionary = storage.evaluated_dictionaries.at(expression.index);
+    const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (steps == 0) {
         const auto result = optionalLookup(dictionary, name.global_index);
         if (result) {
@@ -730,7 +730,7 @@ void setDictionaryDefinition(
             getExpressionName(evaluated_dictionary.type)
         );
     }
-    auto first = storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.data;
+    auto first = storage.evaluated_dictionaries.data[evaluated_dictionary.index].definitions.data;
     storage.definitions.data[first + name.dictionary_index].expression = value;
 }
 
@@ -744,7 +744,7 @@ Expression getDictionaryDefinition(
             getExpressionName(evaluated_dictionary.type)
         );
     }
-    auto first = storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.data;
+    auto first = storage.evaluated_dictionaries.data[evaluated_dictionary.index].definitions.data;
     return storage.definitions.data[first + name.dictionary_index].expression;
 }
 
