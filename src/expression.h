@@ -11,12 +11,6 @@
 
 typedef uint16_t CharacterIndex;
 
-struct CodeCharacter {
-    char character = 'a';
-    CharacterIndex row = 0;
-    CharacterIndex column = 0;
-};
-
 struct CodeRange {
     CharacterIndex data;
     CharacterIndex count;
