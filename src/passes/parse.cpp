@@ -515,11 +515,17 @@ Expression parseTuple(CodeRange code) {
     );
 }
 
+struct Rows {
+    Row* data;
+    size_t count;
+    size_t capacity;
+};
+
 Expression parseTable(CodeRange code) {
     auto whole = code;
     code = parseCharacter(code, '<');
     code = parseWhiteSpace(code);
-    auto rows = std::vector<Row>{};
+    auto rows = Rows{};
     while (!::startsWith(code, '>')) {
         throwIfEmpty(code);
         code = parseCharacter(code, '(');
@@ -532,13 +538,13 @@ Expression parseTable(CodeRange code) {
         code = parseWhiteSpace(code);
         code = parseCharacter(code, ')');
         code = parseWhiteSpace(code);
-        rows.push_back({key, value});
+        auto row = Row{key, value};
+        APPEND(rows, row);
     }
     code = parseCharacter(code, '>');
     auto first = storage.rows.count;
-    for (const auto row : rows) {
-        APPEND(storage.rows, row);
-    }
+    CONCAT(storage.rows, rows);
+    FREE_DARRAY(rows);
     auto last = storage.rows.count;
     return makeTable(firstPart(whole, code), Table{Indices{first, last - first}});
 }
