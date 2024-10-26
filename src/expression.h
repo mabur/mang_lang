@@ -200,9 +200,6 @@ struct Dictionary {
 struct EvaluatedDictionary {
     Expression environment;
     Indices definitions;
-
-    const Expression* optionalLookup(size_t name) const;
-    Expression lookup(size_t name) const;
 };
 
 struct Row {

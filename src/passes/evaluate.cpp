@@ -14,6 +14,25 @@
 
 namespace {
 
+const Expression* optionalLookup(EvaluatedDictionary dictionary, size_t name) {
+    FOR_EACH(i, dictionary.definitions) {
+        if (storage.definitions.data[i].name.global_index == name) {
+            return &storage.definitions.data[i].expression;
+        }
+    }
+    return nullptr;
+}
+
+Expression lookup(EvaluatedDictionary dictionary, size_t name) {
+    const auto expression = optionalLookup(dictionary, name);
+    if (expression == nullptr) {
+        const auto name_c = storage.names.at(name).c_str();
+        throwException("Cannot find name %s in dictionary", name_c);
+    }
+    return *expression;
+}
+
+
 void checkTypes(Expression super, Expression sub, const char* description);
 
 void checkTypesEvaluatedStack(Expression super, Expression sub, const char* description) {
@@ -54,7 +73,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
     FOR_EACH(i, dictionary_super.definitions) {
         auto definition_super = storage.definitions.data[i];
         const auto name_super = definition_super.name.global_index;
-        const auto value_sub = dictionary_sub.optionalLookup(name_super);
+        const auto value_sub = optionalLookup(dictionary_sub, name_super);
         if (value_sub) {
             checkTypes(definition_super.expression, *value_sub, description);
         }
@@ -208,7 +227,7 @@ Expression evaluateLookupChild(
         );
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(child.index);
-    return dictionary.lookup(lookup_child_struct.name);
+    return lookup(dictionary, lookup_child_struct.name);
 }
 
 template<typename Evaluator>
@@ -262,7 +281,7 @@ Expression applyFunctionDictionary(
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.at(input.index);
     FOR_EACH(i, function_struct.arguments) {
         const auto argument = storage.arguments.data[i];
-        const auto expression = evaluated_dictionary.lookup(argument.name);
+        const auto expression = lookup(evaluated_dictionary, argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
@@ -358,7 +377,7 @@ LookupResult lookupDictionaryFirstTime(
         throwMissingSymbolException(storage.names.at(name.global_index), expression);
     }
     const auto& dictionary = storage.evaluated_dictionaries.at(expression.index);
-    const auto result = dictionary.optionalLookup(name.global_index);
+    const auto result = optionalLookup(dictionary, name.global_index);
     if (result) {
         return LookupResult{*result, steps};
     }
@@ -373,7 +392,7 @@ Expression lookupDictionarySecondTime(
     }
     const auto &dictionary = storage.evaluated_dictionaries.at(expression.index);
     if (steps == 0) {
-        const auto result = dictionary.optionalLookup(name.global_index);
+        const auto result = optionalLookup(dictionary, name.global_index);
         if (result) {
             return *result;
         }
