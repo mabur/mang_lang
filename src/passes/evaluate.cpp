@@ -196,7 +196,7 @@ Expression evaluateTable(
     Expression table,
     Expression environment
 ) {
-    auto table_struct = storage.tables.at(table.index);
+    auto table_struct = storage.tables.data[table.index];
     // Allocation:
     auto rows = std::map<std::string, Row>{};
     FOR_EACH(i, table_struct.rows) {

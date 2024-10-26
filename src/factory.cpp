@@ -66,10 +66,10 @@ void clearMemory() {
     FREE_DARRAY(storage.expressions);
     FREE_DARRAY(storage.strings);
     FREE_DARRAY(storage.rows);
+    FREE_DARRAY(storage.tables);
     
     storage.names.clear();
     storage.name_indices.clear();
-    storage.tables.clear();
     storage.evaluated_tables.clear();
 }
 
@@ -157,8 +157,7 @@ Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
 }
 
 Expression makeTable(CodeRange code, Table expression) {
-    storage.tables.emplace_back(std::move(expression));
-    return Expression{storage.tables.size() - 1, code, TABLE};
+    return makeExpression(code, expression, TABLE, storage.tables);
 }
 
 Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {

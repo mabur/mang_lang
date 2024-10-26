@@ -74,7 +74,7 @@ void bindTuple(Expression tuple, Expression environment) {
 }
 
 void bindTable(Expression table, Expression environment) {
-    const auto table_struct = storage.tables.at(table.index);
+    const auto table_struct = storage.tables.data[table.index];
     FOR_EACH(i, table_struct.rows) {
         auto row = storage.rows.data[i];
         bind(row.key, environment);

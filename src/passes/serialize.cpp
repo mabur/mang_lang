@@ -285,7 +285,7 @@ DynamicString serializeFunctionTuple(DynamicString s, const FunctionTuple& funct
 }
     
 DynamicString serializeTable(DynamicString s, Expression t) {
-    auto rows = storage.tables.at(t.index).rows;
+    auto rows = storage.tables.data[t.index].rows;
     if (IS_EMPTY(rows)) {
         return s = concatenate(s, "<>");
     }

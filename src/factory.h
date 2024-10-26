@@ -52,10 +52,10 @@ struct Storage {
     DARRAY(Expression) expressions;
     DARRAY(String) strings;
     DARRAY(Row) rows;
+    DARRAY(Table) tables;
 
     std::vector<std::string> names;
     std::unordered_map<std::string, size_t> name_indices;
-    std::vector<Table> tables;
     std::vector<EvaluatedTable> evaluated_tables;
 };
 
