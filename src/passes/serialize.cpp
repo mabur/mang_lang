@@ -124,15 +124,16 @@ DynamicString serializeForSimpleStatement(DynamicString s, const ForSimpleStatem
 
 template<typename Serializer>
 DynamicString serializeEvaluatedDictionary(DynamicString s, Serializer serializer, const EvaluatedDictionary& dictionary) {
-    if (dictionary.definitions.empty()) {
+    if (IS_EMPTY(dictionary.definitions)) {
         s = concatenate(s, "{}");
         return s;
     }
     s = concatenate(s, "{");
-    for (const auto& pair : dictionary.definitions) {
-        s = serializeName(s, pair.name.global_index);
+    FOR_EACH(i, dictionary.definitions) {
+        auto definition = storage.definitions.data[i];
+        s = serializeName(s, definition.name.global_index);
         s = concatenate(s, "=");
-        s = serializer(s, pair.expression);
+        s = serializer(s, definition.expression);
         s = concatenate(s, " ");
     }
     LAST_ITEM(s) = '}';

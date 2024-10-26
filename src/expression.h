@@ -227,8 +227,7 @@ struct EvaluatedDictionary {
     EvaluatedDictionary& operator=(EvaluatedDictionary&&) = default;
 
     Expression environment;
-    // TODO: use carma like struct for index range
-    std::vector<Definition> definitions;
+    Indices definitions;
 
     const Expression* optionalLookup(size_t name) const;
     Expression lookup(size_t name) const;

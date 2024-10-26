@@ -51,7 +51,8 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* desc
 void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
     const auto& dictionary_super = storage.evaluated_dictionaries.at(super.index);
     const auto& dictionary_sub = storage.evaluated_dictionaries.at(sub.index);
-    for (const auto& definition_super : dictionary_super.definitions) {
+    FOR_EACH(i, dictionary_super.definitions) {
+        auto definition_super = storage.definitions.data[i];
         const auto name_super = definition_super.name.global_index;
         const auto value_sub = dictionary_sub.optionalLookup(name_super);
         if (value_sub) {
@@ -233,8 +234,10 @@ Expression applyFunction(
     // TODO: allocate on storage.definitions directly?
     // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
-    auto definitions = std::vector<Definition>{};
-    definitions.push_back(Definition{BoundLocalName{argument.name, 0}, input});
+    auto first = storage.definitions.count;
+    makeDefinition({}, Definition{BoundLocalName{argument.name, 0}, input});
+    auto last = storage.definitions.count;
+    auto definitions = Indices{first, last - first};
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
@@ -295,14 +298,15 @@ Expression applyFunctionTuple(
     // TODO: allocate on storage.definitions directly.
     // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
-    auto definitions = std::vector<Definition>{};
-    definitions.reserve(num_inputs);
+    auto first = storage.definitions.count;
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.data[argument_index + i];
         const auto expression = storage.expressions.data[tuple.indices.data + i];
         checkArgument(evaluator, argument, expression, function_struct.environment);
-        definitions.push_back(Definition{BoundLocalName{argument.name, i}, expression});
+        makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
     }
+    auto last = storage.definitions.count;
+    auto definitions = Indices{first, last - first};
     const auto middle = makeEvaluatedDictionary(input.range,
         EvaluatedDictionary{function_struct.environment, definitions}
     );
@@ -667,10 +671,14 @@ Expression evaluateTypedExpression(
     return value;
 }
 
-std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
+Indices initializeDefinitions(const Dictionary& dictionary) {
     // TODO: allocate on storage.expressions directly.
     // Allocation:
-    auto definitions = std::vector<Definition>(dictionary.definition_count);
+    auto first = storage.definitions.count;
+    auto definitions = Indices{first, dictionary.definition_count};
+    FOR_EACH(i, definitions) {
+        makeDefinition(CodeRange{}, Definition{});
+    }
     FOR_EACH(i, dictionary.statements) {
         auto statement = storage.statements.data[i];
         auto type = statement.type;
@@ -678,7 +686,7 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
             auto definition = storage.definitions.data[statement.index];
             definition.expression = Expression{0, statement.range, ANY};
             auto dictionary_index = definition.name.dictionary_index;
-            definitions.at(dictionary_index) = definition;
+            storage.definitions.data[first + dictionary_index] = definition;
         }
         else if (type == FOR_STATEMENT) {
             auto for_statement = storage.for_statements.data[statement.index];
@@ -686,10 +694,11 @@ std::vector<Definition> initializeDefinitions(const Dictionary& dictionary) {
             auto definition = Definition{
                 for_statement.item_name, Expression{0, statement.range, ANY}
             };
-            definitions.at(dictionary_index) = definition;
+            storage.definitions.data[first + dictionary_index] = definition;
         }
     }
-    return definitions;
+    auto last = storage.definitions.count;
+    return Indices{first, last - first};
 }
 
 void setDictionaryDefinition(
@@ -702,7 +711,8 @@ void setDictionaryDefinition(
             getExpressionName(evaluated_dictionary.type)
         );
     }
-    storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions[name.dictionary_index].expression = value;
+    auto first = storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.data;
+    storage.definitions.data[first + name.dictionary_index].expression = value;
 }
 
 Expression getDictionaryDefinition(
@@ -715,7 +725,8 @@ Expression getDictionaryDefinition(
             getExpressionName(evaluated_dictionary.type)
         );
     }
-    return storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.at(name.dictionary_index).expression;
+    auto first = storage.evaluated_dictionaries.at(evaluated_dictionary.index).definitions.data;
+    return storage.definitions.data[first + name.dictionary_index].expression;
 }
 
 Expression evaluateDictionaryTypes(

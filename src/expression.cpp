@@ -1,13 +1,15 @@
 #include "expression.h"
 #include <string.h>
 
+#include <carma/carma.h>
+
 #include "exceptions.h"
 #include "factory.h"
 
 const Expression* EvaluatedDictionary::optionalLookup(size_t name) const {
-    for (const auto& definition: definitions) {
-        if (definition.name.global_index == name) {
-            return &definition.expression;
+    FOR_EACH(i, definitions) {
+        if (storage.definitions.data[i].name.global_index == name) {
+            return &storage.definitions.data[i].expression;
         }
     }
     return nullptr;
