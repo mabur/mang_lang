@@ -535,7 +535,12 @@ Expression parseTable(CodeRange code) {
         rows.push_back({key, value});
     }
     code = parseCharacter(code, '>');
-    return makeTable(firstPart(whole, code), Table{rows});
+    auto first = storage.rows.count;
+    for (const auto row : rows) {
+        APPEND(storage.rows, row);
+    }
+    auto last = storage.rows.count;
+    return makeTable(firstPart(whole, code), Table{Indices{first, last - first}});
 }
 
 Expression parseSubstitution(CodeRange code) {

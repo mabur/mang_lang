@@ -196,19 +196,20 @@ Expression evaluateTable(
     Expression table,
     Expression environment
 ) {
-    const auto table_struct = storage.tables.at(table.index);
+    auto table_struct = storage.tables.at(table.index);
     // Allocation:
     auto rows = std::map<std::string, Row>{};
-    for (const auto& row : table_struct.rows) {
-        const auto key = evaluator(row.key, environment);
-        const auto value = evaluator(row.value, environment);
+    FOR_EACH(i, table_struct.rows) {
+        auto row = storage.rows.data[i];
+        auto key = evaluator(row.key, environment);
+        auto value = evaluator(row.value, environment);
         auto serialized_key = DynamicString{};
         serialized_key = serializer(serialized_key, key);
         auto result = makeStdString(serialized_key);
         FREE_DARRAY(serialized_key);
         rows[result] = {key, value};
     }
-    const auto code = table.range;
+    auto code = table.range;
     return makeEvaluatedTable(code, EvaluatedTable{rows});
 }
 

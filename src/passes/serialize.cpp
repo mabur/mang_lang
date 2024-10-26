@@ -285,12 +285,13 @@ DynamicString serializeFunctionTuple(DynamicString s, const FunctionTuple& funct
 }
     
 DynamicString serializeTable(DynamicString s, Expression t) {
-    const auto rows = storage.tables.at(t.index).rows;
-    if (rows.empty()) {
+    auto rows = storage.tables.at(t.index).rows;
+    if (IS_EMPTY(rows)) {
         return s = concatenate(s, "<>");
     }
     s = concatenate(s, "<");
-    for (const auto& row : rows) {
+    FOR_EACH(i, rows) {
+        auto row = storage.rows.data[i];
         s = concatenate(s, "(");
         s = serialize(s, row.key);
         s = concatenate(s, " ");

@@ -51,6 +51,7 @@ struct Storage {
     DARRAY(Expression) statements;
     DARRAY(Expression) expressions;
     DARRAY(String) strings;
+    DARRAY(Row) rows;
 
     std::vector<std::string> names;
     std::unordered_map<std::string, size_t> name_indices;

@@ -207,9 +207,8 @@ struct Row {
     Expression value;
 };
 
-// TODO: make cheaper to copy or pass by reference or pointer?
 struct Table {
-    std::vector<Row> rows;
+    Indices rows;
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
