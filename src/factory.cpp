@@ -181,23 +181,16 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, storage.symbol_lookups);
 }
 
-static
-size_t findNameIndex(std::string name) {
-    const auto name_index = storage.name_indices.find(name);
-    return name_index == storage.name_indices.end() ? SIZE_MAX : name_index->second;
-}
-
 Expression makeName(CodeRange code, const char* data, size_t count) {
-    auto expression = std::string(data, count);
-    const auto name_index = findNameIndex(expression);
-    if (name_index == SIZE_MAX) {
-        storage.name_indices[expression] = storage.names.size();
-        storage.names.emplace_back(expression);
+    auto name = std::string(data, count);
+    auto it = storage.name_indices.find(name);
+    if (it == storage.name_indices.end()) {
+        storage.name_indices[name] = storage.names.size();
+        storage.names.emplace_back(name);
         return Expression{storage.names.size() - 1, code, NAME};
     }
-    else {
-        return Expression{name_index, code, NAME};
-    }
+    auto index = it->second;
+    return Expression{index, code, NAME};
 }
 
 Expression makeArgument(CodeRange code, Argument expression) {
