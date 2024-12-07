@@ -71,17 +71,17 @@ struct Test {
     }
 
     void reformat(const char* case_name, InputOutputList data) {
-        parameterizedTest<const char*, DynamicString>(
+        parameterizedTest<const char*, StringBuilder>(
             ::reformat, "reformat", case_name, data
         );
     }
     void evaluate_types(const char* case_name, InputOutputList data) {
-        parameterizedTest<const char*, DynamicString>(
+        parameterizedTest<const char*, StringBuilder>(
             ::evaluate_types, "evaluate types", case_name, data
         );
     }
     void evaluate_all(const char* case_name, InputOutputList data) {
-        parameterizedTest<const char*, DynamicString>(
+        parameterizedTest<const char*, StringBuilder>(
             ::evaluate_all, "evaluate_all", case_name, data
         );
     }

@@ -24,7 +24,7 @@ Expression putTable(Expression table, Expression item) {
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
-    auto buffer = DynamicString{};
+    auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto s = makeStdString(buffer);
     FREE_DARRAY(buffer);
@@ -40,7 +40,7 @@ Expression putTableTyped(Expression table, Expression item) {
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
-    auto buffer = DynamicString{};
+    auto buffer = StringBuilder{};
     buffer = serialize_types(buffer, key);
     auto s = makeStdString(buffer);
     FREE_DARRAY(buffer);
@@ -271,7 +271,7 @@ Expression get(Expression in) {
             getExpressionName(table.type)
         );
     }
-    auto buffer = DynamicString{};
+    auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto name = makeStdString(buffer);
     FREE_DARRAY(buffer);

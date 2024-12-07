@@ -5,8 +5,8 @@
 
 #include <carma/carma_string.h>
 
-ConstantString makeStaticString(const char* s);
-DynamicString makeDynamicString(char* s);
-std::string makeStdString(DynamicString s);
-DynamicString concatenate(DynamicString base, const char* tail);
-DynamicString readTextFile(const char* file_path);
+StringView makeStaticString(const char* s);
+StringBuilder makeStringBuilder(char* s);
+std::string makeStdString(StringBuilder s);
+StringBuilder concatenate(StringBuilder base, const char* tail);
+StringBuilder readTextFile(const char* file_path);

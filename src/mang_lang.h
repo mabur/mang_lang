@@ -2,6 +2,6 @@
 #include <string>
 #include "string.h"
 
-DynamicString reformat(const char* code);
-DynamicString evaluate_types(const char* code);
-DynamicString evaluate_all(const char* code);
+StringBuilder reformat(const char* code);
+StringBuilder evaluate_types(const char* code);
+StringBuilder evaluate_all(const char* code);

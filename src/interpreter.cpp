@@ -13,8 +13,8 @@ namespace CommandLineArgumentIndex {
 }
 
 static
-DynamicString getOutputFilePathFromInputFilePath(ConstantString input_file_path) {
-    auto result = DynamicString{};
+StringBuilder getOutputFilePathFromInputFilePath(StringView input_file_path) {
+    auto result = StringBuilder{};
     CONCAT(result, input_file_path);
     DROP_BACK_UNTIL_ITEM(result, '.');
     DROP_BACK_WHILE_ITEM(result, '.');
@@ -32,11 +32,11 @@ int main(int argc,  char **argv) {
     const auto input_file_path = makeStaticString(
         argv[CommandLineArgumentIndex::INPUT_PATH]
     );
-    auto output_file_path = DynamicString{};
+    auto output_file_path = StringBuilder{};
     if (argc < CommandLineArgumentIndex::OUTPUT_PATH + 1) {
         output_file_path = getOutputFilePathFromInputFilePath(input_file_path);
     } else {
-        output_file_path = makeDynamicString(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
+        output_file_path = makeStringBuilder(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
     }
     
     printf("Reading program from %s ... ",  input_file_path.data);

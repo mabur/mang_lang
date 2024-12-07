@@ -15,7 +15,7 @@ void throwException(const char* format, ...) {
     va_start(args0, format);
     va_copy(args1, args0);
 
-    static auto string = DynamicString{};
+    static auto string = StringBuilder{};
     CLEAR(string);
     auto num_characters = vsnprintf(string.data, (size_t)string.capacity, format, args0);
     if (num_characters >= 0) {
@@ -40,7 +40,7 @@ void throwUnexpectedExpressionException(
 }
 
 const char* describeLocation(CodeRange code) {
-    static auto s = DynamicString{};
+    static auto s = StringBuilder{};
     if (code.count == 0) {
         FORMAT_STRING(s, " at unknown location.");
     }

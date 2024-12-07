@@ -3,20 +3,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-ConstantString makeStaticString(const char* s) {
-    return ConstantString{s, strlen(s)}; // TODO: should it be +1? No.
+StringView makeStaticString(const char* s) {
+    return StringView{s, strlen(s)}; // TODO: should it be +1? No.
 }
 
-DynamicString makeDynamicString(char* s) {
+StringBuilder makeStringBuilder(char* s) {
     auto count = strlen(s);
-    return DynamicString{s, count, count}; // TODO: should it be +1? No.
+    return StringBuilder{s, count, count}; // TODO: should it be +1? No.
 }
 
-std::string makeStdString(DynamicString s) {
+std::string makeStdString(StringBuilder s) {
     return std::string(s.data, s.count);
 }
 
-DynamicString concatenate(DynamicString base, const char* tail) {
+StringBuilder concatenate(StringBuilder base, const char* tail) {
     CONCAT_CSTRING(base, tail);
     return base;
 }
@@ -40,27 +40,27 @@ long getFileSize(FILE* file) {
 }
 
 static
-DynamicString readStringFromFile(FILE* file, size_t num_characters) {
-    auto result = DynamicString{};
+StringBuilder readStringFromFile(FILE* file, size_t num_characters) {
+    auto result = StringBuilder{};
     auto capacity = num_characters + 1;
     INIT_DARRAY(result, capacity, capacity);
     if (!result.data) {
         perror("Unable to allocate memory");
         FREE_DARRAY(result);
-        return DynamicString{};
+        return StringBuilder{};
     }
     auto bytes_read = fread(result.data, 1, num_characters, file);
     if (bytes_read != num_characters) {
         perror("Error reading file");
         FREE_DARRAY(result);
-        return DynamicString{};
+        return StringBuilder{};
     }
     result.data[bytes_read] = '\0';
     return result;
 }
 
-DynamicString readTextFile(const char* file_path) {
-    auto result = DynamicString{};
+StringBuilder readTextFile(const char* file_path) {
+    auto result = StringBuilder{};
     auto file = fopen(file_path, "rb");
     if (!file) {
         perror("Unable to open file");

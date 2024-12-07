@@ -203,7 +203,7 @@ Expression evaluateTable(
         auto row = storage.rows.data[i];
         auto key = evaluator(row.key, environment);
         auto value = evaluator(row.value, environment);
-        auto serialized_key = DynamicString{};
+        auto serialized_key = StringBuilder{};
         serialized_key = serializer(serialized_key, key);
         auto result = makeStdString(serialized_key);
         FREE_DARRAY(serialized_key);
@@ -937,7 +937,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
-    auto buffer = DynamicString{};
+    auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto k = makeStdString(buffer);
     FREE_DARRAY(buffer);
