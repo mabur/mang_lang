@@ -2,12 +2,27 @@
 
 #include <string>
 
+#include <carma/carma_string.h>
+
 #include "expression.h"
 
 #define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
 
 struct Expressions {
     Expression* data;
+    size_t count;
+    size_t capacity;
+};
+
+struct NameIndex {
+    StringView key;
+    size_t value;
+    bool occupied;
+};
+
+// TODO: optimize table macros for speed for this use-case.
+struct NameIndices{
+    NameIndex* data;
     size_t count;
     size_t capacity;
 };
@@ -53,9 +68,11 @@ struct Storage {
     DARRAY(String) strings;
     DARRAY(Row) rows;
     DARRAY(Table) tables;
-
+    
     std::vector<std::string> names;
-    std::unordered_map<std::string, size_t> name_indices;
+    
+    NameIndices name_indices;
+    
     std::vector<EvaluatedTable> evaluated_tables;
 };
 

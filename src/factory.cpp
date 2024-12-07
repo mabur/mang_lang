@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <carma/carma.h>
+#include <carma/carma_table.h>
 
 #include "exceptions.h"
 #include "passes/serialize.h"
@@ -67,9 +68,10 @@ void clearMemory() {
     FREE_DARRAY(storage.strings);
     FREE_DARRAY(storage.rows);
     FREE_DARRAY(storage.tables);
-    
+
+    FREE_TABLE(storage.name_indices);
     storage.names.clear();
-    storage.name_indices.clear();
+    
     storage.evaluated_tables.clear();
 }
 
@@ -182,14 +184,16 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
 }
 
 Expression makeName(CodeRange code, const char* data, size_t count) {
-    auto name = std::string(data, count);
-    auto it = storage.name_indices.find(name);
-    if (it == storage.name_indices.end()) {
-        storage.name_indices[name] = storage.names.size();
+    auto string_view = StringView{data, count};
+    auto index = SIZE_MAX;
+    GET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
+    if (index == SIZE_MAX) {
+        auto name = std::string(data, count);
+        index = storage.names.size();
+        SET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
         storage.names.emplace_back(name);
-        return Expression{storage.names.size() - 1, code, NAME};
+        return Expression{index, code, NAME};
     }
-    auto index = it->second;
     return Expression{index, code, NAME};
 }
 
