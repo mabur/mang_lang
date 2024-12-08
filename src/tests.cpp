@@ -276,6 +276,14 @@ int main() {
         {"b@{a=(1 'a') b=a:(1 'a')}", "(1 'a')"},
     });
     test.evaluate_all("types", {
+        {"Any:1", "1"},
+        {"Number:1", "1"},
+        {"Boolean:yes", "yes"},
+        {"Character:'Q'", "'Q'"},
+        {"Stack:[1]", "[1]"},
+        {"Table:<(1 2)>", "<(1 2)>"},
+        {"Numbers:[1 2]", "[1 2]"},
+        {"Function:in x out x", "in x out x"},
         {"{a=Any b=a:1}", "{a=0 b=1}"},
     });
     test.reformat("dictionary iteration", {
