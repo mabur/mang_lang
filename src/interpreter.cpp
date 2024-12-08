@@ -40,7 +40,7 @@ int main(int argc,  char **argv) {
     }
     
     printf("Reading program from %s ... ",  input_file_path.data);
-    auto code = readTextFile(input_file_path.data);
+    auto code = read_text_file(input_file_path.data);
     printf("Done.\n");
 
     try {
