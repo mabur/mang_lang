@@ -33,12 +33,18 @@ void throwException(const char* format, ...) {
 }
 
 void throwUnexpectedExpressionException(ExpressionType type, const char* location) {
-    throwException("Unexpected expression %s for %s", getExpressionName(type), location);
+    throwException(
+        "Unexpected expression %s for %s",
+        getExpressionName(type),
+        location
+    );
 }
 
-void throwMissingSymbolException(const std::string& symbol, Expression parent) {
-    throw std::runtime_error(
-        "Cannot find symbol " + symbol + " in environment of type " + getExpressionName(parent.type)
+void throwMissingSymbolException(const char* symbol, Expression parent) {
+    throwException(
+        "Cannot find symbol %s in environment of type %s",
+        symbol,
+        getExpressionName(parent.type)
     );
 }
 
