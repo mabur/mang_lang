@@ -29,15 +29,13 @@ int main(int argc,  char **argv) {
         printf("Expected input file.\n");
         return 1;
     }
-    const auto input_file_path = STRING_VIEW(
+    auto input_file_path = STRING_VIEW(
         argv[CommandLineArgumentIndex::INPUT_PATH]
     );
-    auto output_file_path = StringBuilder{};
-    if (argc < CommandLineArgumentIndex::OUTPUT_PATH + 1) {
-        output_file_path = getOutputFilePathFromInputFilePath(input_file_path);
-    } else {
-        output_file_path = makeStringBuilder(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
-    }
+    auto output_file_path =
+        argc < CommandLineArgumentIndex::OUTPUT_PATH + 1 ?
+        getOutputFilePathFromInputFilePath(input_file_path) :
+        makeStringBuilder(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
     
     printf("Reading program from %s ... ",  input_file_path.data);
     auto code = read_text_file(input_file_path.data);
