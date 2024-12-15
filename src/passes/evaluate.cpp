@@ -26,7 +26,7 @@ const Expression* optionalLookup(EvaluatedDictionary dictionary, size_t name) {
 Expression lookup(EvaluatedDictionary dictionary, size_t name) {
     const auto expression = optionalLookup(dictionary, name);
     if (expression == nullptr) {
-        const auto name_c = storage.names.at(name).c_str();
+        const auto name_c = &storage.names.at(name);
         throwException("Cannot find name %s in dictionary", name_c);
     }
     return *expression;
@@ -81,7 +81,7 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
             throwException(
                 "Static type error in %s. Could not find name %s in dictionary %s",
                 description,
-                storage.names.at(name_super).c_str(),
+                &storage.names.at(name_super),
                 describeLocation(sub.range)
             );
         }
@@ -375,7 +375,7 @@ LookupResult lookupDictionaryFirstTime(
     const BoundGlobalName& name, size_t steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throwMissingSymbolException(storage.names.at(name.global_index), expression);
+        throwMissingSymbolException(&storage.names.at(name.global_index), expression);
     }
     const auto& dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
@@ -389,7 +389,7 @@ Expression lookupDictionarySecondTime(
     const BoundGlobalName& name, int steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throwMissingSymbolException(storage.names.at(name.global_index), expression);
+        throwMissingSymbolException(&storage.names.at(name.global_index), expression);
     }
     const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (steps == 0) {
@@ -397,7 +397,7 @@ Expression lookupDictionarySecondTime(
         if (result) {
             return *result;
         }
-        throwMissingSymbolException(storage.names.at(name.global_index), expression);
+        throwMissingSymbolException(&storage.names.at(name.global_index), expression);
     }
     return lookupDictionarySecondTime(name, steps - 1, dictionary.environment);
 }

@@ -188,10 +188,14 @@ Expression makeName(CodeRange code, const char* data, size_t count) {
     auto index = SIZE_MAX;
     GET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
     if (index == SIZE_MAX) {
-        auto name = std::string(data, count);
+        //auto name = std::string(data, count);
         index = storage.names.size();
         SET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
-        storage.names.emplace_back(name);
+        //storage.names.emplace_back(name);
+        for (size_t i = 0; i < count; ++i) {
+            storage.names.push_back(data[i]);
+        }
+        storage.names.push_back('\0');
         return Expression{index, code, NAME};
     }
     return Expression{index, code, NAME};
