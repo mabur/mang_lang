@@ -184,15 +184,13 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
 }
 
 Expression makeName(CodeRange code, const char* data, size_t count) {
-    auto string_view = StringView{data, count};
+    auto string = StringView{data, count};
     auto index = SIZE_MAX;
-    GET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
+    GET_RANGE_KEY_VALUE(string, index, storage.name_indices);
     if (index == SIZE_MAX) {
         index = storage.names.count;
-        SET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
-        for (size_t i = 0; i < count; ++i) {
-            APPEND(storage.names, data[i]);
-        }
+        SET_RANGE_KEY_VALUE(string, index, storage.name_indices);
+        CONCAT(storage.names, string);
         APPEND(storage.names, '\0');
         return Expression{index, code, NAME};
     }
