@@ -32,11 +32,8 @@ void throwException(const char* format, ...) {
     throw std::runtime_error(string.data);
 }
 
-void throwUnexpectedExpressionException(
-    ExpressionType type, const char* location) {
-    throw std::runtime_error(
-        std::string{"Unexpected expression "} + getExpressionName(type) + " for " + location
-    );
+void throwUnexpectedExpressionException(ExpressionType type, const char* location) {
+    throwException("Unexpected expression %s for %s", getExpressionName(type), location);
 }
 
 void throwMissingSymbolException(const std::string& symbol, Expression parent) {
