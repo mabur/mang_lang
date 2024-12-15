@@ -70,7 +70,7 @@ struct Storage {
     DARRAY(Table) tables;
     
     // Null-terminated strings concatenated after each other:
-    std::vector<char> names;
+    StringBuilder names;
     
     NameIndices name_indices;
     

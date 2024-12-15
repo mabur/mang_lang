@@ -68,9 +68,9 @@ void clearMemory() {
     FREE_DARRAY(storage.strings);
     FREE_DARRAY(storage.rows);
     FREE_DARRAY(storage.tables);
-
+    FREE_DARRAY(storage.names);
+    
     FREE_TABLE(storage.name_indices);
-    storage.names.clear();
     
     storage.evaluated_tables.clear();
 }
@@ -188,14 +188,12 @@ Expression makeName(CodeRange code, const char* data, size_t count) {
     auto index = SIZE_MAX;
     GET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
     if (index == SIZE_MAX) {
-        //auto name = std::string(data, count);
-        index = storage.names.size();
+        index = storage.names.count;
         SET_RANGE_KEY_VALUE(string_view, index, storage.name_indices);
-        //storage.names.emplace_back(name);
         for (size_t i = 0; i < count; ++i) {
-            storage.names.push_back(data[i]);
+            APPEND(storage.names, data[i]);
         }
-        storage.names.push_back('\0');
+        APPEND(storage.names, '\0');
         return Expression{index, code, NAME};
     }
     return Expression{index, code, NAME};

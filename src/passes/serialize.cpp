@@ -11,7 +11,7 @@
 namespace {
 
 StringBuilder serializeName(StringBuilder s, size_t name) {
-    s = concatenate(s, &storage.names.at(name));
+    s = concatenate(s, storage.names.data + name);
     return s;
 }
 
