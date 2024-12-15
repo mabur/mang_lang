@@ -12,8 +12,11 @@ namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
 }
 
-StringView parseInputFilePath(int argc,  char **argv) {
-    return STRING_VIEW(argv[CommandLineArgumentIndex::INPUT_PATH]);
+StringBuilder parseInputFilePath(int argc,  char **argv) {
+    auto result = StringBuilder{};
+    CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
+    APPEND(result, '\0');
+    return result;
 }
 
 StringBuilder parseOutputFilePath(int argc,  char **argv) {
