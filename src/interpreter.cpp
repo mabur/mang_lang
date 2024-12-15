@@ -18,9 +18,20 @@ StringBuilder getOutputFilePathFromInputFilePath(StringView input_file_path) {
     CONCAT(result, input_file_path);
     DROP_BACK_UNTIL_ITEM(result, '.');
     DROP_BACK_WHILE_ITEM(result, '.');
-    concatenate(result, "_evaluated.txt");
+    CONCAT_CSTRING(result, "_evaluated.txt");
     APPEND(result, '\0');
     return result;
+}
+
+StringView parseInputFilePath(int argc,  char **argv) {
+    return STRING_VIEW(argv[CommandLineArgumentIndex::INPUT_PATH]);
+}
+
+StringBuilder parseOutputFilePath(int argc,  char **argv) {
+    auto input_file_path = parseInputFilePath(argc, argv);
+    return argc < CommandLineArgumentIndex::OUTPUT_PATH + 1 ?
+        getOutputFilePathFromInputFilePath(input_file_path) :
+        makeStringBuilder(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
 }
 
 int main(int argc,  char **argv) {
@@ -29,13 +40,8 @@ int main(int argc,  char **argv) {
         printf("Expected input file.\n");
         return 1;
     }
-    auto input_file_path = STRING_VIEW(
-        argv[CommandLineArgumentIndex::INPUT_PATH]
-    );
-    auto output_file_path =
-        argc < CommandLineArgumentIndex::OUTPUT_PATH + 1 ?
-        getOutputFilePathFromInputFilePath(input_file_path) :
-        makeStringBuilder(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
+    auto input_file_path = parseInputFilePath(argc, argv);
+    auto output_file_path = parseOutputFilePath(argc, argv);
     
     printf("Reading program from %s ... ",  input_file_path.data);
     auto code = read_text_file(input_file_path.data);
