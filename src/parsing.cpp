@@ -156,13 +156,13 @@ CodeRange parseKeyword(CodeRange code, const char* keyword) {
 void throwIfEmpty(CodeRange code) {
     if (IS_EMPTY(code)) {
         throwException(
-            "Unexpected end of source while parsing%s", describeLocation(code)
+            "Unexpected end of source while parsing %s", describeLocation(code)
         );
     }
 }
 
 void throwParseException(CodeRange code) {
-    throwException("Does not recognize expression to parse%s", describeLocation(code));
+    throwException("Does not recognize expression to parse %s", describeLocation(code));
 }
 
 CodeRange parseRawNumber(CodeRange code) {
