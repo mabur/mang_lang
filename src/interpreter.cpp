@@ -12,26 +12,23 @@ namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
 }
 
-static
-StringBuilder getOutputFilePathFromInputFilePath(StringView input_file_path) {
-    auto result = StringBuilder{};
-    CONCAT(result, input_file_path);
-    DROP_BACK_UNTIL_ITEM(result, '.');
-    DROP_BACK_WHILE_ITEM(result, '.');
-    CONCAT_CSTRING(result, "_evaluated.txt");
-    APPEND(result, '\0');
-    return result;
-}
-
 StringView parseInputFilePath(int argc,  char **argv) {
     return STRING_VIEW(argv[CommandLineArgumentIndex::INPUT_PATH]);
 }
 
 StringBuilder parseOutputFilePath(int argc,  char **argv) {
-    auto input_file_path = parseInputFilePath(argc, argv);
-    return argc < CommandLineArgumentIndex::OUTPUT_PATH + 1 ?
-        getOutputFilePathFromInputFilePath(input_file_path) :
-        makeStringBuilder(argv[CommandLineArgumentIndex::OUTPUT_PATH]);
+    auto result = StringBuilder{};
+    if (argc >= CommandLineArgumentIndex::OUTPUT_PATH + 1) {
+        CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::OUTPUT_PATH]);
+    }
+    else {
+        CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
+        DROP_BACK_UNTIL_ITEM(result, '.');
+        DROP_BACK(result);
+        CONCAT_CSTRING(result, "_evaluated.txt");
+    }
+    APPEND(result, '\0');
+    return result;
 }
 
 int main(int argc,  char **argv) {
