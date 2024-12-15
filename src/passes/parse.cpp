@@ -582,7 +582,8 @@ Expression parseSubstitution(CodeRange code) {
 
 Expression parseNumber(CodeRange code) {
     code = parseRawNumber(code);
-    const auto value = std::stod(rawString(code));
+    auto raw_string = std::string(storage.code_characters.data + code.data, code.count);
+    auto value = std::stod(raw_string);
     return makeNumber(code, value);
 }
 

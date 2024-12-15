@@ -12,8 +12,6 @@ const char* describeLocation(CodeRange code);
 void throwIfEmpty(CodeRange code);
 void throwParseException(CodeRange code);
 
-std::string rawString(CodeRange code);
-
 bool isKeyword(CodeRange code, const char* word);
 
 bool startsWith(CodeRange code, const char* word);

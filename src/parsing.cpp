@@ -47,10 +47,6 @@ CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
     return CodeRange{middle_part_end, count};
 }
 
-std::string rawString(CodeRange code) {
-    return std::string(storage.code_characters.data + code.data, code.count);
-}
-
 static
 bool isDigit(char c) {
     return isdigit(c);
