@@ -4,10 +4,6 @@
 
 #include <carma/carma_string.h>
 
-StringView makeStaticString(const char* s) {
-    return STRING_VIEW(s);
-}
-
 StringBuilder makeStringBuilder(char* s) {
     auto count = strlen(s);
     // TODO: copy string instead of taking ownership of it.

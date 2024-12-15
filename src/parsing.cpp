@@ -73,7 +73,7 @@ bool isWhiteSpace(char c) {
 }
 
 bool isKeyword(CodeRange code, const char* word) {
-    auto word_range = makeStaticString(word);
+    auto word_range = STRING_VIEW(word);
     FOR_EACH2(it0, it1, code, word_range) {
         if (storage.code_characters.data[it0] != *it1) {
             return false;
@@ -89,7 +89,7 @@ bool isKeyword(CodeRange code, const char* word) {
 }
 
 bool startsWith(CodeRange code, const char* word) {
-    auto word_range = makeStaticString(word);
+    auto word_range = STRING_VIEW(word);
     FOR_EACH2(it0, it1, code, word_range) {
         if (storage.code_characters.data[it0] != *it1) {
             return false;

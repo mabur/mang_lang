@@ -267,7 +267,7 @@ Number getNumber(Expression expression) {
 }
 
 CodeRange makeCodeCharacters(const char* s) {
-    auto string = makeStaticString(s);
+    auto string = STRING_VIEW(s);
     auto result = CodeRange{
         CharacterIndex(storage.code_characters.count),
         CharacterIndex(string.count)

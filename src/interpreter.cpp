@@ -18,7 +18,7 @@ StringBuilder getOutputFilePathFromInputFilePath(StringView input_file_path) {
     CONCAT(result, input_file_path);
     DROP_BACK_UNTIL_ITEM(result, '.');
     DROP_BACK_WHILE_ITEM(result, '.');
-    CONCAT(result, makeStaticString("_evaluated.txt"));
+    concatenate(result, "_evaluated.txt");
     APPEND(result, '\0');
     return result;
 }
@@ -29,7 +29,7 @@ int main(int argc,  char **argv) {
         printf("Expected input file.\n");
         return 1;
     }
-    const auto input_file_path = makeStaticString(
+    const auto input_file_path = STRING_VIEW(
         argv[CommandLineArgumentIndex::INPUT_PATH]
     );
     auto output_file_path = StringBuilder{};
