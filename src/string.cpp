@@ -5,9 +5,7 @@
 #include <carma/carma_string.h>
 
 StringBuilder makeStringBuilder(char* s) {
-    auto count = strlen(s);
-    // TODO: copy string instead of taking ownership of it.
-    return StringBuilder{s, count, count}; // TODO: should it be +1? No.
+    return concatenate(StringBuilder{}, s);
 }
 
 std::string makeStdString(StringBuilder s) {
