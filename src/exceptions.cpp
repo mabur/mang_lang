@@ -39,6 +39,12 @@ void throwUnexpectedExpressionException(
     );
 }
 
+void throwMissingSymbolException(const std::string& symbol, Expression parent) {
+    throw std::runtime_error(
+        "Cannot find symbol " + symbol + " in environment of type " + getExpressionName(parent.type)
+    );
+}
+
 const char* describeLocation(CodeRange code) {
     static auto s = StringBuilder{};
     if (code.count == 0) {

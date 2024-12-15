@@ -365,12 +365,6 @@ struct LookupResult {
     size_t steps;
 };
 
-static void throwMissingSymbolException(const std::string& symbol, Expression parent) {
-    throw std::runtime_error(
-        "Cannot find symbol " + symbol + " in environment of type " + getExpressionName(parent.type)
-    );
-}
-
 LookupResult lookupDictionaryFirstTime(
     const BoundGlobalName& name, size_t steps, Expression expression
 ) {
