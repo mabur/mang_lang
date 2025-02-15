@@ -31,18 +31,14 @@ struct DictionaryNameIndexer {
         return count;
     }
     void bindName(BoundLocalName& name) {
-        name.dictionary_index = getDictionaryIndex(name.global_index);
+        name.dictionary_index = SIZE_MAX;
+        GET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
+        if (name.dictionary_index != SIZE_MAX) {
+            return;
+        }
+        name.dictionary_index = size();
+        SET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
     }
 private:
-    size_t getDictionaryIndex(size_t global_index) {
-        size_t value = SIZE_MAX;
-        GET_KEY_VALUE(global_index, value, dictionary_index_from_global_index);
-        if (value != SIZE_MAX) {
-            return value;
-        }
-        auto count = size();
-        SET_KEY_VALUE(global_index, count, dictionary_index_from_global_index);
-        return count;
-    }
     TableDictionaryIndexFromGlobalIndex dictionary_index_from_global_index;
 };
