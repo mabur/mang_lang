@@ -2,7 +2,6 @@
 #include "factory.h"
 #include "built_in_functions/built_in_functions.h"
 #include "built_in_functions/standard_library.h"
-#include "passes/bind.h"
 #include "passes/evaluate.h"
 #include "passes/parse.h"
 #include "passes/serialize.h"
