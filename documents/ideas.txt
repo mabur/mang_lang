@@ -441,6 +441,8 @@ TOOLS:
   - Colors and syntax high-lighting.
     - Textmate grammars seem to be much easier than LSP or Treesitter.
     - Textmate grammars are supported by for example Sublime and Vscode.
+  - Learn By Building: Language Server Protocol (TJ DeVries)
+    https://www.youtube.com/watch?v=YsdlcQoHqPY&t=831s
   - Implement tool that takes a source file and outputs an html.
   - Homepage
   - Start by describing rules for wrapping different expressions.
