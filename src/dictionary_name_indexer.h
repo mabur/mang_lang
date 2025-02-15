@@ -34,20 +34,3 @@ TableDictionaryIndexFromGlobalIndex bindName(TableDictionaryIndexFromGlobalIndex
     SET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
     return dictionary_index_from_global_index;
 }
-
-struct DictionaryNameIndexer {
-    DictionaryNameIndexer() {
-        dictionary_index_from_global_index = {};
-    }
-    ~DictionaryNameIndexer() {
-        FREE_TABLE(dictionary_index_from_global_index);
-    }
-    size_t size() const {
-        return countTableItems(dictionary_index_from_global_index);
-    }
-    void bindName(BoundLocalName& name) {
-        dictionary_index_from_global_index = ::bindName(dictionary_index_from_global_index, name);
-    }
-private:
-    TableDictionaryIndexFromGlobalIndex dictionary_index_from_global_index;
-};
