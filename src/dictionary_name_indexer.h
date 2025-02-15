@@ -24,6 +24,17 @@ size_t countTableItems(TableDictionaryIndexFromGlobalIndex table) {
     return count;
 }
 
+TableDictionaryIndexFromGlobalIndex bindName(TableDictionaryIndexFromGlobalIndex dictionary_index_from_global_index, BoundLocalName& name) {
+    name.dictionary_index = SIZE_MAX;
+    GET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
+    if (name.dictionary_index != SIZE_MAX) {
+        return dictionary_index_from_global_index;
+    }
+    name.dictionary_index = countTableItems(dictionary_index_from_global_index);
+    SET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
+    return dictionary_index_from_global_index;
+}
+
 struct DictionaryNameIndexer {
     DictionaryNameIndexer() {
         dictionary_index_from_global_index = {};
@@ -35,13 +46,7 @@ struct DictionaryNameIndexer {
         return countTableItems(dictionary_index_from_global_index);
     }
     void bindName(BoundLocalName& name) {
-        name.dictionary_index = SIZE_MAX;
-        GET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
-        if (name.dictionary_index != SIZE_MAX) {
-            return;
-        }
-        name.dictionary_index = countTableItems(dictionary_index_from_global_index);
-        SET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
+        dictionary_index_from_global_index = ::bindName(dictionary_index_from_global_index, name);
     }
 private:
     TableDictionaryIndexFromGlobalIndex dictionary_index_from_global_index;
