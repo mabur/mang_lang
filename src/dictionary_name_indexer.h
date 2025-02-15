@@ -16,6 +16,14 @@ typedef struct {
     size_t capacity;
 } TableDictionaryIndexFromGlobalIndex;
 
+size_t countTableItems(TableDictionaryIndexFromGlobalIndex table) {
+    size_t count = 0;
+    FOR_EACH_TABLE(it, table) {
+        count++;
+    }
+    return count;
+}
+
 struct DictionaryNameIndexer {
     DictionaryNameIndexer() {
         dictionary_index_from_global_index = {};
@@ -24,11 +32,7 @@ struct DictionaryNameIndexer {
         FREE_TABLE(dictionary_index_from_global_index);
     }
     size_t size() const {
-        size_t count = 0;
-        FOR_EACH_TABLE(it, dictionary_index_from_global_index) {
-            count++;
-        }
-        return count;
+        return countTableItems(dictionary_index_from_global_index);
     }
     void bindName(BoundLocalName& name) {
         name.dictionary_index = SIZE_MAX;
@@ -36,7 +40,7 @@ struct DictionaryNameIndexer {
         if (name.dictionary_index != SIZE_MAX) {
             return;
         }
-        name.dictionary_index = size();
+        name.dictionary_index = countTableItems(dictionary_index_from_global_index);
         SET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
     }
 private:
