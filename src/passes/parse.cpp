@@ -268,9 +268,9 @@ typedef struct {
     GlobalIndexAndDictionaryIndex* data;
     size_t count;
     size_t capacity;
-} TableDictionaryIndexFromGlobalIndex;
+} DictionaryIndexer;
 
-size_t countTableItems(TableDictionaryIndexFromGlobalIndex table) {
+size_t countTableItems(DictionaryIndexer table) {
     size_t count = 0;
     FOR_EACH_TABLE(it, table) {
             count++;
@@ -278,19 +278,19 @@ size_t countTableItems(TableDictionaryIndexFromGlobalIndex table) {
     return count;
 }
 
-TableDictionaryIndexFromGlobalIndex bindName(TableDictionaryIndexFromGlobalIndex dictionary_index_from_global_index, BoundLocalName& name) {
+DictionaryIndexer bindName(DictionaryIndexer indexer, BoundLocalName& name) {
     name.dictionary_index = SIZE_MAX;
-    GET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
+    GET_KEY_VALUE(name.global_index, name.dictionary_index, indexer);
     if (name.dictionary_index != SIZE_MAX) {
-        return dictionary_index_from_global_index;
+        return indexer;
     }
-    name.dictionary_index = countTableItems(dictionary_index_from_global_index);
-    SET_KEY_VALUE(name.global_index, name.dictionary_index, dictionary_index_from_global_index);
-    return dictionary_index_from_global_index;
+    name.dictionary_index = countTableItems(indexer);
+    SET_KEY_VALUE(name.global_index, name.dictionary_index, indexer);
+    return indexer;
 }
 
 void bindDictionaryNames(Dictionary& dictionary_struct) {
-    auto indexer = TableDictionaryIndexFromGlobalIndex{};
+    auto indexer = DictionaryIndexer{};
 
     FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
