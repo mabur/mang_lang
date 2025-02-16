@@ -270,19 +270,11 @@ typedef struct {
     size_t capacity;
 } DictionaryIndexer;
 
-size_t countTableItems(DictionaryIndexer table) {
-    size_t count = 0;
-    FOR_EACH_TABLE(it, table) {
-        count++;
-    }
-    return count;
-}
-
 DictionaryIndexer bindName(DictionaryIndexer indexer, BoundLocalName& name) {
     name.dictionary_index = SIZE_MAX;
     GET_KEY_VALUE(name.global_index, name.dictionary_index, indexer);
     if (name.dictionary_index == SIZE_MAX) {
-        name.dictionary_index = countTableItems(indexer);
+        name.dictionary_index = indexer.count;
         SET_KEY_VALUE(name.global_index, name.dictionary_index, indexer);
     }
     return indexer;
@@ -320,7 +312,7 @@ void bindDictionaryNames(Dictionary& dictionary_struct) {
             indexer = bindName(indexer, for_statement.container_name);
         }
     }
-    dictionary_struct.definition_count = countTableItems(indexer);
+    dictionary_struct.definition_count = indexer.count;
     FREE_TABLE(indexer);
 }
 
