@@ -370,7 +370,7 @@ StringBuilder serializeNumber(StringBuilder s, Number number) {
     // Undefined behaviour?
     //FORMAT_STRING(s, "%.*g", DBL_DIG, number);
     auto serialized_number = StringBuilder{};
-    FORMAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
+    CONCAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
     CONCAT_CSTRING(s, serialized_number.data);
     FREE_DARRAY(serialized_number);
     return s;

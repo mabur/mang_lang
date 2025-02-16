@@ -49,27 +49,23 @@ void throwMissingSymbolException(const char* symbol, Expression parent) {
 }
 
 const char* describeLocation(CodeRange code) {
-    static auto s = StringBuilder{};
     if (code.count == 0) {
-        FORMAT_STRING(s, " at unknown location.");
+        return " at unknown location.";
     }
     else if (code.count == 1) {
-        FORMAT_STRING(
-            s,
+        return FORMAT_STRING(
             " at row %zu and column %zu",
             firstRow(code),
             firstColumn(code)
-        );
+        ).data;
     }
     else {
-        FORMAT_STRING(
-            s,
+        return FORMAT_STRING(
             " between row %zu and column %zu and row %zu and column %zu",
             firstRow(code),
             firstColumn(code),
             lastRow(code),
             lastColumn(code)
-        );
+        ).data;
     }
-    return s.data;
 }
