@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <stdint.h>
 
 struct CodeRange;
 
@@ -25,7 +25,7 @@ CodeRange parseRawName(CodeRange code);
 
 struct ParseResult {
     double value;
-    size_t count;
+    uint16_t count;
 };
 
 ParseResult parseDecimal(CodeRange code);

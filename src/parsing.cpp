@@ -134,42 +134,45 @@ CodeRange parseRawName(CodeRange code) {
     return parseWhile(code, isNameCharacter);    
 }
 
+
+static double parseDigitAsDouble(CodeRange code) {
+    return firstCharacter(code) - '0';
+}
+
 ParseResult parseDecimal(CodeRange code) {
     if (IS_EMPTY(code)) {
         throwException("Reached end of file when parsing number %s", describeLocation(code));
     }
     auto start = code;
-    bool isNegative = false;
-    double integerPart = 0.0;
-    double fractionPart = 0.0;
-    double divisor = 10.0;
+    bool is_negative = false;
     if (firstCharacter(code) == '+') {
         DROP_FRONT(code);
     }
     else if (firstCharacter(code) == '-') {
-        isNegative = true;
+        is_negative = true;
         DROP_FRONT(code);
     }
     if (IS_EMPTY(code)) {
         throwException("Reached end of file when parsing number %s", describeLocation(code));
     }
+    double integer_part = 0.0;
     while (!IS_EMPTY(code) && isDigit(firstCharacter(code))) {
-        integerPart = integerPart * 10 + (firstCharacter(code) - '0');
+        integer_part = integer_part * 10 + parseDigitAsDouble(code);
         DROP_FRONT(code);
     }
+    double fraction_part = 0.0;
     if (!IS_EMPTY(code) && firstCharacter(code) == '.') {
         DROP_FRONT(code);
+        double divisor = 10.0;
         while (!IS_EMPTY(code) && isDigit(firstCharacter(code))) {
-            fractionPart += (firstCharacter(code) - '0') / divisor;
+            fraction_part += parseDigitAsDouble(code) / divisor;
             divisor *= 10;
             DROP_FRONT(code);
         }
     }
-    size_t count = code.data - start.data;
-    // Step 4: Combine integer and fractional parts
-    double result = integerPart + fractionPart;
-    if (isNegative) {
+    double result = integer_part + fraction_part;
+    if (is_negative) {
         result = -result;
     }
-    return {result, count};
+    return {result, (CharacterIndex)(code.data - start.data)};
 }
