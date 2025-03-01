@@ -778,6 +778,12 @@ int main() {
         {"round_down!0.6", "0"},
         {"round_down!0.9", "0"},
     });
+    test.evaluate_all("neg", {
+        {"neg!1", "-1"},
+        {"neg!0", "0"},
+        {"neg!-0", "0"},
+        {"neg!-1", "1"},
+    });
     test.evaluate_all("abs", {
         {"abs!-1", "1"},
         {"abs!0", "0"},
