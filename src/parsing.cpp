@@ -149,10 +149,10 @@ ParseResult parseDecimal(CodeRange code) {
     }
     auto start = code;
     bool is_negative = false;
-    if (firstCharacter(code) == '+') {
+    if (startsWith(code, '+')) {
         DROP_FRONT(code);
     }
-    else if (firstCharacter(code) == '-') {
+    else if (startsWith(code, '-')) {
         is_negative = true;
         DROP_FRONT(code);
     }
@@ -165,7 +165,7 @@ ParseResult parseDecimal(CodeRange code) {
         DROP_FRONT(code);
     }
     double fraction_part = 0.0;
-    if (!IS_EMPTY(code) && firstCharacter(code) == '.') {
+    if (startsWith(code, '.')) {
         DROP_FRONT(code);
         double divisor = 10.0;
         while (startsWithDigit(code)) {
