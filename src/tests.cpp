@@ -6,12 +6,14 @@
 #include <iostream>
 #include <string.h>
 
+#include <stdio.h>
+
 struct Test {
     Test() = default;
     ~Test() {
         using namespace std;
-        cout << endl << num_good_total << "/" << num_good_total + num_bad_total
-            << " tests successful in total. ";
+        printf("%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
+
         if (num_bad_total != 0) {
             cout << num_bad_total << " TESTS FAILING! ";
         }
