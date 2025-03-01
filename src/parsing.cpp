@@ -78,6 +78,10 @@ bool startsWith(CodeRange code, char c) {
     return !IS_EMPTY(code) && firstCharacter(code) == c;
 }
 
+bool startsWithDigit(CodeRange code) {
+    return !IS_EMPTY(code) && isDigit(firstCharacter(code));
+}
+
 CodeRange parseWhiteSpace(CodeRange code) {
     return parseWhile(code, isWhiteSpace);
 }
@@ -156,7 +160,7 @@ ParseResult parseDecimal(CodeRange code) {
         throwException("Reached end of file when parsing number %s", describeLocation(code));
     }
     double integer_part = 0.0;
-    while (!IS_EMPTY(code) && isDigit(firstCharacter(code))) {
+    while (startsWithDigit(code)) {
         integer_part = integer_part * 10 + parseDigitAsDouble(code);
         DROP_FRONT(code);
     }
@@ -164,7 +168,7 @@ ParseResult parseDecimal(CodeRange code) {
     if (!IS_EMPTY(code) && firstCharacter(code) == '.') {
         DROP_FRONT(code);
         double divisor = 10.0;
-        while (!IS_EMPTY(code) && isDigit(firstCharacter(code))) {
+        while (startsWithDigit(code)) {
             fraction_part += parseDigitAsDouble(code) / divisor;
             divisor *= 10;
             DROP_FRONT(code);
