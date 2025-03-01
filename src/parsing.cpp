@@ -167,6 +167,9 @@ ParseResult parseDecimal(CodeRange code) {
     double fraction_part = 0.0;
     if (startsWith(code, '.')) {
         DROP_FRONT(code);
+        if (IS_EMPTY(code)) {
+            throwException("Reached end of file when parsing number %s", describeLocation(code));
+        }
         double divisor = 10.0;
         while (startsWithDigit(code)) {
             fraction_part += parseDigitAsDouble(code) / divisor;
