@@ -17,8 +17,7 @@ struct Test {
         if (num_bad_total != 0) {
             printf("%d TESTS FAILING! ", num_bad_total);
         }
-        cout << "Duration " << std::fixed << std::setprecision(1)
-            << duration_total.count() << " seconds." << endl;
+        printf("Duration %.1f seconds.\n", duration_total.count());
     }
     int exitCode() const {
         return num_bad_total;
