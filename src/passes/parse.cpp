@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <limits>
-#include <unordered_map>
 
 #include <carma/carma.h>
 #include <carma/carma_table.h>
