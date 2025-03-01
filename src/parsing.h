@@ -24,3 +24,10 @@ CodeRange parseOptionalCharacter(CodeRange code, char c);
 CodeRange parseKeyword(CodeRange code, const char* keyword);
 CodeRange parseRawNumber(CodeRange code);
 CodeRange parseRawName(CodeRange code);
+
+struct ParseResult {
+    double value;
+    size_t count;
+};
+
+ParseResult parseDecimal(CodeRange code);

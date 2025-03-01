@@ -583,10 +583,8 @@ Expression parseSubstitution(CodeRange code) {
 }
 
 Expression parseNumber(CodeRange code) {
-    code = parseRawNumber(code);
-    auto raw_string = std::string(storage.code_characters.data + code.data, code.count);
-    auto value = std::stod(raw_string);
-    return makeNumber(code, value);
+    auto result = parseDecimal(code);
+    return makeNumber(CodeRange{code.data, (CharacterIndex)result.count}, result.value);
 }
 
 CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
