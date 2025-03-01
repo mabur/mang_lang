@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include <carma/carma_string.h>
 
 #include "expression.h"

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "expression_type.h"
 
 struct CodeRange;

@@ -1,7 +1,6 @@
 #include "arithmetic.h"
 
 #include <cmath>
-#include <string>
 
 #include "binary_tuple.h"
 #include "../exceptions.h"
