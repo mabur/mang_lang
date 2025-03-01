@@ -1,7 +1,7 @@
 #include "parse.h"
 
 #include <iostream>
-#include <limits>
+#include <math.h>
 
 #include <carma/carma.h>
 #include <carma/carma_table.h>
@@ -636,10 +636,7 @@ Expression parseNo(CodeRange code) {
 }
 
 Expression parseNegInf(CodeRange code) {
-    return makeNumber(
-        parseKeyWordContent(code, "-inf"),
-        -std::numeric_limits<double>::infinity()
-    );
+    return makeNumber(parseKeyWordContent(code, "-inf"), -INFINITY);
 }
 
 Expression parseDynamicExpression(CodeRange code) {
