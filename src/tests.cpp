@@ -2,18 +2,13 @@
 #include <chrono>
 #include <functional>
 #include <initializer_list>
-#include <iomanip>
-#include <iostream>
-#include <string.h>
-
 #include <stdio.h>
+#include <string.h>
 
 struct Test {
     Test() = default;
     ~Test() {
-        using namespace std;
         printf("%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
-
         if (num_bad_total != 0) {
             printf("%d TESTS FAILING! ", num_bad_total);
         }
