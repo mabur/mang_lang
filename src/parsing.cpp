@@ -17,25 +17,6 @@ CodeRange parseWhile(CodeRange code, Predicate predicate) {
     return code;
 }
 
-template<typename Predicate>
-CodeRange parseCharacterIf(CodeRange code, Predicate predicate) {
-    throwIfEmpty(code);
-    auto c = firstCharacter(code);
-    if (!predicate(c)) {
-        throwException("Parser got unexpected char%c%s", c, describeLocation(code));
-    }
-    DROP_FRONT(code);
-    return code;
-}
-
-template<typename Predicate>
-CodeRange parseOptionalCharacterIf(CodeRange code, Predicate predicate) {
-    if (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
-        DROP_FRONT(code);
-    }
-    return code;
-}
-
 CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return CodeRange{whole.data, CharacterIndex(whole.count - last_part.count)};
 }
@@ -50,11 +31,6 @@ CodeRange lastPart(CodeRange whole, CodeRange middle_part) {
 static
 bool isDigit(char c) {
     return isdigit(c);
-}
-
-static
-bool isSign(char c) {
-    return c == '+' || c == '-';
 }
 
 static
@@ -127,13 +103,6 @@ CodeRange parseCharacter(CodeRange code, char expected) {
     return code;
 }
 
-CodeRange parseOptionalCharacter(CodeRange code, char c) {
-    if (!IS_EMPTY(code) && firstCharacter(code) == c) {
-        DROP_FRONT(code);
-    }
-    return code;
-}
-
 CodeRange parseKeyword(CodeRange code, const char* keyword) {
     auto it = keyword;
     for (; *it != '\0'; ++it) {
@@ -159,16 +128,6 @@ void throwIfEmpty(CodeRange code) {
 
 void throwParseException(CodeRange code) {
     throwException("Does not recognize expression to parse %s", describeLocation(code));
-}
-
-CodeRange parseRawNumber(CodeRange code) {
-    auto whole = code;
-    code = parseOptionalCharacterIf(code, isSign);
-    code = parseCharacterIf(code, isDigit);
-    code = parseWhile(code, isDigit);
-    code = parseOptionalCharacter(code, '.');
-    code = parseWhile(code, isDigit);
-    return firstPart(whole, code);
 }
 
 CodeRange parseRawName(CodeRange code) {
