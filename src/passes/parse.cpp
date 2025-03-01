@@ -1,7 +1,7 @@
 #include "parse.h"
 
-#include <iostream>
 #include <math.h>
+#include <stdio.h>
 
 #include <carma/carma.h>
 #include <carma/carma_table.h>
@@ -706,7 +706,7 @@ Expression parseExpression(CodeRange code) {
         throwParseException(code);
         return Expression{};
     } catch (const std::runtime_error& e) {
-        std::cout << "Exception while parsing: " << e.what();
+        printf("Exception while parsing: %s", e.what());
         throw e;
     }
 }
