@@ -138,48 +138,6 @@ CodeRange parseRawName(CodeRange code) {
     return parseWhile(code, isNameCharacter);    
 }
 
-
-static double parseDigitAsDouble(CodeRange code) {
+double parseDigitAsDouble(CodeRange code) {
     return firstCharacter(code) - '0';
-}
-
-ParsedNumber parseDecimal(CodeRange code) {
-    if (IS_EMPTY(code)) {
-        throwException("Reached end of file when parsing number %s", describeLocation(code));
-    }
-    auto start = code;
-    bool is_negative = false;
-    if (startsWith(code, '+')) {
-        DROP_FRONT(code);
-    }
-    else if (startsWith(code, '-')) {
-        is_negative = true;
-        DROP_FRONT(code);
-    }
-    if (IS_EMPTY(code)) {
-        throwException("Reached end of file when parsing number %s", describeLocation(code));
-    }
-    double integer_part = 0.0;
-    while (startsWithDigit(code)) {
-        integer_part = integer_part * 10 + parseDigitAsDouble(code);
-        DROP_FRONT(code);
-    }
-    double fraction_part = 0.0;
-    if (startsWith(code, '.')) {
-        DROP_FRONT(code);
-        if (IS_EMPTY(code)) {
-            throwException("Reached end of file when parsing number %s", describeLocation(code));
-        }
-        double divisor = 10.0;
-        while (startsWithDigit(code)) {
-            fraction_part += parseDigitAsDouble(code) / divisor;
-            divisor *= 10;
-            DROP_FRONT(code);
-        }
-    }
-    double result = integer_part + fraction_part;
-    if (is_negative) {
-        result = -result;
-    }
-    return {result, (CharacterIndex)(code.data - start.data)};
 }

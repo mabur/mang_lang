@@ -583,8 +583,45 @@ Expression parseSubstitution(CodeRange code) {
 }
 
 Expression parseNumber(CodeRange code) {
-    auto result = parseDecimal(code);
-    return makeNumber(CodeRange{code.data, (CharacterIndex)result.count}, result.value);
+    if (IS_EMPTY(code)) {
+        throwException("Reached end of file when parsing number %s", describeLocation(code));
+    }
+    auto start = code;
+    bool is_negative = false;
+    if (startsWith(code, '+')) {
+        DROP_FRONT(code);
+    }
+    else if (startsWith(code, '-')) {
+        is_negative = true;
+        DROP_FRONT(code);
+    }
+    if (IS_EMPTY(code)) {
+        throwException("Reached end of file when parsing number %s", describeLocation(code));
+    }
+    double integer_part = 0.0;
+    while (startsWithDigit(code)) {
+        integer_part = integer_part * 10 + parseDigitAsDouble(code);
+        DROP_FRONT(code);
+    }
+    double fraction_part = 0.0;
+    if (startsWith(code, '.')) {
+        DROP_FRONT(code);
+        if (IS_EMPTY(code)) {
+            throwException("Reached end of file when parsing number %s", describeLocation(code));
+        }
+        double divisor = 10.0;
+        while (startsWithDigit(code)) {
+            fraction_part += parseDigitAsDouble(code) / divisor;
+            divisor *= 10;
+            DROP_FRONT(code);
+        }
+    }
+    double value = integer_part + fraction_part;
+    if (is_negative) {
+        value = -value;
+    }
+    auto count = (CharacterIndex)(code.data - start.data);
+    return makeNumber(CodeRange{start.data, count}, value);
 }
 
 CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
