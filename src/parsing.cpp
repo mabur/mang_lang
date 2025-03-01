@@ -143,7 +143,7 @@ static double parseDigitAsDouble(CodeRange code) {
     return firstCharacter(code) - '0';
 }
 
-ParseResult parseDecimal(CodeRange code) {
+ParsedNumber parseDecimal(CodeRange code) {
     if (IS_EMPTY(code)) {
         throwException("Reached end of file when parsing number %s", describeLocation(code));
     }

@@ -23,9 +23,9 @@ CodeRange parseCharacter(CodeRange code, char expected);
 CodeRange parseKeyword(CodeRange code, const char* keyword);
 CodeRange parseRawName(CodeRange code);
 
-struct ParseResult {
+struct ParsedNumber {
     double value;
     uint16_t count;
 };
 
-ParseResult parseDecimal(CodeRange code);
+ParsedNumber parseDecimal(CodeRange code);
