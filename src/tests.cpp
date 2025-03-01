@@ -49,15 +49,17 @@ struct Test {
                     ++num_good;
                 } else {
                     ++num_bad;
-                    cout << endl << "" << function_name << "(" << input << ")"
-                        << " expected " << output_expected << " got "
-                        << output_actual.data << endl;
+                    printf(
+                        "\n%s(%s) expected %s got %s\n",
+                        function_name, input, output_expected, output_actual.data
+                    );
                 }
             } catch (const std::exception& e) {
                 ++num_bad;
-                cout << endl << "" << function_name << "(" << input << ")"
-                    << " expected " << output_expected << " got exception "
-                    << e.what() << endl;
+                printf(
+                    "%s(%s) expected %s got exception %s\n",
+                    function_name, input, output_expected, e.what()
+                );
             }
         }
         auto end = std::chrono::steady_clock::now();
