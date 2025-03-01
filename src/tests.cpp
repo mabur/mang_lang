@@ -15,7 +15,7 @@ struct Test {
         printf("%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
 
         if (num_bad_total != 0) {
-            cout << num_bad_total << " TESTS FAILING! ";
+            printf("%d TESTS FAILING! ", num_bad_total);
         }
         cout << "Duration " << std::fixed << std::setprecision(1)
             << duration_total.count() << " seconds." << endl;
