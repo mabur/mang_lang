@@ -620,8 +620,7 @@ Expression parseNumber(CodeRange code) {
     if (is_negative) {
         value = -value;
     }
-    auto count = (CharacterIndex)(code.data - start.data);
-    return makeNumber(CodeRange{start.data, count}, value);
+    return makeNumber(firstPart(start, code), value);
 }
 
 CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
