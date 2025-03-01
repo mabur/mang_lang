@@ -1,7 +1,6 @@
 #include "evaluate.h"
 
 #include <cassert>
-#include <iostream>
 #include <string.h>
 
 #include <carma/carma.h>
