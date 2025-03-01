@@ -64,9 +64,11 @@ struct Test {
         }
         auto end = std::chrono::steady_clock::now();
         duration_total += end - start;
-        cout << num_good << "/" << num_good + num_bad
-            << " tests successful for case "
-            << function_name << ":" << case_name << endl;
+
+        printf(
+            "%d/%d tests successful for case %s:%s\n",
+            num_good, num_good + num_bad, function_name, case_name
+        );
         num_good_total += num_good;
         num_bad_total += num_bad;
     }
