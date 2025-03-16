@@ -434,6 +434,7 @@ TOOLS:
 * Command line interface for reading source from file and piping it to interpretor
 * Web interpreter using wasm.
 * Code formatting
+  - https://mcyoung.xyz/2025/03/11/formatters/
   - https://yorickpeterse.com/articles/how-to-write-a-code-formatter/
   - https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf
   - https://lindig.github.io/papers/strictly-pretty-2000.pdf
