@@ -1,8 +1,10 @@
 TYPE SYSTEM
+* Type ascriptions like old typescript syntax
+  - in <Number>x out <Number>x
+  - Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
 * Types & Prototypes
-* Maybe types should not be re-evaluated for every function call?
-  - Could store evaluted types if we have EvaluatedFunction structs.
-    - So EvaluatedFunction sets both environment and types of arguments.
+* Dictionary composition like GCL (Google Configuration Language):
+  - ColorARGB!{red=255}
 * Sort out sub-type relation and consistent relation.
   - TypedExpression and function arguments are of on the form SuperType:SubType
   - a subtype can be used where the supertype is expected.
@@ -285,6 +287,9 @@ SYSTEM IMPLEMENTATION
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
 * Packing Expressions:
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
+* Maybe types should not be re-evaluated for every function call?
+  - Could store evaluted types if we have EvaluatedFunction structs.
+    - So EvaluatedFunction sets both environment and types of arguments.
 * Add arrays
 * Improve EvaluatedDictionary.
   - EvaluatedDictionary is used both during evaluation and after evaluation.
@@ -412,6 +417,11 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Evaluation: tree -> tree. (graphical nodes? algebra)
 
 ERROR HANDLING
+* Add Errors as expressions, and do not use exceptions.
+  - Parsing error / Syntax error
+  - Type checking error
+  - Run-time error
+  - Custom errors defined by user
 * Tests for syntax error and run-time error.
   - Testing book suggested to add information to Exceptions to make them easier to test:
     e.message (free form message that is shown to user but not tested)
