@@ -5,6 +5,12 @@ TYPE SYSTEM
 * Types & Prototypes
 * Dictionary composition like GCL (Google Configuration Language):
   - ColorARGB!{red=255}
+  - ColorARGB|{red=255}
+  - ColorARGB+{red=255}
+  - ColorARGB&{red=255}
+  - compose!(ColorARGB, {red=255})
+  - Put!(ColorARGB {red=255})
+  - color += {red=255}
 * Sort out sub-type relation and consistent relation.
   - TypedExpression and function arguments are of on the form SuperType:SubType
   - a subtype can be used where the supertype is expected.
