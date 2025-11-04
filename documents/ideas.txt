@@ -3,11 +3,12 @@ TYPE SYSTEM
   - in <Number>x out <Number>x
   - Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
 * Types & Prototypes
-* Dictionary composition like GCL (Google Configuration Language):
+* Dictionary composition, row polymorphism, like purescript, jsonnet, dhall, CUE, GCL (Google Configuration Language):
   - ColorARGB!{red=255}
   - ColorARGB|{red=255}
   - ColorARGB+{red=255}
   - ColorARGB&{red=255}
+  - ColorARGB//{red=255}
   - compose!(ColorARGB, {red=255})
   - Put!(ColorARGB {red=255})
   - color += {red=255}
