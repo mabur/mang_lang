@@ -97,19 +97,14 @@ Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, x);
 }
 
-template <typename BinaryOperation>
-Expression binaryOperation(Expression in, BinaryOperation operation, const char* function) {
-    const auto tuple = getDynamicBinaryTuple(in, function);
-    const auto left = getNumber(tuple.left);
-    const auto right = getNumber(tuple.right);
-    return makeNumber(operation(left, right));
-}
-
 } // namespace
+
+#define MAKE_BINARY_OPERATION(tuple, op) (makeNumber(getNumber((tuple).left) op getNumber((tuple).right)))
 
 Expression add(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "add");
-    return binaryOperation(in, std::plus<>(), "add");
+    auto tuple = getDynamicBinaryTuple(in, "add");
+    return MAKE_BINARY_OPERATION(tuple, +);
 }
 
 Expression addTyped(Expression in) {
@@ -119,7 +114,8 @@ Expression addTyped(Expression in) {
 
 Expression mul(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mul");
-    return binaryOperation(in, std::multiplies<>(), "mul");
+    auto tuple = getDynamicBinaryTuple(in, "mul");
+    return MAKE_BINARY_OPERATION(tuple, *);
 }
 
 Expression mulTyped(Expression in) {
@@ -129,7 +125,8 @@ Expression mulTyped(Expression in) {
 
 Expression sub(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "sub");
-    return binaryOperation(in, std::minus<>(), "sub");
+    auto tuple = getDynamicBinaryTuple(in, "sub");
+    return MAKE_BINARY_OPERATION(tuple, -);
 }
 
 Expression subTyped(Expression in) {
@@ -139,7 +136,8 @@ Expression subTyped(Expression in) {
 
 Expression div(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "div");
-    return binaryOperation(in, std::divides<>(), "div");
+    auto tuple = getDynamicBinaryTuple(in, "div");
+    return MAKE_BINARY_OPERATION(tuple, /);
 }
 
 Expression divTyped(Expression in) {
@@ -147,13 +145,10 @@ Expression divTyped(Expression in) {
     return makeNumber(1);
 }
 
-double myMod(double a, double b) {
-    return std::fmod(a, b);
-}
-
 Expression mod(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mod");
-    return binaryOperation(in, myMod, "mod");
+    auto tuple = getDynamicBinaryTuple(in, "mod");
+    return makeNumber(std::fmod(getNumber(tuple.left), getNumber(tuple.right)));
 }
 
 Expression modTyped(Expression in) {
