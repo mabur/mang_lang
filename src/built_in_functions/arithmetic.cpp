@@ -1,6 +1,6 @@
 #include "arithmetic.h"
 
-#include <cmath>
+#include <math.h>
 
 #include "binary_tuple.h"
 #include "../exceptions.h"
@@ -148,7 +148,7 @@ Expression divTyped(Expression in) {
 Expression mod(Expression in) {
     checkDynamicTypeBinaryFunction(in, NUMBER, "mod");
     auto tuple = getDynamicBinaryTuple(in, "mod");
-    return makeNumber(std::fmod(getNumber(tuple.left), getNumber(tuple.right)));
+    return makeNumber(fmod(getNumber(tuple.left), getNumber(tuple.right)));
 }
 
 Expression modTyped(Expression in) {
@@ -172,7 +172,7 @@ Expression lessTyped(Expression in) {
 
 Expression sqrt(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "sqrt");
-    return makeNumber(std::sqrt(getNumber(in)));
+    return makeNumber(::sqrt(getNumber(in)));
 }
 
 Expression sqrtTyped(Expression in) {
@@ -182,7 +182,7 @@ Expression sqrtTyped(Expression in) {
 
 Expression round(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round");
-    return makeNumber(std::round(getNumber(in)));
+    return makeNumber(::round(getNumber(in)));
 }
 
 Expression roundTyped(Expression in) {
@@ -192,7 +192,7 @@ Expression roundTyped(Expression in) {
 
 Expression roundUp(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_up");
-    return makeNumber(std::ceil(getNumber(in)));
+    return makeNumber(ceil(getNumber(in)));
 }
 
 Expression roundUpTyped(Expression in) {
@@ -202,7 +202,7 @@ Expression roundUpTyped(Expression in) {
 
 Expression roundDown(Expression in) {
     checkDynamicTypeUnaryFunction(in, NUMBER, "round_down");
-    return makeNumber(std::floor(getNumber(in)));
+    return makeNumber(floor(getNumber(in)));
 }
 
 Expression roundDownTyped(Expression in) {
