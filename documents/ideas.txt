@@ -2,6 +2,16 @@ TYPE SYSTEM
 * Type ascriptions like old typescript syntax
   - in <Number>x out <Number>x
   - Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
+  - Maybe just allow types for function headers?
+  - Maybe model sum types by allowing multiple types inside <> like:
+    - <Square Circle Rectangle>my_shape
+    - Avoids a general concept like: union[Square Circle Rectangle], which is meaningful for types but maybe not for values.
+    - The downside is that <Square Circle Rectangle> could be repetitive if it appears in many places,
+      in that case it is convenient to define a type like: Shape = union[Square Circle Rectangle]
+  - Maybe it is the wrong idea to have type ascriptions tied to a single expression or function input or output?
+    Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
+    - assert a < b < x
+    - zip2 = in (<List>list0 <List>list1) out <[(take!list0 take!list1)]> ...
 * Types & Prototypes
 * Dictionary composition, row polymorphism, like purescript, jsonnet, dhall, CUE, GCL (Google Configuration Language):
   - ColorARGB!{red=255}
