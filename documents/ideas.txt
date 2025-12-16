@@ -346,6 +346,7 @@ SYSTEM IMPLEMENTATION
   - or just a single int for index in that dictionary, and then visit parents until it is found. O(parents)
   - How to deal with dictionaries where names are defined in different order?
     - Could define index-order alphabetically or using some hash-function.
+    - I think this only matters for child@parent lookup.
   - How to deal with dictionaries that are superset of interface?
     - Could maybe rely on some hash-function?
     - Could stop supporting typed generic dictionaries and require dynamic ANY for them.
@@ -361,7 +362,9 @@ SYSTEM IMPLEMENTATION
   - Add a new expression EvaluatedName
     - Store both name and also index and perhaps steps to parent.
     - Compute it during type-evaluation phase.
-    - Requires that dictionaries of the same type has members indexable the same way.
+    - Requires that dictionaries of the same type has members indexable the same way. Does it really? Or does that only matter for child-lookup?
+  - Start with binding name lookup in current scope and parent scopes. That should be static and lexically known.
+    - Child lookup on the other hand is more dynamic.
 * Nodes & Passes:
   - Parse
     - serialize
