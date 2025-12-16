@@ -348,6 +348,7 @@ SYSTEM IMPLEMENTATION
     - Could define index-order alphabetically or using some hash-function.
     - I think this only matters for child@parent lookup.
   - How to deal with dictionaries that are superset of interface?
+    - Is it only a problem for child@parent lookup? If so wait with solving it.
     - Could maybe rely on some hash-function?
     - Could stop supporting typed generic dictionaries and require dynamic ANY for them.
     - Generic dictionaries is so far also the only thing that is causing the supertype:subtype relation to not be symmetric,
@@ -365,6 +366,9 @@ SYSTEM IMPLEMENTATION
     - Requires that dictionaries of the same type has members indexable the same way. Does it really? Or does that only matter for child-lookup?
   - Start with binding name lookup in current scope and parent scopes. That should be static and lexically known.
     - Child lookup on the other hand is more dynamic.
+    - Could be handled on an execution stack, with all names in scope, and indexing backwards.
+      Use WHILE constructing the current "open" dictionaries. Different from when a dictionary has been constructed and is close.
+    - Think about how to handle function closures.
 * Nodes & Passes:
   - Parse
     - serialize
