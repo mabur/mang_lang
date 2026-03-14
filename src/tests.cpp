@@ -173,6 +173,9 @@ int main() {
         {R"#("()")#", "STRING"},
         {R"("{}")", "STRING"},
     });
+    test.reformat("stack", {
+        {"[", "I found an error while parsing a stack.\nIt is missing a closing ']'."},
+    });
     test.evaluate_all("stack", {
         {"[]", "[]"},
         {"[ ]", "[]"},

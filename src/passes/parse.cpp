@@ -489,7 +489,12 @@ Expression parseStack(CodeRange code) {
     code = parseWhiteSpace(code);
     auto items = Expressions{};
     while (!::startsWith(code, ']')) {
-        throwIfEmpty(code);
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I found an error while parsing a stack.\n"
+                "It is missing a closing ']'."
+            ));
+        };
         auto item = parseExpression(code);
         code = lastPart(code, item.range);
         code = parseWhiteSpace(code);
