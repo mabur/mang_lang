@@ -787,11 +787,11 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "is")) {return parseIs(code);}
         if (isKeyword(code, "in")) {return parseAnyFunction(code);}
         if (isKeyword(code, "dynamic")) {return parseDynamicExpression(code);}
-        if (isKeyword(code, "out")) {throwParseException(code);}
-        if (isKeyword(code, "then")) {throwParseException(code);}
-        if (isKeyword(code, "else")) {throwParseException(code);}
-        if (isKeyword(code, "while")) {throwParseException(code);}
-        if (isKeyword(code, "end")) {throwParseException(code);}
+        if (isKeyword(code, "out")) {return makeParseError(code, "Parse error. 'out' is a reserved keyword.");}
+        if (isKeyword(code, "then")) {return makeParseError(code, "Parse error. 'then' is a reserved keyword.");}
+        if (isKeyword(code, "else")) {return makeParseError(code, "Parse error. 'else' is a reserved keyword.");}
+        if (isKeyword(code, "while")) {return makeParseError(code, "Parse error. 'while' is a reserved keyword.");}
+        if (isKeyword(code, "end")) {return makeParseError(code, "Parse error. 'end' is a reserved keyword.");}
         if (isdigit(c) || c == '+' || c == '-') {return parseNumber(code);}
         if (isalpha(c) || c == '_') {return parseSubstitution(code);}
         throwParseException(code);

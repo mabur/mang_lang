@@ -89,6 +89,11 @@ int main() {
     Test test;
     test.reformat("expression", {
         {"", "I did not find any expression to parse."},
+        {"out", "Parse error. 'out' is a reserved keyword."},
+        {"then", "Parse error. 'then' is a reserved keyword."},
+        {"else", "Parse error. 'else' is a reserved keyword."},
+        {"while", "Parse error. 'while' is a reserved keyword."},
+        {"end", "Parse error. 'end' is a reserved keyword."},
     });
     test.evaluate_all("number", {
         {"-1", "-1"},
