@@ -683,7 +683,11 @@ Expression parseString(CodeRange code) {
 Expression parseExpression(CodeRange code) {
     try {
         code = parseWhiteSpace(code);
-        throwIfEmpty(code);
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I did not find any expression to parse."
+            ));
+        }
         const auto c = firstCharacter(code);
         if (c == '[') {return parseStack(code);}
         if (c == '{') {return parseDictionary(code);}

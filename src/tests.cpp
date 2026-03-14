@@ -87,6 +87,9 @@ struct Test {
 
 int main() {
     Test test;
+    test.reformat("expression", {
+        {"", "I did not find any expression to parse."},
+    });
     test.evaluate_all("number", {
         {"-1", "-1"},
         {"-1.0", "-1"},
