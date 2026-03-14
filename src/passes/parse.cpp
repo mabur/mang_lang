@@ -415,7 +415,12 @@ Expression parseFunctionDictionary(CodeRange code) {
     auto last_argument = first_argument;
     
     while (!::startsWith(code, '}')) {
-        throwIfEmpty(code);
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I found an error while parsing a function.\n"
+                "The input had a starting '{' but no ending '}'."
+            ));
+        }
         const auto argument = parseArgument(code);
         code = lastPart(code, argument.range);
         ++last_argument.index;
