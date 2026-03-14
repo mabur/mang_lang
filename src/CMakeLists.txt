@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.2)
 project(mang_lang_cpp)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
         built_in_functions/arithmetic.cpp
@@ -27,7 +27,7 @@ include(FetchContent)
 FetchContent_Declare(
         carma
         GIT_REPOSITORY https://github.com/mabur/carma.git
-        GIT_TAG d137b872b899a5b34bfc33aa1b6ffadc411c82bd
+        GIT_TAG 91362a5f35ebf123c0d7a50806d676b30b30cfc5
 )
 FetchContent_MakeAvailable(carma)
 
