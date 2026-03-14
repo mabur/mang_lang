@@ -453,6 +453,12 @@ Expression parseFunctionTuple(CodeRange code) {
     auto last_argument = first_argument;
     
     while (!::startsWith(code, ')')) {
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I found an error while parsing a function.\n"
+                "The function definition ended too early."
+            ));
+        }
         throwIfEmpty(code);
         const auto name = parseArgument(code);
         code = lastPart(code, name.range);

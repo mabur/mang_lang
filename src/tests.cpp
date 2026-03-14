@@ -550,7 +550,8 @@ int main() {
     });
     test.reformat("function", {
         {"in T:x out x", "in T:x out x"}, // TODO
-        {"in {x out x", "I found an error while parsing a function.\nThe input had a starting '{' but no ending '}'."}
+        {"in {x out x", "I found an error while parsing a function.\nThe input had a starting '{' but no ending '}'."},
+        {"in (", "I found an error while parsing a function.\nThe function definition ended too early."},
     });
     test.evaluate_types("function", {
         {"in x out x", "FUNCTION"},
