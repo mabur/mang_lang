@@ -3,6 +3,7 @@
 #include <string>
 
 #include <carma/carma.h>
+#include <carma/carma_assert.h>
 
 #include "expression.h"
 #include "exceptions.h"
@@ -87,7 +88,7 @@ CodeRange parseWhiteSpace(CodeRange code) {
 }
 
 CodeRange parseCharacter(CodeRange code) {
-    throwIfEmpty(code);
+    CHECK_INTERNAL(!IS_EMPTY(code));
     DROP_FRONT(code);
     return code;
 }
