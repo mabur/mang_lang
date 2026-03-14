@@ -25,11 +25,17 @@ Expression parseCharacterExpression(CodeRange code) {
             "I found an error while parsing a character.\n"
             "It ends too early."
         ));
-    };
-    code = parseCharacter(code, '\'');
+    }
+    if (!startsWith(code, '\'')) {
+        return makeParseError(code, format_cstring("Parse error. Expected '"));
+    }
+    code = parseCharacter(code);
     auto value = firstCharacter(code);
     code = parseCharacter(code);
-    code = parseCharacter(code, '\'');
+    if (!startsWith(code, '\'')) {
+        return makeParseError(code, format_cstring("Parse error. Expected '"));
+    }
+    code = parseCharacter(code);
     return makeCharacter(firstPart(whole, code), value);
 }
 
@@ -156,7 +162,7 @@ Expression parseNamedElement(CodeRange code) {
     code = parseWhiteSpace(code);
     
     if (startsWith(code, '=')) {
-        code = parseCharacter(code, '=');
+        code = parseCharacter(code);
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
         code = lastPart(code, expression.range);
@@ -330,7 +336,10 @@ struct DynamicIndices {
 
 Expression parseDictionary(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '{');
+    if (!startsWith(code, '{')) {
+        return makeParseError(code, format_cstring("Parse error. Expected {"));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto statements = Expressions{};
     auto loop_start_indices = DynamicIndices{};
@@ -382,7 +391,10 @@ Expression parseDictionary(CodeRange code) {
         }
         code = lastPart(code, LAST_ITEM(statements).range);
     }
-    code = parseCharacter(code, '}');
+    if (!startsWith(code, '}')) {
+        return makeParseError(code, format_cstring("Parse error. Expected }"));
+    }
+    code = parseCharacter(code);
     
     const auto statements_first = storage.statements.count;
     CONCAT(storage.statements, statements);
@@ -412,7 +424,10 @@ Expression parseFunction(CodeRange code) {
 
 Expression parseFunctionDictionary(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '{');
+    if (!startsWith(code, '{')) {
+        return makeParseError(code, format_cstring("Parse error. Expected {"));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     
     const auto first_argument = Expression{
@@ -432,7 +447,10 @@ Expression parseFunctionDictionary(CodeRange code) {
         ++last_argument.index;
         code = parseWhiteSpace(code);
     }
-    code = parseCharacter(code, '}');
+    if (!startsWith(code, '}')) {
+        return makeParseError(code, format_cstring("Parse error. Expected }"));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
@@ -450,7 +468,10 @@ Expression parseFunctionDictionary(CodeRange code) {
 
 Expression parseFunctionTuple(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '(');
+    if (!startsWith(code, '(')) {
+        return makeParseError(code, format_cstring("Parse error. Expected ("));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
 
     const auto first_argument = Expression{
@@ -470,7 +491,10 @@ Expression parseFunctionTuple(CodeRange code) {
         ++last_argument.index;
         code = parseWhiteSpace(code);
     }
-    code = parseCharacter(code, ')');
+    if (!startsWith(code, ')')) {
+        return makeParseError(code, format_cstring("Parse error. Expected )"));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
@@ -491,7 +515,10 @@ Expression parseAnyFunction(CodeRange code) {
 
 Expression parseStack(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '[');
+    if (!startsWith(code, '[')) {
+        return makeParseError(code, format_cstring("Parse error. Expected ["));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto items = Expressions{};
     while (!::startsWith(code, ']')) {
@@ -511,14 +538,20 @@ Expression parseStack(CodeRange code) {
         stack = putStack(stack, *it);
     }
     FREE_DARRAY(items);
-    code = parseCharacter(code, ']');
+    if (!startsWith(code, ']')) {
+        return makeParseError(code, format_cstring("Parse error. Expected ]"));
+    }
+    code = parseCharacter(code);
     stack.range = firstPart(whole, code);
     return stack;
 }
 
 Expression parseTuple(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '(');
+    if (!startsWith(code, '(')) {
+        return makeParseError(code, format_cstring("Parse error. Expected ("));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto expressions = Expressions{};
     while (!::startsWith(code, ')')) {
@@ -537,7 +570,10 @@ Expression parseTuple(CodeRange code) {
     CONCAT(storage.expressions,  expressions);
     FREE_DARRAY(expressions);
     const auto last_expression = storage.expressions.count;
-    code = parseCharacter(code, ')');
+    if (!startsWith(code, ')')) {
+        return makeParseError(code, format_cstring("Parse error. Expected )"));
+    }
+    code = parseCharacter(code);
     return makeTuple(
         firstPart(whole, code),
         Tuple{Indices{first_expression, last_expression - first_expression}}
@@ -552,7 +588,10 @@ struct Rows {
 
 Expression parseTable(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '<');
+    if (!startsWith(code, '<')) {
+        return makeParseError(code, format_cstring("Parse error. Expected <"));
+    }
+    code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto rows = Rows{};
     while (!::startsWith(code, '>')) {
@@ -561,8 +600,11 @@ Expression parseTable(CodeRange code) {
                 "I found an error while parsing a table.\n"
                 "It is missing a closing '>'."
             ));
-        };
-        code = parseCharacter(code, '(');
+        }
+        if (!startsWith(code, '(')) {
+            return makeParseError(code, format_cstring("Parse error. Expected ("));
+        }
+        code = parseCharacter(code);
         code = parseWhiteSpace(code);
         const auto key = parseExpression(code);
         code = lastPart(code, key.range);
@@ -570,12 +612,18 @@ Expression parseTable(CodeRange code) {
         const auto value = parseExpression(code);
         code = lastPart(code, value.range);
         code = parseWhiteSpace(code);
-        code = parseCharacter(code, ')');
+        if (!startsWith(code, ')')) {
+           return makeParseError(code, format_cstring("Parse error. Expected )"));
+        }
+        code = parseCharacter(code);
         code = parseWhiteSpace(code);
         auto row = Row{key, value};
         APPEND(rows, row);
     }
-    code = parseCharacter(code, '>');
+    if (!startsWith(code, '>')) {
+        return makeParseError(code, format_cstring("Parse error. Expected >"));
+    }
+    code = parseCharacter(code);
     auto first = storage.rows.count;
     CONCAT(storage.rows, rows);
     FREE_DARRAY(rows);
@@ -688,7 +736,10 @@ CodeRange rangeOfFirst(CodeRange code) {
 
 Expression parseString(CodeRange code) {
     auto whole = code;
-    code = parseCharacter(code, '"');
+    if (!startsWith(code, '"')) {
+        return makeParseError(code, format_cstring("Parse error. Expected \""));
+    }
+    code = parseCharacter(code);
     auto characters = Expressions{};
     for (;;) {
         auto c = firstCharacter(code);
@@ -704,7 +755,10 @@ Expression parseString(CodeRange code) {
         string = putString(string, *it);
     }
     FREE_DARRAY(characters);
-    code = parseCharacter(code, '"');
+    if (!startsWith(code, '"')) {
+        return makeParseError(code, format_cstring("Parse error. Expected \""));
+    }
+    code = parseCharacter(code);
     string.range = firstPart(whole, code);
     return string;
 }
