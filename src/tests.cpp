@@ -292,6 +292,7 @@ int main() {
         {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
         {"{i=[] i++=[1]}", "{i=[] i++=[1]}"},
+        {"{end}", "I find a parsing error.\nend is not matching a while or for"},
     });
     test.reformat("dictionary for", {
         {"{for i in c end}", "{for i in c end}"},

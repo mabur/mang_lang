@@ -342,11 +342,9 @@ Expression parseDictionary(CodeRange code) {
         else if (isKeyword(code, "end")) {
             const auto loop_end_index = statements.count;
             if (IS_EMPTY(loop_start_indices)) {
-                throwException(
+                return makeParseError(code, format_cstring(
                     "I find a parsing error.\n"
-                    "end is not matching a while or for%s",
-                    describeLocation(code)
-                );
+                    "end is not matching a while or for"));
             }
             const auto loop_start_index = LAST_ITEM(loop_start_indices);
             DROP_BACK(loop_start_indices);
@@ -361,10 +359,9 @@ Expression parseDictionary(CodeRange code) {
                 storage.for_simple_statements.data[start_expression.index].end_index = loop_end_index;
                 APPEND(statements, parseForSimpleEndStatement(code, loop_start_index));
             } else {
-                throwException(
+                return makeParseError(code, format_cstring(
                     "Unexpected start type for loop%s",
-                    describeLocation(code)
-                );
+                    describeLocation(code)));
             }
         }
         else if (isKeyword(code, "return")) {
