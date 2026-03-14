@@ -84,6 +84,15 @@ Expression makeNumber(CodeRange code, Number expression) {
     return result;
 }
 
+Expression makeParseError(CodeRange code, ParseError expression) {
+    static_assert(sizeof(ParseError) == sizeof(size_t), "");
+    auto result = Expression{};
+    result.type = PARSE_ERROR;
+    result.range = code;
+    memcpy(&result.index, &expression, sizeof(ParseError));
+    return result;
+}
+
 Expression makeCharacter(CodeRange code, Character expression) {
     return Expression{static_cast<size_t>(expression), code, CHARACTER};
 }
@@ -261,6 +270,13 @@ Number getNumber(Expression expression) {
     static_assert(sizeof(Number) == sizeof(size_t), "");
     Number result;
     memcpy(&result, &expression.index, sizeof(Number));
+    return result;
+}
+
+ParseError getParseError(Expression expression) {
+    static_assert(sizeof(ParseError) == sizeof(size_t), "");
+    ParseError result;
+    memcpy(&result, &expression.index, sizeof(ParseError));
     return result;
 }
 

@@ -52,6 +52,7 @@ namespace container_functions {
 
 Expression clear(Expression in) {
     switch (in.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
         case EMPTY_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
         case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
@@ -78,6 +79,7 @@ Expression clearTyped(Expression in) {
     //    default: throwUnexpectedExpressionException(in.type, "clear operation");
     //}
     switch (in.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return in;
         case EMPTY_STACK: return in;
         case STRING: return in;
@@ -110,6 +112,7 @@ Expression put(Expression in) {
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return putString(collection, item);
@@ -131,6 +134,7 @@ Expression putTyped(Expression in) {
         return collection;
     }
     switch (collection.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return collection; // TODO: type check item
@@ -176,6 +180,7 @@ Expression take(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
         case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
@@ -192,6 +197,7 @@ Expression takeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
         case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
@@ -208,6 +214,7 @@ Expression takeTyped(Expression in) {
 
 Expression drop(Expression in) {
     switch (in.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
         case STRING: return storage.strings.data[in.index].rest;
         case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
@@ -224,6 +231,7 @@ Expression drop(Expression in) {
 
 Expression dropTyped(Expression in) {
     switch (in.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return in;
         case STRING: return in;
         case EVALUATED_TABLE: return in;

@@ -7,3 +7,5 @@
 
 std::string makeStdString(StringBuilder s);
 StringBuilder concatenate(StringBuilder base, const char* tail);
+
+const char* format_cstring(const char* format, ...);

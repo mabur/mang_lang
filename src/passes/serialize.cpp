@@ -404,10 +404,18 @@ StringBuilder serializeString(StringBuilder s, Expression expression) {
     return s;
 }
 
+StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message) {
+    CLEAR(s);
+    CONCAT_CSTRING(s, error_message);
+    return s;
+}
+
 } // namespace
 
 StringBuilder serialize_types(StringBuilder s, Expression expression) {
     switch (expression.type) {
+        case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression));
+
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.data[expression.index]);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize_types, expression);
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(s, expression);
@@ -419,6 +427,8 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
 
 StringBuilder serialize(StringBuilder s, Expression expression) {
     switch (expression.type) {
+        case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression));
+
         case CHARACTER: return serializeCharacter(s, getCharacter(expression));
         case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
         case IS: return serializeIs(s, storage.is_expressions.data[expression.index]);

@@ -10,6 +10,7 @@
 #include "../factory.h"
 #include "../built_in_functions/container.h"
 #include "../parsing.h"
+#include "../string.h"
 
 namespace {
 
@@ -583,7 +584,7 @@ Expression parseSubstitution(CodeRange code) {
 
 Expression parseNumber(CodeRange code) {
     if (IS_EMPTY(code)) {
-        throwException("Reached end of file when parsing number %s", describeLocation(code));
+        return makeParseError(code, format_cstring("Reached end of file when parsing number %s", describeLocation(code)));
     }
     auto start = code;
     bool is_negative = false;
@@ -595,7 +596,7 @@ Expression parseNumber(CodeRange code) {
         DROP_FRONT(code);
     }
     if (IS_EMPTY(code)) {
-        throwException("Reached end of file when parsing number %s", describeLocation(code));
+        return makeParseError(code, format_cstring("Reached end of file when parsing number %s", describeLocation(code)));
     }
     double integer_part = 0.0;
     while (startsWithDigit(code)) {
@@ -606,7 +607,7 @@ Expression parseNumber(CodeRange code) {
     if (startsWith(code, '.')) {
         DROP_FRONT(code);
         if (IS_EMPTY(code)) {
-            throwException("Reached end of file when parsing number %s", describeLocation(code));
+            return makeParseError(code, format_cstring("Reached end of file when parsing number %s", describeLocation(code)));
         }
         double divisor = 10.0;
         while (startsWithDigit(code)) {
