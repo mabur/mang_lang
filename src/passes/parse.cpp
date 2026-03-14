@@ -20,6 +20,12 @@ BoundLocalName getUnboundLocalName(Expression name) {
 
 Expression parseCharacterExpression(CodeRange code) {
     auto whole = code;
+    if (code.count < 3) {
+        return makeParseError(code, format_cstring(
+            "I found an error while parsing a character.\n"
+            "It ends too early."
+        ));
+    };
     code = parseCharacter(code, '\'');
     auto value = firstCharacter(code);
     code = parseCharacter(code);

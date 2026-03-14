@@ -121,6 +121,13 @@ int main() {
         {"+1", "NUMBER"},
         {"+1.0", "NUMBER"},
     });
+    test.reformat("character", {
+        {"'a'", "'a'"},
+        {"'\n'", "'\n'"},
+        {"'", "I found an error while parsing a character.\nIt ends too early."},
+        {"'a", "I found an error while parsing a character.\nIt ends too early."},
+        {"'\n", "I found an error while parsing a character.\nIt ends too early."}
+    });
     test.evaluate_all("character", {
         {"'a'", "'a'"},
         {"'1'", "'1'"},
