@@ -459,7 +459,6 @@ Expression parseFunctionTuple(CodeRange code) {
                 "The function definition ended too early."
             ));
         }
-        throwIfEmpty(code);
         const auto name = parseArgument(code);
         code = lastPart(code, name.range);
         ++last_argument.index;
