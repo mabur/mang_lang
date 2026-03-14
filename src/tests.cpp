@@ -213,6 +213,7 @@ int main() {
         {"<(<> <>)>", "<(<> <>)>"},
         {"<((0 0) (1 1))>", "<((0 0) (1 1))>"},
         {"<(inc!0 inc!1)>", "<(inc!0 inc!1)>"},
+        {"<","I found an error while parsing a table.\nIt is missing a closing '>'."},
     });
     test.evaluate_types("table", {
         {"<>", "<>"},

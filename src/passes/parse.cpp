@@ -550,7 +550,12 @@ Expression parseTable(CodeRange code) {
     code = parseWhiteSpace(code);
     auto rows = Rows{};
     while (!::startsWith(code, '>')) {
-        throwIfEmpty(code);
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I found an error while parsing a table.\n"
+                "It is missing a closing '>'."
+            ));
+        };
         code = parseCharacter(code, '(');
         code = parseWhiteSpace(code);
         const auto key = parseExpression(code);
