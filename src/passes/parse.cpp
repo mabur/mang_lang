@@ -330,7 +330,11 @@ Expression parseDictionary(CodeRange code) {
     auto loop_start_indices = DynamicIndices{};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
-        throwIfEmpty(code);
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I found an error while parsing a dictionary.\nIt ended too early."
+            ));
+        }
         if (isKeyword(code, "while")) {
             APPEND(loop_start_indices, statements.count);
             APPEND(statements, parseWhileStatement(code));
