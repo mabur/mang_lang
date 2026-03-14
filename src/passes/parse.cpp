@@ -516,7 +516,12 @@ Expression parseTuple(CodeRange code) {
     code = parseWhiteSpace(code);
     auto expressions = Expressions{};
     while (!::startsWith(code, ')')) {
-        throwIfEmpty(code);
+        if (IS_EMPTY(code)) {
+            return makeParseError(code, format_cstring(
+                "I found an error while parsing a tuple.\n"
+                "It is missing a closing ')'."
+            ));
+        };
         auto expression = parseExpression(code);
         code = lastPart(code, expression.range);
         APPEND(expressions, expression);

@@ -246,6 +246,7 @@ int main() {
         {"(())", "(())"},
         {"(() ())", "(() ())"},
         {"((()))", "((()))"},
+        {"(", "I found an error while parsing a tuple.\nIt is missing a closing ')'."},
     });
     test.evaluate_types("tuple", {
         {"()", "()"},
