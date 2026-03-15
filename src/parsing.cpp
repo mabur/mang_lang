@@ -93,36 +93,15 @@ CodeRange parseCharacter(CodeRange code) {
     return code;
 }
 
-CodeRange parseCharacter(CodeRange code, char expected) {
-    throwIfEmpty(code);
-    const auto actual = firstCharacter(code);
-    if (actual != expected) {
-        throwException(
-            "Parsing expected \'%c\' but got \'%c\'%s",
-            expected,
-            actual,
-            describeLocation(code)
-        );
-    }
-    DROP_FRONT(code);
-    return code;
-}
-
 CodeRange parseKeyword(CodeRange code, const char* keyword) {
     auto it = keyword;
     for (; *it != '\0'; ++it) {
         CHECK_INTERNAL(!IS_EMPTY(code));
-        code = parseCharacter(code, *it);
+        auto actual = firstCharacter(code);
+        CHECK_INTERNAL(actual == *it);
+        DROP_FRONT(code);
     }
     return code;
-}
-
-void throwIfEmpty(CodeRange code) {
-    if (IS_EMPTY(code)) {
-        throwException(
-            "Unexpected end of source while parsing %s", describeLocation(code)
-        );
-    }
 }
 
 CodeRange parseRawName(CodeRange code) {
