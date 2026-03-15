@@ -44,6 +44,16 @@ Expression parseAlternative(CodeRange code) {
     auto left = parseExpression(code);
     code = lastPart(code, left.range);
     code = parseWhiteSpace(code);
+    if (!isKeyword(code, "then")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'then'."
+        ));
+    }
+    if (!isKeyword(code, "then")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'then'."
+        ));
+    }
     code = parseKeyword(code, "then");
     code = parseWhiteSpace(code);
     auto right = parseExpression(code);
@@ -54,7 +64,11 @@ Expression parseAlternative(CodeRange code) {
 
 Expression parseConditional(CodeRange code) {
     auto whole = code;
-
+    if (!isKeyword(code, "if")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'if'."
+        ));
+    }
     code = parseKeyword(code, "if");
     code = parseWhiteSpace(code);
     
@@ -64,7 +78,11 @@ Expression parseConditional(CodeRange code) {
         APPEND(alternatives, parseAlternative(code));
         code = lastPart(code, LAST_ITEM(alternatives).range);
     }
-
+    if (!isKeyword(code, "else")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'else'."
+        ));
+    }
     code = parseKeyword(code, "else");
     code = parseWhiteSpace(code);
     auto expression_else = parseExpression(code);
@@ -85,7 +103,11 @@ Expression parseConditional(CodeRange code) {
 
 Expression parseIs(CodeRange code) {
     auto whole = code;
-
+    if (!isKeyword(code, "is")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'is'."
+        ));
+    }
     code = parseKeyword(code, "is");
     code = parseWhiteSpace(code);
     auto input = parseExpression(code);
@@ -98,7 +120,11 @@ Expression parseIs(CodeRange code) {
         APPEND(alternatives, parseAlternative(code));
         code = lastPart(code, LAST_ITEM(alternatives).range);
     }
-
+    if (!isKeyword(code, "else")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'else'."
+        ));
+    }
     code = parseKeyword(code, "else");
     code = parseWhiteSpace(code);
     auto expression_else = parseExpression(code);
@@ -172,7 +198,7 @@ Expression parseNamedElement(CodeRange code) {
             Definition{getUnboundLocalName(name), expression}
         );
     }
-    else if (startsWith(code, '-')) {
+    else if (startsWith(code, "--")) {
         code = parseKeyword(code, "--");
         code = parseWhiteSpace(code);
         return makeDropAssignment(
@@ -191,7 +217,7 @@ Expression parseNamedElement(CodeRange code) {
             PutAssignment{getUnboundLocalName(name), expression}
         );
     }
-    else {
+    else if (startsWith(code, "++=")) {
         code = parseKeyword(code, "++=");
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
@@ -202,10 +228,18 @@ Expression parseNamedElement(CodeRange code) {
             PutEachAssignment{getUnboundLocalName(name), expression}
         );
     }
+    return makeParseError(code, format_cstring(
+        "I found a parsing error. I do not recognize the statement."
+    ));
 }
 
 Expression parseWhileStatement(CodeRange code) {
     auto whole = code;
+    if (!isKeyword(code, "while")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'while'."
+        ));
+    }
     code = parseKeyword(code, "while");
     code = parseWhiteSpace(code);
     auto expression = parseExpression(code);
@@ -216,6 +250,11 @@ Expression parseWhileStatement(CodeRange code) {
 
 Expression parseForStatement(CodeRange code) {
     const auto whole = code;
+    if (!isKeyword(code, "for")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'for'."
+        ));
+    }
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
     const auto first_name = parseName(code);
@@ -244,6 +283,11 @@ Expression parseForStatement(CodeRange code) {
 
 Expression parseWhileEndStatement(CodeRange code, size_t start_index) {
     auto whole = code;
+    if (!isKeyword(code, "end")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'end'."
+        ));
+    }
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
     return makeWhileEndStatement(firstPart(whole, code), {start_index});
@@ -251,6 +295,11 @@ Expression parseWhileEndStatement(CodeRange code, size_t start_index) {
 
 Expression parseForEndStatement(CodeRange code, size_t start_index) {
     auto whole = code;
+    if (!isKeyword(code, "end")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'end'."
+        ));
+    }
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
     return makeForEndStatement(firstPart(whole, code), {start_index});
@@ -258,6 +307,11 @@ Expression parseForEndStatement(CodeRange code, size_t start_index) {
 
 Expression parseForSimpleEndStatement(CodeRange code, size_t start_index) {
     auto whole = code;
+    if (!isKeyword(code, "end")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'end'."
+        ));
+    }
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
     return makeForSimpleEndStatement(firstPart(whole, code), {start_index});
@@ -265,6 +319,11 @@ Expression parseForSimpleEndStatement(CodeRange code, size_t start_index) {
 
 Expression parseReturnStatement(CodeRange code) {
     auto whole = code;
+    if (!isKeyword(code, "return")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'return'."
+        ));
+    }
     code = parseKeyword(code, "return");
     code = parseWhiteSpace(code);
     return Expression{0, firstPart(whole, code), RETURN_STATEMENT};
@@ -413,6 +472,11 @@ Expression parseFunction(CodeRange code) {
     auto argument = parseArgument(code);
     code = lastPart(code, argument.range);
     code = parseWhiteSpace(code);
+    if (!isKeyword(code, "out")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'out'."
+        ));
+    }
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
@@ -452,6 +516,11 @@ Expression parseFunctionDictionary(CodeRange code) {
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
+    if (!isKeyword(code, "out")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'out'."
+        ));
+    }
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
@@ -496,6 +565,11 @@ Expression parseFunctionTuple(CodeRange code) {
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
+    if (!isKeyword(code, "out")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'out'."
+        ));
+    }
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
@@ -506,6 +580,16 @@ Expression parseFunctionTuple(CodeRange code) {
 }
 
 Expression parseAnyFunction(CodeRange code) {
+    if (!isKeyword(code, "in")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'in'."
+        ));
+    }
+    if (!isKeyword(code, "in")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'in'."
+        ));
+    }
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
     if (startsWith(code, '{')) {return parseFunctionDictionary(code);}
@@ -722,6 +806,11 @@ Expression parseNegInf(CodeRange code) {
 
 Expression parseDynamicExpression(CodeRange code) {
     auto whole = code;
+    if (!isKeyword(code, "dynamic")) {
+        return makeParseError(code, format_cstring(
+            "I found a parsing error. I was expecting the keyword 'dynamic'."
+        ));
+    }
     code = parseKeyword(code, "dynamic");
     auto inner_expression = parseExpression(code);
     code = lastPart(code, inner_expression.range);

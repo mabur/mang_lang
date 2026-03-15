@@ -111,13 +111,7 @@ CodeRange parseCharacter(CodeRange code, char expected) {
 CodeRange parseKeyword(CodeRange code, const char* keyword) {
     auto it = keyword;
     for (; *it != '\0'; ++it) {
-        if (IS_EMPTY(code)) {
-            throwException(
-                "Reached end of file when parsing %s%s",
-                keyword,
-                describeLocation(code)
-            );
-        }
+        CHECK_INTERNAL(!IS_EMPTY(code));
         code = parseCharacter(code, *it);
     }
     return code;
