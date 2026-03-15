@@ -61,7 +61,7 @@ bool isKeyword(CodeRange code, const char* word) {
     if (it0 == END_POINTER(code)) {
         return true;
     }
-    return !isNameCharacter(storage.code_characters.data[it0]);
+    return IS_EMPTY(code) or !isNameCharacter(storage.code_characters.data[it0]);
 }
 
 bool startsWith(CodeRange code, const char* word) {
