@@ -131,10 +131,6 @@ void throwIfEmpty(CodeRange code) {
     }
 }
 
-void throwParseException(CodeRange code) {
-    throwException("Does not recognize expression to parse %s", describeLocation(code));
-}
-
 CodeRange parseRawName(CodeRange code) {
     return parseWhile(code, isNameCharacter);    
 }

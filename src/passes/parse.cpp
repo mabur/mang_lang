@@ -794,7 +794,9 @@ Expression parseExpression(CodeRange code) {
         if (isKeyword(code, "end")) {return makeParseError(code, "Parse error. 'end' is a reserved keyword.");}
         if (isdigit(c) || c == '+' || c == '-') {return parseNumber(code);}
         if (isalpha(c) || c == '_') {return parseSubstitution(code);}
-        throwParseException(code);
+        return makeParseError(code, format_cstring(
+            "I did not recognize the expression to parse %s", describeLocation(code)
+        ));
         return Expression{};
     } catch (const std::runtime_error& e) {
         printf("Exception while parsing: %s", e.what());
