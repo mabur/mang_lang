@@ -6,7 +6,6 @@
 #include <carma/carma_assert.h>
 
 #include "expression.h"
-#include "exceptions.h"
 #include "factory.h"
 #include "string.h"
 
