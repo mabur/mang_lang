@@ -9,7 +9,7 @@ const char* describeLocation(CodeRange code);
 
 bool isKeyword(CodeRange code, const char* word);
 
-bool startsWith(CodeRange code, const char* word);
+bool startsWithString(CodeRange code, const char* word);
 bool startsWith(CodeRange code, char c);
 bool startsWithDigit(CodeRange code);
 

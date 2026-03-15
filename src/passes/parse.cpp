@@ -198,7 +198,7 @@ Expression parseNamedElement(CodeRange code) {
             Definition{getUnboundLocalName(name), expression}
         );
     }
-    else if (startsWith(code, "--")) {
+    else if (startsWithString(code, "--")) {
         code = parseKeyword(code, "--");
         code = parseWhiteSpace(code);
         return makeDropAssignment(
@@ -206,7 +206,7 @@ Expression parseNamedElement(CodeRange code) {
             DropAssignment{getUnboundLocalName(name)}
         );
     }
-    else if (startsWith(code, "+=")) {
+    else if (startsWithString(code, "+=")) {
         code = parseKeyword(code, "+=");
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);
@@ -217,7 +217,7 @@ Expression parseNamedElement(CodeRange code) {
             PutAssignment{getUnboundLocalName(name), expression}
         );
     }
-    else if (startsWith(code, "++=")) {
+    else if (startsWithString(code, "++=")) {
         code = parseKeyword(code, "++=");
         code = parseWhiteSpace(code);
         auto expression = parseExpression(code);

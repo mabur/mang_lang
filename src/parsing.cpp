@@ -64,7 +64,7 @@ bool isKeyword(CodeRange code, const char* word) {
     return IS_EMPTY(code) or !isNameCharacter(storage.code_characters.data[it0]);
 }
 
-bool startsWith(CodeRange code, const char* word) {
+bool startsWithString(CodeRange code, const char* word) {
     auto word_range = STRING_VIEW(word);
     FOR_EACH2(it0, it1, code, word_range) {
         if (storage.code_characters.data[it0] != *it1) {
