@@ -8,7 +8,6 @@ CodeRange lastPart(CodeRange whole, CodeRange middle_part);
 const char* describeLocation(CodeRange code);
 
 void throwIfEmpty(CodeRange code);
-void throwParseException(CodeRange code);
 
 bool isKeyword(CodeRange code, const char* word);
 
