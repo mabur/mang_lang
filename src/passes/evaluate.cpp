@@ -29,7 +29,7 @@ OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
     return result;
 }
     
-Expression lookup(EvaluatedDictionary dictionary, size_t name) {
+Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     const auto result = optionalLookup(dictionary, name);
     if (result.ok) {
         return result.value;
@@ -234,7 +234,7 @@ Expression evaluateLookupChild(
         );
     }
     const auto& dictionary = storage.evaluated_dictionaries.data[child.index];
-    return lookup(dictionary, lookup_child_struct.name);
+    return requiredLookup(dictionary, lookup_child_struct.name);
 }
 
 template<typename Evaluator>
@@ -288,7 +288,7 @@ Expression applyFunctionDictionary(
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
     FOR_EACH(i, function_struct.arguments) {
         const auto argument = storage.arguments.data[i];
-        const auto expression = lookup(evaluated_dictionary, argument.name);
+        const auto expression = requiredLookup(evaluated_dictionary, argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
     }
     // TODO: pass along environment? Is some use case missing now?
