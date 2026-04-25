@@ -18,7 +18,7 @@ struct OptionalLookup {
     bool ok;
 };
     
-const OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
+OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
     auto result = MAKE(OptionalLookup);
     FOR_EACH(i, dictionary.definitions) {
         if (storage.definitions.data[i].name.global_index == name) {
