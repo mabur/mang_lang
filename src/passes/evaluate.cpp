@@ -434,23 +434,29 @@ void booleanTypes(Expression expression) {
     }
 }
 
-bool boolean(Expression expression) {
+struct BooleanResult {
+    bool value;
+    Expression error;
+};
+    
+BooleanResult boolean(Expression expression) {
     const auto type = expression.type;
     const auto index = expression.index;
     switch (type) {
-        case PARSE_ERROR: return false;
-        case EVALUATED_TABLE: return !storage.evaluated_tables.at(index).empty();
-        case EVALUATED_TABLE_VIEW: return !storage.evaluated_table_views.data[index].empty();
-        case NUMBER: return static_cast<bool>(getNumber(expression));
-        case YES: return true;
-        case NO: return false;
-        case EVALUATED_STACK: return true;
-        case EMPTY_STACK: return false;
-        case STRING: return true;
-        case EMPTY_STRING: return false;
-        default: throwUnexpectedExpressionException(type, "boolean operation");
+    case PARSE_ERROR: return MAKE(BooleanResult, .value=false);
+    case EVALUATED_TABLE: return MAKE(BooleanResult, .value=!storage.evaluated_tables.at(index).empty());
+    case EVALUATED_TABLE_VIEW: return MAKE(BooleanResult, .value=!storage.evaluated_table_views.data[index].empty());
+    case NUMBER: return MAKE(BooleanResult, .value=static_cast<bool>(getNumber(expression)));
+    case YES: return MAKE(BooleanResult, .value=true);
+    case NO: return MAKE(BooleanResult, .value=false);
+    case EVALUATED_STACK: return MAKE(BooleanResult, .value=true);
+    case EMPTY_STACK: return MAKE(BooleanResult, .value=false);
+    case STRING: return MAKE(BooleanResult, .value=true);
+    case EMPTY_STRING: return MAKE(BooleanResult, .value=false);
+    default: return MAKE(BooleanResult, .error=makeEvaluateError(expression.range, format_cstring(
+        "I found an error while trying to evaluate a boolean expression.\n"
+        "I got an unexpected type %s.", getExpressionName(type))));
     }
-    return false; // Does not happen
 }
 
 size_t getIndex(Number number) {
@@ -636,7 +642,7 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto left_value = evaluate(alternative.left, environment);
-        if (boolean(left_value)) {
+        if (boolean(left_value).value) {
             return evaluate(alternative.right, environment);
         }
     }
@@ -855,7 +861,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto right_expression = put_each_assignment.expression;
             for (
                 auto container = evaluate(right_expression, result);
-                boolean(container);
+                boolean(container).value;
                 container = container_functions::drop(container)
             ) {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
@@ -875,7 +881,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.data[statement.index];
-            if (boolean(evaluate(while_statement.expression, result))) {
+            if (boolean(evaluate(while_statement.expression, result)).value) {
                 i += 1;
             } else {
                 i = while_statement.end_index + 1;
@@ -884,7 +890,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            if (boolean(container)) {
+            if (boolean(container).value) {
                 const auto value = container_functions::take(container);
                 setDictionaryDefinition(result, for_statement.item_name, value);
                 i += 1;
@@ -895,7 +901,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            if (boolean(container)) {
+            if (boolean(container).value) {
                 i += 1;
             } else {
                 i = for_statement.end_index + 1;
