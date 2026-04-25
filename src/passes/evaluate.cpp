@@ -28,7 +28,7 @@ OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
     }
     return result;
 }
-    
+
 Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     const auto result = optionalLookup(dictionary, name);
     if (result.ok) {
@@ -37,7 +37,6 @@ Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     auto name_c = storage.names.data + name;
     return makeEvaluateError({}, format_cstring("I cannot find name %s in dictionary", name_c));
 }
-
 
 void checkTypes(Expression super, Expression sub, const char* description);
 
@@ -393,11 +392,7 @@ Expression lookupDictionarySecondTime(
     }
     const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (steps == 0) {
-        const auto result = optionalLookup(dictionary, name.global_index);
-        if (result.ok) {
-            return result.value;
-        }
-        throwMissingSymbolException(storage.names.data + name.global_index, expression);
+        return requiredLookup(dictionary, name.global_index);
     }
     return lookupDictionarySecondTime(name, steps - 1, dictionary.environment);
 }
