@@ -641,8 +641,8 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
-        const auto left_value = evaluate(alternative.left, environment);
-        if (boolean(left_value).value) {
+        const auto condition = boolean(evaluate(alternative.left, environment));
+        if (condition.value) {
             return evaluate(alternative.right, environment);
         }
     }
@@ -859,16 +859,18 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == PUT_EACH_ASSIGNMENT) {
             const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
-            for (
-                auto container = evaluate(right_expression, result);
-                boolean(container).value;
-                container = container_functions::drop(container)
-            ) {
+            auto container = evaluate(right_expression, result);
+            for (;;) {
+                auto condition = boolean(container);
+                if (!condition.value) {
+                    break;
+                }
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::take(container);
                 const auto tuple = makeEvaluatedTuple2(value, current);
                 const auto new_value = container_functions::put(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
+                container = container_functions::drop(container);
             }
             i += 1;
         }
@@ -881,7 +883,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.data[statement.index];
-            if (boolean(evaluate(while_statement.expression, result)).value) {
+            auto condition = boolean(evaluate(while_statement.expression, result));
+            if (condition.value) {
                 i += 1;
             } else {
                 i = while_statement.end_index + 1;
@@ -890,7 +893,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            if (boolean(container).value) {
+            auto condition = boolean(container);
+            if (condition.value) {
                 const auto value = container_functions::take(container);
                 setDictionaryDefinition(result, for_statement.item_name, value);
                 i += 1;
@@ -900,8 +904,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.data[statement.index];
-            const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            if (boolean(container).value) {
+            const auto condition = boolean(getDictionaryDefinition(result, for_statement.container_name));
+            if (condition.value) {
                 i += 1;
             } else {
                 i = for_statement.end_index + 1;
