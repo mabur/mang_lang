@@ -1065,9 +1065,13 @@ Expression evaluateFunctionApplication(
         
         case EMPTY_STACK: throwException("I caught a run-time error when trying to index an empty stack.");
         case EMPTY_STRING: throwException("I caught a run-time error when trying to index an empty string.");
-        default: throwUnexpectedExpressionException(function.type, "evaluateFunctionApplication");
+        
+        default: return makeEvaluateError(function_application.range, format_cstring(
+            "I found an error during evaluation.\n"
+            "The application operator (!) received an %s, which I did not expect.",
+            getExpressionName(function_application.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 } // namespace
@@ -1108,8 +1112,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case IS: return evaluateIsTypes(expression, environment);
         case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
-        
-        default: throwUnexpectedExpressionException(expression.type, "evaluate types operation");
+    
         default: return makeEvaluateError(expression.range, format_cstring(
             "I found an error during type checking.\n"
             "I received an %s, which I did not expect.",
