@@ -1030,10 +1030,13 @@ Expression evaluateFunctionApplicationTypes(
 
         case EMPTY_STACK: return Expression{0, function_application.range, ANY};
         case EMPTY_STRING: return Expression{0, function_application.range, CHARACTER};
-
-        default: throwUnexpectedExpressionException(function.type, "evaluateFunctionApplicationTypes");
+    
+        default: return makeEvaluateError(function_application.range, format_cstring(
+            "I found an error during type checking.\n"
+            "The application operator (!) received an %s, which I did not expect.",
+            getExpressionName(function_application.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression evaluateFunctionApplication(
@@ -1107,8 +1110,12 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
         
         default: throwUnexpectedExpressionException(expression.type, "evaluate types operation");
+        default: return makeEvaluateError(expression.range, format_cstring(
+            "I found an error during type checking.\n"
+            "I received an %s, which I did not expect.",
+            getExpressionName(expression.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression evaluate(Expression expression, Expression environment) {
@@ -1147,8 +1154,11 @@ Expression evaluate(Expression expression, Expression environment) {
         case IS: return evaluateIs(expression, environment);
         case DICTIONARY: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
-
-        default: throwUnexpectedExpressionException(expression.type, "evaluate operation");
+    
+        default: return makeEvaluateError(expression.range, format_cstring(
+            "I found an error during evaluation.\n"
+            "I received an %s, which I did not expect.",
+            getExpressionName(expression.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }

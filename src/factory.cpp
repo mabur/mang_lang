@@ -96,6 +96,14 @@ Expression makeParseError(CodeRange code, ParseError expression) {
     return result;
 }
 
+Expression makeEvaluateError(CodeRange code, EvaluateError expression) {
+    auto result = Expression{};
+    result.type = EVALUATE_ERROR;
+    result.range = code;
+    BIT_CAST(expression, result.index);
+    return result;
+}
+
 Expression makeCharacter(CodeRange code, Character expression) {
     return Expression{static_cast<size_t>(expression), code, CHARACTER};
 }
@@ -277,6 +285,12 @@ Number getNumber(Expression expression) {
 
 ParseError getParseError(Expression expression) {
     ParseError result;
+    BIT_CAST(expression.index, result);
+    return result;
+}
+
+EvaluateError getEvaluateError(Expression expression) {
+    EvaluateError result;
     BIT_CAST(expression.index, result);
     return result;
 }

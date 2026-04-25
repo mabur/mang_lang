@@ -61,9 +61,11 @@ Expression clear(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
-        default: throwUnexpectedExpressionException(in.type, "clear operation");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during evaluation.\n"
+            "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression clearTyped(Expression in) {
@@ -88,9 +90,11 @@ Expression clearTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throwUnexpectedExpressionException(in.type, "clearTyped operation");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during type checking.\n"
+            "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression putNumber(Expression collection, Expression item) {
@@ -121,9 +125,11 @@ Expression put(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: throwUnexpectedExpressionException(in.type, "put operation");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during evaluation.\n"
+            "The put function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression putTyped(Expression in) {
@@ -143,9 +149,11 @@ Expression putTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: throwUnexpectedExpressionException(in.type, "putTyped operation");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during type checking.\n"
+            "The put function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 template<typename T>
@@ -188,9 +196,11 @@ Expression take(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
-        default: throwUnexpectedExpressionException(type, "take");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during evaluation.\n"
+            "The take function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression takeTyped(Expression in) {
@@ -207,9 +217,11 @@ Expression takeTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throwUnexpectedExpressionException(type, "take");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during type checking.\n"
+            "The take function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression drop(Expression in) {
@@ -224,9 +236,11 @@ Expression drop(Expression in) {
         case NUMBER: return dropNumber(in);
         case NO: return in;
         case YES: return Expression{0, CodeRange{}, NO};
-        default: throwUnexpectedExpressionException(in.type, "drop");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during evaluation.\n"
+            "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression dropTyped(Expression in) {
@@ -241,9 +255,11 @@ Expression dropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: throwUnexpectedExpressionException(in.type, "drop typed");
+        default: return makeEvaluateError(in.range, format_cstring(
+            "I found an error during type checking.\n"
+            "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
+        ));
     }
-    return Expression{}; // Does not happen
 }
 
 Expression get(Expression in) {

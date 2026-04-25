@@ -82,9 +82,11 @@ void clearMemory();
 Character getCharacter(Expression expression);
 Number getNumber(Expression expression);
 ParseError getParseError(Expression expression);
+EvaluateError getEvaluateError(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeParseError(CodeRange code, ParseError expression);
+Expression makeEvaluateError(CodeRange code, EvaluateError expression);
 Expression makeCharacter(CodeRange code, Character expression);
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);
 Expression makeTypedExpression(CodeRange code, TypedExpression expression);
