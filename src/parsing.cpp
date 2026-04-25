@@ -3,7 +3,7 @@
 #include <string>
 
 #include <carma/carma.h>
-#include <carma/carma_assert.h>
+#include <carma/carma_error.h>
 
 #include "expression.h"
 #include "factory.h"
@@ -87,7 +87,7 @@ CodeRange parseWhiteSpace(CodeRange code) {
 }
 
 CodeRange parseCharacter(CodeRange code) {
-    CHECK_INTERNAL(!IS_EMPTY(code));
+    CHECK_INTERNAL(!IS_EMPTY(code), "parseCharacter");
     DROP_FRONT(code);
     return code;
 }
@@ -95,9 +95,9 @@ CodeRange parseCharacter(CodeRange code) {
 CodeRange parseKeyword(CodeRange code, const char* keyword) {
     auto it = keyword;
     for (; *it != '\0'; ++it) {
-        CHECK_INTERNAL(!IS_EMPTY(code));
+        CHECK_INTERNAL(!IS_EMPTY(code), "parseKeyword");
         auto actual = firstCharacter(code);
-        CHECK_INTERNAL(actual == *it);
+        CHECK_INTERNAL(actual == *it, "parseKeyword");
         DROP_FRONT(code);
     }
     return code;
