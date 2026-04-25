@@ -13,22 +13,29 @@
 
 namespace {
 
-const Expression* optionalLookup(EvaluatedDictionary dictionary, size_t name) {
+struct OptionalLookup {
+    Expression value;
+    bool ok;
+};
+    
+const OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
+    auto result = MAKE(OptionalLookup);
     FOR_EACH(i, dictionary.definitions) {
         if (storage.definitions.data[i].name.global_index == name) {
-            return &storage.definitions.data[i].expression;
+            result.value = storage.definitions.data[i].expression;
+            result.ok = true;
         }
     }
-    return nullptr;
+    return result;
 }
 
 Expression lookup(EvaluatedDictionary dictionary, size_t name) {
-    const auto expression = optionalLookup(dictionary, name);
-    if (expression == nullptr) {
+    const auto result = optionalLookup(dictionary, name);
+    if (!result.ok) {
         const auto name_c = storage.names.data + name;
         throwException("Cannot find name %s in dictionary", name_c);
     }
-    return *expression;
+    return result.value;
 }
 
 
@@ -73,8 +80,8 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
         auto definition_super = storage.definitions.data[i];
         const auto name_super = definition_super.name.global_index;
         const auto value_sub = optionalLookup(dictionary_sub, name_super);
-        if (value_sub) {
-            checkTypes(definition_super.expression, *value_sub, description);
+        if (value_sub.ok) {
+            checkTypes(definition_super.expression, value_sub.value, description);
         }
         else {
             throwException(
@@ -372,8 +379,8 @@ LookupResult lookupDictionaryFirstTime(
     }
     const auto& dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
-    if (result) {
-        return LookupResult{*result, steps};
+    if (result.ok) {
+        return LookupResult{result.value, steps};
     }
     return lookupDictionaryFirstTime(name, steps + 1, dictionary.environment);
 }
@@ -387,8 +394,8 @@ Expression lookupDictionarySecondTime(
     const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (steps == 0) {
         const auto result = optionalLookup(dictionary, name.global_index);
-        if (result) {
-            return *result;
+        if (result.ok) {
+            return result.value;
         }
         throwMissingSymbolException(storage.names.data + name.global_index, expression);
     }
