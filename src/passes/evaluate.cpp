@@ -28,14 +28,14 @@ OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
     }
     return result;
 }
-
+    
 Expression lookup(EvaluatedDictionary dictionary, size_t name) {
     const auto result = optionalLookup(dictionary, name);
-    if (!result.ok) {
-        const auto name_c = storage.names.data + name;
-        throwException("Cannot find name %s in dictionary", name_c);
+    if (result.ok) {
+        return result.value;
     }
-    return result.value;
+    auto name_c = storage.names.data + name;
+    return makeEvaluateError({}, format_cstring("I cannot find name %s in dictionary", name_c));
 }
 
 
