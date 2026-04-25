@@ -642,6 +642,9 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto condition = boolean(evaluate(alternative.left, environment));
+        if (isError(condition.error.type)) {
+            return condition.error;
+        }
         if (condition.value) {
             return evaluate(alternative.right, environment);
         }
@@ -862,6 +865,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             auto container = evaluate(right_expression, result);
             for (;;) {
                 auto condition = boolean(container);
+                if (isError(condition.error.type)) {
+                    return condition.error;
+                }
                 if (!condition.value) {
                     break;
                 }
@@ -884,6 +890,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.data[statement.index];
             auto condition = boolean(evaluate(while_statement.expression, result));
+            if (isError(condition.error.type)) {
+                return condition.error;
+            }
             if (condition.value) {
                 i += 1;
             } else {
@@ -894,6 +903,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             auto condition = boolean(container);
+            if (isError(condition.error.type)) {
+                return condition.error;
+            }
             if (condition.value) {
                 const auto value = container_functions::take(container);
                 setDictionaryDefinition(result, for_statement.item_name, value);
@@ -905,6 +917,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto condition = boolean(getDictionaryDefinition(result, for_statement.container_name));
+            if (isError(condition.error.type)) {
+                return condition.error;
+            }
             if (condition.value) {
                 i += 1;
             } else {

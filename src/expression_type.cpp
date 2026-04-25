@@ -49,3 +49,7 @@ const char* getExpressionName(ExpressionType type) {
     }
     return "UNKNOWN_EXPRESSION"; // Should not happen
 }
+
+bool isError(ExpressionType type) {
+    return type == PARSE_ERROR || type == EVALUATE_ERROR;
+}
