@@ -374,7 +374,9 @@ LookupResult lookupDictionaryFirstTime(
     const BoundGlobalName& name, size_t steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throwMissingSymbolException(storage.names.data + name.global_index, expression);
+        auto symbol = storage.names.data + name.global_index;
+        return LookupResult{makeEvaluateError({}, format_cstring(
+            "Cannot find symbol %s in environment of type %s", symbol, getExpressionName(expression.type)))};
     }
     const auto& dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
@@ -388,7 +390,9 @@ Expression lookupDictionarySecondTime(
     const BoundGlobalName& name, int steps, Expression expression
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
-        throwMissingSymbolException(storage.names.data + name.global_index, expression);
+        auto symbol = storage.names.data + name.global_index;
+        return makeEvaluateError({}, format_cstring(
+            "Cannot find symbol %s in environment of type %s", symbol, getExpressionName(expression.type)));
     }
     const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (steps == 0) {
@@ -400,6 +404,9 @@ Expression lookupDictionarySecondTime(
 Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
     if (name.parent_steps == -1) {
         const auto result = lookupDictionaryFirstTime(name, 0, expression);
+        if (isError(result.expression.type)) {
+            return result.expression;
+        }
         name.parent_steps = result.steps;
         return result.expression;
     }

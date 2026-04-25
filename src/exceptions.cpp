@@ -31,14 +31,6 @@ void throwException(const char* format, ...) {
     throw std::runtime_error(string.data);
 }
 
-void throwMissingSymbolException(const char* symbol, Expression parent) {
-    throwException(
-        "Cannot find symbol %s in environment of type %s",
-        symbol,
-        getExpressionName(parent.type)
-    );
-}
-
 const char* describeLocation(CodeRange code) {
     if (code.count == 0) {
         return " at unknown location.";
