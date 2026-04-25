@@ -270,16 +270,14 @@ Character getCharacter(Expression expression) {
 }
 
 Number getNumber(Expression expression) {
-    static_assert(sizeof(Number) == sizeof(size_t), "");
     Number result;
-    memcpy(&result, &expression.index, sizeof(Number));
+    BIT_CAST(expression.index, result);
     return result;
 }
 
 ParseError getParseError(Expression expression) {
-    static_assert(sizeof(ParseError) == sizeof(size_t), "");
     ParseError result;
-    memcpy(&result, &expression.index, sizeof(ParseError));
+    BIT_CAST(expression.index, result);
     return result;
 }
 
