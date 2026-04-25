@@ -31,14 +31,6 @@ void throwException(const char* format, ...) {
     throw std::runtime_error(string.data);
 }
 
-void throwUnexpectedExpressionException(ExpressionType type, const char* location) {
-    throwException(
-        "Unexpected expression %s for %s",
-        getExpressionName(type),
-        location
-    );
-}
-
 void throwMissingSymbolException(const char* symbol, Expression parent) {
     throwException(
         "Cannot find symbol %s in environment of type %s",
