@@ -75,21 +75,24 @@ void clearMemory() {
 
 // MAKERS:
 
+#define BIT_CAST(source, target) do { \
+    static_assert(sizeof(source) == sizeof(target), ""); \
+    memcpy(&target, &source, sizeof(source)); \
+} while (0)
+
 Expression makeNumber(CodeRange code, Number expression) {
-    static_assert(sizeof(Number) == sizeof(size_t), "");
     auto result = Expression{};
     result.type = NUMBER;
     result.range = code;
-    memcpy(&result.index, &expression, sizeof(Number));
+    BIT_CAST(expression, result.index);
     return result;
 }
 
 Expression makeParseError(CodeRange code, ParseError expression) {
-    static_assert(sizeof(ParseError) == sizeof(size_t), "");
     auto result = Expression{};
     result.type = PARSE_ERROR;
     result.range = code;
-    memcpy(&result.index, &expression, sizeof(ParseError));
+    BIT_CAST(expression, result.index);
     return result;
 }
 
