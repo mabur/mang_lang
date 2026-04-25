@@ -76,7 +76,7 @@ void clearMemory() {
 // MAKERS:
 
 #define BIT_CAST(source, target) do { \
-    static_assert(sizeof(source) == sizeof(target), ""); \
+    static_assert(sizeof(source) == sizeof(target), "BIT_CAST"); \
     memcpy(&target, &source, sizeof(source)); \
 } while (0)
 
