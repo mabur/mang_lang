@@ -272,7 +272,7 @@ Character getCharacter(Expression expression) {
         "But I found one with the ASCII value %zu.",
         expression.index
     );
-    return static_cast<Character>(expression.index);
+    return (Character)expression.index;
 }
 
 Number getNumber(Expression expression) {
