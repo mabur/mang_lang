@@ -575,20 +575,16 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
 
 bool isStringPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
-        if (left.type != STRING) {
-            throwException(
-                "Internal error detected in isStringPairwiseEqual. "
-                "Expected a stack but got a %s",
-                getExpressionName(left.type)
-            );
-        }
-        if (right.type != STRING) {
-            throwException(
-                "Internal error detected in isStringPairwiseEqual. "
-                "Expected a stack but got a %s",
-                getExpressionName(right.type)
-            );
-        }
+        CHECK_INTERNAL(left.type == STRING,
+            "Internal error detected in isStringPairwiseEqual. "
+            "Expected a stack but got a %s",
+            getExpressionName(left.type)
+        );
+        CHECK_INTERNAL(right.type == STRING,
+            "Internal error detected in isStringPairwiseEqual. "
+            "Expected a stack but got a %s",
+            getExpressionName(right.type)
+        );
         const auto left_container = storage.strings.data[left.index];
         const auto right_container = storage.strings.data[right.index];
         if (!isEqual(left_container.top, right_container.top)) {
