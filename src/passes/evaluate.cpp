@@ -552,20 +552,16 @@ bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
 
 bool isStackPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STACK && right.type != EMPTY_STACK) {
-        if (left.type != EVALUATED_STACK) {
-            throwException(
-                "Internal error detected in isStackPairwiseEqual.\n"
-                "Expected a stack but got a %s",
-                getExpressionName(left.type)
-            );
-        }
-        if (right.type != EVALUATED_STACK) {
-            throwException(
-                "Internal error detected in isStackPairwiseEqual. "
-                "Expected a stack but got a %s",
-                getExpressionName(right.type)
-            );
-        }
+        CHECK_INTERNAL(left.type == EVALUATED_STACK,
+            "Internal error detected in isStackPairwiseEqual.\n"
+            "Expected a stack but got a %s",
+            getExpressionName(left.type)
+        );
+        CHECK_INTERNAL(right.type == EVALUATED_STACK,
+            "Internal error detected in isStackPairwiseEqual. "
+            "Expected a stack but got a %s",
+            getExpressionName(right.type)
+        );
         const auto left_container = storage.evaluated_stacks.data[left.index];
         const auto right_container = storage.evaluated_stacks.data[right.index];
         if (!isEqual(left_container.top, right_container.top)) {
