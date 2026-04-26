@@ -211,14 +211,12 @@ StringBuilder serializeTuple(StringBuilder s, Expression t) {
 StringBuilder serializeStack(StringBuilder s, Expression expression) {
     s = concatenate(s, "[");
     while (expression.type != EMPTY_STACK) {
-        if (expression.type != STACK) {
-            throwException(
-                "\n\nI have found a type error.\n"
-                "It happens in serializeStack.\n"
-                "Instead of a stack I got a %s\n",
-                getExpressionName(expression.type)
-            );
-        }
+        CHECK_INTERNAL(expression.type == STACK,
+            "\n\nI have found a type error.\n"
+            "It happens in serializeStack.\n"
+            "Instead of a stack I got a %s\n",
+            getExpressionName(expression.type)
+        );
         const auto stack = storage.stacks.data[expression.index];
         s = serialize(s, stack.top);
         s = concatenate(s, " ");
@@ -345,13 +343,11 @@ StringBuilder serializeTypesEvaluatedStack(StringBuilder s, Expression e) {
 StringBuilder serializeEvaluatedStack(StringBuilder s, Expression expression) {
     s = concatenate(s, "[");
     while (expression.type != EMPTY_STACK) {
-        if (expression.type != EVALUATED_STACK) {
-            throwException(
-                "I found an error while serializing a stack.\n"
-                "Instead of a stack I got a %s.",
-                getExpressionName(expression.type)
-            );
-        }
+        CHECK_INTERNAL(expression.type == EVALUATED_STACK,
+            "I found an internal error while serializing a stack.\n"
+            "Instead of a stack I got a %s.",
+            getExpressionName(expression.type)
+        );
         const auto stack = storage.evaluated_stacks.data[expression.index];
         s = serialize(s, stack.top);
         s = concatenate(s, " ");
@@ -379,24 +375,20 @@ StringBuilder serializeNumber(StringBuilder s, Number number) {
 StringBuilder serializeString(StringBuilder s, Expression expression) {
     s = concatenate(s, "\"");
     while (expression.type != EMPTY_STRING) {
-        if (expression.type != STRING) {
-            throwException(
-                "I found an error while serializing a string.\n"
-                "Instead of a string I got a %s",
-                getExpressionName(expression.type)
-            );
-        }
+        CHECK_INTERNAL(expression.type == STRING,
+            "I found an internal error while serializing a string.\n"
+            "Instead of a string I got a %s",
+            getExpressionName(expression.type)
+        );
         const auto string = storage.strings.data[expression.index];
         const auto top = string.top;
         const auto rest = string.rest;
-        if (top.type != CHARACTER) {
-            throwException(
-                "I found an error while serializing a string.\n"
-                "Each item in the string should be a character,\n"
-                "but I found a %s",
-                getExpressionName(top.type)
-            );
-        }
+        CHECK_INTERNAL(top.type == CHARACTER,
+            "I found an internal error while serializing a string.\n"
+            "Each item in the string should be a character,\n"
+            "but I found a %s",
+            getExpressionName(top.type)
+        );
         APPEND(s, getCharacter(top));
         expression = rest;
     }
