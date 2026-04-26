@@ -72,7 +72,11 @@ TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char*
     const auto super_count = tuple_super.indices.count;
     const auto sub_count = tuple_sub.indices.count;
     if (super_count != sub_count) {
-        throwException("Static type error in %s. Inconsistent tuple size.", description);
+        result.ok = false;
+        result.error = makeEvaluateError({}, format_cstring(
+            "Static type error in %s. Inconsistent tuple size.", description
+        ));
+        return result;
     }
     FOR_EACH2(super_index, sub_index, tuple_super.indices, tuple_sub.indices) {
         const auto super_expression = storage.expressions.data[super_index];
@@ -96,12 +100,14 @@ TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const 
             if (!result.ok) return result;
         }
         else {
-            throwException(
+            result.ok = false;
+            result.error = makeEvaluateError({}, format_cstring(
                 "Static type error in %s. Could not find name %s in dictionary %s",
                 description,
                 storage.names.data + name_super,
                 describeLocation(sub.range)
-            );
+            ));
+            return result;
         }
     }
     return result;
@@ -147,13 +153,14 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
     if (super.type == EVALUATED_DICTIONARY && sub.type == EVALUATED_DICTIONARY) {
         return checkTypesEvaluatedDictionary(super, sub, description);
     }
-    throwException(
+    result.ok = false;
+    result.error = makeEvaluateError({}, format_cstring(
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
         describeLocation(super.range),
         getExpressionName(super.type),
         getExpressionName(sub.type)
-    );
+    ));
     return result;
 }
 
