@@ -38,26 +38,35 @@ Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     return makeEvaluateError({}, format_cstring("I cannot find name %s in dictionary", name_c));
 }
 
-void checkTypes(Expression super, Expression sub, const char* description);
+struct TypeCheck {
+    bool ok;
+    Expression error;
+};
+    
+TypeCheck checkTypes(Expression super, Expression sub, const char* description);
 
-void checkTypesEvaluatedStack(Expression super, Expression sub, const char* description) {
+TypeCheck checkTypesEvaluatedStack(Expression super, Expression sub, const char* description) {
     const auto stack_super = storage.evaluated_stacks.data[super.index].top;
     const auto stack_sub = storage.evaluated_stacks.data[sub.index].top;
-    checkTypes(stack_super, stack_sub, description);
+    return checkTypes(stack_super, stack_sub, description);
 }
 
-void checkTypesEvaluatedTable(Expression super, Expression sub, const char* description) {
+TypeCheck checkTypesEvaluatedTable(Expression super, Expression sub, const char* description) {
+    auto result = TypeCheck{.ok=true};
     const auto& table_super = storage.evaluated_tables.at(super.index);
     const auto& table_sub = storage.evaluated_tables.at(sub.index);
-    if (table_super.empty()) return;
-    if (table_sub.empty()) return;
+    if (table_super.empty()) return result;
+    if (table_sub.empty()) return result;
     const auto row_super = table_super.begin()->second;
     const auto row_sub = table_sub.begin()->second;
-    checkTypes(row_super.key, row_sub.key, description);
-    checkTypes(row_super.value, row_sub.value, description);
+    result = checkTypes(row_super.key, row_sub.key, description);
+    if (!result.ok) return result;
+    result = checkTypes(row_super.value, row_sub.value, description);
+    return result;
 }
 
-void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
+TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
+    auto result = TypeCheck{.ok=true};
     const auto& tuple_super = storage.evaluated_tuples.data[super.index];
     const auto& tuple_sub = storage.evaluated_tuples.data[sub.index];
     const auto super_count = tuple_super.indices.count;
@@ -68,11 +77,14 @@ void checkTypesEvaluatedTuple(Expression super, Expression sub, const char* desc
     FOR_EACH2(super_index, sub_index, tuple_super.indices, tuple_sub.indices) {
         const auto super_expression = storage.expressions.data[super_index];
         const auto sub_expression = storage.expressions.data[sub_index];
-        checkTypes(super_expression, sub_expression, description);
+        result = checkTypes(super_expression, sub_expression, description);
+        if (!result.ok) return result;
     }
+    return result;
 }
 
-void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
+TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
+    auto result = TypeCheck{.ok=true};
     const auto& dictionary_super = storage.evaluated_dictionaries.data[super.index];
     const auto& dictionary_sub = storage.evaluated_dictionaries.data[sub.index];
     FOR_EACH(i, dictionary_super.definitions) {
@@ -80,7 +92,8 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
         const auto name_super = definition_super.name.global_index;
         const auto value_sub = optionalLookup(dictionary_sub, name_super);
         if (value_sub.ok) {
-            checkTypes(definition_super.expression, value_sub.value, description);
+            result = checkTypes(definition_super.expression, value_sub.value, description);
+            if (!result.ok) return result;
         }
         else {
             throwException(
@@ -91,50 +104,48 @@ void checkTypesEvaluatedDictionary(Expression super, Expression sub, const char*
             );
         }
     }
+    return result;
 }
 
-void checkTypes(Expression super, Expression sub, const char* description) {
-    if (super.type == ANY || sub.type == ANY) return;
+TypeCheck checkTypes(Expression super, Expression sub, const char* description) {
+    auto result = TypeCheck{.ok=true};
+    if (super.type == ANY || sub.type == ANY) return result;
     
-    if (super.type == NUMBER && sub.type == NUMBER) return;
-    if (super.type == CHARACTER && sub.type == CHARACTER) return;
+    if (super.type == NUMBER && sub.type == NUMBER) return result;
+    if (super.type == CHARACTER && sub.type == CHARACTER) return result;
     
-    if (super.type == NO && sub.type == NO) return;
-    if (super.type == YES && sub.type == YES) return;
-    if (super.type == YES && sub.type == NO) return;
-    if (super.type == NO && sub.type == YES) return;
+    if (super.type == NO && sub.type == NO) return result;
+    if (super.type == YES && sub.type == YES) return result;
+    if (super.type == YES && sub.type == NO) return result;
+    if (super.type == NO && sub.type == YES) return result;
 
-    if (super.type == FUNCTION && sub.type == FUNCTION) return;
-    if (super.type == FUNCTION && sub.type == FUNCTION_DICTIONARY) return;
-    if (super.type == FUNCTION && sub.type == FUNCTION_TUPLE) return;
-    if (super.type == FUNCTION && sub.type == FUNCTION_BUILT_IN) return;
-    if (super.type == FUNCTION_DICTIONARY && sub.type == FUNCTION) return;
-    if (super.type == FUNCTION_TUPLE && sub.type == FUNCTION) return;
-    if (super.type == FUNCTION_BUILT_IN && sub.type == FUNCTION) return;
+    if (super.type == FUNCTION && sub.type == FUNCTION) return result;
+    if (super.type == FUNCTION && sub.type == FUNCTION_DICTIONARY) return result;
+    if (super.type == FUNCTION && sub.type == FUNCTION_TUPLE) return result;
+    if (super.type == FUNCTION && sub.type == FUNCTION_BUILT_IN) return result;
+    if (super.type == FUNCTION_DICTIONARY && sub.type == FUNCTION) return result;
+    if (super.type == FUNCTION_TUPLE && sub.type == FUNCTION) return result;
+    if (super.type == FUNCTION_BUILT_IN && sub.type == FUNCTION) return result;
     
-    if (super.type == EMPTY_STRING && sub.type == EMPTY_STRING) return;
-    if (super.type == EMPTY_STRING && sub.type == STRING) return;
-    if (super.type == STRING && sub.type == EMPTY_STRING) return;
-    if (super.type == STRING && sub.type == STRING) return;
+    if (super.type == EMPTY_STRING && sub.type == EMPTY_STRING) return result;
+    if (super.type == EMPTY_STRING && sub.type == STRING) return result;
+    if (super.type == STRING && sub.type == EMPTY_STRING) return result;
+    if (super.type == STRING && sub.type == STRING) return result;
     
-    if (super.type == EMPTY_STACK && sub.type == EMPTY_STACK) return;
-    if (super.type == EMPTY_STACK && sub.type == EVALUATED_STACK) return;
-    if (super.type == EVALUATED_STACK && sub.type == EMPTY_STACK) return;
+    if (super.type == EMPTY_STACK && sub.type == EMPTY_STACK) return result;
+    if (super.type == EMPTY_STACK && sub.type == EVALUATED_STACK) return result;
+    if (super.type == EVALUATED_STACK && sub.type == EMPTY_STACK) return result;
     if (super.type == EVALUATED_STACK && sub.type == EVALUATED_STACK) {
-        checkTypesEvaluatedStack(super, sub, description);
-        return;
+        return checkTypesEvaluatedStack(super, sub, description);
     }
     if (super.type == EVALUATED_TABLE && sub.type == EVALUATED_TABLE) {
-        checkTypesEvaluatedTable(super, sub, description);
-        return;
+        return checkTypesEvaluatedTable(super, sub, description);
     }
     if (super.type == EVALUATED_TUPLE && sub.type == EVALUATED_TUPLE) {
-        checkTypesEvaluatedTuple(super, sub, description);
-        return;
+        return checkTypesEvaluatedTuple(super, sub, description);
     }
     if (super.type == EVALUATED_DICTIONARY && sub.type == EVALUATED_DICTIONARY) {
-        checkTypesEvaluatedDictionary(super, sub, description);
-        return;
+        return checkTypesEvaluatedDictionary(super, sub, description);
     }
     throwException(
         "Static type error in %s at %s. %s is not a supertype for %s",
@@ -143,6 +154,7 @@ void checkTypes(Expression super, Expression sub, const char* description) {
         getExpressionName(super.type),
         getExpressionName(sub.type)
     );
+    return result;
 }
 
 template<typename Evaluator>
@@ -641,7 +653,8 @@ Expression evaluateConditionalTypes(
         const auto alternative_expression = evaluate_types(
             alternative.right, environment
         );
-        checkTypes(else_expression, alternative_expression, "if");
+        auto type_check = checkTypes(else_expression, alternative_expression, "if");
+        if (!type_check.ok) return type_check.error;
     }
     return else_expression;
 }
@@ -674,7 +687,8 @@ Expression evaluateIsTypes(
     FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        checkTypes(else_expression, alternative_expression, "is");
+        auto type_check = checkTypes(else_expression, alternative_expression, "is");
+        if (!type_check.ok) return type_check.error;
     }
     return else_expression;
 }
