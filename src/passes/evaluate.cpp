@@ -9,6 +9,7 @@
 #include "../exceptions.h"
 #include "../factory.h"
 #include "../string.h"
+#include "../type_check.h"
 #include "serialize.h"
 
 namespace {
@@ -37,11 +38,6 @@ Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     auto name_c = storage.names.data + name;
     return makeEvaluateError({}, format_cstring("I cannot find name %s in dictionary", name_c));
 }
-
-struct TypeCheck {
-    bool ok;
-    Expression error;
-};
     
 TypeCheck checkTypes(Expression super, Expression sub, const char* description);
 
