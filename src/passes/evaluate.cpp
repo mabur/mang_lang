@@ -490,13 +490,6 @@ BooleanResult boolean(Expression expression) {
     }
 }
 
-size_t getIndex(Number number) {
-    if (number < 0) {
-        throwException("Cannot have negative index: %f", number);
-    }
-    return static_cast<size_t>(number);
-}
-
 Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto& tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
@@ -510,7 +503,10 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
         ));
     }
     const auto number = getNumber(input);
-    const auto i = getIndex(number);
+    if (number < 0) {
+        throwException("Cannot have negative index: %f", number);
+    }
+    const auto i = (size_t)number;
     const auto count = tuple_struct.indices.count;
     if (i >= count) {
         return makeEvaluateError(tuple.range, format_cstring(
@@ -1022,7 +1018,10 @@ Expression applyStackIndexing(Expression stack, Expression input) {
         ));
     }
     const auto number = getNumber(input);
-    const auto index = getIndex(number);
+    if (number < 0) {
+        throwException("Cannot have negative index: %f", number);
+    }
+    const auto index = (size_t)number;
     auto stack_struct = storage.evaluated_stacks.data[stack.index];
     for (size_t i = 0; i < index; ++i) {
         if (stack_struct.rest.type == EMPTY_STACK) {
@@ -1054,7 +1053,10 @@ Expression applyStringIndexing(Expression string, Expression input) {
         ));
     }
     const auto number = getNumber(input);
-    const auto index = getIndex(number);
+    if (number < 0) {
+        throwException("Cannot have negative index: %f", number);
+    }
+    const auto index = (size_t)number;
     auto string_struct = storage.strings.data[string.index];
     for (size_t i = 0; i < index; ++i) {
         if (string_struct.rest.type == EMPTY_STACK) {
