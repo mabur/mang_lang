@@ -172,12 +172,11 @@ Expression evaluateStack(Evaluator evaluator,
     auto items = Expressions{};
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
-            throwException(
+            return makeEvaluateError(stack.range, format_cstring(
                 "\n\nI have found a type error.\n"
                 "It happens in evaluateStack.\n" 
                 "Instead of a stack I got a %s.\n",
-                getExpressionName(stack.type)
-            );
+                getExpressionName(stack.type)));
         }
         const auto stack_struct = storage.stacks.data[stack.index];
         const auto& top = stack_struct.top;
@@ -295,12 +294,12 @@ Expression applyFunctionDictionary(
     Expression input
 ) {
     if (input.type != EVALUATED_DICTIONARY) {
-        throwException(
+        return makeEvaluateError(function.range, format_cstring(
             "\n\nI have found a type error.\n"
             "It happens when calling a function that is expecting a dictionary as input.\n"
             "But now it got a %s.\n",
             getExpressionName(input.type)
-        );
+        ));
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
     const auto& evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
@@ -320,12 +319,12 @@ Expression applyFunctionTuple(
     Expression input
 ) {
     if (input.type != EVALUATED_TUPLE) {
-        throwException(
+        return makeEvaluateError(function.range, format_cstring(
             "\n\nI have found a type error.\n"
             "It happens when trying to call a function that takes a tuple.\n"
             "Instead of a tuple I got a %s.\n",
             getExpressionName(input.type)
-        );
+        ));
     }
     const auto tuple = storage.evaluated_tuples.data[input.index];
     const auto tuple_count = tuple.indices.count;
@@ -335,7 +334,10 @@ Expression applyFunctionTuple(
     const auto num_inputs = last_argument - first_argument;
     
     if (num_inputs != tuple_count) {
-        throwException("Wrong number of input to function_struct");
+        return makeEvaluateError({}, format_cstring(
+            "Wrong number of input to function_struct",
+            getExpressionName(input.type)
+        ));
     }
 
     auto argument_index = first_argument;
@@ -497,20 +499,22 @@ size_t getIndex(Number number) {
 Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto& tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
-        throwException(
+        return makeEvaluateError(tuple.range, format_cstring(
             "\n\nI have found a type error.\n"
             "It happens when indexing a tuple.\n"
             "The index is expected to be a %s,\n"
             "but now it is a %s.\n",
             getExpressionName(NUMBER),
             getExpressionName(input.type)
-        );
+        ));
     }
     const auto number = getNumber(input);
     const auto i = getIndex(number);
     const auto count = tuple_struct.indices.count;
     if (i >= count) {
-        throwException("Tuple of size %zu indexed with %zu" , count, i);
+        return makeEvaluateError(tuple.range, format_cstring(
+            "Tuple of size %zu indexed with %zu" , count, i
+        ));
     }
     return storage.expressions.data[tuple_struct.indices.data + i];
 }
@@ -773,11 +777,11 @@ Expression getDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name
 ) {
     if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        throwException(
+        return makeEvaluateError(evaluated_dictionary.range, format_cstring(
             "getDictionaryDefinition expected %s got %s",
             getExpressionName(EVALUATED_DICTIONARY),
             getExpressionName(evaluated_dictionary.type)
-        );
+        ));
     }
     auto first = storage.evaluated_dictionaries.data[evaluated_dictionary.index].definitions.data;
     return storage.definitions.data[first + name.dictionary_index].expression;
@@ -995,35 +999,39 @@ Expression applyTableIndexing(Expression table, Expression key) {
         return table_struct.rows.at(k).value;
     }
     catch (const std::out_of_range&) {
-        throwException("Cannot find key %s in table", k.c_str());
+        return makeEvaluateError(table.range, format_cstring(
+            "Cannot find key %s in table", k.c_str()
+        ));
     }
     return Expression{}; // Never happens
 }
 
 Expression applyStackIndexing(Expression stack, Expression input) {
     if (input.type != NUMBER) {
-        throwException(
+        return makeEvaluateError(stack.range, format_cstring(
             "\n\nI have found a dynamic type error.\n"
             "It happens when indexing a stack.\n"
             "The index is expected to be a %s,\n"
             "but now it is a %s.\n",
             getExpressionName(NUMBER),
             getExpressionName(input.type)
-        );
+        ));
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
     auto stack_struct = storage.evaluated_stacks.data[stack.index];
     for (size_t i = 0; i < index; ++i) {
         if (stack_struct.rest.type == EMPTY_STACK) {
-            throwException("Stack index out of range");
+            return makeEvaluateError(stack.range, format_cstring(
+                "Stack index out of range"
+            ));
         }
         if (stack_struct.rest.type != EVALUATED_STACK) {
-            throwException(
+            return makeEvaluateError(stack.range, format_cstring(
                 "I found a type error while indexing a stack. \n"
                 "Instead of a stack I encountered a %s",
                 getExpressionName(stack_struct.rest.type)
-            );
+            ));
         }
         stack_struct = storage.evaluated_stacks.data[stack_struct.rest.index];
     }
@@ -1032,28 +1040,30 @@ Expression applyStackIndexing(Expression stack, Expression input) {
 
 Expression applyStringIndexing(Expression string, Expression input) {
     if (input.type != NUMBER) {
-        throwException(
+        return makeEvaluateError(string.range, format_cstring(
             "\n\nI have found a dynamic type error.\n"
             "It happens when indexing a string.\n"
             "The index is expected to be a %s,\n"
             "but now it is a %s.\n",
             getExpressionName(NUMBER),
             getExpressionName(input.type)
-        );
+        ));
     }
     const auto number = getNumber(input);
     const auto index = getIndex(number);
     auto string_struct = storage.strings.data[string.index];
     for (size_t i = 0; i < index; ++i) {
         if (string_struct.rest.type == EMPTY_STACK) {
-            throwException("String index out of range");
+            return makeEvaluateError(string.range, format_cstring(
+                "String index out of range"
+            ));
         }
         if (string_struct.rest.type != STRING) {
-            throwException(
+            return makeEvaluateError(string.range, format_cstring(
                 "I found a type error while indexing a string. \n"
                 "Instead of a string I encountered a %s",
                 getExpressionName(string_struct.rest.type)
-            );
+            ));
         }
         string_struct = storage.strings.data[string_struct.rest.index];
     }
@@ -1118,8 +1128,10 @@ Expression evaluateFunctionApplication(
         case EVALUATED_STACK: return applyStackIndexing(function, input);
         case STRING: return applyStringIndexing(function, input);
         
-        case EMPTY_STACK: throwException("I caught a run-time error when trying to index an empty stack.");
-        case EMPTY_STRING: throwException("I caught a run-time error when trying to index an empty string.");
+        case EMPTY_STACK: return makeEvaluateError(function_application.range, format_cstring(
+            "I caught a run-time error when trying to index an empty stack."));
+        case EMPTY_STRING: return makeEvaluateError(function_application.range, format_cstring(
+            "I caught a run-time error when trying to index an empty string."));
         
         default: return makeEvaluateError(function_application.range, format_cstring(
             "I found an error during evaluation.\n"
