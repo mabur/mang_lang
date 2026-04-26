@@ -266,14 +266,12 @@ Expression makeString(CodeRange code, String expression) {
 // GETTERS
 
 Character getCharacter(Expression expression) {
-    if (expression.index > 127) {
-        throwException(
-            "I found an error while retrieving a character.\n"
-            "A character should have an ASCII value in the range 0-127.\n"
-            "But I found one with the ASCII value %zu.",
-            expression.index
-        );
-    }
+    CHECK_INTERNAL(expression.index <= 127, 
+        "I found an internal error while retrieving a character.\n"
+        "A character should have an ASCII value in the range 0-127.\n"
+        "But I found one with the ASCII value %zu.",
+        expression.index
+    );
     return static_cast<Character>(expression.index);
 }
 
