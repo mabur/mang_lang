@@ -504,7 +504,9 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
     }
     const auto number = getNumber(input);
     if (number < 0) {
-        throwException("Cannot have negative index: %f", number);
+        return makeEvaluateError(tuple.range, format_cstring(
+            "Cannot have negative index: %f", number
+        ));
     }
     const auto i = (size_t)number;
     const auto count = tuple_struct.indices.count;
@@ -1019,7 +1021,9 @@ Expression applyStackIndexing(Expression stack, Expression input) {
     }
     const auto number = getNumber(input);
     if (number < 0) {
-        throwException("Cannot have negative index: %f", number);
+        return makeEvaluateError(stack.range, format_cstring(
+            "Cannot have negative index: %f", number
+        ));
     }
     const auto index = (size_t)number;
     auto stack_struct = storage.evaluated_stacks.data[stack.index];
@@ -1054,7 +1058,9 @@ Expression applyStringIndexing(Expression string, Expression input) {
     }
     const auto number = getNumber(input);
     if (number < 0) {
-        throwException("Cannot have negative index: %f", number);
+        return makeEvaluateError(string.range, format_cstring(
+            "Cannot have negative index: %f", number
+        ));
     }
     const auto index = (size_t)number;
     auto string_struct = storage.strings.data[string.index];
