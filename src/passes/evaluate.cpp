@@ -443,31 +443,32 @@ Expression applyFunctionBuiltIn(
     return function_struct.function(input);
 }
 
-void booleanTypes(Expression expression) {
-    switch (expression.type) {
-        case PARSE_ERROR: return;
-        case NUMBER: return;
-        case YES: return;
-        case NO: return;
-        case EVALUATED_TABLE: return;
-        case EVALUATED_STACK: return;
-        case EMPTY_STACK: return;
-        case STRING: return;
-        case EMPTY_STRING: return;
-        case ANY: return;
-        default:
-            throwException(
-                "Static type error.\n"
-                "Cannot convert type %s to boolean.",
-                getExpressionName(expression.type)
-            );
-    }
-}
-
 struct BooleanResult {
     bool value;
     Expression error;
 };
+
+BooleanResult booleanTypes(Expression expression) {
+    auto result = MAKE(BooleanResult);
+    switch (expression.type) {
+        case PARSE_ERROR: return result;
+        case NUMBER: return result;
+        case YES: return result;
+        case NO: return result;
+        case EVALUATED_TABLE: return result;
+        case EVALUATED_STACK: return result;
+        case EMPTY_STACK: return result;
+        case STRING: return result;
+        case EMPTY_STRING: return result;
+        case ANY: return result;
+        default:
+            return MAKE(BooleanResult, .error=makeEvaluateError(expression.range, format_cstring(
+                "Static type error.\n"
+                "Cannot convert type %s to boolean.",
+                getExpressionName(expression.type)
+            )));
+    }
+}
     
 BooleanResult boolean(Expression expression) {
     const auto type = expression.type;
@@ -839,19 +840,22 @@ Expression evaluateDictionaryTypes(
         }
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.data[statement.index];
-            booleanTypes(evaluate_types(while_statement.expression, result));
+            auto condition = booleanTypes(evaluate_types(while_statement.expression, result));
+            if (isError(condition.error.type)) return condition.error;
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            booleanTypes(container);
+            auto condition = booleanTypes(container);
+            if (isError(condition.error.type)) return condition.error;
             const auto value = container_functions::takeTyped(container);
             setDictionaryDefinition(result, for_statement.item_name, value);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            booleanTypes(container);
+            auto condition = booleanTypes(container);
+            if (isError(condition.error.type)) return condition.error;
         }
         else if (type == RETURN_STATEMENT) {
         }
