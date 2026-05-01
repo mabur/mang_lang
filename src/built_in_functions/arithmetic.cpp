@@ -27,7 +27,7 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
     return result;
 }
 
-TypeCheck checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
+TypeCheck checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(TypeCheck, .ok=true);
     const auto tuple = getStaticBinaryTuple(in, function);
     const auto left = tuple.left.type;
@@ -35,7 +35,7 @@ TypeCheck checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, 
     if (left != ANY && left != expected) {
         result.ok = false;
         result.error = makeEvaluateError({}, format_cstring(
-            "\n\nI have found a static type error.\n"
+            "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the first item in the tuple is %s.\n",
@@ -48,41 +48,7 @@ TypeCheck checkStaticTypeBinaryFunction(Expression in, ExpressionType expected, 
     if (right != ANY && right != expected) {
         result.ok = false;
         result.error = makeEvaluateError({}, format_cstring(
-            "\n\nI have found a static type error.\n"
-            "It happens when calling the built-in function %s.\n"
-            "The function expects to be called with a tuple of two %ss,\n"
-            "but now the second item in the tuple is %s.\n",
-            function,
-            getExpressionName(expected),
-            getExpressionName(right)
-        ));
-        return result;
-    }
-    return result;
-}
-
-TypeCheck checkDynamicTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
-    auto result = MAKE(TypeCheck, .ok=true);
-    const auto tuple = getDynamicBinaryTuple(in, function);
-    const auto left = tuple.left.type;
-    const auto right = tuple.right.type;
-    if (left != ANY && left != expected) {
-        result.ok = false;
-        result.error = makeEvaluateError({}, format_cstring(
-            "\n\nI have found a dynamic type error.\n"
-            "It happens when calling the built-in function %s.\n"
-            "The function expects to be called with a tuple of two %ss,\n"
-            "but now the first item in the tuple is %s.\n",
-            function,
-            getExpressionName(expected),
-            getExpressionName(left)
-        ));
-        return result;
-    }
-    if (right != ANY && right != expected) {
-        result.ok = false;
-        result.error = makeEvaluateError({}, format_cstring(
-            "\n\nI have found a dynamic type error.\n"
+            "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two %ss,\n"
             "but now the second item in the tuple is %s.\n",
@@ -104,72 +70,72 @@ Expression makeNumber(double x) {
 #define MAKE_BINARY_ARITHMETIC_OPERATION(tuple, op) (makeNumber(getNumber((tuple).left) op getNumber((tuple).right)))
 
 Expression add(Expression in) {
-    auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "add");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "add");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "add");
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, +);
 }
 
 Expression addTyped(Expression in) {
-    auto type_check = checkStaticTypeBinaryFunction(in, NUMBER, "add");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "add");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression mul(Expression in) {
-    auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "mul");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "mul");
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, *);
 }
 
 Expression mulTyped(Expression in) {
-    auto type_check = checkStaticTypeBinaryFunction(in, NUMBER, "mul");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression sub(Expression in) {
-    auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "sub");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "sub");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "sub");
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, -);
 }
 
 Expression subTyped(Expression in) {
-    auto type_check = checkStaticTypeBinaryFunction(in, NUMBER, "sub");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "sub");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression div(Expression in) {
-    auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "div");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "div");
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, /);
 }
 
 Expression divTyped(Expression in) {
-    auto type_check = checkStaticTypeBinaryFunction(in, NUMBER, "div");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression mod(Expression in) {
-    auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "mod");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mod");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "mod");
     return makeNumber(fmod(getNumber(tuple.left), getNumber(tuple.right)));
 }
 
 Expression modTyped(Expression in) {
-    auto type_check = checkStaticTypeBinaryFunction(in, NUMBER, "mod");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mod");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression less(Expression in) {
-    auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "less");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "less");
     if (!type_check.ok) return type_check.error;
     const auto tuple = getDynamicBinaryTuple(in, "less");
     const auto left = getNumber(tuple.left);
@@ -179,7 +145,7 @@ Expression less(Expression in) {
 }
 
 Expression lessTyped(Expression in) {
-    auto type_check = checkStaticTypeBinaryFunction(in, NUMBER, "less");
+    auto type_check = checkTypeBinaryFunction(in, NUMBER, "less");
     if (!type_check.ok) return type_check.error;
     return Expression{0, CodeRange{}, YES};
 }
