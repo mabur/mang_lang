@@ -118,13 +118,13 @@ Expression makeNumber(double x) {
 
 } // namespace
 
-#define MAKE_BINARY_OPERATION(tuple, op) (makeNumber(getNumber((tuple).left) op getNumber((tuple).right)))
+#define MAKE_BINARY_ARITHMETIC_OPERATION(tuple, op) (makeNumber(getNumber((tuple).left) op getNumber((tuple).right)))
 
 Expression add(Expression in) {
     auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "add");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "add");
-    return MAKE_BINARY_OPERATION(tuple, +);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, +);
 }
 
 Expression addTyped(Expression in) {
@@ -137,7 +137,7 @@ Expression mul(Expression in) {
     auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "mul");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "mul");
-    return MAKE_BINARY_OPERATION(tuple, *);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, *);
 }
 
 Expression mulTyped(Expression in) {
@@ -150,7 +150,7 @@ Expression sub(Expression in) {
     auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "sub");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "sub");
-    return MAKE_BINARY_OPERATION(tuple, -);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, -);
 }
 
 Expression subTyped(Expression in) {
@@ -163,7 +163,7 @@ Expression div(Expression in) {
     auto type_check = checkDynamicTypeBinaryFunction(in, NUMBER, "div");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "div");
-    return MAKE_BINARY_OPERATION(tuple, /);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, /);
 }
 
 Expression divTyped(Expression in) {
