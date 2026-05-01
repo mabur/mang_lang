@@ -76,23 +76,11 @@ Expression add(Expression in) {
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, +);
 }
 
-Expression addTyped(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "add");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
-}
-
 Expression mul(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "mul");
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, *);
-}
-
-Expression mulTyped(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
 }
 
 Expression sub(Expression in) {
@@ -102,12 +90,6 @@ Expression sub(Expression in) {
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, -);
 }
 
-Expression subTyped(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "sub");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
-}
-
 Expression div(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
     if (!type_check.ok) return type_check.error;
@@ -115,23 +97,11 @@ Expression div(Expression in) {
     return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, /);
 }
 
-Expression divTyped(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
-}
-
 Expression mod(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "mod");
     if (!type_check.ok) return type_check.error;
     auto tuple = getDynamicBinaryTuple(in, "mod");
     return makeNumber(fmod(getNumber(tuple.left), getNumber(tuple.right)));
-}
-
-Expression modTyped(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mod");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
 }
 
 Expression less(Expression in) {
@@ -144,22 +114,10 @@ Expression less(Expression in) {
         Expression{0, CodeRange{}, YES} : Expression{0, CodeRange{}, NO};
 }
 
-Expression lessTyped(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "less");
-    if (!type_check.ok) return type_check.error;
-    return Expression{0, CodeRange{}, YES};
-}
-
 Expression sqrt(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "sqrt");
     if (!type_check.ok) return type_check.error;
     return makeNumber(::sqrt(getNumber(in)));
-}
-
-Expression sqrtTyped(Expression in) {
-    auto type_check = checkTypeUnaryFunction(in, NUMBER, "sqrt");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
 }
 
 Expression round(Expression in) {
@@ -168,22 +126,10 @@ Expression round(Expression in) {
     return makeNumber(::round(getNumber(in)));
 }
 
-Expression roundTyped(Expression in) {
-    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
-}
-
 Expression roundUp(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_up");
     if (!type_check.ok) return type_check.error;
     return makeNumber(ceil(getNumber(in)));
-}
-
-Expression roundUpTyped(Expression in) {
-    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_up");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
 }
 
 Expression roundDown(Expression in) {
@@ -192,34 +138,16 @@ Expression roundDown(Expression in) {
     return makeNumber(floor(getNumber(in)));
 }
 
-Expression roundDownTyped(Expression in) {
-    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_down");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
-}
-
 Expression asciiNumber(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, CHARACTER, "ascii_number");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getCharacter(in));
 }
 
-Expression asciiNumberTyped(Expression in) {
-    auto type_check = checkTypeUnaryFunction(in, CHARACTER, "ascii_number");
-    if (!type_check.ok) return type_check.error;
-    return makeNumber(1);
-}
-
 Expression asciiCharacter(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "ascii_character");
     if (!type_check.ok) return type_check.error;
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
-}
-
-Expression asciiCharacterTyped(Expression in) {
-    auto type_check = checkTypeUnaryFunction(in, NUMBER, "ascii_character");
-    if (!type_check.ok) return type_check.error;
-    return makeCharacter(CodeRange{}, 'a');
 }
 
 }
