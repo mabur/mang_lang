@@ -10,6 +10,13 @@
 namespace arithmetic {
 namespace {
 
+struct BinaryOperationInput{
+    Expression left;
+    Expression right;
+    Expression error;
+    bool ok;
+};
+
 TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(TypeCheck, .ok=true);
     if (in.type != ANY && in.type != expected) {
@@ -27,11 +34,13 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
     return result;
 }
 
-TypeCheck checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
-    auto result = MAKE(TypeCheck, .ok=true);
+BinaryOperationInput checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
+    auto result = MAKE(BinaryOperationInput, .ok=true);
     const auto tuple = getStaticBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
+    result.left = tuple.left;
+    result.right = tuple.right;
     if (left != ANY && left != expected) {
         result.ok = false;
         result.error = makeEvaluateError({}, format_cstring(
@@ -72,44 +81,38 @@ Expression makeNumber(double x) {
 Expression add(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "add");
     if (!type_check.ok) return type_check.error;
-    auto tuple = getDynamicBinaryTuple(in, "add");
-    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, +);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, +);
 }
 
 Expression mul(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
     if (!type_check.ok) return type_check.error;
-    auto tuple = getDynamicBinaryTuple(in, "mul");
-    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, *);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, *);
 }
 
 Expression sub(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "sub");
     if (!type_check.ok) return type_check.error;
-    auto tuple = getDynamicBinaryTuple(in, "sub");
-    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, -);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, -);
 }
 
 Expression div(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
     if (!type_check.ok) return type_check.error;
-    auto tuple = getDynamicBinaryTuple(in, "div");
-    return MAKE_BINARY_ARITHMETIC_OPERATION(tuple, /);
+    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, /);
 }
 
 Expression mod(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "mod");
     if (!type_check.ok) return type_check.error;
-    auto tuple = getDynamicBinaryTuple(in, "mod");
-    return makeNumber(fmod(getNumber(tuple.left), getNumber(tuple.right)));
+    return makeNumber(fmod(getNumber(type_check.left), getNumber(type_check.right)));
 }
 
 Expression less(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "less");
     if (!type_check.ok) return type_check.error;
-    const auto tuple = getDynamicBinaryTuple(in, "less");
-    const auto left = getNumber(tuple.left);
-    const auto right = getNumber(tuple.right);
+    const auto left = getNumber(type_check.left);
+    const auto right = getNumber(type_check.right);
     return left < right ?
         Expression{0, CodeRange{}, YES} : Expression{0, CodeRange{}, NO};
 }
