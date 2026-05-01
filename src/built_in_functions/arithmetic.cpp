@@ -10,29 +10,12 @@
 namespace arithmetic {
 namespace {
 
-TypeCheck checkStaticTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
+TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(TypeCheck, .ok=true);
     if (in.type != ANY && in.type != expected) {
         result.ok = false;
         result.error = makeEvaluateError({}, format_cstring(
-            "\n\nI have found a static type error.\n"
-            "It happens when calling the built-in function %s.\n"
-            "The function expects to be called with a %s,\n"
-            "but now got %s.\n",
-            function,
-            getExpressionName(expected),
-            getExpressionName(in.type)
-        ));
-    }
-    return result;
-}
-
-TypeCheck checkDynamicTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
-    auto result = MAKE(TypeCheck, .ok=true);
-    if (in.type != expected) {
-        result.ok = false;
-        result.error = makeEvaluateError({}, format_cstring(
-            "\n\nI have found a dynamic type error.\n"
+            "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a %s,\n"
             "but now got %s.\n",
@@ -202,73 +185,73 @@ Expression lessTyped(Expression in) {
 }
 
 Expression sqrt(Expression in) {
-    auto type_check = checkDynamicTypeUnaryFunction(in, NUMBER, "sqrt");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "sqrt");
     if (!type_check.ok) return type_check.error;
     return makeNumber(::sqrt(getNumber(in)));
 }
 
 Expression sqrtTyped(Expression in) {
-    auto type_check = checkStaticTypeUnaryFunction(in, NUMBER, "sqrt");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "sqrt");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression round(Expression in) {
-    auto type_check = checkDynamicTypeUnaryFunction(in, NUMBER, "round");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round");
     if (!type_check.ok) return type_check.error;
     return makeNumber(::round(getNumber(in)));
 }
 
 Expression roundTyped(Expression in) {
-    auto type_check = checkStaticTypeUnaryFunction(in, NUMBER, "round");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression roundUp(Expression in) {
-    auto type_check = checkDynamicTypeUnaryFunction(in, NUMBER, "round_up");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_up");
     if (!type_check.ok) return type_check.error;
     return makeNumber(ceil(getNumber(in)));
 }
 
 Expression roundUpTyped(Expression in) {
-    auto type_check = checkStaticTypeUnaryFunction(in, NUMBER, "round_up");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_up");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression roundDown(Expression in) {
-    auto type_check = checkDynamicTypeUnaryFunction(in, NUMBER, "round_down");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_down");
     if (!type_check.ok) return type_check.error;
     return makeNumber(floor(getNumber(in)));
 }
 
 Expression roundDownTyped(Expression in) {
-    auto type_check = checkStaticTypeUnaryFunction(in, NUMBER, "round_down");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_down");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression asciiNumber(Expression in) {
-    auto type_check = checkDynamicTypeUnaryFunction(in, CHARACTER, "ascii_number");
+    auto type_check = checkTypeUnaryFunction(in, CHARACTER, "ascii_number");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getCharacter(in));
 }
 
 Expression asciiNumberTyped(Expression in) {
-    auto type_check = checkStaticTypeUnaryFunction(in, CHARACTER, "ascii_number");
+    auto type_check = checkTypeUnaryFunction(in, CHARACTER, "ascii_number");
     if (!type_check.ok) return type_check.error;
     return makeNumber(1);
 }
 
 Expression asciiCharacter(Expression in) {
-    auto type_check = checkDynamicTypeUnaryFunction(in, NUMBER, "ascii_character");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "ascii_character");
     if (!type_check.ok) return type_check.error;
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
 }
 
 Expression asciiCharacterTyped(Expression in) {
-    auto type_check = checkStaticTypeUnaryFunction(in, NUMBER, "ascii_character");
+    auto type_check = checkTypeUnaryFunction(in, NUMBER, "ascii_character");
     if (!type_check.ok) return type_check.error;
     return makeCharacter(CodeRange{}, 'a');
 }
