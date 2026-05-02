@@ -21,6 +21,9 @@ Expression putEvaluatedStack(Expression rest, Expression top) {
 
 Expression putTable(Expression table, Expression item) {
     const auto tuple = getBinaryTuple(item, "put table");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
@@ -37,6 +40,9 @@ Expression putTableTyped(Expression table, Expression item) {
         return table;
     }
     const auto tuple = getBinaryTuple(item, "putTable");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
@@ -113,6 +119,9 @@ Expression putNumber(Expression collection, Expression item) {
 
 Expression put(Expression in) {
     const auto tuple = getBinaryTuple(in, "put");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
@@ -134,6 +143,9 @@ Expression put(Expression in) {
 
 Expression putTyped(Expression in) {
     const auto tuple = getBinaryTuple(in, "put");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto item = tuple.left;
     const auto collection = tuple.right;
     if (item.type == ANY) {
