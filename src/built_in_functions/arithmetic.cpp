@@ -36,7 +36,7 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
 
 BinaryOperationInput checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(BinaryOperationInput, .ok=true);
-    const auto tuple = getStaticBinaryTuple(in, function);
+    const auto tuple = getBinaryTuple(in, function);
     const auto left = tuple.left.type;
     const auto right = tuple.right.type;
     result.left = tuple.left;

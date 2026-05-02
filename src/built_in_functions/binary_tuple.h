@@ -7,5 +7,5 @@ struct BinaryTuple {
     Expression right;
 };
 
-BinaryTuple getDynamicBinaryTuple(Expression in, const char* function);
-BinaryTuple getStaticBinaryTuple(Expression in, const char* function);
+BinaryTuple getBinaryTuple(Expression in, const char* function);
+BinaryTuple getBinaryTuple(Expression in, const char* function);
