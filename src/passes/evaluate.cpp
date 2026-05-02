@@ -979,19 +979,17 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
 
 Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
+    const auto& rows = table_struct.rows;
     auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto k = makeStdString(buffer);
     FREE_DARRAY(buffer);
-    try {
-        return table_struct.rows.at(k).value;
+    
+    auto it = rows.find(k);
+    if (it == rows.end()) {
+        return makeEvaluateError(table.range, "Cannot find key %s in table", k.c_str());
     }
-    catch (const std::out_of_range&) {
-        return makeEvaluateError(table.range,
-            "Cannot find key %s in table", k.c_str()
-        );
-    }
-    return Expression{}; // Never happens
+    return it->second.value;
 }
 
 Expression applyStackIndexing(Expression stack, Expression input) {
