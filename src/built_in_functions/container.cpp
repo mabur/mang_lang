@@ -105,7 +105,7 @@ Expression clearTyped(Expression in) {
 
 Expression putNumber(Expression collection, Expression item) {
     if (item.type != ANY && item.type != NUMBER) {
-        throwException(
+        return makeEvaluateError(collection.range,
             "\n\nI have found a static type error.\n"
             "It happens for the operation put!(NUMBER item).\n"
             "It expects the item to be a %s,\n"
@@ -171,7 +171,7 @@ Expression putTyped(Expression in) {
 template<typename T>
 Expression takeTable(const T& table) {
     if (table.empty()) {
-        throwException("Cannot take item from empty table");
+        return makeEvaluateError({}, "Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple2(pair.key, pair.value);
@@ -276,7 +276,7 @@ Expression dropTyped(Expression in) {
 
 Expression get(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        throwException(
+        return makeEvaluateError(in.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -287,7 +287,7 @@ Expression get(Expression in) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        throwException(
+        return makeEvaluateError({},
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -299,7 +299,7 @@ Expression get(Expression in) {
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
-        throwException(
+        return makeEvaluateError(table.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
@@ -319,7 +319,7 @@ Expression get(Expression in) {
 
 Expression getTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        throwException(
+        return makeEvaluateError(in.range, 
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -330,7 +330,7 @@ Expression getTyped(Expression in) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        throwException(
+        return makeEvaluateError({},
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -341,7 +341,7 @@ Expression getTyped(Expression in) {
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
-        throwException(
+        return makeEvaluateError(table.range, 
             "\n\nI have found a dynamic type error.\n"
             "\nIt happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
