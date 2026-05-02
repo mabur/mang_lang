@@ -10,13 +10,6 @@
 namespace arithmetic {
 namespace {
 
-struct BinaryOperationInput{
-    Expression left;
-    Expression right;
-    Expression error;
-    bool ok;
-};
-
 TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(TypeCheck, .ok=true);
     if (in.type != ANY && in.type != expected) {
@@ -34,8 +27,8 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
     return result;
 }
 
-BinaryOperationInput checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
-    auto result = MAKE(BinaryOperationInput, .ok=true);
+BinaryTuple checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
+    auto result = MAKE(BinaryTuple, .ok=true);
     const auto tuple = getBinaryTuple(in, function);
     if (!tuple.ok) {
         result.error = tuple.error;
