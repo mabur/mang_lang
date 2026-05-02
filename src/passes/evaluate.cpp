@@ -977,14 +977,18 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     return result;
 }
 
-Expression applyTableIndexing(Expression table, Expression key) {
-    const auto& table_struct = storage.evaluated_tables.at(table.index);
-    const auto& rows = table_struct.rows;
+std::string stdStringFromManglang(Expression key) {
     auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto k = makeStdString(buffer);
     FREE_DARRAY(buffer);
+    return k;
+}
     
+Expression applyTableIndexing(Expression table, Expression key) {
+    const auto& table_struct = storage.evaluated_tables.at(table.index);
+    const auto& rows = table_struct.rows;
+    auto k = stdStringFromManglang(key);
     auto it = rows.find(k);
     if (it == rows.end()) {
         return makeEvaluateError(table.range, "Cannot find key %s in table", k.c_str());
