@@ -76,30 +76,28 @@ Expression makeNumber(double x) {
 
 } // namespace
 
-#define MAKE_BINARY_ARITHMETIC_OPERATION(tuple, op) (makeNumber(getNumber((tuple).left) op getNumber((tuple).right)))
-
 Expression add(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "add");
     if (!type_check.ok) return type_check.error;
-    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, +);
+    return makeNumber(getNumber(type_check.left) + getNumber(type_check.right));
 }
 
 Expression mul(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
     if (!type_check.ok) return type_check.error;
-    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, *);
+    return makeNumber(getNumber(type_check.left) * getNumber(type_check.right));
 }
 
 Expression sub(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "sub");
     if (!type_check.ok) return type_check.error;
-    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, -);
+    return makeNumber(getNumber(type_check.left) - getNumber(type_check.right));
 }
 
 Expression div(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
     if (!type_check.ok) return type_check.error;
-    return MAKE_BINARY_ARITHMETIC_OPERATION(type_check, /);
+    return makeNumber(getNumber(type_check.left) / getNumber(type_check.right));
 }
 
 Expression mod(Expression in) {
