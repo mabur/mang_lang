@@ -863,30 +863,27 @@ Expression parseExpression(CodeRange code) {
             );
         }
         const auto c = firstCharacter(code);
-        if (c == '[') {return parseStack(code);}
-        if (c == '{') {return parseDictionary(code);}
-        if (c == '(') {return parseTuple(code);}
-        if (c == '<') {return parseTable(code);}
-        if (c == '\'') {return parseCharacterExpression(code);}
-        if (c == '\"') {return parseString(code);}
-        if (isKeyword(code, "yes")) {return parseYes(code);}
-        if (isKeyword(code, "no")) {return parseNo(code);}
-        if (isKeyword(code, "-inf")) {return parseNegInf(code);}
-        if (isKeyword(code, "if")) {return parseConditional(code);}
-        if (isKeyword(code, "is")) {return parseIs(code);}
-        if (isKeyword(code, "in")) {return parseAnyFunction(code);}
-        if (isKeyword(code, "dynamic")) {return parseDynamicExpression(code);}
-        if (isKeyword(code, "out")) {return makeParseError(code, "Parse error. 'out' is a reserved keyword.");}
-        if (isKeyword(code, "then")) {return makeParseError(code, "Parse error. 'then' is a reserved keyword.");}
-        if (isKeyword(code, "else")) {return makeParseError(code, "Parse error. 'else' is a reserved keyword.");}
-        if (isKeyword(code, "while")) {return makeParseError(code, "Parse error. 'while' is a reserved keyword.");}
-        if (isKeyword(code, "end")) {return makeParseError(code, "Parse error. 'end' is a reserved keyword.");}
-        if (isdigit(c) || c == '+' || c == '-') {return parseNumber(code);}
-        if (isalpha(c) || c == '_') {return parseSubstitution(code);}
-        return makeParseError(code, format_cstring(
-            "I did not recognize the expression to parse %s", describeLocation(code)
-        ));
-        return Expression{};
+        if (c == '[') return parseStack(code);
+        if (c == '{') return parseDictionary(code);
+        if (c == '(') return parseTuple(code);
+        if (c == '<') return parseTable(code);
+        if (c == '\'') return parseCharacterExpression(code);
+        if (c == '\"') return parseString(code);
+        if (isKeyword(code, "yes")) return parseYes(code);
+        if (isKeyword(code, "no")) return parseNo(code);
+        if (isKeyword(code, "-inf")) return parseNegInf(code);
+        if (isKeyword(code, "if")) return parseConditional(code);
+        if (isKeyword(code, "is")) return parseIs(code);
+        if (isKeyword(code, "in")) return parseAnyFunction(code);
+        if (isKeyword(code, "dynamic")) return parseDynamicExpression(code);
+        if (isKeyword(code, "out")) return makeParseError(code, "Parse error. 'out' is a reserved keyword.");
+        if (isKeyword(code, "then")) return makeParseError(code, "Parse error. 'then' is a reserved keyword.");
+        if (isKeyword(code, "else")) return makeParseError(code, "Parse error. 'else' is a reserved keyword.");
+        if (isKeyword(code, "while")) return makeParseError(code, "Parse error. 'while' is a reserved keyword.");
+        if (isKeyword(code, "end")) return makeParseError(code, "Parse error. 'end' is a reserved keyword.");
+        if (isdigit(c) || c == '+' || c == '-') return parseNumber(code);
+        if (isalpha(c) || c == '_') return parseSubstitution(code);
+        return makeParseError(code, "I did not recognize the expression to parse %s");
     } catch (const std::runtime_error& e) {
         printf("Exception while parsing: %s", e.what());
         throw e;
