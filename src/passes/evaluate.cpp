@@ -749,13 +749,12 @@ Indices initializeDefinitions(const Dictionary& dictionary) {
 void setDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name, Expression value
 ) {
-    if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        throwException(
-            "setDictionaryDefinition expected %s got %s",
-            getExpressionName(EVALUATED_DICTIONARY),
-            getExpressionName(evaluated_dictionary.type)
-        );
-    }
+    CHECK_INTERNAL(
+        evaluated_dictionary.type == EVALUATED_DICTIONARY,
+        "setDictionaryDefinition expected %s got %s",
+        getExpressionName(EVALUATED_DICTIONARY),
+        getExpressionName(evaluated_dictionary.type)
+    );
     auto first = storage.evaluated_dictionaries.data[evaluated_dictionary.index].definitions.data;
     storage.definitions.data[first + name.dictionary_index].expression = value;
 }
