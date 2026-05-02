@@ -46,32 +46,28 @@ int main(int argc,  char **argv) {
     printf("Reading program from %s ... ",  input_file_path.data);
     auto code = read_text_file(input_file_path.data);
     printf("Done.\n");
-
-    try {
-        printf("Evaluating program ... ");
-        const auto start = std::chrono::steady_clock::now();
-        const auto result = evaluate_all(code.data);
-        const auto end = std::chrono::steady_clock::now();
-        const auto duration_total = std::chrono::duration<double>{end - start};
-        printf("Done in %.1f seconds.\n", duration_total.count());
-        
-        printf("Writing result to %s ... ", output_file_path.data);
-        FILE *output_file = fopen(output_file_path.data, "w");
-        if (output_file != NULL) {
-            fprintf(output_file, "%s", result.data);
-            if (fclose(output_file) == 0) {
-                printf("Done.\n");
-            }
-            else {
-                perror("Error closing file");
-                exit(EXIT_FAILURE);
-            }
+    
+    printf("Evaluating program ... ");
+    const auto start = std::chrono::steady_clock::now();
+    const auto result = evaluate_all(code.data);
+    const auto end = std::chrono::steady_clock::now();
+    const auto duration_total = std::chrono::duration<double>{end - start};
+    printf("Done in %.1f seconds.\n", duration_total.count());
+    
+    printf("Writing result to %s ... ", output_file_path.data);
+    FILE *output_file = fopen(output_file_path.data, "w");
+    if (output_file != NULL) {
+        fprintf(output_file, "%s", result.data);
+        if (fclose(output_file) == 0) {
+            printf("Done.\n");
         }
         else {
-            perror("Error opening file");
+            perror("Error closing file");
             exit(EXIT_FAILURE);
         }
-    } catch (const std::runtime_error& e) {
-        printf("%s\n", e.what());
+    }
+    else {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
     }
 }

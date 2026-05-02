@@ -37,23 +37,15 @@ struct Test {
         for (const auto& test : data) {
             const auto& input = test.first;
             const auto& output_expected = test.second;
-            try {
-                const auto output_actual = function(input);
-                // TODO: we have hardcoded this for strings which is all we use.
-                if (strcmp(output_expected, output_actual.data) == 0) {
-                    ++num_good;
-                } else {
-                    ++num_bad;
-                    printf(
-                        "\n%s(%s) expected %s got %s\n",
-                        function_name, input, output_expected, output_actual.data
-                    );
-                }
-            } catch (const std::exception& e) {
+            const auto output_actual = function(input);
+            // TODO: we have hardcoded this for strings which is all we use.
+            if (strcmp(output_expected, output_actual.data) == 0) {
+                ++num_good;
+            } else {
                 ++num_bad;
                 printf(
-                    "%s(%s) expected %s got exception %s\n",
-                    function_name, input, output_expected, e.what()
+                    "\n%s(%s) expected %s got %s\n",
+                    function_name, input, output_expected, output_actual.data
                 );
             }
         }
