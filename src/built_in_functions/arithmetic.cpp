@@ -28,19 +28,11 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
 }
 
 BinaryTuple checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
-    auto result = MAKE(BinaryTuple, .ok=true);
-    const auto tuple = getBinaryTuple(in, function);
-    if (!tuple.ok) {
-        result.error = tuple.error;
-        result.ok = false;
+    auto result = getBinaryTuple(in, function);
+    if (!result.ok) {
         return result;
     }
-    const auto left = tuple.left.type;
-    const auto right = tuple.right.type;
-    result.left = tuple.left;
-    result.right = tuple.right;
-    if (left != ANY && left != expected) {
-        result.ok = false;
+    if (result.left.type != ANY && result.left.type != expected) {
         result.error = makeEvaluateError({}, format_cstring(
             "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
@@ -48,12 +40,11 @@ BinaryTuple checkTypeBinaryFunction(Expression in, ExpressionType expected, cons
             "but now the first item in the tuple is %s.\n",
             function,
             getExpressionName(expected),
-            getExpressionName(left)
+            getExpressionName(result.left.type)
         ));
         return result;
     }
-    if (right != ANY && right != expected) {
-        result.ok = false;
+    if (result.right.type != ANY && result.right.type != expected) {
         result.error = makeEvaluateError({}, format_cstring(
             "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
@@ -61,10 +52,11 @@ BinaryTuple checkTypeBinaryFunction(Expression in, ExpressionType expected, cons
             "but now the second item in the tuple is %s.\n",
             function,
             getExpressionName(expected),
-            getExpressionName(right)
+            getExpressionName(result.right.type)
         ));
         return result;
     }
+    result.ok = true;
     return result;
 }
 
