@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdarg.h>
-#include <stdexcept>
 #include <string>
 
 #include <carma/carma_string.h>
