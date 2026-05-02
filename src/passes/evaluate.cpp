@@ -763,13 +763,12 @@ void setDictionaryDefinition(
 Expression getDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name
 ) {
-    if (evaluated_dictionary.type != EVALUATED_DICTIONARY) {
-        return makeEvaluateError(evaluated_dictionary.range,
-            "getDictionaryDefinition expected %s got %s",
-            getExpressionName(EVALUATED_DICTIONARY),
-            getExpressionName(evaluated_dictionary.type)
-        );
-    }
+    CHECK_INTERNAL(
+        evaluated_dictionary.type == EVALUATED_DICTIONARY,
+        "getDictionaryDefinition expected %s got %s",
+        getExpressionName(EVALUATED_DICTIONARY),
+        getExpressionName(evaluated_dictionary.type)
+    );
     auto first = storage.evaluated_dictionaries.data[evaluated_dictionary.index].definitions.data;
     return storage.definitions.data[first + name.dictionary_index].expression;
 }
