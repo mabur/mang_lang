@@ -8,13 +8,12 @@ BinaryTuple getBinaryTuple(Expression in, const char* function) {
     if (in.type != EVALUATED_TUPLE) {
         result.error = makeEvaluateError(
             in.range,
-            format_cstring(
-                "I found a type error while calling the function %s. "
-                "The function expected a tuple of two items, "
-                "but it got a %s",
-                function,
-                getExpressionName(in.type)
-        ));
+            "I found a type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got a %s",
+            function,
+            getExpressionName(in.type)
+        );
         return result;
     }
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
@@ -22,13 +21,12 @@ BinaryTuple getBinaryTuple(Expression in, const char* function) {
     if (count != 2) {
         result.error = makeEvaluateError(
             in.range,
-            format_cstring(
             "I found a type error while calling the function %s. "
             "The function expected a tuple of two items, "
             "but it got %zu items.",
             function,
             count
-        ));
+        );
         return result;
     }
     result.left = storage.expressions.data[evaluated_tuple.indices.data + 0];

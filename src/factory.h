@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdarg.h>
+
 #include <carma/carma_string.h>
 
 #include "expression.h"
@@ -86,7 +88,7 @@ EvaluateError getEvaluateError(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeParseError(CodeRange code, ParseError expression);
-Expression makeEvaluateError(CodeRange code, EvaluateError expression);
+Expression makeEvaluateError(CodeRange code, const char* format, ...);
 Expression makeCharacter(CodeRange code, Character expression);
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);
 Expression makeTypedExpression(CodeRange code, TypedExpression expression);

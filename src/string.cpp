@@ -13,15 +13,13 @@ StringBuilder concatenate(StringBuilder base, const char* tail) {
     return base;
 }
 
-const char* format_cstring(const char* format, ...)
+const char* format_cstring_v(const char* format, va_list args)
 {
     char* result = nullptr;
-    va_list args1;
-    va_start(args1, format);
     va_list args2;
-    va_copy(args2, args1);
+    va_copy(args2, args);
 
-    int len = vsnprintf(nullptr, 0, format, args1);
+    int len = vsnprintf(nullptr, 0, format, args);
     size_t count = (size_t)len + 1;
     if (len >= 0) {
         result = (char*)malloc(count);
@@ -33,7 +31,15 @@ const char* format_cstring(const char* format, ...)
             }
         }
     }
-    va_end(args1);
     va_end(args2);
+    return result;
+}
+
+const char* format_cstring(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    const char* result = format_cstring_v(format, args);
+    va_end(args);
     return result;
 }

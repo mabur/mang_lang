@@ -96,7 +96,11 @@ Expression makeParseError(CodeRange code, ParseError expression) {
     return result;
 }
 
-Expression makeEvaluateError(CodeRange code, EvaluateError expression) {
+Expression makeEvaluateError(CodeRange code, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    EvaluateError expression = format_cstring_v(format, args);
+    va_end(args);
     auto result = Expression{};
     result.type = EVALUATE_ERROR;
     result.range = code;

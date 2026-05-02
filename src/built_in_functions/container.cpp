@@ -67,10 +67,10 @@ Expression clear(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during evaluation.\n"
             "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -96,10 +96,10 @@ Expression clearTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during type checking.\n"
             "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -134,10 +134,10 @@ Expression put(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during evaluation.\n"
             "The put function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -161,10 +161,10 @@ Expression putTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during type checking.\n"
             "The put function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -208,10 +208,10 @@ Expression take(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during evaluation.\n"
             "The take function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -229,10 +229,10 @@ Expression takeTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during type checking.\n"
             "The take function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -248,10 +248,10 @@ Expression drop(Expression in) {
         case NUMBER: return dropNumber(in);
         case NO: return in;
         case YES: return Expression{0, CodeRange{}, NO};
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during evaluation.\n"
             "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
@@ -267,10 +267,10 @@ Expression dropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: return makeEvaluateError(in.range, format_cstring(
+        default: return makeEvaluateError(in.range,
             "I found an error during type checking.\n"
             "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
-        ));
+        );
     }
 }
 
