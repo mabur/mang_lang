@@ -437,9 +437,7 @@ Expression parseDictionary(CodeRange code) {
                 storage.for_simple_statements.data[start_expression.index].end_index = loop_end_index;
                 APPEND(statements, parseForSimpleEndStatement(code, loop_start_index));
             } else {
-                return makeParseError(code, format_cstring(
-                    "Unexpected start type for loop%s",
-                    describeLocation(code)));
+                return makeParseError(code, "Unexpected start type for loop");
             }
         }
         else if (isKeyword(code, "return")) {
@@ -748,7 +746,7 @@ Expression parseSubstitution(CodeRange code) {
 
 Expression parseNumber(CodeRange code) {
     if (IS_EMPTY(code)) {
-        return makeParseError(code, format_cstring("Reached end of file when parsing number %s", describeLocation(code)));
+        return makeParseError(code, "Reached end of file when parsing number");
     }
     auto start = code;
     bool is_negative = false;
@@ -760,7 +758,7 @@ Expression parseNumber(CodeRange code) {
         DROP_FRONT(code);
     }
     if (IS_EMPTY(code)) {
-        return makeParseError(code, format_cstring("Reached end of file when parsing number %s", describeLocation(code)));
+        return makeParseError(code, "Reached end of file when parsing number");
     }
     double integer_part = 0.0;
     while (startsWithDigit(code)) {
@@ -771,7 +769,7 @@ Expression parseNumber(CodeRange code) {
     if (startsWith(code, '.')) {
         DROP_FRONT(code);
         if (IS_EMPTY(code)) {
-            return makeParseError(code, format_cstring("Reached end of file when parsing number %s", describeLocation(code)));
+            return makeParseError(code, "Reached end of file when parsing number");
         }
         double divisor = 10.0;
         while (startsWithDigit(code)) {

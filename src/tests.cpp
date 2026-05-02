@@ -108,9 +108,9 @@ int main() {
         {"1.0", "1"},
         {"+1", "1"},
         {"+1.0", "1"},
-        {"+", "Reached end of file when parsing number  at unknown location."},
-        {"-", "Reached end of file when parsing number  at unknown location."},
-        {"1.", "Reached end of file when parsing number  at unknown location."},
+        {"+", "Reached end of file when parsing number"},
+        {"-", "Reached end of file when parsing number"},
+        {"1.", "Reached end of file when parsing number"},
     });
     test.evaluate_types("number", {
         {"-1", "NUMBER"},
