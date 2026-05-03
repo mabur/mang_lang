@@ -20,15 +20,6 @@ int num_good_total= 0;
 int num_bad_total = 0;
 clock_t duration_total = 0;
 
-int summarizeTests() {
-    printf("\n%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
-    if (num_bad_total != 0) {
-        printf("%d TESTS FAILING! ", num_bad_total);
-    }
-    printf("Duration %.1f seconds.", (double)duration_total / CLOCKS_PER_SEC);
-    return num_bad_total;
-}
-
 typedef StringBuilder (*TestFunction)(const char*);
 
 void parameterizedTest(
@@ -37,33 +28,37 @@ void parameterizedTest(
     const char* case_name,
     TestCases test_cases
 ) {
-    using namespace std;
     auto num_good = 0;
     auto num_bad = 0;
-    const clock_t start = clock();
+    auto start = clock();
     FOR_EACH(test_case, test_cases) {
-        auto input = test_case->input;
-        auto output_expected = test_case->expected;
-        auto output_actual = function(input);
-        // TODO: we have hardcoded this for strings which is all we use.
-        if (strcmp(output_expected, output_actual.data) == 0) {
+        auto actual = function(test_case->input);
+        if (strcmp(test_case->expected, actual.data) == 0) {
             ++num_good;
         } else {
             ++num_bad;
             printf(
                 "\n%s(%s) expected %s got %s\n",
-                function_name, input, output_expected, output_actual.data
+                function_name, test_case->input, test_case->expected, actual.data
             );
         }
     }
+    num_good_total += num_good;
+    num_bad_total += num_bad;
     duration_total += clock() - start;
-
     printf(
         "%d/%d tests successful for case %s:%s\n",
         num_good, num_good + num_bad, function_name, case_name
     );
-    num_good_total += num_good;
-    num_bad_total += num_bad;
+}
+
+int summarizeTests() {
+    printf("\n%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
+    if (num_bad_total != 0) {
+        printf("%d TESTS FAILING! ", num_bad_total);
+    }
+    printf("Duration %.1f seconds.", (double)duration_total / CLOCKS_PER_SEC);
+    return num_bad_total;
 }
 
 void testReformat(const char* case_name, TestCases test_cases) {
