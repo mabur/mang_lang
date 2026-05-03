@@ -16,6 +16,10 @@ typedef struct TestCases {
 
 #define TEST_CASES(...) MAKE_RANGE(TestCases, __VA_ARGS__)
 
+int num_good_total= 0;
+int num_bad_total = 0;
+clock_t duration_total = 0;
+
 struct Test {
     Test() = default;
     ~Test() {
@@ -28,10 +32,7 @@ struct Test {
     int exitCode() const {
         return num_bad_total;
     }
-    int num_good_total= 0;
-    int num_bad_total = 0;
-    clock_t duration_total = 0;
-
+    
     template<typename Input, typename Output>
     void parameterizedTest(
         std::function<Output(Input)> function,
