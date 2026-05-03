@@ -47,7 +47,7 @@ StringBuilder evaluate_all(const char* code) {
     const auto code_checked = evaluate_types(code_ast, std_checked);
     const auto std_evaluated = evaluate(std_ast, built_ins);
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
-    std::ignore = code_checked;
+    (void)code_checked;
     auto buffer = StringBuilder{};
     buffer = serialize(buffer, code_evaluated);
     clearMemory();
