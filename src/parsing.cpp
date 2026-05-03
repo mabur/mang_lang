@@ -35,7 +35,7 @@ bool isDigit(char c) {
 
 static
 bool isLetter(char c) {
-    return std::isalpha(c);
+    return isalpha(c);
 }
 
 static
