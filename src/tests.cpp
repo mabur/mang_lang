@@ -29,9 +29,6 @@ struct Test {
         }
         printf("Duration %.1f seconds.\n", (double)duration_total / CLOCKS_PER_SEC);
     }
-    int exitCode() const {
-        return num_bad_total;
-    }
     
     template<typename Input, typename Output>
     void parameterizedTest(
@@ -1890,5 +1887,5 @@ int main() {
         {"squared_norm![3 4]", "25"},
         {"norm![3 4]", "5"},
     ));
-    return test.exitCode();
+    return num_bad_total;
 }
