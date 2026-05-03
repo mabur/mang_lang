@@ -29,9 +29,10 @@ int summarizeTests() {
     return num_bad_total;
 }
 
-template<typename Input, typename Output>
+typedef StringBuilder (*TestFunction)(const char*);
+
 void parameterizedTest(
-    std::function<Output(Input)> function,
+    TestFunction function,
     const char* function_name,
     const char* case_name,
     TestCases test_cases
@@ -66,21 +67,15 @@ void parameterizedTest(
 }
 
 void testReformat(const char* case_name, TestCases test_cases) {
-    parameterizedTest<const char*, StringBuilder>(
-        reformat, "reformat", case_name, test_cases
-    );
+    parameterizedTest(reformat, "reformat", case_name, test_cases);
 }
 
 void testEvaluateTypes(const char* case_name, TestCases test_cases) {
-    parameterizedTest<const char*, StringBuilder>(
-        evaluate_types, "evaluate types", case_name, test_cases
-    );
+    parameterizedTest(evaluate_types, "evaluate_types", case_name, test_cases);
 }
 
 void testEvaluateAll(const char* case_name, TestCases test_cases) {
-    parameterizedTest<const char*, StringBuilder>(
-        evaluate_all, "evaluate_all", case_name, test_cases
-    );
+    parameterizedTest(evaluate_all, "evaluate_all", case_name, test_cases);
 }
 
 int main() {
