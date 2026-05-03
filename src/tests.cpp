@@ -20,16 +20,16 @@ int num_good_total= 0;
 int num_bad_total = 0;
 clock_t duration_total = 0;
 
-struct Test {
-    Test() = default;
-    ~Test() {
-        printf("%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
-        if (num_bad_total != 0) {
-            printf("%d TESTS FAILING! ", num_bad_total);
-        }
-        printf("Duration %.1f seconds.\n", (double)duration_total / CLOCKS_PER_SEC);
+int summarizeTests() {
+    printf("\n%d/%d tests successful in total. ", num_good_total, num_good_total + num_bad_total);
+    if (num_bad_total != 0) {
+        printf("%d TESTS FAILING! ", num_bad_total);
     }
-    
+    printf("Duration %.1f seconds.", (double)duration_total / CLOCKS_PER_SEC);
+    return num_bad_total;
+}
+
+struct Test {
     template<typename Input, typename Output>
     void parameterizedTest(
         std::function<Output(Input)> function,
@@ -1887,5 +1887,5 @@ int main() {
         {"squared_norm![3 4]", "25"},
         {"norm![3 4]", "5"},
     ));
-    return num_bad_total;
+    return summarizeTests();
 }
