@@ -1,5 +1,5 @@
-#include <chrono>
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 
 #include <carma/carma.h>
@@ -48,11 +48,10 @@ int main(int argc,  char **argv) {
     printf("Done.\n");
     
     printf("Evaluating program ... ");
-    const auto start = std::chrono::steady_clock::now();
+    const clock_t start = clock();
     const auto result = evaluate_all(code.data);
-    const auto end = std::chrono::steady_clock::now();
-    const auto duration_total = std::chrono::duration<double>{end - start};
-    printf("Done in %.1f seconds.\n", duration_total.count());
+    const double duration_total = (double)(clock() - start) / CLOCKS_PER_SEC;
+    printf("Done in %.1f seconds.\n", duration_total);
     
     printf("Writing result to %s ... ", output_file_path.data);
     FILE *output_file = fopen(output_file_path.data, "w");

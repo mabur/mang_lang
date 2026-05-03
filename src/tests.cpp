@@ -1,6 +1,6 @@
 #include "mang_lang.h"
-#include <chrono>
 #include <functional>
+#include <time.h>
 #include <initializer_list>
 #include <stdio.h>
 #include <string.h>
@@ -12,14 +12,14 @@ struct Test {
         if (num_bad_total != 0) {
             printf("%d TESTS FAILING! ", num_bad_total);
         }
-        printf("Duration %.1f seconds.\n", duration_total.count());
+        printf("Duration %.1f seconds.\n", (double)duration_total / CLOCKS_PER_SEC);
     }
     int exitCode() const {
         return num_bad_total;
     }
     int num_good_total= 0;
     int num_bad_total = 0;
-    std::chrono::duration<double> duration_total = {};
+    clock_t duration_total = 0;
 
     using InputOutputList = std::initializer_list<std::pair<const char*, const char*>>;
     
@@ -33,7 +33,7 @@ struct Test {
         using namespace std;
         auto num_good = 0;
         auto num_bad = 0;
-        auto start = std::chrono::steady_clock::now();
+        const clock_t start = clock();
         for (const auto& test : data) {
             const auto& input = test.first;
             const auto& output_expected = test.second;
@@ -49,8 +49,7 @@ struct Test {
                 );
             }
         }
-        auto end = std::chrono::steady_clock::now();
-        duration_total += end - start;
+        duration_total += clock() - start;
 
         printf(
             "%d/%d tests successful for case %s:%s\n",
