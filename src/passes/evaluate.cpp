@@ -452,7 +452,8 @@ struct BooleanResult {
 BooleanResult booleanTypes(Expression expression) {
     auto result = MAKE(BooleanResult);
     switch (expression.type) {
-        case PARSE_ERROR: return result;
+        case PARSE_ERROR: return MAKE(BooleanResult, .error=expression);
+        case EVALUATE_ERROR: return MAKE(BooleanResult, .error=expression);
         case NUMBER: return result;
         case YES: return result;
         case NO: return result;
@@ -1088,6 +1089,7 @@ Expression evaluateFunctionApplicationTypes(
     );
     switch (function.type) {
         case PARSE_ERROR: return function;
+        case EVALUATE_ERROR: return function;
 
         case FUNCTION: return applyFunction(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
@@ -1123,6 +1125,7 @@ Expression evaluateFunctionApplication(
     );
     switch (function.type) {
         case PARSE_ERROR: return function;
+        case EVALUATE_ERROR: return function;
 
         case FUNCTION: return applyFunction(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
@@ -1153,6 +1156,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
     switch (expression.type) {
         // These are the same for types and values, and just pass through:
         case PARSE_ERROR: return expression;
+        case EVALUATE_ERROR: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case YES: return expression;
@@ -1198,6 +1202,7 @@ Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
         // These are the same for types and values, and just pass through:
         case PARSE_ERROR: return expression;
+        case EVALUATE_ERROR: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case YES: return expression;
