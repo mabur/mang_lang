@@ -45,6 +45,10 @@ int main(int argc,  char **argv) {
     
     printf("Reading program from %s ... ",  input_file_path.data);
     auto code = read_text_file(input_file_path.data);
+    if (IS_EMPTY(code)){
+        perror("Error reading file");
+        exit(EXIT_FAILURE);
+    }
     printf("Done.\n");
     
     printf("Evaluating program ... ");
