@@ -407,6 +407,7 @@ StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message) 
 StringBuilder serialize_types(StringBuilder s, Expression expression) {
     switch (expression.type) {
         case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression));
+        case EVALUATE_ERROR: return serializeErrorMessage(s, getEvaluateError(expression));
 
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.data[expression.index]);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize_types, expression);
@@ -420,6 +421,7 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
 StringBuilder serialize(StringBuilder s, Expression expression) {
     switch (expression.type) {
         case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression));
+        case EVALUATE_ERROR: return serializeErrorMessage(s, getEvaluateError(expression));
 
         case CHARACTER: return serializeCharacter(s, getCharacter(expression));
         case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
