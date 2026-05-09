@@ -1,52 +1,72 @@
-#include <chrono>
-#include <iomanip>
-#include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include <carma/carma.h>
+#include <carma/carma_string.h>
 
 #include "mang_lang.h"
+#include "string.h"
 
 namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};
 }
 
+StringBuilder parseInputFilePath(int argc,  char **argv) {
+    auto result = StringBuilder{};
+    CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
+    APPEND(result, '\0');
+    return result;
+}
+
+StringBuilder parseOutputFilePath(int argc,  char **argv) {
+    auto result = StringBuilder{};
+    if (argc >= CommandLineArgumentIndex::OUTPUT_PATH + 1) {
+        CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::OUTPUT_PATH]);
+    }
+    else {
+        CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
+        DROP_BACK_UNTIL_ITEM(result, '.');
+        DROP_BACK(result);
+        CONCAT_CSTRING(result, "_evaluated.txt");
+    }
+    APPEND(result, '\0');
+    return result;
+}
+
 int main(int argc,  char **argv) {
     using namespace std;
     if (argc < CommandLineArgumentIndex::INPUT_PATH + 1) {
-        cout << "Expected input file." << endl;
+        printf("Expected input file.\n");
         return 1;
     }
-    const auto input_file_path = std::string{
-        argv[CommandLineArgumentIndex::INPUT_PATH]
-    };
-    auto output_file_path = std::string{};
-    if (argc < CommandLineArgumentIndex::OUTPUT_PATH + 1) {
-        output_file_path = input_file_path.substr(0, input_file_path.find_last_of('.'))
-            + "_evaluated.txt";
-    } else {
-        output_file_path = argv[CommandLineArgumentIndex::OUTPUT_PATH];
+    auto input_file_path = parseInputFilePath(argc, argv);
+    auto output_file_path = parseOutputFilePath(argc, argv);
+    
+    printf("Reading program from %s ... ",  input_file_path.data);
+    auto code = read_text_file(input_file_path.data);
+    printf("Done.\n");
+    
+    printf("Evaluating program ... ");
+    const clock_t start = clock();
+    const auto result = evaluate_all(code.data);
+    const double duration_total = (double)(clock() - start) / CLOCKS_PER_SEC;
+    printf("Done in %.1f seconds.\n", duration_total);
+    
+    printf("Writing result to %s ... ", output_file_path.data);
+    FILE *output_file = fopen(output_file_path.data, "w");
+    if (output_file != NULL) {
+        fprintf(output_file, "%s", result.data);
+        if (fclose(output_file) == 0) {
+            printf("Done.\n");
+        }
+        else {
+            perror("Error closing file");
+            exit(EXIT_FAILURE);
+        }
     }
-
-    cout << "Reading program from " << input_file_path << " ... ";
-    auto input_file = ifstream{input_file_path};
-    const auto code = string{(istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>()};
-    input_file.close();
-    cout << "Done." << endl;
-
-    try {
-        cout << "Evaluating program ... ";
-        const auto start = std::chrono::steady_clock::now();
-        const auto result = evaluate_all(code);
-        const auto end = std::chrono::steady_clock::now();
-        const auto duration_total = std::chrono::duration<double>{end - start};
-        cout << "Done. " << std::fixed << std::setprecision(1)
-            << duration_total.count() << " seconds." << endl;
-        
-        cout << "Writing result to " << output_file_path << " ... ";
-        auto output_file = ofstream{output_file_path};
-        output_file << result;
-        output_file.close();
-        cout << "Done." << endl;
-    } catch (const std::runtime_error& e) {
-        cout << e.what() << endl;
+    else {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
     }
 }

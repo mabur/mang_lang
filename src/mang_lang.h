@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
+#include "string.h"
 
-std::string reformat(std::string code);
-std::string evaluate_types(std::string code);
-std::string evaluate_all(std::string code);
+StringBuilder reformat(const char* code);
+StringBuilder evaluate_types(const char* code);
+StringBuilder evaluate_all(const char* code);

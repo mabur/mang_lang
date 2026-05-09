@@ -1,47 +1,36 @@
 #include "binary_tuple.h"
 
 #include "../factory.h"
+#include "../string.h"
 
-BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function) {
+BinaryTuple getBinaryTuple(Expression in, const char* function) {
+    auto result = MAKE(BinaryTuple);
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error{
-            "I found a dynamic type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got a " + NAMES[in.type]
-        };
+        result.error = makeEvaluateError(
+            in.range,
+            "I found a type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got a %s",
+            function,
+            getExpressionName(in.type)
+        );
+        return result;
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
-    const auto tuple_count = evaluated_tuple.last - evaluated_tuple.first;
-    if (tuple_count != 2) {
-        throw std::runtime_error{
-            "I found a dynamic type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got " + std::to_string(tuple_count) + " items."
-        };
-    }
-    const auto left = storage.expressions.at(evaluated_tuple.first + 0);
-    const auto right = storage.expressions.at(evaluated_tuple.first + 1);
-    return BinaryTuple{left, right};
-}
-
-BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function) {
-    if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error{
-            "I found a static type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got a " + NAMES[in.type]
-        };
-    }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
+    const auto count = evaluated_tuple.indices.count;
     if (count != 2) {
-        throw std::runtime_error{
-            "I found a static type error while calling the function " + function + ". " +
-                "The function expected a tuple of two items, " +
-                "but it got " + std::to_string(count) + " items."
-        };
+        result.error = makeEvaluateError(
+            in.range,
+            "I found a type error while calling the function %s. "
+            "The function expected a tuple of two items, "
+            "but it got %zu items.",
+            function,
+            count
+        );
+        return result;
     }
-    const auto left = storage.expressions.at(evaluated_tuple.first + 0);
-    const auto right = storage.expressions.at(evaluated_tuple.first + 1);
-    return BinaryTuple{left, right};
+    result.left = storage.expressions.data[evaluated_tuple.indices.data + 0];
+    result.right = storage.expressions.data[evaluated_tuple.indices.data + 1];
+    result.ok = true;
+    return result;
 }

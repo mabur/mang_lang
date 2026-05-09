@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-
 struct Expression;
+struct StringBuilder;
 
-void serialize_types(std::string& s, Expression expression);
-void serialize(std::string& s, Expression expression);
+StringBuilder serialize_types(StringBuilder s, Expression expression);
+StringBuilder serialize(StringBuilder s, Expression expression);

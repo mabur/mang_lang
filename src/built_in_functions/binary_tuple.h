@@ -1,13 +1,13 @@
 #pragma once
 
-#include <string>
-
 #include "../expression.h"
 
 struct BinaryTuple {
     Expression left;
     Expression right;
+    Expression error;
+    bool ok;
 };
 
-BinaryTuple getDynamicBinaryTuple(Expression in, const std::string& function);
-BinaryTuple getStaticBinaryTuple(Expression in, const std::string& function);
+BinaryTuple getBinaryTuple(Expression in, const char* function);
+BinaryTuple getBinaryTuple(Expression in, const char* function);

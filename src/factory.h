@@ -1,45 +1,80 @@
 #pragma once
 
+#include <stdarg.h>
+
+#include <carma/carma_string.h>
+
 #include "expression.h"
 
+#define DARRAY(type) struct {type* data; size_t count; size_t capacity;}
+
+struct Expressions {
+    Expression* data;
+    size_t count;
+    size_t capacity;
+};
+
+struct NameIndex {
+    StringView key;
+    size_t value;
+    bool occupied;
+};
+
+// TODO: optimize table macros for speed for this use-case.
+struct NameIndices{
+    NameIndex* data;
+    size_t count;
+    size_t capacity;
+};
+
 struct Storage {
-    std::vector<DynamicExpression> dynamic_expressions;
-    std::vector<TypedExpression> typed_expressions;
-    std::vector<EvaluatedDictionary> evaluated_dictionaries;
-    std::vector<Dictionary> dictionaries;
-    std::vector<Conditional> conditionals;
-    std::vector<IsExpression> is_expressions;
-    std::vector<Alternative> alternatives;
-    std::vector<Function> functions;
-    std::vector<FunctionBuiltIn> built_in_functions;
-    std::vector<FunctionDictionary> dictionary_functions;
-    std::vector<FunctionTuple> tuple_functions;
-    std::vector<Tuple> tuples;
-    std::vector<EvaluatedTuple> evaluated_tuples;
-    std::vector<Stack> stacks;
-    std::vector<EvaluatedStack> evaluated_stacks;
-    std::vector<Table> tables;
+    // SOA for CodeCharacter:
+    DARRAY(char) code_characters;
+    DARRAY(CharacterIndex) code_rows;
+    DARRAY(CharacterIndex) code_columns;
+
+    DARRAY(DynamicExpression) dynamic_expressions;
+    DARRAY(TypedExpression) typed_expressions;
+    DARRAY(Dictionary) dictionaries;
+    DARRAY(EvaluatedDictionary) evaluated_dictionaries;
+    DARRAY(Conditional) conditionals;
+    DARRAY(IsExpression) is_expressions;
+    DARRAY(Alternative) alternatives;
+    DARRAY(Function) functions;
+    DARRAY(FunctionBuiltIn) built_in_functions;
+    DARRAY(FunctionDictionary) dictionary_functions;
+    DARRAY(FunctionTuple) tuple_functions;
+    DARRAY(Tuple) tuples;
+    DARRAY(EvaluatedTuple) evaluated_tuples;
+    DARRAY(Stack) stacks;
+    DARRAY(EvaluatedStack) evaluated_stacks;
+    DARRAY(EvaluatedTableView) evaluated_table_views;
+    DARRAY(LookupChild) child_lookups;
+    DARRAY(FunctionApplication) function_applications;
+    DARRAY(LookupSymbol) symbol_lookups;
+    DARRAY(Argument) arguments;
+    DARRAY(WhileStatement) while_statements;
+    DARRAY(ForStatement) for_statements;
+    DARRAY(ForSimpleStatement) for_simple_statements;
+    DARRAY(WhileEndStatement) while_end_statements;
+    DARRAY(ForEndStatement) for_end_statements;
+    DARRAY(ForSimpleEndStatement) for_simple_end_statements;
+    DARRAY(Definition) definitions;
+    DARRAY(PutAssignment) put_assignments;
+    DARRAY(PutEachAssignment) put_each_assignments;
+    DARRAY(DropAssignment) drop_assignments;
+    DARRAY(Expression) statements;
+    DARRAY(Expression) expressions;
+    DARRAY(String) strings;
+    DARRAY(Row) rows;
+    DARRAY(Table) tables;
+    
+    // Null-terminated strings concatenated after each other:
+    StringBuilder names;
+    
+    NameIndices name_indices;
+    
     std::vector<EvaluatedTable> evaluated_tables;
-    std::vector<EvaluatedTableView> evaluated_table_views;
-    std::vector<LookupChild> child_lookups;
-    std::vector<FunctionApplication> function_applications;
-    std::vector<LookupSymbol> symbol_lookups;
-    std::vector<Name> names;
-    std::unordered_map<Name, size_t> name_indices;
-    std::vector<Argument> arguments;
-    std::vector<WhileStatement> while_statements;
-    std::vector<ForStatement> for_statements;
-    std::vector<ForSimpleStatement> for_simple_statements;
-    std::vector<WhileEndStatement> while_end_statements;
-    std::vector<ForEndStatement> for_end_statements;
-    std::vector<ForSimpleEndStatement> for_simple_end_statements;
-    std::vector<Definition> definitions;
-    std::vector<PutAssignment> put_assignments;
-    std::vector<PutEachAssignment> put_each_assignments;
-    std::vector<DropAssignment> drop_assignments;
-    std::vector<Expression> statements;
-    std::vector<Expression> expressions;
-    std::vector<String> strings;
 };
 
 extern Storage storage;
@@ -48,8 +83,12 @@ void clearMemory();
 
 Character getCharacter(Expression expression);
 Number getNumber(Expression expression);
+ParseError getParseError(Expression expression);
+EvaluateError getEvaluateError(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
+Expression makeParseError(CodeRange code, ParseError expression);
+Expression makeEvaluateError(CodeRange code, const char* format, ...);
 Expression makeCharacter(CodeRange code, Character expression);
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);
 Expression makeTypedExpression(CodeRange code, TypedExpression expression);
@@ -73,7 +112,7 @@ Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression)
 Expression makeLookupChild(CodeRange code, LookupChild expression);
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression);
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression);
-Expression makeName(CodeRange code, Name expression);
+Expression makeName(CodeRange code, const char* data, size_t count);
 Expression makeArgument(CodeRange code, Argument expression);
 Expression makeDefinition(CodeRange code, Definition expression);
 Expression makePutAssignment(CodeRange code, PutAssignment expression);
@@ -86,3 +125,12 @@ Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
 Expression makeForSimpleEndStatement(CodeRange code, ForSimpleEndStatement expression);
 Expression makeString(CodeRange code, String expression);
+
+CodeRange makeCodeCharacters(const char* s);
+
+char firstCharacter(CodeRange code);
+size_t firstColumn(CodeRange code);
+size_t firstRow(CodeRange code);
+char lastCharacter(CodeRange code);
+size_t lastColumn(CodeRange code);
+size_t lastRow(CodeRange code);

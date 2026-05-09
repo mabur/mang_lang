@@ -1,39 +1,36 @@
 #include "container.h"
 
-#include <algorithm>
-
 #include "binary_tuple.h"
 #include "../passes/serialize.h"
+#include "../exceptions.h"
 #include "../expression.h"
 #include "../factory.h"
-
-// Note that we need code range since we use this during parsing.
-CodeRange addCodeRanges(Expression rest, Expression top) {
-    const auto first_character = std::min(rest.range.first, top.range.first);
-    const auto last_character = std::max(rest.range.last, top.range.last);
-    return CodeRange{first_character, last_character};
-}
+#include "../string.h"
 
 Expression putString(Expression rest, Expression top) {
-    return makeString(addCodeRanges(top, rest), String{top, rest});
+    return makeString(rest.range, String{top, rest});
 }
 
 Expression putStack(Expression rest, Expression top) {
-    return makeStack(addCodeRanges(top, rest), Stack{top, rest});
+    return makeStack(rest.range, Stack{top, rest});
 }
 
 Expression putEvaluatedStack(Expression rest, Expression top) {
-    return makeEvaluatedStack(addCodeRanges(top, rest),
-        EvaluatedStack{top, rest});
+    return makeEvaluatedStack(rest.range, EvaluatedStack{top, rest});
 }
 
 Expression putTable(Expression table, Expression item) {
-    const auto tuple = getDynamicBinaryTuple(item, "put table");
+    const auto tuple = getBinaryTuple(item, "put table");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
-    std::string s;
-    serialize(s, key);
+    auto buffer = StringBuilder{};
+    buffer = serialize(buffer, key);
+    auto s = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     rows[s] = {key, value};
     return table;
 }
@@ -42,12 +39,17 @@ Expression putTableTyped(Expression table, Expression item) {
     if (item.type == ANY) {
         return table;
     }
-    const auto tuple = getStaticBinaryTuple(item, "putTable");
+    const auto tuple = getBinaryTuple(item, "putTable");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto key = tuple.left;
     const auto value = tuple.right;
     auto& rows = storage.evaluated_tables.at(table.index).rows;
-    std::string s;
-    serialize_types(s, key);
+    auto buffer = StringBuilder{};
+    buffer = serialize_types(buffer, key);
+    auto s = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     rows[s] = {key, value};
     return table;
 }
@@ -56,31 +58,27 @@ namespace container_functions {
 
 Expression clear(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return Expression{EMPTY_STACK, 0, CodeRange{}};
-        case EMPTY_STACK: return Expression{EMPTY_STACK, 0, CodeRange{}};
-        case STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
-        case EMPTY_STRING: return Expression{EMPTY_STRING, 0, CodeRange{}};
+        case PARSE_ERROR: return in;
+        case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
+        case EMPTY_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
+        case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
+        case EMPTY_STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
         case NUMBER: return makeNumber(CodeRange{}, 0);
-        case YES: return Expression{NO, 0, CodeRange{}};
+        case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "clear operation");
+        default: return makeEvaluateError(in.range,
+            "I found an error during evaluation.\n"
+            "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
 Expression clearTyped(Expression in) {
     // TODO: shouldn't clear EVALUATED_STACK give EMPTY_STACK,
     // so that it can be populated with items of different type?
-    //switch (in.type) {
-    //    case EVALUATED_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
-    //    case EMPTY_STACK: return makeEmptyStack(CodeRange{}, EmptyStack{});
-    //    case STRING: return makeEmptyString(CodeRange{}, EmptyString{});
-    //    case EMPTY_STRING: return makeEmptyString(CodeRange{}, EmptyString{});
-    //    case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
-    //    case NUMBER: return makeNumber(CodeRange{}, 0);
-    //    default: throw UnexpectedExpression(in.type, "clear operation");
-    //}
     switch (in.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return in;
         case EMPTY_STACK: return in;
         case STRING: return in;
@@ -89,32 +87,36 @@ Expression clearTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(in.type, "clearTyped operation");
+        default: return makeEvaluateError(in.range,
+            "I found an error during type checking.\n"
+            "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
 Expression putNumber(Expression collection, Expression item) {
     if (item.type != ANY && item.type != NUMBER) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the operation put!(NUMBER item). " +
-                "\nIt expects the item to be a " + NAMES[NUMBER] + "," +
-                "\nbut now it got a " + NAMES[item.type] +
-                ".\n"
+        return makeEvaluateError(collection.range,
+            "\n\nI have found a static type error.\n"
+            "It happens for the operation put!(NUMBER item).\n"
+            "It expects the item to be a %s,\n"
+            "but now it got a %s.\n",
+            getExpressionName(NUMBER),
+            getExpressionName(item.type)
         );
     }
-    return makeNumber({}, getNumber(collection) + getNumber(item));
-}
-
-Expression putBoolean(Expression, Expression item) {
-    return item;
+    return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
 }
 
 Expression put(Expression in) {
-    const auto tuple = getDynamicBinaryTuple(in, "put");
+    const auto tuple = getBinaryTuple(in, "put");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return putString(collection, item);
@@ -123,18 +125,25 @@ Expression put(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: throw UnexpectedExpression(in.type, "put operation");
+        default: return makeEvaluateError(in.range,
+            "I found an error during evaluation.\n"
+            "The put function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
 Expression putTyped(Expression in) {
-    const auto tuple = getStaticBinaryTuple(in, "put");
+    const auto tuple = getBinaryTuple(in, "put");
+    if (!tuple.ok) {
+        return tuple.error;
+    }
     const auto item = tuple.left;
     const auto collection = tuple.right;
     if (item.type == ANY) {
         return collection;
     }
     switch (collection.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return collection; // TODO: type check item
@@ -143,14 +152,17 @@ Expression putTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: throw UnexpectedExpression(in.type, "putTyped operation");
+        default: return makeEvaluateError(in.range,
+            "I found an error during type checking.\n"
+            "The put function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
 template<typename T>
 Expression takeTable(const T& table) {
     if (table.empty()) {
-        throw std::runtime_error("Cannot take item from empty table");
+        return makeEvaluateError({}, "Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple2(pair.key, pair.value);
@@ -160,7 +172,7 @@ template<typename T>
 Expression takeTableTyped(const T& table, Expression expression) {
     const auto range = expression.range;
     if (table.empty()) {
-        return makeEvaluatedTuple2(Expression{ANY, 0, range}, Expression{ANY, 0, range});
+        return makeEvaluatedTuple2(Expression{0, range, ANY}, Expression{0, range, ANY});
     }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple2(pair.key, pair.value);
@@ -168,25 +180,29 @@ Expression takeTableTyped(const T& table, Expression expression) {
 
 template<typename T>
 Expression dropTable(const T& table) {
-    return makeEvaluatedTableView({}, EvaluatedTableView{++table.begin(), table.end()});
+    return makeEvaluatedTableView(CodeRange{}, EvaluatedTableView{++table.begin(), table.end()});
 }
 
 Expression dropNumber(Expression in) {
-    return makeNumber({}, getNumber(in) - 1);
+    return makeNumber(CodeRange{}, getNumber(in) - 1);
 }
 
 Expression take(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
-        case STRING: return storage.strings.at(index).top;
+        case PARSE_ERROR: return in;
+        case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
+        case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
-        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.at(index));
-        case NUMBER: return makeNumber({}, 1);
+        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.data[index]);
+        case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(type, "take");
+        default: return makeEvaluateError(in.range,
+            "I found an error during evaluation.\n"
+            "The take function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
@@ -194,36 +210,45 @@ Expression takeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case EVALUATED_STACK: return storage.evaluated_stacks.at(index).top;
-        case STRING: return storage.strings.at(index).top;
+        case PARSE_ERROR: return in;
+        case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
+        case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
-        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.at(index), in);
-        case EMPTY_STACK: return Expression{ANY, 0, in.range};
-        case EMPTY_STRING: return Expression{CHARACTER, 0, in.range};
+        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.data[index], in);
+        case EMPTY_STACK: return Expression{0, in.range, ANY};
+        case EMPTY_STRING: return Expression{0, in.range, CHARACTER};
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: throw UnexpectedExpression(type, "take");
+        default: return makeEvaluateError(in.range,
+            "I found an error during type checking.\n"
+            "The take function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
 Expression drop(Expression in) {
     switch (in.type) {
-        case EVALUATED_STACK: return storage.evaluated_stacks.at(in.index).rest;
-        case STRING: return storage.strings.at(in.index).rest;
+        case PARSE_ERROR: return in;
+        case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
+        case STRING: return storage.strings.data[in.index].rest;
         case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
-        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.at(in.index));
+        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.data[in.index]);
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
         case NO: return in;
-        case YES: return Expression{NO, 0, CodeRange{}};
-        default: throw UnexpectedExpression(in.type, "drop");
+        case YES: return Expression{0, CodeRange{}, NO};
+        default: return makeEvaluateError(in.range,
+            "I found an error during evaluation.\n"
+            "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
+        );
     }
 }
 
 Expression dropTyped(Expression in) {
     switch (in.type) {
+        case PARSE_ERROR: return in;
         case EVALUATED_STACK: return in;
         case STRING: return in;
         case EVALUATED_TABLE: return in;
@@ -233,47 +258,50 @@ Expression dropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: throw UnexpectedExpression(in.type,
-            "drop typed" + describeLocation(in.range)
+        default: return makeEvaluateError(in.range,
+            "I found an error during type checking.\n"
+            "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
         );
     }
 }
 
 Expression get(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got a " + NAMES[in.type] +
-                ".\n"
+        return makeEvaluateError(in.range,
+            "\n\nI have found a dynamic type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got a %s.\n",
+            getExpressionName(in.type)
         );
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
+    const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got " + std::to_string(count) + "items" +
-                ".\n"
+        return makeEvaluateError({},
+            "\n\nI have found a dynamic type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got %zu items.\n",
+            count
         );
     }
-    const auto key = storage.expressions.at(evaluated_tuple.first + 0);
-    const auto table = storage.expressions.at(evaluated_tuple.first + 1);
-    const auto default_value = storage.expressions.at(evaluated_tuple.first + 2);
+    const auto key = storage.expressions.data[evaluated_tuple.indices.data + 0];
+    const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
+    const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple where the second item is a table," +
-                "\nbut now it got a " + NAMES[table.type] +
-                ".\n"
+        return makeEvaluateError(table.range,
+            "\n\nI have found a dynamic type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple where the second item is a table,\n"
+            "but now it got a %s.\n",
+            getExpressionName(table.type)
         );
     }
-    std::string name;
-    serialize(name, key);
+    auto buffer = StringBuilder{};
+    buffer = serialize(buffer, key);
+    auto name = makeStdString(buffer);
+    FREE_DARRAY(buffer);
     const auto& rows = storage.evaluated_tables.at(table.index).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?
@@ -282,34 +310,34 @@ Expression get(Expression in) {
 
 Expression getTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got a " + NAMES[in.type] +
-                ".\n"
+        return makeEvaluateError(in.range, 
+            "\n\nI have found a static type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got a %s.\n",
+            getExpressionName(in.type)
         );
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.at(in.index);
-    const auto count = evaluated_tuple.last - evaluated_tuple.first;
+    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
+    const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a static type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple of three items," +
-                "\nbut now it got " + std::to_string(count) + "items" +
-                ".\n"
+        return makeEvaluateError({},
+            "\n\nI have found a static type error.\n"
+            "It happens for the function get!(key table default).\n"
+            "It expects a tuple of three items,\n"
+            "but now it got %zu items.\n",
+            count
         );
     }
-    const auto table = storage.expressions.at(evaluated_tuple.first + 1);
-    const auto default_value = storage.expressions.at(evaluated_tuple.first + 2);
+    const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
+    const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
-        throw std::runtime_error(
-            std::string{"\n\nI have found a dynamic type error."} +
-                "\nIt happens for the function get!(key table default). " +
-                "\nIt expects a tuple where the second item is a table," +
-                "\nbut now it got a " + NAMES[table.type] +
-                ".\n"
+        return makeEvaluateError(table.range, 
+            "\n\nI have found a dynamic type error.\n"
+            "\nIt happens for the function get!(key table default).\n"
+            "It expects a tuple where the second item is a table,\n"
+            "but now it got a %s.\n",
+            getExpressionName(table.type)
         );
     }
     return default_value;

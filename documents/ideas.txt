@@ -1,8 +1,27 @@
 TYPE SYSTEM
+* Type ascriptions like old typescript syntax
+  - in <Number>x out <Number>x
+  - Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
+  - Maybe just allow types for function headers?
+  - Maybe model sum types by allowing multiple types inside <> like:
+    - <Square Circle Rectangle>my_shape
+    - Avoids a general concept like: union[Square Circle Rectangle], which is meaningful for types but maybe not for values.
+    - The downside is that <Square Circle Rectangle> could be repetitive if it appears in many places,
+      in that case it is convenient to define a type like: Shape = union[Square Circle Rectangle]
+  - Maybe it is the wrong idea to have type ascriptions tied to a single expression or function input or output?
+    Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
+    - assert a < b < x
+    - zip2 = in (<List>list0 <List>list1) out <[(take!list0 take!list1)]> ...
 * Types & Prototypes
-* Maybe types should not be re-evaluated for every function call?
-  - Could store evaluted types if we have EvaluatedFunction structs.
-    - So EvaluatedFunction sets both environment and types of arguments.
+* Dictionary composition, row polymorphism, like purescript, jsonnet, dhall, CUE, GCL (Google Configuration Language):
+  - ColorARGB!{red=255}
+  - ColorARGB|{red=255}
+  - ColorARGB+{red=255}
+  - ColorARGB&{red=255}
+  - ColorARGB//{red=255}
+  - compose!(ColorARGB, {red=255})
+  - Put!(ColorARGB {red=255})
+  - color += {red=255}
 * Sort out sub-type relation and consistent relation.
   - TypedExpression and function arguments are of on the form SuperType:SubType
   - a subtype can be used where the supertype is expected.
@@ -173,6 +192,38 @@ STANDARD LIBRARY
 
 
 LANGUAGE SYNTAX & SEMANTICS
+* Rework for loops.
+for it in [3 8 9]
+  sum += take!it
+  sum += *it
+end
+
+for it in 9
+  sum += it
+end
+
+for _ in not?has_collision?intersection
+  return
+end
+
+when not?has_collision?intersection
+  return
+end
+
+* Consider syntax similar to Brett Slatkin, Haskell, Elm, Lisp, Python
+  - Trade less noise for non-nested function calls, but more noise for nested function calls and collections
+  - f x y
+  - list a b
+  - Nested function calls or collections can either bind in a fixed way: f x y -> f(x,y)   f(g x) -> f(g(x))   f(list x y)
+  - Nested function calls or collections could also not be allowed.
+* Besides dictionaries we can define symbols as function parameters.
+  - What would it look like if we could only define symbols in dictionaries?
+    - f = {x=in!0 y=in!1 out=add!(mul!(x x) mul!(x x))}
+    - f = {x=x@in y=y@in out=add!(mul!(x x) mul!(x x))}
+    - get0 = {out=in!0}
+  - Could also be used for local computations without in parameters
+    - {x=1.2 y=2.2 out=add!(mul!(x x) mul!(x x))}
+  - Pros: simple & concise. Cons: function header and body are merged to one. Cannot just look at header to understand input & output.
 * Generic container interface. Make operations like inc,dec,drop,put,+=,--,get0,take consistent with serialization.
   - What do we refer to as first and last of a stack?
   - Should "take" give first or last?
@@ -222,11 +273,40 @@ LANGUAGE SYNTAX & SEMANTICS
   - expression
 
 SYSTEM IMPLEMENTATION
+* Transpile to:
+  * LLVM
+    + Performance
+    + Well known
+    - Complicated
+  * Webassembly
+    + Well known
+    - Low level
+  * C
+    + Performance
+    + Well known language
+    - Difficult with closures
+    - Requires shipping a C compiler
+  * C++
+    + Performance
+    + Well known language
+    - Requires shipping a C++ compiler
+  * Lua !
+    + Simple
+    + Embeddable
+    + Well known
+    + vcpkg
+    * Modes
+      * Lua Interpreter (fast)
+      * LuaJIT Interpreter (faster)
+      * LuaJit JIT (fastest)
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
 * Packing Expressions:
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
+* Maybe types should not be re-evaluated for every function call?
+  - Could store evaluted types if we have EvaluatedFunction structs.
+    - So EvaluatedFunction sets both environment and types of arguments.
 * Add arrays
 * Improve EvaluatedDictionary.
   - EvaluatedDictionary is used both during evaluation and after evaluation.
@@ -249,6 +329,7 @@ SYSTEM IMPLEMENTATION
     - Loop resolution for dictionaries.
     - Name resolution in general.
     - Name for this pass: (name) bind/binding, (name) resolve/resolution, semantic analysis.
+    - TS compiler has this step and calls it binding
   - Could be easy to start by not having separate pass but compute it the first time that we look up in evaluation,
     and then set the steps to parent. Then if the steps are set we can use that the next time we do lookup.
   - Links:
@@ -266,22 +347,32 @@ SYSTEM IMPLEMENTATION
   - or just a single int for index in that dictionary, and then visit parents until it is found. O(parents)
   - How to deal with dictionaries where names are defined in different order?
     - Could define index-order alphabetically or using some hash-function.
+    - I think this only matters for child@parent lookup.
   - How to deal with dictionaries that are superset of interface?
+    - Is it only a problem for child@parent lookup? If so wait with solving it.
     - Could maybe rely on some hash-function?
     - Could stop supporting typed generic dictionaries and require dynamic ANY for them.
     - Generic dictionaries is so far also the only thing that is causing the supertype:subtype relation to not be symmetric,
       which could be a sign of complexity.
     - Allow private fields that are only present during the dictionary evaluation phase,
       but removed after the dictionary has been evaluated.
-      publix x = 1
-      _x = 1
+      Can annotate private with _ like in python (good), or case like in Go or keyword.
+      {_c = 1 x = _c y = _c}
+      {c = 1 x = c y = c}
+      {private c = 1 x = c y = c}
+      {c = 1 public x = c public y = c}
   - Store a name-to-index hash-map for each dictionary type.
   - Use a bitset to store what names are in a dictionary.
     - Compare bitset vs sorted array of indices.
   - Add a new expression EvaluatedName
     - Store both name and also index and perhaps steps to parent.
     - Compute it during type-evaluation phase.
-    - Requires that dictionaries of the same type has members indexable the same way.
+    - Requires that dictionaries of the same type has members indexable the same way. Does it really? Or does that only matter for child-lookup?
+  - Start with binding name lookup in current scope and parent scopes. That should be static and lexically known.
+    - Child lookup on the other hand is more dynamic.
+    - Could be handled on an execution stack, with all names in scope, and indexing backwards.
+      Use WHILE constructing the current "open" dictionaries. Different from when a dictionary has been constructed and is close.
+    - Think about how to handle function closures.
 * Nodes & Passes:
   - Parse
     - serialize
@@ -354,6 +445,11 @@ https://www.reddit.com/r/ProgrammingLanguages/comments/mdtdxq/unifying_objects_a
   - Evaluation: tree -> tree. (graphical nodes? algebra)
 
 ERROR HANDLING
+* Add Errors as expressions, and do not use exceptions.
+  - Parsing error / Syntax error
+  - Type checking error
+  - Run-time error
+  - Custom errors defined by user
 * Tests for syntax error and run-time error.
   - Testing book suggested to add information to Exceptions to make them easier to test:
     e.message (free form message that is shown to user but not tested)
@@ -376,8 +472,16 @@ TOOLS:
 * Command line interface for reading source from file and piping it to interpretor
 * Web interpreter using wasm.
 * Code formatting
+  - https://mcyoung.xyz/2025/03/11/formatters/
+  - https://yorickpeterse.com/articles/how-to-write-a-code-formatter/
+  - https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf
+  - https://lindig.github.io/papers/strictly-pretty-2000.pdf
   - Indentaiton and line breaks.
   - Colors and syntax high-lighting.
+    - Textmate grammars seem to be much easier than LSP or Treesitter.
+    - Textmate grammars are supported by for example Sublime and Vscode.
+  - Learn By Building: Language Server Protocol (TJ DeVries)
+    https://www.youtube.com/watch?v=YsdlcQoHqPY&t=831s
   - Implement tool that takes a source file and outputs an html.
   - Homepage
   - Start by describing rules for wrapping different expressions.

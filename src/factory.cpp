@@ -1,10 +1,13 @@
 #include "factory.h"
 
 #include <cstring>
-#include <unordered_map>
-#include <vector>
 
+#include <carma/carma.h>
+#include <carma/carma_table.h>
+
+#include "exceptions.h"
 #include "passes/serialize.h"
+#include "string.h"
 
 Storage storage;
 
@@ -17,29 +20,96 @@ Expression makeExpression(
     ExpressionType type,
     ArrayType& array
 ) {
-    array.emplace_back(std::move(expression));
-    return Expression{type, array.size() - 1, code};
+    APPEND(array, expression);
+    return Expression{array.count - 1, code, type};
 }
 
 } // namespace
 
 void clearMemory() {
-    storage = Storage{};
+    FREE_DARRAY(storage.code_characters);
+    FREE_DARRAY(storage.code_rows);
+    FREE_DARRAY(storage.code_columns);
+    
+    FREE_DARRAY(storage.dynamic_expressions);
+    FREE_DARRAY(storage.typed_expressions);
+    FREE_DARRAY(storage.dictionaries);
+    FREE_DARRAY(storage.evaluated_dictionaries);
+    FREE_DARRAY(storage.conditionals);
+    FREE_DARRAY(storage.is_expressions);
+    FREE_DARRAY(storage.alternatives);
+    FREE_DARRAY(storage.functions);
+    FREE_DARRAY(storage.built_in_functions);
+    FREE_DARRAY(storage.dictionary_functions);
+    FREE_DARRAY(storage.tuple_functions);
+    FREE_DARRAY(storage.tuples);
+    FREE_DARRAY(storage.evaluated_tuples);
+    FREE_DARRAY(storage.stacks);
+    FREE_DARRAY(storage.evaluated_stacks);
+    FREE_DARRAY(storage.evaluated_table_views);
+    FREE_DARRAY(storage.child_lookups);
+    FREE_DARRAY(storage.function_applications);
+    FREE_DARRAY(storage.symbol_lookups);
+    FREE_DARRAY(storage.arguments);
+    FREE_DARRAY(storage.while_statements);
+    FREE_DARRAY(storage.for_statements);
+    FREE_DARRAY(storage.for_simple_statements);
+    FREE_DARRAY(storage.while_end_statements);
+    FREE_DARRAY(storage.for_end_statements);
+    FREE_DARRAY(storage.for_simple_end_statements);
+    FREE_DARRAY(storage.definitions);
+    FREE_DARRAY(storage.put_assignments);
+    FREE_DARRAY(storage.put_each_assignments);
+    FREE_DARRAY(storage.drop_assignments);
+    FREE_DARRAY(storage.statements);
+    FREE_DARRAY(storage.expressions);
+    FREE_DARRAY(storage.strings);
+    FREE_DARRAY(storage.rows);
+    FREE_DARRAY(storage.tables);
+    FREE_DARRAY(storage.names);
+    
+    FREE_TABLE(storage.name_indices);
+    
+    storage.evaluated_tables.clear();
 }
 
 // MAKERS:
 
+#define BIT_CAST(source, target) do { \
+    static_assert(sizeof(source) == sizeof(target), "BIT_CAST"); \
+    memcpy(&target, &source, sizeof(source)); \
+} while (0)
+
 Expression makeNumber(CodeRange code, Number expression) {
-    static_assert(sizeof(Number) == sizeof(size_t), "");
     auto result = Expression{};
     result.type = NUMBER;
     result.range = code;
-    memcpy(&result.index, &expression, sizeof(Number));
+    BIT_CAST(expression, result.index);
+    return result;
+}
+
+Expression makeParseError(CodeRange code, ParseError expression) {
+    auto result = Expression{};
+    result.type = PARSE_ERROR;
+    result.range = code;
+    BIT_CAST(expression, result.index);
+    return result;
+}
+
+Expression makeEvaluateError(CodeRange code, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    EvaluateError expression = format_cstring_v(format, args);
+    va_end(args);
+    auto result = Expression{};
+    result.type = EVALUATE_ERROR;
+    result.range = code;
+    BIT_CAST(expression, result.index);
     return result;
 }
 
 Expression makeCharacter(CodeRange code, Character expression) {
-    return Expression{CHARACTER, static_cast<size_t>(expression), code};
+    return Expression{static_cast<size_t>(expression), code, CHARACTER};
 }
 
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression) {
@@ -63,7 +133,7 @@ Expression makeAlternative(CodeRange code, Alternative expression) {
 }
 
 Expression makeDictionary(CodeRange code, Dictionary expression) {
-    return makeExpression(code, std::move(expression), DICTIONARY, storage.dictionaries);
+    return makeExpression(code, expression, DICTIONARY, storage.dictionaries);
 }
 
 Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
@@ -95,11 +165,11 @@ Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression) {
 }
 
 Expression makeEvaluatedTuple2(Expression a, Expression b) {
-    const auto first = storage.expressions.size();
-    storage.expressions.push_back(a);
-    storage.expressions.push_back(b);
-    const auto last = storage.expressions.size();
-    return makeEvaluatedTuple({}, EvaluatedTuple{first, last});
+    const auto first = storage.expressions.count;
+    APPEND(storage.expressions, a);
+    APPEND(storage.expressions, b);
+    const auto last = storage.expressions.count;
+    return makeEvaluatedTuple(CodeRange{}, EvaluatedTuple{Indices{first, last - first}});
 }
 
 Expression makeStack(CodeRange code, Stack expression) {
@@ -115,7 +185,8 @@ Expression makeTable(CodeRange code, Table expression) {
 }
 
 Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
-    return makeExpression(code, expression, EVALUATED_TABLE, storage.evaluated_tables);
+    storage.evaluated_tables.emplace_back(std::move(expression));
+    return Expression{storage.evaluated_tables.size() - 1, code, EVALUATED_TABLE};
 }
 
 Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression) {
@@ -134,15 +205,18 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
     return makeExpression(code, expression, LOOKUP_SYMBOL, storage.symbol_lookups);
 }
 
-Expression makeName(CodeRange code, Name expression) {
-    const auto name_index = storage.name_indices.find(expression);
-    if (name_index == storage.name_indices.end()) {
-        storage.name_indices[expression] = storage.names.size();
-        return makeExpression(code, expression, NAME, storage.names);
+Expression makeName(CodeRange code, const char* data, size_t count) {
+    auto string = StringView{data, count};
+    auto index = SIZE_MAX;
+    GET_RANGE_KEY_VALUE(string, index, storage.name_indices);
+    if (index == SIZE_MAX) {
+        index = storage.names.count;
+        SET_RANGE_KEY_VALUE(string, index, storage.name_indices);
+        CONCAT(storage.names, string);
+        APPEND(storage.names, '\0');
+        return Expression{index, code, NAME};
     }
-    else {
-        return Expression{NAME, name_index->second, code};
-    }
+    return Expression{index, code, NAME};
 }
 
 Expression makeArgument(CodeRange code, Argument expression) {
@@ -196,19 +270,74 @@ Expression makeString(CodeRange code, String expression) {
 // GETTERS
 
 Character getCharacter(Expression expression) {
-    if (expression.index > 127) {
-        throw std::runtime_error{
-            "I found an error while retrieving a character. "
-            "A character should have an ASCII value in the range 0-127. "
-            "But I found one with the ASCII value " + std::to_string(expression.index)
-        };
-    }
-    return static_cast<Character>(expression.index);
+    CHECK_INTERNAL(expression.index <= 127, 
+        "I found an internal error while retrieving a character.\n"
+        "A character should have an ASCII value in the range 0-127.\n"
+        "But I found one with the ASCII value %zu.",
+        expression.index
+    );
+    return (Character)expression.index;
 }
 
 Number getNumber(Expression expression) {
-    static_assert(sizeof(Number) == sizeof(size_t), "");
     Number result;
-    memcpy(&result, &expression.index, sizeof(Number));
+    BIT_CAST(expression.index, result);
     return result;
+}
+
+ParseError getParseError(Expression expression) {
+    ParseError result;
+    BIT_CAST(expression.index, result);
+    return result;
+}
+
+EvaluateError getEvaluateError(Expression expression) {
+    EvaluateError result;
+    BIT_CAST(expression.index, result);
+    return result;
+}
+
+CodeRange makeCodeCharacters(const char* s) {
+    auto string = STRING_VIEW(s);
+    auto result = CodeRange{
+        CharacterIndex(storage.code_characters.count),
+        CharacterIndex(string.count)
+    };
+    auto column = CharacterIndex{1};
+    auto row = CharacterIndex{1};
+    FOR_EACH(character, string) {
+        APPEND(storage.code_characters, *character);
+        APPEND(storage.code_rows, row);
+        APPEND(storage.code_columns, column);
+        ++column;
+        if (*character == '\n') {
+            ++row;
+            column = 1;
+        }
+    }
+    return result;
+}
+
+char firstCharacter(CodeRange code) {
+    return storage.code_characters.data[code.data];
+}
+
+size_t firstColumn(CodeRange code) {
+    return storage.code_columns.data[code.data];
+}
+
+size_t firstRow(CodeRange code) {
+    return storage.code_rows.data[code.data];
+}
+
+char lastCharacter(CodeRange code) {
+    return storage.code_characters.data[code.data + code.count - 1];
+}
+
+size_t lastColumn(CodeRange code) {
+    return storage.code_columns.data[code.data + code.count - 1];
+}
+
+size_t lastRow(CodeRange code) {
+    return storage.code_rows.data[code.data + code.count - 1];
 }
