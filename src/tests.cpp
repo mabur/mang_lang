@@ -15,7 +15,7 @@ typedef struct TestCases {
 
 #define TEST_CASES(...) MAKE_RANGE(TestCases, __VA_ARGS__)
 
-int num_good_total= 0;
+int num_good_total = 0;
 int num_bad_total = 0;
 clock_t duration_total = 0;
 
