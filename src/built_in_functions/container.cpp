@@ -8,18 +8,42 @@
 #include "../string.h"
 
 Expression putString(Expression rest, Expression top) {
+    if (top.type == EVALUATE_ERROR) {
+        return top;
+    }
+    if (rest.type == EVALUATE_ERROR) {
+        return rest;
+    }
     return makeString(rest.range, String{top, rest});
 }
 
 Expression putStack(Expression rest, Expression top) {
+    if (top.type == EVALUATE_ERROR) {
+        return top;
+    }
+    if (rest.type == EVALUATE_ERROR) {
+        return rest;
+    }
     return makeStack(rest.range, Stack{top, rest});
 }
 
 Expression putEvaluatedStack(Expression rest, Expression top) {
+    if (top.type == EVALUATE_ERROR) {
+        return top;
+    }
+    if (rest.type == EVALUATE_ERROR) {
+        return rest;
+    }
     return makeEvaluatedStack(rest.range, EvaluatedStack{top, rest});
 }
 
 Expression putTable(Expression table, Expression item) {
+    if (table.type == EVALUATE_ERROR) {
+        return table;
+    }
+    if (item.type == EVALUATE_ERROR) {
+        return item;
+    }
     const auto tuple = getBinaryTuple(item, "put table");
     if (!tuple.ok) {
         return tuple.error;
@@ -36,6 +60,12 @@ Expression putTable(Expression table, Expression item) {
 }
 
 Expression putTableTyped(Expression table, Expression item) {
+    if (table.type == EVALUATE_ERROR) {
+        return table;
+    }
+    if (item.type == EVALUATE_ERROR) {
+        return item;
+    }
     if (item.type == ANY) {
         return table;
     }
