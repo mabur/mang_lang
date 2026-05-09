@@ -239,10 +239,12 @@ Expression evaluateLookupChild(
     const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
     if (child.type != EVALUATED_DICTIONARY) {
+        auto name = storage.names.data + lookup_child_struct.name;
         return makeEvaluateError({},
             "\n\nI have found a type error.\n"
-            "It happens when trying to lookup a child in a dictionary,\n"
+            "It happens when trying to lookup the child named \"%s\" in a dictionary,\n"
             "but instead of a dictionary I got a %s.\n",
+            name,
             getExpressionName(child.type)
         );
     }
