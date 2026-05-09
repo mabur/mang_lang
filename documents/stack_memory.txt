@@ -1,0 +1,52 @@
+STACK BASED MEMORY MANAGEMENT
+
+Improves performance but a bit tricky to implement. Wait until later.
+
+
+CHILD LOOKUP FOR INLINED DICTIONARY
+
+a@{a = 1}
+
+The inlined dictionary becomes dead/unreachable after the child-lookup.
+Could perhaps be handled with a special case in the AST?
+
+
+CALLING BUILT-IN FUNCTIONS
+
+add!(1 2)
+
+Calling a built-in function with an inlined tuple.
+The tuple becomes dead/unreachable after the function call.
+Could perhaps be handled with a special case in the AST?
+
+
+CALLING ANY FUNCTION
+
+f!(1 2)
+
+
+IMPLEMENTATION "SEMANTICS"
+
+* Atoms are already handled well.
+* Copy tuples on stack?
+* Copy dictionaries on stack?
+
+
+MEMORY ARENAS / POOLS / ARRAYS / STACKS
+
+* Differentiate between arrays used for AST nodes, and arrays used for evaluated values.
+* Treat the few arrays used for evaluated values as stacks.
+* Introduce a struct that describes the state of the evaluated stacks at the start of a scope.
+  - Restore those stacks on scope exit.
+
+struct EvaluationStackSnapshot {
+	size_t tuples_count;
+	size_t dictionaries_count;
+	size_t definitions_count;
+}
+
+* Could start by implementing it for tuples, and then move on to dictionaries.
+* Possible implementation break down:
+  - Add StackSnapshots.
+  - Implement deep copy (tuples) on scope exit.
+  - Restore StackSnapshots.
