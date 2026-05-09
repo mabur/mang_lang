@@ -1105,7 +1105,7 @@ Expression evaluateFunctionApplicationTypes(
         default: return makeEvaluateError(function_application.range,
             "I found an error during type checking.\n"
             "The application operator (!) received an %s, which I did not expect.",
-            getExpressionName(function_application.type)
+            getExpressionName(function.type)
         );
     }
 }
@@ -1142,7 +1142,7 @@ Expression evaluateFunctionApplication(
         default: return makeEvaluateError(function_application.range,
             "I found an error during evaluation.\n"
             "The application operator (!) received an %s, which I did not expect.",
-            getExpressionName(function_application.type)
+            getExpressionName(function.type)
         );
     }
 }
