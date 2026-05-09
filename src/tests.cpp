@@ -821,6 +821,9 @@ int main() {
         {"character!97", "'a'"},
         {"character!122", "'z'"},
     ));
+    testEvaluateAll("character constants", TEST_CASES(
+        {"newline", "'\n'"},
+    ));
     testEvaluateTypes("number constants", TEST_CASES(
         {"inf", "NUMBER"},
         {"-inf", "NUMBER"},
