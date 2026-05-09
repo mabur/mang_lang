@@ -396,9 +396,10 @@ StringBuilder serializeString(StringBuilder s, Expression expression) {
     return s;
 }
 
-StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message) {
+StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message, CodeRange range) {
     CLEAR(s);
     CONCAT_CSTRING(s, error_message);
+    CONCAT_CSTRING(s, describeLocation(range));
     return s;
 }
 
@@ -406,8 +407,8 @@ StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message) 
 
 StringBuilder serialize_types(StringBuilder s, Expression expression) {
     switch (expression.type) {
-        case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression));
-        case EVALUATE_ERROR: return serializeErrorMessage(s, getEvaluateError(expression));
+        case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression), expression.range);
+        case EVALUATE_ERROR: return serializeErrorMessage(s, getEvaluateError(expression), expression.range);
 
         case EVALUATED_DICTIONARY: return serializeEvaluatedDictionary(s, serialize_types, storage.evaluated_dictionaries.data[expression.index]);
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize_types, expression);
@@ -420,8 +421,8 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
 
 StringBuilder serialize(StringBuilder s, Expression expression) {
     switch (expression.type) {
-        case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression));
-        case EVALUATE_ERROR: return serializeErrorMessage(s, getEvaluateError(expression));
+        case PARSE_ERROR: return serializeErrorMessage(s, getParseError(expression), expression.range);
+        case EVALUATE_ERROR: return serializeErrorMessage(s, getEvaluateError(expression), expression.range);
 
         case CHARACTER: return serializeCharacter(s, getCharacter(expression));
         case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
