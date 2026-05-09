@@ -238,10 +238,13 @@ Expression evaluateLookupChild(
 ) {
     const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
+    if (child.type == EVALUATE_ERROR) {
+        return child;
+    }
     if (child.type != EVALUATED_DICTIONARY) {
         auto name = storage.names.data + lookup_child_struct.name;
         return makeEvaluateError(lookup_child.range,
-            "\n\nI have found a type error.\n"
+            "\n\nI have found an error.\n"
             "It happens when trying to lookup the child named \"%s\" in a dictionary,\n"
             "but instead of a dictionary I got a %s.\n",
             name,
@@ -472,7 +475,8 @@ BooleanResult boolean(Expression expression) {
     const auto type = expression.type;
     const auto index = expression.index;
     switch (type) {
-    case PARSE_ERROR: return MAKE(BooleanResult, .value=false);
+    case PARSE_ERROR: return MAKE(BooleanResult, .error=expression);
+    case EVALUATE_ERROR: return MAKE(BooleanResult, .error=expression);
     case EVALUATED_TABLE: return MAKE(BooleanResult, .value=!storage.evaluated_tables.at(index).empty());
     case EVALUATED_TABLE_VIEW: return MAKE(BooleanResult, .value=!storage.evaluated_table_views.data[index].empty());
     case NUMBER: return MAKE(BooleanResult, .value=static_cast<bool>(getNumber(expression)));
