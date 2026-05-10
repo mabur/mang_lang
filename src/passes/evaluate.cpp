@@ -327,12 +327,12 @@ Expression applyFunctionTuple(
             getExpressionName(input.type)
         );
     }
-    const auto tuple = storage.evaluated_tuples.data[input.index];
-    const auto tuple_count = tuple.indices.count;
-    const auto function_struct = storage.tuple_functions.data[function.index];
-    const auto first_argument = BEGIN_POINTER(function_struct.arguments);
-    const auto last_argument = END_POINTER(function_struct.arguments);
-    const auto num_inputs = last_argument - first_argument;
+    auto tuple = storage.evaluated_tuples.data[input.index];
+    auto tuple_count = tuple.indices.count;
+    auto function_struct = storage.tuple_functions.data[function.index];
+    size_t first_argument = BEGIN_POINTER(function_struct.arguments);
+    size_t last_argument = END_POINTER(function_struct.arguments);
+    size_t num_inputs = last_argument - first_argument;
     
     if (num_inputs != tuple_count) {
         return makeEvaluateError({},
