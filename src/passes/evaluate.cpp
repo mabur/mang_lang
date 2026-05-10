@@ -397,8 +397,9 @@ LookupResult lookupDictionaryFirstTime(
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
         auto symbol = storage.names.data + name.global_index;
+        auto expression_name = getExpressionName(expression.type);
         return LookupResult{makeEvaluateError({},
-            "Cannot find symbol %s in environment of type %s", symbol, getExpressionName(expression.type))};
+            "Cannot find symbol %s in environment of type %s", symbol, expression_name)};
     }
     const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
@@ -413,8 +414,9 @@ Expression lookupDictionarySecondTime(
 ) {
     if (expression.type != EVALUATED_DICTIONARY) {
         auto symbol = storage.names.data + name.global_index;
+        auto expression_name = getExpressionName(expression.type);
         return makeEvaluateError({},
-            "Cannot find symbol %s in environment of type %s", symbol, getExpressionName(expression.type));
+            "Cannot find symbol %s in environment of type %s", symbol, expression_name);
     }
     const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (steps == 0) {
