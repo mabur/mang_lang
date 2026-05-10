@@ -699,7 +699,7 @@ Expression evaluateIsTypes(
     FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        if (alternative_expression.type == EVALUATE_ERROR) return result;
+        if (alternative_expression.type == EVALUATE_ERROR) return alternative_expression;
         auto type_check = checkTypes(else_expression, alternative_expression, "is");
         if (!type_check.ok) return type_check.error;
     }
@@ -805,7 +805,7 @@ Expression evaluateDictionaryTypes(
             const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
-            if (value.type == EVALUATE_ERROR) return result;
+            if (value.type == EVALUATE_ERROR) return value;
             // TODO: is this a principled approach?
             if (value.type != ANY) {
                 setDictionaryDefinition(result, definition.name, value);
@@ -815,7 +815,7 @@ Expression evaluateDictionaryTypes(
             const auto put_assignment = storage.put_assignments.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
-            if (value.type == EVALUATE_ERROR) return result;
+            if (value.type == EVALUATE_ERROR) return value;
             const auto current = getDictionaryDefinition(result, put_assignment.name);
             const auto tuple = makeEvaluatedTuple2(value, current);
             const auto new_value = container_functions::putTyped(tuple);
@@ -825,7 +825,10 @@ Expression evaluateDictionaryTypes(
             const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
-            if (container.type == EVALUATE_ERROR) return result;
+            if (container.type == EVALUATE_ERROR) {
+                return container;
+            }
+
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::takeTyped(container);
