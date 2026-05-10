@@ -439,6 +439,11 @@ Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
     }
 }
 
+Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
+    auto name = storage.symbol_lookups.data[symbol.index].name;
+    return lookupDictionary(name, environment);
+}
+    
 Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
@@ -1189,7 +1194,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.data[expression.index].name, environment);
+        case LOOKUP_SYMBOL: return lookupSymbolInDictionary(expression, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate_types, expression, environment);
@@ -1235,7 +1240,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE: return evaluateFunctionTuple(expression, environment);
         case FUNCTION_DICTIONARY: return evaluateFunctionDictionary(expression, environment);
-        case LOOKUP_SYMBOL: return lookupDictionary(storage.symbol_lookups.data[expression.index].name, environment);
+        case LOOKUP_SYMBOL: return lookupSymbolInDictionary(expression, environment);
 
         // These are different for types and values, but templated:
         case STACK: return evaluateStack(evaluate, expression, environment);
