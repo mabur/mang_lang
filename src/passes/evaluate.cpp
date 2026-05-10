@@ -442,6 +442,7 @@ Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
 Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
+    if (input.type == EVALUATE_ERROR) return input;
     const auto function_struct = storage.built_in_functions.data[function.index];
     return function_struct.function(input);
 }
@@ -652,9 +653,11 @@ Expression evaluateConditionalTypes(
 ) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
     FOR_EACH(a, conditional_struct.alternatives) {
-        evaluate_types(storage.alternatives.data[a].left, environment);
+        auto result = evaluate_types(storage.alternatives.data[a].left, environment);
+        if (result.type == EVALUATE_ERROR) return result;
     }
     const auto else_expression = evaluate_types(conditional_struct.expression_else, environment);
+    if (else_expression.type == EVALUATE_ERROR) return else_expression;
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(
@@ -685,15 +688,18 @@ Expression evaluateIsTypes(
     Expression is, Expression environment
 ) {
     const auto is_struct = storage.is_expressions.data[is.index];
-    evaluate_types(is_struct.input, environment);
+    auto result = evaluate_types(is_struct.input, environment);
+    if (result.type == EVALUATE_ERROR) return result;
     FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
-        evaluate_types(alternative.left, environment);
+        result = evaluate_types(alternative.left, environment);
+        if (result.type == EVALUATE_ERROR) return result;
     }
     const auto else_expression = evaluate_types(is_struct.expression_else, environment);
     FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(alternative.right, environment);
+        if (alternative_expression.type == EVALUATE_ERROR) return result;
         auto type_check = checkTypes(else_expression, alternative_expression, "is");
         if (!type_check.ok) return type_check.error;
     }
@@ -799,6 +805,7 @@ Expression evaluateDictionaryTypes(
             const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
+            if (value.type == EVALUATE_ERROR) return result;
             // TODO: is this a principled approach?
             if (value.type != ANY) {
                 setDictionaryDefinition(result, definition.name, value);
@@ -808,6 +815,7 @@ Expression evaluateDictionaryTypes(
             const auto put_assignment = storage.put_assignments.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
+            if (value.type == EVALUATE_ERROR) return result;
             const auto current = getDictionaryDefinition(result, put_assignment.name);
             const auto tuple = makeEvaluatedTuple2(value, current);
             const auto new_value = container_functions::putTyped(tuple);
@@ -817,6 +825,7 @@ Expression evaluateDictionaryTypes(
             const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
+            if (container.type == EVALUATE_ERROR) return result;
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = container_functions::takeTyped(container);
@@ -1089,6 +1098,7 @@ Expression evaluateFunctionApplicationTypes(
         storage.function_applications.data[function_application.index].child,
         environment
     );
+    if (input.type == EVALUATE_ERROR) return input;
     switch (function.type) {
         case PARSE_ERROR: return function;
         case EVALUATE_ERROR: return function;
