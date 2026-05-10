@@ -868,7 +868,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     
     auto i = size_t{0};
     while (i < statement_count) {
-        const auto statement = *(storage.statements.data + base_index + i);
+        const auto statement = storage.statements.data[base_index + i];
         const auto type = statement.type;
         if (type == DEFINITION) {
             const auto definition = storage.definitions.data[statement.index];
