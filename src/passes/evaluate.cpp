@@ -63,8 +63,8 @@ TypeCheck checkTypesEvaluatedTable(Expression super, Expression sub, const char*
 
 TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
-    const auto& tuple_super = storage.evaluated_tuples.data[super.index];
-    const auto& tuple_sub = storage.evaluated_tuples.data[sub.index];
+    const auto tuple_super = storage.evaluated_tuples.data[super.index];
+    const auto tuple_sub = storage.evaluated_tuples.data[sub.index];
     const auto super_count = tuple_super.indices.count;
     const auto sub_count = tuple_sub.indices.count;
     if (super_count != sub_count) {
@@ -85,8 +85,8 @@ TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char*
 
 TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
-    const auto& dictionary_super = storage.evaluated_dictionaries.data[super.index];
-    const auto& dictionary_sub = storage.evaluated_dictionaries.data[sub.index];
+    const auto dictionary_super = storage.evaluated_dictionaries.data[super.index];
+    const auto dictionary_sub = storage.evaluated_dictionaries.data[sub.index];
     FOR_EACH(i, dictionary_super.definitions) {
         auto definition_super = storage.definitions.data[i];
         const auto name_super = definition_super.name.global_index;
@@ -175,8 +175,8 @@ Expression evaluateStack(Evaluator evaluator,
                 getExpressionName(stack.type));
         }
         const auto stack_struct = storage.stacks.data[stack.index];
-        const auto& top = stack_struct.top;
-        const auto& rest = stack_struct.rest;
+        const auto top = stack_struct.top;
+        const auto rest = stack_struct.rest;
         APPEND(items, evaluator(top, environment));
         stack = rest;
     }
@@ -251,7 +251,7 @@ Expression evaluateLookupChild(
             getExpressionName(child.type)
         );
     }
-    const auto& dictionary = storage.evaluated_dictionaries.data[child.index];
+    const auto dictionary = storage.evaluated_dictionaries.data[child.index];
     return requiredLookup(dictionary, lookup_child_struct.name);
 }
 
@@ -303,7 +303,7 @@ Expression applyFunctionDictionary(
         );
     }
     const auto function_struct = storage.dictionary_functions.data[function.index];
-    const auto& evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
+    const auto evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
     FOR_EACH(i, function_struct.arguments) {
         const auto argument = storage.arguments.data[i];
         const auto expression = requiredLookup(evaluated_dictionary, argument.name);
@@ -400,7 +400,7 @@ LookupResult lookupDictionaryFirstTime(
         return LookupResult{makeEvaluateError({},
             "Cannot find symbol %s in environment of type %s", symbol, getExpressionName(expression.type))};
     }
-    const auto& dictionary = storage.evaluated_dictionaries.data[expression.index];
+    const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
     if (result.ok) {
         return LookupResult{result.value, steps};
@@ -494,7 +494,7 @@ BooleanResult boolean(Expression expression) {
 }
 
 Expression applyTupleIndexing(Expression tuple, Expression input) {
-    const auto& tuple_struct = storage.evaluated_tuples.data[tuple.index];
+    const auto tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
         return makeEvaluateError(tuple.range,
             "\n\nI have found a type error.\n"
