@@ -44,5 +44,5 @@ if (NOT MSVC)
         target_compile_options(tests PRIVATE -Wall -pedantic -Werror)
 endif()
 
-#target_link_options(manglang PRIVATE -static)
-#target_link_options(tests PRIVATE -static)
+target_link_options(manglang PRIVATE -static)
+target_link_options(tests PRIVATE -static)
