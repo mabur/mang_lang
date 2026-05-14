@@ -43,7 +43,6 @@ const char* getExpressionName(ExpressionType type) {
         case NO: return "NO";
         case DYNAMIC_EXPRESSION: return "DYNAMIC_EXPRESSION";
         case TYPED_EXPRESSION: return "TYPED_EXPRESSION";
-        case PARSE_ERROR: return "PARSE_ERROR";
         case EVALUATE_ERROR: return "EVALUATE_ERROR";
         case ANY: return "ANY";
     }
@@ -51,5 +50,5 @@ const char* getExpressionName(ExpressionType type) {
 }
 
 bool isError(ExpressionType type) {
-    return type == PARSE_ERROR || type == EVALUATE_ERROR;
+    return type == EVALUATE_ERROR;
 }

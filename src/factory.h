@@ -88,7 +88,6 @@ ParseError getParseError(Expression expression);
 EvaluateError getEvaluateError(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
-Expression makeParseError(CodeRange code, ParseError expression);
 Expression makeEvaluateError(CodeRange code, const char* format, ...);
 Expression makeCharacter(CodeRange code, Character expression);
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);

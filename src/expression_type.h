@@ -42,7 +42,6 @@ enum ExpressionType {
     NO,
     DYNAMIC_EXPRESSION,
     TYPED_EXPRESSION,
-    PARSE_ERROR,
     EVALUATE_ERROR,
     ANY,
 };

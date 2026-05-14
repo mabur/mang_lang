@@ -423,7 +423,6 @@ struct BooleanResult {
 BooleanResult booleanTypes(Expression expression) {
     auto result = MAKE(BooleanResult);
     switch (expression.type) {
-        case PARSE_ERROR: return MAKE(BooleanResult, .error=expression);
         case EVALUATE_ERROR: return MAKE(BooleanResult, .error=expression);
         case NUMBER: return result;
         case YES: return result;
@@ -447,7 +446,6 @@ BooleanResult boolean(Expression expression) {
     const auto type = expression.type;
     const auto index = expression.index;
     switch (type) {
-    case PARSE_ERROR: return MAKE(BooleanResult, .error=expression);
     case EVALUATE_ERROR: return MAKE(BooleanResult, .error=expression);
     case EVALUATED_TABLE: return MAKE(BooleanResult, .value=!storage.evaluated_tables.at(index).empty());
     case EVALUATED_TABLE_VIEW: return MAKE(BooleanResult, .value=!storage.evaluated_table_views.data[index].empty());
@@ -1069,7 +1067,6 @@ Expression evaluateFunctionApplicationTypes(
     );
     if (input.type == EVALUATE_ERROR) return input;
     switch (function.type) {
-        case PARSE_ERROR: return function;
         case EVALUATE_ERROR: return function;
 
         case FUNCTION: return applyFunction(evaluate_types, function, input);
@@ -1103,7 +1100,6 @@ Expression evaluateFunctionApplication(
         environment
     );
     switch (function.type) {
-        case PARSE_ERROR: return function;
         case EVALUATE_ERROR: return function;
 
         case FUNCTION: return applyFunction(evaluate, function, input);
@@ -1134,7 +1130,6 @@ Expression evaluateFunctionApplication(
 Expression evaluate_types(Expression expression, Expression environment) {
     switch (expression.type) {
         // These are the same for types and values, and just pass through:
-        case PARSE_ERROR: return expression;
         case EVALUATE_ERROR: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;
@@ -1180,7 +1175,6 @@ Expression evaluate_types(Expression expression, Expression environment) {
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
         // These are the same for types and values, and just pass through:
-        case PARSE_ERROR: return expression;
         case EVALUATE_ERROR: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;

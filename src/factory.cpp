@@ -88,14 +88,6 @@ Expression makeNumber(CodeRange code, Number expression) {
     return result;
 }
 
-Expression makeParseError(CodeRange code, ParseError expression) {
-    auto result = Expression{};
-    result.type = PARSE_ERROR;
-    result.range = code;
-    BIT_CAST(expression, result.index);
-    return result;
-}
-
 Expression makeEvaluateError(CodeRange code, const char* format, ...) {
     va_list args;
     va_start(args, format);
