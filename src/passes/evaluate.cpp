@@ -387,24 +387,24 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(BoundGlobalName name, Expression expression) {
+Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
         auto symbol = storage.names.data + name.global_index;
         auto expression_name = getExpressionName(expression.type);
-        return makeEvaluateError({},
-            "Cannot find symbol %s in environment of type %s", symbol, expression_name);
+        return makeEvaluateError(range,
+            "Cannot find symbol %s in environment of type %s.", symbol, expression_name);
     }
     const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
     const auto result = optionalLookup(dictionary, name.global_index);
     if (result.ok) {
         return result.value;
     }
-    return lookupDictionary(name, dictionary.environment);
+    return lookupDictionary(range, name, dictionary.environment);
 }
 
 Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
     auto name = storage.symbol_lookups.data[symbol.index].name;
-    return lookupDictionary(name, environment);
+    return lookupDictionary(symbol.range, name, environment);
 }
     
 Expression applyFunctionBuiltIn(
@@ -692,7 +692,7 @@ Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
     auto name = storage.typed_expressions.data[expression.index].type_name;
-    const auto type = lookupDictionary(name, environment);
+    const auto type = lookupDictionary(expression.range, name, environment);
     const auto value = evaluator(storage.typed_expressions.data[expression.index].value, environment);
     checkTypes(type, value, "typed expression");
     return value;
@@ -1062,7 +1062,7 @@ Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
     auto name = storage.function_applications.data[function_application.index].name;
-    const auto function = lookupDictionary(name, environment);
+    const auto function = lookupDictionary(function_application.range, name, environment);
     const auto input = evaluate_types(
         storage.function_applications.data[function_application.index].child,
         environment
@@ -1097,7 +1097,7 @@ Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
     auto name = storage.function_applications.data[function_application.index].name;
-    const auto function = lookupDictionary(name, environment);
+    const auto function = lookupDictionary(function_application.range, name, environment);
     const auto input = evaluate(
         storage.function_applications.data[function_application.index].child,
         environment

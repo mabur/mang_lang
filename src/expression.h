@@ -23,7 +23,7 @@ struct CodeRange {
 // Expression             128    128     64
 struct Expression {
     size_t index = 0;
-    CodeRange range;
+    CodeRange range = {};
     ExpressionType type = ANY;
 };
 

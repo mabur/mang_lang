@@ -399,7 +399,8 @@ StringBuilder serializeString(StringBuilder s, Expression expression) {
 StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message, CodeRange range) {
     CLEAR(s);
     CONCAT_CSTRING(s, error_message);
-    //CONCAT_CSTRING(s, describeLocation(range));
+    CONCAT_CSTRING(s, "\n");
+    CONCAT_CSTRING(s, describeLocation(range));
     return s;
 }
 
