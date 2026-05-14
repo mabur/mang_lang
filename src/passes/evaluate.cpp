@@ -238,7 +238,7 @@ Expression evaluateLookupChild(
 ) {
     const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
-    if (child.type == EVALUATE_ERROR) {
+    if (child.type == ERROR_EXPRESSION) {
         return child;
     }
     if (child.type != EVALUATED_DICTIONARY) {
@@ -410,7 +410,7 @@ Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
 Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
-    if (input.type == EVALUATE_ERROR) return input;
+    if (input.type == ERROR_EXPRESSION) return input;
     const auto function_struct = storage.built_in_functions.data[function.index];
     return function_struct.function(input);
 }
@@ -423,7 +423,7 @@ struct BooleanResult {
 BooleanResult booleanTypes(Expression expression) {
     auto result = MAKE(BooleanResult);
     switch (expression.type) {
-        case EVALUATE_ERROR: return MAKE(BooleanResult, .error=expression);
+        case ERROR_EXPRESSION: return MAKE(BooleanResult, .error=expression);
         case NUMBER: return result;
         case YES: return result;
         case NO: return result;
@@ -446,7 +446,7 @@ BooleanResult boolean(Expression expression) {
     const auto type = expression.type;
     const auto index = expression.index;
     switch (type) {
-    case EVALUATE_ERROR: return MAKE(BooleanResult, .error=expression);
+    case ERROR_EXPRESSION: return MAKE(BooleanResult, .error=expression);
     case EVALUATED_TABLE: return MAKE(BooleanResult, .value=!storage.evaluated_tables.at(index).empty());
     case EVALUATED_TABLE_VIEW: return MAKE(BooleanResult, .value=!storage.evaluated_table_views.data[index].empty());
     case NUMBER: return MAKE(BooleanResult, .value=static_cast<bool>(getNumber(expression)));
@@ -620,10 +620,10 @@ Expression evaluateConditionalTypes(
     const auto conditional_struct = storage.conditionals.data[conditional.index];
     FOR_EACH(a, conditional_struct.alternatives) {
         auto result = evaluate_types(storage.alternatives.data[a].left, environment);
-        if (result.type == EVALUATE_ERROR) return result;
+        if (result.type == ERROR_EXPRESSION) return result;
     }
     const auto else_expression = evaluate_types(conditional_struct.expression_else, environment);
-    if (else_expression.type == EVALUATE_ERROR) return else_expression;
+    if (else_expression.type == ERROR_EXPRESSION) return else_expression;
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(
@@ -640,7 +640,7 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto condition = boolean(evaluate(alternative.left, environment));
-        if (condition.error.type == EVALUATE_ERROR) {
+        if (condition.error.type == ERROR_EXPRESSION) {
             return condition.error;
         }
         if (condition.value) {
@@ -655,17 +655,17 @@ Expression evaluateIsTypes(
 ) {
     const auto is_struct = storage.is_expressions.data[is.index];
     auto result = evaluate_types(is_struct.input, environment);
-    if (result.type == EVALUATE_ERROR) return result;
+    if (result.type == ERROR_EXPRESSION) return result;
     FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
         result = evaluate_types(alternative.left, environment);
-        if (result.type == EVALUATE_ERROR) return result;
+        if (result.type == ERROR_EXPRESSION) return result;
     }
     const auto else_expression = evaluate_types(is_struct.expression_else, environment);
     FOR_EACH(a, is_struct.alternative) {
         const auto alternative = storage.alternatives.data[a];
         const auto alternative_expression = evaluate_types(alternative.right, environment);
-        if (alternative_expression.type == EVALUATE_ERROR) return alternative_expression;
+        if (alternative_expression.type == ERROR_EXPRESSION) return alternative_expression;
         auto type_check = checkTypes(else_expression, alternative_expression, "is");
         if (!type_check.ok) return type_check.error;
     }
@@ -770,7 +770,7 @@ Expression evaluateDictionaryTypes(
             const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
-            if (value.type == EVALUATE_ERROR) return value;
+            if (value.type == ERROR_EXPRESSION) return value;
             // TODO: is this a principled approach?
             if (value.type != ANY) {
                 setDictionaryDefinition(result, definition.name, value);
@@ -780,7 +780,7 @@ Expression evaluateDictionaryTypes(
             const auto put_assignment = storage.put_assignments.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
-            if (value.type == EVALUATE_ERROR) return value;
+            if (value.type == ERROR_EXPRESSION) return value;
             const auto current = getDictionaryDefinition(result, put_assignment.name);
             const auto tuple = makeEvaluatedTuple2(value, current);
             const auto new_value = container_functions::putTyped(tuple);
@@ -790,7 +790,7 @@ Expression evaluateDictionaryTypes(
             const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
-            if (container.type == EVALUATE_ERROR) {
+            if (container.type == ERROR_EXPRESSION) {
                 return container;
             }
 
@@ -811,13 +811,13 @@ Expression evaluateDictionaryTypes(
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.data[statement.index];
             auto condition = booleanTypes(evaluate_types(while_statement.expression, result));
-            if (condition.error.type == EVALUATE_ERROR) return condition.error;
+            if (condition.error.type == ERROR_EXPRESSION) return condition.error;
         }
         else if (type == FOR_STATEMENT) {
             const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             auto condition = booleanTypes(container);
-            if (condition.error.type == EVALUATE_ERROR) return condition.error;
+            if (condition.error.type == ERROR_EXPRESSION) return condition.error;
             const auto value = container_functions::takeTyped(container);
             setDictionaryDefinition(result, for_statement.item_name, value);
         }
@@ -825,7 +825,7 @@ Expression evaluateDictionaryTypes(
             const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             auto condition = booleanTypes(container);
-            if (condition.error.type == EVALUATE_ERROR) return condition.error;
+            if (condition.error.type == ERROR_EXPRESSION) return condition.error;
         }
         else if (type == RETURN_STATEMENT) {
         }
@@ -873,7 +873,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             auto container = evaluate(right_expression, result);
             for (;;) {
                 auto condition = boolean(container);
-                if (condition.error.type == EVALUATE_ERROR) {
+                if (condition.error.type == ERROR_EXPRESSION) {
                     return condition.error;
                 }
                 if (!condition.value) {
@@ -898,7 +898,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == WHILE_STATEMENT) {
             const auto while_statement = storage.while_statements.data[statement.index];
             auto condition = boolean(evaluate(while_statement.expression, result));
-            if (condition.error.type == EVALUATE_ERROR) {
+            if (condition.error.type == ERROR_EXPRESSION) {
                 return condition.error;
             }
             if (condition.value) {
@@ -911,7 +911,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto for_statement = storage.for_statements.data[statement.index];
             const auto container = getDictionaryDefinition(result, for_statement.container_name);
             auto condition = boolean(container);
-            if (condition.error.type == EVALUATE_ERROR) {
+            if (condition.error.type == ERROR_EXPRESSION) {
                 return condition.error;
             }
             if (condition.value) {
@@ -925,7 +925,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_SIMPLE_STATEMENT) {
             const auto for_statement = storage.for_simple_statements.data[statement.index];
             const auto condition = boolean(getDictionaryDefinition(result, for_statement.container_name));
-            if (condition.error.type == EVALUATE_ERROR) {
+            if (condition.error.type == ERROR_EXPRESSION) {
                 return condition.error;
             }
             if (condition.value) {
@@ -1065,9 +1065,9 @@ Expression evaluateFunctionApplicationTypes(
         storage.function_applications.data[function_application.index].child,
         environment
     );
-    if (input.type == EVALUATE_ERROR) return input;
+    if (input.type == ERROR_EXPRESSION) return input;
     switch (function.type) {
-        case EVALUATE_ERROR: return function;
+        case ERROR_EXPRESSION: return function;
 
         case FUNCTION: return applyFunction(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
@@ -1100,7 +1100,7 @@ Expression evaluateFunctionApplication(
         environment
     );
     switch (function.type) {
-        case EVALUATE_ERROR: return function;
+        case ERROR_EXPRESSION: return function;
 
         case FUNCTION: return applyFunction(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
@@ -1130,7 +1130,7 @@ Expression evaluateFunctionApplication(
 Expression evaluate_types(Expression expression, Expression environment) {
     switch (expression.type) {
         // These are the same for types and values, and just pass through:
-        case EVALUATE_ERROR: return expression;
+        case ERROR_EXPRESSION: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case YES: return expression;
@@ -1175,7 +1175,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
 Expression evaluate(Expression expression, Expression environment) {
     switch (expression.type) {
         // These are the same for types and values, and just pass through:
-        case EVALUATE_ERROR: return expression;
+        case ERROR_EXPRESSION: return expression;
         case NUMBER: return expression;
         case CHARACTER: return expression;
         case YES: return expression;

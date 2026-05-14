@@ -8,40 +8,40 @@
 #include "../string.h"
 
 Expression putString(Expression rest, Expression top) {
-    if (top.type == EVALUATE_ERROR) {
+    if (top.type == ERROR_EXPRESSION) {
         return top;
     }
-    if (rest.type == EVALUATE_ERROR) {
+    if (rest.type == ERROR_EXPRESSION) {
         return rest;
     }
     return makeString(rest.range, String{top, rest});
 }
 
 Expression putStack(Expression rest, Expression top) {
-    if (top.type == EVALUATE_ERROR) {
+    if (top.type == ERROR_EXPRESSION) {
         return top;
     }
-    if (rest.type == EVALUATE_ERROR) {
+    if (rest.type == ERROR_EXPRESSION) {
         return rest;
     }
     return makeStack(rest.range, Stack{top, rest});
 }
 
 Expression putEvaluatedStack(Expression rest, Expression top) {
-    if (top.type == EVALUATE_ERROR) {
+    if (top.type == ERROR_EXPRESSION) {
         return top;
     }
-    if (rest.type == EVALUATE_ERROR) {
+    if (rest.type == ERROR_EXPRESSION) {
         return rest;
     }
     return makeEvaluatedStack(rest.range, EvaluatedStack{top, rest});
 }
 
 Expression putTable(Expression table, Expression item) {
-    if (table.type == EVALUATE_ERROR) {
+    if (table.type == ERROR_EXPRESSION) {
         return table;
     }
-    if (item.type == EVALUATE_ERROR) {
+    if (item.type == ERROR_EXPRESSION) {
         return item;
     }
     const auto tuple = getBinaryTuple(item, "put table");
@@ -60,10 +60,10 @@ Expression putTable(Expression table, Expression item) {
 }
 
 Expression putTableTyped(Expression table, Expression item) {
-    if (table.type == EVALUATE_ERROR) {
+    if (table.type == ERROR_EXPRESSION) {
         return table;
     }
-    if (item.type == EVALUATE_ERROR) {
+    if (item.type == ERROR_EXPRESSION) {
         return item;
     }
     if (item.type == ANY) {
@@ -88,7 +88,7 @@ namespace container_functions {
 
 Expression clear(Expression in) {
     switch (in.type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
         case EMPTY_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
         case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
@@ -108,7 +108,7 @@ Expression clearTyped(Expression in) {
     // TODO: shouldn't clear EVALUATED_STACK give EMPTY_STACK,
     // so that it can be populated with items of different type?
     switch (in.type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return in;
         case EMPTY_STACK: return in;
         case STRING: return in;
@@ -146,7 +146,7 @@ Expression put(Expression in) {
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return putString(collection, item);
@@ -173,7 +173,7 @@ Expression putTyped(Expression in) {
         return collection;
     }
     switch (collection.type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return putEvaluatedStack(collection, item);
         case EMPTY_STACK: return putEvaluatedStack(collection, item);
         case STRING: return collection; // TODO: type check item
@@ -221,7 +221,7 @@ Expression take(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
         case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
@@ -240,7 +240,7 @@ Expression takeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
         case STRING: return storage.strings.data[index].top;
         case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
@@ -259,7 +259,7 @@ Expression takeTyped(Expression in) {
 
 Expression drop(Expression in) {
     switch (in.type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
         case STRING: return storage.strings.data[in.index].rest;
         case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
@@ -278,7 +278,7 @@ Expression drop(Expression in) {
 
 Expression dropTyped(Expression in) {
     switch (in.type) {
-        case EVALUATE_ERROR: return in;
+        case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return in;
         case STRING: return in;
         case EVALUATED_TABLE: return in;

@@ -46,25 +46,25 @@ StringBuilder evaluate_all(const char* code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
     const auto std_ast = parse(STANDARD_LIBRARY.c_str());
-    if (std_ast.type == EVALUATE_ERROR) {
+    if (std_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_ast);
     }
     const auto code_ast = parse(code);
-    if (code_ast.type == EVALUATE_ERROR) {
+    if (code_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(code_ast);
     }
     // bind(std_ast, built_ins_types);
     // bind(code_ast, std_ast);
     const auto std_checked = evaluate_types(std_ast, built_ins_types);
-    if (std_checked.type == EVALUATE_ERROR) {
+    if (std_checked.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_checked);
     }
     const auto code_checked = evaluate_types(code_ast, std_checked);
-    if (code_checked.type == EVALUATE_ERROR) {
+    if (code_checked.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(code_checked);
     }
     const auto std_evaluated = evaluate(std_ast, built_ins);
-    if (std_evaluated.type == EVALUATE_ERROR) {
+    if (std_evaluated.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_evaluated);
     }
     const auto code_evaluated = evaluate(code_ast, std_evaluated);

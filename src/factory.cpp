@@ -94,7 +94,7 @@ Expression makeEvaluateError(CodeRange code, const char* format, ...) {
     EvaluateError expression = format_cstring_v(format, args);
     va_end(args);
     auto result = Expression{};
-    result.type = EVALUATE_ERROR;
+    result.type = ERROR_EXPRESSION;
     result.range = code;
     BIT_CAST(expression, result.index);
     return result;
