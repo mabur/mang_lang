@@ -440,7 +440,7 @@ Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
 }
 
 Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
-    auto name = storage.symbol_lookups.data[symbol.index].name;
+    auto& name = storage.symbol_lookups.data[symbol.index].name;
     return lookupDictionary(name, environment);
 }
     
@@ -728,9 +728,8 @@ template<typename Evaluator>
 Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
-    const auto type = lookupDictionary(
-        storage.typed_expressions.data[expression.index].type_name, environment
-    );
+    auto& name = storage.typed_expressions.data[expression.index].type_name;
+    const auto type = lookupDictionary(name, environment);
     const auto value = evaluator(storage.typed_expressions.data[expression.index].value, environment);
     checkTypes(type, value, "typed expression");
     return value;
@@ -1099,9 +1098,8 @@ Expression applyStringIndexing(Expression string, Expression input) {
 Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
-    const auto function = lookupDictionary(
-        storage.function_applications.data[function_application.index].name, environment
-    );
+    auto& name = storage.function_applications.data[function_application.index].name;
+    const auto function = lookupDictionary(name, environment);
     const auto input = evaluate_types(
         storage.function_applications.data[function_application.index].child,
         environment
@@ -1135,10 +1133,8 @@ Expression evaluateFunctionApplicationTypes(
 Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
-    const auto function = lookupDictionary(
-        storage.function_applications.data[function_application.index].name,
-        environment
-    );
+    auto& name = storage.function_applications.data[function_application.index].name;
+    const auto function = lookupDictionary(name, environment);
     const auto input = evaluate(
         storage.function_applications.data[function_application.index].child,
         environment
