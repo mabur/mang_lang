@@ -7,18 +7,18 @@
 
 const char* describeLocation(CodeRange code) {
     if (code.count == 0) {
-        return "At unknown location.";
+        return "It happened at an unknown location.";
     }
     else if (code.count == 1) {
         return FORMAT_STRING(
-            "At row %zu and column %zu.",
+            "It happened at row %zu and column %zu.",
             firstRow(code),
             firstColumn(code)
         ).data;
     }
     else {
         return FORMAT_STRING(
-            "Between row %zu and column %zu and row %zu and column %zu.",
+            "It happened between row %zu and column %zu and row %zu and column %zu.",
             firstRow(code),
             firstColumn(code),
             lastRow(code),
