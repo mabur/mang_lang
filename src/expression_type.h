@@ -47,4 +47,3 @@ enum ExpressionType {
 };
 
 const char* getExpressionName(ExpressionType type);
-bool isError(ExpressionType type);
