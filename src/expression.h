@@ -3,8 +3,6 @@
 #include <map>
 #include <stdint.h>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 #include "expression_type.h"
 

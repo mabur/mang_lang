@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdarg.h>
+#include <vector>
 
 #include <carma/carma_string.h>
 
