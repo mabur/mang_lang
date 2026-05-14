@@ -91,7 +91,7 @@ Expression makeNumber(CodeRange code, Number expression) {
 Expression makeEvaluateError(CodeRange code, const char* format, ...) {
     va_list args;
     va_start(args, format);
-    EvaluateError expression = format_cstring_v(format, args);
+    ErrorExpression expression = format_cstring_v(format, args);
     va_end(args);
     auto result = Expression{};
     result.type = ERROR_EXPRESSION;
@@ -277,14 +277,8 @@ Number getNumber(Expression expression) {
     return result;
 }
 
-ParseError getParseError(Expression expression) {
-    ParseError result;
-    BIT_CAST(expression.index, result);
-    return result;
-}
-
-EvaluateError getEvaluateError(Expression expression) {
-    EvaluateError result;
+ErrorExpression getErrorExpression(Expression expression) {
+    ErrorExpression result;
     BIT_CAST(expression.index, result);
     return result;
 }

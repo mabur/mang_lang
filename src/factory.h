@@ -84,8 +84,7 @@ void clearMemory();
 
 Character getCharacter(Expression expression);
 Number getNumber(Expression expression);
-ParseError getParseError(Expression expression);
-EvaluateError getEvaluateError(Expression expression);
+ErrorExpression getErrorExpression(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
 Expression makeEvaluateError(CodeRange code, const char* format, ...);
