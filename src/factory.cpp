@@ -88,7 +88,7 @@ Expression makeNumber(CodeRange code, Number expression) {
     return result;
 }
 
-Expression makeEvaluateError(CodeRange code, const char* format, ...) {
+Expression makeErrorExpression(CodeRange code, const char* format, ...) {
     va_list args;
     va_start(args, format);
     ErrorExpression expression = format_cstring_v(format, args);

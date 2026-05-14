@@ -36,7 +36,7 @@ Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
         return result.value;
     }
     auto name_c = storage.names.data + name;
-    return makeEvaluateError({}, "I cannot find name %s in dictionary", name_c);
+    return makeErrorExpression({}, "I cannot find name %s in dictionary", name_c);
 }
     
 TypeCheck checkTypes(Expression super, Expression sub, const char* description);
@@ -69,7 +69,7 @@ TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char*
     const auto sub_count = tuple_sub.indices.count;
     if (super_count != sub_count) {
         result.ok = false;
-        result.error = makeEvaluateError({},
+        result.error = makeErrorExpression({},
             "Static type error in %s. Inconsistent tuple size.", description
         );
         return result;
@@ -97,7 +97,7 @@ TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const 
         }
         else {
             result.ok = false;
-            result.error = makeEvaluateError({},
+            result.error = makeErrorExpression({},
                 "Static type error in %s. Could not find name %s in dictionary %s",
                 description,
                 storage.names.data + name_super,
@@ -150,7 +150,7 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
         return checkTypesEvaluatedDictionary(super, sub, description);
     }
     result.ok = false;
-    result.error = makeEvaluateError({},
+    result.error = makeErrorExpression({},
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
         describeLocation(super.range),
@@ -168,7 +168,7 @@ Expression evaluateStack(Evaluator evaluator,
     auto items = Expressions{};
     while (stack.type != EMPTY_STACK) {
         if (stack.type != STACK) {
-            return makeEvaluateError(stack.range,
+            return makeErrorExpression(stack.range,
                 "\n\nI have found a type error.\n"
                 "It happens in evaluateStack.\n"
                 "Instead of a stack I got a %s.\n",
@@ -243,7 +243,7 @@ Expression evaluateLookupChild(
     }
     if (child.type != EVALUATED_DICTIONARY) {
         auto name = storage.names.data + lookup_child_struct.name;
-        return makeEvaluateError(lookup_child.range,
+        return makeErrorExpression(lookup_child.range,
             "\n\nI have found an error.\n"
             "It happens when trying to lookup the child named \"%s\" in a dictionary,\n"
             "but instead of a dictionary I got a %s.\n",
@@ -295,7 +295,7 @@ Expression applyFunctionDictionary(
     Expression input
 ) {
     if (input.type != EVALUATED_DICTIONARY) {
-        return makeEvaluateError(function.range,
+        return makeErrorExpression(function.range,
             "\n\nI have found a type error.\n"
             "It happens when calling a function that is expecting a dictionary as input.\n"
             "But now it got a %s.\n",
@@ -320,7 +320,7 @@ Expression applyFunctionTuple(
     Expression input
 ) {
     if (input.type != EVALUATED_TUPLE) {
-        return makeEvaluateError(function.range,
+        return makeErrorExpression(function.range,
             "\n\nI have found a type error.\n"
             "It happens when trying to call a function that takes a tuple.\n"
             "Instead of a tuple I got a %s.\n",
@@ -335,7 +335,7 @@ Expression applyFunctionTuple(
     size_t num_inputs = last_argument - first_argument;
     
     if (num_inputs != tuple_count) {
-        return makeEvaluateError({},
+        return makeErrorExpression({},
             "Wrong number of input to function_struct",
             getExpressionName(input.type)
         );
@@ -391,7 +391,7 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     if (expression.type != EVALUATED_DICTIONARY) {
         auto symbol = storage.names.data + name.global_index;
         auto expression_name = getExpressionName(expression.type);
-        return makeEvaluateError(range,
+        return makeErrorExpression(range,
             "Cannot find symbol %s in environment of type %s.", symbol, expression_name);
     }
     const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
@@ -434,7 +434,7 @@ BooleanResult booleanTypes(Expression expression) {
         case EMPTY_STRING: return result;
         case ANY: return result;
         default:
-            return MAKE(BooleanResult, .error=makeEvaluateError(expression.range,
+            return MAKE(BooleanResult, .error=makeErrorExpression(expression.range,
                 "Static type error.\n"
                 "Cannot convert type %s to boolean.",
                 getExpressionName(expression.type)
@@ -456,7 +456,7 @@ BooleanResult boolean(Expression expression) {
     case EMPTY_STACK: return MAKE(BooleanResult, .value=false);
     case STRING: return MAKE(BooleanResult, .value=true);
     case EMPTY_STRING: return MAKE(BooleanResult, .value=false);
-    default: return MAKE(BooleanResult, .error=makeEvaluateError(expression.range,
+    default: return MAKE(BooleanResult, .error=makeErrorExpression(expression.range,
         "I found an error while trying to evaluate a boolean expression.\n"
         "I got an unexpected type %s.", getExpressionName(type)));
     }
@@ -465,7 +465,7 @@ BooleanResult boolean(Expression expression) {
 Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
-        return makeEvaluateError(tuple.range,
+        return makeErrorExpression(tuple.range,
             "\n\nI have found a type error.\n"
             "It happens when indexing a tuple.\n"
             "The index is expected to be a %s,\n"
@@ -476,14 +476,14 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
     }
     const auto number = getNumber(input);
     if (number < 0) {
-        return makeEvaluateError(tuple.range,
+        return makeErrorExpression(tuple.range,
             "Cannot have negative index: %f", number
         );
     }
     const auto i = (size_t)number;
     const auto count = tuple_struct.indices.count;
     if (i >= count) {
-        return makeEvaluateError(tuple.range,
+        return makeErrorExpression(tuple.range,
             "Tuple of size %zu indexed with %zu" , count, i
         );
     }
@@ -977,14 +977,14 @@ Expression applyTableIndexing(Expression table, Expression key) {
     auto k = stdStringFromManglang(key);
     auto it = rows.find(k);
     if (it == rows.end()) {
-        return makeEvaluateError(table.range, "Cannot find key %s in table", k.c_str());
+        return makeErrorExpression(table.range, "Cannot find key %s in table", k.c_str());
     }
     return it->second.value;
 }
 
 Expression applyStackIndexing(Expression stack, Expression input) {
     if (input.type != NUMBER) {
-        return makeEvaluateError(stack.range,
+        return makeErrorExpression(stack.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens when indexing a stack.\n"
             "The index is expected to be a %s,\n"
@@ -995,7 +995,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
     }
     const auto number = getNumber(input);
     if (number < 0) {
-        return makeEvaluateError(stack.range,
+        return makeErrorExpression(stack.range,
             "Cannot have negative index: %f", number
         );
     }
@@ -1003,12 +1003,12 @@ Expression applyStackIndexing(Expression stack, Expression input) {
     auto stack_struct = storage.evaluated_stacks.data[stack.index];
     for (size_t i = 0; i < index; ++i) {
         if (stack_struct.rest.type == EMPTY_STACK) {
-            return makeEvaluateError(stack.range,
+            return makeErrorExpression(stack.range,
                 "Stack index out of range"
             );
         }
         if (stack_struct.rest.type != EVALUATED_STACK) {
-            return makeEvaluateError(stack.range,
+            return makeErrorExpression(stack.range,
                 "I found a type error while indexing a stack. \n"
                 "Instead of a stack I encountered a %s",
                 getExpressionName(stack_struct.rest.type)
@@ -1021,7 +1021,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
 
 Expression applyStringIndexing(Expression string, Expression input) {
     if (input.type != NUMBER) {
-        return makeEvaluateError(string.range,
+        return makeErrorExpression(string.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens when indexing a string.\n"
             "The index is expected to be a %s,\n"
@@ -1032,7 +1032,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
     }
     const auto number = getNumber(input);
     if (number < 0) {
-        return makeEvaluateError(string.range,
+        return makeErrorExpression(string.range,
             "Cannot have negative index: %f", number
         );
     }
@@ -1040,12 +1040,12 @@ Expression applyStringIndexing(Expression string, Expression input) {
     auto string_struct = storage.strings.data[string.index];
     for (size_t i = 0; i < index; ++i) {
         if (string_struct.rest.type == EMPTY_STACK) {
-            return makeEvaluateError(string.range,
+            return makeErrorExpression(string.range,
                 "String index out of range"
             );
         }
         if (string_struct.rest.type != STRING) {
-            return makeEvaluateError(string.range,
+            return makeErrorExpression(string.range,
                 "I found a type error while indexing a string. \n"
                 "Instead of a string I encountered a %s",
                 getExpressionName(string_struct.rest.type)
@@ -1082,7 +1082,7 @@ Expression evaluateFunctionApplicationTypes(
         case EMPTY_STACK: return Expression{0, function_application.range, ANY};
         case EMPTY_STRING: return Expression{0, function_application.range, CHARACTER};
     
-        default: return makeEvaluateError(function_application.range,
+        default: return makeErrorExpression(function_application.range,
             "I found an error during type checking.\n"
             "The application operator (!) received an %s, which I did not expect.",
             getExpressionName(function.type)
@@ -1112,12 +1112,12 @@ Expression evaluateFunctionApplication(
         case EVALUATED_STACK: return applyStackIndexing(function, input);
         case STRING: return applyStringIndexing(function, input);
         
-        case EMPTY_STACK: return makeEvaluateError(function_application.range,
+        case EMPTY_STACK: return makeErrorExpression(function_application.range,
             "I caught a run-time error when trying to index an empty stack.");
-        case EMPTY_STRING: return makeEvaluateError(function_application.range,
+        case EMPTY_STRING: return makeErrorExpression(function_application.range,
             "I caught a run-time error when trying to index an empty string.");
 
-        default: return makeEvaluateError(function_application.range,
+        default: return makeErrorExpression(function_application.range,
             "I found an error during evaluation.\n"
             "The application operator (!) received an %s, which I did not expect.",
             getExpressionName(function.type)
@@ -1164,7 +1164,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
     
-        default: return makeEvaluateError(expression.range,
+        default: return makeErrorExpression(expression.range,
             "I found an error during type checking.\n"
             "I received an %s, which I did not expect.",
             getExpressionName(expression.type)
@@ -1209,7 +1209,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DICTIONARY: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
     
-        default: return makeEvaluateError(expression.range,
+        default: return makeErrorExpression(expression.range,
             "I found an error during evaluation.\n"
             "I received an %s, which I did not expect.",
             getExpressionName(expression.type)

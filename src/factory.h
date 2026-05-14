@@ -87,7 +87,7 @@ Number getNumber(Expression expression);
 ErrorExpression getErrorExpression(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
-Expression makeEvaluateError(CodeRange code, const char* format, ...);
+Expression makeErrorExpression(CodeRange code, const char* format, ...);
 Expression makeCharacter(CodeRange code, Character expression);
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);
 Expression makeTypedExpression(CodeRange code, TypedExpression expression);

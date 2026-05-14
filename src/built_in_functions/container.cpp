@@ -97,7 +97,7 @@ Expression clear(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during evaluation.\n"
             "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -117,7 +117,7 @@ Expression clearTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during type checking.\n"
             "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -126,7 +126,7 @@ Expression clearTyped(Expression in) {
 
 Expression putNumber(Expression collection, Expression item) {
     if (item.type != ANY && item.type != NUMBER) {
-        return makeEvaluateError(collection.range,
+        return makeErrorExpression(collection.range,
             "\n\nI have found a static type error.\n"
             "It happens for the operation put!(NUMBER item).\n"
             "It expects the item to be a %s,\n"
@@ -155,7 +155,7 @@ Expression put(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during evaluation.\n"
             "The put function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -182,7 +182,7 @@ Expression putTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during type checking.\n"
             "The put function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -192,7 +192,7 @@ Expression putTyped(Expression in) {
 template<typename T>
 Expression takeTable(const T& table) {
     if (table.empty()) {
-        return makeEvaluateError({}, "Cannot take item from empty table");
+        return makeErrorExpression({}, "Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
     return makeEvaluatedTuple2(pair.key, pair.value);
@@ -229,7 +229,7 @@ Expression take(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during evaluation.\n"
             "The take function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -250,7 +250,7 @@ Expression takeTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during type checking.\n"
             "The take function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -269,7 +269,7 @@ Expression drop(Expression in) {
         case NUMBER: return dropNumber(in);
         case NO: return in;
         case YES: return Expression{0, CodeRange{}, NO};
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during evaluation.\n"
             "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -288,7 +288,7 @@ Expression dropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: return makeEvaluateError(in.range,
+        default: return makeErrorExpression(in.range,
             "I found an error during type checking.\n"
             "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -297,7 +297,7 @@ Expression dropTyped(Expression in) {
 
 Expression get(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        return makeEvaluateError(in.range,
+        return makeErrorExpression(in.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -308,7 +308,7 @@ Expression get(Expression in) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        return makeEvaluateError({},
+        return makeErrorExpression({},
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -320,7 +320,7 @@ Expression get(Expression in) {
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
-        return makeEvaluateError(table.range,
+        return makeErrorExpression(table.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
@@ -340,7 +340,7 @@ Expression get(Expression in) {
 
 Expression getTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
-        return makeEvaluateError(in.range, 
+        return makeErrorExpression(in.range, 
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -351,7 +351,7 @@ Expression getTyped(Expression in) {
     const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        return makeEvaluateError({},
+        return makeErrorExpression({},
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -362,7 +362,7 @@ Expression getTyped(Expression in) {
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != EVALUATED_TABLE) {
-        return makeEvaluateError(table.range, 
+        return makeErrorExpression(table.range, 
             "\n\nI have found a dynamic type error.\n"
             "\nIt happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
