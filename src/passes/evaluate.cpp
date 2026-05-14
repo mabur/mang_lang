@@ -387,60 +387,23 @@ Expression evaluateFunctionTuple(
     });
 }
 
-struct LookupResult {
-    Expression expression;
-    size_t steps;
-};
-
-LookupResult lookupDictionaryFirstTime(
-    const BoundGlobalName& name, size_t steps, Expression expression
-) {
-    if (expression.type != EVALUATED_DICTIONARY) {
-        auto symbol = storage.names.data + name.global_index;
-        auto expression_name = getExpressionName(expression.type);
-        return LookupResult{makeEvaluateError({},
-            "Cannot find symbol %s in environment of type %s", symbol, expression_name)};
-    }
-    const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
-    const auto result = optionalLookup(dictionary, name.global_index);
-    if (result.ok) {
-        return LookupResult{result.value, steps};
-    }
-    return lookupDictionaryFirstTime(name, steps + 1, dictionary.environment);
-}
-
-Expression lookupDictionarySecondTime(
-    const BoundGlobalName& name, int steps, Expression expression
-) {
+Expression lookupDictionary(BoundGlobalName name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
         auto symbol = storage.names.data + name.global_index;
         auto expression_name = getExpressionName(expression.type);
         return makeEvaluateError({},
             "Cannot find symbol %s in environment of type %s", symbol, expression_name);
     }
-    const auto &dictionary = storage.evaluated_dictionaries.data[expression.index];
-    if (steps == 0) {
-        return requiredLookup(dictionary, name.global_index);
+    const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
+    const auto result = optionalLookup(dictionary, name.global_index);
+    if (result.ok) {
+        return result.value;
     }
-    return lookupDictionarySecondTime(name, steps - 1, dictionary.environment);
-}
-
-Expression lookupDictionary(BoundGlobalName& name, Expression expression) {
-    if (name.parent_steps == -1) {
-        const auto result = lookupDictionaryFirstTime(name, 0, expression);
-        if (isError(result.expression.type)) {
-            return result.expression;
-        }
-        name.parent_steps = result.steps;
-        return result.expression;
-    }
-    else {
-        return lookupDictionarySecondTime(name, name.parent_steps, expression);
-    }
+    return lookupDictionary(name, dictionary.environment);
 }
 
 Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
-    auto& name = storage.symbol_lookups.data[symbol.index].name;
+    auto name = storage.symbol_lookups.data[symbol.index].name;
     return lookupDictionary(name, environment);
 }
     
@@ -728,7 +691,7 @@ template<typename Evaluator>
 Expression evaluateTypedExpression(
     Evaluator evaluator, Expression expression, Expression environment
 ) {
-    auto& name = storage.typed_expressions.data[expression.index].type_name;
+    auto name = storage.typed_expressions.data[expression.index].type_name;
     const auto type = lookupDictionary(name, environment);
     const auto value = evaluator(storage.typed_expressions.data[expression.index].value, environment);
     checkTypes(type, value, "typed expression");
@@ -1098,7 +1061,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
 Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
-    auto& name = storage.function_applications.data[function_application.index].name;
+    auto name = storage.function_applications.data[function_application.index].name;
     const auto function = lookupDictionary(name, environment);
     const auto input = evaluate_types(
         storage.function_applications.data[function_application.index].child,
@@ -1133,7 +1096,7 @@ Expression evaluateFunctionApplicationTypes(
 Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
-    auto& name = storage.function_applications.data[function_application.index].name;
+    auto name = storage.function_applications.data[function_application.index].name;
     const auto function = lookupDictionary(name, environment);
     const auto input = evaluate(
         storage.function_applications.data[function_application.index].child,
