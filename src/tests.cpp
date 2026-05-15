@@ -1,7 +1,10 @@
-﻿#include "mang_lang.h"
-#include <time.h>
+﻿#include <time.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "exceptions.h"
+#include "factory.h"
+#include "mang_lang.h"
 
 typedef struct TestCase {
     const char* input;
@@ -60,6 +63,19 @@ int summarizeTests() {
     return num_bad_total;
 }
 
+StringBuilder describeCodeRange(const char* code) {
+    auto code_range = makeCodeCharacters(code);
+    auto description = describeLocation(code_range);
+    auto buffer = StringBuilder{};
+    CONCAT_CSTRING(buffer, description);
+    return buffer;
+    // todo: clear memory
+}
+
+void testDescribeCodeRange(const char* case_name, TestCases test_cases) {
+    parameterizedTest(describeCodeRange, "describeCodeRange", case_name, test_cases);
+}
+
 void testReformat(const char* case_name, TestCases test_cases) {
     parameterizedTest(reformat, "reformat", case_name, test_cases);
 }
@@ -73,6 +89,9 @@ void testEvaluateAll(const char* case_name, TestCases test_cases) {
 }
 
 int main() {
+    testDescribeCodeRange("testDescribeCodeRange", TEST_CASES(
+        {"", "It happened at an unknown location."},
+    ));
     testReformat("expression", TEST_CASES(
         {"", "I did not find any expression to parse."},
         {"out", "Parse error. 'out' is a reserved keyword."},
