@@ -232,9 +232,6 @@ StringBuilder serializeCharacter(StringBuilder s, Character character) {
     APPEND(s, '\'');
     APPEND(s, '\0');
     DROP_BACK(s);
-    // TODO: figure out why this results in segmentation faults sometimes.
-    // Undefined behaviour?
-    //FORMAT_STRING(s, "\'%c\'", character);
     return s;
 }
 
@@ -362,9 +359,6 @@ StringBuilder serializeNumber(StringBuilder s, Number number) {
         s = concatenate(s, "nan");
         return s;
     }
-    // TODO: figure out why this results in segmentation faults sometimes.
-    // Undefined behaviour?
-    //FORMAT_STRING(s, "%.*g", DBL_DIG, number);
     auto serialized_number = StringBuilder{};
     CONCAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
     CONCAT_CSTRING(s, serialized_number.data);
