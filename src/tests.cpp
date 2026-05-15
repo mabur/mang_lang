@@ -64,12 +64,13 @@ int summarizeTests() {
 }
 
 StringBuilder describeCodeRange(const char* code) {
+    clearMemory();
     auto code_range = makeCodeCharacters(code);
     auto description = describeLocation(code_range);
     auto buffer = StringBuilder{};
     CONCAT_CSTRING(buffer, description);
+    clearMemory();
     return buffer;
-    // todo: clear memory
 }
 
 void testDescribeCodeRange(const char* case_name, TestCases test_cases) {
@@ -91,6 +92,8 @@ void testEvaluateAll(const char* case_name, TestCases test_cases) {
 int main() {
     testDescribeCodeRange("testDescribeCodeRange", TEST_CASES(
         {"", "It happened at an unknown location."},
+        {"a", "It happened at row 1 and column 1."},
+        {"yes", "It happened between row 1 and column 1 and row 1 and column 3."},
     ));
     testReformat("expression", TEST_CASES(
         {"", "I did not find any expression to parse."},
