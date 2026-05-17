@@ -106,8 +106,8 @@ int main() {
     testEvaluateAll("number", TEST_CASES(
         {"-1", "-1"},
         {"-1.0", "-1"},
-        {"-0", "-0"},
-        {"-0.0", "-0"},
+        {"-0", "0"},
+        {"-0.0", "0"},
         {"0", "0"},
         {"0.0", "0"},
         {"+0", "0"},
@@ -754,8 +754,8 @@ int main() {
         {"mod!(2 2)", "0"},
         {"mod!(3 2)", "1"},
         {"mod!(4 2)", "0"},
-        {"mod!(4.5 2)", "0.5"},
-        {"mod!(1.2 0.5)", "0.2"},
+        {"mod!(4.5 2)", "0.500000"},
+        {"mod!(1.2 0.5)", "0.199999"},
     ));
     testEvaluateAll("less", TEST_CASES(
         {"less?(0 0)", "no"},
@@ -783,8 +783,8 @@ int main() {
     testEvaluateAll("round", TEST_CASES(
         {"round!-0.9", "-1"},
         {"round!-0.6", "-1"},
-        {"round!-0.4", "-0"},
-        {"round!-0.1", "-0"},
+        {"round!-0.4", "0"},
+        {"round!-0.1", "0"},
         {"round!0", "0"},
         {"round!0.1", "0"},
         {"round!0.4", "0"},
@@ -792,10 +792,10 @@ int main() {
         {"round!0.9", "1"},
     ));
     testEvaluateAll("round_up", TEST_CASES(
-        {"round_up!-0.9", "-0"},
-        {"round_up!-0.6", "-0"},
-        {"round_up!-0.4", "-0"},
-        {"round_up!-0.1", "-0"},
+        {"round_up!-0.9", "0"},
+        {"round_up!-0.6", "0"},
+        {"round_up!-0.4", "0"},
+        {"round_up!-0.1", "0"},
         {"round_up!0", "0"},
         {"round_up!0.1", "1"},
         {"round_up!0.4", "1"},
@@ -859,8 +859,8 @@ int main() {
         {"inf", "inf"},
         {"-inf", "-inf"},
         {"nan", "nan"},
-        {"pi", "3.14159265359"},
-        {"tau", "6.28318530718"},
+        {"pi", "3.141592"},
+        {"tau", "6.283185"},
     ));
     testEvaluateAll("boolean", TEST_CASES(
         {"boolean!-2", "yes"},

@@ -1,7 +1,5 @@
 #include "serialize.h"
 
-#include <float.h>
-
 #include <carma/carma.h>
 
 #include "../exceptions.h"
@@ -359,10 +357,7 @@ StringBuilder serializeNumber(StringBuilder s, Number number) {
         s = concatenate(s, "nan");
         return s;
     }
-    auto serialized_number = StringBuilder{};
-    CONCAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
-    SERIALIZE_CSTRING(s, serialized_number.data);
-    FREE_DARRAY(serialized_number);
+    SERIALIZE_DOUBLE(s, number);
     return s;
 }
 
