@@ -27,7 +27,7 @@ include(FetchContent)
 FetchContent_Declare(
         carma
         GIT_REPOSITORY https://github.com/mabur/carma.git
-        GIT_TAG d58a07ad208f2654ecd302caa99f7f1288b54a4d
+        GIT_TAG 185be1148af66e793b8452bceea62283f2b21cc4
 )
 FetchContent_MakeAvailable(carma)
 

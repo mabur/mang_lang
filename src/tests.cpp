@@ -68,7 +68,7 @@ StringBuilder describeCodeRange(const char* code) {
     auto code_range = makeCodeCharacters(code);
     auto description = describeLocation(code_range);
     auto buffer = StringBuilder{};
-    CONCAT_CSTRING(buffer, description);
+    SERIALIZE_CSTRING(buffer, description);
     clearMemory();
     return buffer;
 }

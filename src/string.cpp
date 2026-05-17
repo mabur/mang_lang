@@ -9,7 +9,7 @@ std::string makeStdString(StringBuilder s) {
 }
 
 StringBuilder concatenate(StringBuilder base, const char* tail) {
-    CONCAT_CSTRING(base, tail);
+    SERIALIZE_CSTRING(base, tail);
     return base;
 }
 

@@ -14,7 +14,7 @@ namespace CommandLineArgumentIndex {
 
 StringBuilder parseInputFilePath(int argc,  char **argv) {
     auto result = StringBuilder{};
-    CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
+    SERIALIZE_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
     APPEND(result, '\0');
     return result;
 }
@@ -22,13 +22,13 @@ StringBuilder parseInputFilePath(int argc,  char **argv) {
 StringBuilder parseOutputFilePath(int argc,  char **argv) {
     auto result = StringBuilder{};
     if (argc >= CommandLineArgumentIndex::OUTPUT_PATH + 1) {
-        CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::OUTPUT_PATH]);
+        SERIALIZE_CSTRING(result, argv[CommandLineArgumentIndex::OUTPUT_PATH]);
     }
     else {
-        CONCAT_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
+        SERIALIZE_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
         DROP_BACK_UNTIL_ITEM(result, '.');
         DROP_BACK(result);
-        CONCAT_CSTRING(result, "_evaluated.txt");
+        SERIALIZE_CSTRING(result, "_evaluated.txt");
     }
     APPEND(result, '\0');
     return result;

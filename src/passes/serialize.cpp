@@ -361,7 +361,7 @@ StringBuilder serializeNumber(StringBuilder s, Number number) {
     }
     auto serialized_number = StringBuilder{};
     CONCAT_STRING(serialized_number, "%.*g", DBL_DIG, number);
-    CONCAT_CSTRING(s, serialized_number.data);
+    SERIALIZE_CSTRING(s, serialized_number.data);
     FREE_DARRAY(serialized_number);
     return s;
 }
@@ -392,7 +392,7 @@ StringBuilder serializeString(StringBuilder s, Expression expression) {
 
 StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message, CodeRange range) {
     CLEAR(s);
-    CONCAT_CSTRING(s, error_message);
+    SERIALIZE_CSTRING(s, error_message);
     return s;
 }
 
