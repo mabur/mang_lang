@@ -22,7 +22,7 @@ struct NameIndex {
 };
 
 // TODO: optimize table macros for speed for this use-case.
-struct NameIndices{
+struct NameIndexTable{
     NameIndex* data;
     size_t count;
     size_t capacity;
@@ -73,7 +73,7 @@ struct Storage {
     // Null-terminated strings concatenated after each other:
     StringBuilder names;
     
-    NameIndices name_indices;
+    NameIndexTable name_index_table;
     
     std::vector<EvaluatedTable> evaluated_tables;
 };
