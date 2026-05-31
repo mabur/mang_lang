@@ -329,62 +329,62 @@ Expression parseReturnStatement(CodeRange code) {
     return Expression{0, firstPart(whole, code), RETURN_STATEMENT};
 }
 
-typedef struct {
+typedef struct GlobalIndexAndDictionaryIndex {
     size_t key; // Global index
     size_t value; // Dictionary index
     bool occupied;
 } GlobalIndexAndDictionaryIndex;
 
-typedef struct {
+typedef struct DictionaryIndexTable {
     GlobalIndexAndDictionaryIndex* data;
     size_t count;
     size_t capacity;
-} DictionaryIndexer;
+} DictionaryIndexTable;
 
-DictionaryIndexer bindName(DictionaryIndexer indexer, BoundLocalName& name) {
+DictionaryIndexTable bindName(DictionaryIndexTable index_table, BoundLocalName& name) {
     name.dictionary_index = SIZE_MAX;
-    GET_KEY_VALUE(name.global_index, name.dictionary_index, indexer);
+    GET_KEY_VALUE(name.global_index, name.dictionary_index, index_table);
     if (name.dictionary_index == SIZE_MAX) {
-        name.dictionary_index = indexer.count;
-        SET_KEY_VALUE(name.global_index, name.dictionary_index, indexer);
+        name.dictionary_index = index_table.count;
+        SET_KEY_VALUE(name.global_index, name.dictionary_index, index_table);
     }
-    return indexer;
+    return index_table;
 }
 
 void bindDictionaryNames(Dictionary& dictionary_struct) {
-    auto indexer = DictionaryIndexer{};
+    auto index_table = DictionaryIndexTable{};
 
     FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION) {
             auto& definition = storage.definitions.data[statement.index];
-            indexer = bindName(indexer, definition.name);
+            index_table = bindName(index_table, definition.name);
         }
         else if (type == PUT_ASSIGNMENT) {
             auto& put_assignment = storage.put_assignments.data[statement.index];
-            indexer = bindName(indexer, put_assignment.name);
+            index_table = bindName(index_table, put_assignment.name);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
             auto& put_each_assignment = storage.put_each_assignments.data[statement.index];
-            indexer = bindName(indexer, put_each_assignment.name);
+            index_table = bindName(index_table, put_each_assignment.name);
         }
         else if (type == DROP_ASSIGNMENT) {
             auto& drop_assignment = storage.drop_assignments.data[statement.index];
-            indexer = bindName(indexer, drop_assignment.name);
+            index_table = bindName(index_table, drop_assignment.name);
         }
         else if (type == FOR_STATEMENT) {
             auto& for_statement = storage.for_statements.data[statement.index];
-            indexer = bindName(indexer, for_statement.item_name);
-            indexer = bindName(indexer, for_statement.container_name);
+            index_table = bindName(index_table, for_statement.item_name);
+            index_table = bindName(index_table, for_statement.container_name);
         }
         else if (type == FOR_SIMPLE_STATEMENT) {
             auto& for_statement = storage.for_simple_statements.data[statement.index];
-            indexer = bindName(indexer, for_statement.container_name);
+            index_table = bindName(index_table, for_statement.container_name);
         }
     }
-    dictionary_struct.definition_count = indexer.count;
-    FREE_TABLE(indexer);
+    dictionary_struct.definition_count = index_table.count;
+    FREE_TABLE(index_table);
 }
 
 struct DynamicIndices {
