@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mang_lang_lib)
+project(manglang_lib)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -11,7 +11,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(carma)
 
-add_library(mang_lang
+add_library(manglang_lib
         built_in_functions/arithmetic.cpp
         built_in_functions/binary_tuple.cpp
         built_in_functions/built_in_functions.cpp
@@ -28,9 +28,9 @@ add_library(mang_lang
         mang_lang_string.cpp
         )
 
-target_include_directories(mang_lang PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${carma_SOURCE_DIR})
-target_link_libraries(mang_lang carma)
+target_include_directories(manglang_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${carma_SOURCE_DIR})
+target_link_libraries(manglang_lib carma)
 
 if (NOT MSVC)
-        target_compile_options(mang_lang PRIVATE -Wall -pedantic -Werror)
+        target_compile_options(manglang_lib PRIVATE -Wall -pedantic -Werror)
 endif()
