@@ -4,3 +4,6 @@
 /documents/*.synctex.gz
 /examples/*_evaluated.txt
 /tutorials/
+/.idea/
+/build/
+/cmake-build*/
