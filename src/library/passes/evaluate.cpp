@@ -8,7 +8,7 @@
 #include "../built_in_functions/container.h"
 #include "../exceptions.h"
 #include "../factory.h"
-#include "../string.h"
+#include "../mang_lang_string.h"
 #include "../type_check.h"
 #include "serialize.h"
 

@@ -6,7 +6,7 @@
 #include <carma/carma_string.h>
 
 #include "mang_lang.h"
-#include "string.h"
+#include "mang_lang_string.h"
 
 namespace CommandLineArgumentIndex {
     enum {PROGRAM_PATH, INPUT_PATH, OUTPUT_PATH};

@@ -7,7 +7,7 @@
 
 #include "exceptions.h"
 #include "passes/serialize.h"
-#include "string.h"
+#include "mang_lang_string.h"
 
 Storage storage;
 

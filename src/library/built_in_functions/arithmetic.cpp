@@ -4,7 +4,7 @@
 
 #include "binary_tuple.h"
 #include "../factory.h"
-#include "../string.h"
+#include "../mang_lang_string.h"
 #include "../type_check.h"
 
 namespace arithmetic {

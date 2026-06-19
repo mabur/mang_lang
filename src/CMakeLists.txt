@@ -4,20 +4,20 @@ project(mang_lang_cpp)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(shared
-        built_in_functions/arithmetic.cpp
-        built_in_functions/binary_tuple.cpp
-        built_in_functions/built_in_functions.cpp
-        built_in_functions/container.cpp
-        passes/evaluate.cpp
-        passes/parse.cpp
-        passes/serialize.cpp
-        exceptions.cpp
-        expression.cpp
-        expression_type.cpp
-        factory.cpp
-        mang_lang.cpp
-        parsing.cpp
-        string.cpp
+        library/built_in_functions/arithmetic.cpp
+        library/built_in_functions/binary_tuple.cpp
+        library/built_in_functions/built_in_functions.cpp
+        library/built_in_functions/container.cpp
+        library/passes/evaluate.cpp
+        library/passes/parse.cpp
+        library/passes/serialize.cpp
+        library/exceptions.cpp
+        library/expression.cpp
+        library/expression_type.cpp
+        library/factory.cpp
+        library/mang_lang.cpp
+        library/parsing.cpp
+        library/mang_lang_string.cpp
         )
 
 add_executable(manglang interpreter.cpp)
@@ -31,9 +31,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(carma)
 
-target_include_directories(manglang PRIVATE ${carma_SOURCE_DIR})
-target_include_directories(shared PRIVATE ${carma_SOURCE_DIR})
-target_include_directories(tests PRIVATE ${carma_SOURCE_DIR})
+target_include_directories(manglang PRIVATE ${carma_SOURCE_DIR} library)
+target_include_directories(shared PRIVATE ${carma_SOURCE_DIR} library)
+target_include_directories(tests PRIVATE ${carma_SOURCE_DIR} library)
 
 target_link_libraries(manglang shared carma)
 target_link_libraries(tests shared carma)

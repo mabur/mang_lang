@@ -1,4 +1,4 @@
-#include "string.h"
+#include "mang_lang_string.h"
 
 #include <stdlib.h>
 

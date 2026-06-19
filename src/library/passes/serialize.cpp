@@ -4,7 +4,7 @@
 
 #include "../exceptions.h"
 #include "../factory.h"
-#include "../string.h"
+#include "../mang_lang_string.h"
 
 namespace {
 

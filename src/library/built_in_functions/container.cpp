@@ -5,7 +5,7 @@
 #include "../exceptions.h"
 #include "../expression.h"
 #include "../factory.h"
-#include "../string.h"
+#include "../mang_lang_string.h"
 
 Expression putString(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {

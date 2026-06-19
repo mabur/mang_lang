@@ -1,7 +1,7 @@
 #include "binary_tuple.h"
 
 #include "../factory.h"
-#include "../string.h"
+#include "../mang_lang_string.h"
 
 BinaryTuple getBinaryTuple(Expression in, const char* function) {
     auto result = MAKE(BinaryTuple);

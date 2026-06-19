@@ -10,7 +10,7 @@
 #include "../factory.h"
 #include "../built_in_functions/container.h"
 #include "../parsing.h"
-#include "../string.h"
+#include "../mang_lang_string.h"
 
 namespace {
 

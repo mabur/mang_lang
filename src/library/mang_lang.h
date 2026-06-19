@@ -1,5 +1,5 @@
 #pragma once
-#include "string.h"
+#include "mang_lang_string.h"
 
 StringBuilder reformat(const char* code);
 StringBuilder evaluate_types(const char* code);
