@@ -101,7 +101,7 @@ TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const 
                 "Static type error in %s. Could not find name %s in dictionary %s",
                 description,
                 storage.names.data + name_super,
-                describeLocation(sub.range)
+                describeLocation(sub.range).data
             );
             return result;
         }
@@ -153,7 +153,7 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
     result.error = makeErrorExpression({},
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
-        describeLocation(super.range),
+        describeLocation(super.range).data,
         getExpressionName(super.type),
         getExpressionName(sub.type)
     );

@@ -5,8 +5,6 @@ struct CodeRange;
 CodeRange firstPart(CodeRange whole, CodeRange last_part);
 CodeRange lastPart(CodeRange whole, CodeRange middle_part);
 
-const char* describeLocation(CodeRange code);
-
 bool isKeyword(CodeRange code, const char* word);
 
 bool startsWithString(CodeRange code, const char* word);

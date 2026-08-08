@@ -1,5 +1,7 @@
 #pragma once
 
+#include <carma/carma_string.h>
+
 struct CodeRange;
 
-const char* describeLocation(CodeRange code);
+String256 describeLocation(CodeRange code);
