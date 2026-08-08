@@ -9,5 +9,5 @@ if (NOT MSVC)
         target_compile_options(manglang_tests PRIVATE -Wall -pedantic -Werror)
 endif()
 
-target_link_options(manglang PRIVATE -static)
-target_link_options(manglang_tests PRIVATE -static)
+target_link_options(manglang PRIVATE -static-libgcc -static-libstdc++)
+target_link_options(manglang_tests PRIVATE -static-libgcc -static-libstdc++)
