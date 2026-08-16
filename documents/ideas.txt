@@ -290,7 +290,7 @@ SYSTEM IMPLEMENTATION
     + Performance
     + Well known language
     - Requires shipping a C++ compiler
-  * Lua !
+  * Lua
     + Simple
     + Embeddable
     + Well known
@@ -299,9 +299,12 @@ SYSTEM IMPLEMENTATION
       * Lua Interpreter (fast)
       * LuaJIT Interpreter (faster)
       * LuaJit JIT (fastest)
+  * Custom bytecode
+    + Simple
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
+  - Raytracer new computer: 128x96 -> 2.6s
 * Packing Expressions:
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
 * Maybe types should not be re-evaluated for every function call?
