@@ -32,7 +32,7 @@ target_include_directories(manglang_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib $
 target_link_libraries(manglang_lib carma)
 
 if (NOT MSVC)
-        target_compile_options(manglang_lib PRIVATE -Wall -pedantic -Werror)
+        target_compile_options(manglang_lib PRIVATE -Wall -pedantic -Werror -Wextra -Wno-missing-field-initializers)
 endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL manglang_project)

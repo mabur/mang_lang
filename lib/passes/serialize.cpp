@@ -386,6 +386,7 @@ StringBuilder serializeString(StringBuilder s, Expression expression) {
 }
 
 StringBuilder serializeErrorMessage(StringBuilder s, const char* error_message, CodeRange range) {
+    (void)range;
     CLEAR(s);
     SERIALIZE_CSTRING(s, error_message);
     return s;

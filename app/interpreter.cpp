@@ -13,6 +13,7 @@ namespace CommandLineArgumentIndex {
 }
 
 StringBuilder parseInputFilePath(int argc,  char **argv) {
+    (void)argc;
     auto result = StringBuilder{};
     SERIALIZE_CSTRING(result, argv[CommandLineArgumentIndex::INPUT_PATH]);
     APPEND(result, '\0');
