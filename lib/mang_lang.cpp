@@ -18,21 +18,20 @@ StringBuilder serializeAndClearMemory(Expression expression) {
     return buffer;
 }
 
-static
-Expression parse(const char* string) {
-    auto c = makeCodeCharacters(string);
-    auto expression = parseExpression(c);
-    return expression;
-}
-
 StringBuilder reformat(const char* code) {
-    return serializeAndClearMemory(parse(code));
+    auto code_characters = makeCodeCharacters(code);
+    return serializeAndClearMemory(parseExpression(code_characters));
 }
 
 StringBuilder evaluate_types(const char* code) {
     const auto built_ins = builtInsTypes();
-    const auto std_ast = parse(STANDARD_LIBRARY.c_str());
-    const auto code_ast = parse(code);
+    const auto code_character_standard_library = makeCodeCharacters(STANDARD_LIBRARY.c_str());
+    const auto code_characters_program = makeCodeCharacters(code);
+    
+    // N.B. Need to create all code characters before parsing for stable string interning.
+    const auto std_ast = parseExpression(code_character_standard_library);
+    const auto code_ast = parseExpression(code_characters_program);
+    
     // bind(std_ast, built_ins);
     // bind(code_ast, std_ast);
     const auto standard_library = evaluate_types(std_ast, built_ins);
@@ -45,11 +44,16 @@ StringBuilder evaluate_types(const char* code) {
 StringBuilder evaluate_all(const char* code) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
-    const auto std_ast = parse(STANDARD_LIBRARY.c_str());
+    
+    auto code_character_standard_library = makeCodeCharacters(STANDARD_LIBRARY.c_str());
+    auto code_characters_program = makeCodeCharacters(code);
+    // N.B. Need to create all code characters before parsing for stable string interning.
+    
+    const auto std_ast = parseExpression(code_character_standard_library);
     if (std_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_ast);
     }
-    const auto code_ast = parse(code);
+    const auto code_ast = parseExpression(code_characters_program);
     if (code_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(code_ast);
     }
