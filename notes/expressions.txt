@@ -1,0 +1,83 @@
+PASSES
+
+* Parsing
+  - Convert from string
+  - 1:1
+* Binding & Name Resolution, pre-evaluation
+  - Calculate jumps for loops
+  - Calculate jumps for names
+  - 1:1
+* Type Evaluation/checking
+  - Reduction
+  - Use a stack
+* Value Evaluation
+  - Reduction
+  - Use a stack
+* Serialization
+  - Convert to string
+  - 1:1
+
+
+STACK
+* Can be used for automatic freeing of memory
+* Can be used for faster name lookup
+
+
+PRIMITIVE VALUES
+
+Number
+Character
+ErrorExpression
+
+
+EXPRESSIONS
+
+BoundGlobalName (created by binding)
+BoundLocalName (created by binding)
+
+LookupSymbol (related to binding?)
+LookupChild (related to binding?)
+FunctionApplication (related to binding?)
+
+Argument
+DynamicExpression
+TypedExpression (only considered at type checking/evluation pass?)
+
+Alternative
+Conditional
+IsExpression
+
+Function
+FunctionBuiltIn
+FunctionDictionary
+FunctionTuple
+
+
+CONTAINERS
+
+String
+Tuple
+EvaluatedTuple (created by evaluation and type evaluation)
+Stack
+EvaluatedStack (created by evaluation and type evaluation)
+Row
+Table
+EvaluatedTable (created by evaluation and type evaluation)
+EvaluatedTableView (created by evaluation and type evaluation)
+
+
+DICTIONARY AND STATEMENTS
+
+Dictionary
+EvaluatedDictionary (created by evaluation and type evaluation)
+
+Definition
+PutAssignment
+PutEachAssignment
+DropAssignment
+WhileStatement
+ForStatement
+ForSimpleStatement
+WhileEndStatement
+ForEndStatement
+ForSimpleEndStatement
