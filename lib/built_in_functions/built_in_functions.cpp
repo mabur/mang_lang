@@ -6,6 +6,38 @@
 #include "arithmetic.h"
 #include "container.h"
 
+const BuiltInEntry BUILT_IN_ENTRIES[] = {
+    {"clear",      container_functions::clear, container_functions::clearTyped},
+    {"put",        container_functions::put,   container_functions::putTyped},
+    {"take",       container_functions::take,  container_functions::takeTyped},
+    {"drop",       container_functions::drop,  container_functions::dropTyped},
+    {"get",        container_functions::get,   container_functions::getTyped},
+    {"add",        arithmetic::add,            arithmetic::add},
+    {"mul",        arithmetic::mul,            arithmetic::mul},
+    {"sub",        arithmetic::sub,            arithmetic::sub},
+    {"div",        arithmetic::div,            arithmetic::div},
+    {"mod",        arithmetic::mod,            arithmetic::mod},
+    {"less",       arithmetic::less,           arithmetic::less},
+    {"round",      arithmetic::round,          arithmetic::round},
+    {"round_up",   arithmetic::roundUp,        arithmetic::roundUp},
+    {"round_down", arithmetic::roundDown,      arithmetic::roundDown},
+    {"sqrt",       arithmetic::sqrt,           arithmetic::sqrt},
+    {"number",     arithmetic::asciiNumber,    arithmetic::asciiNumber},
+    {"character",  arithmetic::asciiCharacter, arithmetic::asciiCharacter},
+};
+
+const size_t BUILT_IN_ENTRIES_COUNT = sizeof(BUILT_IN_ENTRIES) / sizeof(BUILT_IN_ENTRIES[0]);
+
+const BuiltInEntry* findBuiltIn(size_t name_index) {
+    const auto name_text = storage.names.data + name_index;
+    for (const auto& entry : BUILT_IN_ENTRIES) {
+        if (strcmp(name_text, entry.name) == 0) {
+            return &entry;
+        }
+    }
+    return nullptr;
+}
+
 static
 Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer function) {
     return Definition{
@@ -15,26 +47,11 @@ Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer fun
 }
 
 Expression builtIns() {
-    size_t i  = 0;
     auto first = storage.definitions.count;
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "clear",      container_functions::clear));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "put",        container_functions::put));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "take",       container_functions::take));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "drop",       container_functions::drop));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "get",        container_functions::get));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "add",        arithmetic::add));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "mul",        arithmetic::mul));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "sub",        arithmetic::sub));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "div",        arithmetic::div));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "mod",        arithmetic::mod));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "less",       arithmetic::less));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "round",      arithmetic::round));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "round_up",   arithmetic::roundUp));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "round_down", arithmetic::roundDown));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "sqrt",       arithmetic::sqrt));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "number",     arithmetic::asciiNumber));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "character",  arithmetic::asciiCharacter));
-
+    for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
+        const auto& entry = BUILT_IN_ENTRIES[i];
+        makeDefinition({}, makeDefinitionBuiltIn(i, entry.name, entry.function));
+    }
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     return makeEvaluatedDictionary(CodeRange{},
@@ -43,26 +60,11 @@ Expression builtIns() {
 }
 
 Expression builtInsTypes() {
-    size_t i = 0;
     auto first = storage.definitions.count;
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "clear",      container_functions::clearTyped));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "put",        container_functions::putTyped));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "take",       container_functions::takeTyped));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "drop",       container_functions::dropTyped));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "get",        container_functions::getTyped));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "add",        arithmetic::add));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "mul",        arithmetic::mul));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "sub",        arithmetic::sub));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "div",        arithmetic::div));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "mod",        arithmetic::mod));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "less",       arithmetic::less));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "round",      arithmetic::round));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "round_up",   arithmetic::roundUp));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "round_down", arithmetic::roundDown));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "sqrt",       arithmetic::sqrt));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "number",     arithmetic::asciiNumber));
-    makeDefinition({}, makeDefinitionBuiltIn(i++, "character",  arithmetic::asciiCharacter));
-    
+    for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
+        const auto& entry = BUILT_IN_ENTRIES[i];
+        makeDefinition({}, makeDefinitionBuiltIn(i, entry.name, entry.function_types));
+    }
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     return makeEvaluatedDictionary(CodeRange{},
