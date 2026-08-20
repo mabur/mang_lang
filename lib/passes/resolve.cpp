@@ -78,7 +78,7 @@ struct DynamicIndices {
 // (the same convention `evaluateDictionary` uses to jump between them).
 // A generic END_STATEMENT is refined here into the concrete
 // WHILE_END_STATEMENT/FOR_END_STATEMENT/FOR_SIMPLE_END_STATEMENT it closes.
-void resolveDictionaryLoops(Dictionary& dictionary_struct) {
+void resolveDictionaryLoops(Dictionary dictionary_struct) {
     const auto base_index = dictionary_struct.statements.data;
     auto loop_start_indices_owner = DynamicIndices{};
 
