@@ -49,6 +49,7 @@ void clearMemory() {
     FREE_DARRAY(storage.evaluated_table_views);
     FREE_DARRAY(storage.child_lookups);
     FREE_DARRAY(storage.function_applications);
+    FREE_DARRAY(storage.function_applications_built_in);
     FREE_DARRAY(storage.symbol_lookups);
     FREE_DARRAY(storage.arguments);
     FREE_DARRAY(storage.while_statements);
@@ -191,6 +192,10 @@ Expression makeLookupChild(CodeRange code, LookupChild expression) {
 
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression) {
     return makeExpression(code, expression, FUNCTION_APPLICATION, storage.function_applications);
+}
+
+Expression makeFunctionApplicationBuiltIn(CodeRange code, FunctionApplicationBuiltIn expression) {
+    return makeExpression(code, expression, FUNCTION_APPLICATION_BUILT_IN, storage.function_applications_built_in);
 }
 
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {

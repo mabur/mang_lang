@@ -208,6 +208,10 @@ void resolveLookupSymbolInScope(Expression expression, DictionaryIndexTable tabl
     storage.symbol_lookups.data[expression.index].name = tryResolveInScope(storage.symbol_lookups.data[expression.index].name, table);
 }
 
+void resolveFunctionApplicationBuiltInInScope(Expression expression, DictionaryIndexTable table) {
+    return resolveExpressionInScope(storage.function_applications_built_in.data[expression.index].child, table);
+}
+
 // Mirrors `resolveExpression`'s traversal, but additionally attempts to
 // resolve name references against `table` (the innermost dictionary's own
 // locals). Stops carrying `table` at a nested DICTIONARY/FUNCTION* boundary,
@@ -226,6 +230,7 @@ void resolveExpressionInScope(Expression expression, DictionaryIndexTable table)
         case TABLE: return resolveTableInScope(expression, table);
         case LOOKUP_CHILD: return resolveLookupChildInScope(expression, table);
         case FUNCTION_APPLICATION: return resolveFunctionApplicationInScope(expression, table);
+        case FUNCTION_APPLICATION_BUILT_IN: return resolveFunctionApplicationBuiltInInScope(expression, table);
         case TYPED_EXPRESSION: return resolveTypedExpressionInScope(expression, table);
         case DYNAMIC_EXPRESSION: return resolveDynamicExpressionInScope(expression, table);
         case LOOKUP_SYMBOL: return resolveLookupSymbolInScope(expression, table);
@@ -310,6 +315,10 @@ void resolveFunctionApplication(Expression expression) {
     return resolveExpression(storage.function_applications.data[expression.index].child);
 }
 
+void resolveBuiltInApplication(Expression expression) {
+    return resolveExpression(storage.function_applications_built_in.data[expression.index].child);
+}
+
 void resolveTypedExpression(Expression expression) {
     return resolveExpression(storage.typed_expressions.data[expression.index].value);
 }
@@ -331,6 +340,7 @@ void resolveExpression(Expression expression) {
         case TABLE: return resolveTable(expression);
         case LOOKUP_CHILD: return resolveLookupChild(expression);
         case FUNCTION_APPLICATION: return resolveFunctionApplication(expression);
+        case FUNCTION_APPLICATION_BUILT_IN: return resolveBuiltInApplication(expression);
         case TYPED_EXPRESSION: return resolveTypedExpression(expression);
         case DYNAMIC_EXPRESSION: return resolveDynamicExpression(expression);
         // Everything else (LOOKUP_SYMBOL, NUMBER, CHARACTER, strings, YES/NO,

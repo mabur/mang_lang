@@ -2,11 +2,13 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <carma/carma.h>
 
 #include "../exceptions.h"
 #include "../factory.h"
+#include "../built_in_functions/arithmetic.h"
 #include "../built_in_functions/container.h"
 #include "../parsing.h"
 #include "../mang_lang_string.h"
@@ -15,6 +17,45 @@ namespace {
 
 BoundLocalName getUnboundLocalName(Expression name) {
     return BoundLocalName{name.index, 0};
+}
+
+struct BuiltInEntry {
+    const char* name;
+    FunctionPointer function;
+    FunctionPointer function_types;
+};
+
+// Mirrors builtIns()/builtInsTypes() in built_in_functions.cpp exactly, so a
+// function application to one of these names can be resolved directly at
+// parse time, skipping the environment lookup entirely at evaluation time.
+const BuiltInEntry BUILT_IN_ENTRIES[] = {
+    {"clear",      container_functions::clear, container_functions::clearTyped},
+    {"put",        container_functions::put,   container_functions::putTyped},
+    {"take",       container_functions::take,  container_functions::takeTyped},
+    {"drop",       container_functions::drop,  container_functions::dropTyped},
+    {"get",        container_functions::get,   container_functions::getTyped},
+    {"add",        arithmetic::add,            arithmetic::add},
+    {"mul",        arithmetic::mul,            arithmetic::mul},
+    {"sub",        arithmetic::sub,            arithmetic::sub},
+    {"div",        arithmetic::div,            arithmetic::div},
+    {"mod",        arithmetic::mod,            arithmetic::mod},
+    {"less",       arithmetic::less,           arithmetic::less},
+    {"round",      arithmetic::round,          arithmetic::round},
+    {"round_up",   arithmetic::roundUp,        arithmetic::roundUp},
+    {"round_down", arithmetic::roundDown,      arithmetic::roundDown},
+    {"sqrt",       arithmetic::sqrt,           arithmetic::sqrt},
+    {"number",     arithmetic::asciiNumber,    arithmetic::asciiNumber},
+    {"character",  arithmetic::asciiCharacter, arithmetic::asciiCharacter},
+};
+
+const BuiltInEntry* findBuiltIn(size_t name_index) {
+    const auto name_text = storage.names.data + name_index;
+    for (const auto& entry : BUILT_IN_ENTRIES) {
+        if (strcmp(name_text, entry.name) == 0) {
+            return &entry;
+        }
+    }
+    return nullptr;
 }
 
 Expression parseCharacterExpression(CodeRange code) {
@@ -624,6 +665,13 @@ Expression parseSubstitution(CodeRange code) {
         code = parseCharacter(code);
         auto child = parseExpression(code);
         code = lastPart(code, child.range);
+        const auto built_in = findBuiltIn(name.index);
+        if (built_in) {
+            return makeFunctionApplicationBuiltIn(
+                firstPart(whole, code),
+                FunctionApplicationBuiltIn{name.index, built_in->function, built_in->function_types, child}
+            );
+        }
         return makeFunctionApplication(
             firstPart(whole, code), {BoundGlobalName{name.index}, child}
         );

@@ -52,6 +52,7 @@ struct Storage {
     DARRAY(EvaluatedTableView) evaluated_table_views;
     DARRAY(LookupChild) child_lookups;
     DARRAY(FunctionApplication) function_applications;
+    DARRAY(FunctionApplicationBuiltIn) function_applications_built_in;
     DARRAY(LookupSymbol) symbol_lookups;
     DARRAY(Argument) arguments;
     DARRAY(WhileStatement) while_statements;
@@ -110,6 +111,7 @@ Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression);
 Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression);
 Expression makeLookupChild(CodeRange code, LookupChild expression);
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression);
+Expression makeFunctionApplicationBuiltIn(CodeRange code, FunctionApplicationBuiltIn expression);
 Expression makeLookupSymbol(CodeRange code, LookupSymbol expression);
 Expression makeName(CodeRange code, const char* data, size_t count);
 Expression makeArgument(CodeRange code, Argument expression);

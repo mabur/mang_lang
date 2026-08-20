@@ -111,6 +111,13 @@ struct FunctionApplication {
     Expression child;
 };
 
+struct FunctionApplicationBuiltIn {
+    size_t name;
+    FunctionPointer function;
+    FunctionPointer function_types;
+    Expression child;
+};
+
 struct LookupSymbol {
     BoundGlobalName name;
 };

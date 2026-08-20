@@ -22,6 +22,7 @@ const char* getExpressionName(ExpressionType type) {
         case EMPTY_STACK: return "EMPTY_STACK";
         case LOOKUP_CHILD: return "LOOKUP_CHILD";
         case FUNCTION_APPLICATION: return "FUNCTION_APPLICATION";
+        case FUNCTION_APPLICATION_BUILT_IN: return "FUNCTION_APPLICATION_BUILT_IN";
         case LOOKUP_SYMBOL: return "LOOKUP_SYMBOL";
         case NAME: return "NAME";
         case ARGUMENT: return "ARGUMENT";

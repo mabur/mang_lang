@@ -1128,6 +1128,20 @@ Expression evaluateFunctionApplication(
     }
 }
 
+Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_application, Expression environment) {
+    auto built_in = storage.function_applications_built_in.data[built_in_application.index];
+    auto input = evaluate_types(built_in.child, environment);
+    if (input.type == ERROR_EXPRESSION) return input;
+    return built_in.function_types(input);
+}
+
+Expression evaluateFunctionApplicationBuiltIn(Expression built_in_application, Expression environment) {
+    auto built_in = storage.function_applications_built_in.data[built_in_application.index];
+    auto input = evaluate(built_in.child, environment);
+    if (input.type == ERROR_EXPRESSION) return input;
+    return built_in.function(input);
+}
+
 } // namespace
 
 Expression evaluate_types(Expression expression, Expression environment) {
@@ -1166,7 +1180,8 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case IS: return evaluateIsTypes(expression, environment);
         case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
-    
+        case FUNCTION_APPLICATION_BUILT_IN: return evaluateFunctionApplicationBuiltInTypes(expression, environment);
+
         default: return makeErrorExpression(expression.range,
             "I found an error during type checking.\n"
             "I received an %s, which I did not expect.",
@@ -1211,7 +1226,8 @@ Expression evaluate(Expression expression, Expression environment) {
         case IS: return evaluateIs(expression, environment);
         case DICTIONARY: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
-    
+        case FUNCTION_APPLICATION_BUILT_IN: return evaluateFunctionApplicationBuiltIn(expression, environment);
+
         default: return makeErrorExpression(expression.range,
             "I found an error during evaluation.\n"
             "I received an %s, which I did not expect.",

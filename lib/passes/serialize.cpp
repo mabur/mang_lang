@@ -169,6 +169,13 @@ StringBuilder serializeFunctionApplication(StringBuilder s, const FunctionApplic
     return s;
 }
 
+StringBuilder serializeFunctionApplicationBuiltIn(StringBuilder s, const FunctionApplicationBuiltIn& built_in_application) {
+    s = serializeName(s, built_in_application.name);
+    s = concatenate(s, "!");
+    s = serialize(s, built_in_application.child);
+    return s;
+}
+
 StringBuilder serializeLookupSymbol(StringBuilder s, const LookupSymbol& lookup_symbol) {
     s = serializeName(s, lookup_symbol.name.global_index);
     return s;
@@ -435,6 +442,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case EVALUATED_STACK: return serializeEvaluatedStack(s, expression);
         case LOOKUP_CHILD: return serializeLookupChild(s, storage.child_lookups.data[expression.index]);
         case FUNCTION_APPLICATION: return serializeFunctionApplication(s, storage.function_applications.data[expression.index]);
+        case FUNCTION_APPLICATION_BUILT_IN: return serializeFunctionApplicationBuiltIn(s, storage.function_applications_built_in.data[expression.index]);
         case LOOKUP_SYMBOL: return serializeLookupSymbol(s, storage.symbol_lookups.data[expression.index]);
         case NUMBER: return serializeNumber(s, getNumber(expression));
         case EMPTY_STRING: return serializeString(s, expression);
