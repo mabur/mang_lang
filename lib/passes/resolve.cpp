@@ -112,97 +112,119 @@ void resolveExpression(Expression expression);
 // Recurses into a dictionary statement's own expression field(s), if it has
 // any, so nested dictionaries/functions/etc. reachable from it get visited.
 void resolveStatement(Expression statement) {
-    const auto type = statement.type;
-    if (type == DEFINITION) {
-        resolveExpression(storage.definitions.data[statement.index].expression);
+    switch (statement.type) {
+        case DEFINITION: return resolveExpression(storage.definitions.data[statement.index].expression);
+        case PUT_ASSIGNMENT: return resolveExpression(storage.put_assignments.data[statement.index].expression);
+        case PUT_EACH_ASSIGNMENT: return resolveExpression(storage.put_each_assignments.data[statement.index].expression);
+        case WHILE_STATEMENT: return resolveExpression(storage.while_statements.data[statement.index].expression);
+        // DROP_ASSIGNMENT, FOR_STATEMENT, FOR_SIMPLE_STATEMENT, RETURN_STATEMENT,
+        // and the various end-statements carry only names/indices, no expression.
+        default: return;
     }
-    else if (type == PUT_ASSIGNMENT) {
-        resolveExpression(storage.put_assignments.data[statement.index].expression);
+}
+
+void resolveDictionary(Expression expression) {
+    auto& dictionary_struct = storage.dictionaries.data[expression.index];
+    bindDictionaryNames(dictionary_struct);
+    resolveDictionaryLoops(dictionary_struct);
+    FOR_EACH(i, dictionary_struct.statements) {
+        resolveStatement(storage.statements.data[i]);
     }
-    else if (type == PUT_EACH_ASSIGNMENT) {
-        resolveExpression(storage.put_each_assignments.data[statement.index].expression);
+}
+
+void resolveFunction(Expression expression) {
+    return resolveExpression(storage.functions.data[expression.index].body);
+}
+
+void resolveFunctionDictionary(Expression expression) {
+    return resolveExpression(storage.dictionary_functions.data[expression.index].body);
+}
+
+void resolveFunctionTuple(Expression expression) {
+    return resolveExpression(storage.tuple_functions.data[expression.index].body);
+}
+
+void resolveConditional(Expression expression) {
+    const auto& conditional = storage.conditionals.data[expression.index];
+    FOR_EACH(i, conditional.alternatives) {
+        const auto& alternative = storage.alternatives.data[i];
+        resolveExpression(alternative.left);
+        resolveExpression(alternative.right);
     }
-    else if (type == WHILE_STATEMENT) {
-        resolveExpression(storage.while_statements.data[statement.index].expression);
+    resolveExpression(conditional.expression_else);
+}
+
+void resolveIs(Expression expression) {
+    const auto& is_expression = storage.is_expressions.data[expression.index];
+    resolveExpression(is_expression.input);
+    FOR_EACH(i, is_expression.alternative) {
+        const auto& alternative = storage.alternatives.data[i];
+        resolveExpression(alternative.left);
+        resolveExpression(alternative.right);
     }
-    // DROP_ASSIGNMENT, FOR_STATEMENT, FOR_SIMPLE_STATEMENT, RETURN_STATEMENT,
-    // and the various end-statements carry only names/indices, no expression.
+    resolveExpression(is_expression.expression_else);
+}
+
+void resolveTuple(Expression expression) {
+    const auto& tuple = storage.tuples.data[expression.index];
+    FOR_EACH(i, tuple.indices) {
+        resolveExpression(storage.expressions.data[i]);
+    }
+}
+
+void resolveStack(Expression expression) {
+    auto current = expression;
+    while (current.type == STACK) {
+        const auto& stack = storage.stacks.data[current.index];
+        resolveExpression(stack.top);
+        current = stack.rest;
+    }
+}
+
+void resolveTable(Expression expression) {
+    const auto& table = storage.tables.data[expression.index];
+    FOR_EACH(i, table.rows) {
+        const auto& row = storage.rows.data[i];
+        resolveExpression(row.key);
+        resolveExpression(row.value);
+    }
+}
+
+void resolveLookupChild(Expression expression) {
+    return resolveExpression(storage.child_lookups.data[expression.index].child);
+}
+
+void resolveFunctionApplication(Expression expression) {
+    return resolveExpression(storage.function_applications.data[expression.index].child);
+}
+
+void resolveTypedExpression(Expression expression) {
+    return resolveExpression(storage.typed_expressions.data[expression.index].value);
+}
+
+void resolveDynamicExpression(Expression expression) {
+    return resolveExpression(storage.dynamic_expressions.data[expression.index].expression);
 }
 
 void resolveExpression(Expression expression) {
-    const auto type = expression.type;
-    if (type == DICTIONARY) {
-        auto& dictionary_struct = storage.dictionaries.data[expression.index];
-        bindDictionaryNames(dictionary_struct);
-        resolveDictionaryLoops(dictionary_struct);
-        FOR_EACH(i, dictionary_struct.statements) {
-            resolveStatement(storage.statements.data[i]);
-        }
+    switch (expression.type) {
+        case DICTIONARY: return resolveDictionary(expression);
+        case FUNCTION: return resolveFunction(expression);
+        case FUNCTION_DICTIONARY: return resolveFunctionDictionary(expression);
+        case FUNCTION_TUPLE: return resolveFunctionTuple(expression);
+        case CONDITIONAL: return resolveConditional(expression);
+        case IS: return resolveIs(expression);
+        case TUPLE: return resolveTuple(expression);
+        case STACK: return resolveStack(expression);
+        case TABLE: return resolveTable(expression);
+        case LOOKUP_CHILD: return resolveLookupChild(expression);
+        case FUNCTION_APPLICATION: return resolveFunctionApplication(expression);
+        case TYPED_EXPRESSION: return resolveTypedExpression(expression);
+        case DYNAMIC_EXPRESSION: return resolveDynamicExpression(expression);
+        // Everything else (LOOKUP_SYMBOL, NUMBER, CHARACTER, strings, YES/NO,
+        // ARGUMENT, EMPTY_STACK, ERROR_EXPRESSION, ...) is a leaf: nothing to recurse into.
+        default: return;
     }
-    else if (type == FUNCTION) {
-        resolveExpression(storage.functions.data[expression.index].body);
-    }
-    else if (type == FUNCTION_DICTIONARY) {
-        resolveExpression(storage.dictionary_functions.data[expression.index].body);
-    }
-    else if (type == FUNCTION_TUPLE) {
-        resolveExpression(storage.tuple_functions.data[expression.index].body);
-    }
-    else if (type == CONDITIONAL) {
-        const auto& conditional = storage.conditionals.data[expression.index];
-        FOR_EACH(i, conditional.alternatives) {
-            const auto& alternative = storage.alternatives.data[i];
-            resolveExpression(alternative.left);
-            resolveExpression(alternative.right);
-        }
-        resolveExpression(conditional.expression_else);
-    }
-    else if (type == IS) {
-        const auto& is_expression = storage.is_expressions.data[expression.index];
-        resolveExpression(is_expression.input);
-        FOR_EACH(i, is_expression.alternative) {
-            const auto& alternative = storage.alternatives.data[i];
-            resolveExpression(alternative.left);
-            resolveExpression(alternative.right);
-        }
-        resolveExpression(is_expression.expression_else);
-    }
-    else if (type == TUPLE) {
-        const auto& tuple = storage.tuples.data[expression.index];
-        FOR_EACH(i, tuple.indices) {
-            resolveExpression(storage.expressions.data[i]);
-        }
-    }
-    else if (type == STACK) {
-        auto current = expression;
-        while (current.type == STACK) {
-            const auto& stack = storage.stacks.data[current.index];
-            resolveExpression(stack.top);
-            current = stack.rest;
-        }
-    }
-    else if (type == TABLE) {
-        const auto& table = storage.tables.data[expression.index];
-        FOR_EACH(i, table.rows) {
-            const auto& row = storage.rows.data[i];
-            resolveExpression(row.key);
-            resolveExpression(row.value);
-        }
-    }
-    else if (type == LOOKUP_CHILD) {
-        resolveExpression(storage.child_lookups.data[expression.index].child);
-    }
-    else if (type == FUNCTION_APPLICATION) {
-        resolveExpression(storage.function_applications.data[expression.index].child);
-    }
-    else if (type == TYPED_EXPRESSION) {
-        resolveExpression(storage.typed_expressions.data[expression.index].value);
-    }
-    else if (type == DYNAMIC_EXPRESSION) {
-        resolveExpression(storage.dynamic_expressions.data[expression.index].expression);
-    }
-    // Everything else (LOOKUP_SYMBOL, NUMBER, CHARACTER, strings, YES/NO,
-    // ARGUMENT, EMPTY_STACK, ERROR_EXPRESSION, ...) is a leaf: nothing to recurse into.
 }
 
 } // namespace
