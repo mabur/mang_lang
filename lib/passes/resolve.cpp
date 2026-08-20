@@ -139,9 +139,9 @@ void resolveStatementInScope(Expression statement, DictionaryIndexTable table) {
 }
 
 void resolveConditionalInScope(Expression expression, DictionaryIndexTable table) {
-    const auto& conditional = storage.conditionals.data[expression.index];
+    auto conditional = storage.conditionals.data[expression.index];
     FOR_EACH(i, conditional.alternatives) {
-        const auto& alternative = storage.alternatives.data[i];
+        auto alternative = storage.alternatives.data[i];
         resolveExpressionInScope(alternative.left, table);
         resolveExpressionInScope(alternative.right, table);
     }
@@ -149,10 +149,10 @@ void resolveConditionalInScope(Expression expression, DictionaryIndexTable table
 }
 
 void resolveIsInScope(Expression expression, DictionaryIndexTable table) {
-    const auto& is_expression = storage.is_expressions.data[expression.index];
+    auto is_expression = storage.is_expressions.data[expression.index];
     resolveExpressionInScope(is_expression.input, table);
     FOR_EACH(i, is_expression.alternative) {
-        const auto& alternative = storage.alternatives.data[i];
+        auto alternative = storage.alternatives.data[i];
         resolveExpressionInScope(alternative.left, table);
         resolveExpressionInScope(alternative.right, table);
     }
@@ -160,7 +160,7 @@ void resolveIsInScope(Expression expression, DictionaryIndexTable table) {
 }
 
 void resolveTupleInScope(Expression expression, DictionaryIndexTable table) {
-    const auto& tuple = storage.tuples.data[expression.index];
+    auto tuple = storage.tuples.data[expression.index];
     FOR_EACH(i, tuple.indices) {
         resolveExpressionInScope(storage.expressions.data[i], table);
     }
@@ -169,16 +169,16 @@ void resolveTupleInScope(Expression expression, DictionaryIndexTable table) {
 void resolveStackInScope(Expression expression, DictionaryIndexTable table) {
     auto current = expression;
     while (current.type == STACK) {
-        const auto& stack = storage.stacks.data[current.index];
+        auto stack = storage.stacks.data[current.index];
         resolveExpressionInScope(stack.top, table);
         current = stack.rest;
     }
 }
 
 void resolveTableInScope(Expression expression, DictionaryIndexTable table) {
-    const auto& t = storage.tables.data[expression.index];
+    auto t = storage.tables.data[expression.index];
     FOR_EACH(i, t.rows) {
-        const auto& row = storage.rows.data[i];
+        auto row = storage.rows.data[i];
         resolveExpressionInScope(row.key, table);
         resolveExpressionInScope(row.value, table);
     }
@@ -257,9 +257,9 @@ void resolveFunctionTuple(Expression expression) {
 }
 
 void resolveConditional(Expression expression) {
-    const auto& conditional = storage.conditionals.data[expression.index];
+    auto conditional = storage.conditionals.data[expression.index];
     FOR_EACH(i, conditional.alternatives) {
-        const auto& alternative = storage.alternatives.data[i];
+        auto alternative = storage.alternatives.data[i];
         resolveExpression(alternative.left);
         resolveExpression(alternative.right);
     }
@@ -267,10 +267,10 @@ void resolveConditional(Expression expression) {
 }
 
 void resolveIs(Expression expression) {
-    const auto& is_expression = storage.is_expressions.data[expression.index];
+    auto is_expression = storage.is_expressions.data[expression.index];
     resolveExpression(is_expression.input);
     FOR_EACH(i, is_expression.alternative) {
-        const auto& alternative = storage.alternatives.data[i];
+        auto alternative = storage.alternatives.data[i];
         resolveExpression(alternative.left);
         resolveExpression(alternative.right);
     }
@@ -278,7 +278,7 @@ void resolveIs(Expression expression) {
 }
 
 void resolveTuple(Expression expression) {
-    const auto& tuple = storage.tuples.data[expression.index];
+    auto tuple = storage.tuples.data[expression.index];
     FOR_EACH(i, tuple.indices) {
         resolveExpression(storage.expressions.data[i]);
     }
@@ -287,16 +287,16 @@ void resolveTuple(Expression expression) {
 void resolveStack(Expression expression) {
     auto current = expression;
     while (current.type == STACK) {
-        const auto& stack = storage.stacks.data[current.index];
+        auto stack = storage.stacks.data[current.index];
         resolveExpression(stack.top);
         current = stack.rest;
     }
 }
 
 void resolveTable(Expression expression) {
-    const auto& table = storage.tables.data[expression.index];
+    auto table = storage.tables.data[expression.index];
     FOR_EACH(i, table.rows) {
-        const auto& row = storage.rows.data[i];
+        auto row = storage.rows.data[i];
         resolveExpression(row.key);
         resolveExpression(row.value);
     }
