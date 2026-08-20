@@ -280,7 +280,7 @@ Expression parseForStatement(CodeRange code) {
     }
 }
 
-Expression parseWhileEndStatement(CodeRange code, size_t start_index) {
+Expression parseEndStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "end")) {
         return makeErrorExpression(code,
@@ -289,31 +289,7 @@ Expression parseWhileEndStatement(CodeRange code, size_t start_index) {
     }
     code = parseKeyword(code, "end");
     code = parseWhiteSpace(code);
-    return makeWhileEndStatement(firstPart(whole, code), {start_index});
-}
-
-Expression parseForEndStatement(CodeRange code, size_t start_index) {
-    auto whole = code;
-    if (!isKeyword(code, "end")) {
-        return makeErrorExpression(code,
-            "I found a parsing error. I was expecting the keyword 'end'."
-        );
-    }
-    code = parseKeyword(code, "end");
-    code = parseWhiteSpace(code);
-    return makeForEndStatement(firstPart(whole, code), {start_index});
-}
-
-Expression parseForSimpleEndStatement(CodeRange code, size_t start_index) {
-    auto whole = code;
-    if (!isKeyword(code, "end")) {
-        return makeErrorExpression(code,
-            "I found a parsing error. I was expecting the keyword 'end'."
-        );
-    }
-    code = parseKeyword(code, "end");
-    code = parseWhiteSpace(code);
-    return makeForSimpleEndStatement(firstPart(whole, code), {start_index});
+    return Expression{0, firstPart(whole, code), END_STATEMENT};
 }
 
 Expression parseReturnStatement(CodeRange code) {
@@ -328,12 +304,6 @@ Expression parseReturnStatement(CodeRange code) {
     return Expression{0, firstPart(whole, code), RETURN_STATEMENT};
 }
 
-struct DynamicIndices {
-    size_t* data;
-    size_t count;
-    size_t capacity;
-};
-
 Expression parseDictionary(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '{')) {
@@ -342,7 +312,7 @@ Expression parseDictionary(CodeRange code) {
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto statements = Expressions{};
-    auto loop_start_indices = DynamicIndices{};
+    auto loop_depth = size_t{0};
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         if (IS_EMPTY(code)) {
@@ -351,35 +321,21 @@ Expression parseDictionary(CodeRange code) {
             );
         }
         if (isKeyword(code, "while")) {
-            APPEND(loop_start_indices, statements.count);
+            ++loop_depth;
             APPEND(statements, parseWhileStatement(code));
         }
         else if (isKeyword(code, "for")) {
-            APPEND(loop_start_indices, statements.count);
+            ++loop_depth;
             APPEND(statements, parseForStatement(code));
         }
         else if (isKeyword(code, "end")) {
-            const auto loop_end_index = statements.count;
-            if (IS_EMPTY(loop_start_indices)) {
+            if (loop_depth == 0) {
                 return makeErrorExpression(code,
                     "I find a parsing error.\n"
                     "end is not matching a while or for");
             }
-            const auto loop_start_index = LAST_ITEM(loop_start_indices);
-            DROP_BACK(loop_start_indices);
-            const auto start_expression = statements.data[loop_start_index];
-            if (start_expression.type == WHILE_STATEMENT) {
-                storage.while_statements.data[start_expression.index].end_index = loop_end_index;
-                APPEND(statements, parseWhileEndStatement(code, loop_start_index));
-            } else if (start_expression.type == FOR_STATEMENT) {
-                storage.for_statements.data[start_expression.index].end_index = loop_end_index;
-                APPEND(statements, parseForEndStatement(code, loop_start_index));
-            } else if (start_expression.type == FOR_SIMPLE_STATEMENT) {
-                storage.for_simple_statements.data[start_expression.index].end_index = loop_end_index;
-                APPEND(statements, parseForSimpleEndStatement(code, loop_start_index));
-            } else {
-                return makeErrorExpression(code, "Unexpected start type for loop");
-            }
+            --loop_depth;
+            APPEND(statements, parseEndStatement(code));
         }
         else if (isKeyword(code, "return")) {
             APPEND(statements, parseReturnStatement(code));
@@ -393,14 +349,13 @@ Expression parseDictionary(CodeRange code) {
         return makeErrorExpression(code, "Parse error. Expected }");
     }
     code = parseCharacter(code);
-    
+
     const auto statements_first = storage.statements.count;
     CONCAT(storage.statements, statements);
     const auto statements_last = storage.statements.count;
 
     FREE_DARRAY(statements);
-    FREE_DARRAY(loop_start_indices);
-    
+
     auto dictionary = Dictionary{Indices{statements_first, statements_last - statements_first}, 0};
     return makeDictionary(firstPart(whole, code), dictionary);
 }
