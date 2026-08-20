@@ -18,6 +18,7 @@ add_library(manglang_lib
         lib/built_in_functions/container.cpp
         lib/passes/evaluate.cpp
         lib/passes/parse.cpp
+        lib/passes/resolve.cpp
         lib/passes/serialize.cpp
         lib/exceptions.cpp
         lib/expression.cpp

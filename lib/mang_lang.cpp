@@ -4,6 +4,7 @@
 #include "built_in_functions/standard_library.h"
 #include "passes/evaluate.h"
 #include "passes/parse.h"
+#include "passes/resolve.h"
 #include "passes/serialize.h"
 #include "mang_lang_string.h"
 
@@ -20,7 +21,7 @@ StringBuilder serializeAndClearMemory(Expression expression) {
 
 StringBuilder reformat(const char* code) {
     auto code_characters = makeCodeCharacters(code);
-    return serializeAndClearMemory(parseExpression(code_characters));
+    return serializeAndClearMemory(resolve(parseExpression(code_characters)));
 }
 
 StringBuilder evaluate_types(const char* code) {
@@ -29,9 +30,9 @@ StringBuilder evaluate_types(const char* code) {
     const auto code_characters_program = makeCodeCharacters(code);
     
     // N.B. Need to create all code characters before parsing for stable string interning.
-    const auto std_ast = parseExpression(code_character_standard_library);
-    const auto code_ast = parseExpression(code_characters_program);
-    
+    const auto std_ast = resolve(parseExpression(code_character_standard_library));
+    const auto code_ast = resolve(parseExpression(code_characters_program));
+
     // bind(std_ast, built_ins);
     // bind(code_ast, std_ast);
     const auto standard_library = evaluate_types(std_ast, built_ins);
@@ -49,11 +50,11 @@ StringBuilder evaluate_all(const char* code) {
     auto code_characters_program = makeCodeCharacters(code);
     // N.B. Need to create all code characters before parsing for stable string interning.
     
-    const auto std_ast = parseExpression(code_character_standard_library);
+    const auto std_ast = resolve(parseExpression(code_character_standard_library));
     if (std_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_ast);
     }
-    const auto code_ast = parseExpression(code_characters_program);
+    const auto code_ast = resolve(parseExpression(code_characters_program));
     if (code_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(code_ast);
     }
