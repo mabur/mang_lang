@@ -117,15 +117,15 @@ void resolveExpression(Expression expression);
 // resolvable with a direct slot lookup; on failure it is left untouched
 // (still `parent_steps == -1`), so evaluation falls back to the existing
 // dynamic search up the environment chain.
-bool tryResolveInScope(BoundGlobalName& name, const DictionaryIndexTable& table) {
+BoundGlobalName tryResolveInScope(BoundGlobalName name, const DictionaryIndexTable& table) {
     size_t dictionary_index = SIZE_MAX;
     GET_KEY_VALUE(name.global_index, dictionary_index, table);
     if (dictionary_index == SIZE_MAX) {
-        return false;
+        return name;
     }
     name.parent_steps = 0;
     name.dictionary_index = dictionary_index;
-    return true;
+    return name;
 }
 
 void resolveExpressionInScope(Expression expression, const DictionaryIndexTable& table);
@@ -192,13 +192,13 @@ void resolveLookupChildInScope(Expression expression, const DictionaryIndexTable
 
 void resolveFunctionApplicationInScope(Expression expression, const DictionaryIndexTable& table) {
     auto& function_application = storage.function_applications.data[expression.index];
-    tryResolveInScope(function_application.name, table);
+    function_application.name = tryResolveInScope(function_application.name, table);
     resolveExpressionInScope(function_application.child, table);
 }
 
 void resolveTypedExpressionInScope(Expression expression, const DictionaryIndexTable& table) {
     auto& typed_expression = storage.typed_expressions.data[expression.index];
-    tryResolveInScope(typed_expression.type_name, table);
+    typed_expression.type_name = tryResolveInScope(typed_expression.type_name, table);
     resolveExpressionInScope(typed_expression.value, table);
 }
 
@@ -207,7 +207,7 @@ void resolveDynamicExpressionInScope(Expression expression, const DictionaryInde
 }
 
 void resolveLookupSymbolInScope(Expression expression, const DictionaryIndexTable& table) {
-    tryResolveInScope(storage.symbol_lookups.data[expression.index].name, table);
+    storage.symbol_lookups.data[expression.index].name = tryResolveInScope(storage.symbol_lookups.data[expression.index].name, table);
 }
 
 // Mirrors `resolveExpression`'s traversal, but additionally attempts to
