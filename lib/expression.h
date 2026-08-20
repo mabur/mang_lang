@@ -37,6 +37,7 @@ struct Indices {
 struct BoundGlobalName {
     size_t global_index; // Index to this name in the global storage.
     int parent_steps = -1; // Number of steps to parent. -1 if unresolved yet.
+    size_t dictionary_index = SIZE_MAX; // Index within the resolved dictionary. Only meaningful if parent_steps != -1.
 };
 
 // The name binds to a possibly mutable value in the currently constructed dictionary.

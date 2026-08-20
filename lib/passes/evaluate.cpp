@@ -395,6 +395,9 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
             "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range));
     }
     const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
+    if (name.parent_steps == 0) {
+        return storage.definitions.data[dictionary.definitions.data + name.dictionary_index].expression;
+    }
     const auto result = optionalLookup(dictionary, name.global_index);
     if (result.ok) {
         return result.value;
