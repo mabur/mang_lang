@@ -447,6 +447,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case WHILE_END_STATEMENT: return concatenate(s, "end ");
         case FOR_END_STATEMENT: return concatenate(s, "end ");
         case FOR_SIMPLE_END_STATEMENT: return concatenate(s, "end ");
+        case END_STATEMENT: return concatenate(s, "end ");
         case RETURN_STATEMENT: return concatenate(s, "return ");
         default: return concatenate(s, getExpressionName(expression.type));
     }

@@ -35,6 +35,7 @@ const char* getExpressionName(ExpressionType type) {
         case WHILE_END_STATEMENT: return "WHILE_END_STATEMENT";
         case FOR_END_STATEMENT: return "FOR_END_STATEMENT";
         case FOR_SIMPLE_END_STATEMENT: return "FOR_SIMPLE_END_STATEMENT";
+        case END_STATEMENT: return "END_STATEMENT";
         case RETURN_STATEMENT: return "RETURN_STATEMENT";
         case NUMBER: return "NUMBER";
         case STRING: return "STRING";
