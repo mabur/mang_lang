@@ -1,19 +1,19 @@
 PASSES
 
-* Parsing
+* Parse
   - Convert from string
   - 1:1
-* Binding & Name Resolution, pre-evaluation
+* Resolve, pre-evaluation
   - Calculate jumps for loops
   - Calculate jumps for names
   - 1:1
-* Type Evaluation/checking
+* Evaluate Types
   - Reduction
   - Use a stack
-* Value Evaluation
+* Evaluate Values
   - Reduction
   - Use a stack
-* Serialization
+* Serialize
   - Convert to string
   - 1:1
 
