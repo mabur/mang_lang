@@ -25,7 +25,14 @@ STACK
 
 
 STACK FOR FAST NAME LOOKUP
-* Store all 
+
+* Store all name definitions
+* Similar to constructing evaluated dictionaries
+* Create copies of expressions on the stack for now. Later on we could just store them on the stack.
+* Each item on the stack is an Expression, corresponding to the right hand side of a definition.
+* Let other part of the code handle popping of the stack when dictionaries goes out of scope.
+
+{a=1 b={c=a}}
 
 
 PRIMITIVE VALUES
