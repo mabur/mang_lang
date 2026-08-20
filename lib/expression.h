@@ -39,6 +39,7 @@ struct BoundGlobalName {
     int parent_steps = -1; // Number of steps to parent. -1 if unresolved yet.
 };
 
+// The name binds to a possibly mutable value in the currently constructed dictionary.
 struct BoundLocalName {
     size_t global_index; // Index to this name in the global storage.
     size_t dictionary_index; // Index to this name and its data in the dictionary.
