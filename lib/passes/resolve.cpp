@@ -66,11 +66,53 @@ void bindDictionaryNames(Dictionary& dictionary_struct) {
     FREE_TABLE(index_table);
 }
 
+struct DynamicIndices {
+    size_t* data;
+    size_t count;
+    size_t capacity;
+};
+
+// Matches each loop-end statement to its loop-start statement, using local
+// indices relative to the start of the dictionary's own statement range
+// (the same convention `evaluateDictionary` uses to jump between them).
+// A generic END_STATEMENT is refined here into the concrete
+// WHILE_END_STATEMENT/FOR_END_STATEMENT/FOR_SIMPLE_END_STATEMENT it closes.
+void resolveDictionaryLoops(Dictionary& dictionary_struct) {
+    const auto base_index = dictionary_struct.statements.data;
+    auto loop_start_indices = DynamicIndices{};
+
+    FOR_EACH(i, dictionary_struct.statements) {
+        const auto local_index = i - base_index;
+        auto& statement = storage.statements.data[i];
+        const auto type = statement.type;
+        if (type == WHILE_STATEMENT || type == FOR_STATEMENT || type == FOR_SIMPLE_STATEMENT) {
+            APPEND(loop_start_indices, local_index);
+        }
+        else if (type == END_STATEMENT) {
+            const auto start_local_index = LAST_ITEM(loop_start_indices);
+            DROP_BACK(loop_start_indices);
+            auto& start_statement = storage.statements.data[base_index + start_local_index];
+            if (start_statement.type == WHILE_STATEMENT) {
+                storage.while_statements.data[start_statement.index].end_index = local_index;
+                statement = makeWhileEndStatement(statement.range, WhileEndStatement{start_local_index});
+            } else if (start_statement.type == FOR_STATEMENT) {
+                storage.for_statements.data[start_statement.index].end_index = local_index;
+                statement = makeForEndStatement(statement.range, ForEndStatement{start_local_index});
+            } else if (start_statement.type == FOR_SIMPLE_STATEMENT) {
+                storage.for_simple_statements.data[start_statement.index].end_index = local_index;
+                statement = makeForSimpleEndStatement(statement.range, ForSimpleEndStatement{start_local_index});
+            }
+        }
+    }
+    FREE_DARRAY(loop_start_indices);
+}
+
 } // namespace
 
 Expression resolve(Expression expression) {
     FOR_EACH(dictionary, storage.dictionaries) {
         bindDictionaryNames(*dictionary);
+        resolveDictionaryLoops(*dictionary);
     }
     return expression;
 }
