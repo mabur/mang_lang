@@ -117,7 +117,7 @@ void resolveExpression(Expression expression);
 // resolvable with a direct slot lookup; on failure it is left untouched
 // (still `parent_steps == -1`), so evaluation falls back to the existing
 // dynamic search up the environment chain.
-BoundGlobalName tryResolveInScope(BoundGlobalName name, const DictionaryIndexTable& table) {
+BoundGlobalName tryResolveInScope(BoundGlobalName name, DictionaryIndexTable table) {
     size_t dictionary_index = SIZE_MAX;
     GET_KEY_VALUE(name.global_index, dictionary_index, table);
     if (dictionary_index == SIZE_MAX) {
@@ -128,9 +128,9 @@ BoundGlobalName tryResolveInScope(BoundGlobalName name, const DictionaryIndexTab
     return name;
 }
 
-void resolveExpressionInScope(Expression expression, const DictionaryIndexTable& table);
+void resolveExpressionInScope(Expression expression, DictionaryIndexTable table);
 
-void resolveStatementInScope(Expression statement, const DictionaryIndexTable& table) {
+void resolveStatementInScope(Expression statement, DictionaryIndexTable table) {
     switch (statement.type) {
         case DEFINITION: return resolveExpressionInScope(storage.definitions.data[statement.index].expression, table);
         case PUT_ASSIGNMENT: return resolveExpressionInScope(storage.put_assignments.data[statement.index].expression, table);
@@ -140,7 +140,7 @@ void resolveStatementInScope(Expression statement, const DictionaryIndexTable& t
     }
 }
 
-void resolveConditionalInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveConditionalInScope(Expression expression, DictionaryIndexTable table) {
     const auto& conditional = storage.conditionals.data[expression.index];
     FOR_EACH(i, conditional.alternatives) {
         const auto& alternative = storage.alternatives.data[i];
@@ -150,7 +150,7 @@ void resolveConditionalInScope(Expression expression, const DictionaryIndexTable
     resolveExpressionInScope(conditional.expression_else, table);
 }
 
-void resolveIsInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveIsInScope(Expression expression, DictionaryIndexTable table) {
     const auto& is_expression = storage.is_expressions.data[expression.index];
     resolveExpressionInScope(is_expression.input, table);
     FOR_EACH(i, is_expression.alternative) {
@@ -161,14 +161,14 @@ void resolveIsInScope(Expression expression, const DictionaryIndexTable& table) 
     resolveExpressionInScope(is_expression.expression_else, table);
 }
 
-void resolveTupleInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveTupleInScope(Expression expression, DictionaryIndexTable table) {
     const auto& tuple = storage.tuples.data[expression.index];
     FOR_EACH(i, tuple.indices) {
         resolveExpressionInScope(storage.expressions.data[i], table);
     }
 }
 
-void resolveStackInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveStackInScope(Expression expression, DictionaryIndexTable table) {
     auto current = expression;
     while (current.type == STACK) {
         const auto& stack = storage.stacks.data[current.index];
@@ -177,7 +177,7 @@ void resolveStackInScope(Expression expression, const DictionaryIndexTable& tabl
     }
 }
 
-void resolveTableInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveTableInScope(Expression expression, DictionaryIndexTable table) {
     const auto& t = storage.tables.data[expression.index];
     FOR_EACH(i, t.rows) {
         const auto& row = storage.rows.data[i];
@@ -186,27 +186,27 @@ void resolveTableInScope(Expression expression, const DictionaryIndexTable& tabl
     }
 }
 
-void resolveLookupChildInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveLookupChildInScope(Expression expression, DictionaryIndexTable table) {
     return resolveExpressionInScope(storage.child_lookups.data[expression.index].child, table);
 }
 
-void resolveFunctionApplicationInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveFunctionApplicationInScope(Expression expression, DictionaryIndexTable table) {
     auto& function_application = storage.function_applications.data[expression.index];
     function_application.name = tryResolveInScope(function_application.name, table);
     resolveExpressionInScope(function_application.child, table);
 }
 
-void resolveTypedExpressionInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveTypedExpressionInScope(Expression expression, DictionaryIndexTable table) {
     auto& typed_expression = storage.typed_expressions.data[expression.index];
     typed_expression.type_name = tryResolveInScope(typed_expression.type_name, table);
     resolveExpressionInScope(typed_expression.value, table);
 }
 
-void resolveDynamicExpressionInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveDynamicExpressionInScope(Expression expression, DictionaryIndexTable table) {
     return resolveExpressionInScope(storage.dynamic_expressions.data[expression.index].expression, table);
 }
 
-void resolveLookupSymbolInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveLookupSymbolInScope(Expression expression, DictionaryIndexTable table) {
     storage.symbol_lookups.data[expression.index].name = tryResolveInScope(storage.symbol_lookups.data[expression.index].name, table);
 }
 
@@ -215,7 +215,7 @@ void resolveLookupSymbolInScope(Expression expression, const DictionaryIndexTabl
 // locals). Stops carrying `table` at a nested DICTIONARY/FUNCTION* boundary,
 // since that is a different scope, and defers to the plain (context-free)
 // walker there instead.
-void resolveExpressionInScope(Expression expression, const DictionaryIndexTable& table) {
+void resolveExpressionInScope(Expression expression, DictionaryIndexTable table) {
     switch (expression.type) {
         case DICTIONARY: return resolveExpression(expression);
         case FUNCTION: return resolveExpression(expression);
