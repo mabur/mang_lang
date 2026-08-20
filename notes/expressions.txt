@@ -19,8 +19,13 @@ PASSES
 
 
 STACK
+
 * Can be used for automatic freeing of memory
 * Can be used for faster name lookup
+
+
+STACK FOR FAST NAME LOOKUP
+* Store all 
 
 
 PRIMITIVE VALUES
