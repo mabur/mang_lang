@@ -33,9 +33,7 @@ DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocal
 // Builds the dictionary's local name table and leaves it to the caller to
 // free, since `resolveDictionary` also uses it to resolve same-dictionary
 // LookupSymbol/FunctionApplication/TypedExpression references.
-DictionaryIndexTable bindDictionaryNames(Dictionary& dictionary_struct) {
-    auto index_table_owner = DictionaryIndexTable{};
-
+DictionaryIndexTable bindDictionaryNames(Dictionary& dictionary_struct, DictionaryIndexTable index_table_owner) {
     FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
@@ -237,12 +235,13 @@ void resolveExpressionInScope(Expression expression, DictionaryIndexTable table)
 
 void resolveDictionary(Expression expression) {
     auto& dictionary_struct = storage.dictionaries.data[expression.index];
-    auto index_table = bindDictionaryNames(dictionary_struct);
+    auto index_table_owner = DictionaryIndexTable{};
+    index_table_owner = bindDictionaryNames(dictionary_struct, index_table_owner);
     resolveDictionaryLoops(dictionary_struct);
     FOR_EACH(i, dictionary_struct.statements) {
-        resolveStatementInScope(storage.statements.data[i], index_table);
+        resolveStatementInScope(storage.statements.data[i], index_table_owner);
     }
-    FREE_TABLE(index_table);
+    FREE_TABLE(index_table_owner);
 }
 
 void resolveFunction(Expression expression) {
