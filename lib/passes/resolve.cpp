@@ -13,7 +13,7 @@ struct DynamicIndices {
     size_t capacity;
 };
     
-DynamicIndices bindName(DynamicIndices seen_names_owner, BoundLocalName* name) {
+DynamicIndices bindLocalName(DynamicIndices seen_names_owner, BoundLocalName* name) {
     FOR_INDEX(i, seen_names_owner) {
         if (seen_names_owner.data[i] == name->global_index) {
             name->dictionary_index = i;
@@ -26,19 +26,19 @@ DynamicIndices bindName(DynamicIndices seen_names_owner, BoundLocalName* name) {
 }
 
 DynamicIndices bindNameForStatement(DynamicIndices seen_names_owner, Expression statement) {
-    seen_names_owner = bindName(seen_names_owner, &storage.for_statements.data[statement.index].item_name);
-    seen_names_owner = bindName(seen_names_owner, &storage.for_statements.data[statement.index].container_name);
+    seen_names_owner = bindLocalName(seen_names_owner, &storage.for_statements.data[statement.index].item_name);
+    seen_names_owner = bindLocalName(seen_names_owner, &storage.for_statements.data[statement.index].container_name);
     return seen_names_owner;
 }
 
 DynamicIndices bindNameStatement(DynamicIndices seen_names_owner, Expression statement) {
     switch (statement.type) {
-        case DEFINITION: return bindName(seen_names_owner, &storage.definitions.data[statement.index].name);
-        case PUT_ASSIGNMENT: return bindName(seen_names_owner, &storage.put_assignments.data[statement.index].name);
-        case PUT_EACH_ASSIGNMENT: return bindName(seen_names_owner, &storage.put_each_assignments.data[statement.index].name);
-        case DROP_ASSIGNMENT: return bindName(seen_names_owner, &storage.drop_assignments.data[statement.index].name);
+        case DEFINITION: return bindLocalName(seen_names_owner, &storage.definitions.data[statement.index].name);
+        case PUT_ASSIGNMENT: return bindLocalName(seen_names_owner, &storage.put_assignments.data[statement.index].name);
+        case PUT_EACH_ASSIGNMENT: return bindLocalName(seen_names_owner, &storage.put_each_assignments.data[statement.index].name);
+        case DROP_ASSIGNMENT: return bindLocalName(seen_names_owner, &storage.drop_assignments.data[statement.index].name);
         case FOR_STATEMENT: return bindNameForStatement(seen_names_owner, statement);
-        case FOR_SIMPLE_STATEMENT: return bindName(seen_names_owner, &storage.for_simple_statements.data[statement.index].container_name);
+        case FOR_SIMPLE_STATEMENT: return bindLocalName(seen_names_owner, &storage.for_simple_statements.data[statement.index].container_name);
         default: return seen_names_owner;
     }
 }
