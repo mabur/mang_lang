@@ -728,6 +728,12 @@ int main() {
         {"a@{c=<(2 3) (4 5)> a=c!2}", "3"},
         {"a@{c=<(2 3) (4 5)> a=c!4}", "5"},
     ));
+    testEvaluateTypes("built in as value", TEST_CASES(
+        {"a@{f=add a=f!(1 2)}", "NUMBER"},
+    ));
+    testEvaluateAll("built in as value", TEST_CASES(
+        {"a@{f=add a=f!(1 2)}", "3"},
+    ));
     testEvaluateAll("add", TEST_CASES(
         {"add!(1 0)", "1"},
         {"add!(0 1)", "1"},
