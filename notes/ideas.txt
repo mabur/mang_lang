@@ -12,6 +12,12 @@ TYPE SYSTEM
     Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
     - assert a < b < x
     - zip2 = in (<List>list0 <List>list1) out <[(take!list0 take!list1)]> ...
+* Add asserts/value-checks/predicates with similar syntax to type-checks:
+  - type-check:value-check;expression
+  - List:is_populated;expression
+  - List:expression
+  - is_populated;expression
+  - expression
 * Types & Prototypes
 * Dictionary composition, row polymorphism, like purescript, jsonnet, dhall, CUE, GCL (Google Configuration Language):
   - ColorARGB!{red=255}
@@ -265,12 +271,7 @@ end
 * kebab-case
   - Numbers and -inf constant.
 * Equality for dictionaries?
-* Add asserts/value-checks/predicates with similar syntax to type-checks:
-  - type-check:value-check;expression
-  - List:is_populated;expression
-  - List:expression
-  - is_populated;expression
-  - expression
+
 
 SYSTEM IMPLEMENTATION
 * Transpile to:
