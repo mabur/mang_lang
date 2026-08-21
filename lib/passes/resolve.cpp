@@ -163,7 +163,7 @@ OptionalIndex findInScope(Expression scope, size_t global_index) {
 // direct hop-and-index lookup; on failure it is returned untouched (still
 // `parent_steps == -1`), so evaluation falls back to the existing dynamic
 // search up the environment chain.
-BoundGlobalName tryResolve(BoundGlobalName name, ScopeChain chain) {
+BoundGlobalName tryBindGlobalName(BoundGlobalName name, ScopeChain chain) {
     for (auto steps = 0; ;++steps, chain = *chain.parent) {
         auto result = findInScope(chain.scope, name.global_index);
         if (result.ok) {
@@ -290,7 +290,7 @@ void resolveLookupChild(Expression expression, ScopeChain chain) {
 
 void resolveFunctionApplication(Expression expression, ScopeChain chain) {
     auto& function_application = storage.function_applications.data[expression.index];
-    function_application.name = tryResolve(function_application.name, chain);
+    function_application.name = tryBindGlobalName(function_application.name, chain);
     resolveExpression(function_application.child, chain);
 }
 
@@ -300,7 +300,7 @@ void resolveBuiltInApplication(Expression expression, ScopeChain chain) {
 
 void resolveTypedExpression(Expression expression, ScopeChain chain) {
     auto& typed_expression = storage.typed_expressions.data[expression.index];
-    typed_expression.type_name = tryResolve(typed_expression.type_name, chain);
+    typed_expression.type_name = tryBindGlobalName(typed_expression.type_name, chain);
     resolveExpression(typed_expression.value, chain);
 }
 
@@ -309,7 +309,7 @@ void resolveDynamicExpression(Expression expression, ScopeChain chain) {
 }
 
 void resolveLookupSymbol(Expression expression, ScopeChain chain) {
-    storage.symbol_lookups.data[expression.index].name = tryResolve(storage.symbol_lookups.data[expression.index].name, chain);
+    storage.symbol_lookups.data[expression.index].name = tryBindGlobalName(storage.symbol_lookups.data[expression.index].name, chain);
 }
 
 void resolveExpression(Expression expression, ScopeChain chain) {
