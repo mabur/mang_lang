@@ -54,17 +54,6 @@ DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, E
     }
     return index_table_owner;
 }
-    
-// Builds the dictionary's local name table and leaves it to the caller to
-// free, since `resolveDictionary` also uses it to resolve same-dictionary
-// LookupSymbol/FunctionApplication/TypedExpression references.
-DictionaryIndexTable bindDictionaryNames(Dictionary& dictionary_struct, DictionaryIndexTable index_table_owner) {
-    FOR_EACH(i, dictionary_struct.statements) {
-        index_table_owner = bindNameStatement(index_table_owner, storage.statements.data[i]);
-    }
-    dictionary_struct.definition_count = index_table_owner.count;
-    return index_table_owner;
-}
 
 struct DynamicIndices {
     size_t* data;
@@ -224,7 +213,10 @@ void resolveStatement(Expression statement, ScopeChain chain) {
 void resolveDictionary(Expression expression, ScopeChain chain) {
     auto& dictionary_struct = storage.dictionaries.data[expression.index];
     auto index_table_owner = DictionaryIndexTable{};
-    index_table_owner = bindDictionaryNames(dictionary_struct, index_table_owner);
+    FOR_EACH(i, dictionary_struct.statements) {
+        index_table_owner = bindNameStatement(index_table_owner, storage.statements.data[i]);
+    }
+    dictionary_struct.definition_count = index_table_owner.count;
     resolveDictionaryLoops(dictionary_struct);
     FREE_TABLE(index_table_owner);
     FOR_EACH(i, dictionary_struct.statements) {
