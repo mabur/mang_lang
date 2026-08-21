@@ -689,6 +689,7 @@ int main() {
         {"a@{f=in {x} out x a=f!{x=0}}", "0"},
         {"a@{f=in {x y} out add!(x y) a=f!{x=2 y=3}}", "5"},
         {"a@{b=2 f=in {x} out add!(b x) a=f!{x=0}}", "2"},
+        {"x@{a={b=1 f=in {x} out b} b=2 f=f@a x=f!{x=0}}", "1"},
     ));
     testEvaluateTypes("lookup function tuple", TEST_CASES(
         {"a@{f=in (x) out x a=f!(0)}", "NUMBER"},

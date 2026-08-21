@@ -302,15 +302,25 @@ Expression applyFunctionDictionary(
             getExpressionName(input.type)
         );
     }
-    const auto function_struct = storage.dictionary_functions.data[function.index];
-    const auto evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
-    FOR_EACH(i, function_struct.arguments) {
-        const auto argument = storage.arguments.data[i];
-        const auto expression = requiredLookup(evaluated_dictionary, argument.name);
+    auto function_struct = storage.dictionary_functions.data[function.index];
+    auto evaluated_dictionary = storage.evaluated_dictionaries.data[input.index];
+    auto first_argument = BEGIN_POINTER(function_struct.arguments);
+    auto num_arguments = function_struct.arguments.count;
+
+    // Allocation:
+    auto first = storage.definitions.count;
+    for (size_t i = 0; i < num_arguments; ++i) {
+        auto argument = storage.arguments.data[first_argument + i];
+        auto expression = requiredLookup(evaluated_dictionary, argument.name);
         checkArgument(evaluator, argument, expression, function_struct.environment);
+        makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
     }
-    // TODO: pass along environment? Is some use case missing now?
-    return evaluator(function_struct.body, input);
+    auto last = storage.definitions.count;
+    auto definitions = Indices{first, last - first};
+    auto middle = makeEvaluatedDictionary(input.range,
+        EvaluatedDictionary{function_struct.environment, definitions}
+    );
+    return evaluator(function_struct.body, middle);
 }
 
 template<typename Evaluator>
