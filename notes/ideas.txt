@@ -184,7 +184,10 @@ LANGUAGE SYNTAX & SEMANTICS
 * Rework for loops.
 for it in [3 8 9]
   sum += take!it
+  sum += get!it
+  sum += it!0
   sum += *it
+  sum += @it
 end
 
 for it in 9
