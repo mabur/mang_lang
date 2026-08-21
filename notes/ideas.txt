@@ -157,25 +157,6 @@ STANDARD LIBRARY
         <> then true
         0 then true
         else false
-  - Compare interface for iterating over containers and numbers:
-    - take!container, 1
-    - drop!container, dec!number, --
-    - put!(item container), add!(1 number), inc!number, +=
-    - empty, 0
-    - clear!container, [], "", <>, 0
-    - put!(take!x drop!x) == x, add!(1 dec!x) == x
-    - ett positivt heltal är ekvivalent med en stack, där bara längden på stacken spelar roll, men inte innehållet.
-    - sub!(a b) == drop_n!(count!b a)
-    - mul!(a b) == cartesian product?
-    - div?
-    - inc?
-    - reverse!number == number
-    - put_each!(a b) == add!(a b)
-    - make_number!container == count!container
-    - merge_stack!(a b) == sum_stack!(a b)
-    - map_number!(f number) == sum_N f(n)
-    - sum![numbers] == merge_stacks![stacks]
-    - product![numbers] == cartesian product?
   - get vs indexing
     - Replace get!(key table default_value) for tables with container!key?
     - O(N) for stack and string
@@ -240,6 +221,25 @@ end
     - Natural to have predecessor instead of successor for containers, since we can drop items without knowing what item we drop, but we cannot add an item without knowing what item we add.
     - Define generic programming axioms for containers using predecessor!
     - https://en.wikipedia.org/wiki/List_(abstract_data_type)
+  - Compare interface for iterating over containers and numbers:
+    - take!container, 1
+    - drop!container, dec!number, --
+    - put!(item container), add!(1 number), inc!number, +=
+    - empty, 0
+    - clear!container, [], "", <>, 0
+    - put!(take!x drop!x) == x, add!(1 dec!x) == x
+    - ett positivt heltal är ekvivalent med en stack, där bara längden på stacken spelar roll, men inte innehållet.
+    - sub!(a b) == drop_n!(count!b a)
+    - mul!(a b) == cartesian product?
+    - div?
+    - inc?
+    - reverse!number == number
+    - put_each!(a b) == add!(a b)
+    - make_number!container == count!container
+    - merge_stack!(a b) == sum_stack!(a b)
+    - map_number!(f number) == sum_N f(n)
+    - sum![numbers] == merge_stacks![stacks]
+    - product![numbers] == cartesian product?
 * Indexing
   - Allow both container!index and index!container. Second version is good for
     - multiple indexing of images x!y!image.
