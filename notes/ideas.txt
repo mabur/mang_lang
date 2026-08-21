@@ -11,6 +11,7 @@ TYPE SYSTEM
   - Maybe it is the wrong idea to have type ascriptions tied to a single expression or function input or output?
     Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
     - assert a < b < x
+    - assert strictly_increasing!(a b x) (as a dictionary statement)
     - zip2 = in (<List>list0 <List>list1) out <[(take!list0 take!list1)]> ...
 * Add asserts/value-checks/predicates with similar syntax to type-checks:
   - type-check:value-check;expression
