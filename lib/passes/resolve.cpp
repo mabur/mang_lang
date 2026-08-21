@@ -142,8 +142,7 @@ OptionalIndex findInDictionaryInner(Expression statement, size_t global_index) {
     default: return OptionalIndex{};
     }
 }
-    
-    
+
 // Looks for `global_index` among the locally-bound names in this
 // dictionary's own statements, reading the dictionary_index each was
 // already assigned by bindDictionaryNames.
@@ -349,7 +348,6 @@ void resolveExpression(Expression expression, ScopeChain chain) {
 } // namespace
 
 Expression resolve(Expression expression, Expression outer_scope) {
-    ScopeChain chain{outer_scope, nullptr};
-    resolveExpression(expression, chain);
+    resolveExpression(expression, ScopeChain{outer_scope, nullptr});
     return expression;
 }
