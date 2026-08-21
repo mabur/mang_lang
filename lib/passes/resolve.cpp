@@ -13,33 +13,32 @@ typedef struct DictionaryIndexTable {
     size_t capacity;
 } DictionaryIndexTable;
 
-DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocalName& name) {
+DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocalName* name) {
     FOR_INDEX(i, index_table_owner) {
-        if (index_table_owner.data[i] == name.global_index) {
-            name.dictionary_index = i;
+        if (index_table_owner.data[i] == name->global_index) {
+            name->dictionary_index = i;
             return index_table_owner;
         }
     }
-    name.dictionary_index = index_table_owner.count;
-    APPEND(index_table_owner, name.global_index);
+    name->dictionary_index = index_table_owner.count;
+    APPEND(index_table_owner, name->global_index);
     return index_table_owner;
 }
 
 DictionaryIndexTable bindNameForStatement(DictionaryIndexTable index_table_owner, Expression statement) {
-    auto& for_statement = storage.for_statements.data[statement.index];
-    index_table_owner = bindName(index_table_owner, for_statement.item_name);
-    index_table_owner = bindName(index_table_owner, for_statement.container_name);
+    index_table_owner = bindName(index_table_owner, &storage.for_statements.data[statement.index].item_name);
+    index_table_owner = bindName(index_table_owner, &storage.for_statements.data[statement.index].container_name);
     return index_table_owner;
 }
 
 DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, Expression statement) {
     switch (statement.type) {
-        case DEFINITION: return bindName(index_table_owner, storage.definitions.data[statement.index].name);
-        case PUT_ASSIGNMENT: return bindName(index_table_owner, storage.put_assignments.data[statement.index].name);
-        case PUT_EACH_ASSIGNMENT: return bindName(index_table_owner, storage.put_each_assignments.data[statement.index].name);
-        case DROP_ASSIGNMENT: return bindName(index_table_owner, storage.drop_assignments.data[statement.index].name);
+        case DEFINITION: return bindName(index_table_owner, &storage.definitions.data[statement.index].name);
+        case PUT_ASSIGNMENT: return bindName(index_table_owner, &storage.put_assignments.data[statement.index].name);
+        case PUT_EACH_ASSIGNMENT: return bindName(index_table_owner, &storage.put_each_assignments.data[statement.index].name);
+        case DROP_ASSIGNMENT: return bindName(index_table_owner, &storage.drop_assignments.data[statement.index].name);
         case FOR_STATEMENT: return bindNameForStatement(index_table_owner, statement);
-        case FOR_SIMPLE_STATEMENT: return bindName(index_table_owner, storage.for_simple_statements.data[statement.index].container_name);
+        case FOR_SIMPLE_STATEMENT: return bindName(index_table_owner, &storage.for_simple_statements.data[statement.index].container_name);
         default: return index_table_owner;
     }
 }
