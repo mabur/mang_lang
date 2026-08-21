@@ -13,33 +13,33 @@ struct DynamicIndices {
     size_t capacity;
 };
     
-DynamicIndices bindLocalName(DynamicIndices seen_names_owner, BoundLocalName* name) {
-    FOR_INDEX(i, seen_names_owner) {
-        if (seen_names_owner.data[i] == name->global_index) {
+DynamicIndices bindLocalName(DynamicIndices dictionary_names_owner, BoundLocalName* name) {
+    FOR_INDEX(i, dictionary_names_owner) {
+        if (dictionary_names_owner.data[i] == name->global_index) {
             name->dictionary_index = i;
-            return seen_names_owner;
+            return dictionary_names_owner;
         }
     }
-    name->dictionary_index = seen_names_owner.count;
-    APPEND(seen_names_owner, name->global_index);
-    return seen_names_owner;
+    name->dictionary_index = dictionary_names_owner.count;
+    APPEND(dictionary_names_owner, name->global_index);
+    return dictionary_names_owner;
 }
 
-DynamicIndices bindNameForStatement(DynamicIndices seen_names_owner, Expression statement) {
-    seen_names_owner = bindLocalName(seen_names_owner, &storage.for_statements.data[statement.index].item_name);
-    seen_names_owner = bindLocalName(seen_names_owner, &storage.for_statements.data[statement.index].container_name);
-    return seen_names_owner;
+DynamicIndices bindNameForStatement(DynamicIndices dictionary_names_owner, Expression statement) {
+    dictionary_names_owner = bindLocalName(dictionary_names_owner, &storage.for_statements.data[statement.index].item_name);
+    dictionary_names_owner = bindLocalName(dictionary_names_owner, &storage.for_statements.data[statement.index].container_name);
+    return dictionary_names_owner;
 }
 
-DynamicIndices bindNameStatement(DynamicIndices seen_names_owner, Expression statement) {
+DynamicIndices bindNameStatement(DynamicIndices dictionary_names_owner, Expression statement) {
     switch (statement.type) {
-        case DEFINITION: return bindLocalName(seen_names_owner, &storage.definitions.data[statement.index].name);
-        case PUT_ASSIGNMENT: return bindLocalName(seen_names_owner, &storage.put_assignments.data[statement.index].name);
-        case PUT_EACH_ASSIGNMENT: return bindLocalName(seen_names_owner, &storage.put_each_assignments.data[statement.index].name);
-        case DROP_ASSIGNMENT: return bindLocalName(seen_names_owner, &storage.drop_assignments.data[statement.index].name);
-        case FOR_STATEMENT: return bindNameForStatement(seen_names_owner, statement);
-        case FOR_SIMPLE_STATEMENT: return bindLocalName(seen_names_owner, &storage.for_simple_statements.data[statement.index].container_name);
-        default: return seen_names_owner;
+        case DEFINITION: return bindLocalName(dictionary_names_owner, &storage.definitions.data[statement.index].name);
+        case PUT_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.put_assignments.data[statement.index].name);
+        case PUT_EACH_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.put_each_assignments.data[statement.index].name);
+        case DROP_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.drop_assignments.data[statement.index].name);
+        case FOR_STATEMENT: return bindNameForStatement(dictionary_names_owner, statement);
+        case FOR_SIMPLE_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.for_simple_statements.data[statement.index].container_name);
+        default: return dictionary_names_owner;
     }
 }
 
@@ -194,12 +194,12 @@ void resolveStatement(Expression statement, ScopeChain chain) {
 void resolveDictionary(Expression expression, ScopeChain chain) {
     auto dictionary_struct = &storage.dictionaries.data[expression.index];
     
-    auto seen_names_owner = DynamicIndices{};
+    auto dictionary_names_owner = DynamicIndices{};
     FOR_EACH(i, dictionary_struct->statements) {
-        seen_names_owner = bindNameStatement(seen_names_owner, storage.statements.data[i]);
+        dictionary_names_owner = bindNameStatement(dictionary_names_owner, storage.statements.data[i]);
     }
-    dictionary_struct->definition_count = seen_names_owner.count;
-    FREE_DARRAY(seen_names_owner);
+    dictionary_struct->definition_count = dictionary_names_owner.count;
+    FREE_DARRAY(dictionary_names_owner);
     
     resolveDictionaryLoops(*dictionary_struct);
     FOR_EACH(i, dictionary_struct->statements) {
