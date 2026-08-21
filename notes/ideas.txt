@@ -311,6 +311,7 @@ SYSTEM IMPLEMENTATION
 * Maybe types should not be re-evaluated for every function call?
   - Could store evaluted types if we have EvaluatedFunction structs.
     - So EvaluatedFunction sets both environment and types of arguments.
+* Consider tuples instead of stacks for 3D vectors.
 * Packing Expressions:
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
 * Add arrays
