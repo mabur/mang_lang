@@ -38,26 +38,15 @@ DictionaryIndexTable bindNameForStatement(DictionaryIndexTable index_table_owner
 }
 
 DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, Expression statement) {
-    auto type = statement.type;
-    if (type == DEFINITION) {
-        index_table_owner = bindName(index_table_owner, storage.definitions.data[statement.index].name);
+    switch (statement.type) {
+        case DEFINITION: return bindName(index_table_owner, storage.definitions.data[statement.index].name);
+        case PUT_ASSIGNMENT: return bindName(index_table_owner, storage.put_assignments.data[statement.index].name);
+        case PUT_EACH_ASSIGNMENT: return bindName(index_table_owner, storage.put_each_assignments.data[statement.index].name);
+        case DROP_ASSIGNMENT: return bindName(index_table_owner, storage.drop_assignments.data[statement.index].name);
+        case FOR_STATEMENT: return bindNameForStatement(index_table_owner, statement);
+        case FOR_SIMPLE_STATEMENT: return bindName(index_table_owner, storage.for_simple_statements.data[statement.index].container_name);
+        default: return index_table_owner;
     }
-    else if (type == PUT_ASSIGNMENT) {
-        index_table_owner = bindName(index_table_owner, storage.put_assignments.data[statement.index].name);
-    }
-    else if (type == PUT_EACH_ASSIGNMENT) {
-        index_table_owner = bindName(index_table_owner, storage.put_each_assignments.data[statement.index].name);
-    }
-    else if (type == DROP_ASSIGNMENT) {
-        index_table_owner = bindName(index_table_owner, storage.drop_assignments.data[statement.index].name);
-    }
-    else if (type == FOR_STATEMENT) {
-        index_table_owner = bindNameForStatement(index_table_owner, statement);
-    }
-    else if (type == FOR_SIMPLE_STATEMENT) {
-        index_table_owner = bindName(index_table_owner, storage.for_simple_statements.data[statement.index].container_name);
-    }
-    return index_table_owner;
 }
 
 struct DynamicIndices {
