@@ -25,19 +25,19 @@ DynamicIndices bindLocalName(DynamicIndices dictionary_names_owner, BoundLocalNa
     return dictionary_names_owner;
 }
 
-DynamicIndices bindNameForStatement(DynamicIndices dictionary_names_owner, Expression statement) {
+DynamicIndices bindLocalNameForStatement(DynamicIndices dictionary_names_owner, Expression statement) {
     dictionary_names_owner = bindLocalName(dictionary_names_owner, &storage.for_statements.data[statement.index].item_name);
     dictionary_names_owner = bindLocalName(dictionary_names_owner, &storage.for_statements.data[statement.index].container_name);
     return dictionary_names_owner;
 }
 
-DynamicIndices bindNameStatement(DynamicIndices dictionary_names_owner, Expression statement) {
+DynamicIndices bindLocalNameStatement(DynamicIndices dictionary_names_owner, Expression statement) {
     switch (statement.type) {
         case DEFINITION: return bindLocalName(dictionary_names_owner, &storage.definitions.data[statement.index].name);
         case PUT_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.put_assignments.data[statement.index].name);
         case PUT_EACH_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.put_each_assignments.data[statement.index].name);
         case DROP_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.drop_assignments.data[statement.index].name);
-        case FOR_STATEMENT: return bindNameForStatement(dictionary_names_owner, statement);
+        case FOR_STATEMENT: return bindLocalNameForStatement(dictionary_names_owner, statement);
         case FOR_SIMPLE_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.for_simple_statements.data[statement.index].container_name);
         default: return dictionary_names_owner;
     }
@@ -196,7 +196,7 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
     
     auto dictionary_names_owner = DynamicIndices{};
     FOR_EACH(i, dictionary_struct->statements) {
-        dictionary_names_owner = bindNameStatement(dictionary_names_owner, storage.statements.data[i]);
+        dictionary_names_owner = bindLocalNameStatement(dictionary_names_owner, storage.statements.data[i]);
     }
     dictionary_struct->definition_count = dictionary_names_owner.count;
     FREE_DARRAY(dictionary_names_owner);
