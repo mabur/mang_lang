@@ -7,13 +7,13 @@
 
 namespace {
 
-typedef struct DictionaryIndexTable {
+struct DynamicIndices {
     size_t* data;
     size_t count;
     size_t capacity;
-} DictionaryIndexTable;
-
-DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocalName* name) {
+};
+    
+DynamicIndices bindName(DynamicIndices index_table_owner, BoundLocalName* name) {
     FOR_INDEX(i, index_table_owner) {
         if (index_table_owner.data[i] == name->global_index) {
             name->dictionary_index = i;
@@ -25,13 +25,13 @@ DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocal
     return index_table_owner;
 }
 
-DictionaryIndexTable bindNameForStatement(DictionaryIndexTable index_table_owner, Expression statement) {
+DynamicIndices bindNameForStatement(DynamicIndices index_table_owner, Expression statement) {
     index_table_owner = bindName(index_table_owner, &storage.for_statements.data[statement.index].item_name);
     index_table_owner = bindName(index_table_owner, &storage.for_statements.data[statement.index].container_name);
     return index_table_owner;
 }
 
-DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, Expression statement) {
+DynamicIndices bindNameStatement(DynamicIndices index_table_owner, Expression statement) {
     switch (statement.type) {
         case DEFINITION: return bindName(index_table_owner, &storage.definitions.data[statement.index].name);
         case PUT_ASSIGNMENT: return bindName(index_table_owner, &storage.put_assignments.data[statement.index].name);
@@ -42,12 +42,6 @@ DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, E
         default: return index_table_owner;
     }
 }
-
-struct DynamicIndices {
-    size_t* data;
-    size_t count;
-    size_t capacity;
-};
 
 // Matches each loop-end statement to its loop-start statement, using local
 // indices relative to the start of the dictionary's own statement range
@@ -199,7 +193,7 @@ void resolveStatement(Expression statement, ScopeChain chain) {
 
 void resolveDictionary(Expression expression, ScopeChain chain) {
     auto& dictionary_struct = storage.dictionaries.data[expression.index];
-    auto index_table_owner = DictionaryIndexTable{};
+    auto index_table_owner = DynamicIndices{};
     FOR_EACH(i, dictionary_struct.statements) {
         index_table_owner = bindNameStatement(index_table_owner, storage.statements.data[i]);
     }
