@@ -30,6 +30,13 @@ DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocal
     return index_table_owner;
 }
 
+DictionaryIndexTable bindNameForStatement(DictionaryIndexTable index_table_owner, Expression statement) {
+    auto& for_statement = storage.for_statements.data[statement.index];
+    index_table_owner = bindName(index_table_owner, for_statement.item_name);
+    index_table_owner = bindName(index_table_owner, for_statement.container_name);
+    return index_table_owner;
+}
+
 DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, Expression statement) {
     auto type = statement.type;
     if (type == DEFINITION) {
@@ -45,9 +52,7 @@ DictionaryIndexTable bindNameStatement(DictionaryIndexTable index_table_owner, E
         index_table_owner = bindName(index_table_owner, storage.drop_assignments.data[statement.index].name);
     }
     else if (type == FOR_STATEMENT) {
-        auto& for_statement = storage.for_statements.data[statement.index];
-        index_table_owner = bindName(index_table_owner, for_statement.item_name);
-        index_table_owner = bindName(index_table_owner, for_statement.container_name);
+        index_table_owner = bindNameForStatement(index_table_owner, statement);
     }
     else if (type == FOR_SIMPLE_STATEMENT) {
         index_table_owner = bindName(index_table_owner, storage.for_simple_statements.data[statement.index].container_name);
