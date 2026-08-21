@@ -192,15 +192,17 @@ void resolveStatement(Expression statement, ScopeChain chain) {
 }
 
 void resolveDictionary(Expression expression, ScopeChain chain) {
-    auto& dictionary_struct = storage.dictionaries.data[expression.index];
+    auto dictionary_struct = &storage.dictionaries.data[expression.index];
+    
     auto index_table_owner = DynamicIndices{};
-    FOR_EACH(i, dictionary_struct.statements) {
+    FOR_EACH(i, dictionary_struct->statements) {
         index_table_owner = bindNameStatement(index_table_owner, storage.statements.data[i]);
     }
-    dictionary_struct.definition_count = index_table_owner.count;
-    resolveDictionaryLoops(dictionary_struct);
+    dictionary_struct->definition_count = index_table_owner.count;
     FREE_DARRAY(index_table_owner);
-    FOR_EACH(i, dictionary_struct.statements) {
+    
+    resolveDictionaryLoops(*dictionary_struct);
+    FOR_EACH(i, dictionary_struct->statements) {
         resolveStatement(storage.statements.data[i], ScopeChain{expression, &chain});
     }
 }
