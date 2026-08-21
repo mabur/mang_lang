@@ -9,6 +9,7 @@ TYPE SYSTEM
     - The downside is that <Square Circle Rectangle> could be repetitive if it appears in many places,
       in that case it is convenient to define a type like: Shape = union[Square Circle Rectangle]
   - Maybe it is the wrong idea to have type ascriptions tied to a single expression or function input or output?
+  - Maybe it is the wrong idea to have the type in a type ascriptions tied to a symbol rather than a type expression?
     Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
     - assert a < b < x
     - assert strictly_increasing!(a b x) (as a dictionary statement)
@@ -307,11 +308,11 @@ SYSTEM IMPLEMENTATION
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
   - Raytracer new computer 128x96: -> 2.6s -> 2.4s
-* Packing Expressions:
-  - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
 * Maybe types should not be re-evaluated for every function call?
   - Could store evaluted types if we have EvaluatedFunction structs.
     - So EvaluatedFunction sets both environment and types of arguments.
+* Packing Expressions:
+  - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
 * Add arrays
 * Improve EvaluatedDictionary.
   - EvaluatedDictionary is used both during evaluation and after evaluation.
