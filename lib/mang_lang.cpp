@@ -21,7 +21,7 @@ StringBuilder serializeAndClearMemory(Expression expression) {
 
 StringBuilder reformat(const char* code) {
     auto code_characters = makeCodeCharacters(code);
-    return serializeAndClearMemory(resolve(parseExpression(code_characters)));
+    return serializeAndClearMemory(resolve(parseExpression(code_characters), Expression{}));
 }
 
 StringBuilder evaluate_types(const char* code) {
@@ -30,11 +30,9 @@ StringBuilder evaluate_types(const char* code) {
     const auto code_characters_program = makeCodeCharacters(code);
     
     // N.B. Need to create all code characters before parsing for stable string interning.
-    const auto std_ast = resolve(parseExpression(code_character_standard_library));
-    const auto code_ast = resolve(parseExpression(code_characters_program));
+    const auto std_ast = resolve(parseExpression(code_character_standard_library), Expression{});
+    const auto code_ast = resolve(parseExpression(code_characters_program), std_ast);
 
-    // bind(std_ast, built_ins);
-    // bind(code_ast, std_ast);
     const auto standard_library = evaluate_types(std_ast, built_ins);
     auto buffer = StringBuilder{};
     buffer = serialize_types(buffer, evaluate_types(code_ast, standard_library));
@@ -50,16 +48,14 @@ StringBuilder evaluate_all(const char* code) {
     auto code_characters_program = makeCodeCharacters(code);
     // N.B. Need to create all code characters before parsing for stable string interning.
     
-    const auto std_ast = resolve(parseExpression(code_character_standard_library));
+    const auto std_ast = resolve(parseExpression(code_character_standard_library), Expression{});
     if (std_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_ast);
     }
-    const auto code_ast = resolve(parseExpression(code_characters_program));
+    const auto code_ast = resolve(parseExpression(code_characters_program), std_ast);
     if (code_ast.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(code_ast);
     }
-    // bind(std_ast, built_ins_types);
-    // bind(code_ast, std_ast);
     const auto std_checked = evaluate_types(std_ast, built_ins_types);
     if (std_checked.type == ERROR_EXPRESSION) {
         return serializeAndClearMemory(std_checked);

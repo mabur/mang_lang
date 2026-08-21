@@ -2,5 +2,5 @@
 
 struct Expression;
 
-Expression resolve(Expression expression);
+Expression resolve(Expression expression, Expression outer_scope);
 

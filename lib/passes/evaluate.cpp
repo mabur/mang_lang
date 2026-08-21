@@ -408,6 +408,13 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     if (name.parent_steps == 0) {
         return storage.definitions.data[dictionary.definitions.data + name.dictionary_index].expression;
     }
+    if (name.parent_steps > 0) {
+        return lookupDictionary(
+            range,
+            BoundGlobalName{name.global_index, name.parent_steps - 1, name.dictionary_index},
+            dictionary.environment
+        );
+    }
     const auto result = optionalLookup(dictionary, name.global_index);
     if (result.ok) {
         return result.value;
