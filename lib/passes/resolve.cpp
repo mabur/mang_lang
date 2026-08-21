@@ -1,32 +1,27 @@
 #include "resolve.h"
 
 #include <carma/carma.h>
-#include <carma/carma_table.h>
 
 #include "../expression.h"
 #include "../factory.h"
 
 namespace {
 
-typedef struct GlobalIndexAndDictionaryIndex {
-    size_t key; // Global index
-    size_t value; // Dictionary index
-    bool occupied;
-} GlobalIndexAndDictionaryIndex;
-
 typedef struct DictionaryIndexTable {
-    GlobalIndexAndDictionaryIndex* data;
+    size_t* data;
     size_t count;
     size_t capacity;
 } DictionaryIndexTable;
 
 DictionaryIndexTable bindName(DictionaryIndexTable index_table_owner, BoundLocalName& name) {
-    name.dictionary_index = SIZE_MAX;
-    GET_KEY_VALUE(name.global_index, name.dictionary_index, index_table_owner);
-    if (name.dictionary_index == SIZE_MAX) {
-        name.dictionary_index = index_table_owner.count;
-        SET_KEY_VALUE(name.global_index, name.dictionary_index, index_table_owner);
+    FOR_INDEX(i, index_table_owner) {
+        if (index_table_owner.data[i] == name.global_index) {
+            name.dictionary_index = i;
+            return index_table_owner;
+        }
     }
+    name.dictionary_index = index_table_owner.count;
+    APPEND(index_table_owner, name.global_index);
     return index_table_owner;
 }
 
@@ -211,7 +206,7 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
     }
     dictionary_struct.definition_count = index_table_owner.count;
     resolveDictionaryLoops(dictionary_struct);
-    FREE_TABLE(index_table_owner);
+    FREE_DARRAY(index_table_owner);
     FOR_EACH(i, dictionary_struct.statements) {
         resolveStatement(storage.statements.data[i], ScopeChain{expression, &chain});
     }
