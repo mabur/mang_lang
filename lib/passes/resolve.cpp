@@ -4,6 +4,7 @@
 
 #include "../expression.h"
 #include "../factory.h"
+#include "../built_in_functions/built_in_functions.h"
 
 namespace {
 
@@ -156,13 +157,6 @@ OptionalIndex findInScope(Expression scope, size_t global_index) {
     }
 }
 
-// Tries to resolve a name reference against the chain of lexically
-// enclosing scopes, walking outward and counting hops, innermost first (so
-// an inner declaration correctly shadows an outer one of the same name).
-// On success, `parent_steps`/`dictionary_index` mark it resolvable with a
-// direct hop-and-index lookup; on failure it is returned untouched (still
-// `parent_steps == -1`), so evaluation falls back to the existing dynamic
-// search up the environment chain.
 BoundGlobalName tryBindGlobalName(BoundGlobalName name, ScopeChain chain) {
     for (auto steps = 0; ;++steps, chain = *chain.parent) {
         auto result = findInScope(chain.scope, name.global_index);
@@ -172,7 +166,12 @@ BoundGlobalName tryBindGlobalName(BoundGlobalName name, ScopeChain chain) {
             return name;
         }
         if (chain.parent == nullptr) {
-            return name;
+            auto built_in = findBuiltIn(name.global_index);
+            if (built_in != nullptr) {
+                name.parent_steps = chain.scope.type == ANY ? steps : steps + 1;
+                name.dictionary_index = built_in - BUILT_IN_ENTRIES;
+            }
+            return name; // Error, but report it during evaluation for now.
         }
     }
 }

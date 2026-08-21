@@ -415,11 +415,8 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
             dictionary.environment
         );
     }
-    const auto result = optionalLookup(dictionary, name.global_index);
-    if (result.ok) {
-        return result.value;
-    }
-    return lookupDictionary(range, name, dictionary.environment);
+    auto symbol = storage.names.data + name.global_index;
+    return makeErrorExpression(range, "Cannot find symbol %s.\n%s", symbol, describeLocation(range));
 }
 
 Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
