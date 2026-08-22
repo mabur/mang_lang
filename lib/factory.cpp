@@ -306,6 +306,12 @@ CodeRange makeCodeCharacters(const char* s) {
             column = 1;
         }
     }
+    // Sentinel entry so an empty CodeRange right after the last character
+    // still has a valid row/column to report.
+    // This happens can happen if the input stops to early.
+    APPEND(storage.code_characters, '\0');
+    APPEND(storage.code_rows, row);
+    APPEND(storage.code_columns, column);
     return result;
 }
 

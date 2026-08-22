@@ -7,7 +7,11 @@
 
 String256 describeLocation(CodeRange code) {
     if (code.count == 0) {
-        return formatString256("It happened at an unknown location.");
+        return formatString256(
+            "It happened at row %zu and column %zu.",
+            firstRow(code),
+            firstColumn(code)
+        );
     }
     else if (code.count == 1) {
         return formatString256(

@@ -91,7 +91,7 @@ void testEvaluateAll(const char* case_name, TestCases test_cases) {
 
 int main() {
     testDescribeCodeRange("testDescribeCodeRange", TEST_CASES(
-        {"", "It happened at an unknown location."},
+        {"", "It happened at row 1 and column 1."},
         {"a", "It happened at row 1 and column 1."},
         {"yes", "It happened between row 1 and column 1 and row 1 and column 3."},
     ));
@@ -323,7 +323,7 @@ int main() {
         {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
         {"{i=[] i++=[1]}", "{i=[] i++=[1]}"},
         {"{end}", "I find a parsing error.\nend is not matching a while or for"},
-        {"{", "I found an error while parsing a dictionary.\nIt ended too early.\nIt happened at an unknown location."},
+        {"{", "I found an error while parsing a dictionary.\nIt ended too early.\nIt happened at row 1 and column 2."},
     ));
     testReformat("dictionary for", TEST_CASES(
         {"{for i in c end}", "{for i in c end}"},
