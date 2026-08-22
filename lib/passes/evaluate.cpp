@@ -255,18 +255,20 @@ Expression evaluateLookupChild(
     return requiredLookup(dictionary, lookup_child_struct.name);
 }
 
-template<typename Evaluator>
+template<bool CheckTypes, typename Evaluator>
 void checkArgument(
     Evaluator evaluator, const Argument& a, Expression input, Expression environment
 ) {
-    if (a.type.type == ANY) {
-        return;
+    if constexpr (CheckTypes) {
+        if (a.type.type == ANY) {
+            return;
+        }
+        const auto type = evaluator(a.type, environment);
+        checkTypes(input, type, "function call");
     }
-    const auto type = evaluator(a.type, environment);
-    checkTypes(input, type, "function call");
 }
 
-template<typename Evaluator>
+template<bool CheckTypes, typename Evaluator>
 Expression applyFunction(
     Evaluator evaluator,
     Expression function,
@@ -274,7 +276,7 @@ Expression applyFunction(
 ) {
     const auto function_struct = storage.functions.data[function.index];
     const auto argument = storage.arguments.data[function_struct.argument];
-    checkArgument(evaluator, argument, input, function_struct.environment);
+    checkArgument<CheckTypes>(evaluator, argument, input, function_struct.environment);
     // TODO: allocate on storage.definitions directly?
     // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
@@ -288,7 +290,7 @@ Expression applyFunction(
     return evaluator(function_struct.body, middle);
 }
 
-template<typename Evaluator>
+template<bool CheckTypes, typename Evaluator>
 Expression applyFunctionDictionary(
     Evaluator evaluator,
     Expression function,
@@ -312,7 +314,7 @@ Expression applyFunctionDictionary(
     for (size_t i = 0; i < num_arguments; ++i) {
         auto argument = storage.arguments.data[first_argument + i];
         auto expression = requiredLookup(evaluated_dictionary, argument.name);
-        checkArgument(evaluator, argument, expression, function_struct.environment);
+        checkArgument<CheckTypes>(evaluator, argument, expression, function_struct.environment);
         makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
     }
     auto last = storage.definitions.count;
@@ -323,7 +325,7 @@ Expression applyFunctionDictionary(
     return evaluator(function_struct.body, middle);
 }
 
-template<typename Evaluator>
+template<bool CheckTypes, typename Evaluator>
 Expression applyFunctionTuple(
     Evaluator evaluator,
     Expression function,
@@ -359,7 +361,7 @@ Expression applyFunctionTuple(
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.data[argument_index + i];
         const auto expression = storage.expressions.data[tuple.indices.data + i];
-        checkArgument(evaluator, argument, expression, function_struct.environment);
+        checkArgument<CheckTypes>(evaluator, argument, expression, function_struct.environment);
         makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
     }
     auto last = storage.definitions.count;
@@ -1087,10 +1089,10 @@ Expression evaluateFunctionApplicationTypes(
     switch (function.type) {
         case ERROR_EXPRESSION: return function;
 
-        case FUNCTION: return applyFunction(evaluate_types, function, input);
+        case FUNCTION: return applyFunction<true>(evaluate_types, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate_types, function, input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate_types, function, input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary<true>(evaluate_types, function, input);
+        case FUNCTION_TUPLE: return applyFunctionTuple<true>(evaluate_types, function, input);
 
         case EVALUATED_TABLE: return applyTableIndexingTypes(function);
         case EVALUATED_TUPLE: return applyTupleIndexing(function, input);
@@ -1120,10 +1122,10 @@ Expression evaluateFunctionApplication(
     switch (function.type) {
         case ERROR_EXPRESSION: return function;
 
-        case FUNCTION: return applyFunction(evaluate, function, input);
+        case FUNCTION: return applyFunction<false>(evaluate, function, input);
         case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary(evaluate, function, input);
-        case FUNCTION_TUPLE: return applyFunctionTuple(evaluate, function, input);
+        case FUNCTION_DICTIONARY: return applyFunctionDictionary<false>(evaluate, function, input);
+        case FUNCTION_TUPLE: return applyFunctionTuple<false>(evaluate, function, input);
         
         case EVALUATED_TABLE: return applyTableIndexing(function, input);
         case EVALUATED_TUPLE: return applyTupleIndexing(function, input);
