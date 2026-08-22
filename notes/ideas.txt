@@ -313,10 +313,7 @@ SYSTEM IMPLEMENTATION
 * Optimization:
   - Raytracer 32x20: 1.8,1.9,2.0,2.2,2.3s -> 1.0s -> 0.9s
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
-  - Raytracer new computer 128x96: -> 2.6s -> 2.4s -> 1.8s
-* Maybe types should not be re-evaluated for every function call?
-  - Could store evaluted types if we have EvaluatedFunction structs.
-    - So EvaluatedFunction sets both environment and types of arguments.
+  - Raytracer new computer 128x96: -> 2.6s -> 2.4s -> 1.8s -> 1.7s
 * Consider tuples instead of stacks for 3D vectors.
 * Packing Expressions:
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
