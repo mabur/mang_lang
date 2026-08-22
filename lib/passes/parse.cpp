@@ -317,8 +317,10 @@ Expression parseDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code,
-                "I found an error while parsing a dictionary.\nIt ended too early."
+            return makeErrorExpression(
+                code,
+                "I found an error while parsing a dictionary.\nIt ended too early.\n%s",
+                describeLocation(code)
             );
         }
         if (isKeyword(code, "while")) {
