@@ -467,8 +467,16 @@ const std::string STANDARD_LIBRARY = R"(
     mul2 = in (a b) out (mul!(a!0 b!0) mul!(a!1 b!1))
     div2 = in (a b) out (div!(a!0 b!0) div!(a!1 b!1))
     
+    add3 = in (a b) out (add!(a!0 b!0) add!(a!1 b!1) add!(a!2 b!2))
+    sub3 = in (a b) out (sub!(a!0 b!0) sub!(a!1 b!1) sub!(a!2 b!2))
+    mul3 = in (a b) out (mul!(a!0 b!0) mul!(a!1 b!1) mul!(a!2 b!2))
+    div3 = in (a b) out (div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
+
     dot2 = in (a b) out add!(mul!(a!0 b!0) mul!(a!1 b!1))
+    dot3 = in (a b) out add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
     squared_norm2 = in a out dot2!(a a)
+    squared_norm3 = in a out dot3!(a a)
     norm2 = in a out sqrt!squared_norm2!a
+    norm3 = in a out sqrt!squared_norm3!a
 }
 )";
