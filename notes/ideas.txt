@@ -315,6 +315,7 @@ SYSTEM IMPLEMENTATION
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
   - Raytracer new computer 128x96: -> 2.6s -> 2.4s -> 1.8s -> 1.7s -> 0.3s
   - Raytracer new computer 320x240: 1.9s -> 1.6s
+* Optimize calling of built-in functions without type checking.
 * Specialize expressions for small stacks, with content stored directly in the struct: Tuple2, Tuple3, Tuple4.
 * implement fold as built-in
 * Packing Expressions:
