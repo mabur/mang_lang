@@ -26,32 +26,24 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
     }
     return result;
 }
+    
+bool isNumberOrAny(Expression expression) {
+    return expression.type == NUMBER || expression.type == ANY;
+} 
 
-BinaryTuple checkTypeBinaryFunction(Expression in, ExpressionType expected, const char* function) {
+BinaryTuple checkTypeBinaryFunction(Expression in, const char* function) {
     auto result = getBinaryTuple(in, function);
     if (!result.ok) {
         return result;
     }
-    if (result.left.type != ANY && result.left.type != expected) {
+    if (!isNumberOrAny(result.left) || !isNumberOrAny(result.right)) {
         result.error = makeErrorExpression({},
             "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
-            "The function expects to be called with a tuple of two %ss,\n"
-            "but now the first item in the tuple is %s.\n",
+            "The function expects to be called with a tuple of two NUMBERs,\n"
+            "but now it got (%s %s).\n",
             function,
-            getExpressionName(expected),
-            getExpressionName(result.left.type)
-        );
-        return result;
-    }
-    if (result.right.type != ANY && result.right.type != expected) {
-        result.error = makeErrorExpression({},
-            "\n\nI have found a type error.\n"
-            "It happens when calling the built-in function %s.\n"
-            "The function expects to be called with a tuple of two %ss,\n"
-            "but now the second item in the tuple is %s.\n",
-            function,
-            getExpressionName(expected),
+            getExpressionName(result.left.type),
             getExpressionName(result.right.type)
         );
         return result;
@@ -67,37 +59,37 @@ Expression makeNumber(double x) {
 } // namespace
 
 Expression add(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "add");
+    auto type_check = checkTypeBinaryFunction(in, "add");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) + getNumber(type_check.right));
 }
 
 Expression mul(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mul");
+    auto type_check = checkTypeBinaryFunction(in, "mul");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) * getNumber(type_check.right));
 }
 
 Expression sub(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "sub");
+    auto type_check = checkTypeBinaryFunction(in, "sub");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) - getNumber(type_check.right));
 }
 
 Expression div(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "div");
+    auto type_check = checkTypeBinaryFunction(in, "div");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) / getNumber(type_check.right));
 }
 
 Expression mod(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "mod");
+    auto type_check = checkTypeBinaryFunction(in, "mod");
     if (!type_check.ok) return type_check.error;
     return makeNumber(fmod(getNumber(type_check.left), getNumber(type_check.right)));
 }
 
 Expression less(Expression in) {
-    auto type_check = checkTypeBinaryFunction(in, NUMBER, "less");
+    auto type_check = checkTypeBinaryFunction(in, "less");
     if (!type_check.ok) return type_check.error;
     const auto left = getNumber(type_check.left);
     const auto right = getNumber(type_check.right);
