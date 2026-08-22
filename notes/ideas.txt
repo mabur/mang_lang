@@ -315,7 +315,7 @@ SYSTEM IMPLEMENTATION
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
   - Raytracer new computer 128x96: -> 2.6s -> 2.4s -> 1.8s -> 1.7s -> 0.3s
   - Raytracer new computer 320x240: 1.9s
-* Only check types for function input in evaluate types pass
+* Only check types for function input in evaluate types pass, but then check if for all kinds of functions.
 * Specialize expressions for small stacks, with content stored directly in the struct: Tuple2, Tuple3, Tuple4.
 * implement fold as built-in
 * Packing Expressions:
