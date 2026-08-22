@@ -702,13 +702,18 @@ Expression evaluateIs(Expression is, Expression environment) {
     return evaluate(is_struct.expression_else, environment);
 }
 
-template<typename Evaluator>
-Expression evaluateTypedExpression(
-    Evaluator evaluator, Expression expression, Expression environment
-) {
+Expression evaluateTypedExpressionTypes(Expression expression, Expression environment) {
     auto name = storage.typed_expressions.data[expression.index].type_name;
     const auto type = lookupDictionary(expression.range, name, environment);
-    const auto value = evaluator(storage.typed_expressions.data[expression.index].value, environment);
+    const auto value = evaluate_types(storage.typed_expressions.data[expression.index].value, environment);
+    checkTypes(type, value, "typed expression");
+    return value;
+}
+    
+Expression evaluateTypedExpression(Expression expression, Expression environment) {
+    auto name = storage.typed_expressions.data[expression.index].type_name;
+    const auto type = lookupDictionary(expression.range, name, environment);
+    const auto value = evaluate(storage.typed_expressions.data[expression.index].value, environment);
     checkTypes(type, value, "typed expression");
     return value;
 }
@@ -1186,9 +1191,9 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE: return evaluateTable(evaluate_types, serialize_types, expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, expression, environment);
-        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate_types, expression, environment);
 
         // These are different for types and values:
+        case TYPED_EXPRESSION: return evaluateTypedExpressionTypes(expression, environment);
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpressionTyped(expression);
         case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
         case IS: return evaluateIsTypes(expression, environment);
@@ -1232,9 +1237,9 @@ Expression evaluate(Expression expression, Expression environment) {
         case TUPLE: return evaluateTuple(evaluate, expression, environment);
         case TABLE: return evaluateTable(evaluate, serialize, expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, expression, environment);
-        case TYPED_EXPRESSION: return evaluateTypedExpression(evaluate, expression, environment);
 
         // These are different for types and values:
+        case TYPED_EXPRESSION: return evaluateTypedExpression(expression, environment);
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpression(expression, environment);
         case CONDITIONAL: return evaluateConditional(expression, environment);
         case IS: return evaluateIs(expression, environment);
