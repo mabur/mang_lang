@@ -1909,5 +1909,14 @@ int main() {
         {"squared_norm![3 4]", "25"},
         {"norm![3 4]", "5"},
     ));
+    testEvaluateAll("vector 2D math", TEST_CASES(
+        {"add2!((1 2) (3 4))", "(4 6)"},
+        {"sub2!((1 2) (3 4))", "(-2 -2)"},
+        {"mul2!((1 2) (3 4))", "(3 8)"},
+        {"div2!((6 8) (3 2))", "(2 4)"},
+        {"dot2!((1 2) (3 4))", "11"},
+        {"squared_norm2!(3 4)", "25"},
+        {"norm2!(3 4)", "5"},
+    ));
     return summarizeTests();
 }

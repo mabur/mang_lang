@@ -461,5 +461,14 @@ const std::string STANDARD_LIBRARY = R"(
     dot = in (Numbers:a Numbers:b) out Number:sum!mulv!(a b)
     squared_norm = in Numbers:a out Number:dot!(a a)
     norm = in Numbers:a out Number:sqrt!squared_norm!a
+
+    add2 = in (a b) out (add!(a!0 b!0) add!(a!1 b!1))
+    sub2 = in (a b) out (sub!(a!0 b!0) sub!(a!1 b!1))
+    mul2 = in (a b) out (mul!(a!0 b!0) mul!(a!1 b!1))
+    div2 = in (a b) out (div!(a!0 b!0) div!(a!1 b!1))
+    
+    dot2 = in (a b) out add!(mul!(a!0 b!0) mul!(a!1 b!1))
+    squared_norm2 = in a out dot2!(a a)
+    norm2 = in a out sqrt!squared_norm2!a
 }
 )";
