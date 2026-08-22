@@ -14,6 +14,9 @@ const std::string STANDARD_LIBRARY = R"(
     Numbers = [Number]
     Function = in x out x
 
+    Vector2 = (Number Number)
+    Vector3 = (Number Number Number)
+
     boolean = in x out Boolean:if x then yes else no
     not = in x out Boolean:if x then no else yes
 
@@ -462,21 +465,21 @@ const std::string STANDARD_LIBRARY = R"(
     squared_norm = in Numbers:a out Number:dot!(a a)
     norm = in Numbers:a out Number:sqrt!squared_norm!a
 
-    add2 = in (a b) out (add!(a!0 b!0) add!(a!1 b!1))
-    sub2 = in (a b) out (sub!(a!0 b!0) sub!(a!1 b!1))
-    mul2 = in (a b) out (mul!(a!0 b!0) mul!(a!1 b!1))
-    div2 = in (a b) out (div!(a!0 b!0) div!(a!1 b!1))
+    add2 = in (Vector2:a Vector2:b) out Vector2:(add!(a!0 b!0) add!(a!1 b!1))
+    sub2 = in (Vector2:a Vector2:b) out Vector2:(sub!(a!0 b!0) sub!(a!1 b!1))
+    mul2 = in (Vector2:a Vector2:b) out Vector2:(mul!(a!0 b!0) mul!(a!1 b!1))
+    div2 = in (Vector2:a Vector2:b) out Vector2:(div!(a!0 b!0) div!(a!1 b!1))
     
-    add3 = in (a b) out (add!(a!0 b!0) add!(a!1 b!1) add!(a!2 b!2))
-    sub3 = in (a b) out (sub!(a!0 b!0) sub!(a!1 b!1) sub!(a!2 b!2))
-    mul3 = in (a b) out (mul!(a!0 b!0) mul!(a!1 b!1) mul!(a!2 b!2))
-    div3 = in (a b) out (div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
+    add3 = in (Vector3:a Vector3:b) out Vector3:(add!(a!0 b!0) add!(a!1 b!1) add!(a!2 b!2))
+    sub3 = in (Vector3:a Vector3:b) out Vector3:(sub!(a!0 b!0) sub!(a!1 b!1) sub!(a!2 b!2))
+    mul3 = in (Vector3:a Vector3:b) out Vector3:(mul!(a!0 b!0) mul!(a!1 b!1) mul!(a!2 b!2))
+    div3 = in (Vector3:a Vector3:b) out Vector3:(div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
 
-    dot2 = in (a b) out add!(mul!(a!0 b!0) mul!(a!1 b!1))
-    dot3 = in (a b) out add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
-    squared_norm2 = in a out dot2!(a a)
-    squared_norm3 = in a out dot3!(a a)
-    norm2 = in a out sqrt!squared_norm2!a
-    norm3 = in a out sqrt!squared_norm3!a
+    dot2 = in (Vector2:a Vector2:b) out Number:add!(mul!(a!0 b!0) mul!(a!1 b!1))
+    dot3 = in (Vector3:a Vector3:b) out add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
+    squared_norm2 = in Vector2:a out Number:dot2!(a a)
+    squared_norm3 = in Vector3:a out Number:dot3!(a a)
+    norm2 = in Vector2:a out Number:sqrt!squared_norm2!a
+    norm3 = in Vector3:a out Number:sqrt!squared_norm3!a
 }
 )";
