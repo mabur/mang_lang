@@ -64,12 +64,12 @@ findSingleIntersection = in (Vector3:start Vector3:direction Sphere:sphere) out 
     offset = sub3!(position@sphere start)
     c = dot3!(direction offset)
     is_backwards = less?(c 0.0)
-    for is_backwards
+    if is_backwards
         return
     end
     discriminant = add!(sub!(mul!(c c) squared_norm3!offset) squared_radius@sphere)
     is_outside = less?(discriminant 0.0)
-    for is_outside
+    if is_outside
         return
     end
     intersection = {
@@ -100,7 +100,7 @@ shadeAtmosphere = in (Intersection:intersection Vector3:atmosphere_color) out
 shade = in (Intersection:intersection world) out Vector3:color@{
     color = (1 1 1)
     is_infinite = equal?(inf distance@intersection)
-    for is_infinite
+    if is_infinite
         return
     end
     color = shadeAtmosphere!(intersection atmosphere_color@world)
