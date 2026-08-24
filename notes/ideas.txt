@@ -184,6 +184,12 @@ STANDARD LIBRARY
 LANGUAGE SYNTAX & SEMANTICS
 * Document if-statement.
 * Rework for loops to not consume or mutate symbol outside of loop.
+* How can we avoid the complications with the for-loop?
+  - List comprehension
+  - Fold
+  - More specialized higher order functions, variants of max and sum etc.
+  - Generators
+  - Have a special iterator type, that lookups to a value
 for it over [3 8 9]
   sum += take!it (exists)
   sum += get!it
