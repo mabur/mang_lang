@@ -44,11 +44,6 @@ DynamicIndices bindLocalNameStatement(DynamicIndices dictionary_names_owner, Exp
     }
 }
 
-// Matches each loop-end statement to its loop-start statement, using local
-// indices relative to the start of the dictionary's own statement range
-// (the same convention `evaluateDictionary` uses to jump between them).
-// A generic END_STATEMENT is refined here into the concrete
-// WHILE_END_STATEMENT/FOR_END_STATEMENT/FOR_SIMPLE_END_STATEMENT it closes.
 void resolveDictionaryLoops(Dictionary dictionary_struct) {
     const auto base_index = dictionary_struct.statements.data;
     auto loop_start_indices_owner = DynamicIndices{};
@@ -57,7 +52,7 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
         const auto local_index = i - base_index;
         auto& statement = storage.statements.data[i];
         const auto type = statement.type;
-        if (type == WHILE_STATEMENT || type == FOR_STATEMENT || type == FOR_SIMPLE_STATEMENT) {
+        if (type == WHILE_STATEMENT || type == FOR_STATEMENT || type == FOR_SIMPLE_STATEMENT || type == IF_STATEMENT) {
             APPEND(loop_start_indices_owner, local_index);
         }
         else if (type == END_STATEMENT) {
@@ -73,6 +68,9 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
             } else if (start_statement.type == FOR_SIMPLE_STATEMENT) {
                 storage.for_simple_statements.data[start_statement.index].end_index = local_index;
                 statement = makeForSimpleEndStatement(statement.range, ForSimpleEndStatement{start_local_index});
+            } else if (start_statement.type == IF_STATEMENT) {
+                storage.if_statements.data[start_statement.index].end_index = local_index;
+                statement = Expression{0, statement.range, IF_END_STATEMENT};
             }
         }
     }
@@ -184,6 +182,7 @@ void resolveStatement(Expression statement, ScopeChain chain) {
         case PUT_ASSIGNMENT: return resolveExpression(storage.put_assignments.data[statement.index].expression, chain);
         case PUT_EACH_ASSIGNMENT: return resolveExpression(storage.put_each_assignments.data[statement.index].expression, chain);
         case WHILE_STATEMENT: return resolveExpression(storage.while_statements.data[statement.index].expression, chain);
+        case IF_STATEMENT: return resolveExpression(storage.if_statements.data[statement.index].expression, chain);
         // DROP_ASSIGNMENT, FOR_STATEMENT, FOR_SIMPLE_STATEMENT, RETURN_STATEMENT,
         // and the various end-statements carry only names/indices, no expression.
         default: return;

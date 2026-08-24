@@ -185,6 +185,11 @@ struct ForSimpleStatement {
     size_t end_index;
 };
 
+struct IfStatement {
+    Expression expression;
+    size_t end_index;
+};
+
 struct WhileEndStatement {
     size_t start_index;
 };

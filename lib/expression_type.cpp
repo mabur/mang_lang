@@ -33,9 +33,11 @@ const char* getExpressionName(ExpressionType type) {
         case WHILE_STATEMENT: return "WHILE_STATEMENT";
         case FOR_STATEMENT: return "FOR_STATEMENT";
         case FOR_SIMPLE_STATEMENT: return "FOR_SIMPLE_STATEMENT";
+        case IF_STATEMENT: return "IF_STATEMENT";
         case WHILE_END_STATEMENT: return "WHILE_END_STATEMENT";
         case FOR_END_STATEMENT: return "FOR_END_STATEMENT";
         case FOR_SIMPLE_END_STATEMENT: return "FOR_SIMPLE_END_STATEMENT";
+        case IF_END_STATEMENT: return "IF_END_STATEMENT";
         case END_STATEMENT: return "END_STATEMENT";
         case RETURN_STATEMENT: return "RETURN_STATEMENT";
         case NUMBER: return "NUMBER";

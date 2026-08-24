@@ -281,6 +281,21 @@ Expression parseForStatement(CodeRange code) {
     }
 }
 
+Expression parseIfStatement(CodeRange code) {
+    auto whole = code;
+    if (!isKeyword(code, "if")) {
+        return makeErrorExpression(code,
+            "I found a parsing error. I was expecting the keyword 'if'."
+        );
+    }
+    code = parseKeyword(code, "if");
+    code = parseWhiteSpace(code);
+    auto expression = parseExpression(code);
+    code = lastPart(code, expression.range);
+    code = parseWhiteSpace(code);
+    return makeIfStatement(firstPart(whole, code), {expression, 0});
+}
+
 Expression parseEndStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "end")) {
@@ -331,11 +346,15 @@ Expression parseDictionary(CodeRange code) {
             ++loop_depth;
             APPEND(statements, parseForStatement(code));
         }
+        else if (isKeyword(code, "if")) {
+            ++loop_depth;
+            APPEND(statements, parseIfStatement(code));
+        }
         else if (isKeyword(code, "end")) {
             if (loop_depth == 0) {
                 return makeErrorExpression(code,
                     "I find a parsing error.\n"
-                    "end is not matching a while or for");
+                    "end is not matching a while, for or if");
             }
             --loop_depth;
             APPEND(statements, parseEndStatement(code));

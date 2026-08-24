@@ -847,6 +847,11 @@ Expression evaluateDictionaryTypes(
             auto condition = booleanTypes(container);
             if (condition.error.type == ERROR_EXPRESSION) return condition.error;
         }
+        else if (type == IF_STATEMENT) {
+            const auto if_statement = storage.if_statements.data[statement.index];
+            auto condition = booleanTypes(evaluate_types(if_statement.expression, result));
+            if (condition.error.type == ERROR_EXPRESSION) return condition.error;
+        }
         else if (type == RETURN_STATEMENT) {
         }
     }
@@ -954,6 +959,18 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 i = for_statement.end_index + 1;
             }
         }
+        else if (type == IF_STATEMENT) {
+            const auto if_statement = storage.if_statements.data[statement.index];
+            auto condition = boolean(evaluate(if_statement.expression, result));
+            if (condition.error.type == ERROR_EXPRESSION) {
+                return condition.error;
+            }
+            if (condition.value) {
+                i += 1;
+            } else {
+                i = if_statement.end_index + 1;
+            }
+        }
         else if (type == WHILE_END_STATEMENT) {
             const auto end_statement = storage.while_end_statements.data[statement.index];
             i = end_statement.start_index;
@@ -975,6 +992,9 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);
+        }
+        else if (type == IF_END_STATEMENT) {
+            i += 1;
         }
         else if (type == RETURN_STATEMENT) {
             break;

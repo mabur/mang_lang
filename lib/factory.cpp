@@ -54,6 +54,7 @@ void clearMemory() {
     FREE_DARRAY(storage.while_statements);
     FREE_DARRAY(storage.for_statements);
     FREE_DARRAY(storage.for_simple_statements);
+    FREE_DARRAY(storage.if_statements);
     FREE_DARRAY(storage.while_end_statements);
     FREE_DARRAY(storage.for_end_statements);
     FREE_DARRAY(storage.for_simple_end_statements);
@@ -245,6 +246,10 @@ Expression makeForStatement(CodeRange code, ForStatement expression) {
 
 Expression makeForSimpleStatement(CodeRange code, ForSimpleStatement expression) {
     return makeExpression(code, expression, FOR_SIMPLE_STATEMENT, storage.for_simple_statements);
+}
+
+Expression makeIfStatement(CodeRange code, IfStatement expression) {
+    return makeExpression(code, expression, IF_STATEMENT, storage.if_statements);
 }
 
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression) {

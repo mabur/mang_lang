@@ -120,6 +120,13 @@ StringBuilder serializeForSimpleStatement(StringBuilder s, const ForSimpleStatem
     return s;
 }
 
+StringBuilder serializeIfStatement(StringBuilder s, const IfStatement& element) {
+    s = concatenate(s, "if ");
+    s = serialize(s, element.expression);
+    s = concatenate(s, " ");
+    return s;
+}
+
 template<typename Serializer>
 StringBuilder serializeEvaluatedDictionary(StringBuilder s, Serializer serializer, const EvaluatedDictionary& dictionary) {
     if (IS_EMPTY(dictionary.definitions)) {
@@ -430,6 +437,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case WHILE_STATEMENT: return serializeWhileStatement(s, storage.while_statements.data[expression.index]);
         case FOR_STATEMENT: return serializeForStatement(s, storage.for_statements.data[expression.index]);
         case FOR_SIMPLE_STATEMENT: return serializeForSimpleStatement(s, storage.for_simple_statements.data[expression.index]);
+        case IF_STATEMENT: return serializeIfStatement(s, storage.if_statements.data[expression.index]);
         case FUNCTION: return serializeFunction(s, storage.functions.data[expression.index]);
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(s, storage.dictionary_functions.data[expression.index]);
         case FUNCTION_TUPLE: return serializeFunctionTuple(s, storage.tuple_functions.data[expression.index]);
@@ -455,6 +463,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case WHILE_END_STATEMENT: return concatenate(s, "end ");
         case FOR_END_STATEMENT: return concatenate(s, "end ");
         case FOR_SIMPLE_END_STATEMENT: return concatenate(s, "end ");
+        case IF_END_STATEMENT: return concatenate(s, "end ");
         case END_STATEMENT: return concatenate(s, "end ");
         case RETURN_STATEMENT: return concatenate(s, "return ");
         default: return concatenate(s, getExpressionName(expression.type));

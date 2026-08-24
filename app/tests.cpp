@@ -322,7 +322,7 @@ int main() {
         {"{i=2 while i i=dec!i end}", "{i=2 while i i=dec!i end}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=10 while i i=dec!i end j=1}"},
         {"{i=[] i++=[1]}", "{i=[] i++=[1]}"},
-        {"{end}", "I find a parsing error.\nend is not matching a while or for"},
+        {"{end}", "I find a parsing error.\nend is not matching a while, for or if"},
         {"{", "I found an error while parsing a dictionary.\nIt ended too early.\nIt happened at row 1 and column 2."},
     ));
     testReformat("dictionary for", TEST_CASES(
@@ -367,7 +367,25 @@ int main() {
         {"{c=[] for c end}", "{c=EMPTY_STACK}"},
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
         {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
-        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<(ANY ANY)> i=(ANY ANY)}"}, // TODO 
+        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<(ANY ANY)> i=(ANY ANY)}"}, // TODO
+    ));
+    testReformat("dictionary if", TEST_CASES(
+        {"{if 1 end}", "{if 1 end}"},
+        {"{c=1 if c return end s=1}", "{c=1 if c return end s=1}"},
+        {"{c=1 d=1 if c if d s=1 end end}", "{c=1 d=1 if c if d s=1 end end}"},
+    ));
+    testEvaluateTypes("dictionary if", TEST_CASES(
+        {"{if 1 end}", "{}"},
+        {"{c=1 if c return end s=0}", "{c=NUMBER s=NUMBER}"},
+    ));
+    testEvaluateAll("dictionary if", TEST_CASES(
+        {"{if yes a=1 end}", "{a=1}"},
+        {"{if no a=1 end}", "{a=ANY}"},
+        {"{if yes return end a=1}", "{a=ANY}"},        
+        {"{if no return end a=1}", "{a=1}"},
+        {"{a=1 b=1 if a c=2 if b d=3 end end}", "{a=1 b=1 c=2 d=3}"},
+        {"{a=1 b=0 if a c=2 if b d=3 end end}", "{a=1 b=0 c=2 d=ANY}"},
+        {"{a=0 b=1 if a c=2 if b d=3 end end}", "{a=0 b=1 c=ANY d=ANY}"},
     ));
     testEvaluateTypes("ANY in dictionary", TEST_CASES(
         {"y@{y=take![]}", "ANY"},
