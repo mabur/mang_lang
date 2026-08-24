@@ -205,9 +205,9 @@ for y in ys
     end
 end
 
-for ys over range!HEIGHT
-    for xs over range!WIDTH
-        image = writePixel!(image x!0 y!0 WIDTH HEIGHT world)
+for y over range!HEIGHT
+    for x over range!WIDTH
+        image = writePixel!(image take!x take!y WIDTH HEIGHT world)
     end
 end
 
@@ -222,18 +222,31 @@ for light in lights
     color = add3!(color shadeSingleLight!(intersection light))
 end
 
-for lights over lights@world
-    color = add3!(color shadeSingleLight!(intersection lights!0))
+for light over lights@world
+    color = add3!(color shadeSingleLight!(intersection take!light))
 end
 
 for light in lights over lights@world
     color = add3!(color shadeSingleLight!(intersection light))
 end
 
+// Count down from 10 to 1
+for n over 10
+end
+
 * Add if/when-statement for early returns etc, without using a for-statement:
 
-when not?has_collision?intersection
-  return
+is_backwards = less?(c 0.0) // current
+for is_backwards
+    return
+end
+
+if less?(c 0.0)
+    return
+end
+
+when less?(c 0.0)
+    return
 end
 
 * Consider syntax similar to Brett Slatkin, Haskell, Elm, Lisp, Python
