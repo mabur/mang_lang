@@ -260,25 +260,23 @@ Expression parseForStatement(CodeRange code) {
     const auto first_name = parseName(code);
     code = lastPart(code, first_name.range);
     code = parseWhiteSpace(code);
-    if (isKeyword(code, "in")) {
-        code = parseKeyword(code, "in");
-        code = parseWhiteSpace(code);
-        auto second_name = parseName(code);
-        code = lastPart(code, second_name.range);
-        return makeForStatement(
-            firstPart(whole, code),
-            ForStatement{
-                getUnboundLocalName(first_name),
-                getUnboundLocalName(second_name),
-                0,
-            }
+    if (!isKeyword(code, "in")) {
+        return makeErrorExpression(code,
+            "I found a parsing error. I was expecting the keyword 'in'."
         );
     }
-    else {
-        return makeForSimpleStatement(firstPart(whole, code),
-            ForSimpleStatement{getUnboundLocalName(first_name), 0}
-        );
-    }
+    code = parseKeyword(code, "in");
+    code = parseWhiteSpace(code);
+    auto second_name = parseName(code);
+    code = lastPart(code, second_name.range);
+    return makeForStatement(
+        firstPart(whole, code),
+        ForStatement{
+            getUnboundLocalName(first_name),
+            getUnboundLocalName(second_name),
+            0,
+        }
+    );
 }
 
 Expression parseIfStatement(CodeRange code) {
@@ -364,6 +362,11 @@ Expression parseDictionary(CodeRange code) {
         }
         else {
             APPEND(statements, parseNamedElement(code));
+        }
+        if (LAST_ITEM(statements).type == ERROR_EXPRESSION) {
+            const auto error = LAST_ITEM(statements);
+            FREE_DARRAY(statements);
+            return error;
         }
         code = lastPart(code, LAST_ITEM(statements).range);
     }

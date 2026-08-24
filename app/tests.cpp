@@ -327,14 +327,12 @@ int main() {
     ));
     testReformat("dictionary for", TEST_CASES(
         {"{for i in c end}", "{for i in c end}"},
-        {"{for c end}", "{for c end}"},
+        {"{for c end}", "I found a parsing error. I was expecting the keyword 'in'."},
     ));
     testEvaluateTypes("dictionary iteration", TEST_CASES(
         {"{while 1 end}", "{}"},
         {"{i=2 while i i=dec!i end}", "{i=NUMBER}"},
         {"{i=10 while i i=dec!i end j=1}", "{i=NUMBER j=NUMBER}"},
-        {"{c=yes for c return end s=0}", "{c=YES s=NUMBER}"},
-        {"{c=no for c return end s=0}", "{c=NO s=NUMBER}"},
         {"{i=[] i++=[1]}", "{i=[NUMBER]}"},
     ));
     testEvaluateAll("dictionary iterations", TEST_CASES(
@@ -348,11 +346,7 @@ int main() {
         {"{i=[] i++=[1 2]}", "{i=[2 1]}"},
     ));
     testEvaluateAll("dictionary for", TEST_CASES(
-        {"{c=3 s=0 for c s+=c end}", "{c=0 s=6}"},
         {"{c=3 s=0 for i in c s+=c end}", "{c=0 s=6 i=1}"},
-        {"{c=yes for c return end s=0}", "{c=yes s=ANY}"}, // TODO: think about
-        {"{c=no for c return end s=0}", "{c=no s=0}"},
-        {"{c=yes s=0 for c s+=1 end}", "{c=no s=1}"},
         {"{c=yes s=0 for i in c s+=1 end}", "{c=no s=1 i=yes}"},
         {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0 i=ANY}"}, // TODO: think about
         {"{c=[] for i in c end}", "{c=[] i=ANY}"}, // TODO: think about
@@ -364,7 +358,6 @@ int main() {
         {"r@{f=in c out {d=c for i in d end} r=f![1]}", "{d=[] i=1}"},
     ));
     testEvaluateTypes("dictionary for", TEST_CASES(
-        {"{c=[] for c end}", "{c=EMPTY_STACK}"},
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
         {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
         {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<(ANY ANY)> i=(ANY ANY)}"}, // TODO

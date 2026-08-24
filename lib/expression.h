@@ -180,11 +180,6 @@ struct ForStatement {
     size_t end_index;
 };
 
-struct ForSimpleStatement {
-    BoundLocalName container_name;
-    size_t end_index;
-};
-
 struct IfStatement {
     Expression expression;
     size_t end_index;
@@ -195,10 +190,6 @@ struct WhileEndStatement {
 };
 
 struct ForEndStatement {
-    size_t start_index;
-};
-
-struct ForSimpleEndStatement {
     size_t start_index;
 };
 

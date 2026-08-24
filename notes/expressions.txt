@@ -96,9 +96,8 @@ PutEachAssignment
 DropAssignment
 WhileStatement
 ForStatement
-ForSimpleStatement
 IfStatement
 WhileEndStatement
 ForEndStatement
-ForSimpleEndStatement
+IfEndStatement (no payload)
 IfEndStatement

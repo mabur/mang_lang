@@ -113,13 +113,6 @@ StringBuilder serializeForStatement(StringBuilder s, const ForStatement& element
     return s;
 }
 
-StringBuilder serializeForSimpleStatement(StringBuilder s, const ForSimpleStatement& element) {
-    s = concatenate(s, "for ");
-    s = serializeName(s, element.container_name.global_index);
-    s = concatenate(s, " ");
-    return s;
-}
-
 StringBuilder serializeIfStatement(StringBuilder s, const IfStatement& element) {
     s = concatenate(s, "if ");
     s = serialize(s, element.expression);
@@ -436,7 +429,6 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case DROP_ASSIGNMENT: return serializeDropAssignment(s, storage.drop_assignments.data[expression.index]);
         case WHILE_STATEMENT: return serializeWhileStatement(s, storage.while_statements.data[expression.index]);
         case FOR_STATEMENT: return serializeForStatement(s, storage.for_statements.data[expression.index]);
-        case FOR_SIMPLE_STATEMENT: return serializeForSimpleStatement(s, storage.for_simple_statements.data[expression.index]);
         case IF_STATEMENT: return serializeIfStatement(s, storage.if_statements.data[expression.index]);
         case FUNCTION: return serializeFunction(s, storage.functions.data[expression.index]);
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(s, storage.dictionary_functions.data[expression.index]);
@@ -462,7 +454,6 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case NO: return concatenate(s, "no");
         case WHILE_END_STATEMENT: return concatenate(s, "end ");
         case FOR_END_STATEMENT: return concatenate(s, "end ");
-        case FOR_SIMPLE_END_STATEMENT: return concatenate(s, "end ");
         case IF_END_STATEMENT: return concatenate(s, "end ");
         case END_STATEMENT: return concatenate(s, "end ");
         case RETURN_STATEMENT: return concatenate(s, "return ");

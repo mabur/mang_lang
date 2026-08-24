@@ -841,12 +841,6 @@ Expression evaluateDictionaryTypes(
             const auto value = container_functions::takeTyped(container);
             setDictionaryDefinition(result, for_statement.item_name, value);
         }
-        else if (type == FOR_SIMPLE_STATEMENT) {
-            const auto for_statement = storage.for_simple_statements.data[statement.index];
-            const auto container = getDictionaryDefinition(result, for_statement.container_name);
-            auto condition = booleanTypes(container);
-            if (condition.error.type == ERROR_EXPRESSION) return condition.error;
-        }
         else if (type == IF_STATEMENT) {
             const auto if_statement = storage.if_statements.data[statement.index];
             auto condition = booleanTypes(evaluate_types(if_statement.expression, result));
@@ -947,18 +941,6 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 i = for_statement.end_index + 1;
             }
         }
-        else if (type == FOR_SIMPLE_STATEMENT) {
-            const auto for_statement = storage.for_simple_statements.data[statement.index];
-            const auto condition = boolean(getDictionaryDefinition(result, for_statement.container_name));
-            if (condition.error.type == ERROR_EXPRESSION) {
-                return condition.error;
-            }
-            if (condition.value) {
-                i += 1;
-            } else {
-                i = for_statement.end_index + 1;
-            }
-        }
         else if (type == IF_STATEMENT) {
             const auto if_statement = storage.if_statements.data[statement.index];
             auto condition = boolean(evaluate(if_statement.expression, result));
@@ -980,15 +962,6 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i = end_statement.start_index;
             const auto start_statement = storage.statements.data[base_index + i];
             const auto name_index = storage.for_statements.data[start_statement.index].container_name;
-            const auto old_container = getDictionaryDefinition(result, name_index);
-            const auto new_container = container_functions::drop(old_container);
-            setDictionaryDefinition(result, name_index, new_container);
-        }
-        else if (type == FOR_SIMPLE_END_STATEMENT) {
-            const auto end_statement = storage.for_simple_end_statements.data[statement.index];
-            i = end_statement.start_index;
-            const auto start_statement = storage.statements.data[base_index + i];
-            const auto name_index = storage.for_simple_statements.data[start_statement.index].container_name;
             const auto old_container = getDictionaryDefinition(result, name_index);
             const auto new_container = container_functions::drop(old_container);
             setDictionaryDefinition(result, name_index, new_container);

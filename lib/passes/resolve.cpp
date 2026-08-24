@@ -39,7 +39,6 @@ DynamicIndices bindLocalNameStatement(DynamicIndices dictionary_names_owner, Exp
         case PUT_EACH_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.put_each_assignments.data[statement.index].name);
         case DROP_ASSIGNMENT: return bindLocalName(dictionary_names_owner, &storage.drop_assignments.data[statement.index].name);
         case FOR_STATEMENT: return bindLocalNameForStatement(dictionary_names_owner, statement);
-        case FOR_SIMPLE_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.for_simple_statements.data[statement.index].container_name);
         default: return dictionary_names_owner;
     }
 }
@@ -52,7 +51,7 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
         const auto local_index = i - base_index;
         auto& statement = storage.statements.data[i];
         const auto type = statement.type;
-        if (type == WHILE_STATEMENT || type == FOR_STATEMENT || type == FOR_SIMPLE_STATEMENT || type == IF_STATEMENT) {
+        if (type == WHILE_STATEMENT || type == FOR_STATEMENT || type == IF_STATEMENT) {
             APPEND(loop_start_indices_owner, local_index);
         }
         else if (type == END_STATEMENT) {
@@ -65,9 +64,6 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
             } else if (start_statement.type == FOR_STATEMENT) {
                 storage.for_statements.data[start_statement.index].end_index = local_index;
                 statement = makeForEndStatement(statement.range, ForEndStatement{start_local_index});
-            } else if (start_statement.type == FOR_SIMPLE_STATEMENT) {
-                storage.for_simple_statements.data[start_statement.index].end_index = local_index;
-                statement = makeForSimpleEndStatement(statement.range, ForSimpleEndStatement{start_local_index});
             } else if (start_statement.type == IF_STATEMENT) {
                 storage.if_statements.data[start_statement.index].end_index = local_index;
                 statement = Expression{0, statement.range, IF_END_STATEMENT};
@@ -125,7 +121,6 @@ OptionalIndex findInDictionaryInner(Expression statement, size_t global_index) {
     case PUT_EACH_ASSIGNMENT: return matchName(storage.put_each_assignments.data[statement.index].name, global_index);
     case DROP_ASSIGNMENT: return matchName(storage.drop_assignments.data[statement.index].name, global_index);
     case FOR_STATEMENT: return findInForStatement(storage.for_statements.data[statement.index], global_index);
-    case FOR_SIMPLE_STATEMENT: return matchName(storage.for_simple_statements.data[statement.index].container_name, global_index);
     default: return OptionalIndex{};
     }
 }
@@ -183,8 +178,8 @@ void resolveStatement(Expression statement, ScopeChain chain) {
         case PUT_EACH_ASSIGNMENT: return resolveExpression(storage.put_each_assignments.data[statement.index].expression, chain);
         case WHILE_STATEMENT: return resolveExpression(storage.while_statements.data[statement.index].expression, chain);
         case IF_STATEMENT: return resolveExpression(storage.if_statements.data[statement.index].expression, chain);
-        // DROP_ASSIGNMENT, FOR_STATEMENT, FOR_SIMPLE_STATEMENT, RETURN_STATEMENT,
-        // and the various end-statements carry only names/indices, no expression.
+        // DROP_ASSIGNMENT, FOR_STATEMENT, RETURN_STATEMENT, and the various
+        // end-statements carry only names/indices, no expression.
         default: return;
     }
 }
