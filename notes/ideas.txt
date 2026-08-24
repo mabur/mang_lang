@@ -20,6 +20,7 @@ TYPE SYSTEM
   - List:expression
   - is_populated;expression
   - expression
+* How can we make typing total and remove Any and Dynamic? Would open up for speed optimizations.
 * Types & Prototypes
 * Dictionary composition, row polymorphism, like purescript, jsonnet, dhall, CUE, GCL (Google Configuration Language):
   - ColorARGB!{red=255}
