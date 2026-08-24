@@ -182,6 +182,7 @@ STANDARD LIBRARY
 
 
 LANGUAGE SYNTAX & SEMANTICS
+* Document if-statement.
 * Rework for loops to not consume or mutate symbol outside of loop.
 for it over [3 8 9]
   sum += take!it (exists)
@@ -233,21 +234,6 @@ end
 
 // Count down from 10 to 1
 for n over 10
-end
-
-* Add if/when-statement for early returns etc, without using a for-statement:
-
-is_backwards = less?(c 0.0) // current
-for is_backwards
-    return
-end
-
-if less?(c 0.0)
-    return
-end
-
-when less?(c 0.0)
-    return
 end
 
 * Consider syntax similar to Brett Slatkin, Haskell, Elm, Lisp, Python
