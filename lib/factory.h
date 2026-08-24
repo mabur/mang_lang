@@ -18,14 +18,6 @@ struct Expressions {
 struct NameIndex {
     StringView key;
     size_t value;
-    bool occupied;
-};
-
-// TODO: optimize table macros for speed for this use-case.
-struct NameIndexTable{
-    NameIndex* data;
-    size_t count;
-    size_t capacity;
 };
 
 struct Storage {
@@ -73,8 +65,8 @@ struct Storage {
     
     // Null-terminated strings concatenated after each other:
     StringBuilder names;
-    
-    NameIndexTable name_index_table;
+
+    DARRAY(NameIndex) name_index_table;
     
     std::vector<EvaluatedTable> evaluated_tables;
 };

@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <carma/carma.h>
-#include <carma/carma_table.h>
 
 #include "exceptions.h"
 #include "passes/serialize.h"
@@ -68,8 +67,8 @@ void clearMemory() {
     FREE_DARRAY(storage.rows);
     FREE_DARRAY(storage.tables);
     FREE_DARRAY(storage.names);
-    
-    FREE_TABLE(storage.name_index_table);
+
+    FREE_DARRAY(storage.name_index_table);
     
     storage.evaluated_tables.clear();
 }
@@ -204,15 +203,15 @@ Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
 
 Expression makeName(CodeRange code, const char* data, size_t count) {
     auto string = StringView{data, count};
-    auto index = SIZE_MAX;
-    GET_RANGE_KEY_VALUE(string, index, storage.name_index_table);
-    if (index == SIZE_MAX) {
-        index = storage.names.count;
-        SET_RANGE_KEY_VALUE(string, index, storage.name_index_table);
-        CONCAT(storage.names, string);
-        APPEND(storage.names, '\0');
-        return Expression{index, code, NAME};
+    FOR_EACH(item, storage.name_index_table) {
+        if (ARE_EQUAL(item->key, string)) {
+            return Expression{item->value, code, NAME};
+        }
     }
+    auto index = storage.names.count;
+    APPEND(storage.name_index_table, (NameIndex{string, index}));
+    CONCAT(storage.names, string);
+    APPEND(storage.names, '\0');
     return Expression{index, code, NAME};
 }
 
