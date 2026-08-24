@@ -517,7 +517,7 @@ The functions above form the generic interface for containers in Manglang. On to
   end
 }
 </pre>
-By using the operators <code>+=</code> and <code>--</code> we can simplify it to:
+By using the operators <code>+=</code> and <code>--</code> we can also write it as:
 <pre>
 {
   container = [1 2 3]
@@ -529,7 +529,7 @@ By using the operators <code>+=</code> and <code>--</code> we can simplify it to
   end
 }
 </pre>
-But we can simplify it even further by using a for-loop:
+But we can also simplify it by using a for-loop:
 <pre>
 {
   container = [1 2 3]
@@ -719,9 +719,6 @@ Both versions above evaluate to the output below:
 }
 </pre>
 
-<p>
-There are two things to note about for-loops in Manglang. The first thing is that in the expression <code>for item in name</code> both <code>item</code> and <code>name</code> are names. This means that a container needs to first be given a name before it can be used in a for-loop. The container CANNOT be inlined directly like <code>for item in [1 2 3]</code>. Another thing to note is that the for loop rebinds these names for each iteration of the loop and leave them in their final state after the loop. So in this sense a for-loop consumes the name of the container. If you want to refer to the full container also after the loop then you need to assign a different name to it before entering the for-loop.
-</p>
 
 <h2 id="dynamic">4.d. Dynamic</h2>
 <p>
