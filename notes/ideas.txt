@@ -181,8 +181,8 @@ STANDARD LIBRARY
 
 
 LANGUAGE SYNTAX & SEMANTICS
-* Rework for loops.
-for it in [3 8 9]
+* Rework for loops to not consume or mutate symbol outside of loop.
+for it over [3 8 9]
   sum += take!it (exists)
   sum += get!it
   sum += it!0 (exists)
@@ -193,13 +193,44 @@ for it in [3 8 9]
   sum += @it
 end
 
-for it in 9
+for over 9
   sum += it
 end
 
-for _ in not?has_collision?intersection
-  return
+ys = range!HEIGHT // Current
+for y in ys
+    xs = range!WIDTH
+    for x in xs
+        image = writePixel!(image x y WIDTH HEIGHT world)
+    end
 end
+
+for ys over range!HEIGHT
+    for xs over range!WIDTH
+        image = writePixel!(image x!0 y!0 WIDTH HEIGHT world)
+    end
+end
+
+for y in ys over range!HEIGHT
+    for x in xs over range!WIDTH
+        image = writePixel!(image x y WIDTH HEIGHT world)
+    end
+end
+
+lights = lights@world // Current
+for light in lights
+    color = add3!(color shadeSingleLight!(intersection light))
+end
+
+for lights over lights@world
+    color = add3!(color shadeSingleLight!(intersection lights!0))
+end
+
+for light in lights over lights@world
+    color = add3!(color shadeSingleLight!(intersection light))
+end
+
+* Add if/when-statement for early returns etc, without using a for-statement:
 
 when not?has_collision?intersection
   return
