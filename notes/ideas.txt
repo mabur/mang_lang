@@ -183,64 +183,7 @@ STANDARD LIBRARY
 
 LANGUAGE SYNTAX & SEMANTICS
 * Document if-statement.
-* Rework for loops to not consume or mutate symbol outside of loop.
-* How can we avoid the complications with the for-loop?
-  - List comprehension
-  - Fold
-  - More specialized higher order functions, variants of max and sum etc.
-  - Generators
-  - Have a special iterator type, that lookups to a value
-for it over [3 8 9]
-  sum += take!it (exists)
-  sum += get!it
-  sum += it!0 (exists)
-  sum += it!
-  sum += !it
-  sum += it?
-  sum += *it
-  sum += @it
-end
-
-for over 9
-  sum += it
-end
-
-ys = range!HEIGHT // Current
-for y in ys
-    xs = range!WIDTH
-    for x in xs
-        image = writePixel!(image x y WIDTH HEIGHT world)
-    end
-end
-
-for ys over range!HEIGHT
-    for xs over range!WIDTH
-        image = writePixel!(image take!xs take!ys WIDTH HEIGHT world)
-    end
-end
-
-for y in ys over range!HEIGHT
-    for x in xs over range!WIDTH
-        image = writePixel!(image x y WIDTH HEIGHT world)
-    end
-end
-
-lights = lights@world // Current
-for light in lights
-    color = add3!(color shadeSingleLight!(intersection light))
-end
-
-for lights over lights@world
-    color = add3!(color shadeSingleLight!(intersection take!lights))
-end
-
-for light in lights over lights@world
-    color = add3!(color shadeSingleLight!(intersection light))
-end
-
-// Count down from 10 to 1
-for n over 10
-end
+* Document for-loop
 
 * Consider syntax similar to Brett Slatkin, Haskell, Elm, Lisp, Python
   - Trade less noise for non-nested function calls, but more noise for nested function calls and collections
