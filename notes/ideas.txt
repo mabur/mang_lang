@@ -205,9 +205,9 @@ for y in ys
     end
 end
 
-for y over range!HEIGHT
-    for x over range!WIDTH
-        image = writePixel!(image take!x take!y WIDTH HEIGHT world)
+for ys over range!HEIGHT
+    for xs over range!WIDTH
+        image = writePixel!(image take!xs take!ys WIDTH HEIGHT world)
     end
 end
 
@@ -222,8 +222,8 @@ for light in lights
     color = add3!(color shadeSingleLight!(intersection light))
 end
 
-for light over lights@world
-    color = add3!(color shadeSingleLight!(intersection take!light))
+for lights over lights@world
+    color = add3!(color shadeSingleLight!(intersection take!lights))
 end
 
 for light in lights over lights@world
