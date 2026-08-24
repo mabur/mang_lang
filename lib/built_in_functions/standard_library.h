@@ -263,8 +263,7 @@ const std::string STANDARD_LIBRARY = R"(
     take_many = in (Number:n container_in) out container_in:reverse!container_out@{
         container = container_in
         container_out = clear!container
-        m = n
-        for _ in m
+        for _ in n
             container_out += take!container
             container--
         end
@@ -284,8 +283,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     drop_many = in (Number:n in_stream) out in_stream:stream@{
         stream = in_stream
-        m = n
-        for _ in m
+        for _ in n
             stream--
         end
     }
@@ -335,8 +333,9 @@ const std::string STANDARD_LIBRARY = R"(
     range = in Number:n out Numbers:numbers@{
         numbers = []
         m = n
-        for _ in m
+        while m
             numbers += dec!m
+            m--
         end
     }
 
@@ -367,11 +366,9 @@ const std::string STANDARD_LIBRARY = R"(
 
     cartesian_product2 = in (a b) out Stack:result@{
         result = []
-        d = b
-        for item_d in d
-            c = a
-            for item_c in c
-                result += (item_c item_d)
+        for item_b in b
+            for item_a in a
+                result += (item_a item_b)
             end
         end
     }
@@ -379,8 +376,7 @@ const std::string STANDARD_LIBRARY = R"(
     put_column = in (column rows) out Stack:reverse!new_rows@{
         remaining_rows = rows
         new_rows = []
-        c = column
-        for item in c
+        for item in column
             row = take!remaining_rows
             row += item
             new_rows += row
@@ -390,8 +386,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     transpose = in rows out Stack:map!(reverse columns@{
         columns = replace!([] take!rows)
-        r = rows
-        for row in r
+        for row in rows
             columns = put_column!(row columns)
         end
     })

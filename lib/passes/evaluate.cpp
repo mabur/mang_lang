@@ -408,7 +408,9 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     }
     const auto dictionary = storage.evaluated_dictionaries.data[expression.index];
     if (name.parent_steps == 0) {
-        return storage.definitions.data[dictionary.definitions.data + name.dictionary_index].expression;
+        auto value = storage.definitions.data[dictionary.definitions.data + name.dictionary_index].expression;
+        return value.type != FOR_ITERATOR ? value :
+            container_functions::take(storage.for_iterators.data[value.index].container);
     }
     if (name.parent_steps > 0) {
         return lookupDictionary(
@@ -733,11 +735,11 @@ Indices initializeDefinitions(const Dictionary& dictionary) {
             auto dictionary_index = definition.name.dictionary_index;
             storage.definitions.data[first + dictionary_index] = definition;
         }
-        else if (type == FOR_STATEMENT) {
-            auto for_statement = storage.for_statements.data[statement.index];
-            auto dictionary_index = for_statement.item_name.dictionary_index;
+        else if (type == FOR_INIT_STATEMENT) {
+            auto for_init_statement = storage.for_init_statements.data[statement.index];
+            auto dictionary_index = for_init_statement.name.dictionary_index;
             auto definition = Definition{
-                for_statement.item_name, Expression{0, statement.range, ANY}
+                for_init_statement.name, Expression{0, statement.range, ANY}
             };
             storage.definitions.data[first + dictionary_index] = definition;
         }
@@ -833,13 +835,14 @@ Expression evaluateDictionaryTypes(
             auto condition = booleanTypes(evaluate_types(while_statement.expression, result));
             if (condition.error.type == ERROR_EXPRESSION) return condition.error;
         }
-        else if (type == FOR_STATEMENT) {
-            const auto for_statement = storage.for_statements.data[statement.index];
-            const auto container = getDictionaryDefinition(result, for_statement.container_name);
+        else if (type == FOR_INIT_STATEMENT) {
+            const auto for_init_statement = storage.for_init_statements.data[statement.index];
+            const auto container = evaluate_types(for_init_statement.container_expression, result);
+            if (container.type == ERROR_EXPRESSION) return container;
             auto condition = booleanTypes(container);
             if (condition.error.type == ERROR_EXPRESSION) return condition.error;
             const auto value = container_functions::takeTyped(container);
-            setDictionaryDefinition(result, for_statement.item_name, value);
+            setDictionaryDefinition(result, for_init_statement.name, value);
         }
         else if (type == IF_STATEMENT) {
             const auto if_statement = storage.if_statements.data[statement.index];
@@ -926,20 +929,24 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 i = while_statement.end_index + 1;
             }
         }
-        else if (type == FOR_STATEMENT) {
-            const auto for_statement = storage.for_statements.data[statement.index];
-            const auto container = getDictionaryDefinition(result, for_statement.container_name);
+        else if (type == FOR_INIT_STATEMENT) {
+            const auto for_init_statement = storage.for_init_statements.data[statement.index];
+            const auto container = evaluate(for_init_statement.container_expression, result);
             auto condition = boolean(container);
             if (condition.error.type == ERROR_EXPRESSION) {
                 return condition.error;
             }
             if (condition.value) {
-                const auto value = container_functions::take(container);
-                setDictionaryDefinition(result, for_statement.item_name, value);
+                auto iterator = makeForIterator(statement.range, ForIterator{container});
+                setDictionaryDefinition(result, for_init_statement.name, iterator);
                 i += 1;
             } else {
-                i = for_statement.end_index + 1;
+                auto for_statement = storage.statements.data[base_index + i + 1];
+                i = storage.for_statements.data[for_statement.index].end_index + 1;
             }
+        }
+        else if (type == FOR_STATEMENT) {
+            i += 1;
         }
         else if (type == IF_STATEMENT) {
             const auto if_statement = storage.if_statements.data[statement.index];
@@ -958,13 +965,24 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             i = end_statement.start_index;
         }
         else if (type == FOR_END_STATEMENT) {
-            const auto end_statement = storage.for_end_statements.data[statement.index];
-            i = end_statement.start_index;
-            const auto start_statement = storage.statements.data[base_index + i];
-            const auto name_index = storage.for_statements.data[start_statement.index].container_name;
-            const auto old_container = getDictionaryDefinition(result, name_index);
-            const auto new_container = container_functions::drop(old_container);
-            setDictionaryDefinition(result, name_index, new_container);
+            auto end_statement = storage.for_end_statements.data[statement.index];
+            auto start_statement = storage.statements.data[base_index + end_statement.start_index];
+            auto name = storage.for_statements.data[start_statement.index].name;
+            auto iterator = storage.for_iterators.data[getDictionaryDefinition(result, name).index];
+            auto next_container = container_functions::drop(iterator.container);
+            auto condition = boolean(next_container);
+            if (condition.error.type == ERROR_EXPRESSION) {
+                return condition.error;
+            }
+            if (condition.value) {
+                auto next_iterator = makeForIterator(statement.range, ForIterator{next_container});
+                setDictionaryDefinition(result, name, next_iterator);
+                i = end_statement.start_index;
+            } else {
+                auto last_value = container_functions::take(iterator.container);
+                setDictionaryDefinition(result, name, last_value);
+                i += 1;
+            }
         }
         else if (type == IF_END_STATEMENT) {
             i += 1;

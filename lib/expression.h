@@ -174,9 +174,15 @@ struct WhileStatement {
     size_t end_index;
 };
 
+struct ForInitStatement {
+    BoundLocalName name;
+    Expression container_expression;
+};
+
+// The looping part of for:
 struct ForStatement {
-    BoundLocalName item_name;
-    BoundLocalName container_name;
+    BoundLocalName name;
+    Expression container_expression;
     size_t end_index;
 };
 
@@ -194,6 +200,10 @@ struct ForEndStatement {
 };
 
 // STATEMENTS END
+
+struct ForIterator {
+    Expression container;
+};
 
 struct Dictionary {
     Indices statements;

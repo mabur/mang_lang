@@ -248,35 +248,39 @@ Expression parseWhileStatement(CodeRange code) {
     return makeWhileStatement(firstPart(whole, code), {expression, 0});
 }
 
-Expression parseForStatement(CodeRange code) {
+Expressions parseForStatement(CodeRange code, Expressions statements_owner) {
     const auto whole = code;
     if (!isKeyword(code, "for")) {
-        return makeErrorExpression(code,
+        APPEND(statements_owner, makeErrorExpression(code,
             "I found a parsing error. I was expecting the keyword 'for'."
-        );
+        ));
+        return statements_owner;
     }
     code = parseKeyword(code, "for");
     code = parseWhiteSpace(code);
-    const auto first_name = parseName(code);
-    code = lastPart(code, first_name.range);
+    const auto name = parseName(code);
+    code = lastPart(code, name.range);
     code = parseWhiteSpace(code);
     if (!isKeyword(code, "in")) {
-        return makeErrorExpression(code,
+        APPEND(statements_owner, makeErrorExpression(code,
             "I found a parsing error. I was expecting the keyword 'in'."
-        );
+        ));
+        return statements_owner;
     }
     code = parseKeyword(code, "in");
     code = parseWhiteSpace(code);
-    auto second_name = parseName(code);
-    code = lastPart(code, second_name.range);
-    return makeForStatement(
+    const auto container_expression = parseExpression(code);
+    code = lastPart(code, container_expression.range);
+    code = parseWhiteSpace(code);
+    APPEND(statements_owner, makeForInitStatement(
         firstPart(whole, code),
-        ForStatement{
-            getUnboundLocalName(first_name),
-            getUnboundLocalName(second_name),
-            0,
-        }
-    );
+        ForInitStatement{getUnboundLocalName(name), container_expression}
+    ));
+    APPEND(statements_owner, makeForStatement(
+        firstPart(whole, code),
+        ForStatement{getUnboundLocalName(name), container_expression, 0}
+    ));
+    return statements_owner;
 }
 
 Expression parseIfStatement(CodeRange code) {
@@ -342,7 +346,7 @@ Expression parseDictionary(CodeRange code) {
         }
         else if (isKeyword(code, "for")) {
             ++loop_depth;
-            APPEND(statements, parseForStatement(code));
+            statements = parseForStatement(code, statements);
         }
         else if (isKeyword(code, "if")) {
             ++loop_depth;

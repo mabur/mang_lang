@@ -20,14 +20,13 @@ result@{
     ]
     polymer = start
     n = 10
-    for n
+    for _ in n
         result = ""
         while drop!polymer
             a = polymer!0
             b = polymer!1
             prefix = put_each!([b a] "")
-            remaining_rules = rules
-            for rule in remaining_rules
+            for rule in rules
                 prefix = if
                     drop!drop!prefix then prefix
                     equal?(rule!0 prefix) then put_each!([b rule!1 a] "")

@@ -39,7 +39,7 @@ R 2"
     for line in lines
         direction = line!0
         steps = parse_digit!line!2
-        for steps
+        for _ in steps
             head = take!heads
             tail = take!tails
             head_movement = head_movements!direction

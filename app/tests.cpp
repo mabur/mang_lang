@@ -346,16 +346,18 @@ int main() {
         {"{i=[] i++=[1 2]}", "{i=[2 1]}"},
     ));
     testEvaluateAll("dictionary for", TEST_CASES(
-        {"{c=3 s=0 for i in c s+=c end}", "{c=0 s=6 i=1}"},
-        {"{c=yes s=0 for i in c s+=1 end}", "{c=no s=1 i=yes}"},
-        {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0 i=ANY}"}, // TODO: think about
-        {"{c=[] for i in c end}", "{c=[] i=ANY}"}, // TODO: think about
-        {"{c=[1] for i in c end}", "{c=[] i=1}"},
-        {"{c=[1 2] for i in c end}", "{c=[] i=2}"},
-        {"{a=[] c=[1 2 3] for i in c a+=i end}", "{a=[3 2 1] c=[] i=3}"},
-        {"{c=[1 2] for i in c d=[2 3] for j in d end end}", "{c=[] i=2 d=[] j=3}"},
+        {"{c=3 s=0 for i in c s+=i end}", "{c=3 s=3 i=1}"},
+        {"{c=yes s=0 for i in c s+=1 end}", "{c=yes s=1 i=yes}"},
+        {"{c=no s=0 for i in c s+=1 end}", "{c=no s=0 i=ANY}"},
+        {"{c=[] for i in c end}", "{c=[] i=ANY}"},
+        {"{c=[1] for i in c end}", "{c=[1] i=1}"},
+        {"{c=[1 2] for i in c end}", "{c=[1 2] i=2}"},
+        {"{a=[] c=[1 2 3] for i in c a+=i end}", "{a=[3 2 1] c=[1 2 3] i=3}"},
+        {"{c=[1 2] for i in c d=[2 3] for j in d end end}", "{c=[1 2] i=2 d=[2 3] j=3}"},
         {"r@{f=in c out {d=c for i in d end} r=f![]}", "{d=[] i=ANY}"},
-        {"r@{f=in c out {d=c for i in d end} r=f![1]}", "{d=[] i=1}"},
+        {"r@{f=in c out {d=c for i in d end} r=f![1]}", "{d=[1] i=1}"},
+        {"{s=0 for i in [1 2 3] s+=i end}", "{s=6 i=3}"},
+        {"{for i in [] end}", "{i=ANY}"},
     ));
     testEvaluateTypes("dictionary for", TEST_CASES(
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},

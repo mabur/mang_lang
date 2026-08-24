@@ -31,6 +31,7 @@ const char* getExpressionName(ExpressionType type) {
         case PUT_EACH_ASSIGNMENT: return "PUT_EACH_ASSIGNMENT";
         case DROP_ASSIGNMENT: return "DROP_ASSIGNMENT";
         case WHILE_STATEMENT: return "WHILE_STATEMENT";
+        case FOR_INIT_STATEMENT: return "FOR_INIT_STATEMENT";
         case FOR_STATEMENT: return "FOR_STATEMENT";
         case IF_STATEMENT: return "IF_STATEMENT";
         case WHILE_END_STATEMENT: return "WHILE_END_STATEMENT";
@@ -38,6 +39,7 @@ const char* getExpressionName(ExpressionType type) {
         case IF_END_STATEMENT: return "IF_END_STATEMENT";
         case END_STATEMENT: return "END_STATEMENT";
         case RETURN_STATEMENT: return "RETURN_STATEMENT";
+        case FOR_ITERATOR: return "FOR_ITERATOR";
         case NUMBER: return "NUMBER";
         case STRING: return "STRING";
         case EMPTY_STRING: return "EMPTY_STRING";

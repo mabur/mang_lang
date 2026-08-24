@@ -106,9 +106,9 @@ StringBuilder serializeWhileStatement(StringBuilder s, const WhileStatement& ele
 
 StringBuilder serializeForStatement(StringBuilder s, const ForStatement& element) {
     s = concatenate(s, "for ");
-    s = serializeName(s, element.item_name.global_index);
+    s = serializeName(s, element.name.global_index);
     s = concatenate(s, " in ");
-    s = serializeName(s, element.container_name.global_index);
+    s = serialize(s, element.container_expression);
     s = concatenate(s, " ");
     return s;
 }
@@ -428,6 +428,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case PUT_EACH_ASSIGNMENT: return serializePutEachAssignment(s, storage.put_each_assignments.data[expression.index]);
         case DROP_ASSIGNMENT: return serializeDropAssignment(s, storage.drop_assignments.data[expression.index]);
         case WHILE_STATEMENT: return serializeWhileStatement(s, storage.while_statements.data[expression.index]);
+        case FOR_INIT_STATEMENT: return s; // Handled by the FOR_STATEMENT that comes right after
         case FOR_STATEMENT: return serializeForStatement(s, storage.for_statements.data[expression.index]);
         case IF_STATEMENT: return serializeIfStatement(s, storage.if_statements.data[expression.index]);
         case FUNCTION: return serializeFunction(s, storage.functions.data[expression.index]);

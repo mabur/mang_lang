@@ -82,8 +82,7 @@ findSingleIntersection = in (Vector3:start Vector3:direction Sphere:sphere) out 
 
 findIntersection = in (Vector3:start Vector3:direction Spheres:spheres) out Intersection:i1@{
     i1 = default_intersection
-    s = spheres
-    for sphere in s
+    for sphere in spheres
         i2 = findSingleIntersection!(start direction sphere)
         i1 = if less?(distance@i2 distance@i1) then i2 else i1
     end
@@ -104,8 +103,7 @@ shade = in (Intersection:intersection world) out Vector3:color@{
         return
     end
     color = shadeAtmosphere!(intersection atmosphere_color@world)
-    lights = lights@world
-    for light in lights
+    for light in lights@world
         color = add3!(color shadeSingleLight!(intersection light))
     end
 }
@@ -142,10 +140,8 @@ writeImage = in World:world out String:image@{
     image += newline
     image ++= "255"
     image += newline
-    ys = range!HEIGHT
-    for y in ys
-        xs = range!WIDTH
-        for x in xs
+    for y in range!HEIGHT
+        for x in range!WIDTH
             image = writePixel!(image x y WIDTH HEIGHT world)
         end
     end

@@ -52,10 +52,12 @@ void clearMemory() {
     FREE_DARRAY(storage.symbol_lookups);
     FREE_DARRAY(storage.arguments);
     FREE_DARRAY(storage.while_statements);
+    FREE_DARRAY(storage.for_init_statements);
     FREE_DARRAY(storage.for_statements);
     FREE_DARRAY(storage.if_statements);
     FREE_DARRAY(storage.while_end_statements);
     FREE_DARRAY(storage.for_end_statements);
+    FREE_DARRAY(storage.for_iterators);
     FREE_DARRAY(storage.definitions);
     FREE_DARRAY(storage.put_assignments);
     FREE_DARRAY(storage.put_each_assignments);
@@ -238,6 +240,10 @@ Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
     return makeExpression(code, expression, WHILE_STATEMENT, storage.while_statements);
 }
 
+Expression makeForInitStatement(CodeRange code, ForInitStatement expression) {
+    return makeExpression(code, expression, FOR_INIT_STATEMENT, storage.for_init_statements);
+}
+
 Expression makeForStatement(CodeRange code, ForStatement expression) {
     return makeExpression(code, expression, FOR_STATEMENT, storage.for_statements);
 }
@@ -252,6 +258,10 @@ Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression) {
 
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression) {
     return makeExpression(code, expression, FOR_END_STATEMENT, storage.for_end_statements);
+}
+
+Expression makeForIterator(CodeRange code, ForIterator expression) {
+    return makeExpression(code, expression, FOR_ITERATOR, storage.for_iterators);
 }
 
 Expression makeString(CodeRange code, String expression) {
