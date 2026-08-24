@@ -183,7 +183,6 @@ STANDARD LIBRARY
 
 LANGUAGE SYNTAX & SEMANTICS
 * Document if-statement.
-* Document for-loop
 
 * Consider syntax similar to Brett Slatkin, Haskell, Elm, Lisp, Python
   - Trade less noise for non-nested function calls, but more noise for nested function calls and collections
