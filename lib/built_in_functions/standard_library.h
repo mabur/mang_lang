@@ -17,35 +17,35 @@ const std::string STANDARD_LIBRARY = R"(
     Vector2 = (Number Number)
     Vector3 = (Number Number Number)
 
-    boolean = in x out Boolean:if x then yes else no
-    not = in x out Boolean:if x then no else yes
+    boolean = in x out <Boolean>if x then yes else no
+    not = in x out <Boolean>if x then no else yes
 
-    equal = in (left right) out Boolean:is left right then yes else no
-    unequal = in (left right) out Boolean:is left right then no else yes
+    equal = in (left right) out <Boolean>is left right then yes else no
+    unequal = in (left right) out <Boolean>is left right then no else yes
 
-    less_or_equal = in (Number:left Number:right) out Boolean:not?less?(right left)
+    less_or_equal = in (<Number>left <Number>right) out <Boolean>not?less?(right left)
 
     inf = div!(1 0)
     nan = div!(0 0)
     pi = 3.14159265359
     tau = 6.28318530718
 
-    inc = in Number:x out Number:add!(x 1)
-    dec = in Number:x out Number:sub!(x 1)
-    neg = in Number:x out Number:sub!(0 x)
-    abs = in Number:x out Number:if less?(0 x) then x else neg!x
+    inc = in <Number>x out <Number>add!(x 1)
+    dec = in <Number>x out <Number>sub!(x 1)
+    neg = in <Number>x out <Number>sub!(0 x)
+    abs = in <Number>x out <Number>if less?(0 x) then x else neg!x
 
     newline = character!10
 
-    is_digit = in Character:c out Boolean:is_increasing?[number!'0' number!c number!'9']
-    is_upper = in Character:c out Boolean:is_increasing?[number!'A' number!c number!'Z']
-    is_lower = in Character:c out Boolean:is_increasing?[number!'a' number!c number!'z']
-    is_letter = in Character:c out Boolean:any?[is_upper?c is_lower?c]
+    is_digit = in <Character>c out <Boolean>is_increasing?[number!'0' number!c number!'9']
+    is_upper = in <Character>c out <Boolean>is_increasing?[number!'A' number!c number!'Z']
+    is_lower = in <Character>c out <Boolean>is_increasing?[number!'a' number!c number!'z']
+    is_letter = in <Character>c out <Boolean>any?[is_upper?c is_lower?c]
 
-    parse_digit = in Character:c out Number:sub!(number!c number!'0')
-    serialize_digit = in Number:x out Character:character!add!(x number!'0')
+    parse_digit = in <Character>c out <Number>sub!(number!c number!'0')
+    serialize_digit = in <Number>x out <Character>character!add!(x number!'0')
 
-    parse_natural_number = in String:string out Number:number@{ 
+    parse_natural_number = in <String>string out <Number>number@{ 
         number = 0
         x = 1
         for c in reverse!string
@@ -55,7 +55,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    serialize_natural_number = in Number:number out String:string@{
+    serialize_natural_number = in <Number>number out <String>string@{
         x = number        
         string = ""
         string += serialize_digit!mod!(x 10)
@@ -66,103 +66,103 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    to_upper = in Character:c out Character:
+    to_upper = in <Character>c out <Character>
         if is_lower?c then
             character!sub!(number!c 32)
         else
             c
 
-    to_lower = in Character:c out Character:
+    to_lower = in <Character>c out <Character>
         if is_upper?c then
             character!add!(number!c 32)
         else
             c
 
-    fold = in (Function:operation in_stream init) out result@{
+    fold = in (<Function>operation in_stream init) out result@{
         result = init
         for item in in_stream
             result = operation!(item result)
         end
     }
 
-    put_each = in (in_stream out_stream) out out_stream:fold!(
+    put_each = in (in_stream out_stream) out <out_stream>fold!(
         put
         in_stream
         out_stream
     )
 
-    reverse = in container out container:put_each!(
+    reverse = in container out <container>put_each!(
         container
         clear!container
     )
 
-    make_stack = in in_stream out Stack:reverse!put_each!(
+    make_stack = in in_stream out <Stack>reverse!put_each!(
         in_stream
         []
     )
 
-    make_string = in in_stream out String:reverse!put_each!(
+    make_string = in in_stream out <String>reverse!put_each!(
         in_stream
         ""
     )
 
-    make_table = in in_stream out Table:put_each!(
+    make_table = in in_stream out <Table>put_each!(
         in_stream
         table[]
     )
 
-    merge_generic = in (in_streams out_stream) out out_stream:fold!(
+    merge_generic = in (in_streams out_stream) out <out_stream>fold!(
         put_each
         in_streams
         out_stream
     )
 
-    merge_stack = in in_streams out Stack:reverse!merge_generic!(
+    merge_stack = in in_streams out <Stack>reverse!merge_generic!(
         in_streams
         []
     )
 
-    merge_string = in in_streams out String:reverse!merge_generic!(
+    merge_string = in in_streams out <String>reverse!merge_generic!(
         in_streams
         ""
     )
 
-    merge_table = in containers out Table:merge_generic!(
+    merge_table = in containers out <Table>merge_generic!(
         reverse!containers
         table[]
     )
 
-    map_generic = in (Function:f in_stream out_stream) out fold!(
+    map_generic = in (<Function>f in_stream out_stream) out fold!(
         in (item stream) out put!(f!item stream)
         in_stream
         out_stream
     )
 
-    map = in (Function:f container) out reverse!map_generic!(
+    map = in (<Function>f container) out reverse!map_generic!(
         f
         container
         clear!container
     )
 
-    map_stack = in (Function:f in_stream) out Stack:reverse!map_generic!(
+    map_stack = in (<Function>f in_stream) out <Stack>reverse!map_generic!(
         f
         in_stream
         []
     )
 
-    map_string = in (Function:f in_stream) out String:reverse!map_generic!(
+    map_string = in (<Function>f in_stream) out <String>reverse!map_generic!(
         f
         in_stream
         ""
     )
 
-    map_table = in (Function:f in_stream) out Table:map_generic!(
+    map_table = in (<Function>f in_stream) out <Table>map_generic!(
         f
         in_stream
         table[]
     )
 
-    zip2 = in (a b) out Stack:reverse!result@{
+    zip2 = in (a b) out <Stack>reverse!result@{
         a2 = a
         b2 = b
         result = []
@@ -173,7 +173,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip3 = in (a b c) out Stack:reverse!result@{
+    zip3 = in (a b c) out <Stack>reverse!result@{
         a2 = a
         b2 = b
         c2 = c
@@ -186,7 +186,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip4 = in (a b c d) out Stack:reverse!result@{
+    zip4 = in (a b c d) out <Stack>reverse!result@{
         a2 = a
         b2 = b
         c2 = c
@@ -201,7 +201,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    consecutive_pairs = in in_stream out Stack:reverse!result@{
+    consecutive_pairs = in in_stream out <Stack>reverse!result@{
         s = in_stream
         result = []
         while if s then boolean!drop!s else no
@@ -210,42 +210,42 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    min = in (Number:left Number:right) out Number:if less?(left right) then left else right
-    max = in (Number:left Number:right) out Number:if less?(left right) then right else left
+    min = in (<Number>left <Number>right) out <Number>if less?(left right) then left else right
+    max = in (<Number>left <Number>right) out <Number>if less?(left right) then right else left
 
-    min_item = in Numbers:in_stream out Number:fold!(min in_stream inf)
+    min_item = in <Numbers>in_stream out <Number>fold!(min in_stream inf)
 
-    max_item = in Numbers:in_stream out Number:fold!(max in_stream -inf)
+    max_item = in <Numbers>in_stream out <Number>fold!(max in_stream -inf)
 
-    min_predicate = in (Function:predicate in_stream) out fold!(
+    min_predicate = in (<Function>predicate in_stream) out fold!(
         in (left right) out if predicate?(left right) then left else right
         drop!in_stream
         take!in_stream
     )
 
-    max_predicate = in (Function:predicate in_stream) out fold!(
+    max_predicate = in (<Function>predicate in_stream) out fold!(
         in (left right) out if predicate?(left right) then right else left
         drop!in_stream
         take!in_stream
     )
 
-    min_key = in (Function:key in_stream) out fold!(
+    min_key = in (<Function>key in_stream) out fold!(
         in (left right) out if less?(key!left key!right) then left else right
         drop!in_stream
         take!in_stream
     )
 
-    max_key = in (Function:key in_stream) out fold!(
+    max_key = in (<Function>key in_stream) out fold!(
         in (left right) out if less?(key!left key!right) then right else left
         drop!in_stream
         take!in_stream
     )
 
-    sum = in Numbers:in_stream out Number:fold!(add in_stream 0)
+    sum = in <Numbers>in_stream out <Number>fold!(add in_stream 0)
 
-    product = in Numbers:in_stream out Number:fold!(mul in_stream 1)
+    product = in <Numbers>in_stream out <Number>fold!(mul in_stream 1)
 
-    clear_if = in (Function:predicate container) out container:reverse!fold!(
+    clear_if = in (<Function>predicate container) out <container>reverse!fold!(
         in (item container) out
             if predicate?item then
                 container
@@ -255,10 +255,10 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    clear_item = in (item container) out container:
+    clear_item = in (item container) out <container>
         clear_if?(in x out equal?(x item) container)
 
-    take_many = in (Number:n container_in) out container_in:reverse!container_out@{
+    take_many = in (<Number>n container_in) out <container_in>reverse!container_out@{
         container = container_in
         container_out = clear!container
         for _ in n
@@ -267,7 +267,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_while = in (Function:predicate container_in) out container_in:reverse!container_out@{
+    take_while = in (<Function>predicate container_in) out <container_in>reverse!container_out@{
         container = container_in        
         container_out = clear!container
         while if container then predicate?take!container else no
@@ -276,24 +276,24 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    take_until_item = in (item container) out container:
+    take_until_item = in (item container) out <container>
         take_while!(in x out unequal?(x item) container)
 
-    drop_many = in (Number:n in_stream) out in_stream:stream@{
+    drop_many = in (<Number>n in_stream) out <in_stream>stream@{
         stream = in_stream
         for _ in n
             stream--
         end
     }
 
-    drop_while = in (Function:predicate in_stream) out in_stream:stream@{
+    drop_while = in (<Function>predicate in_stream) out <in_stream>stream@{
         stream = in_stream
         while if stream then predicate?take!stream else no
             stream--
         end
     }
 
-    drop_until_item = in (item in_stream) out in_stream:
+    drop_until_item = in (item in_stream) out <in_stream>
         drop_while?(in x out unequal?(x item) in_stream)
 
     replace = in (new_item container) out map!(
@@ -301,7 +301,7 @@ const std::string STANDARD_LIBRARY = R"(
         container
     )
 
-    replace_if = in (Function:predicate new_item container) out map!(
+    replace_if = in (<Function>predicate new_item container) out map!(
         in old_item out
             if predicate?old_item then
                 new_item
@@ -313,22 +313,22 @@ const std::string STANDARD_LIBRARY = R"(
     replace_item = in (old_item new_item container) out 
         replace_if?(in x out equal?(x old_item) new_item container)
 
-    count = in in_stream out Number:fold!(
+    count = in in_stream out <Number>fold!(
         in (item n) out inc!n
         in_stream
         0
     )
 
-    count_if = in (Function:predicate in_stream) out Number:fold!(
+    count_if = in (<Function>predicate in_stream) out <Number>fold!(
         in (item n) out if predicate?item then inc!n else n
         in_stream
         0
     )
 
-    count_item = in (item in_stream) out Number:
+    count_item = in (item in_stream) out <Number>
         count_if!(in x out equal?(x item) in_stream)
 
-    range = in Number:n out Numbers:numbers@{
+    range = in <Number>n out <Numbers>numbers@{
         numbers = []
         m = n
         while m
@@ -337,7 +337,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in in_stream out Stack:zip2!(range!count!in_stream in_stream)
+    enumerate = in in_stream out <Stack>zip2!(range!count!in_stream in_stream)
 
     get0 = in in_stream out in_stream!0
     get1 = in in_stream out in_stream!1
@@ -350,7 +350,7 @@ const std::string STANDARD_LIBRARY = R"(
     get8 = in in_stream out in_stream!8
     get9 = in in_stream out in_stream!9
 
-    split = in (delimiter container) out Stack:reverse!result@{
+    split = in (delimiter container) out <Stack>reverse!result@{
         word = take_until_item!(delimiter container)
         sub_container = drop_until_item!(delimiter container)
         result = [word]
@@ -362,7 +362,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    cartesian_product2 = in (a b) out Stack:result@{
+    cartesian_product2 = in (a b) out <Stack>result@{
         result = []
         for item_b in b
             for item_a in a
@@ -371,7 +371,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    put_column = in (column rows) out Stack:reverse!new_rows@{
+    put_column = in (column rows) out <Stack>reverse!new_rows@{
         remaining_rows = rows
         new_rows = []
         for item in column
@@ -382,26 +382,26 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    transpose = in rows out Stack:map!(reverse columns@{
+    transpose = in rows out <Stack>map!(reverse columns@{
         columns = replace!([] take!rows)
         for row in rows
             columns = put_column!(row columns)
         end
     })
 
-    all = in in_stream out Boolean:not?drop_while!(boolean in_stream)
-    none = in in_stream out Boolean:not?drop_while!(not in_stream)
-    any = in in_stream out Boolean:boolean?drop_while!(not in_stream)
+    all = in in_stream out <Boolean>not?drop_while!(boolean in_stream)
+    none = in in_stream out <Boolean>not?drop_while!(not in_stream)
+    any = in in_stream out <Boolean>boolean?drop_while!(not in_stream)
 
-    and = in in_stream out Boolean:all?in_stream
-    or = in in_stream out Boolean:any?in_stream
+    and = in in_stream out <Boolean>all?in_stream
+    or = in in_stream out <Boolean>any?in_stream
 
-    is_increasing = in Numbers:numbers out Boolean:not?drop_while!(
+    is_increasing = in <Numbers>numbers out <Boolean>not?drop_while!(
         less_or_equal
         consecutive_pairs!numbers
     )
 
-    less_or_equal_top = in (Numbers:left Numbers:right) out Boolean:
+    less_or_equal_top = in (<Numbers>left <Numbers>right) out <Boolean>
         if left then
             if right then
                 is_increasing?[take!left take!right]
@@ -410,7 +410,7 @@ const std::string STANDARD_LIBRARY = R"(
         else
             no
 
-    merge_sorted = in (left_in right_in) out Stack:reverse!stack@{
+    merge_sorted = in (left_in right_in) out <Stack>reverse!stack@{
         left = left_in
         right = right_in
         stack = []
@@ -426,13 +426,13 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    unique = in in_stream out Stack:get_keys!fold!(
+    unique = in in_stream out <Stack>get_keys!fold!(
         in (item table) out put!((item 0) table)
         in_stream
         table[]
     )
 
-    count_elements = in in_stream out Table:fold!(
+    count_elements = in in_stream out <Table>fold!(
         in (item table) out put!((item inc!get!(item table 0)) table)
         in_stream
         table[]
@@ -440,39 +440,39 @@ const std::string STANDARD_LIBRARY = R"(
 
     get_items = make_stack
 
-    get_keys = in Table:table out Stack:map_stack!(
+    get_keys = in <Table>table out <Stack>map_stack!(
         in (key value) out key
         table
     )
 
-    get_values = in Table:table out Stack:map_stack!(
+    get_values = in <Table>table out <Stack>map_stack!(
         in (key value) out value
         table
     )
 
-    addv = in (Numbers:a Numbers:b) out Numbers:map!(add zip2!(a b))
-    subv = in (Numbers:a Numbers:b) out Numbers:map!(sub zip2!(a b))
-    mulv = in (Numbers:a Numbers:b) out Numbers:map!(mul zip2!(a b))
-    divv = in (Numbers:a Numbers:b) out Numbers:map!(div zip2!(a b))
-    dot = in (Numbers:a Numbers:b) out Number:sum!mulv!(a b)
-    squared_norm = in Numbers:a out Number:dot!(a a)
-    norm = in Numbers:a out Number:sqrt!squared_norm!a
+    addv = in (<Numbers>a <Numbers>b) out <Numbers>map!(add zip2!(a b))
+    subv = in (<Numbers>a <Numbers>b) out <Numbers>map!(sub zip2!(a b))
+    mulv = in (<Numbers>a <Numbers>b) out <Numbers>map!(mul zip2!(a b))
+    divv = in (<Numbers>a <Numbers>b) out <Numbers>map!(div zip2!(a b))
+    dot = in (<Numbers>a <Numbers>b) out <Number>sum!mulv!(a b)
+    squared_norm = in <Numbers>a out <Number>dot!(a a)
+    norm = in <Numbers>a out <Number>sqrt!squared_norm!a
 
-    add2 = in (Vector2:a Vector2:b) out Vector2:(add!(a!0 b!0) add!(a!1 b!1))
-    sub2 = in (Vector2:a Vector2:b) out Vector2:(sub!(a!0 b!0) sub!(a!1 b!1))
-    mul2 = in (Vector2:a Vector2:b) out Vector2:(mul!(a!0 b!0) mul!(a!1 b!1))
-    div2 = in (Vector2:a Vector2:b) out Vector2:(div!(a!0 b!0) div!(a!1 b!1))
+    add2 = in (<Vector2>a <Vector2>b) out <Vector2>(add!(a!0 b!0) add!(a!1 b!1))
+    sub2 = in (<Vector2>a <Vector2>b) out <Vector2>(sub!(a!0 b!0) sub!(a!1 b!1))
+    mul2 = in (<Vector2>a <Vector2>b) out <Vector2>(mul!(a!0 b!0) mul!(a!1 b!1))
+    div2 = in (<Vector2>a <Vector2>b) out <Vector2>(div!(a!0 b!0) div!(a!1 b!1))
     
-    add3 = in (Vector3:a Vector3:b) out Vector3:(add!(a!0 b!0) add!(a!1 b!1) add!(a!2 b!2))
-    sub3 = in (Vector3:a Vector3:b) out Vector3:(sub!(a!0 b!0) sub!(a!1 b!1) sub!(a!2 b!2))
-    mul3 = in (Vector3:a Vector3:b) out Vector3:(mul!(a!0 b!0) mul!(a!1 b!1) mul!(a!2 b!2))
-    div3 = in (Vector3:a Vector3:b) out Vector3:(div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
+    add3 = in (<Vector3>a <Vector3>b) out <Vector3>(add!(a!0 b!0) add!(a!1 b!1) add!(a!2 b!2))
+    sub3 = in (<Vector3>a <Vector3>b) out <Vector3>(sub!(a!0 b!0) sub!(a!1 b!1) sub!(a!2 b!2))
+    mul3 = in (<Vector3>a <Vector3>b) out <Vector3>(mul!(a!0 b!0) mul!(a!1 b!1) mul!(a!2 b!2))
+    div3 = in (<Vector3>a <Vector3>b) out <Vector3>(div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
 
-    dot2 = in (Vector2:a Vector2:b) out Number:add!(mul!(a!0 b!0) mul!(a!1 b!1))
-    dot3 = in (Vector3:a Vector3:b) out add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
-    squared_norm2 = in Vector2:a out Number:dot2!(a a)
-    squared_norm3 = in Vector3:a out Number:dot3!(a a)
-    norm2 = in Vector2:a out Number:sqrt!squared_norm2!a
-    norm3 = in Vector3:a out Number:sqrt!squared_norm3!a
+    dot2 = in (<Vector2>a <Vector2>b) out <Number>add!(mul!(a!0 b!0) mul!(a!1 b!1))
+    dot3 = in (<Vector3>a <Vector3>b) out add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
+    squared_norm2 = in <Vector2>a out <Number>dot2!(a a)
+    squared_norm3 = in <Vector3>a out <Number>dot3!(a a)
+    norm2 = in <Vector2>a out <Number>sqrt!squared_norm2!a
+    norm3 = in <Vector3>a out <Number>sqrt!squared_norm3!a
 }
 )";

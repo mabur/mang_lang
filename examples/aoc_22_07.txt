@@ -25,45 +25,45 @@ $ ls
 
     Strings = [String]
     
-    parse_command_string = in String:command_string out Strings :
+    parse_command_string = in <String>command_string out <Strings>
         clear_item!("" split!(newline drop!command_string))
-    command_strings = Strings : drop!split!('$' input)
+    command_strings = <Strings>drop!split!('$' input)
     commands = map_stack!(parse_command_string command_strings)
 
     State = {
         current_path = Strings
         path_and_size = table[(Strings Number)]
     }
-    state = State:{
+    state = <State>{
         current_path = []
         path_and_size = table[]
     }
-    handle_cd = in (Strings:command State:state) out State:{
-        current_path = Strings : current_path@state
+    handle_cd = in (<Strings>command <State>state) out <State>{
+        current_path = <Strings>current_path@state
         path_and_size = path_and_size@state
-        new_directory = String : drop_many!(3 take!command)
-        current_path = Strings : is new_directory
-            ".." then Strings:drop!current_path
-            else put!(String:new_directory Strings:current_path)
+        new_directory = <String>drop_many!(3 take!command)
+        current_path = <Strings>is new_directory
+            ".." then <Strings>drop!current_path
+            else put!(<String>new_directory <Strings>current_path)
     }
-    handle_ls = in (Strings:command State:state) out State:{
-        current_path = Strings : current_path@state
+    handle_ls = in (<Strings>command <State>state) out <State>{
+        current_path = <Strings>current_path@state
         path_and_size = path_and_size@state
-        command = Strings : drop!command
+        command = <Strings>drop!command
         for item in command
             parts = split!(' ' item)
-            size = String : parts!0
-            file = String : parts!1
-            file_path = Strings : put!(file current_path)
-            path_and_size = is Character : take!size
+            size = <String>parts!0
+            file = <String>parts!1
+            file_path = <Strings>put!(file current_path)
+            path_and_size = is <Character>take!size
                 'd' then path_and_size
-                else put!((Strings:file_path Number:parse_natural_number!size) path_and_size)
+                else put!((<Strings>file_path <Number>parse_natural_number!size) path_and_size)
         end
     }
-    handle_command = in (Strings:command State:state) out State:is take!take!command
-        'c' then State:handle_cd!(command state)
-        'l' then State:handle_ls!(command state)
-        else State:state
+    handle_command = in (<Strings>command <State>state) out <State>is take!take!command
+        'c' then <State>handle_cd!(command state)
+        'l' then <State>handle_ls!(command state)
+        else <State>state
 
     state = fold!(handle_command commands state)
 

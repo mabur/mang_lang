@@ -189,10 +189,6 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
     }
 }
 
-// Argument type annotations (the `Number` in `Number:x`) are resolved
-// against the function's own enclosing scope, not its own argument scope:
-// checkArgument() evaluates them against function_struct.environment, so
-// an annotation can never refer to a sibling argument.
 void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
     FOR_EACH(i, arguments) {
         auto argument = storage.arguments.data[i];

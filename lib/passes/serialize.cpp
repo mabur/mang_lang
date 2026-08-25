@@ -15,8 +15,9 @@ StringBuilder serializeName(StringBuilder s, size_t name) {
 
 StringBuilder serializeArgument(StringBuilder s, Argument a) {
     if (a.type.type != ANY) {
+        s = concatenate(s, "<");
         s = serialize(s, a.type);
-        s = concatenate(s, ":");
+        s = concatenate(s, ">");
         s = serializeName(s, a.name);
         return s;
     }
@@ -31,8 +32,9 @@ StringBuilder serializeDynamicExpression(StringBuilder s, const DynamicExpressio
 }
 
 StringBuilder serializeTypedExpression(StringBuilder s, const TypedExpression& typed_expression) {
+    s = concatenate(s, "<");
     s = serializeName(s, typed_expression.type_name.global_index);
-    s = concatenate(s, ":");
+    s = concatenate(s, ">");
     s = serialize(s, typed_expression.value);
     return s;
 }

@@ -173,7 +173,7 @@ Manglang consists of the following basic building blocks:
 <img src="type_annotation.png" width=48 height=48>
 </td>
 <td>
-<a href="#type_annotation">Type Annotation</a>
+<a href="#type_ascription">Type Ascription</a>
 </td>
 </tr>
 </table>
@@ -591,7 +591,7 @@ The following values are interpreted as <code>no</code> or falsey:
         <li>number zero <code>0</code></li>
         <li>empty stack <code>[]</code></li>
         <li>empty string <code>""</code> </li>
-        <li>empty table <code>&lt;&gt;</code> </li>
+        <li>empty table <code>table[]</code> </li>
     </ul>
 </li>
 <li>
@@ -925,7 +925,7 @@ They expect the same input and return the same result.
 by unpacking the elements of the input dictionary.
 </p>
 
-<h1 id="type_annotation">6. Type Annotation <img src="type_annotation.png" width=48 height=48></h1>
+<h1 id="type_ascription">6. Type Ascription <img src="type_annotation.png" width=48 height=48></h1>
 Manglang code is evaluated in two separate steps:
 <ol>
 <li><b>Evaluation of types.</b> Quick early verification of the program.</li>
@@ -938,29 +938,29 @@ The <b>second step</b> is the main step which computes the actual result of the 
 The <b>first step</b> does a quick static type checking of the program. It checks if the program seem to make sense. Manglang has a simple type system which supports both <b>type inference</b> and <b>gradual typing</b>. This means that static type  checking is happening even when there is no explicit annotation of types in a program. But explicit type annotation can also be added to specify the intention of the program in greater detail.
 </p>
 
-<h2>6.a. Annotating Types for Expressions</h2>
-You can specify the type of any expression like <code>type:expression</code>. Note that the type and the expression come in the reverse order compared to some other common programming languages. As usual in Manglang white space is optional around <code>:</code>. Let's look at an example:
+<h2>6.a. Types for Expressions</h2>
+You can specify the type of any expression like <code>&lt;type&gt;expression</code>. Let's look at an example:
 <pre>
 {
-  width = Number:320
-  height = Number:240
+  width = &lt;Number&gt;320
+  height = &lt;Number&gt;240
 }
 </pre>
 
-<h2>6.b. Annotating Types for Functions</h2>
+<h2>6.b. Types for Functions</h2>
 <p>
 We can also annotate the types for the input and output of functions similarly. Here are some example functions from the standard library:
 </p>
 <pre>
 {
-  inc = in Number:x
-    out Number:add!(x 1)
+  inc = in &lt;Number&gt;x
+    out &lt;Number&gt;add!(x 1)
 
-  min = in (Number:left Number:right)
-    out Number:if less?(left right) then left else right
+  min = in (&lt;Number&gt;left &lt;Number&gt;right)
+    out &lt;Number&gt;if less?(left right) then left else right
 
-  min_item = in Numbers:container
-    out Number:fold!(min container inf)
+  min_item = in &lt;Numbers&gt;container
+    out &lt;Number&gt;fold!(min container inf)
 }
 </pre>
 
@@ -975,7 +975,7 @@ Manglang defines the following types in its standard library: <code>Any</code>, 
   Character = 'a'
   Stack = []
   String = ""
-  Table = <>
+  Table = table[]
   Numbers = [Number]
   Function = in x out x
   ...
@@ -988,9 +988,9 @@ So a named type is just a named example value for that type. We can name and use
   Person = {name = String age = Age}
   Persons = [Person]
 
-  anders = Person : {name = "Anders" age = 9}
-  ada = Person : {name = "Ada" age = 11}
-  persons = Persons : [anders ada]
+  anders = &lt;Person&gt;{name = "Anders" age = 9}
+  ada = &lt;Person&gt;{name = "Ada" age = 11}
+  persons = &lt;Persons&gt;[anders ada]
 }
 </pre>
 
@@ -1036,7 +1036,12 @@ The static type checker compares pairs of types to see that they compatible. The
 
   </li>
 </ul>
-The types in Manglang form a tree, where a type is compatible with all its descendants and all its ancestors. Type compatibility is a <b>symmetric</b> relation, so if <code>a:b</code> are compatible then <code>b:a</code> are compatible. However, compatibility is <b>not transitive</b>, which means that if <code>a:b</code> are compatible and <code>a:c</code> are compatible, it does NOT mean that <code>b:c</code> are compatible.
+The types in Manglang form a tree, where a type is compatible with all its descendants and all its ancestors.
+Type compatibility is a <b>symmetric</b> relation,
+so if <code>&lta&gtb</code> are compatible then <code>&ltb&gta</code> are compatible.
+However, compatibility is <b>not transitive</b>,
+which means that if <code>&lta&gtb</code> are compatible and <code>&lta&gtc</code> are compatible,
+it does NOT mean that <code>&ltb&gtc</code> are compatible.
 
 <h1>More Code Examples</h1>
 <p>

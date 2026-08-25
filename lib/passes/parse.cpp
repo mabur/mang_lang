@@ -159,25 +159,32 @@ Expression parseName(CodeRange code) {
 
 Expression parseArgument(CodeRange code) {
     auto whole = code;
-    auto first_name = parseName(code);
-    code = lastPart(code, first_name.range);
-    code = parseWhiteSpace(code);
-    if (startsWith(code, ':')) {
+    if (startsWith(code, '<')) {
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
-        auto second_name = parseName(code);
-        code = lastPart(code, second_name.range);
+        auto type_name = parseName(code);
+        code = lastPart(code, type_name.range);
+        code = parseWhiteSpace(code);
+        if (!startsWith(code, '>')) {
+            return makeErrorExpression(code, "Parse error. Expected >");
+        }
+        code = parseCharacter(code);
+        code = parseWhiteSpace(code);
+        auto param_name = parseName(code);
+        code = lastPart(code, param_name.range);
         const auto type = makeLookupSymbol(
-            first_name.range, {first_name.index}
+            type_name.range, {type_name.index}
         );
         return makeArgument(
-            firstPart(whole, code), Argument{type, second_name.index}
+            firstPart(whole, code), Argument{type, param_name.index}
         );
     }
     else {
+        auto name = parseName(code);
+        code = lastPart(code, name.range);
         return makeArgument(
-            firstPart(whole, code), Argument{{}, first_name.index}
-        );   
+            firstPart(whole, code), Argument{{}, name.index}
+        );
     }
 }
 
@@ -665,15 +672,28 @@ Expression parseSubstitution(CodeRange code) {
             firstPart(whole, code), {BoundGlobalName{name.index}, child}
         );
     }
-    if (startsWith(code, ':')) {
-        code = parseCharacter(code);
-        auto value = parseExpression(code);
-        code = lastPart(code, value.range);
-        return makeTypedExpression(
-            firstPart(whole, code), {BoundGlobalName{name.index}, value}
-        );
-    }
     return makeLookupSymbol(name.range, {name.index});
+}
+
+Expression parseTypedExpression(CodeRange code) {
+    auto whole = code;
+    if (!startsWith(code, '<')) {
+        return makeErrorExpression(code, "Parse error. Expected <");
+    }
+    code = parseCharacter(code);
+    code = parseWhiteSpace(code);
+    auto type_name = parseName(code);
+    code = lastPart(code, type_name.range);
+    code = parseWhiteSpace(code);
+    if (!startsWith(code, '>')) {
+        return makeErrorExpression(code, "Parse error. Expected >");
+    }
+    code = parseCharacter(code);
+    auto value = parseExpression(code);
+    code = lastPart(code, value.range);
+    return makeTypedExpression(
+        firstPart(whole, code), {BoundGlobalName{type_name.index}, value}
+    );
 }
 
 Expression parseNumber(CodeRange code) {
@@ -795,6 +815,7 @@ Expression parseExpression(CodeRange code) {
     if (c == '[') return parseStack(code);
     if (c == '{') return parseDictionary(code);
     if (c == '(') return parseTuple(code);
+    if (c == '<') return parseTypedExpression(code);
     if (c == '\'') return parseCharacterExpression(code);
     if (c == '\"') return parseString(code);
     if (startsWithString(code, "table[")) return parseTable(code);

@@ -7,7 +7,7 @@ Intersection = {
     color = Vector3
 }
 
-default_intersection = Intersection:{
+default_intersection = <Intersection>{
     distance = inf
     position = (0 0 0)
     normal = (0 0 0)
@@ -34,14 +34,14 @@ World = {
     atmosphere_color = Vector3
 }
 
-muls = in (Number:scalar Vector3:vector) out
-    Vector3:mul3!((scalar scalar scalar) vector)
+muls = in (<Number>scalar <Vector3>vector) out
+    <Vector3>mul3!((scalar scalar scalar) vector)
 
 R = 100000.0
 MAX_C = 1.0
 MIN_C = 0.1
 
-world = World:{
+world = <World>{
     spheres = [
         {position=(-2 0 6) squared_radius=1 color=(MAX_C MAX_C MIN_C)}
         {position=(0 0 5) squared_radius=1 color=(MAX_C MIN_C MIN_C)}
@@ -56,10 +56,10 @@ world = World:{
     atmosphere_color = muls!(0.3 (0.5 0.5 1))
 }
 
-normalize3 = in Vector3:vector out Vector3:
+normalize3 = in <Vector3>vector out <Vector3>
     muls!(div!(1 norm3!vector) vector)
 
-findSingleIntersection = in (Vector3:start Vector3:direction Sphere:sphere) out Intersection:intersection@{
+findSingleIntersection = in (<Vector3>start <Vector3>direction <Sphere>sphere) out <Intersection>intersection@{
     intersection = default_intersection
     offset = sub3!(position@sphere start)
     c = dot3!(direction offset)
@@ -80,7 +80,7 @@ findSingleIntersection = in (Vector3:start Vector3:direction Sphere:sphere) out 
     }
 }
 
-findIntersection = in (Vector3:start Vector3:direction Spheres:spheres) out Intersection:i1@{
+findIntersection = in (<Vector3>start <Vector3>direction <Spheres>spheres) out <Intersection>i1@{
     i1 = default_intersection
     for sphere in spheres
         i2 = findSingleIntersection!(start direction sphere)
@@ -88,15 +88,15 @@ findIntersection = in (Vector3:start Vector3:direction Spheres:spheres) out Inte
     end
 }
 
-shadeSingleLight = in (Intersection:intersection Light:light) out result@{
+shadeSingleLight = in (<Intersection>intersection <Light>light) out result@{
     geometry = max!(neg!dot3!(direction@light normal@intersection) 0.0)
     result = muls!(geometry mul3!(color@intersection color@light))
 }
 
-shadeAtmosphere = in (Intersection:intersection Vector3:atmosphere_color) out 
-    Vector3:muls!(sqrt!get2!position@intersection atmosphere_color)
+shadeAtmosphere = in (<Intersection>intersection <Vector3>atmosphere_color) out 
+    <Vector3>muls!(sqrt!get2!position@intersection atmosphere_color)
 
-shade = in (Intersection:intersection world) out Vector3:color@{
+shade = in (<Intersection>intersection world) out <Vector3>color@{
     color = (1 1 1)
     is_infinite = equal?(inf distance@intersection)
     if is_infinite
@@ -108,9 +108,9 @@ shade = in (Intersection:intersection world) out Vector3:color@{
     end
 }
 
-colorU8fromF64 = in Number:c out Number:round!min!(mul!(255 c) 255)
+colorU8fromF64 = in <Number>c out <Number>round!min!(mul!(255 c) 255)
 
-writePixel = in (String:image Number:x Number:y Number:width Number:height World:world) out String:image_out@{
+writePixel = in (<String>image <Number>x <Number>y <Number>width <Number>height <World>world) out <String>image_out@{
     start = (0 0 0)
     xd = sub!(x div!(width 2))
     yd = sub!(y div!(height 2))
@@ -128,7 +128,7 @@ writePixel = in (String:image Number:x Number:y Number:width Number:height World
     image_out ++= " "
 }
 
-writeImage = in World:world out String:image@{
+writeImage = in <World>world out <String>image@{
     WIDTH = 320
     HEIGHT = 240
     image = ""

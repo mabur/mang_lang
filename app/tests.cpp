@@ -302,20 +302,20 @@ int main() {
         {"((()))", "((()))"},
     ));
     testEvaluateAll("tuple type checking", TEST_CASES(
-        {"b@{a=() b=a:()}", "()"},
-        {"b@{a=(1) b=a:(1)}", "(1)"},
-        {"b@{a=(1 'a') b=a:(1 'a')}", "(1 'a')"},
+        {"b@{a=() b=<a>()}", "()"},
+        {"b@{a=(1) b=<a>(1)}", "(1)"},
+        {"b@{a=(1 'a') b=<a>(1 'a')}", "(1 'a')"},
     ));
     testEvaluateAll("types", TEST_CASES(
-        {"Any:1", "1"},
-        {"Number:1", "1"},
-        {"Boolean:yes", "yes"},
-        {"Character:'Q'", "'Q'"},
-        {"Stack:[1]", "[1]"},
-        {"Table:table[(1 2)]", "table[(1 2)]"},
-        {"Numbers:[1 2]", "[1 2]"},
-        {"Function:in x out x", "in x out x"},
-        {"{a=Any b=a:1}", "{a=0 b=1}"},
+        {"<Any>1", "1"},
+        {"<Number>1", "1"},
+        {"<Boolean>yes", "yes"},
+        {"<Character>'Q'", "'Q'"},
+        {"<Stack>[1]", "[1]"},
+        {"<Table>table[(1 2)]", "table[(1 2)]"},
+        {"<Numbers>[1 2]", "[1 2]"},
+        {"<Function>in x out x", "in x out x"},
+        {"{a=Any b=<a>1}", "{a=0 b=1}"},
     ));
     testReformat("dictionary iteration", TEST_CASES(
         {"{while 1 end}", "{while 1 end}"},
@@ -403,15 +403,15 @@ int main() {
         {"{a=0 a+=1}", "{a=NUMBER}"},
     ));    
     testEvaluateTypes("dictionary type checking", TEST_CASES(
-        {"{a={} b=a:{}}", "{a={} b={}}"},
-        {"{a={} b=a:{x=1}}", "{a={} b={x=NUMBER}}"},
-        {"{a={x=1} b=a:{x=1}}", "{a={x=NUMBER} b={x=NUMBER}}"},
-        {"{a={} b=a:{x=1 y=1}}", "{a={} b={x=NUMBER y=NUMBER}}"},
-        {"{a={x=1} b=a:{x=1 y=1}}", "{a={x=NUMBER} b={x=NUMBER y=NUMBER}}"},
-        {"{a={x=1 y=1} b=a:{x=1 y=1}}", "{a={x=NUMBER y=NUMBER} b={x=NUMBER y=NUMBER}}"},
-        {"{a={} b=a:{y=1 x=1}}", "{a={} b={y=NUMBER x=NUMBER}}"},
-        {"{a={x=1} b=a:{y=1 x=1}}", "{a={x=NUMBER} b={y=NUMBER x=NUMBER}}"},
-        {"{a={x=1 y=1} b=a:{y=1 x=1}}", "{a={x=NUMBER y=NUMBER} b={y=NUMBER x=NUMBER}}"},
+        {"{a={} b=<a>{}}", "{a={} b={}}"},
+        {"{a={} b=<a>{x=1}}", "{a={} b={x=NUMBER}}"},
+        {"{a={x=1} b=<a>{x=1}}", "{a={x=NUMBER} b={x=NUMBER}}"},
+        {"{a={} b=<a>{x=1 y=1}}", "{a={} b={x=NUMBER y=NUMBER}}"},
+        {"{a={x=1} b=<a>{x=1 y=1}}", "{a={x=NUMBER} b={x=NUMBER y=NUMBER}}"},
+        {"{a={x=1 y=1} b=<a>{x=1 y=1}}", "{a={x=NUMBER y=NUMBER} b={x=NUMBER y=NUMBER}}"},
+        {"{a={} b=<a>{y=1 x=1}}", "{a={} b={y=NUMBER x=NUMBER}}"},
+        {"{a={x=1} b=<a>{y=1 x=1}}", "{a={x=NUMBER} b={y=NUMBER x=NUMBER}}"},
+        {"{a={x=1 y=1} b=<a>{y=1 x=1}}", "{a={x=NUMBER y=NUMBER} b={y=NUMBER x=NUMBER}}"},
     ));
     testEvaluateAll("dictionary", TEST_CASES(
         {"{}", "{}"},
@@ -589,18 +589,18 @@ int main() {
         {"add!(1 2)", "add!(1 2)"},
     ));
     testReformat("function", TEST_CASES(
-        {"in T:x out x", "in T:x out x"}, // TODO
+        {"in <T>x out x", "in <T>x out x"}, // TODO
         {"in {x out x", "I found an error while parsing a function.\nThe input had a starting '{' but no ending '}'."},
         {"in (", "I found an error while parsing a function.\nThe function definition ended too early."},
     ));
     testEvaluateTypes("function", TEST_CASES(
         {"in x out x", "FUNCTION"},
-        {"in T:x out x", "FUNCTION"}, // TODO
+        {"in <T>x out x", "FUNCTION"}, // TODO
     ));
     testEvaluateAll("function", TEST_CASES(
         {"in x out x", "in x out x"},
         {"f@{f=in x out x}", "in x out x"},
-        {"f@{T=1 f=in T:x out x}", "in T:x out x"}, //TODO:
+        {"f@{T=1 f=in <T>x out x}", "in <T>x out x"}, //TODO:
     ));
     testEvaluateTypes("function dictionary", TEST_CASES(
         {"in {x} out x", "FUNCTION_DICTIONARY"},
@@ -661,9 +661,9 @@ int main() {
         {"y@{a=1 f=in stack out map_stack!(in y out a stack) y=f![0 0]}", "[1 1]"},
         {"b@{a={a=0 f=in x out a} g=f@a b=g!1}", "0"},
         {"y@{f=in (x stack) out map_stack!(in y out x stack) y=f!(2 [0 0])}", "[2 2]"},
-        {"a@{T=1 f=in T:x out x a=f!0}", "0"},
-        {"a@{T=1 f=in (T:x T:y) out x a=f!(0 0)}", "0"},
-        {"a@{T=1 f=in {T:x T:y} out x a=f!{x=0 y=0}}", "0"},
+        {"a@{T=1 f=in <T>x out x a=f!0}", "0"},
+        {"a@{T=1 f=in (<T>x <T>y) out x a=f!(0 0)}", "0"},
+        {"a@{T=1 f=in {<T>x <T>y} out x a=f!{x=0 y=0}}", "0"},
     ));
     testEvaluateTypes("recursive function", TEST_CASES(
         {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 y=f!3}", "ANY"},
@@ -684,14 +684,14 @@ int main() {
         {"dynamic 1", "1"},
     ));
     testReformat("typed expression", TEST_CASES(
-        {"a:b", "a:b"},
-        {" a : b ", "a:b"},
+        {"<a>b", "<a>b"},
+        {" < a > b ", "<a>b"},
     ));
     testEvaluateTypes("typed expression", TEST_CASES(
-        {"{a=1 b=a:1}", "{a=NUMBER b=NUMBER}"},
-        {"{a=[] b=a:[]}", "{a=EMPTY_STACK b=EMPTY_STACK}"},
-        {"{a=[] b=a:[1]}", "{a=EMPTY_STACK b=[NUMBER]}"},
-        {"{a=[1] b=a:[]}", "{a=[NUMBER] b=EMPTY_STACK}"}, // TODO
+        {"{a=1 b=<a>1}", "{a=NUMBER b=NUMBER}"},
+        {"{a=[] b=<a>[]}", "{a=EMPTY_STACK b=EMPTY_STACK}"},
+        {"{a=[] b=<a>[1]}", "{a=EMPTY_STACK b=[NUMBER]}"},
+        {"{a=[1] b=<a>[]}", "{a=[NUMBER] b=EMPTY_STACK}"}, // TODO
     ));
     testEvaluateTypes("lookup function dictionary", TEST_CASES(
         {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},
