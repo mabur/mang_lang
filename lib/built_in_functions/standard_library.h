@@ -217,25 +217,25 @@ const std::string STANDARD_LIBRARY = R"(
 
     max_item = in <Numbers>in_stream out <Number>fold!(max in_stream -inf)
 
-    min_predicate = in (<Function>predicate in_stream) out fold!(
+    min_predicate = in (<Function>predicate in_stream) out <take!in_stream>fold!(
         in (left right) out if predicate?(left right) then left else right
         drop!in_stream
         take!in_stream
     )
 
-    max_predicate = in (<Function>predicate in_stream) out fold!(
+    max_predicate = in (<Function>predicate in_stream) out <take!in_stream>fold!(
         in (left right) out if predicate?(left right) then right else left
         drop!in_stream
         take!in_stream
     )
 
-    min_key = in (<Function>key in_stream) out fold!(
+    min_key = in (<Function>key in_stream) out <take!in_stream>fold!(
         in (left right) out if less?(key!left key!right) then left else right
         drop!in_stream
         take!in_stream
     )
 
-    max_key = in (<Function>key in_stream) out fold!(
+    max_key = in (<Function>key in_stream) out <take!in_stream>fold!(
         in (left right) out if less?(key!left key!right) then right else left
         drop!in_stream
         take!in_stream
