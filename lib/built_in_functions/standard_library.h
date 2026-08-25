@@ -45,11 +45,10 @@ const std::string STANDARD_LIBRARY = R"(
     parse_digit = in Character:c out Number:sub!(number!c number!'0')
     serialize_digit = in Number:x out Character:character!add!(x number!'0')
 
-    parse_natural_number = in String:string out Number:number@{
-        reversed_string = reverse!string
+    parse_natural_number = in String:string out Number:number@{ 
         number = 0
         x = 1
-        for c in reversed_string
+        for c in reverse!string
             digit = parse_digit!c
             number = add!(number mul!(x digit))
             x = mul!(x 10)
@@ -81,8 +80,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     fold = in (Function:operation in_stream init) out result@{
         result = init
-        s = in_stream
-        for item in s
+        for item in in_stream
             result = operation!(item result)
         end
     }
