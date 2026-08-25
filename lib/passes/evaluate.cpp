@@ -256,16 +256,20 @@ Expression evaluateLookupChild(
 }
 
 template<bool CheckTypes, typename Evaluator>
-void checkArgument(
+Expression checkArgument(
     Evaluator evaluator, const Argument& a, Expression input, Expression environment
 ) {
     if constexpr (CheckTypes) {
         if (a.type.type == ANY) {
-            return;
+            return Expression{};
         }
         const auto type = evaluator(a.type, environment);
-        checkTypes(input, type, "function call");
+        const auto type_check = checkTypes(input, type, "function call");
+        if (!type_check.ok) {
+            return type_check.error;
+        }
     }
+    return Expression{};
 }
 
 template<bool CheckTypes, typename Evaluator>
@@ -276,7 +280,10 @@ Expression applyFunction(
 ) {
     const auto function_struct = storage.functions.data[function.index];
     const auto argument = storage.arguments.data[function_struct.argument];
-    checkArgument<CheckTypes>(evaluator, argument, input, function_struct.environment);
+    const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, input, function_struct.environment);
+    if (argument_check.type == ERROR_EXPRESSION) {
+        return argument_check;
+    }
     // TODO: allocate on storage.definitions directly?
     // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
@@ -314,7 +321,10 @@ Expression applyFunctionDictionary(
     for (size_t i = 0; i < num_arguments; ++i) {
         auto argument = storage.arguments.data[first_argument + i];
         auto expression = requiredLookup(evaluated_dictionary, argument.name);
-        checkArgument<CheckTypes>(evaluator, argument, expression, function_struct.environment);
+        const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, expression, function_struct.environment);
+        if (argument_check.type == ERROR_EXPRESSION) {
+            return argument_check;
+        }
         makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
     }
     auto last = storage.definitions.count;
@@ -361,7 +371,10 @@ Expression applyFunctionTuple(
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.data[argument_index + i];
         const auto expression = storage.expressions.data[tuple.indices.data + i];
-        checkArgument<CheckTypes>(evaluator, argument, expression, function_struct.environment);
+        const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, expression, function_struct.environment);
+        if (argument_check.type == ERROR_EXPRESSION) {
+            return argument_check;
+        }
         makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
     }
     auto last = storage.definitions.count;
@@ -709,7 +722,10 @@ Expression evaluateIs(Expression is, Expression environment) {
 Expression evaluateTypedExpressionTypes(Expression expression, Expression environment) {
     const auto type = evaluate_types(storage.typed_expressions.data[expression.index].type, environment);
     const auto value = evaluate_types(storage.typed_expressions.data[expression.index].value, environment);
-    checkTypes(type, value, "typed expression");
+    const auto type_check = checkTypes(type, value, "typed expression");
+    if (!type_check.ok) {
+        return type_check.error;
+    }
     return value;
 }
     
