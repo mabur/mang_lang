@@ -1,29 +1,53 @@
+* Homepage with hand-drawn illustrations
+* Effects and interactivity as instreams and outstreams
+
+DICTIONARY NAMING
+* Dictionary (good but overloaded)
+* Lexicon (good)
+* Glossary (quite good)
+* Compendium
+* Codex
+* Encyclopedia
+* Legend
+* Registry
+* Register (overloaded)
+* Ledger
+* Roster
+* Manifest
+* Docket
+* Roll
+* Directory (overloaded)
+* Index (overloaded)
+Traditional
+* Namespace (good, but maybe overlaoded?)
+* Record (good but generic)
+* Object (good but generic)
+* Struct
+* Symbol table
+* Environment
+* Scope
+* Context
+* Class
+* Frame (overloaded)
 
 TYPE SYSTEM
-* Explain type system and type ascriptions as using typeof for all type checking.
-* Type ascriptions like old typescript syntax
-  - in <Number>x out <Number>x
-  - Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
-  - Maybe just allow types for function headers?
-  - Maybe model sum types by allowing multiple types inside <> like:
-    - <Square Circle Rectangle>my_shape
-    - Avoids a general concept like: union[Square Circle Rectangle], which is meaningful for types but maybe not for values.
-    - The downside is that <Square Circle Rectangle> could be repetitive if it appears in many places,
-      in that case it is convenient to define a type like: Shape = union[Square Circle Rectangle]
-  - Maybe it is the wrong idea to have type ascriptions tied to a single expression or function input or output?
-  - Maybe it is the wrong idea to have the type in a type ascriptions tied to a symbol rather than a type expression?
-    Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
-    - assert a < b < x
-    - assert strictly_increasing!(a b x) (as a dictionary statement)
-    - zip2 = in (<List>list0 <List>list1) out <[(take!list0 take!list1)]> ...
-* Add asserts/value-checks/predicates with similar syntax to type-checks:
-  - type-check:value-check;expression
-  - List:is_populated;expression
-  - List:expression
-  - is_populated;expression
-  - expression
 * How can we make typing total and remove Any and Dynamic? Would open up for speed optimizations.
+* Explain type system and type ascriptions as using typeof for all type checking.
 * Types & Prototypes
+* Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
+* Maybe just allow types for function headers?
+* Maybe model sum types by allowing multiple types inside <> like:
+  - <Square Circle Rectangle>my_shape
+  - Avoids a general concept like: union[Square Circle Rectangle], which is meaningful for types but maybe not for values.
+  - The downside is that <Square Circle Rectangle> could be repetitive if it appears in many places,
+    in that case it is convenient to define a type like: Shape = union[Square Circle Rectangle]
+* Maybe it is the wrong idea to have type ascriptions tied to a single expression or function input or output?
+* Maybe it is the wrong idea to have the type in a type ascriptions tied to a symbol rather than a type expression?
+  Can also compare with assertions. For both types and assertions it is sometimes useful to have relations over multiple expressions like:
+  - assert a < b < x
+  - assert strictly_increasing!(a b x) (as a dictionary statement)
+  - zip2 = in (<List>list0 <List>list1) out <[(take!list0 take!list1)]> ...
+- Could have assert as a dictionary statement
 * Dictionary composition, row polymorphism, like purescript, jsonnet, dhall, CUE, GCL (Google Configuration Language):
   - ColorARGB!{red=255}
   - ColorARGB|{red=255}
@@ -296,6 +320,7 @@ SYSTEM IMPLEMENTATION
   - Raytracer 64x40: 3.5s -> 3.4s -> 2.6,2.7s -> 2.1-2.2 -> 2.0
   - Raytracer new computer 128x96: -> 2.6s -> 2.4s -> 1.8s -> 1.7s -> 0.3s
   - Raytracer new computer 320x240: 1.9s -> 1.6s
+* Add mutable array type.
 * Optimize calling of built-in functions without type checking.
 * Specialize expressions for small stacks, with content stored directly in the struct: Tuple2, Tuple3, Tuple4.
 * implement fold as built-in
