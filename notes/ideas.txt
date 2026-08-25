@@ -32,6 +32,9 @@ Traditional
 
 TYPE SYSTEM
 * Add more types to generic functions in standard library.
+* Type functions:
+  - take!container gives value_type/item_type: gets the value type of a container. Would it make sense to have a type function like value_type/item_type
+  - clear!container gives generic container type
 * How can we make typing total and remove Any and Dynamic? Would open up for speed optimizations.
 * Explain type system and type ascriptions as using typeof for all type checking.
 * Types & Prototypes

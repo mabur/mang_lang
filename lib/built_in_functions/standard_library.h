@@ -96,7 +96,7 @@ const std::string STANDARD_LIBRARY = R"(
         clear!container
     )
 
-    make_stack = in in_stream out <Stack>reverse!put_each!(
+    make_stack = in in_stream out <[take!in_stream]>reverse!put_each!(
         in_stream
         []
     )
@@ -162,7 +162,7 @@ const std::string STANDARD_LIBRARY = R"(
         table[]
     )
 
-    zip2 = in (a b) out <Stack>reverse!result@{
+    zip2 = in (a b) out <[(take!a take!b)]>reverse!result@{
         a2 = a
         b2 = b
         result = []
@@ -173,7 +173,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip3 = in (a b c) out <Stack>reverse!result@{
+    zip3 = in (a b c) out <[(take!a take!b take!c)]>reverse!result@{
         a2 = a
         b2 = b
         c2 = c
@@ -186,7 +186,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    zip4 = in (a b c d) out <Stack>reverse!result@{
+    zip4 = in (a b c d) out <[(take!a take!b take!c take!d)]>reverse!result@{
         a2 = a
         b2 = b
         c2 = c
@@ -201,7 +201,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    consecutive_pairs = in in_stream out <Stack>reverse!result@{
+    consecutive_pairs = in in_stream out <[(take!in_stream take!in_stream)]>reverse!result@{
         s = in_stream
         result = []
         while if s then boolean!drop!s else no
@@ -337,7 +337,7 @@ const std::string STANDARD_LIBRARY = R"(
         end
     }
 
-    enumerate = in in_stream out <Stack>zip2!(range!count!in_stream in_stream)
+    enumerate = in in_stream out <[(Number take!in_stream)]>zip2!(range!count!in_stream in_stream)
 
     get0 = in in_stream out in_stream!0
     get1 = in in_stream out in_stream!1
