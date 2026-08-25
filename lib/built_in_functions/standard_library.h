@@ -301,7 +301,7 @@ const std::string STANDARD_LIBRARY = R"(
         container
     )
 
-    replace_if = in (<Function>predicate new_item container) out map!(
+    replace_if = in (<Function>predicate new_item container) out <container>map!(
         in old_item out
             if predicate?old_item then
                 new_item
@@ -310,7 +310,7 @@ const std::string STANDARD_LIBRARY = R"(
         container
     )
 
-    replace_item = in (old_item new_item container) out 
+    replace_item = in (old_item new_item container) out <container>
         replace_if?(in x out equal?(x old_item) new_item container)
 
     count = in in_stream out <Number>fold!(
@@ -469,7 +469,7 @@ const std::string STANDARD_LIBRARY = R"(
     div3 = in (<Vector3>a <Vector3>b) out <Vector3>(div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
 
     dot2 = in (<Vector2>a <Vector2>b) out <Number>add!(mul!(a!0 b!0) mul!(a!1 b!1))
-    dot3 = in (<Vector3>a <Vector3>b) out add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
+    dot3 = in (<Vector3>a <Vector3>b) out <Number>add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
     squared_norm2 = in <Vector2>a out <Number>dot2!(a a)
     squared_norm3 = in <Vector3>a out <Number>dot3!(a a)
     norm2 = in <Vector2>a out <Number>sqrt!squared_norm2!a
