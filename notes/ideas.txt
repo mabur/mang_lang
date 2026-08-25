@@ -251,9 +251,9 @@ LANGUAGE SYNTAX & SEMANTICS
         flag = yes
       end
     put, clear, take, drop, +=, --
-  - Syntax for homogeneous dynamic containers: stacks [], tables <(k v)>, optionals?
+  - Syntax for homogeneous dynamic containers: stacks [], tables, optionals?
     - [], stack[]
-    - <>, table[]
+    - table[]
     - ?, optional[], option[] maybe[]
   - Empty tuple () for MISSING, NULL. Alternatively option[]
   - Add short-circuit "and" "or" to while statement.

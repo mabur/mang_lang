@@ -594,17 +594,18 @@ struct Rows {
 
 Expression parseTable(CodeRange code) {
     auto whole = code;
-    if (!startsWith(code, '<')) {
-        return makeErrorExpression(code, "Parse error. Expected <");
+    if (!startsWithString(code, "table[")) {
+        return makeErrorExpression(code, "Parse error. Expected table[");
     }
+    code = parseKeyword(code, "table");
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto rows = Rows{};
-    while (!::startsWith(code, '>')) {
+    while (!::startsWith(code, ']')) {
         if (IS_EMPTY(code)) {
             return makeErrorExpression(code,
                 "I found an error while parsing a table.\n"
-                "It is missing a closing '>'."
+                "It is missing a closing ']'."
             );
         }
         if (!startsWith(code, '(')) {
@@ -626,8 +627,8 @@ Expression parseTable(CodeRange code) {
         auto row = Row{key, value};
         APPEND(rows, row);
     }
-    if (!startsWith(code, '>')) {
-        return makeErrorExpression(code, "Parse error. Expected >");
+    if (!startsWith(code, ']')) {
+        return makeErrorExpression(code, "Parse error. Expected ]");
     }
     code = parseCharacter(code);
     auto first = storage.rows.count;
@@ -794,9 +795,9 @@ Expression parseExpression(CodeRange code) {
     if (c == '[') return parseStack(code);
     if (c == '{') return parseDictionary(code);
     if (c == '(') return parseTuple(code);
-    if (c == '<') return parseTable(code);
     if (c == '\'') return parseCharacterExpression(code);
     if (c == '\"') return parseString(code);
+    if (startsWithString(code, "table[")) return parseTable(code);
     if (isKeyword(code, "yes")) return parseYes(code);
     if (isKeyword(code, "no")) return parseNo(code);
     if (isKeyword(code, "-inf")) return parseNegInf(code);

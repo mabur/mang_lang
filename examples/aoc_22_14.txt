@@ -19,7 +19,7 @@ result@{
         ] 
     }
     
-    filled = <>
+    filled = table[]
     for path in paths
         while drop!path
             source = path!0

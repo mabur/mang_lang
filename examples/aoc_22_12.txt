@@ -8,7 +8,7 @@ abdefghi"
 
     count_alphabet = in c out sub!(number!c number!'a')
 
-    heights = <>
+    heights = table[]
     start = [nan nan]
     goal = [nan nan]
     lines = split!(newline input)
@@ -28,7 +28,7 @@ abdefghi"
         y = inc!y
     end
     
-    visited = <(start yes)>
+    visited = table[(start yes)]
     active_frontier = [start]
     steps = 0
     while not!get!(goal visited no)

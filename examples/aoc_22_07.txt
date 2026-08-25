@@ -32,11 +32,11 @@ $ ls
 
     State = {
         current_path = Strings
-        path_and_size = <(Strings Number)>
+        path_and_size = table[(Strings Number)]
     }
     state = State:{
         current_path = []
-        path_and_size = <>
+        path_and_size = table[]
     }
     handle_cd = in (Strings:command State:state) out State:{
         current_path = Strings : current_path@state
@@ -77,7 +77,7 @@ $ ls
             directory_sizes = put!((item directory_size) directory_sizes)
         end
     }
-    directory_sizes = fold!(update_directory_sizes path_and_size@state <>)
+    directory_sizes = fold!(update_directory_sizes path_and_size@state table[])
     sizes = get_values!directory_sizes
     is_big_size = in size out less?(100000 size)
     result = sum!clear_if!(is_big_size sizes)

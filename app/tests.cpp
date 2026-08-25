@@ -229,31 +229,31 @@ int main() {
         {"[[[]]]", "[[EMPTY_STACK]]"},
     ));
     testReformat("table", TEST_CASES(
-        {"<>", "<>"},
-        {"<(1 2)>", "<(1 2)>"},
-        {"< (1  2 ) >", "<(1 2)>"},
-        {"<(<> <>)>", "<(<> <>)>"},
-        {"<((0 0) (1 1))>", "<((0 0) (1 1))>"},
-        {"<(inc!0 inc!1)>", "<(inc!0 inc!1)>"},
-        {"<","I found an error while parsing a table.\nIt is missing a closing '>'."},
+        {"table[]", "table[]"},
+        {"table[(1 2)]", "table[(1 2)]"},
+        {"table[ (1  2 ) ]", "table[(1 2)]"},
+        {"table[(table[] table[])]", "table[(table[] table[])]"},
+        {"table[((0 0) (1 1))]", "table[((0 0) (1 1))]"},
+        {"table[(inc!0 inc!1)]", "table[(inc!0 inc!1)]"},
+        {"table[","I found an error while parsing a table.\nIt is missing a closing ']'."},
     ));
     testEvaluateTypes("table", TEST_CASES(
-        {"<>", "<>"},
-        {"<(1 2)>", "<(NUMBER NUMBER)>"},
-        {"< (1  2 ) >", "<(NUMBER NUMBER)>"},
-        {"<(<> <>)>", "<(<> <>)>"},
-        {"<((0 0) (1 1))>", "<((NUMBER NUMBER) (NUMBER NUMBER))>"},
-        {"<(inc!0 inc!1)>", "<(NUMBER NUMBER)>"},
-        {"<(3 6) (4 8) (1 2) (2 4)>","<(NUMBER NUMBER)>"}
+        {"table[]", "table[]"},
+        {"table[(1 2)]", "table[(NUMBER NUMBER)]"},
+        {"table[ (1  2 ) ]", "table[(NUMBER NUMBER)]"},
+        {"table[(table[] table[])]", "table[(table[] table[])]"},
+        {"table[((0 0) (1 1))]", "table[((NUMBER NUMBER) (NUMBER NUMBER))]"},
+        {"table[(inc!0 inc!1)]", "table[(NUMBER NUMBER)]"},
+        {"table[(3 6) (4 8) (1 2) (2 4)]","table[(NUMBER NUMBER)]"}
     ));
     testEvaluateAll("table", TEST_CASES(
-        {"<>", "<>"},
-        {"<(1 2)>", "<(1 2)>"},
-        {"< (1  2 ) >", "<(1 2)>"},
-        {"<(<> <>)>", "<(<> <>)>"},
-        {"<((0 0) (1 1))>", "<((0 0) (1 1))>"},
-        {"<(inc!0 inc!1)>", "<(1 2)>"},
-        {"<(3 6) (4 8) (1 2) (2 4)>","<(1 2) (2 4) (3 6) (4 8)>"}
+        {"table[]", "table[]"},
+        {"table[(1 2)]", "table[(1 2)]"},
+        {"table[ (1  2 ) ]", "table[(1 2)]"},
+        {"table[(table[] table[])]", "table[(table[] table[])]"},
+        {"table[((0 0) (1 1))]", "table[((0 0) (1 1))]"},
+        {"table[(inc!0 inc!1)]", "table[(1 2)]"},
+        {"table[(3 6) (4 8) (1 2) (2 4)]","table[(1 2) (2 4) (3 6) (4 8)]"}
     ));
     testReformat("tuple", TEST_CASES(
         {"()", "()"},
@@ -312,7 +312,7 @@ int main() {
         {"Boolean:yes", "yes"},
         {"Character:'Q'", "'Q'"},
         {"Stack:[1]", "[1]"},
-        {"Table:<(1 2)>", "<(1 2)>"},
+        {"Table:table[(1 2)]", "table[(1 2)]"},
         {"Numbers:[1 2]", "[1 2]"},
         {"Function:in x out x", "in x out x"},
         {"{a=Any b=a:1}", "{a=0 b=1}"},
@@ -361,8 +361,8 @@ int main() {
     ));
     testEvaluateTypes("dictionary for", TEST_CASES(
         {"{c=[] for i in c end}", "{c=EMPTY_STACK i=ANY}"},
-        {"{c=<> for i in c end}", "{c=<> i=(ANY ANY)}"},
-        {"{c=<> d=<> for i in c d+=i end}", "{c=<> d=<(ANY ANY)> i=(ANY ANY)}"}, // TODO
+        {"{c=table[] for i in c end}", "{c=table[] i=(ANY ANY)}"},
+        {"{c=table[] d=table[] for i in c d+=i end}", "{c=table[] d=table[(ANY ANY)] i=(ANY ANY)}"}, // TODO
     ));
     testReformat("dictionary if", TEST_CASES(
         {"{if 1 end}", "{if 1 end}"},
@@ -399,7 +399,7 @@ int main() {
         {"{a=1 b=a}", "{a=NUMBER b=NUMBER}"},
         {"{a=[] a+=1}", "{a=[NUMBER]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[NUMBER]}"},
-        {"{a=<> a+=(1 2)}", "{a=<(NUMBER NUMBER)>}"},
+        {"{a=table[] a+=(1 2)}", "{a=table[(NUMBER NUMBER)]}"},
         {"{a=0 a+=1}", "{a=NUMBER}"},
     ));    
     testEvaluateTypes("dictionary type checking", TEST_CASES(
@@ -427,7 +427,7 @@ int main() {
         {R"({a=1})", R"({a=1})"},
         {"{a=[] a+=1}", "{a=[1]}"},
         {"{a=[1] a+=2 a+=3}", "{a=[3 2 1]}"},
-        {"{a=<> a+=(1 2)}", "{a=<(1 2)>}"},
+        {"{a=table[] a+=(1 2)}", "{a=table[(1 2)]}"},
         {"{a=3 a+=4}", "{a=7}"},
     ));
     testReformat("drop assignment", TEST_CASES(
@@ -437,15 +437,15 @@ int main() {
     testEvaluateTypes("drop assignment", TEST_CASES(
         {"{c=1 c--}", "{c=NUMBER}"},
         {"{c=[1] c--}", "{c=[NUMBER]}"},
-        {"{c=<(1 2)> c--}", "{c=<(NUMBER NUMBER)>}"},
+        {"{c=table[(1 2)] c--}", "{c=table[(NUMBER NUMBER)]}"},
         {"{a=[1] while a a-- end}", "{a=[NUMBER]}"},
     ));
     testEvaluateAll("drop assignment", TEST_CASES(
         {"{c=1 c--}", "{c=0}"},
         {"{c=[1] c--}", "{c=[]}"},
         {"{c=[1 2] c--}", "{c=[2]}"},
-        {"{c=<(1 2)> c--}", "{c=<>}"},
-        {"{c=<(1 2) (3 4)> c--}", "{c=<(3 4)>}"},
+        {"{c=table[(1 2)] c--}", "{c=table[]}"},
+        {"{c=table[(1 2) (3 4)] c--}", "{c=table[(3 4)]}"},
         {"{a=[1] while a a-- end}", "{a=[]}"},
         {"{c=yes c--}", "{c=no}"},
     ));
@@ -456,7 +456,7 @@ int main() {
         {"{c=no c+=yes}", "{c=yes}"},
         {"{c=no c+=no}", "{c=no}"},
         {"{c=[1] c+=2}", "{c=[2 1]}"},
-        {"{c=<(1 2)> c+=(0 3)}", "{c=<(0 3) (1 2)>}"},
+        {"{c=table[(1 2)] c+=(0 3)}", "{c=table[(0 3) (1 2)]}"},
     ));
     testReformat("conditional", TEST_CASES(
         {"if 1 then 2 else 3", "if 1 then 2 else 3"},
@@ -738,8 +738,8 @@ int main() {
         {R"(a@{i=1 c="abc" a=c!i})", "'b'"},
     ));
     testEvaluateAll("lookup table indexing", TEST_CASES(
-        {"a@{c=<(2 3) (4 5)> a=c!2}", "3"},
-        {"a@{c=<(2 3) (4 5)> a=c!4}", "5"},
+        {"a@{c=table[(2 3) (4 5)] a=c!2}", "3"},
+        {"a@{c=table[(2 3) (4 5)] a=c!4}", "5"},
     ));
     testEvaluateTypes("built in as value", TEST_CASES(
         {"a@{f=add a=f!(1 2)}", "NUMBER"},
@@ -1073,9 +1073,9 @@ int main() {
         {"clear![1 2]", "[]"},
     ));
     testEvaluateAll("clear table", TEST_CASES(
-        {"clear!<>", "<>"},
-        {"clear!<(1 11)>", "<>"},
-        {"clear!<(1 11) (2 22)>", "<>"},
+        {"clear!table[]", "table[]"},
+        {"clear!table[(1 11)]", "table[]"},
+        {"clear!table[(1 11) (2 22)]", "table[]"},
     ));
     testEvaluateAll("clear number", TEST_CASES(
         {"clear!0", "0"},
@@ -1188,35 +1188,35 @@ int main() {
         {R"(put!('a' "bc"))", R"("abc")"},
     ));
     testEvaluateAll("put table", TEST_CASES(
-        {"put!((1 11) <>)", "<(1 11)>"},
-        {"put!((4 44) <(5 55)>)", "<(4 44) (5 55)>"},
-        {"put!((4 44) <(6 66) (8 88)>)", "<(4 44) (6 66) (8 88)>"},
-        {"put!((0 1) <>)", "<(0 1)>"},
-        {"put!((0 1) <(0 2)>)", "<(0 1)>"},
-        {"put!((0 5) <(2 3) (1 2) (0 1)>)", "<(0 5) (1 2) (2 3)>"},
+        {"put!((1 11) table[])", "table[(1 11)]"},
+        {"put!((4 44) table[(5 55)])", "table[(4 44) (5 55)]"},
+        {"put!((4 44) table[(6 66) (8 88)])", "table[(4 44) (6 66) (8 88)]"},
+        {"put!((0 1) table[])", "table[(0 1)]"},
+        {"put!((0 1) table[(0 2)])", "table[(0 1)]"},
+        {"put!((0 5) table[(2 3) (1 2) (0 1)])", "table[(0 5) (1 2) (2 3)]"},
     ));
     testEvaluateAll("get table", TEST_CASES(
-        {"get!(0 <> 2)", "2"},
-        {"get!(0 <(0 1)> 2)", "1"},
-        {"get!(1 <(0 1)> 2)", "2"},
-        {"get!(0 <(0 1) (1 2) (3 3)> 2)", "1"},
-        {"get!((3) <((1) [1]) ((2) [2]) ((3) [3])> [])", "[3]"},
+        {"get!(0 table[] 2)", "2"},
+        {"get!(0 table[(0 1)] 2)", "1"},
+        {"get!(1 table[(0 1)] 2)", "2"},
+        {"get!(0 table[(0 1) (1 2) (3 3)] 2)", "1"},
+        {"get!((3) table[((1) [1]) ((2) [2]) ((3) [3])] [])", "[3]"},
     ));
     testEvaluateAll("get_keys", TEST_CASES(
-        {"get_keys!<>", "[]"},
-        {"get_keys!<(0 1)>", "[0]"},
-        {"get_keys!<(0 1) (2 3)>", "[0 2]"},
-        {"get_keys!<(2 3) (0 1)>", "[0 2]"},
+        {"get_keys!table[]", "[]"},
+        {"get_keys!table[(0 1)]", "[0]"},
+        {"get_keys!table[(0 1) (2 3)]", "[0 2]"},
+        {"get_keys!table[(2 3) (0 1)]", "[0 2]"},
     ));
     testEvaluateAll("get_values", TEST_CASES(
-        {"get_values!<(1 0)>", "[0]"},
-        {"get_values!<(10 0) (11 1) (12 2)>", "[0 1 2]"},
-        {"get_values!<(3 0) (2 1) (1 2)>", "[2 1 0]"},
+        {"get_values!table[(1 0)]", "[0]"},
+        {"get_values!table[(10 0) (11 1) (12 2)]", "[0 1 2]"},
+        {"get_values!table[(3 0) (2 1) (1 2)]", "[2 1 0]"},
     ));
     testEvaluateAll("get_items", TEST_CASES(
-        {"get_items!<(0 1)>", "[(0 1)]"},
-        {"get_items!<(0 1) (2 3) (4 5)>", "[(0 1) (2 3) (4 5)]"},
-        {"get_items!<(4 1) (2 3) (0 5)>", "[(0 5) (2 3) (4 1)]"},
+        {"get_items!table[(0 1)]", "[(0 1)]"},
+        {"get_items!table[(0 1) (2 3) (4 5)]", "[(0 1) (2 3) (4 5)]"},
+        {"get_items!table[(4 1) (2 3) (0 5)]", "[(0 5) (2 3) (4 1)]"},
     ));
     testEvaluateAll("inc", TEST_CASES(
         {"inc!0", "1"},
@@ -1399,10 +1399,10 @@ int main() {
         {"count![[] []]", "2"},
     ));
     testEvaluateAll("count table", TEST_CASES(
-        {"count!<>", "0"},
-        {"count!<(1 1)>", "1"},
-        {"count!<(1 1) (1 1)>", "1"},
-        {"count!<(1 1) (2 2)>", "2"},
+        {"count!table[]", "0"},
+        {"count!table[(1 1)]", "1"},
+        {"count!table[(1 1) (1 1)]", "1"},
+        {"count!table[(1 1) (2 2)]", "2"},
     ));
     testEvaluateTypes("count string", TEST_CASES(
         {R"(count!"")", "NUMBER"},
@@ -1448,9 +1448,9 @@ int main() {
         {"count_if!(in x out equal?(x 3) [3 2 3])", "2"},
     ));
     testEvaluateAll("count_if table", TEST_CASES(
-        {"count_if!(less <(0 0)>)", "0"},
-        {"count_if!(less <(0 1)>)", "1"},
-        {"count_if!(less <(0 0) (1 2) (2 3) (4 5) (7 6)>)", "3"},
+        {"count_if!(less table[(0 0)])", "0"},
+        {"count_if!(less table[(0 1)])", "1"},
+        {"count_if!(less table[(0 0) (1 2) (2 3) (4 5) (7 6)])", "3"},
     ));
     testEvaluateAll("count_if string", TEST_CASES(
         {R"(count_if!(in x out 0 ""))", "0"},
@@ -1473,16 +1473,16 @@ int main() {
         {"reverse![0 1 2]", "[2 1 0]"},
     ));
     testEvaluateTypes("reverse table", TEST_CASES(
-        {"reverse!<>", "<(ANY ANY)>"}, // TODO
-        {"reverse!<(0 0)>", "<(NUMBER NUMBER)>"},
-        {"reverse!<(0 0) (1 1)>", "<(NUMBER NUMBER)>"},
-        {"reverse!<(0 0) (1 1) (2 2)>", "<(NUMBER NUMBER)>"},
+        {"reverse!table[]", "table[(ANY ANY)]"}, // TODO
+        {"reverse!table[(0 0)]", "table[(NUMBER NUMBER)]"},
+        {"reverse!table[(0 0) (1 1)]", "table[(NUMBER NUMBER)]"},
+        {"reverse!table[(0 0) (1 1) (2 2)]", "table[(NUMBER NUMBER)]"},
     ));
     testEvaluateAll("reverse table", TEST_CASES(
-        {"reverse!<>", "<>"},
-        {"reverse!<(0 0)>", "<(0 0)>"},
-        {"reverse!<(0 0) (1 1)>", "<(0 0) (1 1)>"},
-        {"reverse!<(0 0) (1 1) (2 2)>", "<(0 0) (1 1) (2 2)>"},
+        {"reverse!table[]", "table[]"},
+        {"reverse!table[(0 0)]", "table[(0 0)]"},
+        {"reverse!table[(0 0) (1 1)]", "table[(0 0) (1 1)]"},
+        {"reverse!table[(0 0) (1 1) (2 2)]", "table[(0 0) (1 1) (2 2)]"},
     ));
     testEvaluateTypes("reverse string", TEST_CASES(
         {R"(reverse!"")", "STRING"},
@@ -1505,8 +1505,8 @@ int main() {
         {R"(make_stack!"cab")", "['c' 'a' 'b']"},
     ));
     testEvaluateAll("make_stack table", TEST_CASES(
-        {"make_stack!<>", "[]"},
-        {"make_stack!<(3 33) (1 11) (2 22)>", "[(1 11) (2 22) (3 33)]"},
+        {"make_stack!table[]", "[]"},
+        {"make_stack!table[(3 33) (1 11) (2 22)]", "[(1 11) (2 22) (3 33)]"},
     ));
     testEvaluateAll("make_string", TEST_CASES(
         {R"(make_string![])", R"("")"},
@@ -1515,16 +1515,16 @@ int main() {
         {R"(make_string!"cab")", R"("cab")"},
     ));
     testEvaluateTypes("make_table", TEST_CASES(
-        {"make_table![]", "<>"},
-        {"make_table![(3 33) (1 11) (2 22)]", "<(NUMBER NUMBER)>"},
-        {"make_table!<>", "<(ANY ANY)>"}, // TODO
-        {"make_table!<(3 33) (1 11) (2 22)>", "<(NUMBER NUMBER)>"},
+        {"make_table![]", "table[]"},
+        {"make_table![(3 33) (1 11) (2 22)]", "table[(NUMBER NUMBER)]"},
+        {"make_table!table[]", "table[(ANY ANY)]"}, // TODO
+        {"make_table!table[(3 33) (1 11) (2 22)]", "table[(NUMBER NUMBER)]"},
     ));
     testEvaluateAll("make_table", TEST_CASES(
-        {"make_table![]", "<>"},
-        {"make_table![(3 33) (1 11) (2 22)]", "<(1 11) (2 22) (3 33)>"},
-        {"make_table!<>", "<>"},
-        {"make_table!<(3 33) (1 11) (2 22)>", "<(1 11) (2 22) (3 33)>"},
+        {"make_table![]", "table[]"},
+        {"make_table![(3 33) (1 11) (2 22)]", "table[(1 11) (2 22) (3 33)]"},
+        {"make_table!table[]", "table[]"},
+        {"make_table!table[(3 33) (1 11) (2 22)]", "table[(1 11) (2 22) (3 33)]"},
     ));
     testEvaluateAll("map_stack", TEST_CASES(
         {"map_stack!(inc [])", "[]"},
@@ -1549,8 +1549,8 @@ int main() {
         {R"(map_string!(to_upper "abc"))", "STRING"},
     ));
     testEvaluateAll("map table", TEST_CASES(
-        {"map_table!(in x out (x x) [1 2])", "<(1 1) (2 2)>"},
-        {"map_table!(in (x y) out (x inc!y) <(1 11) (2 22)>)", "<(1 12) (2 23)>"},
+        {"map_table!(in x out (x x) [1 2])", "table[(1 1) (2 2)]"},
+        {"map_table!(in (x y) out (x inc!y) table[(1 11) (2 22)])", "table[(1 12) (2 23)]"},
     ));
     testEvaluateAll("clear_if stack", TEST_CASES(
         {"clear_if!(in x out 1 [])", "[]"},
@@ -1559,9 +1559,9 @@ int main() {
         {"clear_if!(in x out less?(x 5) [7 4 6 1 9 3 2])", "[7 6 9]"},
     ));
     testEvaluateAll("clear_if table", TEST_CASES(
-        {"clear_if!(less <(0 0)>)", "<(0 0)>"},
-        {"clear_if!(less <(0 1)>)", "<>"},
-        {"clear_if!(less <(0 0) (1 2) (2 3) (5 4)>)", "<(0 0) (5 4)>"},
+        {"clear_if!(less table[(0 0)])", "table[(0 0)]"},
+        {"clear_if!(less table[(0 1)])", "table[]"},
+        {"clear_if!(less table[(0 0) (1 2) (2 3) (5 4)])", "table[(0 0) (5 4)]"},
     ));
     testEvaluateAll("clear_if string", TEST_CASES(
         {R"(clear_if!(in x out 0 ""))", R"("")"},
@@ -1699,12 +1699,12 @@ int main() {
         {"put_each!([1 2 3] [4 5 6])", "[3 2 1 4 5 6]"},
     ));
     testEvaluateAll("put_each table", TEST_CASES(
-        {"put_each!(<> <>)", "<>"},
-        {"put_each!(<> <(1 2)>)", "<(1 2)>"},
-        {"put_each!(<(1 2)> <>)", "<(1 2)>"},
-        {"put_each!(<(1 2)> <(1 1)>)", "<(1 2)>"},
-        {"put_each!(<(1 11)> <(2 22)>)", "<(1 11) (2 22)>"},
-        {"put_each!(<(1 11) (3 33)> <(2 22) (4 44)>)", "<(1 11) (2 22) (3 33) (4 44)>"},
+        {"put_each!(table[] table[])", "table[]"},
+        {"put_each!(table[] table[(1 2)])", "table[(1 2)]"},
+        {"put_each!(table[(1 2)] table[])", "table[(1 2)]"},
+        {"put_each!(table[(1 2)] table[(1 1)])", "table[(1 2)]"},
+        {"put_each!(table[(1 11)] table[(2 22)])", "table[(1 11) (2 22)]"},
+        {"put_each!(table[(1 11) (3 33)] table[(2 22) (4 44)])", "table[(1 11) (2 22) (3 33) (4 44)]"},
     ));
     testEvaluateTypes("put_each", TEST_CASES(
         {"put_each!([] [])", "EMPTY_STACK"},
@@ -1738,7 +1738,7 @@ int main() {
         {"merge_stack![[1] [2 3] [4 5 6]]", "[1 2 3 4 5 6]"},
     ));
     testEvaluateAll("merge_stack table", TEST_CASES(
-        {"merge_stack![[(1 11)] <(2 22)>]", "[(1 11) (2 22)]"},
+        {"merge_stack![[(1 11)] table[(2 22)]]", "[(1 11) (2 22)]"},
     ));
     testEvaluateAll("merge_stack string", TEST_CASES(
         {R"(merge_stack![['a'] "b"])", "['a' 'b']"},
@@ -1751,12 +1751,12 @@ int main() {
         {"merge_stack![[1] [2 3] [4 5 6]]", "[NUMBER]"},
     ));
     testEvaluateAll("merge_table", TEST_CASES(
-        {"merge_table![<> <>]", "<>"},
-        {"merge_table![<> <(2 22)>]", "<(2 22)>"},
-        {"merge_table![<(1 11)> <>]", "<(1 11)>"},
-        {"merge_table![<(1 11)> <(1 11)>]", "<(1 11)>"},
-        {"merge_table![<(1 11)> <(2 22)>]", "<(1 11) (2 22)>"},
-        {"merge_table![<(1 11)> <(5 55) (3 33)> <(4 44) (5 0) (6 66) (2 22)>]", "<(1 11) (2 22) (3 33) (4 44) (5 55) (6 66)>"},
+        {"merge_table![table[] table[]]", "table[]"},
+        {"merge_table![table[] table[(2 22)]]", "table[(2 22)]"},
+        {"merge_table![table[(1 11)] table[]]", "table[(1 11)]"},
+        {"merge_table![table[(1 11)] table[(1 11)]]", "table[(1 11)]"},
+        {"merge_table![table[(1 11)] table[(2 22)]]", "table[(1 11) (2 22)]"},
+        {"merge_table![table[(1 11)] table[(5 55) (3 33)] table[(4 44) (5 0) (6 66) (2 22)]]", "table[(1 11) (2 22) (3 33) (4 44) (5 55) (6 66)]"},
     ));
     testEvaluateAll("merge_string", TEST_CASES(
         {R"(merge_string!["" ""])", R"("")"},
@@ -1907,11 +1907,11 @@ int main() {
         {"unique![1 1 2 3 1 4 2 4 0]", "[0 1 2 3 4]"},
     ));
     testEvaluateAll("count_elements", TEST_CASES(
-        {"count_elements![]", "<>"},
-        {"count_elements![1]", "<(1 1)>"},
-        {"count_elements![1 2]", "<(1 1) (2 1)>"},
-        {"count_elements![1 1]", "<(1 2)>"},
-        {"count_elements![1 1 2 3 1 4 2 4 0]", "<(0 1) (1 3) (2 2) (3 1) (4 2)>"},
+        {"count_elements![]", "table[]"},
+        {"count_elements![1]", "table[(1 1)]"},
+        {"count_elements![1 2]", "table[(1 1) (2 1)]"},
+        {"count_elements![1 1]", "table[(1 2)]"},
+        {"count_elements![1 1 2 3 1 4 2 4 0]", "table[(0 1) (1 3) (2 2) (3 1) (4 2)]"},
     ));
     testEvaluateAll("vector math", TEST_CASES(
         {"addv!([1 2] [3 4])", "[4 6]"},

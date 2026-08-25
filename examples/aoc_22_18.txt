@@ -21,7 +21,7 @@ result@{
     parse_point = in string out map_stack!(parse_natural_number split!(',' string))
     points = map_stack!(parse_point split!(newline input))
     
-    plane_counts = <>
+    plane_counts = table[]
     for point in points
         x = point!0
         y = point!1

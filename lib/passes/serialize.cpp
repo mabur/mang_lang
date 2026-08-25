@@ -287,9 +287,9 @@ StringBuilder serializeFunctionTuple(StringBuilder s, const FunctionTuple& funct
 StringBuilder serializeTable(StringBuilder s, Expression t) {
     auto rows = storage.tables.data[t.index].rows;
     if (IS_EMPTY(rows)) {
-        return s = concatenate(s, "<>");
+        return s = concatenate(s, "table[]");
     }
-    s = concatenate(s, "<");
+    s = concatenate(s, "table[");
     FOR_EACH(i, rows) {
         auto row = storage.rows.data[i];
         s = concatenate(s, "(");
@@ -298,32 +298,32 @@ StringBuilder serializeTable(StringBuilder s, Expression t) {
         s = serialize(s, row.value);
         s = concatenate(s, ") ");
     }
-    LAST_ITEM(s) = '>';
+    LAST_ITEM(s) = ']';
     return s;
 }
 
 StringBuilder serializeTypesEvaluatedTable(StringBuilder s, Expression t) {
     const auto& rows = storage.evaluated_tables.at(t.index).rows;
     if (rows.empty()) {
-        s = concatenate(s, "<>");
+        s = concatenate(s, "table[]");
         return s;
     }
     const auto& row = rows.begin()->second;
-    s = concatenate(s, "<(");
+    s = concatenate(s, "table[(");
     s = serialize_types(s, row.key);
     s = concatenate(s, " ");
     s = serialize_types(s, row.value);
-    s = concatenate(s, ")>");
+    s = concatenate(s, ")]");
     return s;
 }
 
 template<typename Table>
 StringBuilder serializeEvaluatedTable(StringBuilder s, const Table& table) {
     if (table.empty()) {
-        s = concatenate(s, "<>");
+        s = concatenate(s, "table[]");
         return s;
     }
-    s = concatenate(s, "<");
+    s = concatenate(s, "table[");
     for (const auto& row : table) {
         s = concatenate(s, "(");
         s = concatenate(s, row.first.c_str());
@@ -331,7 +331,7 @@ StringBuilder serializeEvaluatedTable(StringBuilder s, const Table& table) {
         s = serialize(s, row.second.value);
         s = concatenate(s, ") ");
     }
-    LAST_ITEM(s) = '>';
+    LAST_ITEM(s) = ']';
     return s;
 }
 

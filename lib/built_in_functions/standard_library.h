@@ -10,7 +10,7 @@ const std::string STANDARD_LIBRARY = R"(
     Character = 'a'
     Stack = []
     String = ""
-    Table = <>
+    Table = table[]
     Numbers = [Number]
     Function = in x out x
 
@@ -108,7 +108,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     make_table = in in_stream out Table:put_each!(
         in_stream
-        <>
+        table[]
     )
 
     merge_generic = in (in_streams out_stream) out out_stream:fold!(
@@ -129,7 +129,7 @@ const std::string STANDARD_LIBRARY = R"(
 
     merge_table = in containers out Table:merge_generic!(
         reverse!containers
-        <>
+        table[]
     )
 
     map_generic = in (Function:f in_stream out_stream) out fold!(
@@ -159,7 +159,7 @@ const std::string STANDARD_LIBRARY = R"(
     map_table = in (Function:f in_stream) out Table:map_generic!(
         f
         in_stream
-        <>
+        table[]
     )
 
     zip2 = in (a b) out Stack:reverse!result@{
@@ -429,13 +429,13 @@ const std::string STANDARD_LIBRARY = R"(
     unique = in in_stream out Stack:get_keys!fold!(
         in (item table) out put!((item 0) table)
         in_stream
-        <>
+        table[]
     )
 
     count_elements = in in_stream out Table:fold!(
         in (item table) out put!((item inc!get!(item table 0)) table)
         in_stream
-        <>
+        table[]
     )
 
     get_items = make_stack
