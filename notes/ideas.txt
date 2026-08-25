@@ -1,4 +1,6 @@
+
 TYPE SYSTEM
+* Explain type system and type ascriptions as using typeof for all type checking.
 * Type ascriptions like old typescript syntax
   - in <Number>x out <Number>x
   - Allows arbitrary inlined expressions in type ascriptions and not just symbols defined elsewhere
