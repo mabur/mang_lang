@@ -57,7 +57,7 @@ struct DynamicExpression {
 };
 
 struct TypedExpression {
-    BoundGlobalName type_name;
+    Expression type;
     Expression value;
 };
 

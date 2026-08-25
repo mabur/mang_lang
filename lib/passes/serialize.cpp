@@ -33,7 +33,7 @@ StringBuilder serializeDynamicExpression(StringBuilder s, const DynamicExpressio
 
 StringBuilder serializeTypedExpression(StringBuilder s, const TypedExpression& typed_expression) {
     s = concatenate(s, "<");
-    s = serializeName(s, typed_expression.type_name.global_index);
+    s = serialize(s, typed_expression.type);
     s = concatenate(s, ">");
     s = serialize(s, typed_expression.value);
     return s;

@@ -162,8 +162,8 @@ Expression parseArgument(CodeRange code) {
     if (startsWith(code, '<')) {
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
-        auto type_name = parseName(code);
-        code = lastPart(code, type_name.range);
+        auto type = parseExpression(code);
+        code = lastPart(code, type.range);
         code = parseWhiteSpace(code);
         if (!startsWith(code, '>')) {
             return makeErrorExpression(code, "Parse error. Expected >");
@@ -172,9 +172,6 @@ Expression parseArgument(CodeRange code) {
         code = parseWhiteSpace(code);
         auto param_name = parseName(code);
         code = lastPart(code, param_name.range);
-        const auto type = makeLookupSymbol(
-            type_name.range, {type_name.index}
-        );
         return makeArgument(
             firstPart(whole, code), Argument{type, param_name.index}
         );
@@ -682,8 +679,8 @@ Expression parseTypedExpression(CodeRange code) {
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
-    auto type_name = parseName(code);
-    code = lastPart(code, type_name.range);
+    auto type = parseExpression(code);
+    code = lastPart(code, type.range);
     code = parseWhiteSpace(code);
     if (!startsWith(code, '>')) {
         return makeErrorExpression(code, "Parse error. Expected >");
@@ -692,7 +689,7 @@ Expression parseTypedExpression(CodeRange code) {
     auto value = parseExpression(code);
     code = lastPart(code, value.range);
     return makeTypedExpression(
-        firstPart(whole, code), {BoundGlobalName{type_name.index}, value}
+        firstPart(whole, code), {type, value}
     );
 }
 

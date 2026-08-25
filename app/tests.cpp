@@ -596,6 +596,7 @@ int main() {
     testEvaluateTypes("function", TEST_CASES(
         {"in x out x", "FUNCTION"},
         {"in <T>x out x", "FUNCTION"}, // TODO
+        {"in <[Number]>x out x", "FUNCTION"},
     ));
     testEvaluateAll("function", TEST_CASES(
         {"in x out x", "in x out x"},
@@ -686,12 +687,16 @@ int main() {
     testReformat("typed expression", TEST_CASES(
         {"<a>b", "<a>b"},
         {" < a > b ", "<a>b"},
+        {"<[Number]>x", "<[Number]>x"},
+        {"<{a=Number}>x", "<{a=Number}>x"},
     ));
     testEvaluateTypes("typed expression", TEST_CASES(
         {"{a=1 b=<a>1}", "{a=NUMBER b=NUMBER}"},
         {"{a=[] b=<a>[]}", "{a=EMPTY_STACK b=EMPTY_STACK}"},
         {"{a=[] b=<a>[1]}", "{a=EMPTY_STACK b=[NUMBER]}"},
         {"{a=[1] b=<a>[]}", "{a=[NUMBER] b=EMPTY_STACK}"}, // TODO
+        {"<[1]>[1 2 3]", "[NUMBER]"},
+        {"<{a=Number b=Stack}>{a=1 b=[1 2 3]}", "{a=NUMBER b=[NUMBER]}"},
     ));
     testEvaluateTypes("lookup function dictionary", TEST_CASES(
         {"a@{f=in {x} out x a=f!{x=0}}", "NUMBER"},

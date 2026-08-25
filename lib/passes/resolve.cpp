@@ -278,7 +278,7 @@ void resolveBuiltInApplication(Expression expression, ScopeChain chain) {
 
 void resolveTypedExpression(Expression expression, ScopeChain chain) {
     auto& typed_expression = storage.typed_expressions.data[expression.index];
-    typed_expression.type_name = tryBindGlobalName(typed_expression.type_name, chain);
+    resolveExpression(typed_expression.type, chain);
     resolveExpression(typed_expression.value, chain);
 }
 

@@ -707,8 +707,7 @@ Expression evaluateIs(Expression is, Expression environment) {
 }
 
 Expression evaluateTypedExpressionTypes(Expression expression, Expression environment) {
-    auto name = storage.typed_expressions.data[expression.index].type_name;
-    const auto type = lookupDictionary(expression.range, name, environment);
+    const auto type = evaluate_types(storage.typed_expressions.data[expression.index].type, environment);
     const auto value = evaluate_types(storage.typed_expressions.data[expression.index].value, environment);
     checkTypes(type, value, "typed expression");
     return value;
