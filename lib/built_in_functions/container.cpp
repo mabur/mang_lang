@@ -86,7 +86,7 @@ Expression putTableTyped(Expression table, Expression item) {
 
 namespace container_functions {
 
-Expression clear(Expression in) {
+Expression clearShared(Expression in, const char* error_message) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
@@ -97,29 +97,22 @@ Expression clear(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
-        default: return makeErrorExpression(in.range,
-            "I found an error during evaluation.\n"
-            "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
+        default: return makeErrorExpression(
+            in.range,
+            "%s\nThe clear function received an %s, which it did not expect.\n%s",
+            error_message,
+            getExpressionName(in.type),
+            describeLocation(in.range)
         );
     }
 }
+    
+Expression clear(Expression in) {
+    return clearShared(in, "I found an error during evaluation.");
+}
 
 Expression clearTyped(Expression in) {
-    switch (in.type) {
-        case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
-        case EMPTY_STACK: return in;
-        case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
-        case EMPTY_STRING: return in;
-        case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
-        case NUMBER: return makeNumber(CodeRange{}, 0);
-        case YES: return Expression{0, CodeRange{}, NO};
-        case NO: return in;
-        default: return makeErrorExpression(in.range,
-            "I found an error during type checking.\n"
-            "The clear function received an %s, which it did not expect.", getExpressionName(in.type)
-        );
-    }
+    return clearShared(in, "I found an error during type checking.");
 }
 
 Expression putNumber(Expression collection, Expression item) {
