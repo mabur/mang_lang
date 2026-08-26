@@ -132,7 +132,7 @@ const std::string STANDARD_LIBRARY = R"(
         table[]
     )
 
-    map_generic = in (<Function>f in_stream out_stream) out fold!(
+    map_generic = in (<Function>f in_stream out_stream) out <out_stream>fold!(
         in (item stream) out put!(f!item stream)
         in_stream
         out_stream
