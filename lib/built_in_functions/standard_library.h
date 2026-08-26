@@ -78,7 +78,7 @@ const std::string STANDARD_LIBRARY = R"(
         else
             c
 
-    fold = in (<Function>operation in_stream init) out result@{
+    fold = in (<Function>operation in_stream init) out <init>result@{
         result = init
         for item in in_stream
             result = operation!(item result)
