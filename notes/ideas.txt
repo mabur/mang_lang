@@ -31,7 +31,6 @@ Traditional
 * Frame (overloaded)
 
 TYPE SYSTEM
-* Add more types to generic functions in standard library.
 * Type functions:
   - take!container gives the value_type/item_type of a container. Would it make sense to have a named type function for this?
   - clear!container gives generic container type. Would it make sense to have a named type function for this?
