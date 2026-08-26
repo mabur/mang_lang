@@ -296,7 +296,7 @@ const std::string STANDARD_LIBRARY = R"(
     drop_until_item = in (item in_stream) out <in_stream>
         drop_while?(in x out unequal?(x item) in_stream)
 
-    replace = in (new_item container) out map!(
+    replace = in (new_item container) out <clear!container>map!(
         in old_item out new_item
         container
     )
