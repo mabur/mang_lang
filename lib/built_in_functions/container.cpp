@@ -90,9 +90,9 @@ Expression clear(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
-        case EMPTY_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
+        case EMPTY_STACK: return in;
         case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
-        case EMPTY_STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
+        case EMPTY_STRING: return in;
         case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
@@ -105,17 +105,15 @@ Expression clear(Expression in) {
 }
 
 Expression clearTyped(Expression in) {
-    // TODO: shouldn't clear EVALUATED_STACK give EMPTY_STACK,
-    // so that it can be populated with items of different type?
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return in;
+        case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
         case EMPTY_STACK: return in;
-        case STRING: return in;
+        case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
         case EMPTY_STRING: return in;
-        case EVALUATED_TABLE: return in;
-        case NUMBER: return in;
-        case YES: return in;
+        case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
+        case NUMBER: return makeNumber(CodeRange{}, 0);
+        case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
         default: return makeErrorExpression(in.range,
             "I found an error during type checking.\n"

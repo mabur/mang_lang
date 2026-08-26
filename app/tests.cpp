@@ -1069,8 +1069,7 @@ int main() {
     ));
     testEvaluateTypes("clear stack", TEST_CASES(
         {"clear![]", "EMPTY_STACK"},
-        {"clear![1]", "[NUMBER]"},
-        {"clear![1 2]", "[NUMBER]"},
+        {"clear![1]", "EMPTY_STACK"},
     ));
     testEvaluateAll("clear stack", TEST_CASES(
         {"clear![]", "[]"},
@@ -1093,8 +1092,7 @@ int main() {
     ));
     testEvaluateTypes("clear string", TEST_CASES(
         {R"(clear!"")", "EMPTY_STRING"},
-        {R"(clear!"a")", "STRING"},
-        {R"(clear!"ab")", "STRING"},
+        {R"(clear!"a")", "EMPTY_STRING"},
     ));
     testEvaluateAll("clear string", TEST_CASES(
         {R"(clear!"")", R"("")"},
