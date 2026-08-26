@@ -138,7 +138,7 @@ const std::string STANDARD_LIBRARY = R"(
         out_stream
     )
 
-    map = in (<Function>f container) out reverse!map_generic!(
+    map = in (<Function>f container) out <clear!container>reverse!map_generic!(
         f
         container
         clear!container
