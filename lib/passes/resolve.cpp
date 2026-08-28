@@ -44,8 +44,8 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
 
     FOR_EACH(i, dictionary_struct.statements) {
         const auto local_index = i - base_index;
-        auto& statement = storage.statements.data[i];
-        const auto type = statement.type;
+        auto statement = &storage.statements.data[i];
+        const auto type = statement->type;
         if (type == WHILE_STATEMENT || type == FOR_STATEMENT || type == IF_STATEMENT) {
             APPEND(loop_start_indices_owner, local_index);
         }
@@ -55,13 +55,13 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
             auto& start_statement = storage.statements.data[base_index + start_local_index];
             if (start_statement.type == WHILE_STATEMENT) {
                 storage.while_statements.data[start_statement.index].end_index = local_index;
-                statement = makeWhileEndStatement(statement.range, WhileEndStatement{start_local_index});
+                *statement = makeWhileEndStatement(statement->range, WhileEndStatement{start_local_index});
             } else if (start_statement.type == FOR_STATEMENT) {
                 storage.for_statements.data[start_statement.index].end_index = local_index;
-                statement = makeForEndStatement(statement.range, ForEndStatement{start_local_index});
+                *statement = makeForEndStatement(statement->range, ForEndStatement{start_local_index});
             } else if (start_statement.type == IF_STATEMENT) {
                 storage.if_statements.data[start_statement.index].end_index = local_index;
-                statement = Expression{0, statement.range, IF_END_STATEMENT};
+                *statement = Expression{0, statement->range, IF_END_STATEMENT};
             }
         }
     }
