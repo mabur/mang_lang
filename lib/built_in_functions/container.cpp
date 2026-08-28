@@ -84,8 +84,6 @@ Expression putTableTyped(Expression table, Expression item) {
     return table;
 }
 
-namespace container_functions {
-
 Expression clearShared(Expression in, const char* error_message) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
@@ -362,6 +360,4 @@ Expression containerGetTyped(Expression in) {
         );
     }
     return default_value;
-}
-
 }

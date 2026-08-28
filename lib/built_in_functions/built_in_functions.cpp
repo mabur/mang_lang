@@ -7,11 +7,11 @@
 #include "container.h"
 
 const BuiltInEntry BUILT_IN_ENTRIES[] = {
-    {"clear",      container_functions::containerClear, container_functions::containerClearTyped},
-    {"put",        container_functions::containerPut,   container_functions::containerPutTyped},
-    {"take",       container_functions::containerTake,  container_functions::containerTakeTyped},
-    {"drop",       container_functions::containerDrop,  container_functions::containerDropTyped},
-    {"get",        container_functions::containerGet,   container_functions::containerGetTyped},
+    {"clear",      containerClear, containerClearTyped},
+    {"put",        containerPut,   containerPutTyped},
+    {"take",       containerTake,  containerTakeTyped},
+    {"drop",       containerDrop,  containerDropTyped},
+    {"get",        containerGet,   containerGetTyped},
     {"add",        arithmetic::add,            arithmetic::add},
     {"mul",        arithmetic::mul,            arithmetic::mul},
     {"sub",        arithmetic::sub,            arithmetic::sub},
