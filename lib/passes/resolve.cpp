@@ -277,7 +277,7 @@ void resolveBuiltInApplication(Expression expression, ScopeChain chain) {
 }
 
 void resolveTypedExpression(Expression expression, ScopeChain chain) {
-    auto& typed_expression = storage.typed_expressions.data[expression.index];
+    auto typed_expression = storage.typed_expressions.data[expression.index];
     resolveExpression(typed_expression.type, chain);
     resolveExpression(typed_expression.value, chain);
 }
