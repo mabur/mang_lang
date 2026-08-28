@@ -5,7 +5,6 @@
 #include <carma/carma.h>
 
 #include "exceptions.h"
-#include "passes/serialize.h"
 #include "mang_lang_string.h"
 
 Storage storage;
