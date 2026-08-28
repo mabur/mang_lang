@@ -7,7 +7,7 @@
 #include "../factory.h"
 #include "../mang_lang_string.h"
 
-Expression putString(Expression rest, Expression top) {
+Expression containerPutString(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
@@ -17,7 +17,7 @@ Expression putString(Expression rest, Expression top) {
     return makeString(rest.range, String{top, rest});
 }
 
-Expression putStack(Expression rest, Expression top) {
+Expression containerPutStack(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
@@ -27,7 +27,7 @@ Expression putStack(Expression rest, Expression top) {
     return makeStack(rest.range, Stack{top, rest});
 }
 
-Expression putEvaluatedStack(Expression rest, Expression top) {
+Expression containerPutEvaluatedStack(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
@@ -136,10 +136,10 @@ Expression containerPut(Expression in) {
     const auto collection = tuple.right;
     switch (collection.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return putEvaluatedStack(collection, item);
-        case EMPTY_STACK: return putEvaluatedStack(collection, item);
-        case STRING: return putString(collection, item);
-        case EMPTY_STRING: return putString(collection, item);
+        case EVALUATED_STACK: return containerPutEvaluatedStack(collection, item);
+        case EMPTY_STACK: return containerPutEvaluatedStack(collection, item);
+        case STRING: return containerPutString(collection, item);
+        case EMPTY_STRING: return containerPutString(collection, item);
         case EVALUATED_TABLE: return putTable(collection, item);
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
@@ -163,10 +163,10 @@ Expression containerPutTyped(Expression in) {
     }
     switch (collection.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return putEvaluatedStack(collection, item);
-        case EMPTY_STACK: return putEvaluatedStack(collection, item);
+        case EVALUATED_STACK: return containerPutEvaluatedStack(collection, item);
+        case EMPTY_STACK: return containerPutEvaluatedStack(collection, item);
         case STRING: return collection; // TODO: type check item
-        case EMPTY_STRING: return putString(collection, item);
+        case EMPTY_STRING: return containerPutString(collection, item);
         case EVALUATED_TABLE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item

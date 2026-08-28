@@ -545,7 +545,7 @@ Expression parseStack(CodeRange code) {
     }
     auto stack = Expression{0, CodeRange{}, EMPTY_STACK};
     FOR_EACH_BACKWARD(it, items){
-        stack = putStack(stack, *it);
+        stack = containerPutStack(stack, *it);
     }
     FREE_DARRAY(items);
     if (!startsWith(code, ']')) {
@@ -788,7 +788,7 @@ Expression parseString(CodeRange code) {
     }
     auto string = Expression{0, rangeOfFirst(whole), EMPTY_STRING};
     FOR_EACH_BACKWARD(it, characters) {
-        string = putString(string, *it);
+        string = containerPutString(string, *it);
     }
     FREE_DARRAY(characters);
     if (!startsWith(code, '"')) {

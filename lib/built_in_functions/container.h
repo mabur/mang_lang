@@ -2,9 +2,9 @@
 
 #include "../expression.h"
 
-Expression putString(Expression rest, Expression top);
-Expression putStack(Expression rest, Expression top);
-Expression putEvaluatedStack(Expression rest, Expression top);
+Expression containerPutString(Expression rest, Expression top);
+Expression containerPutStack(Expression rest, Expression top);
+Expression containerPutEvaluatedStack(Expression rest, Expression top);
 
 Expression containerClear(Expression in);
 Expression containerClearTyped(Expression in);
