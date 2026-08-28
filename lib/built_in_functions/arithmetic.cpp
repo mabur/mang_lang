@@ -58,37 +58,37 @@ Expression makeNumber(double x) {
 
 } // namespace
 
-Expression add(Expression in) {
+Expression builtInAdd(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, "add");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) + getNumber(type_check.right));
 }
 
-Expression mul(Expression in) {
+Expression builtInMul(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, "mul");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) * getNumber(type_check.right));
 }
 
-Expression sub(Expression in) {
+Expression builtInSub(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, "sub");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) - getNumber(type_check.right));
 }
 
-Expression div(Expression in) {
+Expression builtInDiv(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, "div");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getNumber(type_check.left) / getNumber(type_check.right));
 }
 
-Expression mod(Expression in) {
+Expression builtInMod(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, "mod");
     if (!type_check.ok) return type_check.error;
     return makeNumber(fmod(getNumber(type_check.left), getNumber(type_check.right)));
 }
 
-Expression less(Expression in) {
+Expression builtInLess(Expression in) {
     auto type_check = checkTypeBinaryFunction(in, "less");
     if (!type_check.ok) return type_check.error;
     const auto left = getNumber(type_check.left);
@@ -97,37 +97,37 @@ Expression less(Expression in) {
         Expression{0, CodeRange{}, YES} : Expression{0, CodeRange{}, NO};
 }
 
-Expression sqrt(Expression in) {
+Expression builtInSqrt(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "sqrt");
     if (!type_check.ok) return type_check.error;
     return makeNumber(::sqrt(getNumber(in)));
 }
 
-Expression round(Expression in) {
+Expression builtInRound(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "round");
     if (!type_check.ok) return type_check.error;
     return makeNumber(::round(getNumber(in)));
 }
 
-Expression roundUp(Expression in) {
+Expression builtInRoundUp(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_up");
     if (!type_check.ok) return type_check.error;
     return makeNumber(ceil(getNumber(in)));
 }
 
-Expression roundDown(Expression in) {
+Expression builtInRoundDown(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "round_down");
     if (!type_check.ok) return type_check.error;
     return makeNumber(floor(getNumber(in)));
 }
 
-Expression asciiNumber(Expression in) {
+Expression builtInAsciiNumber(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, CHARACTER, "ascii_number");
     if (!type_check.ok) return type_check.error;
     return makeNumber(getCharacter(in));
 }
 
-Expression asciiCharacter(Expression in) {
+Expression builtInAsciiCharacter(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "ascii_character");
     if (!type_check.ok) return type_check.error;
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));

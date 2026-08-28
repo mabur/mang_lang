@@ -4,32 +4,32 @@ struct Expression;
 
 namespace arithmetic {
 
-Expression add(Expression in);
-Expression addTyped(Expression in);
-Expression mul(Expression in);
-Expression mulTyped(Expression in);
-Expression sub(Expression in);
-Expression subTyped(Expression in);
-Expression div(Expression in);
-Expression divTyped(Expression in);
-Expression mod(Expression in);
-Expression modTyped(Expression in);
+Expression builtInAdd(Expression in);
+Expression builtInAddTyped(Expression in);
+Expression builtInMul(Expression in);
+Expression builtInMulTyped(Expression in);
+Expression builtInSub(Expression in);
+Expression builtInSubTyped(Expression in);
+Expression builtInDiv(Expression in);
+Expression builtInDivTyped(Expression in);
+Expression builtInMod(Expression in);
+Expression builtInModTyped(Expression in);
 
-Expression less(Expression in);
-Expression lessTyped(Expression in);
+Expression builtInLess(Expression in);
+Expression builtInLessTyped(Expression in);
 
-Expression sqrt(Expression in);
-Expression sqrtTyped(Expression in);
-Expression round(Expression in);
-Expression roundTyped(Expression in);
-Expression roundUp(Expression in);
-Expression roundUpTyped(Expression in);
-Expression roundDown(Expression in);
-Expression roundDownTyped(Expression in);
+Expression builtInSqrt(Expression in);
+Expression builtInSqrtTyped(Expression in);
+Expression builtInRound(Expression in);
+Expression builtInRoundTyped(Expression in);
+Expression builtInRoundUp(Expression in);
+Expression builtInRoundUpTyped(Expression in);
+Expression builtInRoundDown(Expression in);
+Expression builtInRoundDownTyped(Expression in);
 
-Expression asciiNumber(Expression in);
-Expression asciiNumberTyped(Expression in);
-Expression asciiCharacter(Expression in);
-Expression asciiCharacterTyped(Expression in);
+Expression builtInAsciiNumber(Expression in);
+Expression builtInAsciiNumberTyped(Expression in);
+Expression builtInAsciiCharacter(Expression in);
+Expression builtInAsciiCharacterTyped(Expression in);
 
 }
