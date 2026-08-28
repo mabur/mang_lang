@@ -197,8 +197,11 @@ Expression takeTableTyped(const T& table, Expression expression) {
     return makeEvaluatedTuple2(pair.key, pair.value);
 }
 
-template<typename T>
-Expression dropTable(const T& table) {
+Expression dropTableEvaluatedTable(const EvaluatedTable& table) {
+    return makeEvaluatedTableView(CodeRange{}, EvaluatedTableView{++table.begin(), table.end()});
+}
+
+Expression dropTableEvaluatedTableView(const EvaluatedTableView& table) {
     return makeEvaluatedTableView(CodeRange{}, EvaluatedTableView{++table.begin(), table.end()});
 }
 
@@ -251,8 +254,8 @@ Expression builtInDrop(Expression in) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
         case STRING: return storage.strings.data[in.index].rest;
-        case EVALUATED_TABLE: return dropTable(storage.evaluated_tables.at(in.index));
-        case EVALUATED_TABLE_VIEW: return dropTable(storage.evaluated_table_views.data[in.index]);
+        case EVALUATED_TABLE: return dropTableEvaluatedTable(storage.evaluated_tables.at(in.index));
+        case EVALUATED_TABLE_VIEW: return dropTableEvaluatedTableView(storage.evaluated_table_views.data[in.index]);
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
