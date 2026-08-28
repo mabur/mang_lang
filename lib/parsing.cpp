@@ -9,14 +9,6 @@
 #include "factory.h"
 #include "mang_lang_string.h"
 
-template<typename Predicate>
-CodeRange parseWhile(CodeRange code, Predicate predicate) {
-    while (!IS_EMPTY(code) && predicate(firstCharacter(code))) {
-        DROP_FRONT(code);
-    }
-    return code;
-}
-
 CodeRange firstPart(CodeRange whole, CodeRange last_part) {
     return CodeRange{whole.data, CharacterIndex(whole.count - last_part.count)};
 }
@@ -83,7 +75,10 @@ bool startsWithDigit(CodeRange code) {
 }
 
 CodeRange parseWhiteSpace(CodeRange code) {
-    return parseWhile(code, isWhiteSpace);
+    while (!IS_EMPTY(code) && isWhiteSpace(firstCharacter(code))) {
+        DROP_FRONT(code);
+    }
+    return code;
 }
 
 CodeRange parseCharacter(CodeRange code) {
@@ -104,7 +99,10 @@ CodeRange parseKeyword(CodeRange code, const char* keyword) {
 }
 
 CodeRange parseRawName(CodeRange code) {
-    return parseWhile(code, isNameCharacter);    
+    while (!IS_EMPTY(code) && isNameCharacter(firstCharacter(code))) {
+        DROP_FRONT(code);
+    }
+    return code;
 }
 
 double parseDigitAsDouble(CodeRange code) {
