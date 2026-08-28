@@ -182,7 +182,7 @@ Expression evaluateStack(Evaluator evaluator,
     }
     auto evaluated_stack = Expression{0, stack.range, EMPTY_STACK};
     FOR_EACH_BACKWARD(it, items) {
-        evaluated_stack = containerPutEvaluatedStack(evaluated_stack, *it);
+        evaluated_stack = builtInPutEvaluatedStack(evaluated_stack, *it);
     }
     FREE_DARRAY(items);
     return evaluated_stack;
@@ -423,7 +423,7 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     if (name.parent_steps == 0) {
         auto value = storage.definitions.data[dictionary.definitions.data + name.dictionary_index].expression;
         return value.type != FOR_ITERATOR ? value :
-            containerTake(storage.for_iterators.data[value.index].container);
+            builtInTake(storage.for_iterators.data[value.index].container);
     }
     if (name.parent_steps > 0) {
         return lookupDictionary(
@@ -820,7 +820,7 @@ Expression evaluateDictionaryTypes(
             if (value.type == ERROR_EXPRESSION) return value;
             const auto current = getDictionaryDefinition(result, put_assignment.name);
             const auto tuple = makeEvaluatedTuple2(value, current);
-            const auto new_value = containerPutTyped(tuple);
+            const auto new_value = builtInPutTyped(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT) {
@@ -833,16 +833,16 @@ Expression evaluateDictionaryTypes(
 
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
-                const auto value = containerTakeTyped(container);
+                const auto value = builtInTakeTyped(container);
                 const auto tuple = makeEvaluatedTuple2(value, current);
-                const auto new_value = containerPutTyped(tuple);
+                const auto new_value = builtInPutTyped(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
             }
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = storage.drop_assignments.data[statement.index];
             const auto current = getDictionaryDefinition(result, drop_assignment.name);
-            const auto new_value = containerDropTyped(current);
+            const auto new_value = builtInDropTyped(current);
             setDictionaryDefinition(result, drop_assignment.name, new_value);
         }
         else if (type == WHILE_STATEMENT) {
@@ -856,7 +856,7 @@ Expression evaluateDictionaryTypes(
             if (container.type == ERROR_EXPRESSION) return container;
             auto condition = booleanTypes(container);
             if (condition.error.type == ERROR_EXPRESSION) return condition.error;
-            const auto value = containerTakeTyped(container);
+            const auto value = builtInTakeTyped(container);
             setDictionaryDefinition(result, for_init_statement.name, value);
         }
         else if (type == IF_STATEMENT) {
@@ -900,7 +900,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
             const auto tuple = makeEvaluatedTuple2(value, current);
-            const auto new_value = containerPut(tuple);
+            const auto new_value = builtInPut(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
             i += 1;
         }
@@ -917,18 +917,18 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                     break;
                 }
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
-                const auto value = containerTake(container);
+                const auto value = builtInTake(container);
                 const auto tuple = makeEvaluatedTuple2(value, current);
-                const auto new_value = containerPut(tuple);
+                const auto new_value = builtInPut(tuple);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
-                container = containerDrop(container);
+                container = builtInDrop(container);
             }
             i += 1;
         }
         else if (type == DROP_ASSIGNMENT) {
             const auto drop_assignment = storage.drop_assignments.data[statement.index];
             const auto current = getDictionaryDefinition(result, drop_assignment.name);
-            const auto new_value = containerDrop(current);
+            const auto new_value = builtInDrop(current);
             setDictionaryDefinition(result, drop_assignment.name, new_value);
             i += 1;
         }
@@ -984,7 +984,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             auto start_statement = storage.statements.data[base_index + end_statement.start_index];
             auto name = storage.for_statements.data[start_statement.index].name;
             auto iterator = storage.for_iterators.data[getDictionaryDefinition(result, name).index];
-            auto next_container = containerDrop(iterator.container);
+            auto next_container = builtInDrop(iterator.container);
             auto condition = boolean(next_container);
             if (condition.error.type == ERROR_EXPRESSION) {
                 return condition.error;
@@ -994,7 +994,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 setDictionaryDefinition(result, name, next_iterator);
                 i = end_statement.start_index;
             } else {
-                auto last_value = containerTake(iterator.container);
+                auto last_value = builtInTake(iterator.container);
                 setDictionaryDefinition(result, name, last_value);
                 i += 1;
             }

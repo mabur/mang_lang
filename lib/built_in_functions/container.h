@@ -2,17 +2,17 @@
 
 struct Expression;
 
-Expression containerPutString(Expression rest, Expression top);
-Expression containerPutStack(Expression rest, Expression top);
-Expression containerPutEvaluatedStack(Expression rest, Expression top);
+Expression builtInPutString(Expression rest, Expression top);
+Expression builtInPutStack(Expression rest, Expression top);
+Expression builtInPutEvaluatedStack(Expression rest, Expression top);
 
-Expression containerClear(Expression in);
-Expression containerClearTyped(Expression in);
-Expression containerPut(Expression in);
-Expression containerPutTyped(Expression in);
-Expression containerTake(Expression in);
-Expression containerTakeTyped(Expression in);
-Expression containerDrop(Expression in);
-Expression containerDropTyped(Expression in);
-Expression containerGet(Expression in);
-Expression containerGetTyped(Expression in);
+Expression builtInClear(Expression in);
+Expression builtInClearTyped(Expression in);
+Expression builtInPut(Expression in);
+Expression builtInPutTyped(Expression in);
+Expression builtInTake(Expression in);
+Expression builtInTakeTyped(Expression in);
+Expression builtInDrop(Expression in);
+Expression builtInDropTyped(Expression in);
+Expression builtInGet(Expression in);
+Expression builtInGetTyped(Expression in);

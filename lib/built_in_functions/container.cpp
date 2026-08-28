@@ -7,7 +7,7 @@
 #include "../factory.h"
 #include "../mang_lang_string.h"
 
-Expression containerPutString(Expression rest, Expression top) {
+Expression builtInPutString(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
@@ -17,7 +17,7 @@ Expression containerPutString(Expression rest, Expression top) {
     return makeString(rest.range, String{top, rest});
 }
 
-Expression containerPutStack(Expression rest, Expression top) {
+Expression builtInPutStack(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
@@ -27,7 +27,7 @@ Expression containerPutStack(Expression rest, Expression top) {
     return makeStack(rest.range, Stack{top, rest});
 }
 
-Expression containerPutEvaluatedStack(Expression rest, Expression top) {
+Expression builtInPutEvaluatedStack(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
@@ -105,11 +105,11 @@ Expression clearShared(Expression in, const char* error_message) {
     }
 }
     
-Expression containerClear(Expression in) {
+Expression builtInClear(Expression in) {
     return clearShared(in, "I found an error during evaluation.");
 }
 
-Expression containerClearTyped(Expression in) {
+Expression builtInClearTyped(Expression in) {
     return clearShared(in, "I found an error during type checking.");
 }
 
@@ -127,7 +127,7 @@ Expression putNumber(Expression collection, Expression item) {
     return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
 }
 
-Expression containerPut(Expression in) {
+Expression builtInPut(Expression in) {
     const auto tuple = getBinaryTuple(in, "put");
     if (!tuple.ok) {
         return tuple.error;
@@ -136,10 +136,10 @@ Expression containerPut(Expression in) {
     const auto collection = tuple.right;
     switch (collection.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return containerPutEvaluatedStack(collection, item);
-        case EMPTY_STACK: return containerPutEvaluatedStack(collection, item);
-        case STRING: return containerPutString(collection, item);
-        case EMPTY_STRING: return containerPutString(collection, item);
+        case EVALUATED_STACK: return builtInPutEvaluatedStack(collection, item);
+        case EMPTY_STACK: return builtInPutEvaluatedStack(collection, item);
+        case STRING: return builtInPutString(collection, item);
+        case EMPTY_STRING: return builtInPutString(collection, item);
         case EVALUATED_TABLE: return putTable(collection, item);
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
@@ -151,7 +151,7 @@ Expression containerPut(Expression in) {
     }
 }
 
-Expression containerPutTyped(Expression in) {
+Expression builtInPutTyped(Expression in) {
     const auto tuple = getBinaryTuple(in, "put");
     if (!tuple.ok) {
         return tuple.error;
@@ -163,10 +163,10 @@ Expression containerPutTyped(Expression in) {
     }
     switch (collection.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return containerPutEvaluatedStack(collection, item);
-        case EMPTY_STACK: return containerPutEvaluatedStack(collection, item);
+        case EVALUATED_STACK: return builtInPutEvaluatedStack(collection, item);
+        case EMPTY_STACK: return builtInPutEvaluatedStack(collection, item);
         case STRING: return collection; // TODO: type check item
-        case EMPTY_STRING: return containerPutString(collection, item);
+        case EMPTY_STRING: return builtInPutString(collection, item);
         case EVALUATED_TABLE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
@@ -206,7 +206,7 @@ Expression dropNumber(Expression in) {
     return makeNumber(CodeRange{}, getNumber(in) - 1);
 }
 
-Expression containerTake(Expression in) {
+Expression builtInTake(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
@@ -225,7 +225,7 @@ Expression containerTake(Expression in) {
     }
 }
 
-Expression containerTakeTyped(Expression in) {
+Expression builtInTakeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
@@ -246,7 +246,7 @@ Expression containerTakeTyped(Expression in) {
     }
 }
 
-Expression containerDrop(Expression in) {
+Expression builtInDrop(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
@@ -265,7 +265,7 @@ Expression containerDrop(Expression in) {
     }
 }
 
-Expression containerDropTyped(Expression in) {
+Expression builtInDropTyped(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return in;
@@ -284,7 +284,7 @@ Expression containerDropTyped(Expression in) {
     }
 }
 
-Expression containerGet(Expression in) {
+Expression builtInGet(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
         return makeErrorExpression(in.range,
             "\n\nI have found a dynamic type error.\n"
@@ -327,7 +327,7 @@ Expression containerGet(Expression in) {
         default_value : iterator->second.value;
 }
 
-Expression containerGetTyped(Expression in) {
+Expression builtInGetTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
         return makeErrorExpression(in.range, 
             "\n\nI have found a static type error.\n"
