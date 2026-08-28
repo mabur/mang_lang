@@ -2,8 +2,6 @@
 
 struct Expression;
 
-namespace arithmetic {
-
 Expression builtInAdd(Expression in);
 Expression builtInAddTyped(Expression in);
 Expression builtInMul(Expression in);
@@ -31,5 +29,3 @@ Expression builtInAsciiNumber(Expression in);
 Expression builtInAsciiNumberTyped(Expression in);
 Expression builtInAsciiCharacter(Expression in);
 Expression builtInAsciiCharacterTyped(Expression in);
-
-}

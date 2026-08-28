@@ -7,7 +7,6 @@
 #include "../mang_lang_string.h"
 #include "../type_check.h"
 
-namespace arithmetic {
 namespace {
 
 TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
@@ -131,6 +130,4 @@ Expression builtInAsciiCharacter(Expression in) {
     auto type_check = checkTypeUnaryFunction(in, NUMBER, "ascii_character");
     if (!type_check.ok) return type_check.error;
     return makeCharacter(CodeRange{}, static_cast<char>(getNumber(in)));
-}
-
 }
