@@ -30,9 +30,9 @@ const size_t BUILT_IN_ENTRIES_COUNT = sizeof(BUILT_IN_ENTRIES) / sizeof(BUILT_IN
 
 const BuiltInEntry* findBuiltIn(size_t name_index) {
     const auto name_text = storage.names.data + name_index;
-    for (const auto& entry : BUILT_IN_ENTRIES) {
-        if (strcmp(name_text, entry.name) == 0) {
-            return &entry;
+    for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
+        if (strcmp(name_text, BUILT_IN_ENTRIES[i].name) == 0) {
+            return &BUILT_IN_ENTRIES[i];
         }
     }
     return nullptr;
