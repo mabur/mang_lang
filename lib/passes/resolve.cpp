@@ -52,7 +52,7 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
         else if (type == END_STATEMENT) {
             const auto start_local_index = LAST_ITEM(loop_start_indices_owner);
             DROP_BACK(loop_start_indices_owner);
-            auto& start_statement = storage.statements.data[base_index + start_local_index];
+            auto start_statement = storage.statements.data[base_index + start_local_index];
             if (start_statement.type == WHILE_STATEMENT) {
                 storage.while_statements.data[start_statement.index].end_index = local_index;
                 *statement = makeWhileEndStatement(statement->range, WhileEndStatement{start_local_index});
