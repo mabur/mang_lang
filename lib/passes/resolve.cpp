@@ -267,9 +267,9 @@ void resolveLookupChild(Expression expression, ScopeChain chain) {
 }
 
 void resolveFunctionApplication(Expression expression, ScopeChain chain) {
-    auto& function_application = storage.function_applications.data[expression.index];
-    function_application.name = tryBindGlobalName(function_application.name, chain);
-    resolveExpression(function_application.child, chain);
+    auto function_application = &storage.function_applications.data[expression.index];
+    function_application->name = tryBindGlobalName(function_application->name, chain);
+    resolveExpression(function_application->child, chain);
 }
 
 void resolveBuiltInApplication(Expression expression, ScopeChain chain) {
