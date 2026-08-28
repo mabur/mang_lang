@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../expression.h"
+struct Expression;
 
 Expression containerPutString(Expression rest, Expression top);
 Expression containerPutStack(Expression rest, Expression top);
