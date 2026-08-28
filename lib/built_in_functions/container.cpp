@@ -107,11 +107,11 @@ Expression clearShared(Expression in, const char* error_message) {
     }
 }
     
-Expression clear(Expression in) {
+Expression containerClear(Expression in) {
     return clearShared(in, "I found an error during evaluation.");
 }
 
-Expression clearTyped(Expression in) {
+Expression containerClearTyped(Expression in) {
     return clearShared(in, "I found an error during type checking.");
 }
 
@@ -129,7 +129,7 @@ Expression putNumber(Expression collection, Expression item) {
     return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
 }
 
-Expression put(Expression in) {
+Expression containerPut(Expression in) {
     const auto tuple = getBinaryTuple(in, "put");
     if (!tuple.ok) {
         return tuple.error;
@@ -153,7 +153,7 @@ Expression put(Expression in) {
     }
 }
 
-Expression putTyped(Expression in) {
+Expression containerPutTyped(Expression in) {
     const auto tuple = getBinaryTuple(in, "put");
     if (!tuple.ok) {
         return tuple.error;
@@ -208,7 +208,7 @@ Expression dropNumber(Expression in) {
     return makeNumber(CodeRange{}, getNumber(in) - 1);
 }
 
-Expression take(Expression in) {
+Expression containerTake(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
@@ -227,7 +227,7 @@ Expression take(Expression in) {
     }
 }
 
-Expression takeTyped(Expression in) {
+Expression containerTakeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
@@ -248,7 +248,7 @@ Expression takeTyped(Expression in) {
     }
 }
 
-Expression drop(Expression in) {
+Expression containerDrop(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
@@ -267,7 +267,7 @@ Expression drop(Expression in) {
     }
 }
 
-Expression dropTyped(Expression in) {
+Expression containerDropTyped(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
         case EVALUATED_STACK: return in;
@@ -286,7 +286,7 @@ Expression dropTyped(Expression in) {
     }
 }
 
-Expression get(Expression in) {
+Expression containerGet(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
         return makeErrorExpression(in.range,
             "\n\nI have found a dynamic type error.\n"
@@ -329,7 +329,7 @@ Expression get(Expression in) {
         default_value : iterator->second.value;
 }
 
-Expression getTyped(Expression in) {
+Expression containerGetTyped(Expression in) {
     if (in.type != EVALUATED_TUPLE) {
         return makeErrorExpression(in.range, 
             "\n\nI have found a static type error.\n"

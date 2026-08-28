@@ -8,15 +8,15 @@ Expression putEvaluatedStack(Expression rest, Expression top);
 
 namespace container_functions {
 
-Expression clear(Expression in);
-Expression clearTyped(Expression in);
-Expression put(Expression in);
-Expression putTyped(Expression in);
-Expression take(Expression in);
-Expression takeTyped(Expression in);
-Expression drop(Expression in);
-Expression dropTyped(Expression in);
-Expression get(Expression in);
-Expression getTyped(Expression in);
+Expression containerClear(Expression in);
+Expression containerClearTyped(Expression in);
+Expression containerPut(Expression in);
+Expression containerPutTyped(Expression in);
+Expression containerTake(Expression in);
+Expression containerTakeTyped(Expression in);
+Expression containerDrop(Expression in);
+Expression containerDropTyped(Expression in);
+Expression containerGet(Expression in);
+Expression containerGetTyped(Expression in);
 
 }
