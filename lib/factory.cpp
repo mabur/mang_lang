@@ -11,7 +11,8 @@
 Storage storage;
 
 template<typename ElementType, typename ArrayType>
-static Expression makeExpression(
+static
+Expression makeExpression(
     CodeRange code,
     ElementType&& expression,
     ExpressionType type,

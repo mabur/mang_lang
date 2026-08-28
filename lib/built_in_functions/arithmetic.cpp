@@ -7,7 +7,8 @@
 #include "../mang_lang_string.h"
 #include "../type_check.h"
 
-static TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
+static
+TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(TypeCheck, .ok=true);
     if (in.type != ANY && in.type != expected) {
         result.ok = false;
@@ -24,11 +25,13 @@ static TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, 
     return result;
 }
     
-static bool isNumberOrAny(Expression expression) {
+static
+bool isNumberOrAny(Expression expression) {
     return expression.type == NUMBER || expression.type == ANY;
 } 
 
-static BinaryTuple checkTypeBinaryFunction(Expression in, const char* function) {
+static
+BinaryTuple checkTypeBinaryFunction(Expression in, const char* function) {
     auto result = getBinaryTuple(in, function);
     if (!result.ok) {
         return result;
@@ -49,7 +52,8 @@ static BinaryTuple checkTypeBinaryFunction(Expression in, const char* function) 
     return result;
 }
 
-static Expression makeNumber(double x) {
+static
+Expression makeNumber(double x) {
     return makeNumber(CodeRange{}, x);
 }
 

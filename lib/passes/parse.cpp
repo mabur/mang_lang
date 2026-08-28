@@ -12,11 +12,13 @@
 #include "../parsing.h"
 #include "../mang_lang_string.h"
 
-static BoundLocalName getUnboundLocalName(Expression name) {
+static
+BoundLocalName getUnboundLocalName(Expression name) {
     return BoundLocalName{name.index, 0};
 }
 
-static Expression parseCharacterExpression(CodeRange code) {
+static
+Expression parseCharacterExpression(CodeRange code) {
     auto whole = code;
     if (code.count < 3) {
         return makeErrorExpression(code,
@@ -37,7 +39,8 @@ static Expression parseCharacterExpression(CodeRange code) {
     return makeCharacter(firstPart(whole, code), value);
 }
 
-static Expression parseAlternative(CodeRange code) {
+static
+Expression parseAlternative(CodeRange code) {
     auto whole = code;
     auto left = parseExpression(code);
     code = lastPart(code, left.range);
@@ -60,7 +63,8 @@ static Expression parseAlternative(CodeRange code) {
     return makeAlternative(firstPart(whole, code), Alternative{left, right});
 }
 
-static Expression parseConditional(CodeRange code) {
+static
+Expression parseConditional(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "if")) {
         return makeErrorExpression(code,
@@ -99,7 +103,8 @@ static Expression parseConditional(CodeRange code) {
     return result;
 }
 
-static Expression parseIs(CodeRange code) {
+static
+Expression parseIs(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "is")) {
         return makeErrorExpression(code,
@@ -144,7 +149,8 @@ static Expression parseIs(CodeRange code) {
     return result;
 }
 
-static Expression parseName(CodeRange code) {
+static
+Expression parseName(CodeRange code) {
     auto whole = code;
     code = parseRawName(code);
     auto first_part = firstPart(whole, code);
@@ -155,7 +161,8 @@ static Expression parseName(CodeRange code) {
     );
 }
 
-static Expression parseArgument(CodeRange code) {
+static
+Expression parseArgument(CodeRange code) {
     auto whole = code;
     if (startsWith(code, '<')) {
         code = parseCharacter(code);
@@ -183,7 +190,8 @@ static Expression parseArgument(CodeRange code) {
     }
 }
 
-static Expression parseNamedElement(CodeRange code) {
+static
+Expression parseNamedElement(CodeRange code) {
     auto whole = code;
     auto name = parseName(code);
     code = lastPart(code, name.range);
@@ -235,7 +243,8 @@ static Expression parseNamedElement(CodeRange code) {
     );
 }
 
-static Expression parseWhileStatement(CodeRange code) {
+static
+Expression parseWhileStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "while")) {
         return makeErrorExpression(code,
@@ -250,7 +259,8 @@ static Expression parseWhileStatement(CodeRange code) {
     return makeWhileStatement(firstPart(whole, code), {expression, 0});
 }
 
-static Expressions parseForStatement(CodeRange code, Expressions statements_owner) {
+static
+Expressions parseForStatement(CodeRange code, Expressions statements_owner) {
     const auto whole = code;
     if (!isKeyword(code, "for")) {
         APPEND(statements_owner, makeErrorExpression(code,
@@ -285,7 +295,8 @@ static Expressions parseForStatement(CodeRange code, Expressions statements_owne
     return statements_owner;
 }
 
-static Expression parseIfStatement(CodeRange code) {
+static
+Expression parseIfStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "if")) {
         return makeErrorExpression(code,
@@ -300,7 +311,8 @@ static Expression parseIfStatement(CodeRange code) {
     return makeIfStatement(firstPart(whole, code), {expression, 0});
 }
 
-static Expression parseEndStatement(CodeRange code) {
+static
+Expression parseEndStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "end")) {
         return makeErrorExpression(code,
@@ -312,7 +324,8 @@ static Expression parseEndStatement(CodeRange code) {
     return Expression{0, firstPart(whole, code), END_STATEMENT};
 }
 
-static Expression parseReturnStatement(CodeRange code) {
+static
+Expression parseReturnStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "return")) {
         return makeErrorExpression(code,
@@ -324,7 +337,8 @@ static Expression parseReturnStatement(CodeRange code) {
     return Expression{0, firstPart(whole, code), RETURN_STATEMENT};
 }
 
-static Expression parseDictionary(CodeRange code) {
+static
+Expression parseDictionary(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '{')) {
         return makeErrorExpression(code, "Parse error. Expected {");
@@ -391,7 +405,8 @@ static Expression parseDictionary(CodeRange code) {
     return makeDictionary(firstPart(whole, code), dictionary);
 }
 
-static Expression parseFunction(CodeRange code) {
+static
+Expression parseFunction(CodeRange code) {
     auto whole = code;
     auto argument = parseArgument(code);
     code = lastPart(code, argument.range);
@@ -410,7 +425,8 @@ static Expression parseFunction(CodeRange code) {
     );
 }
 
-static Expression parseFunctionDictionary(CodeRange code) {
+static
+Expression parseFunctionDictionary(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '{')) {
         return makeErrorExpression(code, "Parse error. Expected {");
@@ -459,7 +475,8 @@ static Expression parseFunctionDictionary(CodeRange code) {
     );
 }
 
-static Expression parseFunctionTuple(CodeRange code) {
+static
+Expression parseFunctionTuple(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '(')) {
         return makeErrorExpression(code, "Parse error. Expected (");
@@ -503,7 +520,8 @@ static Expression parseFunctionTuple(CodeRange code) {
     );
 }
 
-static Expression parseAnyFunction(CodeRange code) {
+static
+Expression parseAnyFunction(CodeRange code) {
     if (!isKeyword(code, "in")) {
         return makeErrorExpression(code,
             "I found a parsing error. I was expecting the keyword 'in'."
@@ -521,7 +539,8 @@ static Expression parseAnyFunction(CodeRange code) {
     return parseFunction(code);
 }
 
-static Expression parseStack(CodeRange code) {
+static
+Expression parseStack(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '[')) {
         return makeErrorExpression(code, "Parse error. Expected [");
@@ -554,7 +573,8 @@ static Expression parseStack(CodeRange code) {
     return stack;
 }
 
-static Expression parseTuple(CodeRange code) {
+static
+Expression parseTuple(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '(')) {
         return makeErrorExpression(code, "Parse error. Expected (");
@@ -594,7 +614,8 @@ struct Rows {
     size_t capacity;
 };
 
-static Expression parseTable(CodeRange code) {
+static
+Expression parseTable(CodeRange code) {
     auto whole = code;
     if (!startsWithString(code, "table[")) {
         return makeErrorExpression(code, "Parse error. Expected table[");
@@ -640,7 +661,8 @@ static Expression parseTable(CodeRange code) {
     return makeTable(firstPart(whole, code), Table{Indices{first, last - first}});
 }
 
-static Expression parseSubstitution(CodeRange code) {
+static
+Expression parseSubstitution(CodeRange code) {
     auto whole = code;
     auto name = parseName(code);
     code = lastPart(code, name.range);
@@ -670,7 +692,8 @@ static Expression parseSubstitution(CodeRange code) {
     return makeLookupSymbol(name.range, {name.index});
 }
 
-static Expression parseTypedExpression(CodeRange code) {
+static
+Expression parseTypedExpression(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '<')) {
         return makeErrorExpression(code, "Parse error. Expected <");
@@ -691,7 +714,8 @@ static Expression parseTypedExpression(CodeRange code) {
     );
 }
 
-static Expression parseNumber(CodeRange code) {
+static
+Expression parseNumber(CodeRange code) {
     if (IS_EMPTY(code)) {
         return makeErrorExpression(code, "Reached end of file when parsing number");
     }
@@ -732,24 +756,29 @@ static Expression parseNumber(CodeRange code) {
     return makeNumber(firstPart(start, code), value);
 }
 
-static CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
+static
+CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
     auto tail = parseKeyword(code, keyword);
     return firstPart(code, tail);
 }
 
-static Expression parseYes(CodeRange code) {
+static
+Expression parseYes(CodeRange code) {
     return Expression{0, parseKeyWordContent(code, "yes"), YES};
 }
 
-static Expression parseNo(CodeRange code) {
+static
+Expression parseNo(CodeRange code) {
     return Expression{0, parseKeyWordContent(code, "no"), NO};
 }
 
-static Expression parseNegInf(CodeRange code) {
+static
+Expression parseNegInf(CodeRange code) {
     return makeNumber(parseKeyWordContent(code, "-inf"), -INFINITY);
 }
 
-static Expression parseDynamicExpression(CodeRange code) {
+static
+Expression parseDynamicExpression(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "dynamic")) {
         return makeErrorExpression(code,
@@ -764,11 +793,13 @@ static Expression parseDynamicExpression(CodeRange code) {
     );
 }
 
-static CodeRange rangeOfFirst(CodeRange code) {
+static
+CodeRange rangeOfFirst(CodeRange code) {
     return CodeRange{code.data, 1};
 }
 
-static Expression parseString(CodeRange code) {
+static
+Expression parseString(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '"')) {
         return makeErrorExpression(code, "Parse error. Expected \"");
