@@ -49,7 +49,7 @@ Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer fun
 Expression builtIns() {
     auto first = storage.definitions.count;
     for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
-        const auto& entry = BUILT_IN_ENTRIES[i];
+        auto entry = BUILT_IN_ENTRIES[i];
         makeDefinition({}, makeDefinitionBuiltIn(i, entry.name, entry.function));
     }
     auto last = storage.definitions.count;
@@ -62,7 +62,7 @@ Expression builtIns() {
 Expression builtInsTypes() {
     auto first = storage.definitions.count;
     for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
-        const auto& entry = BUILT_IN_ENTRIES[i];
+        auto entry = BUILT_IN_ENTRIES[i];
         makeDefinition({}, makeDefinitionBuiltIn(i, entry.name, entry.function_types));
     }
     auto last = storage.definitions.count;
