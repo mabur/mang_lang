@@ -12,14 +12,12 @@
 #include "../type_check.h"
 #include "serialize.h"
 
-namespace {
-
 struct OptionalLookup {
     Expression value;
     bool ok;
 };
     
-OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
+static OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
     auto result = MAKE(OptionalLookup);
     FOR_EACH(i, dictionary.definitions) {
         if (storage.definitions.data[i].name.global_index == name) {
@@ -30,7 +28,7 @@ OptionalLookup optionalLookup(EvaluatedDictionary dictionary, size_t name) {
     return result;
 }
 
-Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
+static Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     const auto result = optionalLookup(dictionary, name);
     if (result.ok) {
         return result.value;
@@ -39,15 +37,15 @@ Expression requiredLookup(EvaluatedDictionary dictionary, size_t name) {
     return makeErrorExpression({}, "I cannot find name %s in dictionary", name_c);
 }
     
-TypeCheck checkTypes(Expression super, Expression sub, const char* description);
+static TypeCheck checkTypes(Expression super, Expression sub, const char* description);
 
-TypeCheck checkTypesEvaluatedStack(Expression super, Expression sub, const char* description) {
+static TypeCheck checkTypesEvaluatedStack(Expression super, Expression sub, const char* description) {
     const auto stack_super = storage.evaluated_stacks.data[super.index].top;
     const auto stack_sub = storage.evaluated_stacks.data[sub.index].top;
     return checkTypes(stack_super, stack_sub, description);
 }
 
-TypeCheck checkTypesEvaluatedTable(Expression super, Expression sub, const char* description) {
+static TypeCheck checkTypesEvaluatedTable(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
     const auto& table_super = storage.evaluated_tables.at(super.index);
     const auto& table_sub = storage.evaluated_tables.at(sub.index);
@@ -61,7 +59,7 @@ TypeCheck checkTypesEvaluatedTable(Expression super, Expression sub, const char*
     return result;
 }
 
-TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
+static TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
     const auto tuple_super = storage.evaluated_tuples.data[super.index];
     const auto tuple_sub = storage.evaluated_tuples.data[sub.index];
@@ -83,7 +81,7 @@ TypeCheck checkTypesEvaluatedTuple(Expression super, Expression sub, const char*
     return result;
 }
 
-TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
+static TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
     const auto dictionary_super = storage.evaluated_dictionaries.data[super.index];
     const auto dictionary_sub = storage.evaluated_dictionaries.data[sub.index];
@@ -109,7 +107,7 @@ TypeCheck checkTypesEvaluatedDictionary(Expression super, Expression sub, const 
     return result;
 }
 
-TypeCheck checkTypes(Expression super, Expression sub, const char* description) {
+static TypeCheck checkTypes(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
     if (super.type == ANY || sub.type == ANY) return result;
     
@@ -161,7 +159,7 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
 }
 
 template<typename Evaluator>
-Expression evaluateStack(Evaluator evaluator,
+static Expression evaluateStack(Evaluator evaluator,
     Expression stack, Expression environment
 ) {
     // Allocation:
@@ -189,7 +187,7 @@ Expression evaluateStack(Evaluator evaluator,
 }
 
 template<typename Evaluator>
-Expression evaluateTuple(
+static Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
     auto tuple_struct = storage.tuples.data[tuple.index];
@@ -209,7 +207,7 @@ Expression evaluateTuple(
 }
 
 template<typename Evaluator, typename Serializer>
-Expression evaluateTable(
+static Expression evaluateTable(
     Evaluator evaluator,
     Serializer serializer,
     Expression table,
@@ -233,7 +231,7 @@ Expression evaluateTable(
 }
 
 template<typename Evaluator>
-Expression evaluateLookupChild(
+static Expression evaluateLookupChild(
     Evaluator evaluator, Expression lookup_child, Expression environment
 ) {
     const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
@@ -256,7 +254,7 @@ Expression evaluateLookupChild(
 }
 
 template<bool CheckTypes, typename Evaluator>
-Expression checkArgument(
+static Expression checkArgument(
     Evaluator evaluator, const Argument& a, Expression input, Expression environment
 ) {
     if constexpr (CheckTypes) {
@@ -273,7 +271,7 @@ Expression checkArgument(
 }
 
 template<bool CheckTypes, typename Evaluator>
-Expression applyFunction(
+static Expression applyFunction(
     Evaluator evaluator,
     Expression function,
     Expression input
@@ -298,7 +296,7 @@ Expression applyFunction(
 }
 
 template<bool CheckTypes, typename Evaluator>
-Expression applyFunctionDictionary(
+static Expression applyFunctionDictionary(
     Evaluator evaluator,
     Expression function,
     Expression input
@@ -336,7 +334,7 @@ Expression applyFunctionDictionary(
 }
 
 template<bool CheckTypes, typename Evaluator>
-Expression applyFunctionTuple(
+static Expression applyFunctionTuple(
     Evaluator evaluator,
     Expression function,
     Expression input
@@ -385,14 +383,14 @@ Expression applyFunctionTuple(
     return evaluator(function_struct.body, middle);
 }
 
-Expression evaluateFunction(Expression function, Expression environment) {
+static Expression evaluateFunction(Expression function, Expression environment) {
     const auto function_struct = storage.functions.data[function.index];
     return makeFunction(function.range, {
         environment, function_struct.argument, function_struct.body
     });
 }
 
-Expression evaluateFunctionDictionary(
+static Expression evaluateFunctionDictionary(
     Expression function_dictionary, Expression environment
 ) {
     const auto function_dictionary_struct = storage.dictionary_functions.data[function_dictionary.index];
@@ -403,7 +401,7 @@ Expression evaluateFunctionDictionary(
     });
 }
 
-Expression evaluateFunctionTuple(
+static Expression evaluateFunctionTuple(
     Expression function_tuple, Expression environment
 ) {
     const auto function_tuple_struct = storage.tuple_functions.data[function_tuple.index];
@@ -412,7 +410,7 @@ Expression evaluateFunctionTuple(
     });
 }
 
-Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression expression) {
+static Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression expression) {
     if (expression.type != EVALUATED_DICTIONARY) {
         auto symbol = storage.names.data + name.global_index;
         auto expression_name = getExpressionName(expression.type);
@@ -436,12 +434,12 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     return makeErrorExpression(range, "Cannot find symbol %s.\n%s", symbol, describeLocation(range));
 }
 
-Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
+static Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
     auto name = storage.symbol_lookups.data[symbol.index].name;
     return lookupDictionary(symbol.range, name, environment);
 }
     
-Expression applyFunctionBuiltIn(
+static Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
     if (input.type == ERROR_EXPRESSION) return input;
@@ -454,7 +452,7 @@ struct BooleanResult {
     Expression error;
 };
 
-BooleanResult booleanTypes(Expression expression) {
+static BooleanResult booleanTypes(Expression expression) {
     auto result = MAKE(BooleanResult);
     switch (expression.type) {
         case ERROR_EXPRESSION: return MAKE(BooleanResult, .error=expression);
@@ -476,7 +474,7 @@ BooleanResult booleanTypes(Expression expression) {
     }
 }
     
-BooleanResult boolean(Expression expression) {
+static BooleanResult boolean(Expression expression) {
     const auto type = expression.type;
     const auto index = expression.index;
     switch (type) {
@@ -496,7 +494,7 @@ BooleanResult boolean(Expression expression) {
     }
 }
 
-Expression applyTupleIndexing(Expression tuple, Expression input) {
+static Expression applyTupleIndexing(Expression tuple, Expression input) {
     const auto tuple_struct = storage.evaluated_tuples.data[tuple.index];
     if (input.type != NUMBER) {
         return makeErrorExpression(tuple.range,
@@ -524,7 +522,7 @@ Expression applyTupleIndexing(Expression tuple, Expression input) {
     return storage.expressions.data[tuple_struct.indices.data + i];
 }
 
-Expression applyTableIndexingTypes(Expression table) {
+static Expression applyTableIndexingTypes(Expression table) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
     if (table_struct.rows.empty()) {
         return Expression{0, table.range, ANY};
@@ -532,17 +530,17 @@ Expression applyTableIndexingTypes(Expression table) {
     return table_struct.begin()->second.value;
 }
 
-Expression applyStackIndexingTypes(Expression stack) {
+static Expression applyStackIndexingTypes(Expression stack) {
     return storage.evaluated_stacks.data[stack.index].top;
 }
 
-Expression applyStringIndexingTypes(Expression string) {
+static Expression applyStringIndexingTypes(Expression string) {
     return storage.strings.data[string.index].top;
 }
 
-bool isEqual(Expression left, Expression right);
+static bool isEqual(Expression left, Expression right);
 
-bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
+static bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
     if (left.indices.count != right.indices.count) {
         return false;
     }
@@ -556,7 +554,7 @@ bool isTuplePairwiseEqual(EvaluatedTuple left, EvaluatedTuple right) {
     return true;
 }
 
-bool isStackPairwiseEqual(Expression left, Expression right) {
+static bool isStackPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STACK && right.type != EMPTY_STACK) {
         CHECK_INTERNAL(left.type == EVALUATED_STACK,
             "Internal error detected in isStackPairwiseEqual.\n"
@@ -579,7 +577,7 @@ bool isStackPairwiseEqual(Expression left, Expression right) {
     return left.type == EMPTY_STACK && right.type == EMPTY_STACK;
 }
 
-bool isStringPairwiseEqual(Expression left, Expression right) {
+static bool isStringPairwiseEqual(Expression left, Expression right) {
     while (left.type != EMPTY_STRING && right.type != EMPTY_STRING) {
         CHECK_INTERNAL(left.type == STRING,
             "Internal error detected in isStringPairwiseEqual. "
@@ -603,7 +601,7 @@ bool isStringPairwiseEqual(Expression left, Expression right) {
 }
 
 
-bool isEqual(Expression left, Expression right) {
+static bool isEqual(Expression left, Expression right) {
     const auto left_type = left.type;
     const auto right_type = right.type;
     if (left_type == NUMBER && right_type == NUMBER) {
@@ -639,16 +637,16 @@ bool isEqual(Expression left, Expression right) {
     return false;
 }
 
-Expression evaluateDynamicExpressionTyped(Expression expression) {
+static Expression evaluateDynamicExpressionTyped(Expression expression) {
     return Expression{0, expression.range, ANY};
 }
 
-Expression evaluateDynamicExpression(Expression expression, Expression environment) {
+static Expression evaluateDynamicExpression(Expression expression, Expression environment) {
     const auto inner_expression = storage.dynamic_expressions.data[expression.index].expression;
     return evaluate(inner_expression, environment);
 }
 
-Expression evaluateConditionalTypes(
+static Expression evaluateConditionalTypes(
     Expression conditional, Expression environment
 ) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
@@ -669,7 +667,7 @@ Expression evaluateConditionalTypes(
     return else_expression;
 }
 
-Expression evaluateConditional(Expression conditional, Expression environment) {
+static Expression evaluateConditional(Expression conditional, Expression environment) {
     const auto conditional_struct = storage.conditionals.data[conditional.index];
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
@@ -684,7 +682,7 @@ Expression evaluateConditional(Expression conditional, Expression environment) {
     return evaluate(conditional_struct.expression_else, environment);
 }
 
-Expression evaluateIsTypes(
+static Expression evaluateIsTypes(
     Expression is, Expression environment
 ) {
     const auto is_struct = storage.is_expressions.data[is.index];
@@ -706,7 +704,7 @@ Expression evaluateIsTypes(
     return else_expression;
 }
 
-Expression evaluateIs(Expression is, Expression environment) {
+static Expression evaluateIs(Expression is, Expression environment) {
     const auto is_struct = storage.is_expressions.data[is.index];
     const auto value = evaluate(is_struct.input, environment);
     FOR_EACH(a, is_struct.alternative) {
@@ -719,7 +717,7 @@ Expression evaluateIs(Expression is, Expression environment) {
     return evaluate(is_struct.expression_else, environment);
 }
 
-Expression evaluateTypedExpressionTypes(Expression expression, Expression environment) {
+static Expression evaluateTypedExpressionTypes(Expression expression, Expression environment) {
     const auto type = evaluate_types(storage.typed_expressions.data[expression.index].type, environment);
     const auto value = evaluate_types(storage.typed_expressions.data[expression.index].value, environment);
     const auto type_check = checkTypes(type, value, "typed expression");
@@ -729,11 +727,11 @@ Expression evaluateTypedExpressionTypes(Expression expression, Expression enviro
     return value;
 }
     
-Expression evaluateTypedExpression(Expression expression, Expression environment) {
+static Expression evaluateTypedExpression(Expression expression, Expression environment) {
     return evaluate(storage.typed_expressions.data[expression.index].value, environment);
 }
 
-Indices initializeDefinitions(const Dictionary& dictionary) {
+static Indices initializeDefinitions(const Dictionary& dictionary) {
     // TODO: allocate on storage.expressions directly.
     // Allocation:
     auto first = storage.definitions.count;
@@ -763,7 +761,7 @@ Indices initializeDefinitions(const Dictionary& dictionary) {
     return Indices{first, last - first};
 }
 
-void setDictionaryDefinition(
+static void setDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name, Expression value
 ) {
     CHECK_INTERNAL(
@@ -776,7 +774,7 @@ void setDictionaryDefinition(
     storage.definitions.data[first + name.dictionary_index].expression = value;
 }
 
-Expression getDictionaryDefinition(
+static Expression getDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name
 ) {
     CHECK_INTERNAL(
@@ -789,7 +787,7 @@ Expression getDictionaryDefinition(
     return storage.definitions.data[first + name.dictionary_index].expression;
 }
 
-Expression evaluateDictionaryTypes(
+static Expression evaluateDictionaryTypes(
     Expression dictionary, Expression environment
 ) {
     // TODO: allocate on storage.definitions directly.
@@ -870,7 +868,7 @@ Expression evaluateDictionaryTypes(
     return result;
 }
 
-Expression evaluateDictionary(Expression dictionary, Expression environment) {
+static Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto initial_definitions = initializeDefinitions(
         storage.dictionaries.data[dictionary.index]
     );
@@ -1009,7 +1007,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     return result;
 }
 
-std::string stdStringFromManglang(Expression key) {
+static std::string stdStringFromManglang(Expression key) {
     auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto k = makeStdString(buffer);
@@ -1017,7 +1015,7 @@ std::string stdStringFromManglang(Expression key) {
     return k;
 }
     
-Expression applyTableIndexing(Expression table, Expression key) {
+static Expression applyTableIndexing(Expression table, Expression key) {
     const auto& table_struct = storage.evaluated_tables.at(table.index);
     const auto& rows = table_struct.rows;
     auto k = stdStringFromManglang(key);
@@ -1028,7 +1026,7 @@ Expression applyTableIndexing(Expression table, Expression key) {
     return it->second.value;
 }
 
-Expression applyStackIndexing(Expression stack, Expression input) {
+static Expression applyStackIndexing(Expression stack, Expression input) {
     if (input.type != NUMBER) {
         return makeErrorExpression(stack.range,
             "\n\nI have found a dynamic type error.\n"
@@ -1065,7 +1063,7 @@ Expression applyStackIndexing(Expression stack, Expression input) {
     return stack_struct.top;
 }
 
-Expression applyStringIndexing(Expression string, Expression input) {
+static Expression applyStringIndexing(Expression string, Expression input) {
     if (input.type != NUMBER) {
         return makeErrorExpression(string.range,
             "\n\nI have found a dynamic type error.\n"
@@ -1102,7 +1100,7 @@ Expression applyStringIndexing(Expression string, Expression input) {
     return string_struct.top;
 }
 
-Expression evaluateFunctionApplicationTypes(
+static Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
     auto name = storage.function_applications.data[function_application.index].name;
@@ -1136,7 +1134,7 @@ Expression evaluateFunctionApplicationTypes(
     }
 }
 
-Expression evaluateFunctionApplication(
+static Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
     auto name = storage.function_applications.data[function_application.index].name;
@@ -1171,21 +1169,19 @@ Expression evaluateFunctionApplication(
     }
 }
 
-Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_application, Expression environment) {
+static Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_application, Expression environment) {
     auto built_in = storage.function_applications_built_in.data[built_in_application.index];
     auto input = evaluate_types(built_in.child, environment);
     if (input.type == ERROR_EXPRESSION) return input;
     return built_in.function_types(input);
 }
 
-Expression evaluateFunctionApplicationBuiltIn(Expression built_in_application, Expression environment) {
+static Expression evaluateFunctionApplicationBuiltIn(Expression built_in_application, Expression environment) {
     auto built_in = storage.function_applications_built_in.data[built_in_application.index];
     auto input = evaluate(built_in.child, environment);
     if (input.type == ERROR_EXPRESSION) return input;
     return built_in.function(input);
 }
-
-} // namespace
 
 Expression evaluate_types(Expression expression, Expression environment) {
     switch (expression.type) {

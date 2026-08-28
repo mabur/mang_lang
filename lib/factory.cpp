@@ -10,10 +10,8 @@
 
 Storage storage;
 
-namespace {
-
 template<typename ElementType, typename ArrayType>
-Expression makeExpression(
+static Expression makeExpression(
     CodeRange code,
     ElementType&& expression,
     ExpressionType type,
@@ -22,8 +20,6 @@ Expression makeExpression(
     APPEND(array, expression);
     return Expression{array.count - 1, code, type};
 }
-
-} // namespace
 
 void clearMemory() {
     FREE_DARRAY(storage.code_characters);
