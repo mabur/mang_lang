@@ -19,8 +19,9 @@ DICTIONARY NAMING
 * Directory (overloaded)
 * Index (overloaded)
 Traditional
-* Record (good most standard name, but generic)
-* Namespace (good, but maybe overlaoded?)
+* Record (good standard name)
+* Pod (Cute, but maybe more narrow meaning)
+* Namespace (good, but maybe overloaded?)
 * Object (good but generic and hints about object oriented programming)
 * Struct
 * Symbol table
