@@ -1,0 +1,34 @@
+ANSATZ
+Lets' assume no-escape rule and late binding. What can we prepare in the semantics or refernce walking tree interpreter, to make it closer to a bytecode vm, or to make it easier to implement a bytecode vm?
+
+
+IDEAS
+
+The useful framing is that a bytecode VM is only the expression evaluator. Frames, values, closures, built-in calls, statements and errors are shared machinery, and all of it can be built and tested inside the tree walker first. When that is done, writing the VM is replacing one recursive function with a compiler and a dispatch loop. Here is what I would prepare, in the order I would do it.
+
+Pin the semantics with tests first
+No-escape rule. Add failing programs: a function factory, a closure returned inside a tuple and inside a dictionary, a closure put into a table owned by the caller. Pin the error message.
+Late binding. Add the case from your last message, and one where a closure created before a loop is called inside the loop after the captured name has been reassigned.
+Eager errors. Add programs with an error in a definition that the result never reads, and pin that they fail. Today they pass silently because errors are values.
+Unassigned slots in reused blocks. A block inside a for loop with a name defined only in a skipped if. Decide reinitialize versus static error and pin it.
+These tests protect the refactors below and become the VM's acceptance suite.
+
+Refactor the tree walker toward the VM's data model
+1. Separate values from AST nodes. Today the Expression struct is both a syntax node and a runtime value, and the tag set mixes them: a stack literal and an evaluated stack, a tuple and an evaluated tuple, a function literal and a closure. A VM has code and values as two separate worlds. Introduce a Value type, even if its layout is identical at first, and change the evaluator to take a node and return a value. This forces you to find every place an AST node leaks out as a value, such as number and character literals being returned directly and the any-value sentinel built from a node. Numbers are already stored inline in the index field, so that part is done.
+
+2. Drop the code range from values. Once values are distinct, remove the range field and keep a "current node" the evaluator sets on entry for error messages. Type errors currently point at the type value's range, which after this change becomes the ascription node's range. That is arguably more useful. Values then fit in 16 bytes with room to shrink to 8 later.
+
+3. Compute frame layouts in the resolver. The resolver in resolve.cpp currently produces steps-to-parent counting every scope. Change the addressing to function depth plus slot offset, with every frame-position block assigned a slot range in its enclosing function's frame and each function recording its total frame size. This is exactly the VM's addressing mode, and the resolver output becomes the VM's symbol table with no further translation.
+
+4. Add the frame stack and the two environment kinds. Introduce a frame array with a small header holding the static link and serial. Function application pushes a frame, frame-position blocks write into their slot range, value-position dictionaries construct in the arena as now. The lookup code in evaluate.cpp already dispatches on the environment's type, so a frame is one more case. Closures record the nearest stack frame in their chain and its serial, and calls check it. The type checker calls the same application code with its own built-ins, so it gets the frame machinery for free. This step is the big speed win and the one where the thousand tests earn their keep.
+
+5. Give the for loop a hidden slot. Store the remaining container in an anonymous frame slot and the current item in the named one. That removes the per-iteration iterator allocation and the implicit take hidden inside variable lookup, which is a special case no VM instruction should have to know about.
+
+6. Give built-ins direct arities. Every built-in takes one value and the binary ones unpack a tuple, so add!(x y) allocates a tuple in the arena on every call, and so do the += and -- statements through the two-element tuple helper. Add a second entry point per binary built-in taking two values, and a node variant for a built-in applied to a literal tuple that evaluates the children and calls it directly. That node is your future add instruction, and the built-in table becomes the VM's native function table.
+
+7. Make errors trap. Replace the returned error value with a global error slot and unwinding, either a C++ exception or a check at statement boundaries. Every per-operation error check in the evaluator disappears, and the VM's dispatch loop never has to test for a poison value.
+
+What already matches and should stay
+The statement loop in dictionary evaluation is already a small bytecode interpreter with a program counter and precomputed jump targets, so the VM's control flow is a straight extension of it. Built-in names are already resolved statically when not shadowed, so the compiler can emit direct calls. Calls go through a name rather than an arbitrary expression, which keeps every call site a fixed slot load and makes inline caching possible later. Keep all three.
+
+After steps 1 through 7 the only recursive code left is expression evaluation, and the compiler's job is to emit post-order instructions over the same node structs into a new array in the same storage, as a fourth pass beside parse, resolve and evaluate. The dispatch loop then uses the frames, values, closures and built-in table you already trust.
