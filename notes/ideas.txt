@@ -329,9 +329,10 @@ SYSTEM IMPLEMENTATION
 * Specialize expressions for small stacks, with content stored directly in the struct: Tuple2, Tuple3, Tuple4.
 * implement fold as built-in
 * Changes in semantic to enable optimizations:
-  1. Make loop-bound variables immutable per iteration instead of mutating one shared slot.
-  2. Restrict closures so they can't escape their call (no returning/storing functions)
-  3. Make typing total. Remove Any and Dynamic.
+  - No escape rule. A function closure may not be used after its frame is popped.
+  - Late bidning. While a frame is live, the closure sees whatever the slots currently hold.
+  - Make loop-bound variables immutable per iteration instead of mutating one shared slot.
+  - Make typing total. Remove Any and Dynamic.
 * Packing Expressions:
   - Pack index for expressions that only wrap a single other Expression directly in the parent expression, to avoid one indirection.
 * Add arrays
