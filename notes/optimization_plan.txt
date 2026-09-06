@@ -15,6 +15,9 @@ These tests protect the refactors below and become the VM's acceptance suite.
 
 Refactor the tree walker toward the VM's data model
 
+* Separate storing of statements and definitions for DictionaryExpressions and DictionaryValues
+* Make the linear seach lookup faster for child@dictionary and function argument lookup in (a b) out a and in {a b} out a
+
 3. Split the dictionary slot from the definition. A dictionary value is today a range into the shared definitions array, where each entry carries a name and a value. Change it to point at the static name list of the expression it was built from, plus a range of plain values. Names stay available for child lookup, dictionary-argument functions and the dictionary type check, which all search by name at runtime. Values become 16 bytes with no name beside them, which is what a frame slot must look like. The `Definition` struct then serves only the parsed statement and can take the statement suffix. The tests cover every use of this.
 
 4. Pin the behavior the frame work can break. Add tests that already pass: late binding, with a name reassigned between two calls of a closure that reads it, and a closure created before a loop and called inside it. Add a block inside a for loop with a name defined only in a skipped `if`, pinning that the second iteration sees the any-value again. These are the cases where reusing slots would silently change results.
