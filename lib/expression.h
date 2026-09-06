@@ -78,7 +78,6 @@ struct IsExpression {
 };
 
 struct Function {
-    Expression environment;
     size_t argument;
     Expression body;
 };
@@ -90,15 +89,18 @@ struct FunctionBuiltIn {
 };
 
 struct FunctionDictionary {
-    Expression environment;
     Indices arguments;
     Expression body;
 };
 
 struct FunctionTuple {
-    Expression environment;
     Indices arguments;
     Expression body;
+};
+
+struct EvaluatedFunction {
+    Expression function;
+    Expression environment;
 };
 
 struct LookupChild {

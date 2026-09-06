@@ -37,6 +37,7 @@ void clearMemory() {
     FREE_DARRAY(storage.built_in_functions);
     FREE_DARRAY(storage.dictionary_functions);
     FREE_DARRAY(storage.tuple_functions);
+    FREE_DARRAY(storage.evaluated_functions);
     FREE_DARRAY(storage.tuples);
     FREE_DARRAY(storage.evaluated_tuples);
     FREE_DARRAY(storage.stacks);
@@ -143,6 +144,10 @@ Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression)
 
 Expression makeFunctionTuple(CodeRange code, FunctionTuple expression) {
     return makeExpression(code, expression, FUNCTION_TUPLE, storage.tuple_functions);
+}
+
+Expression makeEvaluatedFunction(CodeRange code, EvaluatedFunction expression) {
+    return makeExpression(code, expression, EVALUATED_FUNCTION, storage.evaluated_functions);
 }
 
 Expression makeTuple(CodeRange code, Tuple expression) {

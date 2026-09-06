@@ -441,6 +441,7 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
         case EVALUATED_TUPLE: return serializeEvaluatedTuple(s, serialize_types, expression);
         case EVALUATED_STACK: return serializeTypesEvaluatedStack(s, expression);
         case EVALUATED_TABLE: return serializeTypesEvaluatedTable(s, expression);
+        case EVALUATED_FUNCTION: return concatenate(s, getExpressionName(storage.evaluated_functions.data[expression.index].function.type));
         // TODO: EVALUATED_TABLE_VIEW?
         default: return concatenate(s, getExpressionName(expression.type)); return s;
     }
@@ -466,6 +467,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case FUNCTION: return serializeFunction(s, storage.functions.data[expression.index]);
         case FUNCTION_DICTIONARY: return serializeFunctionDictionary(s, storage.dictionary_functions.data[expression.index]);
         case FUNCTION_TUPLE: return serializeFunctionTuple(s, storage.tuple_functions.data[expression.index]);
+        case EVALUATED_FUNCTION: return serialize(s, storage.evaluated_functions.data[expression.index].function);
         case TABLE: return serializeTable(s, expression);
         case EVALUATED_TABLE: return serializeEvaluatedTable(s, storage.evaluated_tables.at(expression.index).rows);
         case EVALUATED_TABLE_VIEW: return serializeEvaluatedTable(s, storage.evaluated_table_views.data[expression.index]);

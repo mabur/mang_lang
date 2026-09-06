@@ -421,7 +421,7 @@ Expression parseFunction(CodeRange code) {
     code = lastPart(code, body.range);
     return makeFunction(
         firstPart(whole, code),
-        {Expression{}, argument.index, body}
+        {argument.index, body}
     );
 }
 
@@ -468,7 +468,6 @@ Expression parseFunctionDictionary(CodeRange code) {
     return makeFunctionDictionary(
         firstPart(whole, code),
         FunctionDictionary{
-            Expression{},
             indices,
             body
         }
@@ -516,7 +515,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code = lastPart(code, body.range);
     return makeFunctionTuple(
         firstPart(whole, code),
-        {Expression{}, Indices{first_argument.index, last_argument.index - first_argument.index}, body}
+        {Indices{first_argument.index, last_argument.index - first_argument.index}, body}
     );
 }
 

@@ -17,6 +17,7 @@ const char* getExpressionName(ExpressionType type) {
         case FUNCTION_BUILT_IN: return "FUNCTION_BUILT_IN";
         case FUNCTION_DICTIONARY: return "FUNCTION_DICTIONARY";
         case FUNCTION_TUPLE: return "FUNCTION_TUPLE";
+        case EVALUATED_FUNCTION: return "EVALUATED_FUNCTION";
         case STACK: return "STACK";
         case EVALUATED_STACK: return "EVALUATED_STACK";
         case EMPTY_STACK: return "EMPTY_STACK";

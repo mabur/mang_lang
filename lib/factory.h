@@ -37,6 +37,7 @@ struct Storage {
     DARRAY(FunctionBuiltIn) built_in_functions;
     DARRAY(FunctionDictionary) dictionary_functions;
     DARRAY(FunctionTuple) tuple_functions;
+    DARRAY(EvaluatedFunction) evaluated_functions;
     DARRAY(Tuple) tuples;
     DARRAY(EvaluatedTuple) evaluated_tuples;
     DARRAY(Stack) stacks;
@@ -94,6 +95,7 @@ Expression makeFunction(CodeRange code, Function expression);
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression);
 Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression);
 Expression makeFunctionTuple(CodeRange code, FunctionTuple expression);
+Expression makeEvaluatedFunction(CodeRange code, EvaluatedFunction expression);
 Expression makeTuple(CodeRange code, Tuple expression);
 Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression);
 Expression makeEvaluatedTuple2(Expression a, Expression b);
