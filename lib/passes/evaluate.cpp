@@ -255,7 +255,7 @@ static
 Expression evaluateLookupChild(
     Evaluator evaluator, Expression lookup_child, Expression environment
 ) {
-    const auto lookup_child_struct = storage.child_lookups.data[lookup_child.index];
+    const auto lookup_child_struct = storage.lookup_child_expressions.data[lookup_child.index];
     const auto child = evaluator(lookup_child_struct.child, environment);
     if (child.type == ERROR_VALUE) {
         return child;
@@ -460,7 +460,7 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
 
 static
 Expression lookupSymbolInDictionary(Expression symbol, Expression environment) {
-    auto name = storage.symbol_lookups.data[symbol.index].name;
+    auto name = storage.lookup_symbol_expressions.data[symbol.index].name;
     return lookupDictionary(symbol.range, name, environment);
 }
     
@@ -689,7 +689,7 @@ static
 Expression evaluateConditionalTypes(
     Expression conditional, Expression environment
 ) {
-    const auto conditional_struct = storage.conditionals.data[conditional.index];
+    const auto conditional_struct = storage.conditional_expressions.data[conditional.index];
     FOR_EACH(a, conditional_struct.alternatives) {
         auto result = evaluate_types(storage.alternatives.data[a].left, environment);
         if (result.type == ERROR_VALUE) return result;
@@ -709,7 +709,7 @@ Expression evaluateConditionalTypes(
 
 static
 Expression evaluateConditional(Expression conditional, Expression environment) {
-    const auto conditional_struct = storage.conditionals.data[conditional.index];
+    const auto conditional_struct = storage.conditional_expressions.data[conditional.index];
     FOR_EACH(a, conditional_struct.alternatives) {
         const auto alternative = storage.alternatives.data[a];
         const auto condition = boolean(evaluate(alternative.left, environment));
@@ -1158,10 +1158,10 @@ static
 Expression evaluateFunctionApplicationTypes(
     Expression function_application, Expression environment
 ) {
-    auto name = storage.function_applications.data[function_application.index].name;
+    auto name = storage.function_application_expressions.data[function_application.index].name;
     const auto function = lookupDictionary(function_application.range, name, environment);
     const auto input = evaluate_types(
-        storage.function_applications.data[function_application.index].child,
+        storage.function_application_expressions.data[function_application.index].child,
         environment
     );
     if (input.type == ERROR_VALUE) return input;
@@ -1191,10 +1191,10 @@ static
 Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
-    auto name = storage.function_applications.data[function_application.index].name;
+    auto name = storage.function_application_expressions.data[function_application.index].name;
     const auto function = lookupDictionary(function_application.range, name, environment);
     const auto input = evaluate(
-        storage.function_applications.data[function_application.index].child,
+        storage.function_application_expressions.data[function_application.index].child,
         environment
     );
     switch (function.type) {
@@ -1223,7 +1223,7 @@ Expression evaluateFunctionApplication(
 
 static
 Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_application, Expression environment) {
-    auto built_in = storage.function_applications_built_in.data[built_in_application.index];
+    auto built_in = storage.function_application_built_in_expressions.data[built_in_application.index];
     auto input = evaluate_types(built_in.child, environment);
     if (input.type == ERROR_VALUE) return input;
     return built_in.function_types(input);
@@ -1231,7 +1231,7 @@ Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_applicati
 
 static
 Expression evaluateFunctionApplicationBuiltIn(Expression built_in_application, Expression environment) {
-    auto built_in = storage.function_applications_built_in.data[built_in_application.index];
+    auto built_in = storage.function_application_built_in_expressions.data[built_in_application.index];
     auto input = evaluate(built_in.child, environment);
     if (input.type == ERROR_VALUE) return input;
     return built_in.function(input);
@@ -1260,22 +1260,22 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION_EXPRESSION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE_EXPRESSION: return evaluateFunction(expression, environment);
         case FUNCTION_DICTIONARY_EXPRESSION: return evaluateFunction(expression, environment);
-        case LOOKUP_SYMBOL: return lookupSymbolInDictionary(expression, environment);
+        case LOOKUP_SYMBOL_EXPRESSION: return lookupSymbolInDictionary(expression, environment);
 
         // These are different for types and values, but templated:
         case STACK_EXPRESSION: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE_EXPRESSION: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE_EXPRESSION: return evaluateTable(evaluate_types, serialize_types, expression, environment);
-        case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, expression, environment);
+        case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate_types, expression, environment);
 
         // These are different for types and values:
         case TYPED_EXPRESSION: return evaluateTypedExpressionTypes(expression, environment);
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpressionTyped(expression);
-        case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
-        case IS: return evaluateIsTypes(expression, environment);
+        case CONDITIONAL_EXPRESSION: return evaluateConditionalTypes(expression, environment);
+        case IS_EXPRESSION: return evaluateIsTypes(expression, environment);
         case DICTIONARY_EXPRESSION: return evaluateDictionaryTypes(expression, environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
-        case FUNCTION_APPLICATION_BUILT_IN: return evaluateFunctionApplicationBuiltInTypes(expression, environment);
+        case FUNCTION_APPLICATION_EXPRESSION: return evaluateFunctionApplicationTypes(expression, environment);
+        case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return evaluateFunctionApplicationBuiltInTypes(expression, environment);
 
         default: return makeErrorValue(expression.range,
             "I found an error during type checking.\n"
@@ -1308,22 +1308,22 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION_EXPRESSION: return evaluateFunction(expression, environment);
         case FUNCTION_TUPLE_EXPRESSION: return evaluateFunction(expression, environment);
         case FUNCTION_DICTIONARY_EXPRESSION: return evaluateFunction(expression, environment);
-        case LOOKUP_SYMBOL: return lookupSymbolInDictionary(expression, environment);
+        case LOOKUP_SYMBOL_EXPRESSION: return lookupSymbolInDictionary(expression, environment);
 
         // These are different for types and values, but templated:
         case STACK_EXPRESSION: return evaluateStack(evaluate, expression, environment);
         case TUPLE_EXPRESSION: return evaluateTuple(evaluate, expression, environment);
         case TABLE_EXPRESSION: return evaluateTable(evaluate, serialize, expression, environment);
-        case LOOKUP_CHILD: return evaluateLookupChild(evaluate, expression, environment);
+        case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate, expression, environment);
 
         // These are different for types and values:
         case TYPED_EXPRESSION: return evaluateTypedExpression(expression, environment);
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpression(expression, environment);
-        case CONDITIONAL: return evaluateConditional(expression, environment);
-        case IS: return evaluateIs(expression, environment);
+        case CONDITIONAL_EXPRESSION: return evaluateConditional(expression, environment);
+        case IS_EXPRESSION: return evaluateIs(expression, environment);
         case DICTIONARY_EXPRESSION: return evaluateDictionary(expression, environment);
-        case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
-        case FUNCTION_APPLICATION_BUILT_IN: return evaluateFunctionApplicationBuiltIn(expression, environment);
+        case FUNCTION_APPLICATION_EXPRESSION: return evaluateFunctionApplication(expression, environment);
+        case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return evaluateFunctionApplicationBuiltIn(expression, environment);
 
         default: return makeErrorValue(expression.range,
             "I found an error during evaluation.\n"

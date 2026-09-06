@@ -232,7 +232,7 @@ void resolveFunctionTuple(Expression expression, ScopeChain chain) {
 
 static
 void resolveConditional(Expression expression, ScopeChain chain) {
-    auto conditional = storage.conditionals.data[expression.index];
+    auto conditional = storage.conditional_expressions.data[expression.index];
     FOR_EACH(i, conditional.alternatives) {
         auto alternative = storage.alternatives.data[i];
         resolveExpression(alternative.left, chain);
@@ -283,19 +283,19 @@ void resolveTable(Expression expression, ScopeChain chain) {
 
 static
 void resolveLookupChild(Expression expression, ScopeChain chain) {
-    return resolveExpression(storage.child_lookups.data[expression.index].child, chain);
+    return resolveExpression(storage.lookup_child_expressions.data[expression.index].child, chain);
 }
 
 static
 void resolveFunctionApplication(Expression expression, ScopeChain chain) {
-    auto function_application = &storage.function_applications.data[expression.index];
+    auto function_application = &storage.function_application_expressions.data[expression.index];
     function_application->name = tryBindGlobalName(function_application->name, chain);
     resolveExpression(function_application->child, chain);
 }
 
 static
 void resolveBuiltInApplication(Expression expression, ScopeChain chain) {
-    return resolveExpression(storage.function_applications_built_in.data[expression.index].child, chain);
+    return resolveExpression(storage.function_application_built_in_expressions.data[expression.index].child, chain);
 }
 
 static
@@ -312,7 +312,7 @@ void resolveDynamicExpression(Expression expression, ScopeChain chain) {
 
 static
 void resolveLookupSymbol(Expression expression, ScopeChain chain) {
-    storage.symbol_lookups.data[expression.index].name = tryBindGlobalName(storage.symbol_lookups.data[expression.index].name, chain);
+    storage.lookup_symbol_expressions.data[expression.index].name = tryBindGlobalName(storage.lookup_symbol_expressions.data[expression.index].name, chain);
 }
 
 static
@@ -322,17 +322,17 @@ void resolveExpression(Expression expression, ScopeChain chain) {
         case FUNCTION_EXPRESSION: return resolveFunction(expression, chain);
         case FUNCTION_DICTIONARY_EXPRESSION: return resolveFunctionDictionary(expression, chain);
         case FUNCTION_TUPLE_EXPRESSION: return resolveFunctionTuple(expression, chain);
-        case CONDITIONAL: return resolveConditional(expression, chain);
-        case IS: return resolveIs(expression, chain);
+        case CONDITIONAL_EXPRESSION: return resolveConditional(expression, chain);
+        case IS_EXPRESSION: return resolveIs(expression, chain);
         case TUPLE_EXPRESSION: return resolveTuple(expression, chain);
         case STACK_EXPRESSION: return resolveStack(expression, chain);
         case TABLE_EXPRESSION: return resolveTable(expression, chain);
-        case LOOKUP_CHILD: return resolveLookupChild(expression, chain);
-        case FUNCTION_APPLICATION: return resolveFunctionApplication(expression, chain);
-        case FUNCTION_APPLICATION_BUILT_IN: return resolveBuiltInApplication(expression, chain);
+        case LOOKUP_CHILD_EXPRESSION: return resolveLookupChild(expression, chain);
+        case FUNCTION_APPLICATION_EXPRESSION: return resolveFunctionApplication(expression, chain);
+        case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return resolveBuiltInApplication(expression, chain);
         case TYPED_EXPRESSION: return resolveTypedExpression(expression, chain);
         case DYNAMIC_EXPRESSION: return resolveDynamicExpression(expression, chain);
-        case LOOKUP_SYMBOL: return resolveLookupSymbol(expression, chain);
+        case LOOKUP_SYMBOL_EXPRESSION: return resolveLookupSymbol(expression, chain);
         // Everything else (NUMBER, CHARACTER, strings, YES/NO, ARGUMENT,
         // EMPTY_STACK, ERROR_VALUE, ...) is a leaf: nothing to recurse into.
         default: return;

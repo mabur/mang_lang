@@ -95,9 +95,9 @@ Expression parseConditional(CodeRange code) {
     // TODO: make it more explicit that we require at least one alternative.
     auto first_index = FIRST_ITEM(alternatives).index;
     auto last_index = LAST_ITEM(alternatives).index;
-    auto result = makeConditional(
+    auto result = makeConditionalExpression(
         firstPart(whole, code),
-        Conditional{Indices{first_index, last_index - first_index + 1}, expression_else}
+        ConditionalExpression{Indices{first_index, last_index - first_index + 1}, expression_else}
     );
     FREE_DARRAY(alternatives);
     return result;
@@ -137,7 +137,7 @@ Expression parseIs(CodeRange code) {
     // TODO: verify parsing of nested alternatives. This looks suspicious.
     auto first_index = FIRST_ITEM(alternatives).index;
     auto last_index = LAST_ITEM(alternatives).index;
-    auto result = makeIs(
+    auto result = makeIsExpression(
         firstPart(whole, code),
         IsExpression{
             input,
@@ -671,7 +671,7 @@ Expression parseSubstitution(CodeRange code) {
         code = parseWhiteSpace(code);
         auto child = parseExpression(code);
         code = lastPart(code, child.range);
-        return makeLookupChild(firstPart(whole, code), {name.index, child});
+        return makeLookupChildExpression(firstPart(whole, code), {name.index, child});
     }
     if (startsWith(code, '!') || startsWith(code, '?')) {
         code = parseCharacter(code);
@@ -679,16 +679,16 @@ Expression parseSubstitution(CodeRange code) {
         code = lastPart(code, child.range);
         const auto built_in = findBuiltIn(name.index);
         if (built_in) {
-            return makeFunctionApplicationBuiltIn(
+            return makeFunctionApplicationBuiltInExpression(
                 firstPart(whole, code),
-                FunctionApplicationBuiltIn{name.index, built_in->function, built_in->function_types, child}
+                FunctionApplicationBuiltInExpression{name.index, built_in->function, built_in->function_types, child}
             );
         }
-        return makeFunctionApplication(
+        return makeFunctionApplicationExpression(
             firstPart(whole, code), {BoundGlobalName{name.index}, child}
         );
     }
-    return makeLookupSymbol(name.range, {name.index});
+    return makeLookupSymbolExpression(name.range, {name.index});
 }
 
 static

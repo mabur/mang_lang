@@ -66,7 +66,7 @@ struct Alternative {
     Expression right;
 };
 
-struct Conditional {
+struct ConditionalExpression {
     Indices alternatives;
     Expression expression_else;
 };
@@ -103,24 +103,24 @@ struct FunctionValue {
     Expression environment;
 };
 
-struct LookupChild {
+struct LookupChildExpression {
     size_t name;
     Expression child;
 };
 
-struct FunctionApplication {
+struct FunctionApplicationExpression {
     BoundGlobalName name;
     Expression child;
 };
 
-struct FunctionApplicationBuiltIn {
+struct FunctionApplicationBuiltInExpression {
     size_t name;
     FunctionPointer function;
     FunctionPointer function_types;
     Expression child;
 };
 
-struct LookupSymbol {
+struct LookupSymbolExpression {
     BoundGlobalName name;
 };
 

@@ -30,7 +30,7 @@ void clearMemory() {
     FREE_DARRAY(storage.typed_expressions);
     FREE_DARRAY(storage.dictionary_expressions);
     FREE_DARRAY(storage.dictionary_values);
-    FREE_DARRAY(storage.conditionals);
+    FREE_DARRAY(storage.conditional_expressions);
     FREE_DARRAY(storage.is_expressions);
     FREE_DARRAY(storage.alternatives);
     FREE_DARRAY(storage.function_expressions);
@@ -43,10 +43,10 @@ void clearMemory() {
     FREE_DARRAY(storage.stack_expressions);
     FREE_DARRAY(storage.stack_values);
     FREE_DARRAY(storage.table_view_values);
-    FREE_DARRAY(storage.child_lookups);
-    FREE_DARRAY(storage.function_applications);
-    FREE_DARRAY(storage.function_applications_built_in);
-    FREE_DARRAY(storage.symbol_lookups);
+    FREE_DARRAY(storage.lookup_child_expressions);
+    FREE_DARRAY(storage.function_application_expressions);
+    FREE_DARRAY(storage.function_application_built_in_expressions);
+    FREE_DARRAY(storage.lookup_symbol_expressions);
     FREE_DARRAY(storage.arguments);
     FREE_DARRAY(storage.while_statements);
     FREE_DARRAY(storage.for_init_statements);
@@ -110,12 +110,12 @@ Expression makeTypedExpression(CodeRange code, TypedExpression expression) {
     return makeExpression(code, expression, TYPED_EXPRESSION, storage.typed_expressions);
 }
 
-Expression makeConditional(CodeRange code, Conditional expression) {
-    return makeExpression(code, expression, CONDITIONAL, storage.conditionals);
+Expression makeConditionalExpression(CodeRange code, ConditionalExpression expression) {
+    return makeExpression(code, expression, CONDITIONAL_EXPRESSION, storage.conditional_expressions);
 }
 
-Expression makeIs(CodeRange code, IsExpression expression) {
-    return makeExpression(code, expression, IS, storage.is_expressions);
+Expression makeIsExpression(CodeRange code, IsExpression expression) {
+    return makeExpression(code, expression, IS_EXPRESSION, storage.is_expressions);
 }
 
 Expression makeAlternative(CodeRange code, Alternative expression) {
@@ -187,20 +187,20 @@ Expression makeTableViewValue(CodeRange code, TableViewValue expression) {
     return makeExpression(code, expression, TABLE_VIEW_VALUE, storage.table_view_values);
 }
 
-Expression makeLookupChild(CodeRange code, LookupChild expression) {
-    return makeExpression(code, expression, LOOKUP_CHILD, storage.child_lookups);
+Expression makeLookupChildExpression(CodeRange code, LookupChildExpression expression) {
+    return makeExpression(code, expression, LOOKUP_CHILD_EXPRESSION, storage.lookup_child_expressions);
 }
 
-Expression makeFunctionApplication(CodeRange code, FunctionApplication expression) {
-    return makeExpression(code, expression, FUNCTION_APPLICATION, storage.function_applications);
+Expression makeFunctionApplicationExpression(CodeRange code, FunctionApplicationExpression expression) {
+    return makeExpression(code, expression, FUNCTION_APPLICATION_EXPRESSION, storage.function_application_expressions);
 }
 
-Expression makeFunctionApplicationBuiltIn(CodeRange code, FunctionApplicationBuiltIn expression) {
-    return makeExpression(code, expression, FUNCTION_APPLICATION_BUILT_IN, storage.function_applications_built_in);
+Expression makeFunctionApplicationBuiltInExpression(CodeRange code, FunctionApplicationBuiltInExpression expression) {
+    return makeExpression(code, expression, FUNCTION_APPLICATION_BUILT_IN_EXPRESSION, storage.function_application_built_in_expressions);
 }
 
-Expression makeLookupSymbol(CodeRange code, LookupSymbol expression) {
-    return makeExpression(code, expression, LOOKUP_SYMBOL, storage.symbol_lookups);
+Expression makeLookupSymbolExpression(CodeRange code, LookupSymbolExpression expression) {
+    return makeExpression(code, expression, LOOKUP_SYMBOL_EXPRESSION, storage.lookup_symbol_expressions);
 }
 
 Expression makeName(CodeRange code, const char* data, size_t count) {

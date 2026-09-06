@@ -42,7 +42,7 @@ StringBuilder serializeTypedExpression(StringBuilder s, const TypedExpression& t
 }
 
 static
-StringBuilder serializeConditional(StringBuilder s, const Conditional& conditional) {
+StringBuilder serializeConditionalExpression(StringBuilder s, const ConditionalExpression& conditional) {
     s = concatenate(s, "if ");
     FOR_EACH(a, conditional.alternatives) {
         const auto alternative = storage.alternatives.data[a];
@@ -57,7 +57,7 @@ StringBuilder serializeConditional(StringBuilder s, const Conditional& condition
 }
 
 static
-StringBuilder serializeIs(StringBuilder s, const IsExpression& is_expression) {
+StringBuilder serializeIsExpression(StringBuilder s, const IsExpression& is_expression) {
     s = concatenate(s, "is ");
     s = serialize(s, is_expression.input);
     s = concatenate(s, " ");
@@ -171,7 +171,7 @@ StringBuilder serializeTupleValue(StringBuilder s, Serializer serializer, Expres
 }
 
 static
-StringBuilder serializeLookupChild(StringBuilder s, const LookupChild& lookup_child) {
+StringBuilder serializeLookupChildExpression(StringBuilder s, const LookupChildExpression& lookup_child) {
     s = serializeName(s, lookup_child.name);
     s = concatenate(s, "@");
     s = serialize(s, lookup_child.child);
@@ -179,7 +179,7 @@ StringBuilder serializeLookupChild(StringBuilder s, const LookupChild& lookup_ch
 }
 
 static
-StringBuilder serializeFunctionApplication(StringBuilder s, const FunctionApplication& function_application) {
+StringBuilder serializeFunctionApplicationExpression(StringBuilder s, const FunctionApplicationExpression& function_application) {
     s = serializeName(s, function_application.name.global_index);
     s = concatenate(s, "!");
     s = serialize(s, function_application.child);
@@ -187,7 +187,7 @@ StringBuilder serializeFunctionApplication(StringBuilder s, const FunctionApplic
 }
 
 static
-StringBuilder serializeFunctionApplicationBuiltIn(StringBuilder s, const FunctionApplicationBuiltIn& built_in_application) {
+StringBuilder serializeFunctionApplicationBuiltInExpression(StringBuilder s, const FunctionApplicationBuiltInExpression& built_in_application) {
     s = serializeName(s, built_in_application.name);
     s = concatenate(s, "!");
     s = serialize(s, built_in_application.child);
@@ -195,7 +195,7 @@ StringBuilder serializeFunctionApplicationBuiltIn(StringBuilder s, const Functio
 }
 
 static
-StringBuilder serializeLookupSymbol(StringBuilder s, const LookupSymbol& lookup_symbol) {
+StringBuilder serializeLookupSymbolExpression(StringBuilder s, const LookupSymbolExpression& lookup_symbol) {
     s = serializeName(s, lookup_symbol.name.global_index);
     return s;
 }
@@ -453,8 +453,8 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case ERROR_VALUE: return serializeErrorMessage(s, getErrorValue(expression), expression.range);
 
         case CHARACTER: return serializeCharacter(s, getCharacter(expression));
-        case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
-        case IS: return serializeIs(s, storage.is_expressions.data[expression.index]);
+        case CONDITIONAL_EXPRESSION: return serializeConditionalExpression(s, storage.conditional_expressions.data[expression.index]);
+        case IS_EXPRESSION: return serializeIsExpression(s, storage.is_expressions.data[expression.index]);
         case DICTIONARY_EXPRESSION: return serializeDictionaryExpression(s, storage.dictionary_expressions.data[expression.index]);
         case DICTIONARY_VALUE: return serializeDictionaryValue(s, serialize, storage.dictionary_values.data[expression.index]);
         case DEFINITION: return serializeDefinition(s, storage.definitions.data[expression.index]);
@@ -476,10 +476,10 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case TUPLE_VALUE: return serializeTupleValue(s, serialize, expression);
         case STACK_EXPRESSION: return serializeStackExpression(s, expression);
         case STACK_VALUE: return serializeStackValue(s, expression);
-        case LOOKUP_CHILD: return serializeLookupChild(s, storage.child_lookups.data[expression.index]);
-        case FUNCTION_APPLICATION: return serializeFunctionApplication(s, storage.function_applications.data[expression.index]);
-        case FUNCTION_APPLICATION_BUILT_IN: return serializeFunctionApplicationBuiltIn(s, storage.function_applications_built_in.data[expression.index]);
-        case LOOKUP_SYMBOL: return serializeLookupSymbol(s, storage.symbol_lookups.data[expression.index]);
+        case LOOKUP_CHILD_EXPRESSION: return serializeLookupChildExpression(s, storage.lookup_child_expressions.data[expression.index]);
+        case FUNCTION_APPLICATION_EXPRESSION: return serializeFunctionApplicationExpression(s, storage.function_application_expressions.data[expression.index]);
+        case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return serializeFunctionApplicationBuiltInExpression(s, storage.function_application_built_in_expressions.data[expression.index]);
+        case LOOKUP_SYMBOL_EXPRESSION: return serializeLookupSymbolExpression(s, storage.lookup_symbol_expressions.data[expression.index]);
         case NUMBER: return serializeNumber(s, getNumber(expression));
         case EMPTY_STRING: return serializeString(s, expression);
         case STRING: return serializeString(s, expression);
