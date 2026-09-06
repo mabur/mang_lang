@@ -42,7 +42,7 @@ static
 Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer function) {
     return Definition{
         {makeName(CodeRange{}, name, strlen(name)).index, i},
-        makeFunctionBuiltIn(CodeRange{}, {function}),
+        makeFunctionBuiltInValue(CodeRange{}, {function}),
     };
 }
 

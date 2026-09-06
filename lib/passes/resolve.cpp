@@ -72,7 +72,7 @@ void resolveDictionaryLoops(DictionaryExpression dictionary_struct) {
 // A single link in the chain of lexically enclosing scopes the resolver is
 // currently nested inside, innermost first. `scope` is a DICTIONARY_EXPRESSION,
 // FUNCTION_EXPRESSION, FUNCTION_DICTIONARY_EXPRESSION, or FUNCTION_TUPLE_EXPRESSION expression, or the
-// default Expression{} (type ANY) to mean "no scope here". `parent` is
+// default Expression{} (type ANY_VALUE) to mean "no scope here". `parent` is
 // whatever lexically encloses it (nullptr if nothing further is known).
 // Each link lives only for the duration of the recursive resolve() call
 // that built it, the same as any other stack-allocated recursive-descent
@@ -134,7 +134,7 @@ OptionalIndex findInDictionary(Expression dictionary_expression, size_t global_i
 }
 
 // Looks for `global_index` directly within one scope, ignoring its parents.
-// A scope of type ANY (the empty sentinel) safely falls through to not-found.
+// A scope of type ANY_VALUE (the empty sentinel) safely falls through to not-found.
 static
 OptionalIndex findInScope(Expression scope, size_t global_index) {
     switch (scope.type) {
@@ -158,7 +158,7 @@ BoundGlobalName tryBindGlobalName(BoundGlobalName name, ScopeChain chain) {
         if (chain.parent == nullptr) {
             auto built_in = findBuiltIn(name.global_index);
             if (built_in != nullptr) {
-                name.parent_steps = chain.scope.type == ANY ? steps : steps + 1;
+                name.parent_steps = chain.scope.type == ANY_VALUE ? steps : steps + 1;
                 name.dictionary_index = built_in - BUILT_IN_ENTRIES;
             }
             return name; // Error, but report it during evaluation for now.
@@ -203,7 +203,7 @@ static
 void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
     FOR_EACH(i, arguments) {
         auto argument = storage.arguments.data[i];
-        if (argument.type.type != ANY) {
+        if (argument.type.type != ANY_VALUE) {
             resolveExpression(argument.type, chain);
         }
     }

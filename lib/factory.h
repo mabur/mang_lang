@@ -34,7 +34,7 @@ struct Storage {
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
     DARRAY(FunctionExpression) function_expressions;
-    DARRAY(FunctionBuiltIn) built_in_functions;
+    DARRAY(FunctionBuiltInValue) function_built_in_values;
     DARRAY(FunctionDictionaryExpression) function_dictionary_expressions;
     DARRAY(FunctionTupleExpression) function_tuple_expressions;
     DARRAY(FunctionValue) function_values;
@@ -92,7 +92,7 @@ Expression makeAlternative(CodeRange code, Alternative expression);
 Expression makeDictionaryExpression(CodeRange code, DictionaryExpression expression);
 Expression makeDictionaryValue(CodeRange code, DictionaryValue expression);
 Expression makeFunctionExpression(CodeRange code, FunctionExpression expression);
-Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression);
+Expression makeFunctionBuiltInValue(CodeRange code, FunctionBuiltInValue expression);
 Expression makeFunctionDictionaryExpression(CodeRange code, FunctionDictionaryExpression expression);
 Expression makeFunctionTupleExpression(CodeRange code, FunctionTupleExpression expression);
 Expression makeFunctionValue(CodeRange code, FunctionValue expression);

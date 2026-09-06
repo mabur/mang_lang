@@ -66,7 +66,7 @@ Expression putTableTyped(Expression table, Expression item) {
     if (item.type == ERROR_VALUE) {
         return item;
     }
-    if (item.type == ANY) {
+    if (item.type == ANY_VALUE) {
         return table;
     }
     const auto tuple = getBinaryTuple(item, "putTable");
@@ -114,7 +114,7 @@ Expression builtInClearTyped(Expression in) {
 }
 
 Expression putNumber(Expression collection, Expression item) {
-    if (item.type != ANY && item.type != NUMBER) {
+    if (item.type != ANY_VALUE && item.type != NUMBER) {
         return makeErrorValue(collection.range,
             "\n\nI have found a static type error.\n"
             "It happens for the operation put!(NUMBER item).\n"
@@ -158,7 +158,7 @@ Expression builtInPutTyped(Expression in) {
     }
     const auto item = tuple.left;
     const auto collection = tuple.right;
-    if (item.type == ANY) {
+    if (item.type == ANY_VALUE) {
         return collection;
     }
     switch (collection.type) {
@@ -191,7 +191,7 @@ template<typename T>
 Expression takeTableTyped(const T& table, Expression expression) {
     const auto range = expression.range;
     if (table.empty()) {
-        return makeTupleValue2(Expression{0, range, ANY}, Expression{0, range, ANY});
+        return makeTupleValue2(Expression{0, range, ANY_VALUE}, Expression{0, range, ANY_VALUE});
     }
     const auto& pair = table.begin()->second;
     return makeTupleValue2(pair.key, pair.value);
@@ -237,7 +237,7 @@ Expression builtInTakeTyped(Expression in) {
         case STRING: return storage.strings.data[index].top;
         case TABLE_VALUE: return takeTableTyped(storage.table_values.at(index), in);
         case TABLE_VIEW_VALUE: return takeTableTyped(storage.table_view_values.data[index], in);
-        case EMPTY_STACK: return Expression{0, in.range, ANY};
+        case EMPTY_STACK: return Expression{0, in.range, ANY_VALUE};
         case EMPTY_STRING: return Expression{0, in.range, CHARACTER};
         case NUMBER: return in;
         case YES: return in;

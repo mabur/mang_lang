@@ -124,7 +124,7 @@ ExpressionType functionType(Expression expression) {
 static
 TypeCheck checkTypes(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
-    if (super.type == ANY || sub.type == ANY) return result;
+    if (super.type == ANY_VALUE || sub.type == ANY_VALUE) return result;
 
     if (super.type == NUMBER && sub.type == NUMBER) return result;
     if (super.type == CHARACTER && sub.type == CHARACTER) return result;
@@ -139,10 +139,10 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
     if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_EXPRESSION) return result;
     if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_DICTIONARY_EXPRESSION) return result;
     if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_TUPLE_EXPRESSION) return result;
-    if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_BUILT_IN) return result;
+    if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_BUILT_IN_VALUE) return result;
     if (super_type == FUNCTION_DICTIONARY_EXPRESSION && sub_type == FUNCTION_EXPRESSION) return result;
     if (super_type == FUNCTION_TUPLE_EXPRESSION && sub_type == FUNCTION_EXPRESSION) return result;
-    if (super_type == FUNCTION_BUILT_IN && sub_type == FUNCTION_EXPRESSION) return result;
+    if (super_type == FUNCTION_BUILT_IN_VALUE && sub_type == FUNCTION_EXPRESSION) return result;
 
     if (super.type == EMPTY_STRING && sub.type == EMPTY_STRING) return result;
     if (super.type == EMPTY_STRING && sub.type == STRING) return result;
@@ -280,7 +280,7 @@ Expression checkArgument(
     Evaluator evaluator, const Argument& a, Expression input, Expression environment
 ) {
     if constexpr (CheckTypes) {
-        if (a.type.type == ANY) {
+        if (a.type.type == ANY_VALUE) {
             return Expression{};
         }
         const auto type = evaluator(a.type, environment);
@@ -469,7 +469,7 @@ Expression applyFunctionBuiltIn(
     Expression function, Expression input
 ) {
     if (input.type == ERROR_VALUE) return input;
-    const auto function_struct = storage.built_in_functions.data[function.index];
+    const auto function_struct = storage.function_built_in_values.data[function.index];
     return function_struct.function(input);
 }
 
@@ -491,7 +491,7 @@ BooleanResult booleanTypes(Expression expression) {
         case EMPTY_STACK: return result;
         case STRING: return result;
         case EMPTY_STRING: return result;
-        case ANY: return result;
+        case ANY_VALUE: return result;
         default:
             return MAKE(BooleanResult, .error=makeErrorValue(expression.range,
                 "Static type error.\n"
@@ -555,7 +555,7 @@ static
 Expression applyTableIndexingTypes(Expression table) {
     const auto& table_struct = storage.table_values.at(table.index);
     if (table_struct.rows.empty()) {
-        return Expression{0, table.range, ANY};
+        return Expression{0, table.range, ANY_VALUE};
     }
     return table_struct.begin()->second.value;
 }
@@ -676,7 +676,7 @@ bool isEqual(Expression left, Expression right) {
 
 static
 Expression evaluateDynamicExpressionTyped(Expression expression) {
-    return Expression{0, expression.range, ANY};
+    return Expression{0, expression.range, ANY_VALUE};
 }
 
 static
@@ -790,7 +790,7 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
         auto type = statement.type;
         if (type == DEFINITION) {
             auto definition = storage.definitions.data[statement.index];
-            definition.expression = Expression{0, statement.range, ANY};
+            definition.expression = Expression{0, statement.range, ANY_VALUE};
             auto dictionary_index = definition.name.dictionary_index;
             storage.definitions.data[first + dictionary_index] = definition;
         }
@@ -798,7 +798,7 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
             auto for_init_statement = storage.for_init_statements.data[statement.index];
             auto dictionary_index = for_init_statement.name.dictionary_index;
             auto definition = Definition{
-                for_init_statement.name, Expression{0, statement.range, ANY}
+                for_init_statement.name, Expression{0, statement.range, ANY_VALUE}
             };
             storage.definitions.data[first + dictionary_index] = definition;
         }
@@ -856,7 +856,7 @@ Expression evaluateDictionaryTypes(
             const auto value = evaluate_types(right_expression, result);
             if (value.type == ERROR_VALUE) return value;
             // TODO: is this a principled approach?
-            if (value.type != ANY) {
+            if (value.type != ANY_VALUE) {
                 setDictionaryDefinition(result, definition.name, value);
             }
         }
@@ -1169,14 +1169,14 @@ Expression evaluateFunctionApplicationTypes(
         case ERROR_VALUE: return function;
 
         case FUNCTION_VALUE: return applyFunctionValue<true>(evaluate_types, function, input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
+        case FUNCTION_BUILT_IN_VALUE: return applyFunctionBuiltIn(function, input);
 
         case TABLE_VALUE: return applyTableIndexingTypes(function);
         case TUPLE_VALUE: return applyTupleIndexing(function, input);
         case STACK_VALUE: return applyStackIndexingTypes(function);
         case STRING: return applyStringIndexingTypes(function);
 
-        case EMPTY_STACK: return Expression{0, function_application.range, ANY};
+        case EMPTY_STACK: return Expression{0, function_application.range, ANY_VALUE};
         case EMPTY_STRING: return Expression{0, function_application.range, CHARACTER};
     
         default: return makeErrorValue(function_application.range,
@@ -1201,7 +1201,7 @@ Expression evaluateFunctionApplication(
         case ERROR_VALUE: return function;
 
         case FUNCTION_VALUE: return applyFunctionValue<false>(evaluate, function, input);
-        case FUNCTION_BUILT_IN: return applyFunctionBuiltIn(function, input);
+        case FUNCTION_BUILT_IN_VALUE: return applyFunctionBuiltIn(function, input);
 
         case TABLE_VALUE: return applyTableIndexing(function, input);
         case TUPLE_VALUE: return applyTupleIndexing(function, input);
@@ -1254,7 +1254,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TABLE_VALUE: return expression;
         case TABLE_VIEW_VALUE: return expression;
         case FUNCTION_VALUE: return expression;
-        case FUNCTION_BUILT_IN: return expression;
+        case FUNCTION_BUILT_IN_VALUE: return expression;
 
         // These are the same for types and values:
         case FUNCTION_EXPRESSION: return evaluateFunction(expression, environment);
@@ -1302,7 +1302,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TABLE_VALUE: return expression;
         case TABLE_VIEW_VALUE: return expression;
         case FUNCTION_VALUE: return expression;
-        case FUNCTION_BUILT_IN: return expression;
+        case FUNCTION_BUILT_IN_VALUE: return expression;
 
         // These are the same for types and values:
         case FUNCTION_EXPRESSION: return evaluateFunction(expression, environment);

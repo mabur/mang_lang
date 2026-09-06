@@ -22,7 +22,7 @@ struct CodeRange {
 struct Expression {
     size_t index = 0;
     CodeRange range = {};
-    ExpressionType type = ANY;
+    ExpressionType type = ANY_VALUE;
 };
 
 using Number = double;
@@ -84,7 +84,7 @@ struct FunctionExpression {
 
 typedef Expression (*FunctionPointer)(Expression);
 
-struct FunctionBuiltIn {
+struct FunctionBuiltInValue {
     FunctionPointer function;
 };
 

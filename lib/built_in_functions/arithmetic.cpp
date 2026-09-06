@@ -10,7 +10,7 @@
 static
 TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const char* function) {
     auto result = MAKE(TypeCheck, .ok=true);
-    if (in.type != ANY && in.type != expected) {
+    if (in.type != ANY_VALUE && in.type != expected) {
         result.ok = false;
         result.error = makeErrorValue({},
             "\n\nI have found a type error.\n"
@@ -27,7 +27,7 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
     
 static
 bool isNumberOrAny(Expression expression) {
-    return expression.type == NUMBER || expression.type == ANY;
+    return expression.type == NUMBER || expression.type == ANY_VALUE;
 } 
 
 static

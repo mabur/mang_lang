@@ -14,7 +14,7 @@ StringBuilder serializeName(StringBuilder s, size_t name) {
 
 static
 StringBuilder serializeArgument(StringBuilder s, Argument a) {
-    if (a.type.type != ANY) {
+    if (a.type.type != ANY_VALUE) {
         s = concatenate(s, "<");
         s = serialize(s, a.type);
         s = concatenate(s, ">");
@@ -442,6 +442,7 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
         case STACK_VALUE: return serializeTypesStackValue(s, expression);
         case TABLE_VALUE: return serializeTypesTableValue(s, expression);
         case FUNCTION_VALUE: return concatenate(s, getFunctionTypeName(storage.function_values.data[expression.index].function.type));
+        case ANY_VALUE: return concatenate(s, "ANY");
         // TODO: TABLE_VIEW_VALUE?
         default: return concatenate(s, getExpressionName(expression.type)); return s;
     }
@@ -492,6 +493,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case IF_END_STATEMENT: return concatenate(s, "end ");
         case END_STATEMENT: return concatenate(s, "end ");
         case RETURN_STATEMENT: return concatenate(s, "return ");
+        case ANY_VALUE: return concatenate(s, "ANY");
         default: return concatenate(s, getExpressionName(expression.type));
     }
 }

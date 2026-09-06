@@ -34,7 +34,7 @@ void clearMemory() {
     FREE_DARRAY(storage.is_expressions);
     FREE_DARRAY(storage.alternatives);
     FREE_DARRAY(storage.function_expressions);
-    FREE_DARRAY(storage.built_in_functions);
+    FREE_DARRAY(storage.function_built_in_values);
     FREE_DARRAY(storage.function_dictionary_expressions);
     FREE_DARRAY(storage.function_tuple_expressions);
     FREE_DARRAY(storage.function_values);
@@ -134,8 +134,8 @@ Expression makeFunctionExpression(CodeRange code, FunctionExpression expression)
     return makeExpression(code, expression, FUNCTION_EXPRESSION, storage.function_expressions);
 }
 
-Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression) {
-    return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
+Expression makeFunctionBuiltInValue(CodeRange code, FunctionBuiltInValue expression) {
+    return makeExpression(code, expression, FUNCTION_BUILT_IN_VALUE, storage.function_built_in_values);
 }
 
 Expression makeFunctionDictionaryExpression(CodeRange code, FunctionDictionaryExpression expression) {

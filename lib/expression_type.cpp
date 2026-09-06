@@ -18,8 +18,8 @@ const char* getExpressionName(ExpressionType type) {
         case TABLE_VALUE: return "TABLE_VALUE";
         case TABLE_VIEW_VALUE: return "TABLE_VIEW_VALUE";
         case FUNCTION_VALUE: return "FUNCTION_VALUE";
-        case FUNCTION_BUILT_IN: return "FUNCTION_BUILT_IN";
-        case ANY: return "ANY";
+        case FUNCTION_BUILT_IN_VALUE: return "FUNCTION_BUILT_IN_VALUE";
+        case ANY_VALUE: return "ANY_VALUE";
         case ERROR_VALUE: return "ERROR_VALUE";
 
         // Internal runtime state:
