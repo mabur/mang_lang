@@ -28,19 +28,19 @@ void clearMemory() {
     
     FREE_DARRAY(storage.dynamic_expressions);
     FREE_DARRAY(storage.typed_expressions);
-    FREE_DARRAY(storage.dictionaries);
+    FREE_DARRAY(storage.dictionary_expressions);
     FREE_DARRAY(storage.dictionary_values);
     FREE_DARRAY(storage.conditionals);
     FREE_DARRAY(storage.is_expressions);
     FREE_DARRAY(storage.alternatives);
-    FREE_DARRAY(storage.functions);
+    FREE_DARRAY(storage.function_expressions);
     FREE_DARRAY(storage.built_in_functions);
-    FREE_DARRAY(storage.dictionary_functions);
-    FREE_DARRAY(storage.tuple_functions);
+    FREE_DARRAY(storage.function_dictionary_expressions);
+    FREE_DARRAY(storage.function_tuple_expressions);
     FREE_DARRAY(storage.function_values);
-    FREE_DARRAY(storage.tuples);
+    FREE_DARRAY(storage.tuple_expressions);
     FREE_DARRAY(storage.tuple_values);
-    FREE_DARRAY(storage.stacks);
+    FREE_DARRAY(storage.stack_expressions);
     FREE_DARRAY(storage.stack_values);
     FREE_DARRAY(storage.table_view_values);
     FREE_DARRAY(storage.child_lookups);
@@ -63,7 +63,7 @@ void clearMemory() {
     FREE_DARRAY(storage.expressions);
     FREE_DARRAY(storage.strings);
     FREE_DARRAY(storage.rows);
-    FREE_DARRAY(storage.tables);
+    FREE_DARRAY(storage.table_expressions);
     FREE_DARRAY(storage.names);
 
     FREE_DARRAY(storage.name_index_table);
@@ -122,36 +122,36 @@ Expression makeAlternative(CodeRange code, Alternative expression) {
     return makeExpression(code, expression, ALTERNATIVE, storage.alternatives);
 }
 
-Expression makeDictionary(CodeRange code, Dictionary expression) {
-    return makeExpression(code, expression, DICTIONARY, storage.dictionaries);
+Expression makeDictionaryExpression(CodeRange code, DictionaryExpression expression) {
+    return makeExpression(code, expression, DICTIONARY_EXPRESSION, storage.dictionary_expressions);
 }
 
 Expression makeDictionaryValue(CodeRange code, DictionaryValue expression) {
     return makeExpression(code, expression, DICTIONARY_VALUE, storage.dictionary_values);
 }
 
-Expression makeFunction(CodeRange code, Function expression) {
-    return makeExpression(code, expression, FUNCTION, storage.functions);
+Expression makeFunctionExpression(CodeRange code, FunctionExpression expression) {
+    return makeExpression(code, expression, FUNCTION_EXPRESSION, storage.function_expressions);
 }
 
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression) {
     return makeExpression(code, expression, FUNCTION_BUILT_IN, storage.built_in_functions);
 }
 
-Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression) {
-    return makeExpression(code, expression, FUNCTION_DICTIONARY, storage.dictionary_functions);
+Expression makeFunctionDictionaryExpression(CodeRange code, FunctionDictionaryExpression expression) {
+    return makeExpression(code, expression, FUNCTION_DICTIONARY_EXPRESSION, storage.function_dictionary_expressions);
 }
 
-Expression makeFunctionTuple(CodeRange code, FunctionTuple expression) {
-    return makeExpression(code, expression, FUNCTION_TUPLE, storage.tuple_functions);
+Expression makeFunctionTupleExpression(CodeRange code, FunctionTupleExpression expression) {
+    return makeExpression(code, expression, FUNCTION_TUPLE_EXPRESSION, storage.function_tuple_expressions);
 }
 
 Expression makeFunctionValue(CodeRange code, FunctionValue expression) {
     return makeExpression(code, expression, FUNCTION_VALUE, storage.function_values);
 }
 
-Expression makeTuple(CodeRange code, Tuple expression) {
-    return makeExpression(code, expression, TUPLE, storage.tuples);
+Expression makeTupleExpression(CodeRange code, TupleExpression expression) {
+    return makeExpression(code, expression, TUPLE_EXPRESSION, storage.tuple_expressions);
 }
 
 Expression makeTupleValue(CodeRange code, TupleValue expression) {
@@ -166,16 +166,16 @@ Expression makeTupleValue2(Expression a, Expression b) {
     return makeTupleValue(CodeRange{}, TupleValue{Indices{first, last - first}});
 }
 
-Expression makeStack(CodeRange code, Stack expression) {
-    return makeExpression(code, expression, STACK, storage.stacks);
+Expression makeStackExpression(CodeRange code, StackExpression expression) {
+    return makeExpression(code, expression, STACK_EXPRESSION, storage.stack_expressions);
 }
 
 Expression makeStackValue(CodeRange code, StackValue expression) {
     return makeExpression(code, expression, STACK_VALUE, storage.stack_values);
 }
 
-Expression makeTable(CodeRange code, Table expression) {
-    return makeExpression(code, expression, TABLE, storage.tables);
+Expression makeTableExpression(CodeRange code, TableExpression expression) {
+    return makeExpression(code, expression, TABLE_EXPRESSION, storage.table_expressions);
 }
 
 Expression makeTableValue(CodeRange code, TableValue expression) {

@@ -24,7 +24,7 @@ Expression builtInPutStack(Expression rest, Expression top) {
     if (rest.type == ERROR_VALUE) {
         return rest;
     }
-    return makeStack(rest.range, Stack{top, rest});
+    return makeStackExpression(rest.range, StackExpression{top, rest});
 }
 
 Expression builtInPutStackValue(Expression rest, Expression top) {

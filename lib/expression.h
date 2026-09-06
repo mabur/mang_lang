@@ -77,7 +77,7 @@ struct IsExpression {
     Expression expression_else;
 };
 
-struct Function {
+struct FunctionExpression {
     size_t argument;
     Expression body;
 };
@@ -88,12 +88,12 @@ struct FunctionBuiltIn {
     FunctionPointer function;
 };
 
-struct FunctionDictionary {
+struct FunctionDictionaryExpression {
     Indices arguments;
     Expression body;
 };
 
-struct FunctionTuple {
+struct FunctionTupleExpression {
     Indices arguments;
     Expression body;
 };
@@ -129,22 +129,22 @@ struct String {
     Expression rest;
 };
 
-struct Tuple {
+struct TupleExpression {
     Indices indices;
 };
 
 // TODO: add special case for tuple of size 2.
-// TODO: merge with Tuple for storage but keep type-code to know if it is evaluated.
+// TODO: merge with TupleExpression for storage but keep type-code to know if it is evaluated.
 struct TupleValue {
     Indices indices;
 };
 
-struct Stack {
+struct StackExpression {
     Expression top;
     Expression rest;
 };
 
-// TODO: merge with Stack for storage but keep type-code to know if it is evaluated.
+// TODO: merge with StackExpression for storage but keep type-code to know if it is evaluated.
 struct StackValue {
     Expression top;
     Expression rest;
@@ -207,7 +207,7 @@ struct ForIterator {
     Expression container;
 };
 
-struct Dictionary {
+struct DictionaryExpression {
     Indices statements;
     size_t definition_count;
 };
@@ -222,7 +222,7 @@ struct Row {
     Expression value;
 };
 
-struct Table {
+struct TableExpression {
     Indices rows;
 };
 

@@ -26,13 +26,13 @@ const char* getExpressionName(ExpressionType type) {
         case FOR_ITERATOR: return "FOR_ITERATOR";
 
         // Expressions, constructors:
-        case STACK: return "STACK";
-        case TUPLE: return "TUPLE";
-        case DICTIONARY: return "DICTIONARY";
-        case TABLE: return "TABLE";
-        case FUNCTION: return "FUNCTION";
-        case FUNCTION_TUPLE: return "FUNCTION_TUPLE";
-        case FUNCTION_DICTIONARY: return "FUNCTION_DICTIONARY";
+        case STACK_EXPRESSION: return "STACK_EXPRESSION";
+        case TUPLE_EXPRESSION: return "TUPLE_EXPRESSION";
+        case DICTIONARY_EXPRESSION: return "DICTIONARY_EXPRESSION";
+        case TABLE_EXPRESSION: return "TABLE_EXPRESSION";
+        case FUNCTION_EXPRESSION: return "FUNCTION_EXPRESSION";
+        case FUNCTION_TUPLE_EXPRESSION: return "FUNCTION_TUPLE_EXPRESSION";
+        case FUNCTION_DICTIONARY_EXPRESSION: return "FUNCTION_DICTIONARY_EXPRESSION";
 
         // Expressions, operations:
         case CONDITIONAL: return "CONDITIONAL";
@@ -65,4 +65,13 @@ const char* getExpressionName(ExpressionType type) {
         case RETURN_STATEMENT: return "RETURN_STATEMENT";
     }
     return "UNKNOWN_EXPRESSION"; // Should not happen
+}
+
+const char* getFunctionTypeName(ExpressionType type) {
+    switch (type) {
+        case FUNCTION_EXPRESSION: return "FUNCTION";
+        case FUNCTION_TUPLE_EXPRESSION: return "FUNCTION_TUPLE";
+        case FUNCTION_DICTIONARY_EXPRESSION: return "FUNCTION_DICTIONARY";
+        default: return getExpressionName(type);
+    }
 }

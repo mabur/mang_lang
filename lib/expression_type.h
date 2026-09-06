@@ -1,8 +1,8 @@
 #pragma once
 
 // The tags are grouped so that every tag evaluation may return, a value,
-// forms one contiguous block at the start of the enum. isValue() relies on
-// this. Keep new tags inside the section they belong to.
+// forms one contiguous block at the start of the enum. Keep new tags inside
+// the section they belong to.
 enum ExpressionType {
     // Values that evaluate to themselves:
     NUMBER,
@@ -32,13 +32,13 @@ enum ExpressionType {
     // EXPRESSIONS:
 
     // Constructors. Each has a value twin above:
-    STACK,
-    TUPLE,
-    DICTIONARY,
-    TABLE,
-    FUNCTION,
-    FUNCTION_TUPLE,
-    FUNCTION_DICTIONARY,
+    STACK_EXPRESSION,
+    TUPLE_EXPRESSION,
+    DICTIONARY_EXPRESSION,
+    TABLE_EXPRESSION,
+    FUNCTION_EXPRESSION,
+    FUNCTION_TUPLE_EXPRESSION,
+    FUNCTION_DICTIONARY_EXPRESSION,
 
     // Operations:
     CONDITIONAL,
@@ -72,3 +72,8 @@ enum ExpressionType {
 };
 
 const char* getExpressionName(ExpressionType type);
+
+// The name printed for a function type, given the tag of the function
+// expression a function value was created from. Falls back to
+// getExpressionName for anything else.
+const char* getFunctionTypeName(ExpressionType type);

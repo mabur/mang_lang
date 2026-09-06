@@ -136,13 +136,13 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
 
     auto super_type = functionType(super);
     auto sub_type = functionType(sub);
-    if (super_type == FUNCTION && sub_type == FUNCTION) return result;
-    if (super_type == FUNCTION && sub_type == FUNCTION_DICTIONARY) return result;
-    if (super_type == FUNCTION && sub_type == FUNCTION_TUPLE) return result;
-    if (super_type == FUNCTION && sub_type == FUNCTION_BUILT_IN) return result;
-    if (super_type == FUNCTION_DICTIONARY && sub_type == FUNCTION) return result;
-    if (super_type == FUNCTION_TUPLE && sub_type == FUNCTION) return result;
-    if (super_type == FUNCTION_BUILT_IN && sub_type == FUNCTION) return result;
+    if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_EXPRESSION) return result;
+    if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_DICTIONARY_EXPRESSION) return result;
+    if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_TUPLE_EXPRESSION) return result;
+    if (super_type == FUNCTION_EXPRESSION && sub_type == FUNCTION_BUILT_IN) return result;
+    if (super_type == FUNCTION_DICTIONARY_EXPRESSION && sub_type == FUNCTION_EXPRESSION) return result;
+    if (super_type == FUNCTION_TUPLE_EXPRESSION && sub_type == FUNCTION_EXPRESSION) return result;
+    if (super_type == FUNCTION_BUILT_IN && sub_type == FUNCTION_EXPRESSION) return result;
 
     if (super.type == EMPTY_STRING && sub.type == EMPTY_STRING) return result;
     if (super.type == EMPTY_STRING && sub.type == STRING) return result;
@@ -169,8 +169,8 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
         "Static type error in %s at %s. %s is not a supertype for %s",
         description,
         describeLocation(super.range).data,
-        getExpressionName(super_type),
-        getExpressionName(sub_type)
+        getFunctionTypeName(super_type),
+        getFunctionTypeName(sub_type)
     );
     return result;
 }
@@ -183,14 +183,14 @@ Expression evaluateStack(Evaluator evaluator,
     // Allocation:
     auto items = Expressions{};
     while (stack.type != EMPTY_STACK) {
-        if (stack.type != STACK) {
+        if (stack.type != STACK_EXPRESSION) {
             return makeErrorValue(stack.range,
                 "\n\nI have found a type error.\n"
                 "It happens in evaluateStack.\n"
                 "Instead of a stack I got a %s.\n",
                 getExpressionName(stack.type));
         }
-        const auto stack_struct = storage.stacks.data[stack.index];
+        const auto stack_struct = storage.stack_expressions.data[stack.index];
         const auto top = stack_struct.top;
         const auto rest = stack_struct.rest;
         APPEND(items, evaluator(top, environment));
@@ -209,7 +209,7 @@ static
 Expression evaluateTuple(
     Evaluator evaluator, Expression tuple, Expression environment
 ) {
-    auto tuple_struct = storage.tuples.data[tuple.index];
+    auto tuple_struct = storage.tuple_expressions.data[tuple.index];
     auto tuple_count = tuple_struct.indices.count;
     auto first = storage.expressions.count;
     auto target_indices = Indices{first, tuple_count};
@@ -233,7 +233,7 @@ Expression evaluateTable(
     Expression table,
     Expression environment
 ) {
-    auto table_struct = storage.tables.data[table.index];
+    auto table_struct = storage.table_expressions.data[table.index];
     // Allocation:
     auto rows = std::map<std::string, Row>{};
     FOR_EACH(i, table_struct.rows) {
@@ -299,7 +299,7 @@ Expression applyFunction(
     FunctionValue function_value,
     Expression input
 ) {
-    const auto function_struct = storage.functions.data[function_value.function.index];
+    const auto function_struct = storage.function_expressions.data[function_value.function.index];
     const auto argument = storage.arguments.data[function_struct.argument];
     const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, input, function_value.environment);
     if (argument_check.type == ERROR_VALUE) {
@@ -333,7 +333,7 @@ Expression applyFunctionDictionary(
             getExpressionName(input.type)
         );
     }
-    auto function_struct = storage.dictionary_functions.data[function_value.function.index];
+    auto function_struct = storage.function_dictionary_expressions.data[function_value.function.index];
     auto evaluated_dictionary = storage.dictionary_values.data[input.index];
     auto first_argument = BEGIN_POINTER(function_struct.arguments);
     auto num_arguments = function_struct.arguments.count;
@@ -374,7 +374,7 @@ Expression applyFunctionTuple(
     }
     auto tuple = storage.tuple_values.data[input.index];
     auto tuple_count = tuple.indices.count;
-    auto function_struct = storage.tuple_functions.data[function_value.function.index];
+    auto function_struct = storage.function_tuple_expressions.data[function_value.function.index];
     size_t first_argument = BEGIN_POINTER(function_struct.arguments);
     size_t last_argument = END_POINTER(function_struct.arguments);
     size_t num_inputs = last_argument - first_argument;
@@ -417,9 +417,9 @@ Expression applyFunctionValue(
 ) {
     const auto function_value = storage.function_values.data[expression.index];
     switch (function_value.function.type) {
-        case FUNCTION: return applyFunction<CheckTypes>(evaluator, function_value, input);
-        case FUNCTION_DICTIONARY: return applyFunctionDictionary<CheckTypes>(evaluator, function_value, input);
-        case FUNCTION_TUPLE: return applyFunctionTuple<CheckTypes>(evaluator, function_value, input);
+        case FUNCTION_EXPRESSION: return applyFunction<CheckTypes>(evaluator, function_value, input);
+        case FUNCTION_DICTIONARY_EXPRESSION: return applyFunctionDictionary<CheckTypes>(evaluator, function_value, input);
+        case FUNCTION_TUPLE_EXPRESSION: return applyFunctionTuple<CheckTypes>(evaluator, function_value, input);
         default: return makeErrorValue(expression.range,
             "I found an internal error when calling a function.\n"
             "The function value refers to a %s instead of a function literal.",
@@ -777,7 +777,7 @@ Expression evaluateTypedExpression(Expression expression, Expression environment
 }
 
 static
-Indices initializeDefinitions(const Dictionary& dictionary) {
+Indices initializeDefinitions(const DictionaryExpression& dictionary) {
     // TODO: allocate on storage.expressions directly.
     // Allocation:
     auto first = storage.definitions.count;
@@ -841,12 +841,12 @@ Expression evaluateDictionaryTypes(
 ) {
     // TODO: allocate on storage.definitions directly.
     const auto initial_definitions = initializeDefinitions(
-        storage.dictionaries.data[dictionary.index]
+        storage.dictionary_expressions.data[dictionary.index]
     );
     const auto result = makeDictionaryValue(
         dictionary.range, DictionaryValue{environment, initial_definitions}
     );
-    const auto dictionary_struct = storage.dictionaries.data[dictionary.index];
+    const auto dictionary_struct = storage.dictionary_expressions.data[dictionary.index];
     FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
@@ -920,13 +920,13 @@ Expression evaluateDictionaryTypes(
 static
 Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto initial_definitions = initializeDefinitions(
-        storage.dictionaries.data[dictionary.index]
+        storage.dictionary_expressions.data[dictionary.index]
     );
     const auto result = makeDictionaryValue(
         dictionary.range, DictionaryValue{environment, initial_definitions}
     );
 
-    const auto dict_statements = storage.dictionaries.data[dictionary.index].statements;
+    const auto dict_statements = storage.dictionary_expressions.data[dictionary.index].statements;
     const auto base_index = dict_statements.data;
     const auto statement_count = dict_statements.count;
     
@@ -1257,15 +1257,15 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case FUNCTION_BUILT_IN: return expression;
 
         // These are the same for types and values:
-        case FUNCTION: return evaluateFunction(expression, environment);
-        case FUNCTION_TUPLE: return evaluateFunction(expression, environment);
-        case FUNCTION_DICTIONARY: return evaluateFunction(expression, environment);
+        case FUNCTION_EXPRESSION: return evaluateFunction(expression, environment);
+        case FUNCTION_TUPLE_EXPRESSION: return evaluateFunction(expression, environment);
+        case FUNCTION_DICTIONARY_EXPRESSION: return evaluateFunction(expression, environment);
         case LOOKUP_SYMBOL: return lookupSymbolInDictionary(expression, environment);
 
         // These are different for types and values, but templated:
-        case STACK: return evaluateStack(evaluate_types, expression, environment);
-        case TUPLE: return evaluateTuple(evaluate_types, expression, environment);
-        case TABLE: return evaluateTable(evaluate_types, serialize_types, expression, environment);
+        case STACK_EXPRESSION: return evaluateStack(evaluate_types, expression, environment);
+        case TUPLE_EXPRESSION: return evaluateTuple(evaluate_types, expression, environment);
+        case TABLE_EXPRESSION: return evaluateTable(evaluate_types, serialize_types, expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate_types, expression, environment);
 
         // These are different for types and values:
@@ -1273,7 +1273,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpressionTyped(expression);
         case CONDITIONAL: return evaluateConditionalTypes(expression, environment);
         case IS: return evaluateIsTypes(expression, environment);
-        case DICTIONARY: return evaluateDictionaryTypes(expression, environment);
+        case DICTIONARY_EXPRESSION: return evaluateDictionaryTypes(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplicationTypes(expression, environment);
         case FUNCTION_APPLICATION_BUILT_IN: return evaluateFunctionApplicationBuiltInTypes(expression, environment);
 
@@ -1305,15 +1305,15 @@ Expression evaluate(Expression expression, Expression environment) {
         case FUNCTION_BUILT_IN: return expression;
 
         // These are the same for types and values:
-        case FUNCTION: return evaluateFunction(expression, environment);
-        case FUNCTION_TUPLE: return evaluateFunction(expression, environment);
-        case FUNCTION_DICTIONARY: return evaluateFunction(expression, environment);
+        case FUNCTION_EXPRESSION: return evaluateFunction(expression, environment);
+        case FUNCTION_TUPLE_EXPRESSION: return evaluateFunction(expression, environment);
+        case FUNCTION_DICTIONARY_EXPRESSION: return evaluateFunction(expression, environment);
         case LOOKUP_SYMBOL: return lookupSymbolInDictionary(expression, environment);
 
         // These are different for types and values, but templated:
-        case STACK: return evaluateStack(evaluate, expression, environment);
-        case TUPLE: return evaluateTuple(evaluate, expression, environment);
-        case TABLE: return evaluateTable(evaluate, serialize, expression, environment);
+        case STACK_EXPRESSION: return evaluateStack(evaluate, expression, environment);
+        case TUPLE_EXPRESSION: return evaluateTuple(evaluate, expression, environment);
+        case TABLE_EXPRESSION: return evaluateTable(evaluate, serialize, expression, environment);
         case LOOKUP_CHILD: return evaluateLookupChild(evaluate, expression, environment);
 
         // These are different for types and values:
@@ -1321,7 +1321,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpression(expression, environment);
         case CONDITIONAL: return evaluateConditional(expression, environment);
         case IS: return evaluateIs(expression, environment);
-        case DICTIONARY: return evaluateDictionary(expression, environment);
+        case DICTIONARY_EXPRESSION: return evaluateDictionary(expression, environment);
         case FUNCTION_APPLICATION: return evaluateFunctionApplication(expression, environment);
         case FUNCTION_APPLICATION_BUILT_IN: return evaluateFunctionApplicationBuiltIn(expression, environment);
 

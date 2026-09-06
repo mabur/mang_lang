@@ -201,7 +201,7 @@ StringBuilder serializeLookupSymbol(StringBuilder s, const LookupSymbol& lookup_
 }
     
 static
-StringBuilder serializeDictionary(StringBuilder s, const Dictionary& dictionary) {
+StringBuilder serializeDictionaryExpression(StringBuilder s, const DictionaryExpression& dictionary) {
     s = concatenate(s, "{");
     FOR_EACH(i, dictionary.statements) {
         const auto statement = storage.statements.data[i];
@@ -218,8 +218,8 @@ StringBuilder serializeDictionary(StringBuilder s, const Dictionary& dictionary)
 }
 
 static
-StringBuilder serializeTuple(StringBuilder s, Expression t) {
-    const auto tuple_struct = storage.tuples.data[t.index];
+StringBuilder serializeTupleExpression(StringBuilder s, Expression t) {
+    const auto tuple_struct = storage.tuple_expressions.data[t.index];
     if (IS_EMPTY(tuple_struct.indices)) {
         s = concatenate(s, "()");
         return s;
@@ -235,16 +235,16 @@ StringBuilder serializeTuple(StringBuilder s, Expression t) {
 }
 
 static
-StringBuilder serializeStack(StringBuilder s, Expression expression) {
+StringBuilder serializeStackExpression(StringBuilder s, Expression expression) {
     s = concatenate(s, "[");
     while (expression.type != EMPTY_STACK) {
-        CHECK_INTERNAL(expression.type == STACK,
+        CHECK_INTERNAL(expression.type == STACK_EXPRESSION,
             "\n\nI have found a type error.\n"
-            "It happens in serializeStack.\n"
+            "It happens in serializeStackExpression.\n"
             "Instead of a stack I got a %s\n",
             getExpressionName(expression.type)
         );
-        const auto stack = storage.stacks.data[expression.index];
+        const auto stack = storage.stack_expressions.data[expression.index];
         s = serialize(s, stack.top);
         s = concatenate(s, " ");
         expression = stack.rest;
@@ -264,7 +264,7 @@ StringBuilder serializeCharacter(StringBuilder s, Character character) {
 }
 
 static
-StringBuilder serializeFunction(StringBuilder s, const Function& function) {
+StringBuilder serializeFunctionExpression(StringBuilder s, const FunctionExpression& function) {
     s = concatenate(s, "in ");
     s = serializeArgument(s, storage.arguments.data[function.argument]);
     s = concatenate(s, " out ");
@@ -273,7 +273,7 @@ StringBuilder serializeFunction(StringBuilder s, const Function& function) {
 }
 
 static
-StringBuilder serializeFunctionDictionary(StringBuilder s, const FunctionDictionary& function_dictionary) {
+StringBuilder serializeFunctionDictionaryExpression(StringBuilder s, const FunctionDictionaryExpression& function_dictionary) {
     s = concatenate(s, "in ");
     s = concatenate(s, "{");
     FOR_EACH(i, function_dictionary.arguments) {
@@ -292,7 +292,7 @@ StringBuilder serializeFunctionDictionary(StringBuilder s, const FunctionDiction
 }
 
 static
-StringBuilder serializeFunctionTuple(StringBuilder s, const FunctionTuple& function_stack) {
+StringBuilder serializeFunctionTupleExpression(StringBuilder s, const FunctionTupleExpression& function_stack) {
     s = concatenate(s, "in ");
     s = concatenate(s, "(");
     FOR_EACH(i, function_stack.arguments) {
@@ -311,8 +311,8 @@ StringBuilder serializeFunctionTuple(StringBuilder s, const FunctionTuple& funct
 }
     
 static
-StringBuilder serializeTable(StringBuilder s, Expression t) {
-    auto rows = storage.tables.data[t.index].rows;
+StringBuilder serializeTableExpression(StringBuilder s, Expression t) {
+    auto rows = storage.table_expressions.data[t.index].rows;
     if (IS_EMPTY(rows)) {
         return s = concatenate(s, "table[]");
     }
@@ -345,9 +345,9 @@ StringBuilder serializeTypesTableValue(StringBuilder s, Expression t) {
     return s;
 }
 
-template<typename Table>
+template<typename TableLike>
 static
-StringBuilder serializeTableValue(StringBuilder s, const Table& table) {
+StringBuilder serializeTableValue(StringBuilder s, const TableLike& table) {
     if (table.empty()) {
         s = concatenate(s, "table[]");
         return s;
@@ -441,7 +441,7 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
         case TUPLE_VALUE: return serializeTupleValue(s, serialize_types, expression);
         case STACK_VALUE: return serializeTypesStackValue(s, expression);
         case TABLE_VALUE: return serializeTypesTableValue(s, expression);
-        case FUNCTION_VALUE: return concatenate(s, getExpressionName(storage.function_values.data[expression.index].function.type));
+        case FUNCTION_VALUE: return concatenate(s, getFunctionTypeName(storage.function_values.data[expression.index].function.type));
         // TODO: TABLE_VIEW_VALUE?
         default: return concatenate(s, getExpressionName(expression.type)); return s;
     }
@@ -454,7 +454,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case CHARACTER: return serializeCharacter(s, getCharacter(expression));
         case CONDITIONAL: return serializeConditional(s, storage.conditionals.data[expression.index]);
         case IS: return serializeIs(s, storage.is_expressions.data[expression.index]);
-        case DICTIONARY: return serializeDictionary(s, storage.dictionaries.data[expression.index]);
+        case DICTIONARY_EXPRESSION: return serializeDictionaryExpression(s, storage.dictionary_expressions.data[expression.index]);
         case DICTIONARY_VALUE: return serializeDictionaryValue(s, serialize, storage.dictionary_values.data[expression.index]);
         case DEFINITION: return serializeDefinition(s, storage.definitions.data[expression.index]);
         case PUT_ASSIGNMENT: return serializePutAssignment(s, storage.put_assignments.data[expression.index]);
@@ -464,16 +464,16 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case FOR_INIT_STATEMENT: return s; // Handled by the FOR_STATEMENT that comes right after
         case FOR_STATEMENT: return serializeForStatement(s, storage.for_statements.data[expression.index]);
         case IF_STATEMENT: return serializeIfStatement(s, storage.if_statements.data[expression.index]);
-        case FUNCTION: return serializeFunction(s, storage.functions.data[expression.index]);
-        case FUNCTION_DICTIONARY: return serializeFunctionDictionary(s, storage.dictionary_functions.data[expression.index]);
-        case FUNCTION_TUPLE: return serializeFunctionTuple(s, storage.tuple_functions.data[expression.index]);
+        case FUNCTION_EXPRESSION: return serializeFunctionExpression(s, storage.function_expressions.data[expression.index]);
+        case FUNCTION_DICTIONARY_EXPRESSION: return serializeFunctionDictionaryExpression(s, storage.function_dictionary_expressions.data[expression.index]);
+        case FUNCTION_TUPLE_EXPRESSION: return serializeFunctionTupleExpression(s, storage.function_tuple_expressions.data[expression.index]);
         case FUNCTION_VALUE: return serialize(s, storage.function_values.data[expression.index].function);
-        case TABLE: return serializeTable(s, expression);
+        case TABLE_EXPRESSION: return serializeTableExpression(s, expression);
         case TABLE_VALUE: return serializeTableValue(s, storage.table_values.at(expression.index).rows);
         case TABLE_VIEW_VALUE: return serializeTableValue(s, storage.table_view_values.data[expression.index]);
-        case TUPLE: return serializeTuple(s, expression);
+        case TUPLE_EXPRESSION: return serializeTupleExpression(s, expression);
         case TUPLE_VALUE: return serializeTupleValue(s, serialize, expression);
-        case STACK: return serializeStack(s, expression);
+        case STACK_EXPRESSION: return serializeStackExpression(s, expression);
         case STACK_VALUE: return serializeStackValue(s, expression);
         case LOOKUP_CHILD: return serializeLookupChild(s, storage.child_lookups.data[expression.index]);
         case FUNCTION_APPLICATION: return serializeFunctionApplication(s, storage.function_applications.data[expression.index]);

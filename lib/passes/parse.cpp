@@ -401,8 +401,8 @@ Expression parseDictionary(CodeRange code) {
 
     FREE_DARRAY(statements);
 
-    auto dictionary = Dictionary{Indices{statements_first, statements_last - statements_first}, 0};
-    return makeDictionary(firstPart(whole, code), dictionary);
+    auto dictionary = DictionaryExpression{Indices{statements_first, statements_last - statements_first}, 0};
+    return makeDictionaryExpression(firstPart(whole, code), dictionary);
 }
 
 static
@@ -419,7 +419,7 @@ Expression parseFunction(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
-    return makeFunction(
+    return makeFunctionExpression(
         firstPart(whole, code),
         {argument.index, body}
     );
@@ -465,9 +465,9 @@ Expression parseFunctionDictionary(CodeRange code) {
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
     auto indices = Indices{first_argument.index, last_argument.index - first_argument.index};
-    return makeFunctionDictionary(
+    return makeFunctionDictionaryExpression(
         firstPart(whole, code),
-        FunctionDictionary{
+        FunctionDictionaryExpression{
             indices,
             body
         }
@@ -513,7 +513,7 @@ Expression parseFunctionTuple(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
-    return makeFunctionTuple(
+    return makeFunctionTupleExpression(
         firstPart(whole, code),
         {Indices{first_argument.index, last_argument.index - first_argument.index}, body}
     );
@@ -601,9 +601,9 @@ Expression parseTuple(CodeRange code) {
         return makeErrorValue(code, "Parse error. Expected )");
     }
     code = parseCharacter(code);
-    return makeTuple(
+    return makeTupleExpression(
         firstPart(whole, code),
-        Tuple{Indices{first_expression, last_expression - first_expression}}
+        TupleExpression{Indices{first_expression, last_expression - first_expression}}
     );
 }
 
@@ -657,7 +657,7 @@ Expression parseTable(CodeRange code) {
     CONCAT(storage.rows, rows);
     FREE_DARRAY(rows);
     auto last = storage.rows.count;
-    return makeTable(firstPart(whole, code), Table{Indices{first, last - first}});
+    return makeTableExpression(firstPart(whole, code), TableExpression{Indices{first, last - first}});
 }
 
 static

@@ -39,7 +39,7 @@ DynamicIndices bindLocalNameStatement(DynamicIndices dictionary_names_owner, Exp
 }
 
 static
-void resolveDictionaryLoops(Dictionary dictionary_struct) {
+void resolveDictionaryLoops(DictionaryExpression dictionary_struct) {
     const auto base_index = dictionary_struct.statements.data;
     auto loop_start_indices_owner = DynamicIndices{};
 
@@ -70,8 +70,8 @@ void resolveDictionaryLoops(Dictionary dictionary_struct) {
 }
 
 // A single link in the chain of lexically enclosing scopes the resolver is
-// currently nested inside, innermost first. `scope` is a DICTIONARY,
-// FUNCTION, FUNCTION_DICTIONARY, or FUNCTION_TUPLE expression, or the
+// currently nested inside, innermost first. `scope` is a DICTIONARY_EXPRESSION,
+// FUNCTION_EXPRESSION, FUNCTION_DICTIONARY_EXPRESSION, or FUNCTION_TUPLE_EXPRESSION expression, or the
 // default Expression{} (type ANY) to mean "no scope here". `parent` is
 // whatever lexically encloses it (nullptr if nothing further is known).
 // Each link lives only for the duration of the recursive resolve() call
@@ -89,8 +89,8 @@ struct OptionalIndex {
 
 // Looks for `global_index` among the arguments listed in `arguments`
 // (indices into storage.arguments), returning its declaration-order
-// position. Shared by FUNCTION_DICTIONARY and FUNCTION_TUPLE, and by
-// FUNCTION via a single-element Indices.
+// position. Shared by FUNCTION_DICTIONARY_EXPRESSION and FUNCTION_TUPLE_EXPRESSION, and by
+// FUNCTION_EXPRESSION via a single-element Indices.
 static
 OptionalIndex findInArguments(Indices arguments, size_t global_index) {
     FOR_EACH(i, arguments) {
@@ -124,7 +124,7 @@ OptionalIndex findInDictionaryInner(Expression statement, size_t global_index) {
 // already assigned by bindDictionaryNames.
 static
 OptionalIndex findInDictionary(Expression dictionary_expression, size_t global_index) {
-    auto dictionary_struct = storage.dictionaries.data[dictionary_expression.index];
+    auto dictionary_struct = storage.dictionary_expressions.data[dictionary_expression.index];
     FOR_EACH(i, dictionary_struct.statements) {
         auto statement = storage.statements.data[i];
         auto result = findInDictionaryInner(statement, global_index);
@@ -138,10 +138,10 @@ OptionalIndex findInDictionary(Expression dictionary_expression, size_t global_i
 static
 OptionalIndex findInScope(Expression scope, size_t global_index) {
     switch (scope.type) {
-        case DICTIONARY: return findInDictionary(scope, global_index);
-        case FUNCTION: return findInArguments(Indices{storage.functions.data[scope.index].argument, 1}, global_index);
-        case FUNCTION_DICTIONARY: return findInArguments(storage.dictionary_functions.data[scope.index].arguments, global_index);
-        case FUNCTION_TUPLE: return findInArguments(storage.tuple_functions.data[scope.index].arguments, global_index);
+        case DICTIONARY_EXPRESSION: return findInDictionary(scope, global_index);
+        case FUNCTION_EXPRESSION: return findInArguments(Indices{storage.function_expressions.data[scope.index].argument, 1}, global_index);
+        case FUNCTION_DICTIONARY_EXPRESSION: return findInArguments(storage.function_dictionary_expressions.data[scope.index].arguments, global_index);
+        case FUNCTION_TUPLE_EXPRESSION: return findInArguments(storage.function_tuple_expressions.data[scope.index].arguments, global_index);
         default: return OptionalIndex{};
     }
 }
@@ -184,7 +184,7 @@ void resolveStatement(Expression statement, ScopeChain chain) {
 
 static
 void resolveDictionary(Expression expression, ScopeChain chain) {
-    auto dictionary_struct = &storage.dictionaries.data[expression.index];
+    auto dictionary_struct = &storage.dictionary_expressions.data[expression.index];
     
     auto dictionary_names_owner = DynamicIndices{};
     FOR_EACH(i, dictionary_struct->statements) {
@@ -211,21 +211,21 @@ void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
 
 static
 void resolveFunction(Expression expression, ScopeChain chain) {
-    auto function_struct = storage.functions.data[expression.index];
+    auto function_struct = storage.function_expressions.data[expression.index];
     resolveArgumentTypes(Indices{function_struct.argument, 1}, chain);
     resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionDictionary(Expression expression, ScopeChain chain) {
-    auto function_struct = storage.dictionary_functions.data[expression.index];
+    auto function_struct = storage.function_dictionary_expressions.data[expression.index];
     resolveArgumentTypes(function_struct.arguments, chain);
     resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionTuple(Expression expression, ScopeChain chain) {
-    auto function_struct = storage.tuple_functions.data[expression.index];
+    auto function_struct = storage.function_tuple_expressions.data[expression.index];
     resolveArgumentTypes(function_struct.arguments, chain);
     resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
@@ -255,7 +255,7 @@ void resolveIs(Expression expression, ScopeChain chain) {
 
 static
 void resolveTuple(Expression expression, ScopeChain chain) {
-    auto tuple = storage.tuples.data[expression.index];
+    auto tuple = storage.tuple_expressions.data[expression.index];
     FOR_EACH(i, tuple.indices) {
         resolveExpression(storage.expressions.data[i], chain);
     }
@@ -264,8 +264,8 @@ void resolveTuple(Expression expression, ScopeChain chain) {
 static
 void resolveStack(Expression expression, ScopeChain chain) {
     auto current = expression;
-    while (current.type == STACK) {
-        auto stack = storage.stacks.data[current.index];
+    while (current.type == STACK_EXPRESSION) {
+        auto stack = storage.stack_expressions.data[current.index];
         resolveExpression(stack.top, chain);
         current = stack.rest;
     }
@@ -273,7 +273,7 @@ void resolveStack(Expression expression, ScopeChain chain) {
 
 static
 void resolveTable(Expression expression, ScopeChain chain) {
-    auto table = storage.tables.data[expression.index];
+    auto table = storage.table_expressions.data[expression.index];
     FOR_EACH(i, table.rows) {
         auto row = storage.rows.data[i];
         resolveExpression(row.key, chain);
@@ -318,15 +318,15 @@ void resolveLookupSymbol(Expression expression, ScopeChain chain) {
 static
 void resolveExpression(Expression expression, ScopeChain chain) {
     switch (expression.type) {
-        case DICTIONARY: return resolveDictionary(expression, chain);
-        case FUNCTION: return resolveFunction(expression, chain);
-        case FUNCTION_DICTIONARY: return resolveFunctionDictionary(expression, chain);
-        case FUNCTION_TUPLE: return resolveFunctionTuple(expression, chain);
+        case DICTIONARY_EXPRESSION: return resolveDictionary(expression, chain);
+        case FUNCTION_EXPRESSION: return resolveFunction(expression, chain);
+        case FUNCTION_DICTIONARY_EXPRESSION: return resolveFunctionDictionary(expression, chain);
+        case FUNCTION_TUPLE_EXPRESSION: return resolveFunctionTuple(expression, chain);
         case CONDITIONAL: return resolveConditional(expression, chain);
         case IS: return resolveIs(expression, chain);
-        case TUPLE: return resolveTuple(expression, chain);
-        case STACK: return resolveStack(expression, chain);
-        case TABLE: return resolveTable(expression, chain);
+        case TUPLE_EXPRESSION: return resolveTuple(expression, chain);
+        case STACK_EXPRESSION: return resolveStack(expression, chain);
+        case TABLE_EXPRESSION: return resolveTable(expression, chain);
         case LOOKUP_CHILD: return resolveLookupChild(expression, chain);
         case FUNCTION_APPLICATION: return resolveFunctionApplication(expression, chain);
         case FUNCTION_APPLICATION_BUILT_IN: return resolveBuiltInApplication(expression, chain);
