@@ -29,7 +29,7 @@ void clearMemory() {
     FREE_DARRAY(storage.dynamic_expressions);
     FREE_DARRAY(storage.typed_expressions);
     FREE_DARRAY(storage.dictionaries);
-    FREE_DARRAY(storage.evaluated_dictionaries);
+    FREE_DARRAY(storage.dictionary_values);
     FREE_DARRAY(storage.conditionals);
     FREE_DARRAY(storage.is_expressions);
     FREE_DARRAY(storage.alternatives);
@@ -37,12 +37,12 @@ void clearMemory() {
     FREE_DARRAY(storage.built_in_functions);
     FREE_DARRAY(storage.dictionary_functions);
     FREE_DARRAY(storage.tuple_functions);
-    FREE_DARRAY(storage.evaluated_functions);
+    FREE_DARRAY(storage.function_values);
     FREE_DARRAY(storage.tuples);
-    FREE_DARRAY(storage.evaluated_tuples);
+    FREE_DARRAY(storage.tuple_values);
     FREE_DARRAY(storage.stacks);
-    FREE_DARRAY(storage.evaluated_stacks);
-    FREE_DARRAY(storage.evaluated_table_views);
+    FREE_DARRAY(storage.stack_values);
+    FREE_DARRAY(storage.table_view_values);
     FREE_DARRAY(storage.child_lookups);
     FREE_DARRAY(storage.function_applications);
     FREE_DARRAY(storage.function_applications_built_in);
@@ -68,7 +68,7 @@ void clearMemory() {
 
     FREE_DARRAY(storage.name_index_table);
     
-    storage.evaluated_tables.clear();
+    storage.table_values.clear();
 }
 
 // MAKERS:
@@ -126,8 +126,8 @@ Expression makeDictionary(CodeRange code, Dictionary expression) {
     return makeExpression(code, expression, DICTIONARY, storage.dictionaries);
 }
 
-Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression) {
-    return makeExpression(code, expression, EVALUATED_DICTIONARY, storage.evaluated_dictionaries);
+Expression makeDictionaryValue(CodeRange code, DictionaryValue expression) {
+    return makeExpression(code, expression, DICTIONARY_VALUE, storage.dictionary_values);
 }
 
 Expression makeFunction(CodeRange code, Function expression) {
@@ -146,45 +146,45 @@ Expression makeFunctionTuple(CodeRange code, FunctionTuple expression) {
     return makeExpression(code, expression, FUNCTION_TUPLE, storage.tuple_functions);
 }
 
-Expression makeEvaluatedFunction(CodeRange code, EvaluatedFunction expression) {
-    return makeExpression(code, expression, EVALUATED_FUNCTION, storage.evaluated_functions);
+Expression makeFunctionValue(CodeRange code, FunctionValue expression) {
+    return makeExpression(code, expression, FUNCTION_VALUE, storage.function_values);
 }
 
 Expression makeTuple(CodeRange code, Tuple expression) {
     return makeExpression(code, expression, TUPLE, storage.tuples);
 }
 
-Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression) {
-    return makeExpression(code, expression, EVALUATED_TUPLE, storage.evaluated_tuples);
+Expression makeTupleValue(CodeRange code, TupleValue expression) {
+    return makeExpression(code, expression, TUPLE_VALUE, storage.tuple_values);
 }
 
-Expression makeEvaluatedTuple2(Expression a, Expression b) {
+Expression makeTupleValue2(Expression a, Expression b) {
     const auto first = storage.expressions.count;
     APPEND(storage.expressions, a);
     APPEND(storage.expressions, b);
     const auto last = storage.expressions.count;
-    return makeEvaluatedTuple(CodeRange{}, EvaluatedTuple{Indices{first, last - first}});
+    return makeTupleValue(CodeRange{}, TupleValue{Indices{first, last - first}});
 }
 
 Expression makeStack(CodeRange code, Stack expression) {
     return makeExpression(code, expression, STACK, storage.stacks);
 }
 
-Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression) {
-    return makeExpression(code, expression, EVALUATED_STACK, storage.evaluated_stacks);
+Expression makeStackValue(CodeRange code, StackValue expression) {
+    return makeExpression(code, expression, STACK_VALUE, storage.stack_values);
 }
 
 Expression makeTable(CodeRange code, Table expression) {
     return makeExpression(code, expression, TABLE, storage.tables);
 }
 
-Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression) {
-    storage.evaluated_tables.emplace_back(std::move(expression));
-    return Expression{storage.evaluated_tables.size() - 1, code, EVALUATED_TABLE};
+Expression makeTableValue(CodeRange code, TableValue expression) {
+    storage.table_values.emplace_back(std::move(expression));
+    return Expression{storage.table_values.size() - 1, code, TABLE_VALUE};
 }
 
-Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression) {
-    return makeExpression(code, expression, EVALUATED_TABLE_VIEW, storage.evaluated_table_views);
+Expression makeTableViewValue(CodeRange code, TableViewValue expression) {
+    return makeExpression(code, expression, TABLE_VIEW_VALUE, storage.table_view_values);
 }
 
 Expression makeLookupChild(CodeRange code, LookupChild expression) {

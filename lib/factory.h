@@ -29,7 +29,7 @@ struct Storage {
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;
     DARRAY(Dictionary) dictionaries;
-    DARRAY(EvaluatedDictionary) evaluated_dictionaries;
+    DARRAY(DictionaryValue) dictionary_values;
     DARRAY(Conditional) conditionals;
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
@@ -37,12 +37,12 @@ struct Storage {
     DARRAY(FunctionBuiltIn) built_in_functions;
     DARRAY(FunctionDictionary) dictionary_functions;
     DARRAY(FunctionTuple) tuple_functions;
-    DARRAY(EvaluatedFunction) evaluated_functions;
+    DARRAY(FunctionValue) function_values;
     DARRAY(Tuple) tuples;
-    DARRAY(EvaluatedTuple) evaluated_tuples;
+    DARRAY(TupleValue) tuple_values;
     DARRAY(Stack) stacks;
-    DARRAY(EvaluatedStack) evaluated_stacks;
-    DARRAY(EvaluatedTableView) evaluated_table_views;
+    DARRAY(StackValue) stack_values;
+    DARRAY(TableViewValue) table_view_values;
     DARRAY(LookupChild) child_lookups;
     DARRAY(FunctionApplication) function_applications;
     DARRAY(FunctionApplicationBuiltIn) function_applications_built_in;
@@ -70,7 +70,7 @@ struct Storage {
 
     DARRAY(NameIndex) name_index_table;
     
-    std::vector<EvaluatedTable> evaluated_tables;
+    std::vector<TableValue> table_values;
 };
 
 extern Storage storage;
@@ -90,20 +90,20 @@ Expression makeConditional(CodeRange code, Conditional expression);
 Expression makeIs(CodeRange code, IsExpression expression);
 Expression makeAlternative(CodeRange code, Alternative expression);
 Expression makeDictionary(CodeRange code, Dictionary expression);
-Expression makeEvaluatedDictionary(CodeRange code, EvaluatedDictionary expression);
+Expression makeDictionaryValue(CodeRange code, DictionaryValue expression);
 Expression makeFunction(CodeRange code, Function expression);
 Expression makeFunctionBuiltIn(CodeRange code, FunctionBuiltIn expression);
 Expression makeFunctionDictionary(CodeRange code, FunctionDictionary expression);
 Expression makeFunctionTuple(CodeRange code, FunctionTuple expression);
-Expression makeEvaluatedFunction(CodeRange code, EvaluatedFunction expression);
+Expression makeFunctionValue(CodeRange code, FunctionValue expression);
 Expression makeTuple(CodeRange code, Tuple expression);
-Expression makeEvaluatedTuple(CodeRange code, EvaluatedTuple expression);
-Expression makeEvaluatedTuple2(Expression a, Expression b);
+Expression makeTupleValue(CodeRange code, TupleValue expression);
+Expression makeTupleValue2(Expression a, Expression b);
 Expression makeStack(CodeRange code, Stack expression);
-Expression makeEvaluatedStack(CodeRange code, EvaluatedStack expression);
+Expression makeStackValue(CodeRange code, StackValue expression);
 Expression makeTable(CodeRange code, Table expression);
-Expression makeEvaluatedTable(CodeRange code, EvaluatedTable expression);
-Expression makeEvaluatedTableView(CodeRange code, EvaluatedTableView expression);
+Expression makeTableValue(CodeRange code, TableValue expression);
+Expression makeTableViewValue(CodeRange code, TableViewValue expression);
 Expression makeLookupChild(CodeRange code, LookupChild expression);
 Expression makeFunctionApplication(CodeRange code, FunctionApplication expression);
 Expression makeFunctionApplicationBuiltIn(CodeRange code, FunctionApplicationBuiltIn expression);

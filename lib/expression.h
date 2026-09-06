@@ -98,7 +98,7 @@ struct FunctionTuple {
     Expression body;
 };
 
-struct EvaluatedFunction {
+struct FunctionValue {
     Expression function;
     Expression environment;
 };
@@ -135,7 +135,7 @@ struct Tuple {
 
 // TODO: add special case for tuple of size 2.
 // TODO: merge with Tuple for storage but keep type-code to know if it is evaluated.
-struct EvaluatedTuple {
+struct TupleValue {
     Indices indices;
 };
 
@@ -145,7 +145,7 @@ struct Stack {
 };
 
 // TODO: merge with Stack for storage but keep type-code to know if it is evaluated.
-struct EvaluatedStack {
+struct StackValue {
     Expression top;
     Expression rest;
 };
@@ -212,7 +212,7 @@ struct Dictionary {
     size_t definition_count;
 };
 
-struct EvaluatedDictionary {
+struct DictionaryValue {
     Expression environment;
     Indices definitions;
 };
@@ -227,7 +227,7 @@ struct Table {
 };
 
 // TODO: make cheaper to copy or pass by reference or pointer?
-struct EvaluatedTable {
+struct TableValue {
     using Iterator = std::map<std::string, Row>::const_iterator;
     std::map<std::string, Row> rows;
     Iterator begin() const {return rows.begin();}
@@ -235,7 +235,7 @@ struct EvaluatedTable {
     bool empty() const {return rows.empty();}
 };
 
-struct EvaluatedTableView {
+struct TableViewValue {
     using Iterator = std::map<std::string, Row>::const_iterator;
     Iterator first;
     Iterator last;

@@ -54,8 +54,8 @@ Expression builtIns() {
     }
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
-    return makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{Expression{}, definitions}
+    return makeDictionaryValue(CodeRange{},
+        DictionaryValue{Expression{}, definitions}
     );
 }
 
@@ -67,7 +67,7 @@ Expression builtInsTypes() {
     }
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
-    return makeEvaluatedDictionary(CodeRange{},
-        EvaluatedDictionary{Expression{}, definitions}
+    return makeDictionaryValue(CodeRange{},
+        DictionaryValue{Expression{}, definitions}
     );
 }

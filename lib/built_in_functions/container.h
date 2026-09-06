@@ -4,7 +4,7 @@ struct Expression;
 
 Expression builtInPutString(Expression rest, Expression top);
 Expression builtInPutStack(Expression rest, Expression top);
-Expression builtInPutEvaluatedStack(Expression rest, Expression top);
+Expression builtInPutStackValue(Expression rest, Expression top);
 
 Expression builtInClear(Expression in);
 Expression builtInClearTyped(Expression in);

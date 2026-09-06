@@ -27,14 +27,14 @@ Expression builtInPutStack(Expression rest, Expression top) {
     return makeStack(rest.range, Stack{top, rest});
 }
 
-Expression builtInPutEvaluatedStack(Expression rest, Expression top) {
+Expression builtInPutStackValue(Expression rest, Expression top) {
     if (top.type == ERROR_EXPRESSION) {
         return top;
     }
     if (rest.type == ERROR_EXPRESSION) {
         return rest;
     }
-    return makeEvaluatedStack(rest.range, EvaluatedStack{top, rest});
+    return makeStackValue(rest.range, StackValue{top, rest});
 }
 
 Expression putTable(Expression table, Expression item) {
@@ -50,7 +50,7 @@ Expression putTable(Expression table, Expression item) {
     }
     const auto key = tuple.left;
     const auto value = tuple.right;
-    auto& rows = storage.evaluated_tables.at(table.index).rows;
+    auto& rows = storage.table_values.at(table.index).rows;
     auto buffer = StringBuilder{};
     buffer = serialize(buffer, key);
     auto s = makeStdString(buffer);
@@ -75,7 +75,7 @@ Expression putTableTyped(Expression table, Expression item) {
     }
     const auto key = tuple.left;
     const auto value = tuple.right;
-    auto& rows = storage.evaluated_tables.at(table.index).rows;
+    auto& rows = storage.table_values.at(table.index).rows;
     auto buffer = StringBuilder{};
     buffer = serialize_types(buffer, key);
     auto s = makeStdString(buffer);
@@ -87,11 +87,11 @@ Expression putTableTyped(Expression table, Expression item) {
 Expression clearShared(Expression in, const char* error_message) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return Expression{0, CodeRange{}, EMPTY_STACK};
+        case STACK_VALUE: return Expression{0, CodeRange{}, EMPTY_STACK};
         case EMPTY_STACK: return in;
         case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
         case EMPTY_STRING: return in;
-        case EVALUATED_TABLE: return makeEvaluatedTable(CodeRange{}, EvaluatedTable{});
+        case TABLE_VALUE: return makeTableValue(CodeRange{}, TableValue{});
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
@@ -136,11 +136,11 @@ Expression builtInPut(Expression in) {
     const auto collection = tuple.right;
     switch (collection.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return builtInPutEvaluatedStack(collection, item);
-        case EMPTY_STACK: return builtInPutEvaluatedStack(collection, item);
+        case STACK_VALUE: return builtInPutStackValue(collection, item);
+        case EMPTY_STACK: return builtInPutStackValue(collection, item);
         case STRING: return builtInPutString(collection, item);
         case EMPTY_STRING: return builtInPutString(collection, item);
-        case EVALUATED_TABLE: return putTable(collection, item);
+        case TABLE_VALUE: return putTable(collection, item);
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
@@ -163,11 +163,11 @@ Expression builtInPutTyped(Expression in) {
     }
     switch (collection.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return builtInPutEvaluatedStack(collection, item);
-        case EMPTY_STACK: return builtInPutEvaluatedStack(collection, item);
+        case STACK_VALUE: return builtInPutStackValue(collection, item);
+        case EMPTY_STACK: return builtInPutStackValue(collection, item);
         case STRING: return collection; // TODO: type check item
         case EMPTY_STRING: return builtInPutString(collection, item);
-        case EVALUATED_TABLE: return putTableTyped(collection, item);
+        case TABLE_VALUE: return putTableTyped(collection, item);
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
@@ -184,25 +184,25 @@ Expression takeTable(const T& table) {
         return makeErrorExpression({}, "Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
-    return makeEvaluatedTuple2(pair.key, pair.value);
+    return makeTupleValue2(pair.key, pair.value);
 }
 
 template<typename T>
 Expression takeTableTyped(const T& table, Expression expression) {
     const auto range = expression.range;
     if (table.empty()) {
-        return makeEvaluatedTuple2(Expression{0, range, ANY}, Expression{0, range, ANY});
+        return makeTupleValue2(Expression{0, range, ANY}, Expression{0, range, ANY});
     }
     const auto& pair = table.begin()->second;
-    return makeEvaluatedTuple2(pair.key, pair.value);
+    return makeTupleValue2(pair.key, pair.value);
 }
 
-Expression dropTableEvaluatedTable(const EvaluatedTable& table) {
-    return makeEvaluatedTableView(CodeRange{}, EvaluatedTableView{++table.begin(), table.end()});
+Expression dropTableTableValue(const TableValue& table) {
+    return makeTableViewValue(CodeRange{}, TableViewValue{++table.begin(), table.end()});
 }
 
-Expression dropTableEvaluatedTableView(const EvaluatedTableView& table) {
-    return makeEvaluatedTableView(CodeRange{}, EvaluatedTableView{++table.begin(), table.end()});
+Expression dropTableTableViewValue(const TableViewValue& table) {
+    return makeTableViewValue(CodeRange{}, TableViewValue{++table.begin(), table.end()});
 }
 
 Expression dropNumber(Expression in) {
@@ -214,10 +214,10 @@ Expression builtInTake(Expression in) {
     const auto index = in.index;
     switch (type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
+        case STACK_VALUE: return storage.stack_values.data[index].top;
         case STRING: return storage.strings.data[index].top;
-        case EVALUATED_TABLE: return takeTable(storage.evaluated_tables.at(index));
-        case EVALUATED_TABLE_VIEW: return takeTable(storage.evaluated_table_views.data[index]);
+        case TABLE_VALUE: return takeTable(storage.table_values.at(index));
+        case TABLE_VIEW_VALUE: return takeTable(storage.table_view_values.data[index]);
         case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
@@ -233,10 +233,10 @@ Expression builtInTakeTyped(Expression in) {
     const auto index = in.index;
     switch (type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return storage.evaluated_stacks.data[index].top;
+        case STACK_VALUE: return storage.stack_values.data[index].top;
         case STRING: return storage.strings.data[index].top;
-        case EVALUATED_TABLE: return takeTableTyped(storage.evaluated_tables.at(index), in);
-        case EVALUATED_TABLE_VIEW: return takeTableTyped(storage.evaluated_table_views.data[index], in);
+        case TABLE_VALUE: return takeTableTyped(storage.table_values.at(index), in);
+        case TABLE_VIEW_VALUE: return takeTableTyped(storage.table_view_values.data[index], in);
         case EMPTY_STACK: return Expression{0, in.range, ANY};
         case EMPTY_STRING: return Expression{0, in.range, CHARACTER};
         case NUMBER: return in;
@@ -252,10 +252,10 @@ Expression builtInTakeTyped(Expression in) {
 Expression builtInDrop(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return storage.evaluated_stacks.data[in.index].rest;
+        case STACK_VALUE: return storage.stack_values.data[in.index].rest;
         case STRING: return storage.strings.data[in.index].rest;
-        case EVALUATED_TABLE: return dropTableEvaluatedTable(storage.evaluated_tables.at(in.index));
-        case EVALUATED_TABLE_VIEW: return dropTableEvaluatedTableView(storage.evaluated_table_views.data[in.index]);
+        case TABLE_VALUE: return dropTableTableValue(storage.table_values.at(in.index));
+        case TABLE_VIEW_VALUE: return dropTableTableViewValue(storage.table_view_values.data[in.index]);
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return dropNumber(in);
@@ -271,10 +271,10 @@ Expression builtInDrop(Expression in) {
 Expression builtInDropTyped(Expression in) {
     switch (in.type) {
         case ERROR_EXPRESSION: return in;
-        case EVALUATED_STACK: return in;
+        case STACK_VALUE: return in;
         case STRING: return in;
-        case EVALUATED_TABLE: return in;
-        case EVALUATED_TABLE_VIEW: return in;
+        case TABLE_VALUE: return in;
+        case TABLE_VIEW_VALUE: return in;
         case EMPTY_STACK: return in;
         case EMPTY_STRING: return in;
         case NUMBER: return in;
@@ -288,7 +288,7 @@ Expression builtInDropTyped(Expression in) {
 }
 
 Expression builtInGet(Expression in) {
-    if (in.type != EVALUATED_TUPLE) {
+    if (in.type != TUPLE_VALUE) {
         return makeErrorExpression(in.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
@@ -297,7 +297,7 @@ Expression builtInGet(Expression in) {
             getExpressionName(in.type)
         );
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
+    const auto evaluated_tuple = storage.tuple_values.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
         return makeErrorExpression({},
@@ -311,7 +311,7 @@ Expression builtInGet(Expression in) {
     const auto key = storage.expressions.data[evaluated_tuple.indices.data + 0];
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
-    if (table.type != EVALUATED_TABLE) {
+    if (table.type != TABLE_VALUE) {
         return makeErrorExpression(table.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
@@ -324,14 +324,14 @@ Expression builtInGet(Expression in) {
     buffer = serialize(buffer, key);
     auto name = makeStdString(buffer);
     FREE_DARRAY(buffer);
-    const auto& rows = storage.evaluated_tables.at(table.index).rows;
+    const auto& rows = storage.table_values.at(table.index).rows;
     const auto iterator = rows.find(name);
     return iterator == rows.end() ?
         default_value : iterator->second.value;
 }
 
 Expression builtInGetTyped(Expression in) {
-    if (in.type != EVALUATED_TUPLE) {
+    if (in.type != TUPLE_VALUE) {
         return makeErrorExpression(in.range, 
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
@@ -340,7 +340,7 @@ Expression builtInGetTyped(Expression in) {
             getExpressionName(in.type)
         );
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
+    const auto evaluated_tuple = storage.tuple_values.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
         return makeErrorExpression({},
@@ -353,7 +353,7 @@ Expression builtInGetTyped(Expression in) {
     }
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
-    if (table.type != EVALUATED_TABLE) {
+    if (table.type != TABLE_VALUE) {
         return makeErrorExpression(table.range, 
             "\n\nI have found a dynamic type error.\n"
             "\nIt happens for the function get!(key table default).\n"

@@ -5,7 +5,7 @@
 
 BinaryTuple getBinaryTuple(Expression in, const char* function) {
     auto result = MAKE(BinaryTuple);
-    if (in.type != EVALUATED_TUPLE) {
+    if (in.type != TUPLE_VALUE) {
         result.error = makeErrorExpression(
             in.range,
             "I found a type error while calling the function %s. "
@@ -16,7 +16,7 @@ BinaryTuple getBinaryTuple(Expression in, const char* function) {
         );
         return result;
     }
-    const auto evaluated_tuple = storage.evaluated_tuples.data[in.index];
+    const auto evaluated_tuple = storage.tuple_values.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 2) {
         result.error = makeErrorExpression(
