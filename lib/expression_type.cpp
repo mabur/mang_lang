@@ -2,31 +2,54 @@
 
 const char* getExpressionName(ExpressionType type) {
     switch (type) {
+        // Values, self-evaluating:
+        case NUMBER: return "NUMBER";
         case CHARACTER: return "CHARACTER";
-        case CONDITIONAL: return "CONDITIONAL";
-        case IS: return "IS";
-        case ALTERNATIVE: return "ALTERNATIVE";
-        case TABLE: return "TABLE";
+        case YES: return "YES";
+        case NO: return "NO";
+        case STRING: return "STRING";
+        case EMPTY_STRING: return "EMPTY_STRING";
+        case EMPTY_STACK: return "EMPTY_STACK";
+
+        // Values, produced by evaluation:
+        case STACK_VALUE: return "STACK_VALUE";
+        case TUPLE_VALUE: return "TUPLE_VALUE";
+        case DICTIONARY_VALUE: return "DICTIONARY_VALUE";
         case TABLE_VALUE: return "TABLE_VALUE";
         case TABLE_VIEW_VALUE: return "TABLE_VIEW_VALUE";
-        case DICTIONARY: return "DICTIONARY";
-        case DICTIONARY_VALUE: return "DICTIONARY_VALUE";
-        case TUPLE: return "TUPLE";
-        case TUPLE_VALUE: return "TUPLE_VALUE";
-        case FUNCTION: return "FUNCTION";
-        case FUNCTION_BUILT_IN: return "FUNCTION_BUILT_IN";
-        case FUNCTION_DICTIONARY: return "FUNCTION_DICTIONARY";
-        case FUNCTION_TUPLE: return "FUNCTION_TUPLE";
         case FUNCTION_VALUE: return "FUNCTION_VALUE";
+        case FUNCTION_BUILT_IN: return "FUNCTION_BUILT_IN";
+        case ANY: return "ANY";
+        case ERROR_EXPRESSION: return "ERROR_EXPRESSION";
+
+        // Internal runtime state:
+        case FOR_ITERATOR: return "FOR_ITERATOR";
+
+        // Expressions, constructors:
         case STACK: return "STACK";
-        case STACK_VALUE: return "STACK_VALUE";
-        case EMPTY_STACK: return "EMPTY_STACK";
+        case TUPLE: return "TUPLE";
+        case DICTIONARY: return "DICTIONARY";
+        case TABLE: return "TABLE";
+        case FUNCTION: return "FUNCTION";
+        case FUNCTION_TUPLE: return "FUNCTION_TUPLE";
+        case FUNCTION_DICTIONARY: return "FUNCTION_DICTIONARY";
+
+        // Expressions, operations:
+        case CONDITIONAL: return "CONDITIONAL";
+        case IS: return "IS";
+        case LOOKUP_SYMBOL: return "LOOKUP_SYMBOL";
         case LOOKUP_CHILD: return "LOOKUP_CHILD";
         case FUNCTION_APPLICATION: return "FUNCTION_APPLICATION";
         case FUNCTION_APPLICATION_BUILT_IN: return "FUNCTION_APPLICATION_BUILT_IN";
-        case LOOKUP_SYMBOL: return "LOOKUP_SYMBOL";
+        case TYPED_EXPRESSION: return "TYPED_EXPRESSION";
+        case DYNAMIC_EXPRESSION: return "DYNAMIC_EXPRESSION";
+
+        // Syntax fragments:
         case NAME: return "NAME";
         case ARGUMENT: return "ARGUMENT";
+        case ALTERNATIVE: return "ALTERNATIVE";
+
+        // Statements:
         case DEFINITION: return "DEFINITION";
         case PUT_ASSIGNMENT: return "PUT_ASSIGNMENT";
         case PUT_EACH_ASSIGNMENT: return "PUT_EACH_ASSIGNMENT";
@@ -40,16 +63,6 @@ const char* getExpressionName(ExpressionType type) {
         case IF_END_STATEMENT: return "IF_END_STATEMENT";
         case END_STATEMENT: return "END_STATEMENT";
         case RETURN_STATEMENT: return "RETURN_STATEMENT";
-        case FOR_ITERATOR: return "FOR_ITERATOR";
-        case NUMBER: return "NUMBER";
-        case STRING: return "STRING";
-        case EMPTY_STRING: return "EMPTY_STRING";
-        case YES: return "YES";
-        case NO: return "NO";
-        case DYNAMIC_EXPRESSION: return "DYNAMIC_EXPRESSION";
-        case TYPED_EXPRESSION: return "TYPED_EXPRESSION";
-        case ERROR_EXPRESSION: return "ERROR_EXPRESSION";
-        case ANY: return "ANY";
     }
     return "UNKNOWN_EXPRESSION"; // Should not happen
 }
