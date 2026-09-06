@@ -15,8 +15,9 @@ These tests protect the refactors below and become the VM's acceptance suite.
 
 Refactor the tree walker toward the VM's data model
 1. Separate values from AST nodes. Today the Expression struct is both a syntax node and a runtime value, and the tag set mixes them: a stack literal and an evaluated stack, a tuple and an evaluated tuple, a function literal and a closure. A VM has code and values as two separate worlds. Introduce a Value type, even if its layout is identical at first, and change the evaluator to take a node and return a value. This forces you to find every place an AST node leaks out as a value, such as number and character literals being returned directly and the any-value sentinel built from a node. Numbers are already stored inline in the index field, so that part is done.
-
-2. Drop the code range from values. Once values are distinct, remove the range field and keep a "current node" the evaluator sets on entry for error messages. Type errors currently point at the type value's range, which after this change becomes the ascription node's range. That is arguably more useful. Values then fit in 16 bytes with room to shrink to 8 later.
+ - At least split for functions, with evaluated functions / function values / closures having an environment, but the initial AST function does not.
+ - Partition the tags into self-evaluating, unevaluated and evaluated, and assert the invariant at the evaluator's return.
+ - Add a distinct closure tag with static link and serial, separate from the function literal.
 
 3. Compute frame layouts in the resolver. The resolver in resolve.cpp currently produces steps-to-parent counting every scope. Change the addressing to function depth plus slot offset, with every frame-position block assigned a slot range in its enclosing function's frame and each function recording its total frame size. This is exactly the VM's addressing mode, and the resolver output becomes the VM's symbol table with no further translation.
 
