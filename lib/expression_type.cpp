@@ -50,10 +50,10 @@ const char* getExpressionName(ExpressionType type) {
         case ALTERNATIVE: return "ALTERNATIVE";
 
         // Statements:
-        case DEFINITION: return "DEFINITION";
-        case PUT_ASSIGNMENT: return "PUT_ASSIGNMENT";
-        case PUT_EACH_ASSIGNMENT: return "PUT_EACH_ASSIGNMENT";
-        case DROP_ASSIGNMENT: return "DROP_ASSIGNMENT";
+        case DEFINITION_STATEMENT: return "DEFINITION_STATEMENT";
+        case PUT_ASSIGNMENT_STATEMENT: return "PUT_ASSIGNMENT_STATEMENT";
+        case PUT_EACH_ASSIGNMENT_STATEMENT: return "PUT_EACH_ASSIGNMENT_STATEMENT";
+        case DROP_ASSIGNMENT_STATEMENT: return "DROP_ASSIGNMENT_STATEMENT";
         case WHILE_STATEMENT: return "WHILE_STATEMENT";
         case FOR_INIT_STATEMENT: return "FOR_INIT_STATEMENT";
         case FOR_STATEMENT: return "FOR_STATEMENT";

@@ -56,9 +56,9 @@ struct Storage {
     DARRAY(ForEndStatement) for_end_statements;
     DARRAY(ForIterator) for_iterators;
     DARRAY(Definition) definitions;
-    DARRAY(PutAssignment) put_assignments;
-    DARRAY(PutEachAssignment) put_each_assignments;
-    DARRAY(DropAssignment) drop_assignments;
+    DARRAY(PutAssignmentStatement) put_assignment_statements;
+    DARRAY(PutEachAssignmentStatement) put_each_assignment_statements;
+    DARRAY(DropAssignmentStatement) drop_assignment_statements;
     DARRAY(Expression) statements;
     DARRAY(Expression) expressions;
     DARRAY(String) strings;
@@ -111,9 +111,9 @@ Expression makeLookupSymbolExpression(CodeRange code, LookupSymbolExpression exp
 Expression makeName(CodeRange code, const char* data, size_t count);
 Expression makeArgument(CodeRange code, Argument expression);
 Expression makeDefinition(CodeRange code, Definition expression);
-Expression makePutAssignment(CodeRange code, PutAssignment expression);
-Expression makePutEachAssignment(CodeRange code, PutEachAssignment expression);
-Expression makeDropAssignment(CodeRange code, DropAssignment expression);
+Expression makePutAssignmentStatement(CodeRange code, PutAssignmentStatement expression);
+Expression makePutEachAssignmentStatement(CodeRange code, PutEachAssignmentStatement expression);
+Expression makeDropAssignmentStatement(CodeRange code, DropAssignmentStatement expression);
 Expression makeWhileStatement(CodeRange code, WhileStatement expression);
 Expression makeForInitStatement(CodeRange code, ForInitStatement expression);
 Expression makeForStatement(CodeRange code, ForStatement expression);

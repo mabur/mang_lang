@@ -788,7 +788,7 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
     FOR_EACH(i, dictionary.statements) {
         auto statement = storage.statements.data[i];
         auto type = statement.type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION_STATEMENT) {
             auto definition = storage.definitions.data[statement.index];
             definition.expression = Expression{0, statement.range, ANY_VALUE};
             auto dictionary_index = definition.name.dictionary_index;
@@ -850,7 +850,7 @@ Expression evaluateDictionaryTypes(
     FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION_STATEMENT) {
             const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
@@ -860,8 +860,8 @@ Expression evaluateDictionaryTypes(
                 setDictionaryDefinition(result, definition.name, value);
             }
         }
-        else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = storage.put_assignments.data[statement.index];
+        else if (type == PUT_ASSIGNMENT_STATEMENT) {
+            const auto put_assignment = storage.put_assignment_statements.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate_types(right_expression, result);
             if (value.type == ERROR_VALUE) return value;
@@ -870,8 +870,8 @@ Expression evaluateDictionaryTypes(
             const auto new_value = builtInPutTyped(tuple);
             setDictionaryDefinition(result, put_assignment.name, new_value);
         }
-        else if (type == PUT_EACH_ASSIGNMENT) {
-            const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
+        else if (type == PUT_EACH_ASSIGNMENT_STATEMENT) {
+            const auto put_each_assignment = storage.put_each_assignment_statements.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate_types(right_expression, result);
             if (container.type == ERROR_VALUE) {
@@ -886,8 +886,8 @@ Expression evaluateDictionaryTypes(
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
             }
         }
-        else if (type == DROP_ASSIGNMENT) {
-            const auto drop_assignment = storage.drop_assignments.data[statement.index];
+        else if (type == DROP_ASSIGNMENT_STATEMENT) {
+            const auto drop_assignment = storage.drop_assignment_statements.data[statement.index];
             const auto current = getDictionaryDefinition(result, drop_assignment.name);
             const auto new_value = builtInDropTyped(current);
             setDictionaryDefinition(result, drop_assignment.name, new_value);
@@ -934,7 +934,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     while (i < statement_count) {
         const auto statement = storage.statements.data[base_index + i];
         const auto type = statement.type;
-        if (type == DEFINITION) {
+        if (type == DEFINITION_STATEMENT) {
             const auto definition = storage.definitions.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
@@ -942,8 +942,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             setDictionaryDefinition(result, definition.name, value);
             i += 1;
         }
-        else if (type == PUT_ASSIGNMENT) {
-            const auto put_assignment = storage.put_assignments.data[statement.index];
+        else if (type == PUT_ASSIGNMENT_STATEMENT) {
+            const auto put_assignment = storage.put_assignment_statements.data[statement.index];
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
@@ -952,8 +952,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             setDictionaryDefinition(result, put_assignment.name, new_value);
             i += 1;
         }
-        else if (type == PUT_EACH_ASSIGNMENT) {
-            const auto put_each_assignment = storage.put_each_assignments.data[statement.index];
+        else if (type == PUT_EACH_ASSIGNMENT_STATEMENT) {
+            const auto put_each_assignment = storage.put_each_assignment_statements.data[statement.index];
             const auto right_expression = put_each_assignment.expression;
             auto container = evaluate(right_expression, result);
             for (;;) {
@@ -973,8 +973,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             }
             i += 1;
         }
-        else if (type == DROP_ASSIGNMENT) {
-            const auto drop_assignment = storage.drop_assignments.data[statement.index];
+        else if (type == DROP_ASSIGNMENT_STATEMENT) {
+            const auto drop_assignment = storage.drop_assignment_statements.data[statement.index];
             const auto current = getDictionaryDefinition(result, drop_assignment.name);
             const auto new_value = builtInDrop(current);
             setDictionaryDefinition(result, drop_assignment.name, new_value);

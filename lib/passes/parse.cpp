@@ -211,9 +211,9 @@ Expression parseNamedElement(CodeRange code) {
     else if (startsWithString(code, "--")) {
         code = parseKeyword(code, "--");
         code = parseWhiteSpace(code);
-        return makeDropAssignment(
+        return makeDropAssignmentStatement(
             firstPart(whole, code),
-            DropAssignment{getUnboundLocalName(name)}
+            DropAssignmentStatement{getUnboundLocalName(name)}
         );
     }
     else if (startsWithString(code, "+=")) {
@@ -222,9 +222,9 @@ Expression parseNamedElement(CodeRange code) {
         auto expression = parseExpression(code);
         code = lastPart(code, expression.range);
         code = parseWhiteSpace(code);
-        return makePutAssignment(
+        return makePutAssignmentStatement(
             firstPart(whole, code),
-            PutAssignment{getUnboundLocalName(name), expression}
+            PutAssignmentStatement{getUnboundLocalName(name), expression}
         );
     }
     else if (startsWithString(code, "++=")) {
@@ -233,9 +233,9 @@ Expression parseNamedElement(CodeRange code) {
         auto expression = parseExpression(code);
         code = lastPart(code, expression.range);
         code = parseWhiteSpace(code);
-        return makePutEachAssignment(
+        return makePutEachAssignmentStatement(
             firstPart(whole, code),
-            PutEachAssignment{getUnboundLocalName(name), expression}
+            PutEachAssignmentStatement{getUnboundLocalName(name), expression}
         );
     }
     return makeErrorValue(code,

@@ -157,17 +157,17 @@ struct Definition {
     Expression expression;
 };
 
-struct PutAssignment {
+struct PutAssignmentStatement {
     BoundLocalName name;
     Expression expression;
 };
 
-struct PutEachAssignment {
+struct PutEachAssignmentStatement {
     BoundLocalName name;
     Expression expression;
 };
 
-struct DropAssignment {
+struct DropAssignmentStatement {
     BoundLocalName name;
 };
 

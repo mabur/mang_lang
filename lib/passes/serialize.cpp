@@ -83,7 +83,7 @@ StringBuilder serializeDefinition(StringBuilder s, const Definition& element) {
 }
 
 static
-StringBuilder serializePutAssignment(StringBuilder s, const PutAssignment& element) {
+StringBuilder serializePutAssignmentStatement(StringBuilder s, const PutAssignmentStatement& element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "+=");
     s = serialize(s, element.expression);
@@ -92,7 +92,7 @@ StringBuilder serializePutAssignment(StringBuilder s, const PutAssignment& eleme
 }
 
 static
-StringBuilder serializePutEachAssignment(StringBuilder s, const PutEachAssignment& element) {
+StringBuilder serializePutEachAssignmentStatement(StringBuilder s, const PutEachAssignmentStatement& element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "++=");
     s = serialize(s, element.expression);
@@ -101,7 +101,7 @@ StringBuilder serializePutEachAssignment(StringBuilder s, const PutEachAssignmen
 }
 
 static
-StringBuilder serializeDropAssignment(StringBuilder s, const DropAssignment& element) {
+StringBuilder serializeDropAssignmentStatement(StringBuilder s, const DropAssignmentStatement& element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "-- ");
     return s;
@@ -457,10 +457,10 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case IS_EXPRESSION: return serializeIsExpression(s, storage.is_expressions.data[expression.index]);
         case DICTIONARY_EXPRESSION: return serializeDictionaryExpression(s, storage.dictionary_expressions.data[expression.index]);
         case DICTIONARY_VALUE: return serializeDictionaryValue(s, serialize, storage.dictionary_values.data[expression.index]);
-        case DEFINITION: return serializeDefinition(s, storage.definitions.data[expression.index]);
-        case PUT_ASSIGNMENT: return serializePutAssignment(s, storage.put_assignments.data[expression.index]);
-        case PUT_EACH_ASSIGNMENT: return serializePutEachAssignment(s, storage.put_each_assignments.data[expression.index]);
-        case DROP_ASSIGNMENT: return serializeDropAssignment(s, storage.drop_assignments.data[expression.index]);
+        case DEFINITION_STATEMENT: return serializeDefinition(s, storage.definitions.data[expression.index]);
+        case PUT_ASSIGNMENT_STATEMENT: return serializePutAssignmentStatement(s, storage.put_assignment_statements.data[expression.index]);
+        case PUT_EACH_ASSIGNMENT_STATEMENT: return serializePutEachAssignmentStatement(s, storage.put_each_assignment_statements.data[expression.index]);
+        case DROP_ASSIGNMENT_STATEMENT: return serializeDropAssignmentStatement(s, storage.drop_assignment_statements.data[expression.index]);
         case WHILE_STATEMENT: return serializeWhileStatement(s, storage.while_statements.data[expression.index]);
         case FOR_INIT_STATEMENT: return s; // Handled by the FOR_STATEMENT that comes right after
         case FOR_STATEMENT: return serializeForStatement(s, storage.for_statements.data[expression.index]);

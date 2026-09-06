@@ -54,12 +54,13 @@ enum ExpressionType {
     NAME,
     ARGUMENT,
     ALTERNATIVE,
+    
+    DEFINITION_STATEMENT, // Used for both DictionaryExpression and DictionaryValue.
 
-    // Statements that are executed while constructing a dictionary value:
-    DEFINITION,
-    PUT_ASSIGNMENT,
-    PUT_EACH_ASSIGNMENT,
-    DROP_ASSIGNMENT,
+    // These statements are used inside DictionaryExpressions:
+    PUT_ASSIGNMENT_STATEMENT,
+    PUT_EACH_ASSIGNMENT_STATEMENT,
+    DROP_ASSIGNMENT_STATEMENT,
     WHILE_STATEMENT,
     FOR_INIT_STATEMENT,
     FOR_STATEMENT,

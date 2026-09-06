@@ -56,9 +56,9 @@ void clearMemory() {
     FREE_DARRAY(storage.for_end_statements);
     FREE_DARRAY(storage.for_iterators);
     FREE_DARRAY(storage.definitions);
-    FREE_DARRAY(storage.put_assignments);
-    FREE_DARRAY(storage.put_each_assignments);
-    FREE_DARRAY(storage.drop_assignments);
+    FREE_DARRAY(storage.put_assignment_statements);
+    FREE_DARRAY(storage.put_each_assignment_statements);
+    FREE_DARRAY(storage.drop_assignment_statements);
     FREE_DARRAY(storage.statements);
     FREE_DARRAY(storage.expressions);
     FREE_DARRAY(storage.strings);
@@ -222,19 +222,19 @@ Expression makeArgument(CodeRange code, Argument expression) {
 }
 
 Expression makeDefinition(CodeRange code, Definition expression) {
-    return makeExpression(code, expression, DEFINITION, storage.definitions);
+    return makeExpression(code, expression, DEFINITION_STATEMENT, storage.definitions);
 }
 
-Expression makePutAssignment(CodeRange code, PutAssignment expression) {
-    return makeExpression(code, expression, PUT_ASSIGNMENT, storage.put_assignments);
+Expression makePutAssignmentStatement(CodeRange code, PutAssignmentStatement expression) {
+    return makeExpression(code, expression, PUT_ASSIGNMENT_STATEMENT, storage.put_assignment_statements);
 }
 
-Expression makePutEachAssignment(CodeRange code, PutEachAssignment expression) {
-    return makeExpression(code, expression, PUT_EACH_ASSIGNMENT, storage.put_each_assignments);
+Expression makePutEachAssignmentStatement(CodeRange code, PutEachAssignmentStatement expression) {
+    return makeExpression(code, expression, PUT_EACH_ASSIGNMENT_STATEMENT, storage.put_each_assignment_statements);
 }
 
-Expression makeDropAssignment(CodeRange code, DropAssignment expression) {
-    return makeExpression(code, expression, DROP_ASSIGNMENT, storage.drop_assignments);
+Expression makeDropAssignmentStatement(CodeRange code, DropAssignmentStatement expression) {
+    return makeExpression(code, expression, DROP_ASSIGNMENT_STATEMENT, storage.drop_assignment_statements);
 }
 
 Expression makeWhileStatement(CodeRange code, WhileStatement expression) {
