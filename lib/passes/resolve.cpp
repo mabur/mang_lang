@@ -334,7 +334,7 @@ void resolveExpression(Expression expression, ScopeChain chain) {
         case DYNAMIC_EXPRESSION: return resolveDynamicExpression(expression, chain);
         case LOOKUP_SYMBOL: return resolveLookupSymbol(expression, chain);
         // Everything else (NUMBER, CHARACTER, strings, YES/NO, ARGUMENT,
-        // EMPTY_STACK, ERROR_EXPRESSION, ...) is a leaf: nothing to recurse into.
+        // EMPTY_STACK, ERROR_VALUE, ...) is a leaf: nothing to recurse into.
         default: return;
     }
 }

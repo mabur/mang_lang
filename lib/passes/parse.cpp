@@ -21,19 +21,19 @@ static
 Expression parseCharacterExpression(CodeRange code) {
     auto whole = code;
     if (code.count < 3) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found an error while parsing a character.\n"
             "It ends too early."
         );
     }
     if (!startsWith(code, '\'')) {
-        return makeErrorExpression(code, "Parse error. Expected '");
+        return makeErrorValue(code, "Parse error. Expected '");
     }
     code = parseCharacter(code);
     auto value = firstCharacter(code);
     code = parseCharacter(code);
     if (!startsWith(code, '\'')) {
-        return makeErrorExpression(code, "Parse error. Expected '");
+        return makeErrorValue(code, "Parse error. Expected '");
     }
     code = parseCharacter(code);
     return makeCharacter(firstPart(whole, code), value);
@@ -46,12 +46,12 @@ Expression parseAlternative(CodeRange code) {
     code = lastPart(code, left.range);
     code = parseWhiteSpace(code);
     if (!isKeyword(code, "then")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'then'."
         );
     }
     if (!isKeyword(code, "then")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'then'."
         );
     }
@@ -67,7 +67,7 @@ static
 Expression parseConditional(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "if")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'if'."
         );
     }
@@ -81,7 +81,7 @@ Expression parseConditional(CodeRange code) {
         code = lastPart(code, LAST_ITEM(alternatives).range);
     }
     if (!isKeyword(code, "else")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'else'."
         );
     }
@@ -107,7 +107,7 @@ static
 Expression parseIs(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "is")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'is'."
         );
     }
@@ -124,7 +124,7 @@ Expression parseIs(CodeRange code) {
         code = lastPart(code, LAST_ITEM(alternatives).range);
     }
     if (!isKeyword(code, "else")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'else'."
         );
     }
@@ -171,7 +171,7 @@ Expression parseArgument(CodeRange code) {
         code = lastPart(code, type.range);
         code = parseWhiteSpace(code);
         if (!startsWith(code, '>')) {
-            return makeErrorExpression(code, "Parse error. Expected >");
+            return makeErrorValue(code, "Parse error. Expected >");
         }
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
@@ -238,7 +238,7 @@ Expression parseNamedElement(CodeRange code) {
             PutEachAssignment{getUnboundLocalName(name), expression}
         );
     }
-    return makeErrorExpression(code,
+    return makeErrorValue(code,
         "I found a parsing error. I do not recognize the statement."
     );
 }
@@ -247,7 +247,7 @@ static
 Expression parseWhileStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "while")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'while'."
         );
     }
@@ -263,7 +263,7 @@ static
 Expressions parseForStatement(CodeRange code, Expressions statements_owner) {
     const auto whole = code;
     if (!isKeyword(code, "for")) {
-        APPEND(statements_owner, makeErrorExpression(code,
+        APPEND(statements_owner, makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'for'."
         ));
         return statements_owner;
@@ -274,7 +274,7 @@ Expressions parseForStatement(CodeRange code, Expressions statements_owner) {
     code = lastPart(code, name.range);
     code = parseWhiteSpace(code);
     if (!isKeyword(code, "in")) {
-        APPEND(statements_owner, makeErrorExpression(code,
+        APPEND(statements_owner, makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'in'."
         ));
         return statements_owner;
@@ -299,7 +299,7 @@ static
 Expression parseIfStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "if")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'if'."
         );
     }
@@ -315,7 +315,7 @@ static
 Expression parseEndStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "end")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'end'."
         );
     }
@@ -328,7 +328,7 @@ static
 Expression parseReturnStatement(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "return")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'return'."
         );
     }
@@ -341,7 +341,7 @@ static
 Expression parseDictionary(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '{')) {
-        return makeErrorExpression(code, "Parse error. Expected {");
+        return makeErrorValue(code, "Parse error. Expected {");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
@@ -350,7 +350,7 @@ Expression parseDictionary(CodeRange code) {
     while (!::startsWith(code, '}')) {
         code = parseWhiteSpace(code);
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(
+            return makeErrorValue(
                 code,
                 "I found an error while parsing a dictionary.\nIt ended too early.\n%s",
                 describeLocation(code)
@@ -370,7 +370,7 @@ Expression parseDictionary(CodeRange code) {
         }
         else if (isKeyword(code, "end")) {
             if (loop_depth == 0) {
-                return makeErrorExpression(code,
+                return makeErrorValue(code,
                     "I find a parsing error.\n"
                     "end is not matching a while, for or if");
             }
@@ -383,7 +383,7 @@ Expression parseDictionary(CodeRange code) {
         else {
             APPEND(statements, parseNamedElement(code));
         }
-        if (LAST_ITEM(statements).type == ERROR_EXPRESSION) {
+        if (LAST_ITEM(statements).type == ERROR_VALUE) {
             const auto error = LAST_ITEM(statements);
             FREE_DARRAY(statements);
             return error;
@@ -391,7 +391,7 @@ Expression parseDictionary(CodeRange code) {
         code = lastPart(code, LAST_ITEM(statements).range);
     }
     if (!startsWith(code, '}')) {
-        return makeErrorExpression(code, "Parse error. Expected }");
+        return makeErrorValue(code, "Parse error. Expected }");
     }
     code = parseCharacter(code);
 
@@ -412,7 +412,7 @@ Expression parseFunction(CodeRange code) {
     code = lastPart(code, argument.range);
     code = parseWhiteSpace(code);
     if (!isKeyword(code, "out")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'out'."
         );
     }
@@ -429,7 +429,7 @@ static
 Expression parseFunctionDictionary(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '{')) {
-        return makeErrorExpression(code, "Parse error. Expected {");
+        return makeErrorValue(code, "Parse error. Expected {");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
@@ -441,7 +441,7 @@ Expression parseFunctionDictionary(CodeRange code) {
     
     while (!::startsWith(code, '}')) {
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code,
+            return makeErrorValue(code,
                 "I found an error while parsing a function.\n"
                 "The input had a starting '{' but no ending '}'."
             );
@@ -452,12 +452,12 @@ Expression parseFunctionDictionary(CodeRange code) {
         code = parseWhiteSpace(code);
     }
     if (!startsWith(code, '}')) {
-        return makeErrorExpression(code, "Parse error. Expected }");
+        return makeErrorValue(code, "Parse error. Expected }");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
     if (!isKeyword(code, "out")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'out'."
         );
     }
@@ -478,7 +478,7 @@ static
 Expression parseFunctionTuple(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '(')) {
-        return makeErrorExpression(code, "Parse error. Expected (");
+        return makeErrorValue(code, "Parse error. Expected (");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
@@ -490,7 +490,7 @@ Expression parseFunctionTuple(CodeRange code) {
     
     while (!::startsWith(code, ')')) {
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code,
+            return makeErrorValue(code,
                 "I found an error while parsing a function.\n"
                 "The function definition ended too early."
             );
@@ -501,12 +501,12 @@ Expression parseFunctionTuple(CodeRange code) {
         code = parseWhiteSpace(code);
     }
     if (!startsWith(code, ')')) {
-        return makeErrorExpression(code, "Parse error. Expected )");
+        return makeErrorValue(code, "Parse error. Expected )");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
     if (!isKeyword(code, "out")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'out'."
         );
     }
@@ -522,12 +522,12 @@ Expression parseFunctionTuple(CodeRange code) {
 static
 Expression parseAnyFunction(CodeRange code) {
     if (!isKeyword(code, "in")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'in'."
         );
     }
     if (!isKeyword(code, "in")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'in'."
         );
     }
@@ -542,14 +542,14 @@ static
 Expression parseStack(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '[')) {
-        return makeErrorExpression(code, "Parse error. Expected [");
+        return makeErrorValue(code, "Parse error. Expected [");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto items = Expressions{};
     while (!::startsWith(code, ']')) {
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code,
+            return makeErrorValue(code,
                 "I found an error while parsing a stack.\n"
                 "It is missing a closing ']'."
             );
@@ -565,7 +565,7 @@ Expression parseStack(CodeRange code) {
     }
     FREE_DARRAY(items);
     if (!startsWith(code, ']')) {
-        return makeErrorExpression(code, "Parse error. Expected ]");
+        return makeErrorValue(code, "Parse error. Expected ]");
     }
     code = parseCharacter(code);
     stack.range = firstPart(whole, code);
@@ -576,14 +576,14 @@ static
 Expression parseTuple(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '(')) {
-        return makeErrorExpression(code, "Parse error. Expected (");
+        return makeErrorValue(code, "Parse error. Expected (");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
     auto expressions = Expressions{};
     while (!::startsWith(code, ')')) {
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code,
+            return makeErrorValue(code,
                 "I found an error while parsing a tuple.\n"
                 "It is missing a closing ')'."
             );
@@ -598,7 +598,7 @@ Expression parseTuple(CodeRange code) {
     FREE_DARRAY(expressions);
     const auto last_expression = storage.expressions.count;
     if (!startsWith(code, ')')) {
-        return makeErrorExpression(code, "Parse error. Expected )");
+        return makeErrorValue(code, "Parse error. Expected )");
     }
     code = parseCharacter(code);
     return makeTuple(
@@ -617,7 +617,7 @@ static
 Expression parseTable(CodeRange code) {
     auto whole = code;
     if (!startsWithString(code, "table[")) {
-        return makeErrorExpression(code, "Parse error. Expected table[");
+        return makeErrorValue(code, "Parse error. Expected table[");
     }
     code = parseKeyword(code, "table");
     code = parseCharacter(code);
@@ -625,13 +625,13 @@ Expression parseTable(CodeRange code) {
     auto rows = Rows{};
     while (!::startsWith(code, ']')) {
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code,
+            return makeErrorValue(code,
                 "I found an error while parsing a table.\n"
                 "It is missing a closing ']'."
             );
         }
         if (!startsWith(code, '(')) {
-            return makeErrorExpression(code, "Parse error. Expected (");
+            return makeErrorValue(code, "Parse error. Expected (");
         }
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
@@ -642,7 +642,7 @@ Expression parseTable(CodeRange code) {
         code = lastPart(code, value.range);
         code = parseWhiteSpace(code);
         if (!startsWith(code, ')')) {
-           return makeErrorExpression(code, "Parse error. Expected )");
+           return makeErrorValue(code, "Parse error. Expected )");
         }
         code = parseCharacter(code);
         code = parseWhiteSpace(code);
@@ -650,7 +650,7 @@ Expression parseTable(CodeRange code) {
         APPEND(rows, row);
     }
     if (!startsWith(code, ']')) {
-        return makeErrorExpression(code, "Parse error. Expected ]");
+        return makeErrorValue(code, "Parse error. Expected ]");
     }
     code = parseCharacter(code);
     auto first = storage.rows.count;
@@ -695,7 +695,7 @@ static
 Expression parseTypedExpression(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '<')) {
-        return makeErrorExpression(code, "Parse error. Expected <");
+        return makeErrorValue(code, "Parse error. Expected <");
     }
     code = parseCharacter(code);
     code = parseWhiteSpace(code);
@@ -703,7 +703,7 @@ Expression parseTypedExpression(CodeRange code) {
     code = lastPart(code, type.range);
     code = parseWhiteSpace(code);
     if (!startsWith(code, '>')) {
-        return makeErrorExpression(code, "Parse error. Expected >");
+        return makeErrorValue(code, "Parse error. Expected >");
     }
     code = parseCharacter(code);
     auto value = parseExpression(code);
@@ -716,7 +716,7 @@ Expression parseTypedExpression(CodeRange code) {
 static
 Expression parseNumber(CodeRange code) {
     if (IS_EMPTY(code)) {
-        return makeErrorExpression(code, "Reached end of file when parsing number");
+        return makeErrorValue(code, "Reached end of file when parsing number");
     }
     auto start = code;
     bool is_negative = false;
@@ -728,7 +728,7 @@ Expression parseNumber(CodeRange code) {
         DROP_FRONT(code);
     }
     if (IS_EMPTY(code)) {
-        return makeErrorExpression(code, "Reached end of file when parsing number");
+        return makeErrorValue(code, "Reached end of file when parsing number");
     }
     double integer_part = 0.0;
     while (startsWithDigit(code)) {
@@ -739,7 +739,7 @@ Expression parseNumber(CodeRange code) {
     if (startsWith(code, '.')) {
         DROP_FRONT(code);
         if (IS_EMPTY(code)) {
-            return makeErrorExpression(code, "Reached end of file when parsing number");
+            return makeErrorValue(code, "Reached end of file when parsing number");
         }
         double divisor = 10.0;
         while (startsWithDigit(code)) {
@@ -780,7 +780,7 @@ static
 Expression parseDynamicExpression(CodeRange code) {
     auto whole = code;
     if (!isKeyword(code, "dynamic")) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I found a parsing error. I was expecting the keyword 'dynamic'."
         );
     }
@@ -801,7 +801,7 @@ static
 Expression parseString(CodeRange code) {
     auto whole = code;
     if (!startsWith(code, '"')) {
-        return makeErrorExpression(code, "Parse error. Expected \"");
+        return makeErrorValue(code, "Parse error. Expected \"");
     }
     code = parseCharacter(code);
     auto characters = Expressions{};
@@ -820,7 +820,7 @@ Expression parseString(CodeRange code) {
     }
     FREE_DARRAY(characters);
     if (!startsWith(code, '"')) {
-        return makeErrorExpression(code, "Parse error. Expected \"");
+        return makeErrorValue(code, "Parse error. Expected \"");
     }
     code = parseCharacter(code);
     string.range = firstPart(whole, code);
@@ -830,7 +830,7 @@ Expression parseString(CodeRange code) {
 Expression parseExpression(CodeRange code) {
     code = parseWhiteSpace(code);
     if (IS_EMPTY(code)) {
-        return makeErrorExpression(code,
+        return makeErrorValue(code,
             "I did not find any expression to parse."
         );
     }
@@ -849,12 +849,12 @@ Expression parseExpression(CodeRange code) {
     if (isKeyword(code, "is")) return parseIs(code);
     if (isKeyword(code, "in")) return parseAnyFunction(code);
     if (isKeyword(code, "dynamic")) return parseDynamicExpression(code);
-    if (isKeyword(code, "out")) return makeErrorExpression(code, "Parse error. 'out' is a reserved keyword.");
-    if (isKeyword(code, "then")) return makeErrorExpression(code, "Parse error. 'then' is a reserved keyword.");
-    if (isKeyword(code, "else")) return makeErrorExpression(code, "Parse error. 'else' is a reserved keyword.");
-    if (isKeyword(code, "while")) return makeErrorExpression(code, "Parse error. 'while' is a reserved keyword.");
-    if (isKeyword(code, "end")) return makeErrorExpression(code, "Parse error. 'end' is a reserved keyword.");
+    if (isKeyword(code, "out")) return makeErrorValue(code, "Parse error. 'out' is a reserved keyword.");
+    if (isKeyword(code, "then")) return makeErrorValue(code, "Parse error. 'then' is a reserved keyword.");
+    if (isKeyword(code, "else")) return makeErrorValue(code, "Parse error. 'else' is a reserved keyword.");
+    if (isKeyword(code, "while")) return makeErrorValue(code, "Parse error. 'while' is a reserved keyword.");
+    if (isKeyword(code, "end")) return makeErrorValue(code, "Parse error. 'end' is a reserved keyword.");
     if (isdigit(c) || c == '+' || c == '-') return parseNumber(code);
     if (isalpha(c) || c == '_') return parseSubstitution(code);
-    return makeErrorExpression(code, "I did not recognize the expression to parse %s");
+    return makeErrorValue(code, "I did not recognize the expression to parse %s");
 }

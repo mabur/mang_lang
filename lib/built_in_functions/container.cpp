@@ -8,40 +8,40 @@
 #include "../mang_lang_string.h"
 
 Expression builtInPutString(Expression rest, Expression top) {
-    if (top.type == ERROR_EXPRESSION) {
+    if (top.type == ERROR_VALUE) {
         return top;
     }
-    if (rest.type == ERROR_EXPRESSION) {
+    if (rest.type == ERROR_VALUE) {
         return rest;
     }
     return makeString(rest.range, String{top, rest});
 }
 
 Expression builtInPutStack(Expression rest, Expression top) {
-    if (top.type == ERROR_EXPRESSION) {
+    if (top.type == ERROR_VALUE) {
         return top;
     }
-    if (rest.type == ERROR_EXPRESSION) {
+    if (rest.type == ERROR_VALUE) {
         return rest;
     }
     return makeStack(rest.range, Stack{top, rest});
 }
 
 Expression builtInPutStackValue(Expression rest, Expression top) {
-    if (top.type == ERROR_EXPRESSION) {
+    if (top.type == ERROR_VALUE) {
         return top;
     }
-    if (rest.type == ERROR_EXPRESSION) {
+    if (rest.type == ERROR_VALUE) {
         return rest;
     }
     return makeStackValue(rest.range, StackValue{top, rest});
 }
 
 Expression putTable(Expression table, Expression item) {
-    if (table.type == ERROR_EXPRESSION) {
+    if (table.type == ERROR_VALUE) {
         return table;
     }
-    if (item.type == ERROR_EXPRESSION) {
+    if (item.type == ERROR_VALUE) {
         return item;
     }
     const auto tuple = getBinaryTuple(item, "put table");
@@ -60,10 +60,10 @@ Expression putTable(Expression table, Expression item) {
 }
 
 Expression putTableTyped(Expression table, Expression item) {
-    if (table.type == ERROR_EXPRESSION) {
+    if (table.type == ERROR_VALUE) {
         return table;
     }
-    if (item.type == ERROR_EXPRESSION) {
+    if (item.type == ERROR_VALUE) {
         return item;
     }
     if (item.type == ANY) {
@@ -86,7 +86,7 @@ Expression putTableTyped(Expression table, Expression item) {
 
 Expression clearShared(Expression in, const char* error_message) {
     switch (in.type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return Expression{0, CodeRange{}, EMPTY_STACK};
         case EMPTY_STACK: return in;
         case STRING: return Expression{0, CodeRange{}, EMPTY_STRING};
@@ -95,7 +95,7 @@ Expression clearShared(Expression in, const char* error_message) {
         case NUMBER: return makeNumber(CodeRange{}, 0);
         case YES: return Expression{0, CodeRange{}, NO};
         case NO: return in;
-        default: return makeErrorExpression(
+        default: return makeErrorValue(
             in.range,
             "%s\nThe clear function received an %s, which it did not expect.\n%s",
             error_message,
@@ -115,7 +115,7 @@ Expression builtInClearTyped(Expression in) {
 
 Expression putNumber(Expression collection, Expression item) {
     if (item.type != ANY && item.type != NUMBER) {
-        return makeErrorExpression(collection.range,
+        return makeErrorValue(collection.range,
             "\n\nI have found a static type error.\n"
             "It happens for the operation put!(NUMBER item).\n"
             "It expects the item to be a %s,\n"
@@ -135,7 +135,7 @@ Expression builtInPut(Expression in) {
     const auto item = tuple.left;
     const auto collection = tuple.right;
     switch (collection.type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return builtInPutStackValue(collection, item);
         case EMPTY_STACK: return builtInPutStackValue(collection, item);
         case STRING: return builtInPutString(collection, item);
@@ -144,7 +144,7 @@ Expression builtInPut(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: return makeErrorExpression(in.range,
+        default: return makeErrorValue(in.range,
             "I found an error during evaluation.\n"
             "The put function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -162,7 +162,7 @@ Expression builtInPutTyped(Expression in) {
         return collection;
     }
     switch (collection.type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return builtInPutStackValue(collection, item);
         case EMPTY_STACK: return builtInPutStackValue(collection, item);
         case STRING: return collection; // TODO: type check item
@@ -171,7 +171,7 @@ Expression builtInPutTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: return makeErrorExpression(in.range,
+        default: return makeErrorValue(in.range,
             "I found an error during type checking.\n"
             "The put function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -181,7 +181,7 @@ Expression builtInPutTyped(Expression in) {
 template<typename T>
 Expression takeTable(const T& table) {
     if (table.empty()) {
-        return makeErrorExpression({}, "Cannot take item from empty table");
+        return makeErrorValue({}, "Cannot take item from empty table");
     }
     const auto& pair = table.begin()->second;
     return makeTupleValue2(pair.key, pair.value);
@@ -213,7 +213,7 @@ Expression builtInTake(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return storage.stack_values.data[index].top;
         case STRING: return storage.strings.data[index].top;
         case TABLE_VALUE: return takeTable(storage.table_values.at(index));
@@ -221,7 +221,7 @@ Expression builtInTake(Expression in) {
         case NUMBER: return makeNumber(CodeRange{}, 1);
         case YES: return in;
         case NO: return in;
-        default: return makeErrorExpression(in.range,
+        default: return makeErrorValue(in.range,
             "I found an error during evaluation.\n"
             "The take function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -232,7 +232,7 @@ Expression builtInTakeTyped(Expression in) {
     const auto type = in.type;
     const auto index = in.index;
     switch (type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return storage.stack_values.data[index].top;
         case STRING: return storage.strings.data[index].top;
         case TABLE_VALUE: return takeTableTyped(storage.table_values.at(index), in);
@@ -242,7 +242,7 @@ Expression builtInTakeTyped(Expression in) {
         case NUMBER: return in;
         case YES: return in;
         case NO: return in;
-        default: return makeErrorExpression(in.range,
+        default: return makeErrorValue(in.range,
             "I found an error during type checking.\n"
             "The take function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -251,7 +251,7 @@ Expression builtInTakeTyped(Expression in) {
 
 Expression builtInDrop(Expression in) {
     switch (in.type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return storage.stack_values.data[in.index].rest;
         case STRING: return storage.strings.data[in.index].rest;
         case TABLE_VALUE: return dropTableTableValue(storage.table_values.at(in.index));
@@ -261,7 +261,7 @@ Expression builtInDrop(Expression in) {
         case NUMBER: return dropNumber(in);
         case NO: return in;
         case YES: return Expression{0, CodeRange{}, NO};
-        default: return makeErrorExpression(in.range,
+        default: return makeErrorValue(in.range,
             "I found an error during evaluation.\n"
             "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -270,7 +270,7 @@ Expression builtInDrop(Expression in) {
 
 Expression builtInDropTyped(Expression in) {
     switch (in.type) {
-        case ERROR_EXPRESSION: return in;
+        case ERROR_VALUE: return in;
         case STACK_VALUE: return in;
         case STRING: return in;
         case TABLE_VALUE: return in;
@@ -280,7 +280,7 @@ Expression builtInDropTyped(Expression in) {
         case NUMBER: return in;
         case NO: return in;
         case YES: return in;
-        default: return makeErrorExpression(in.range,
+        default: return makeErrorValue(in.range,
             "I found an error during type checking.\n"
             "The drop function received an %s, which it did not expect.", getExpressionName(in.type)
         );
@@ -289,7 +289,7 @@ Expression builtInDropTyped(Expression in) {
 
 Expression builtInGet(Expression in) {
     if (in.type != TUPLE_VALUE) {
-        return makeErrorExpression(in.range,
+        return makeErrorValue(in.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -300,7 +300,7 @@ Expression builtInGet(Expression in) {
     const auto evaluated_tuple = storage.tuple_values.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        return makeErrorExpression({},
+        return makeErrorValue({},
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -312,7 +312,7 @@ Expression builtInGet(Expression in) {
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != TABLE_VALUE) {
-        return makeErrorExpression(table.range,
+        return makeErrorValue(table.range,
             "\n\nI have found a dynamic type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"
@@ -332,7 +332,7 @@ Expression builtInGet(Expression in) {
 
 Expression builtInGetTyped(Expression in) {
     if (in.type != TUPLE_VALUE) {
-        return makeErrorExpression(in.range, 
+        return makeErrorValue(in.range, 
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -343,7 +343,7 @@ Expression builtInGetTyped(Expression in) {
     const auto evaluated_tuple = storage.tuple_values.data[in.index];
     const auto count = evaluated_tuple.indices.count;
     if (count != 3) {
-        return makeErrorExpression({},
+        return makeErrorValue({},
             "\n\nI have found a static type error.\n"
             "It happens for the function get!(key table default).\n"
             "It expects a tuple of three items,\n"
@@ -354,7 +354,7 @@ Expression builtInGetTyped(Expression in) {
     const auto table = storage.expressions.data[evaluated_tuple.indices.data + 1];
     const auto default_value = storage.expressions.data[evaluated_tuple.indices.data + 2];
     if (table.type != TABLE_VALUE) {
-        return makeErrorExpression(table.range, 
+        return makeErrorValue(table.range, 
             "\n\nI have found a dynamic type error.\n"
             "\nIt happens for the function get!(key table default).\n"
             "It expects a tuple where the second item is a table,\n"

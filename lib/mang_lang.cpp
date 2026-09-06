@@ -49,23 +49,23 @@ StringBuilder evaluate_all(const char* code) {
     // N.B. Need to create all code characters before parsing for stable string interning.
     
     const auto std_ast = resolve(parseExpression(code_character_standard_library), Expression{});
-    if (std_ast.type == ERROR_EXPRESSION) {
+    if (std_ast.type == ERROR_VALUE) {
         return serializeAndClearMemory(std_ast);
     }
     const auto code_ast = resolve(parseExpression(code_characters_program), std_ast);
-    if (code_ast.type == ERROR_EXPRESSION) {
+    if (code_ast.type == ERROR_VALUE) {
         return serializeAndClearMemory(code_ast);
     }
     const auto std_checked = evaluate_types(std_ast, built_ins_types);
-    if (std_checked.type == ERROR_EXPRESSION) {
+    if (std_checked.type == ERROR_VALUE) {
         return serializeAndClearMemory(std_checked);
     }
     const auto code_checked = evaluate_types(code_ast, std_checked);
-    if (code_checked.type == ERROR_EXPRESSION) {
+    if (code_checked.type == ERROR_VALUE) {
         return serializeAndClearMemory(code_checked);
     }
     const auto std_evaluated = evaluate(std_ast, built_ins);
-    if (std_evaluated.type == ERROR_EXPRESSION) {
+    if (std_evaluated.type == ERROR_VALUE) {
         return serializeAndClearMemory(std_evaluated);
     }
     const auto code_evaluated = evaluate(code_ast, std_evaluated);

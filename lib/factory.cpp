@@ -86,13 +86,13 @@ Expression makeNumber(CodeRange code, Number expression) {
     return result;
 }
 
-Expression makeErrorExpression(CodeRange code, const char* format, ...) {
+Expression makeErrorValue(CodeRange code, const char* format, ...) {
     va_list args;
     va_start(args, format);
-    ErrorExpression expression = format_cstring_v(format, args);
+    ErrorValue expression = format_cstring_v(format, args);
     va_end(args);
     auto result = Expression{};
-    result.type = ERROR_EXPRESSION;
+    result.type = ERROR_VALUE;
     result.range = code;
     BIT_CAST(expression, result.index);
     return result;
@@ -287,8 +287,8 @@ Number getNumber(Expression expression) {
     return result;
 }
 
-ErrorExpression getErrorExpression(Expression expression) {
-    ErrorExpression result;
+ErrorValue getErrorValue(Expression expression) {
+    ErrorValue result;
     BIT_CAST(expression.index, result);
     return result;
 }

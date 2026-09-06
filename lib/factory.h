@@ -79,10 +79,10 @@ void clearMemory();
 
 Character getCharacter(Expression expression);
 Number getNumber(Expression expression);
-ErrorExpression getErrorExpression(Expression expression);
+ErrorValue getErrorValue(Expression expression);
 
 Expression makeNumber(CodeRange code, Number expression);
-Expression makeErrorExpression(CodeRange code, const char* format, ...);
+Expression makeErrorValue(CodeRange code, const char* format, ...);
 Expression makeCharacter(CodeRange code, Character expression);
 Expression makeDynamicExpression(CodeRange code, DynamicExpression expression);
 Expression makeTypedExpression(CodeRange code, TypedExpression expression);

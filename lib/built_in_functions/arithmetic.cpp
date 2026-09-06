@@ -12,7 +12,7 @@ TypeCheck checkTypeUnaryFunction(Expression in, ExpressionType expected, const c
     auto result = MAKE(TypeCheck, .ok=true);
     if (in.type != ANY && in.type != expected) {
         result.ok = false;
-        result.error = makeErrorExpression({},
+        result.error = makeErrorValue({},
             "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a %s,\n"
@@ -37,7 +37,7 @@ BinaryTuple checkTypeBinaryFunction(Expression in, const char* function) {
         return result;
     }
     if (!isNumberOrAny(result.left) || !isNumberOrAny(result.right)) {
-        result.error = makeErrorExpression({},
+        result.error = makeErrorValue({},
             "\n\nI have found a type error.\n"
             "It happens when calling the built-in function %s.\n"
             "The function expects to be called with a tuple of two NUMBERs,\n"

@@ -22,7 +22,7 @@ enum ExpressionType {
     FUNCTION_VALUE,
     FUNCTION_BUILT_IN,
     ANY,
-    ERROR_EXPRESSION, // A value despite its name: evaluation returns it.
+    ERROR_VALUE,
 
     // INTERNAL RUNTIME STATE
     // Stored in dictionary slots while a for loop runs. Never returned by

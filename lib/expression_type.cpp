@@ -20,7 +20,7 @@ const char* getExpressionName(ExpressionType type) {
         case FUNCTION_VALUE: return "FUNCTION_VALUE";
         case FUNCTION_BUILT_IN: return "FUNCTION_BUILT_IN";
         case ANY: return "ANY";
-        case ERROR_EXPRESSION: return "ERROR_EXPRESSION";
+        case ERROR_VALUE: return "ERROR_VALUE";
 
         // Internal runtime state:
         case FOR_ITERATOR: return "FOR_ITERATOR";

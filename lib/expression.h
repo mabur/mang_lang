@@ -27,7 +27,7 @@ struct Expression {
 
 using Number = double;
 using Character = char;
-using ErrorExpression = const char*;
+using ErrorValue = const char*;
 
 struct Indices {
     size_t data;
