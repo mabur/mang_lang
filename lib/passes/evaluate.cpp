@@ -21,7 +21,7 @@ static
 OptionalLookup optionalLookup(DictionaryValue dictionary, size_t name) {
     auto result = MAKE(OptionalLookup);
     FOR_EACH2(name_index, slot_index, dictionary.names, dictionary.slot_values) {
-        if (storage.dictionary_names.data[name_index] == name) {
+        if (storage.slot_names.data[name_index] == name) {
             result.value = storage.slot_values.data[slot_index];
             result.ok = true;
         }
@@ -93,7 +93,7 @@ TypeCheck checkTypesDictionaryValue(Expression super, Expression sub, const char
     const auto dictionary_super = storage.dictionary_values.data[super.index];
     const auto dictionary_sub = storage.dictionary_values.data[sub.index];
     FOR_EACH2(name_index, slot_index, dictionary_super.names, dictionary_super.slot_values) {
-        const auto name_super = storage.dictionary_names.data[name_index];
+        const auto name_super = storage.slot_names.data[name_index];
         const auto value_super = storage.slot_values.data[slot_index];
         const auto value_sub = optionalLookup(dictionary_sub, name_super);
         if (value_sub.ok) {

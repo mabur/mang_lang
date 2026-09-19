@@ -45,12 +45,12 @@ const BuiltInEntry* findBuiltIn(size_t name_index) {
 static
 Expression makeBuiltInEnvironment(bool types) {
     auto slot_values = Indices{storage.slot_values.count, BUILT_IN_ENTRIES_COUNT};
-    auto first = storage.dictionary_names.count;
+    auto first = storage.slot_names.count;
     for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
         auto entry = BUILT_IN_ENTRIES[i];
         auto function = types ? entry.function_types : entry.function;
         APPEND(storage.slot_values, makeFunctionBuiltInValue(CodeRange{}, {function}));
-        APPEND(storage.dictionary_names, makeName(CodeRange{}, entry.name, strlen(entry.name)).index);
+        APPEND(storage.slot_names, makeName(CodeRange{}, entry.name, strlen(entry.name)).index);
     }
     auto names = Indices{first, BUILT_IN_ENTRIES_COUNT};
     return makeDictionaryValue(CodeRange{}, DictionaryValue{Expression{}, slot_values, names});

@@ -193,9 +193,9 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
     dictionary_struct->definition_count = dictionary_names_owner.count;
     // Persist the names in slot order, so that dictionary values built from
     // this expression can share them instead of storing a name per slot.
-    const auto names_first = storage.dictionary_names.count;
+    const auto names_first = storage.slot_names.count;
     FOR_INDEX(i, dictionary_names_owner) {
-        APPEND(storage.dictionary_names, dictionary_names_owner.data[i]);
+        APPEND(storage.slot_names, dictionary_names_owner.data[i]);
     }
     dictionary_struct->names = Indices{names_first, dictionary_names_owner.count};
     FREE_DARRAY(dictionary_names_owner);
@@ -220,9 +220,9 @@ void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
 // frame built by a call can share them. Same layout as for dictionaries.
 static
 Indices appendArgumentNames(Indices arguments) {
-    const auto first = storage.dictionary_names.count;
+    const auto first = storage.slot_names.count;
     FOR_EACH(i, arguments) {
-        APPEND(storage.dictionary_names, storage.arguments.data[i].name);
+        APPEND(storage.slot_names, storage.arguments.data[i].name);
     }
     return Indices{first, arguments.count};
 }

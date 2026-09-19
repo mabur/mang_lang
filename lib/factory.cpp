@@ -61,7 +61,7 @@ void clearMemory() {
     FREE_DARRAY(storage.drop_assignment_statements);
     FREE_DARRAY(storage.statements);
     FREE_DARRAY(storage.expressions);
-    FREE_DARRAY(storage.dictionary_names);
+    FREE_DARRAY(storage.slot_names);
     FREE_DARRAY(storage.slot_values);
     FREE_DARRAY(storage.strings);
     FREE_DARRAY(storage.rows);
