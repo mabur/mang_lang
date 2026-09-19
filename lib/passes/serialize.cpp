@@ -141,9 +141,9 @@ StringBuilder serializeDictionaryValue(StringBuilder s, Serializer serializer, c
         return s;
     }
     s = concatenate(s, "{");
-    FOR_EACH2(name_index, definition_index, dictionary.names, dictionary.definitions) {
+    FOR_EACH2(name_index, slot_index, dictionary.names, dictionary.slot_values) {
         const auto name = storage.dictionary_names.data[name_index];
-        const auto value = storage.definitions.data[definition_index].expression;
+        const auto value = storage.slot_values.data[slot_index];
         s = serializeName(s, name);
         s = concatenate(s, "=");
         s = serializer(s, value);

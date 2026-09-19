@@ -20,9 +20,9 @@ struct OptionalLookup {
 static
 OptionalLookup optionalLookup(DictionaryValue dictionary, size_t name) {
     auto result = MAKE(OptionalLookup);
-    FOR_EACH2(name_index, definition_index, dictionary.names, dictionary.definitions) {
+    FOR_EACH2(name_index, slot_index, dictionary.names, dictionary.slot_values) {
         if (storage.dictionary_names.data[name_index] == name) {
-            result.value = storage.definitions.data[definition_index].expression;
+            result.value = storage.slot_values.data[slot_index];
             result.ok = true;
         }
     }
@@ -92,9 +92,9 @@ TypeCheck checkTypesDictionaryValue(Expression super, Expression sub, const char
     auto result = TypeCheck{.ok=true};
     const auto dictionary_super = storage.dictionary_values.data[super.index];
     const auto dictionary_sub = storage.dictionary_values.data[sub.index];
-    FOR_EACH2(name_index, definition_index, dictionary_super.names, dictionary_super.definitions) {
+    FOR_EACH2(name_index, slot_index, dictionary_super.names, dictionary_super.slot_values) {
         const auto name_super = storage.dictionary_names.data[name_index];
-        const auto value_super = storage.definitions.data[definition_index].expression;
+        const auto value_super = storage.slot_values.data[slot_index];
         const auto value_sub = optionalLookup(dictionary_sub, name_super);
         if (value_sub.ok) {
             result = checkTypes(value_super, value_sub.value, description);
@@ -305,15 +305,11 @@ Expression applyFunction(
     if (argument_check.type == ERROR_VALUE) {
         return argument_check;
     }
-    // TODO: allocate on storage.definitions directly?
-    // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
-    auto first = storage.definitions.count;
-    makeDefinition({}, Definition{BoundLocalName{argument.name, 0}, input});
-    auto last = storage.definitions.count;
-    auto definitions = Indices{first, last - first};
+    const auto slot_values = Indices{storage.slot_values.count, 1};
+    APPEND(storage.slot_values, input);
     const auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, definitions, function_struct.names}
+        DictionaryValue{function_value.environment, slot_values, function_struct.names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -339,7 +335,7 @@ Expression applyFunctionDictionary(
     auto num_arguments = function_struct.arguments.count;
 
     // Allocation:
-    auto first = storage.definitions.count;
+    const auto slot_values = Indices{storage.slot_values.count, num_arguments};
     for (size_t i = 0; i < num_arguments; ++i) {
         auto argument = storage.arguments.data[first_argument + i];
         auto expression = requiredLookup(evaluated_dictionary, argument.name);
@@ -347,12 +343,10 @@ Expression applyFunctionDictionary(
         if (argument_check.type == ERROR_VALUE) {
             return argument_check;
         }
-        makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
+        APPEND(storage.slot_values, expression);
     }
-    auto last = storage.definitions.count;
-    auto definitions = Indices{first, last - first};
     auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, definitions, function_struct.names}
+        DictionaryValue{function_value.environment, slot_values, function_struct.names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -387,10 +381,8 @@ Expression applyFunctionTuple(
     }
 
     auto argument_index = first_argument;
-    // TODO: allocate on storage.definitions directly.
-    // This is a trade-off between heap fragmentation and automated memory cleanup.
     // Allocation:
-    auto first = storage.definitions.count;
+    const auto slot_values = Indices{storage.slot_values.count, num_inputs};
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto argument = storage.arguments.data[argument_index + i];
         const auto expression = storage.expressions.data[tuple.indices.data + i];
@@ -398,12 +390,10 @@ Expression applyFunctionTuple(
         if (argument_check.type == ERROR_VALUE) {
             return argument_check;
         }
-        makeDefinition({}, Definition{BoundLocalName{argument.name, i}, expression});
+        APPEND(storage.slot_values, expression);
     }
-    auto last = storage.definitions.count;
-    auto definitions = Indices{first, last - first};
     const auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, definitions, function_struct.names}
+        DictionaryValue{function_value.environment, slot_values, function_struct.names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -443,15 +433,7 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     }
     const auto dictionary = storage.dictionary_values.data[expression.index];
     if (name.parent_steps == 0) {
-        const auto definition = storage.definitions.data[dictionary.definitions.data + name.dictionary_index];
-        // Transitional check: the shared name list must agree with the name
-        // stored in the slot, until the slot no longer stores a name.
-        CHECK_INTERNAL(
-            storage.dictionary_names.data[dictionary.names.data + name.dictionary_index] == definition.name.global_index,
-            "Internal error in lookupDictionary. The shared name list disagrees with the slot for %s.",
-            storage.names.data + name.global_index
-        );
-        auto value = definition.expression;
+        const auto value = storage.slot_values.data[dictionary.slot_values.data + name.dictionary_index];
         return value.type != FOR_ITERATOR ? value :
             builtInTake(storage.for_iterators.data[value.index].container);
     }
@@ -784,35 +766,30 @@ Expression evaluateTypedExpression(Expression expression, Expression environment
     return evaluate(storage.typed_expressions.data[expression.index].value, environment);
 }
 
+// Allocates the slots of a new dictionary value, all holding the any-value.
+// A slot defined by a statement gets the range of that statement, so that a
+// read before the definition can be reported at the definition.
 static
 Indices initializeDefinitions(const DictionaryExpression& dictionary) {
-    // TODO: allocate on storage.expressions directly.
     // Allocation:
-    auto first = storage.definitions.count;
-    auto definitions = Indices{first, dictionary.definition_count};
-    FOR_EACH(i, definitions) {
-        makeDefinition(CodeRange{}, Definition{});
+    const auto first = storage.slot_values.count;
+    const auto slot_values = Indices{first, dictionary.definition_count};
+    for (size_t i = 0; i < dictionary.definition_count; ++i) {
+        APPEND(storage.slot_values, Expression{});
     }
     FOR_EACH(i, dictionary.statements) {
         auto statement = storage.statements.data[i];
         auto type = statement.type;
         if (type == DEFINITION_STATEMENT) {
-            auto definition = storage.definitions.data[statement.index];
-            definition.expression = Expression{0, statement.range, ANY_VALUE};
-            auto dictionary_index = definition.name.dictionary_index;
-            storage.definitions.data[first + dictionary_index] = definition;
+            auto dictionary_index = storage.definitions.data[statement.index].name.dictionary_index;
+            storage.slot_values.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
         }
         else if (type == FOR_INIT_STATEMENT) {
-            auto for_init_statement = storage.for_init_statements.data[statement.index];
-            auto dictionary_index = for_init_statement.name.dictionary_index;
-            auto definition = Definition{
-                for_init_statement.name, Expression{0, statement.range, ANY_VALUE}
-            };
-            storage.definitions.data[first + dictionary_index] = definition;
+            auto dictionary_index = storage.for_init_statements.data[statement.index].name.dictionary_index;
+            storage.slot_values.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
         }
     }
-    auto last = storage.definitions.count;
-    return Indices{first, last - first};
+    return slot_values;
 }
 
 static
@@ -825,8 +802,8 @@ void setDictionaryDefinition(
         getExpressionName(DICTIONARY_VALUE),
         getExpressionName(evaluated_dictionary.type)
     );
-    auto first = storage.dictionary_values.data[evaluated_dictionary.index].definitions.data;
-    storage.definitions.data[first + name.dictionary_index].expression = value;
+    auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
+    storage.slot_values.data[first + name.dictionary_index] = value;
 }
 
 static
@@ -839,15 +816,14 @@ Expression getDictionaryDefinition(
         getExpressionName(DICTIONARY_VALUE),
         getExpressionName(evaluated_dictionary.type)
     );
-    auto first = storage.dictionary_values.data[evaluated_dictionary.index].definitions.data;
-    return storage.definitions.data[first + name.dictionary_index].expression;
+    auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
+    return storage.slot_values.data[first + name.dictionary_index];
 }
 
 static
 Expression evaluateDictionaryTypes(
     Expression dictionary, Expression environment
 ) {
-    // TODO: allocate on storage.definitions directly.
     const auto initial_definitions = initializeDefinitions(
         storage.dictionary_expressions.data[dictionary.index]
     );

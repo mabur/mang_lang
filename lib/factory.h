@@ -64,6 +64,8 @@ struct Storage {
     // Name indices in slot order for dictionary expressions and
     // the arguments of function expressions:
     DARRAY(size_t) dictionary_names;
+    // The slot values of all dictionary values:
+    DARRAY(Expression) slot_values;
     DARRAY(String) strings;
     DARRAY(Row) rows;
     DARRAY(TableExpression) table_expressions;

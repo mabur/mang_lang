@@ -225,10 +225,11 @@ struct DictionaryExpression {
 
 struct DictionaryValue {
     Expression environment;
-    Indices definitions;
+    // The current values of the slots, as a range into storage.slot_values.
+    Indices slot_values;
     // The names of the slots, in slot order, as a range into
     // storage.dictionary_names. Shared with the expression this value was
-    // built from. names.count == definitions.count.
+    // built from. names.count == slot_values.count.
     Indices names;
 };
 

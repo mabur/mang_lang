@@ -40,48 +40,26 @@ const BuiltInEntry* findBuiltIn(size_t name_index) {
     return nullptr;
 }
 
+// Builds the built-in environment: a dictionary value with one slot per
+// entry, holding either the value function or the type function of each entry.
 static
-Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer function) {
-    return Definition{
-        {makeName(CodeRange{}, name, strlen(name)).index, i},
-        makeFunctionBuiltInValue(CodeRange{}, {function}),
-    };
-}
-
-// Persists the built-in names in slot order, in the same shared array that
-// dictionary and function expressions use for their slot names.
-static
-Indices appendBuiltInNames() {
-    const auto first = storage.dictionary_names.count;
+Expression makeBuiltInEnvironment(bool types) {
+    auto slot_values = Indices{storage.slot_values.count, BUILT_IN_ENTRIES_COUNT};
+    auto first = storage.dictionary_names.count;
     for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
-        const auto name = BUILT_IN_ENTRIES[i].name;
-        APPEND(storage.dictionary_names, makeName(CodeRange{}, name, strlen(name)).index);
+        auto entry = BUILT_IN_ENTRIES[i];
+        auto function = types ? entry.function_types : entry.function;
+        APPEND(storage.slot_values, makeFunctionBuiltInValue(CodeRange{}, {function}));
+        APPEND(storage.dictionary_names, makeName(CodeRange{}, entry.name, strlen(entry.name)).index);
     }
-    return Indices{first, BUILT_IN_ENTRIES_COUNT};
+    auto names = Indices{first, BUILT_IN_ENTRIES_COUNT};
+    return makeDictionaryValue(CodeRange{}, DictionaryValue{Expression{}, slot_values, names});
 }
 
 Expression builtIns() {
-    auto first = storage.definitions.count;
-    for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
-        auto entry = BUILT_IN_ENTRIES[i];
-        makeDefinition({}, makeDefinitionBuiltIn(i, entry.name, entry.function));
-    }
-    auto last = storage.definitions.count;
-    auto definitions = Indices{first, last - first};
-    return makeDictionaryValue(CodeRange{},
-        DictionaryValue{Expression{}, definitions, appendBuiltInNames()}
-    );
+    return makeBuiltInEnvironment(false);
 }
 
 Expression builtInsTypes() {
-    auto first = storage.definitions.count;
-    for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
-        auto entry = BUILT_IN_ENTRIES[i];
-        makeDefinition({}, makeDefinitionBuiltIn(i, entry.name, entry.function_types));
-    }
-    auto last = storage.definitions.count;
-    auto definitions = Indices{first, last - first};
-    return makeDictionaryValue(CodeRange{},
-        DictionaryValue{Expression{}, definitions, appendBuiltInNames()}
-    );
+    return makeBuiltInEnvironment(true);
 }
