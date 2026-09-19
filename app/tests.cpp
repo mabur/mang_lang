@@ -672,6 +672,28 @@ int main() {
     testEvaluateAll("recursive function", TEST_CASES(
         {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 y=f!3}", "6"},
     ));
+    // A function value reads the current value of a captured name when it is
+    // called, not the value the name had when the function was created.
+    testEvaluateAll("late binding", TEST_CASES(
+        {"{a=1 f=in x out add!(a x) b=f!2 a=2 c=f!3}", "{a=2 f=in x out add!(a x) b=3 c=5}"},
+        {"{a=0 f=in x out add!(a x) s=0 for i in [1 2] a=i s=f!0 end}", "{a=2 f=in x out add!(a x) s=2 i=2}"},
+        {"b@{a=1 d={f=in x out a} a=2 g=f@d b=g!0}", "2"},
+    ));
+    // The same function can be active more than once at the same time, both
+    // through recursion and through higher-order functions calling each other.
+    testEvaluateAll("re-entrant function", TEST_CASES(
+        {"sum!map!(sum [[1 2] [3 4]])", "10"},
+        {"map!(in row out map!(inc row) [[1 2] [3]])", "[[2 3] [4]]"},
+        {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 g=in x out f!x y=add!(g!2 f!g!1)}", "4"},
+    ));
+    // A name defined only inside a skipped if keeps the any-value in a block
+    // that is entered again, but keeps its last value within one dictionary.
+    testEvaluateAll("block reuse in loop", TEST_CASES(
+        {"{s=[] f=in i out a@{if i a=i end} for i in [0 1] s+=f!i end}", "{s=[1 ANY] f=in i out a@{if i a=i end} i=1}"},
+        {"{s=[] f=in i out a@{if i a=i end} for i in [1 0] s+=f!i end}", "{s=[ANY 1] f=in i out a@{if i a=i end} i=0}"},
+        {"{for i in [0 1] if i a=i end end}", "{i=1 a=1}"},
+        {"{for i in [1 0] if i a=i end end}", "{i=0 a=1}"},
+    ));
     testReformat("dynamic", TEST_CASES(
         {"dynamic 1", "dynamic 1"},
     ));
