@@ -28,7 +28,7 @@ DynamicIndices bindLocalName(DynamicIndices dictionary_names_owner, BoundLocalNa
 static
 DynamicIndices bindLocalNameStatement(DynamicIndices dictionary_names_owner, Expression statement) {
     switch (statement.type) {
-        case DEFINITION_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.definitions.data[statement.index].name);
+        case DEFINITION_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.definition_statements.data[statement.index].name);
         case PUT_ASSIGNMENT_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.put_assignment_statements.data[statement.index].name);
         case PUT_EACH_ASSIGNMENT_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.put_each_assignment_statements.data[statement.index].name);
         case DROP_ASSIGNMENT_STATEMENT: return bindLocalName(dictionary_names_owner, &storage.drop_assignment_statements.data[statement.index].name);
@@ -109,7 +109,7 @@ OptionalIndex matchName(BoundLocalName name, size_t global_index) {
 static
 OptionalIndex findInDictionaryInner(Expression statement, size_t global_index) {
     switch (statement.type) {
-    case DEFINITION_STATEMENT: return matchName(storage.definitions.data[statement.index].name, global_index);
+    case DEFINITION_STATEMENT: return matchName(storage.definition_statements.data[statement.index].name, global_index);
     case PUT_ASSIGNMENT_STATEMENT: return matchName(storage.put_assignment_statements.data[statement.index].name, global_index);
     case PUT_EACH_ASSIGNMENT_STATEMENT: return matchName(storage.put_each_assignment_statements.data[statement.index].name, global_index);
     case DROP_ASSIGNMENT_STATEMENT: return matchName(storage.drop_assignment_statements.data[statement.index].name, global_index);
@@ -172,7 +172,7 @@ void resolveExpression(Expression expression, ScopeChain chain);
 static
 void resolveStatement(Expression statement, ScopeChain chain) {
     switch (statement.type) {
-        case DEFINITION_STATEMENT: return resolveExpression(storage.definitions.data[statement.index].expression, chain);
+        case DEFINITION_STATEMENT: return resolveExpression(storage.definition_statements.data[statement.index].expression, chain);
         case PUT_ASSIGNMENT_STATEMENT: return resolveExpression(storage.put_assignment_statements.data[statement.index].expression, chain);
         case PUT_EACH_ASSIGNMENT_STATEMENT: return resolveExpression(storage.put_each_assignment_statements.data[statement.index].expression, chain);
         case WHILE_STATEMENT: return resolveExpression(storage.while_statements.data[statement.index].expression, chain);

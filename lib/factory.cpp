@@ -55,7 +55,7 @@ void clearMemory() {
     FREE_DARRAY(storage.while_end_statements);
     FREE_DARRAY(storage.for_end_statements);
     FREE_DARRAY(storage.for_iterators);
-    FREE_DARRAY(storage.definitions);
+    FREE_DARRAY(storage.definition_statements);
     FREE_DARRAY(storage.put_assignment_statements);
     FREE_DARRAY(storage.put_each_assignment_statements);
     FREE_DARRAY(storage.drop_assignment_statements);
@@ -224,7 +224,7 @@ Expression makeArgument(CodeRange code, Argument expression) {
 }
 
 Expression makeDefinition(CodeRange code, Definition expression) {
-    return makeExpression(code, expression, DEFINITION_STATEMENT, storage.definitions);
+    return makeExpression(code, expression, DEFINITION_STATEMENT, storage.definition_statements);
 }
 
 Expression makePutAssignmentStatement(CodeRange code, PutAssignmentStatement expression) {

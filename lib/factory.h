@@ -55,7 +55,7 @@ struct Storage {
     DARRAY(WhileEndStatement) while_end_statements;
     DARRAY(ForEndStatement) for_end_statements;
     DARRAY(ForIterator) for_iterators;
-    DARRAY(Definition) definitions;
+    DARRAY(Definition) definition_statements;
     DARRAY(PutAssignmentStatement) put_assignment_statements;
     DARRAY(PutEachAssignmentStatement) put_each_assignment_statements;
     DARRAY(DropAssignmentStatement) drop_assignment_statements;

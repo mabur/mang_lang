@@ -781,7 +781,7 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
         auto statement = storage.statements.data[i];
         auto type = statement.type;
         if (type == DEFINITION_STATEMENT) {
-            auto dictionary_index = storage.definitions.data[statement.index].name.dictionary_index;
+            auto dictionary_index = storage.definition_statements.data[statement.index].name.dictionary_index;
             storage.slot_values.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
         }
         else if (type == FOR_INIT_STATEMENT) {
@@ -839,7 +839,7 @@ Expression evaluateDictionaryTypes(
         const auto statement = storage.statements.data[i];
         const auto type = statement.type;
         if (type == DEFINITION_STATEMENT) {
-            const auto definition = storage.definitions.data[statement.index];
+            const auto definition = storage.definition_statements.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate_types(right_expression, result);
             if (value.type == ERROR_VALUE) return value;
@@ -927,7 +927,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         const auto statement = storage.statements.data[base_index + i];
         const auto type = statement.type;
         if (type == DEFINITION_STATEMENT) {
-            const auto definition = storage.definitions.data[statement.index];
+            const auto definition = storage.definition_statements.data[statement.index];
             const auto right_expression = definition.expression;
             const auto value = evaluate(right_expression, result);
             // Bottleneck:
