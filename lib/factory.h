@@ -61,6 +61,9 @@ struct Storage {
     DARRAY(DropAssignmentStatement) drop_assignment_statements;
     DARRAY(Expression) statements;
     DARRAY(Expression) expressions;
+    // Name indices in slot order for dictionary expressions and
+    // the arguments of function expressions:
+    DARRAY(size_t) dictionary_names;
     DARRAY(String) strings;
     DARRAY(Row) rows;
     DARRAY(TableExpression) table_expressions;

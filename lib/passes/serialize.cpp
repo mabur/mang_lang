@@ -136,16 +136,17 @@ StringBuilder serializeIfStatement(StringBuilder s, const IfStatement& element) 
 template<typename Serializer>
 static
 StringBuilder serializeDictionaryValue(StringBuilder s, Serializer serializer, const DictionaryValue& dictionary) {
-    if (IS_EMPTY(dictionary.definitions)) {
+    if (IS_EMPTY(dictionary.names)) {
         s = concatenate(s, "{}");
         return s;
     }
     s = concatenate(s, "{");
-    FOR_EACH(i, dictionary.definitions) {
-        auto definition = storage.definitions.data[i];
-        s = serializeName(s, definition.name.global_index);
+    FOR_EACH2(name_index, definition_index, dictionary.names, dictionary.definitions) {
+        const auto name = storage.dictionary_names.data[name_index];
+        const auto value = storage.definitions.data[definition_index].expression;
+        s = serializeName(s, name);
         s = concatenate(s, "=");
-        s = serializer(s, definition.expression);
+        s = serializer(s, value);
         s = concatenate(s, " ");
     }
     LAST_ITEM(s) = '}';

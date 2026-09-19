@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include <carma/carma.h>
+
 #include "../factory.h"
 #include "arithmetic.h"
 #include "container.h"
@@ -46,6 +48,18 @@ Definition makeDefinitionBuiltIn(size_t i, const char* name, FunctionPointer fun
     };
 }
 
+// Persists the built-in names in slot order, in the same shared array that
+// dictionary and function expressions use for their slot names.
+static
+Indices appendBuiltInNames() {
+    const auto first = storage.dictionary_names.count;
+    for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
+        const auto name = BUILT_IN_ENTRIES[i].name;
+        APPEND(storage.dictionary_names, makeName(CodeRange{}, name, strlen(name)).index);
+    }
+    return Indices{first, BUILT_IN_ENTRIES_COUNT};
+}
+
 Expression builtIns() {
     auto first = storage.definitions.count;
     for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
@@ -55,7 +69,7 @@ Expression builtIns() {
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     return makeDictionaryValue(CodeRange{},
-        DictionaryValue{Expression{}, definitions}
+        DictionaryValue{Expression{}, definitions, appendBuiltInNames()}
     );
 }
 
@@ -68,6 +82,6 @@ Expression builtInsTypes() {
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     return makeDictionaryValue(CodeRange{},
-        DictionaryValue{Expression{}, definitions}
+        DictionaryValue{Expression{}, definitions, appendBuiltInNames()}
     );
 }

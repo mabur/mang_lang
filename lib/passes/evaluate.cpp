@@ -20,9 +20,9 @@ struct OptionalLookup {
 static
 OptionalLookup optionalLookup(DictionaryValue dictionary, size_t name) {
     auto result = MAKE(OptionalLookup);
-    FOR_EACH(i, dictionary.definitions) {
-        if (storage.definitions.data[i].name.global_index == name) {
-            result.value = storage.definitions.data[i].expression;
+    FOR_EACH2(name_index, definition_index, dictionary.names, dictionary.definitions) {
+        if (storage.dictionary_names.data[name_index] == name) {
+            result.value = storage.definitions.data[definition_index].expression;
             result.ok = true;
         }
     }
@@ -92,12 +92,12 @@ TypeCheck checkTypesDictionaryValue(Expression super, Expression sub, const char
     auto result = TypeCheck{.ok=true};
     const auto dictionary_super = storage.dictionary_values.data[super.index];
     const auto dictionary_sub = storage.dictionary_values.data[sub.index];
-    FOR_EACH(i, dictionary_super.definitions) {
-        auto definition_super = storage.definitions.data[i];
-        const auto name_super = definition_super.name.global_index;
+    FOR_EACH2(name_index, definition_index, dictionary_super.names, dictionary_super.definitions) {
+        const auto name_super = storage.dictionary_names.data[name_index];
+        const auto value_super = storage.definitions.data[definition_index].expression;
         const auto value_sub = optionalLookup(dictionary_sub, name_super);
         if (value_sub.ok) {
-            result = checkTypes(definition_super.expression, value_sub.value, description);
+            result = checkTypes(value_super, value_sub.value, description);
             if (!result.ok) return result;
         }
         else {
@@ -313,7 +313,7 @@ Expression applyFunction(
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     const auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, definitions}
+        DictionaryValue{function_value.environment, definitions, function_struct.names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -352,7 +352,7 @@ Expression applyFunctionDictionary(
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, definitions}
+        DictionaryValue{function_value.environment, definitions, function_struct.names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -403,7 +403,7 @@ Expression applyFunctionTuple(
     auto last = storage.definitions.count;
     auto definitions = Indices{first, last - first};
     const auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, definitions}
+        DictionaryValue{function_value.environment, definitions, function_struct.names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -443,7 +443,15 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     }
     const auto dictionary = storage.dictionary_values.data[expression.index];
     if (name.parent_steps == 0) {
-        auto value = storage.definitions.data[dictionary.definitions.data + name.dictionary_index].expression;
+        const auto definition = storage.definitions.data[dictionary.definitions.data + name.dictionary_index];
+        // Transitional check: the shared name list must agree with the name
+        // stored in the slot, until the slot no longer stores a name.
+        CHECK_INTERNAL(
+            storage.dictionary_names.data[dictionary.names.data + name.dictionary_index] == definition.name.global_index,
+            "Internal error in lookupDictionary. The shared name list disagrees with the slot for %s.",
+            storage.names.data + name.global_index
+        );
+        auto value = definition.expression;
         return value.type != FOR_ITERATOR ? value :
             builtInTake(storage.for_iterators.data[value.index].container);
     }
@@ -844,7 +852,11 @@ Expression evaluateDictionaryTypes(
         storage.dictionary_expressions.data[dictionary.index]
     );
     const auto result = makeDictionaryValue(
-        dictionary.range, DictionaryValue{environment, initial_definitions}
+        dictionary.range, DictionaryValue{
+            environment,
+            initial_definitions,
+            storage.dictionary_expressions.data[dictionary.index].names
+        }
     );
     const auto dictionary_struct = storage.dictionary_expressions.data[dictionary.index];
     FOR_EACH(i, dictionary_struct.statements) {
@@ -923,7 +935,11 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         storage.dictionary_expressions.data[dictionary.index]
     );
     const auto result = makeDictionaryValue(
-        dictionary.range, DictionaryValue{environment, initial_definitions}
+        dictionary.range, DictionaryValue{
+            environment,
+            initial_definitions,
+            storage.dictionary_expressions.data[dictionary.index].names
+        }
     );
 
     const auto dict_statements = storage.dictionary_expressions.data[dictionary.index].statements;

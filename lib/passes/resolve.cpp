@@ -191,6 +191,13 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
         dictionary_names_owner = bindLocalNameStatement(dictionary_names_owner, storage.statements.data[i]);
     }
     dictionary_struct->definition_count = dictionary_names_owner.count;
+    // Persist the names in slot order, so that dictionary values built from
+    // this expression can share them instead of storing a name per slot.
+    const auto names_first = storage.dictionary_names.count;
+    FOR_INDEX(i, dictionary_names_owner) {
+        APPEND(storage.dictionary_names, dictionary_names_owner.data[i]);
+    }
+    dictionary_struct->names = Indices{names_first, dictionary_names_owner.count};
     FREE_DARRAY(dictionary_names_owner);
     
     resolveDictionaryLoops(*dictionary_struct);
@@ -209,25 +216,40 @@ void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
     }
 }
 
+// Persists the names of `arguments` in slot order, so that the argument
+// frame built by a call can share them. Same layout as for dictionaries.
+static
+Indices appendArgumentNames(Indices arguments) {
+    const auto first = storage.dictionary_names.count;
+    FOR_EACH(i, arguments) {
+        APPEND(storage.dictionary_names, storage.arguments.data[i].name);
+    }
+    return Indices{first, arguments.count};
+}
+
 static
 void resolveFunction(Expression expression, ScopeChain chain) {
-    auto function_struct = storage.function_expressions.data[expression.index];
-    resolveArgumentTypes(Indices{function_struct.argument, 1}, chain);
-    resolveExpression(function_struct.body, ScopeChain{expression, &chain});
+    auto function_struct = &storage.function_expressions.data[expression.index];
+    const auto arguments = Indices{function_struct->argument, 1};
+    function_struct->names = appendArgumentNames(arguments);
+    resolveArgumentTypes(arguments, chain);
+    resolveExpression(function_struct->body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionDictionary(Expression expression, ScopeChain chain) {
-    auto function_struct = storage.function_dictionary_expressions.data[expression.index];
-    resolveArgumentTypes(function_struct.arguments, chain);
-    resolveExpression(function_struct.body, ScopeChain{expression, &chain});
+    auto function_struct = &storage.function_dictionary_expressions.data[expression.index];
+    function_struct->names = appendArgumentNames(function_struct->arguments);
+    resolveArgumentTypes(function_struct->arguments, chain);
+    resolveExpression(function_struct->body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionTuple(Expression expression, ScopeChain chain) {
-    auto function_struct = storage.function_tuple_expressions.data[expression.index];
-    resolveArgumentTypes(function_struct.arguments, chain);
-    resolveExpression(function_struct.body, ScopeChain{expression, &chain});
+    auto function_struct = &storage.function_tuple_expressions.data[expression.index];
+    function_struct->names = appendArgumentNames(function_struct->arguments);
+    resolveArgumentTypes(function_struct->arguments, chain);
+    resolveExpression(function_struct->body, ScopeChain{expression, &chain});
 }
 
 static

@@ -77,9 +77,14 @@ struct IsExpression {
     Expression expression_else;
 };
 
+// The `names` of the function expressions below are the argument names in
+// slot order, as a range into storage.dictionary_names. They describe the
+// dictionary value that a call builds as its argument frame. Filled in by the
+// resolver.
 struct FunctionExpression {
-    size_t argument;
+    size_t argument; // TODO: split and re-use names indices below.
     Expression body;
+    Indices names;
 };
 
 typedef Expression (*FunctionPointer)(Expression);
@@ -89,13 +94,15 @@ struct FunctionBuiltInValue {
 };
 
 struct FunctionDictionaryExpression {
-    Indices arguments;
+    Indices arguments; // TODO: split and re-use names indices below.
     Expression body;
+    Indices names;
 };
 
 struct FunctionTupleExpression {
-    Indices arguments;
+    Indices arguments; // TODO: split and re-use names indices below.
     Expression body;
+    Indices names;
 };
 
 struct FunctionValue {
@@ -210,11 +217,19 @@ struct ForIterator {
 struct DictionaryExpression {
     Indices statements;
     size_t definition_count;
+    // The names defined by the statements, in slot order, as a range into
+    // storage.dictionary_names. Shared by every value built from this
+    // expression. Filled in by the resolver. names.count == definition_count.
+    Indices names;
 };
 
 struct DictionaryValue {
     Expression environment;
     Indices definitions;
+    // The names of the slots, in slot order, as a range into
+    // storage.dictionary_names. Shared with the expression this value was
+    // built from. names.count == definitions.count.
+    Indices names;
 };
 
 struct Row {
