@@ -87,15 +87,14 @@ struct OptionalIndex {
     bool ok;
 };
 
-// Looks for `global_index` among the arguments listed in `arguments`
-// (indices into storage.arguments), returning its declaration-order
-// position. Shared by FUNCTION_DICTIONARY_EXPRESSION and FUNCTION_TUPLE_EXPRESSION, and by
-// FUNCTION_EXPRESSION via a single-element Indices.
+// Looks for `global_index` among the argument names of a function
+// (a range into storage.slot_names), returning its position, which is also
+// its slot index in the argument frame of a call.
 static
-OptionalIndex findInArguments(Indices arguments, size_t global_index) {
-    FOR_EACH(i, arguments) {
-        if (storage.arguments.data[i].name == global_index) {
-            return OptionalIndex{i - BEGIN_POINTER(arguments), true};
+OptionalIndex findInArguments(Indices argument_names, size_t global_index) {
+    FOR_EACH(i, argument_names) {
+        if (storage.slot_names.data[i] == global_index) {
+            return OptionalIndex{i - BEGIN_POINTER(argument_names), true};
         }
     }
     return OptionalIndex{};
@@ -139,9 +138,9 @@ static
 OptionalIndex findInScope(Expression scope, size_t global_index) {
     switch (scope.type) {
         case DICTIONARY_EXPRESSION: return findInDictionary(scope, global_index);
-        case FUNCTION_EXPRESSION: return findInArguments(Indices{storage.function_expressions.data[scope.index].argument, 1}, global_index);
-        case FUNCTION_DICTIONARY_EXPRESSION: return findInArguments(storage.function_dictionary_expressions.data[scope.index].arguments, global_index);
-        case FUNCTION_TUPLE_EXPRESSION: return findInArguments(storage.function_tuple_expressions.data[scope.index].arguments, global_index);
+        case FUNCTION_EXPRESSION: return findInArguments(storage.function_expressions.data[scope.index].argument_names, global_index);
+        case FUNCTION_DICTIONARY_EXPRESSION: return findInArguments(storage.function_dictionary_expressions.data[scope.index].argument_names, global_index);
+        case FUNCTION_TUPLE_EXPRESSION: return findInArguments(storage.function_tuple_expressions.data[scope.index].argument_names, global_index);
         default: return OptionalIndex{};
     }
 }
@@ -207,11 +206,11 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
 }
 
 static
-void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
-    FOR_EACH(i, arguments) {
-        auto argument = storage.arguments.data[i];
-        if (argument.type.type != ANY_VALUE) {
-            resolveExpression(argument.type, chain);
+void resolveArgumentTypes(Indices argument_types, ScopeChain chain) {
+    FOR_EACH(i, argument_types) {
+        auto type = storage.argument_types.data[i];
+        if (type.type != ANY_VALUE) {
+            resolveExpression(type, chain);
         }
     }
 }
@@ -219,21 +218,21 @@ void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
 static
 void resolveFunction(Expression expression, ScopeChain chain) {
     auto function_struct = storage.function_expressions.data[expression.index];
-    resolveArgumentTypes(Indices{function_struct.argument, 1}, chain);
+    resolveArgumentTypes(function_struct.argument_types, chain);
     resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionDictionary(Expression expression, ScopeChain chain) {
     auto function_struct = storage.function_dictionary_expressions.data[expression.index];
-    resolveArgumentTypes(function_struct.arguments, chain);
+    resolveArgumentTypes(function_struct.argument_types, chain);
     resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionTuple(Expression expression, ScopeChain chain) {
     auto function_struct = storage.function_tuple_expressions.data[expression.index];
-    resolveArgumentTypes(function_struct.arguments, chain);
+    resolveArgumentTypes(function_struct.argument_types, chain);
     resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
@@ -340,7 +339,7 @@ void resolveExpression(Expression expression, ScopeChain chain) {
         case TYPED_EXPRESSION: return resolveTypedExpression(expression, chain);
         case DYNAMIC_EXPRESSION: return resolveDynamicExpression(expression, chain);
         case LOOKUP_SYMBOL_EXPRESSION: return resolveLookupSymbol(expression, chain);
-        // Everything else (NUMBER, CHARACTER, strings, YES/NO, ARGUMENT,
+        // Everything else (NUMBER, CHARACTER, strings, YES/NO,
         // EMPTY_STACK, ERROR_VALUE, ...) is a leaf: nothing to recurse into.
         default: return;
     }

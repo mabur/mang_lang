@@ -47,7 +47,7 @@ void clearMemory() {
     FREE_DARRAY(storage.function_application_expressions);
     FREE_DARRAY(storage.function_application_built_in_expressions);
     FREE_DARRAY(storage.lookup_symbol_expressions);
-    FREE_DARRAY(storage.arguments);
+    FREE_DARRAY(storage.argument_types);
     FREE_DARRAY(storage.while_statements);
     FREE_DARRAY(storage.for_init_statements);
     FREE_DARRAY(storage.for_statements);
@@ -217,10 +217,6 @@ Expression makeName(CodeRange code, const char* data, size_t count) {
     CONCAT(storage.names, string);
     APPEND(storage.names, '\0');
     return Expression{index, code, NAME};
-}
-
-Expression makeArgument(CodeRange code, Argument expression) {
-    return makeExpression(code, expression, ARGUMENT, storage.arguments);
 }
 
 Expression makeDefinition(CodeRange code, Definition expression) {

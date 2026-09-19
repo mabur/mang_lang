@@ -13,15 +13,23 @@ StringBuilder serializeName(StringBuilder s, size_t name) {
 }
 
 static
-StringBuilder serializeArgument(StringBuilder s, Argument a) {
-    if (a.type.type != ANY_VALUE) {
+StringBuilder serializeArgument(StringBuilder s, size_t name, Expression type) {
+    if (type.type != ANY_VALUE) {
         s = concatenate(s, "<");
-        s = serialize(s, a.type);
+        s = serialize(s, type);
         s = concatenate(s, ">");
-        s = serializeName(s, a.name);
-        return s;
     }
-    s = serializeName(s, a.name);
+    s = serializeName(s, name);
+    return s;
+}
+
+// Serializes the arguments of a function, separated by spaces.
+static
+StringBuilder serializeArguments(StringBuilder s, Indices argument_names, Indices argument_types) {
+    FOR_EACH2(name_index, type_index, argument_names, argument_types) {
+        s = serializeArgument(s, storage.slot_names.data[name_index], storage.argument_types.data[type_index]);
+        s = concatenate(s, " ");
+    }
     return s;
 }
 
@@ -267,8 +275,8 @@ StringBuilder serializeCharacter(StringBuilder s, Character character) {
 static
 StringBuilder serializeFunctionExpression(StringBuilder s, const FunctionExpression& function) {
     s = concatenate(s, "in ");
-    s = serializeArgument(s, storage.arguments.data[function.argument]);
-    s = concatenate(s, " out ");
+    s = serializeArguments(s, function.argument_names, function.argument_types);
+    s = concatenate(s, "out ");
     s = serialize(s, function.body);
     return s;
 }
@@ -277,11 +285,8 @@ static
 StringBuilder serializeFunctionDictionaryExpression(StringBuilder s, const FunctionDictionaryExpression& function_dictionary) {
     s = concatenate(s, "in ");
     s = concatenate(s, "{");
-    FOR_EACH(i, function_dictionary.arguments) {
-        s = serializeArgument(s, storage.arguments.data[i]);
-        s = concatenate(s, " ");
-    }
-    if (IS_EMPTY(function_dictionary.arguments)) {
+    s = serializeArguments(s, function_dictionary.argument_names, function_dictionary.argument_types);
+    if (IS_EMPTY(function_dictionary.argument_names)) {
         s = concatenate(s, "}");
     }
     else {
@@ -296,11 +301,8 @@ static
 StringBuilder serializeFunctionTupleExpression(StringBuilder s, const FunctionTupleExpression& function_stack) {
     s = concatenate(s, "in ");
     s = concatenate(s, "(");
-    FOR_EACH(i, function_stack.arguments) {
-        s = serializeArgument(s, storage.arguments.data[i]);
-        s = concatenate(s, " ");
-    }
-    if (IS_EMPTY(function_stack.arguments)) {
+    s = serializeArguments(s, function_stack.argument_names, function_stack.argument_types);
+    if (IS_EMPTY(function_stack.argument_names)) {
         s = concatenate(s, ")");
     }
     else {

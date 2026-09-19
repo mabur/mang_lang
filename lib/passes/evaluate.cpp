@@ -274,16 +274,19 @@ Expression evaluateLookupChild(
     return requiredLookup(dictionary, lookup_child_struct.name);
 }
 
+// Checks `input` against the type ascription of argument `i` of a function,
+// given the function's argument_types range. Only in the type-checking pass.
 template<bool CheckTypes, typename Evaluator>
 static
 Expression checkArgument(
-    Evaluator evaluator, const Argument& a, Expression input, Expression environment
+    Evaluator evaluator, Indices argument_types, size_t i, Expression input, Expression environment
 ) {
     if constexpr (CheckTypes) {
-        if (a.type.type == ANY_VALUE) {
+        const auto type_expression = storage.argument_types.data[argument_types.data + i];
+        if (type_expression.type == ANY_VALUE) {
             return Expression{};
         }
-        const auto type = evaluator(a.type, environment);
+        const auto type = evaluator(type_expression, environment);
         const auto type_check = checkTypes(input, type, "function call");
         if (!type_check.ok) {
             return type_check.error;
@@ -300,8 +303,7 @@ Expression applyFunction(
     Expression input
 ) {
     const auto function_struct = storage.function_expressions.data[function_value.function.index];
-    const auto argument = storage.arguments.data[function_struct.argument];
-    const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, input, function_value.environment);
+    const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, 0, input, function_value.environment);
     if (argument_check.type == ERROR_VALUE) {
         return argument_check;
     }
@@ -309,7 +311,7 @@ Expression applyFunction(
     const auto slot_values = Indices{storage.slot_values.count, 1};
     APPEND(storage.slot_values, input);
     const auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, slot_values, function_struct.names}
+        DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -331,22 +333,21 @@ Expression applyFunctionDictionary(
     }
     auto function_struct = storage.function_dictionary_expressions.data[function_value.function.index];
     auto evaluated_dictionary = storage.dictionary_values.data[input.index];
-    auto first_argument = BEGIN_POINTER(function_struct.arguments);
-    auto num_arguments = function_struct.arguments.count;
+    auto num_arguments = function_struct.argument_names.count;
 
     // Allocation:
     const auto slot_values = Indices{storage.slot_values.count, num_arguments};
     for (size_t i = 0; i < num_arguments; ++i) {
-        auto argument = storage.arguments.data[first_argument + i];
-        auto expression = requiredLookup(evaluated_dictionary, argument.name);
-        const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, expression, function_value.environment);
+        const auto name = storage.slot_names.data[function_struct.argument_names.data + i];
+        auto expression = requiredLookup(evaluated_dictionary, name);
+        const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, i, expression, function_value.environment);
         if (argument_check.type == ERROR_VALUE) {
             return argument_check;
         }
         APPEND(storage.slot_values, expression);
     }
     auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, slot_values, function_struct.names}
+        DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
     );
     return evaluator(function_struct.body, middle);
 }
@@ -369,9 +370,7 @@ Expression applyFunctionTuple(
     auto tuple = storage.tuple_values.data[input.index];
     auto tuple_count = tuple.indices.count;
     auto function_struct = storage.function_tuple_expressions.data[function_value.function.index];
-    size_t first_argument = BEGIN_POINTER(function_struct.arguments);
-    size_t last_argument = END_POINTER(function_struct.arguments);
-    size_t num_inputs = last_argument - first_argument;
+    size_t num_inputs = function_struct.argument_names.count;
 
     if (num_inputs != tuple_count) {
         return makeErrorValue({},
@@ -380,20 +379,18 @@ Expression applyFunctionTuple(
         );
     }
 
-    auto argument_index = first_argument;
     // Allocation:
     const auto slot_values = Indices{storage.slot_values.count, num_inputs};
     for (size_t i = 0; i < num_inputs; ++i) {
-        const auto argument = storage.arguments.data[argument_index + i];
         const auto expression = storage.expressions.data[tuple.indices.data + i];
-        const auto argument_check = checkArgument<CheckTypes>(evaluator, argument, expression, function_value.environment);
+        const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, i, expression, function_value.environment);
         if (argument_check.type == ERROR_VALUE) {
             return argument_check;
         }
         APPEND(storage.slot_values, expression);
     }
     const auto middle = makeDictionaryValue(input.range,
-        DictionaryValue{function_value.environment, slot_values, function_struct.names}
+        DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
     );
     return evaluator(function_struct.body, middle);
 }

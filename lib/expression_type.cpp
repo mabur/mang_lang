@@ -46,7 +46,6 @@ const char* getExpressionName(ExpressionType type) {
 
         // Syntax fragments:
         case NAME: return "NAME";
-        case ARGUMENT: return "ARGUMENT";
         case ALTERNATIVE: return "ALTERNATIVE";
 
         // Statements:

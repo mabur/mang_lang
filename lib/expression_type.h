@@ -52,7 +52,6 @@ enum ExpressionType {
 
     // Fragments that are never evaluated on their own:
     NAME,
-    ARGUMENT,
     ALTERNATIVE,
     
     DEFINITION_STATEMENT, // Used for both DictionaryExpression and DictionaryValue.

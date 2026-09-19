@@ -46,11 +46,6 @@ struct BoundLocalName {
     size_t dictionary_index; // Index to this name and its data in the dictionary.
 };
 
-struct Argument {
-    Expression type; // Optional
-    size_t name;
-};
-
 // TODO: type alias instead of struct?
 struct DynamicExpression {
     Expression expression;
@@ -77,14 +72,16 @@ struct IsExpression {
     Expression expression_else;
 };
 
-// The `names` of the function expressions below are the argument names in
-// slot order, as a range into storage.slot_names. They describe the
-// dictionary value that a call builds as its argument frame. Filled in by the
-// parser.
+// The three function expressions below store their arguments as two parallel
+// ranges of the same count, filled in by the parser:
+// - argument_names: a range into storage.slot_names, in slot order. It is
+//   also the name range of the dictionary value a call builds as its frame.
+// - argument_types: a range into storage.argument_types. An argument without
+//   a type ascription has the any-value as its type.
 struct FunctionExpression {
-    size_t argument; // TODO: split and re-use names indices below.
+    Indices argument_names;
+    Indices argument_types;
     Expression body;
-    Indices names;
 };
 
 typedef Expression (*FunctionPointer)(Expression);
@@ -94,15 +91,15 @@ struct FunctionBuiltInValue {
 };
 
 struct FunctionDictionaryExpression {
-    Indices arguments; // TODO: split and re-use names indices below.
+    Indices argument_names;
+    Indices argument_types;
     Expression body;
-    Indices names;
 };
 
 struct FunctionTupleExpression {
-    Indices arguments; // TODO: split and re-use names indices below.
+    Indices argument_names;
+    Indices argument_types;
     Expression body;
-    Indices names;
 };
 
 struct FunctionValue {

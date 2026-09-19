@@ -47,7 +47,9 @@ struct Storage {
     DARRAY(FunctionApplicationExpression) function_application_expressions;
     DARRAY(FunctionApplicationBuiltInExpression) function_application_built_in_expressions;
     DARRAY(LookupSymbolExpression) lookup_symbol_expressions;
-    DARRAY(Argument) arguments;
+    // The type ascriptions of all function arguments. An argument without an
+    // ascription has the any-value here. Parallel to its name in slot_names.
+    DARRAY(Expression) argument_types;
     DARRAY(WhileStatement) while_statements;
     DARRAY(ForInitStatement) for_init_statements;
     DARRAY(ForStatement) for_statements;
@@ -115,7 +117,6 @@ Expression makeFunctionApplicationExpression(CodeRange code, FunctionApplication
 Expression makeFunctionApplicationBuiltInExpression(CodeRange code, FunctionApplicationBuiltInExpression expression);
 Expression makeLookupSymbolExpression(CodeRange code, LookupSymbolExpression expression);
 Expression makeName(CodeRange code, const char* data, size_t count);
-Expression makeArgument(CodeRange code, Argument expression);
 Expression makeDefinition(CodeRange code, Definition expression);
 Expression makePutAssignmentStatement(CodeRange code, PutAssignmentStatement expression);
 Expression makePutEachAssignmentStatement(CodeRange code, PutEachAssignmentStatement expression);
