@@ -78,9 +78,9 @@ struct IsExpression {
 };
 
 // The `names` of the function expressions below are the argument names in
-// slot order, as a range into storage.dictionary_names. They describe the
+// slot order, as a range into storage.slot_names. They describe the
 // dictionary value that a call builds as its argument frame. Filled in by the
-// resolver.
+// parser.
 struct FunctionExpression {
     size_t argument; // TODO: split and re-use names indices below.
     Expression body;
@@ -218,7 +218,7 @@ struct DictionaryExpression {
     Indices statements;
     size_t definition_count;
     // The names defined by the statements, in slot order, as a range into
-    // storage.dictionary_names. Shared by every value built from this
+    // storage.slot_names. Shared by every value built from this
     // expression. Filled in by the resolver. names.count == definition_count.
     Indices names;
 };
@@ -228,7 +228,7 @@ struct DictionaryValue {
     // The current values of the slots, as a range into storage.slot_values.
     Indices slot_values;
     // The names of the slots, in slot order, as a range into
-    // storage.dictionary_names. Shared with the expression this value was
+    // storage.slot_names. Shared with the expression this value was
     // built from. names.count == slot_values.count.
     Indices names;
 };

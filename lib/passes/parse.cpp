@@ -161,6 +161,10 @@ Expression parseName(CodeRange code) {
     );
 }
 
+// Parses one argument of a function. Besides the Argument, the name is
+// appended to storage.slot_names, so that the arguments of a function form
+// a contiguous name range there, in the same layout as the slot names of a
+// dictionary expression.
 static
 Expression parseArgument(CodeRange code) {
     auto whole = code;
@@ -177,6 +181,7 @@ Expression parseArgument(CodeRange code) {
         code = parseWhiteSpace(code);
         auto param_name = parseName(code);
         code = lastPart(code, param_name.range);
+        APPEND(storage.slot_names, param_name.index);
         return makeArgument(
             firstPart(whole, code), Argument{type, param_name.index}
         );
@@ -184,6 +189,7 @@ Expression parseArgument(CodeRange code) {
     else {
         auto name = parseName(code);
         code = lastPart(code, name.range);
+        APPEND(storage.slot_names, name.index);
         return makeArgument(
             firstPart(whole, code), Argument{{}, name.index}
         );
@@ -408,6 +414,7 @@ Expression parseDictionary(CodeRange code) {
 static
 Expression parseFunction(CodeRange code) {
     auto whole = code;
+    const auto first_name = storage.slot_names.count;
     auto argument = parseArgument(code);
     code = lastPart(code, argument.range);
     code = parseWhiteSpace(code);
@@ -421,7 +428,7 @@ Expression parseFunction(CodeRange code) {
     code = lastPart(code, body.range);
     return makeFunctionExpression(
         firstPart(whole, code),
-        {argument.index, body}
+        {argument.index, body, Indices{first_name, 1}}
     );
 }
 
@@ -438,7 +445,8 @@ Expression parseFunctionDictionary(CodeRange code) {
         storage.arguments.count, CodeRange{}, ARGUMENT
     };
     auto last_argument = first_argument;
-    
+    const auto first_name = storage.slot_names.count;
+
     while (!::startsWith(code, '}')) {
         if (IS_EMPTY(code)) {
             return makeErrorValue(code,
@@ -464,12 +472,13 @@ Expression parseFunctionDictionary(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
-    auto indices = Indices{first_argument.index, last_argument.index - first_argument.index};
+    const auto count = last_argument.index - first_argument.index;
     return makeFunctionDictionaryExpression(
         firstPart(whole, code),
         FunctionDictionaryExpression{
-            indices,
-            body
+            Indices{first_argument.index, count},
+            body,
+            Indices{first_name, count}
         }
     );
 }
@@ -487,7 +496,8 @@ Expression parseFunctionTuple(CodeRange code) {
         storage.arguments.count, CodeRange{}, ARGUMENT
     };
     auto last_argument = first_argument;
-    
+    const auto first_name = storage.slot_names.count;
+
     while (!::startsWith(code, ')')) {
         if (IS_EMPTY(code)) {
             return makeErrorValue(code,
@@ -513,9 +523,10 @@ Expression parseFunctionTuple(CodeRange code) {
     code = parseKeyword(code, "out");
     auto body = parseExpression(code);
     code = lastPart(code, body.range);
+    const auto count = last_argument.index - first_argument.index;
     return makeFunctionTupleExpression(
         firstPart(whole, code),
-        {Indices{first_argument.index, last_argument.index - first_argument.index}, body}
+        {Indices{first_argument.index, count}, body, Indices{first_name, count}}
     );
 }
 

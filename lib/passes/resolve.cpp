@@ -216,40 +216,25 @@ void resolveArgumentTypes(Indices arguments, ScopeChain chain) {
     }
 }
 
-// Persists the names of `arguments` in slot order, so that the argument
-// frame built by a call can share them. Same layout as for dictionaries.
-static
-Indices appendArgumentNames(Indices arguments) {
-    const auto first = storage.slot_names.count;
-    FOR_EACH(i, arguments) {
-        APPEND(storage.slot_names, storage.arguments.data[i].name);
-    }
-    return Indices{first, arguments.count};
-}
-
 static
 void resolveFunction(Expression expression, ScopeChain chain) {
-    auto function_struct = &storage.function_expressions.data[expression.index];
-    const auto arguments = Indices{function_struct->argument, 1};
-    function_struct->names = appendArgumentNames(arguments);
-    resolveArgumentTypes(arguments, chain);
-    resolveExpression(function_struct->body, ScopeChain{expression, &chain});
+    auto function_struct = storage.function_expressions.data[expression.index];
+    resolveArgumentTypes(Indices{function_struct.argument, 1}, chain);
+    resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionDictionary(Expression expression, ScopeChain chain) {
-    auto function_struct = &storage.function_dictionary_expressions.data[expression.index];
-    function_struct->names = appendArgumentNames(function_struct->arguments);
-    resolveArgumentTypes(function_struct->arguments, chain);
-    resolveExpression(function_struct->body, ScopeChain{expression, &chain});
+    auto function_struct = storage.function_dictionary_expressions.data[expression.index];
+    resolveArgumentTypes(function_struct.arguments, chain);
+    resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
 void resolveFunctionTuple(Expression expression, ScopeChain chain) {
-    auto function_struct = &storage.function_tuple_expressions.data[expression.index];
-    function_struct->names = appendArgumentNames(function_struct->arguments);
-    resolveArgumentTypes(function_struct->arguments, chain);
-    resolveExpression(function_struct->body, ScopeChain{expression, &chain});
+    auto function_struct = storage.function_tuple_expressions.data[expression.index];
+    resolveArgumentTypes(function_struct.arguments, chain);
+    resolveExpression(function_struct.body, ScopeChain{expression, &chain});
 }
 
 static
