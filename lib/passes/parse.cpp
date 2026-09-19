@@ -201,9 +201,9 @@ Expression parseNamedElement(CodeRange code) {
         auto expression = parseExpression(code);
         code = lastPart(code, expression.range);
         code = parseWhiteSpace(code);
-        return makeDefinition(
+        return makeDefinitionStatement(
             firstPart(whole, code),
-            Definition{getUnboundLocalName(name), expression}
+            DefinitionStatement{getUnboundLocalName(name), expression}
         );
     }
     else if (startsWithString(code, "--")) {

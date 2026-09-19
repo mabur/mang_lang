@@ -82,7 +82,7 @@ StringBuilder serializeIsExpression(StringBuilder s, const IsExpression& is_expr
 }
 
 static
-StringBuilder serializeDefinition(StringBuilder s, const Definition& element) {
+StringBuilder serializeDefinitionStatement(StringBuilder s, const DefinitionStatement& element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "=");
     s = serialize(s, element.expression);
@@ -460,7 +460,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case IS_EXPRESSION: return serializeIsExpression(s, storage.is_expressions.data[expression.index]);
         case DICTIONARY_EXPRESSION: return serializeDictionaryExpression(s, storage.dictionary_expressions.data[expression.index]);
         case DICTIONARY_VALUE: return serializeDictionaryValue(s, serialize, storage.dictionary_values.data[expression.index]);
-        case DEFINITION_STATEMENT: return serializeDefinition(s, storage.definition_statements.data[expression.index]);
+        case DEFINITION_STATEMENT: return serializeDefinitionStatement(s, storage.definition_statements.data[expression.index]);
         case PUT_ASSIGNMENT_STATEMENT: return serializePutAssignmentStatement(s, storage.put_assignment_statements.data[expression.index]);
         case PUT_EACH_ASSIGNMENT_STATEMENT: return serializePutEachAssignmentStatement(s, storage.put_each_assignment_statements.data[expression.index]);
         case DROP_ASSIGNMENT_STATEMENT: return serializeDropAssignmentStatement(s, storage.drop_assignment_statements.data[expression.index]);

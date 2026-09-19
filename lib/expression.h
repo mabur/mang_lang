@@ -156,7 +156,7 @@ struct StackValue {
 
 // STATEMENTS BEGIN
 
-struct Definition {
+struct DefinitionStatement {
     BoundLocalName name;
     Expression expression;
 };

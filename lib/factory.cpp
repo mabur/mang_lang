@@ -219,7 +219,7 @@ Expression makeName(CodeRange code, const char* data, size_t count) {
     return Expression{index, code, NAME};
 }
 
-Expression makeDefinition(CodeRange code, Definition expression) {
+Expression makeDefinitionStatement(CodeRange code, DefinitionStatement expression) {
     return makeExpression(code, expression, DEFINITION_STATEMENT, storage.definition_statements);
 }
 
