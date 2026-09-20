@@ -103,6 +103,8 @@ struct FunctionTupleExpression {
     Expression body;
 };
 
+// Using a function value after the call that created it has ended is
+// undefined behaviour: the frame it captured may have been reclaimed.
 struct FunctionValue {
     Expression function;
     Expression environment;
@@ -227,13 +229,16 @@ struct DictionaryExpression {
     size_t slot_count;
 };
 
+// Lives in storage.dictionary_values_forever or storage.dictionary_values_stack,
+// depending on the tag of the expression referring to it.
 struct DictionaryValue {
     Expression environment;
-    // The current values of the slots, as a range into storage.slot_values_forever.
+    // The current values of the slots, as a range into storage.slot_values_forever
+    // or storage.slot_values_stack, matching where this value lives.
     Indices slot_values;
     // The names of the slots, in slot order, as a range into
     // storage.slot_names. Shared with the expression this value was
-    // built from. names.count == slot_values.count.
+    // built from. names.count <= slot_values.count.
     Indices names;
 };
 

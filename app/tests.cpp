@@ -686,6 +686,13 @@ int main() {
         {"map!(in row out map!(inc row) [[1 2] [3]])", "[[2 3] [4]]"},
         {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 g=in x out f!x y=add!(g!2 f!g!1)}", "4"},
     ));
+    // A function value is used inside the call that created it, directly or
+    // through values created there. Using it after that call has ended is
+    // undefined behaviour, since the frame it captured is reclaimed then.
+    testEvaluateAll("function value inside its call", TEST_CASES(
+        {"r@{g=in y out v@{d={f=in x out add!(x y)} k=f@d v=k!2} r=g!1}", "3"},
+        {"r@{g=in y out v@{f=in x out add!(x y) v=map!(f [1 2])} r=g!1}", "[2 3]"},
+    ));
     // A name defined only inside a skipped if keeps the any-value in a block
     // that is entered again, but keeps its last value within one dictionary.
     testEvaluateAll("block reuse in loop", TEST_CASES(

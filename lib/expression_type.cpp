@@ -15,6 +15,7 @@ const char* getExpressionName(ExpressionType type) {
         case STACK_VALUE: return "STACK_VALUE";
         case TUPLE_VALUE: return "TUPLE_VALUE";
         case DICTIONARY_VALUE_FOREVER: return "DICTIONARY_VALUE_FOREVER";
+        case DICTIONARY_VALUE_STACK: return "DICTIONARY_VALUE_STACK";
         case TABLE_VALUE: return "TABLE_VALUE";
         case TABLE_VIEW_VALUE: return "TABLE_VIEW_VALUE";
         case FUNCTION_VALUE: return "FUNCTION_VALUE";

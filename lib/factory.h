@@ -29,7 +29,11 @@ struct Storage {
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;
     DARRAY(DictionaryExpression) dictionary_expressions;
+    // Dictionary values that are never reclaimed:
     DARRAY(DictionaryValue) dictionary_values_forever;
+    // Dictionary values that are reclaimed when the scope that built them
+    // ends. Pushed and popped in stack order, like their slot_values_stack.
+    DARRAY(DictionaryValue) dictionary_values_stack;
     DARRAY(ConditionalExpression) conditional_expressions;
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
@@ -62,12 +66,12 @@ struct Storage {
     DARRAY(DropAssignmentStatement) drop_assignment_statements;
     DARRAY(Expression) statements;
     DARRAY(Expression) expressions;
-    // The slot names of all dictionary_expressions. Shared with dictionary_values.
+    // The slot names of all dictionary_expressions. Shared with dictionary values.
     // Also used for function arguments.
     DARRAY(size_t) slot_names;
-    // The slot values of all dictionary_values.
-    // Also used for function arguments.
+    // The slot values of dictionary_values_forever and dictionary_values_stack:
     DARRAY(Expression) slot_values_forever;
+    DARRAY(Expression) slot_values_stack;
     DARRAY(String) strings;
     DARRAY(Row) rows;
     DARRAY(TableExpression) table_expressions;
@@ -102,6 +106,7 @@ Expression makeIsExpression(CodeRange code, IsExpression expression);
 Expression makeAlternative(CodeRange code, Alternative expression);
 Expression makeDictionaryExpression(CodeRange code, DictionaryExpression expression);
 Expression makeDictionaryValueForever(CodeRange code, DictionaryValue expression);
+Expression makeDictionaryValueStack(CodeRange code, DictionaryValue expression);
 Expression makeFunctionExpression(CodeRange code, FunctionExpression expression);
 Expression makeFunctionBuiltInValue(CodeRange code, FunctionBuiltInValue expression);
 Expression makeFunctionDictionaryExpression(CodeRange code, FunctionDictionaryExpression expression);

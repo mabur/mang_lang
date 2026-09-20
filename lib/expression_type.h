@@ -16,7 +16,11 @@ enum ExpressionType {
     // Values that are produced by evaluating an expression:
     STACK_VALUE,
     TUPLE_VALUE,
+    // A dictionary value has one of two lifetimes, and lives in the storage
+    // arrays named after it. FOREVER: never reclaimed. STACK: reclaimed when
+    // the scope that built it ends, which is what an argument frame gets.
     DICTIONARY_VALUE_FOREVER,
+    DICTIONARY_VALUE_STACK,
     TABLE_VALUE,
     TABLE_VIEW_VALUE,
     FUNCTION_VALUE,
@@ -65,6 +69,10 @@ enum ExpressionType {
     END_STATEMENT,
     RETURN_STATEMENT,
 };
+
+inline bool isDictionaryValue(ExpressionType type) {
+    return type == DICTIONARY_VALUE_FOREVER || type == DICTIONARY_VALUE_STACK;
+}
 
 const char* getExpressionName(ExpressionType type);
 

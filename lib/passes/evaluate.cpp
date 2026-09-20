@@ -29,6 +29,38 @@ OptionalLookup optionalLookup(DictionaryValue dictionary, size_t name) {
     return result;
 }
 
+// A dictionary value lives in one of two places, told apart by the tag of
+// the expression referring to it. These accessors hide which.
+static
+DictionaryValue getDictionaryValue(Expression dictionary) {
+    CHECK_INTERNAL(
+        isDictionaryValue(dictionary.type),
+        "getDictionaryValue expected a dictionary value but got %s",
+        getExpressionName(dictionary.type)
+    );
+    return dictionary.type == DICTIONARY_VALUE_STACK
+        ? storage.dictionary_values_stack.data[dictionary.index]
+        : storage.dictionary_values_forever.data[dictionary.index];
+}
+
+static
+Expression getSlot(Expression dictionary, size_t slot_index) {
+    const auto first = getDictionaryValue(dictionary).slot_values.data;
+    return dictionary.type == DICTIONARY_VALUE_STACK
+        ? storage.slot_values_stack.data[first + slot_index]
+        : storage.slot_values_forever.data[first + slot_index];
+}
+
+static
+void setSlot(Expression dictionary, size_t slot_index, Expression value) {
+    const auto first = getDictionaryValue(dictionary).slot_values.data;
+    if (dictionary.type == DICTIONARY_VALUE_STACK) {
+        storage.slot_values_stack.data[first + slot_index] = value;
+    } else {
+        storage.slot_values_forever.data[first + slot_index] = value;
+    }
+}
+
 static
 Expression requiredLookup(DictionaryValue dictionary, size_t name) {
     const auto result = optionalLookup(dictionary, name);
@@ -295,6 +327,31 @@ Expression checkArgument(
     return Expression{};
 }
 
+// The height of the stack of dictionary values, to pop back to.
+struct StackMark {
+    size_t dictionary_count;
+    size_t slot_count;
+};
+
+static
+StackMark markStack() {
+    return StackMark{storage.dictionary_values_stack.count, storage.slot_values_stack.count};
+}
+
+static
+void popStack(StackMark mark) {
+    storage.dictionary_values_stack.count = mark.dictionary_count;
+    storage.slot_values_stack.count = mark.slot_count;
+}
+
+// Pushes a dictionary value whose slots are the ones appended to
+// slot_values_stack since `mark`.
+static
+Expression pushDictionaryValue(StackMark mark, CodeRange range, Expression environment, Indices names) {
+    const auto slot_values = Indices{mark.slot_count, storage.slot_values_stack.count - mark.slot_count};
+    return makeDictionaryValueStack(range, DictionaryValue{environment, slot_values, names});
+}
+
 template<bool CheckTypes, typename Evaluator>
 static
 Expression applyFunction(
@@ -307,13 +364,12 @@ Expression applyFunction(
     if (argument_check.type == ERROR_VALUE) {
         return argument_check;
     }
-    // Allocation:
-    const auto slot_values = Indices{storage.slot_values_forever.count, 1};
-    APPEND(storage.slot_values_forever, input);
-    const auto middle = makeDictionaryValueForever(input.range,
-        DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
-    );
-    return evaluator(function_struct.body, middle);
+    const auto mark = markStack();
+    APPEND(storage.slot_values_stack, input);
+    const auto frame = pushDictionaryValue(mark, input.range, function_value.environment, function_struct.argument_names);
+    const auto result = evaluator(function_struct.body, frame);
+    popStack(mark);
+    return result;
 }
 
 template<bool CheckTypes, typename Evaluator>
@@ -335,21 +391,21 @@ Expression applyFunctionDictionary(
     auto evaluated_dictionary = storage.dictionary_values_forever.data[input.index];
     auto num_arguments = function_struct.argument_names.count;
 
-    // Allocation:
-    const auto slot_values = Indices{storage.slot_values_forever.count, num_arguments};
+    const auto mark = markStack();
     for (size_t i = 0; i < num_arguments; ++i) {
         const auto name = storage.slot_names.data[function_struct.argument_names.data + i];
         auto expression = requiredLookup(evaluated_dictionary, name);
         const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, i, expression, function_value.environment);
         if (argument_check.type == ERROR_VALUE) {
+            popStack(mark);
             return argument_check;
         }
-        APPEND(storage.slot_values_forever, expression);
+        APPEND(storage.slot_values_stack, expression);
     }
-    auto middle = makeDictionaryValueForever(input.range,
-        DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
-    );
-    return evaluator(function_struct.body, middle);
+    const auto frame = pushDictionaryValue(mark, input.range, function_value.environment, function_struct.argument_names);
+    const auto result = evaluator(function_struct.body, frame);
+    popStack(mark);
+    return result;
 }
 
 template<bool CheckTypes, typename Evaluator>
@@ -379,20 +435,20 @@ Expression applyFunctionTuple(
         );
     }
 
-    // Allocation:
-    const auto slot_values = Indices{storage.slot_values_forever.count, num_inputs};
+    const auto mark = markStack();
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto expression = storage.expressions.data[tuple.indices.data + i];
         const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, i, expression, function_value.environment);
         if (argument_check.type == ERROR_VALUE) {
+            popStack(mark);
             return argument_check;
         }
-        APPEND(storage.slot_values_forever, expression);
+        APPEND(storage.slot_values_stack, expression);
     }
-    const auto middle = makeDictionaryValueForever(input.range,
-        DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
-    );
-    return evaluator(function_struct.body, middle);
+    const auto frame = pushDictionaryValue(mark, input.range, function_value.environment, function_struct.argument_names);
+    const auto result = evaluator(function_struct.body, frame);
+    popStack(mark);
+    return result;
 }
 
 template<bool CheckTypes, typename Evaluator>
@@ -422,21 +478,20 @@ Expression evaluateFunction(Expression function, Expression environment) {
 
 static
 Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression expression) {
-    if (expression.type != DICTIONARY_VALUE_FOREVER) {
+    if (!isDictionaryValue(expression.type)) {
         auto symbol = storage.names.data + name.global_index;
         auto expression_name = getExpressionName(expression.type);
         return makeErrorValue(range,
             "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range));
     }
-    const auto dictionary = storage.dictionary_values_forever.data[expression.index];
     if (name.parent_steps == 0) {
-        return storage.slot_values_forever.data[dictionary.slot_values.data + name.dictionary_index];
+        return getSlot(expression, name.dictionary_index);
     }
     if (name.parent_steps > 0) {
         return lookupDictionary(
             range,
             BoundGlobalName{name.global_index, name.parent_steps - 1, name.dictionary_index},
-            dictionary.environment
+            getDictionaryValue(expression).environment
         );
     }
     auto symbol = storage.names.data + name.global_index;
@@ -785,30 +840,6 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
         }
     }
     return slot_values;
-}
-
-static
-void setSlot(Expression evaluated_dictionary, size_t slot_index, Expression value) {
-    CHECK_INTERNAL(
-        evaluated_dictionary.type == DICTIONARY_VALUE_FOREVER,
-        "setSlot expected %s got %s",
-        getExpressionName(DICTIONARY_VALUE_FOREVER),
-        getExpressionName(evaluated_dictionary.type)
-    );
-    auto first = storage.dictionary_values_forever.data[evaluated_dictionary.index].slot_values.data;
-    storage.slot_values_forever.data[first + slot_index] = value;
-}
-
-static
-Expression getSlot(Expression evaluated_dictionary, size_t slot_index) {
-    CHECK_INTERNAL(
-        evaluated_dictionary.type == DICTIONARY_VALUE_FOREVER,
-        "getSlot expected %s got %s",
-        getExpressionName(DICTIONARY_VALUE_FOREVER),
-        getExpressionName(evaluated_dictionary.type)
-    );
-    auto first = storage.dictionary_values_forever.data[evaluated_dictionary.index].slot_values.data;
-    return storage.slot_values_forever.data[first + slot_index];
 }
 
 static
@@ -1260,6 +1291,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case EMPTY_STACK: return expression;
         case STACK_VALUE: return expression;
         case DICTIONARY_VALUE_FOREVER: return expression;
+        case DICTIONARY_VALUE_STACK: return expression;
         case TUPLE_VALUE: return expression;
         case TABLE_VALUE: return expression;
         case TABLE_VIEW_VALUE: return expression;
@@ -1308,6 +1340,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case EMPTY_STACK: return expression;
         case STACK_VALUE: return expression;
         case DICTIONARY_VALUE_FOREVER: return expression;
+        case DICTIONARY_VALUE_STACK: return expression;
         case TUPLE_VALUE: return expression;
         case TABLE_VALUE: return expression;
         case TABLE_VIEW_VALUE: return expression;

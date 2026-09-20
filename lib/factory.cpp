@@ -31,6 +31,7 @@ void clearMemory() {
     FREE_DARRAY(storage.typed_expressions);
     FREE_DARRAY(storage.dictionary_expressions);
     FREE_DARRAY(storage.dictionary_values_forever);
+    FREE_DARRAY(storage.dictionary_values_stack);
     FREE_DARRAY(storage.conditional_expressions);
     FREE_DARRAY(storage.is_expressions);
     FREE_DARRAY(storage.alternatives);
@@ -63,6 +64,7 @@ void clearMemory() {
     FREE_DARRAY(storage.expressions);
     FREE_DARRAY(storage.slot_names);
     FREE_DARRAY(storage.slot_values_forever);
+    FREE_DARRAY(storage.slot_values_stack);
     FREE_DARRAY(storage.strings);
     FREE_DARRAY(storage.rows);
     FREE_DARRAY(storage.table_expressions);
@@ -94,6 +96,7 @@ void printStorageStatistics() {
     PRINT_STORAGE_ARRAY(typed_expressions);
     PRINT_STORAGE_ARRAY(dictionary_expressions);
     PRINT_STORAGE_ARRAY(dictionary_values_forever);
+    PRINT_STORAGE_ARRAY(dictionary_values_stack);
     PRINT_STORAGE_ARRAY(conditional_expressions);
     PRINT_STORAGE_ARRAY(is_expressions);
     PRINT_STORAGE_ARRAY(alternatives);
@@ -126,6 +129,7 @@ void printStorageStatistics() {
     PRINT_STORAGE_ARRAY(expressions);
     PRINT_STORAGE_ARRAY(slot_names);
     PRINT_STORAGE_ARRAY(slot_values_forever);
+    PRINT_STORAGE_ARRAY(slot_values_stack);
     PRINT_STORAGE_ARRAY(strings);
     PRINT_STORAGE_ARRAY(rows);
     PRINT_STORAGE_ARRAY(table_expressions);
@@ -191,6 +195,10 @@ Expression makeDictionaryExpression(CodeRange code, DictionaryExpression express
 
 Expression makeDictionaryValueForever(CodeRange code, DictionaryValue expression) {
     return makeExpression(code, expression, DICTIONARY_VALUE_FOREVER, storage.dictionary_values_forever);
+}
+
+Expression makeDictionaryValueStack(CodeRange code, DictionaryValue expression) {
+    return makeExpression(code, expression, DICTIONARY_VALUE_STACK, storage.dictionary_values_stack);
 }
 
 Expression makeFunctionExpression(CodeRange code, FunctionExpression expression) {
