@@ -151,7 +151,7 @@ StringBuilder serializeDictionaryValue(StringBuilder s, Serializer serializer, c
     s = concatenate(s, "{");
     FOR_EACH2(name_index, slot_index, dictionary.names, dictionary.slot_values) {
         const auto name = storage.slot_names.data[name_index];
-        const auto value = storage.slot_values.data[slot_index];
+        const auto value = storage.slot_values_forever.data[slot_index];
         s = serializeName(s, name);
         s = concatenate(s, "=");
         s = serializer(s, value);
@@ -440,7 +440,7 @@ StringBuilder serialize_types(StringBuilder s, Expression expression) {
     switch (expression.type) {
         case ERROR_VALUE: return serializeErrorMessage(s, getErrorValue(expression), expression.range);
 
-        case DICTIONARY_VALUE: return serializeDictionaryValue(s, serialize_types, storage.dictionary_values.data[expression.index]);
+        case DICTIONARY_VALUE_FOREVER: return serializeDictionaryValue(s, serialize_types, storage.dictionary_values_forever.data[expression.index]);
         case TUPLE_VALUE: return serializeTupleValue(s, serialize_types, expression);
         case STACK_VALUE: return serializeTypesStackValue(s, expression);
         case TABLE_VALUE: return serializeTypesTableValue(s, expression);
@@ -459,7 +459,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case CONDITIONAL_EXPRESSION: return serializeConditionalExpression(s, storage.conditional_expressions.data[expression.index]);
         case IS_EXPRESSION: return serializeIsExpression(s, storage.is_expressions.data[expression.index]);
         case DICTIONARY_EXPRESSION: return serializeDictionaryExpression(s, storage.dictionary_expressions.data[expression.index]);
-        case DICTIONARY_VALUE: return serializeDictionaryValue(s, serialize, storage.dictionary_values.data[expression.index]);
+        case DICTIONARY_VALUE_FOREVER: return serializeDictionaryValue(s, serialize, storage.dictionary_values_forever.data[expression.index]);
         case DEFINITION_STATEMENT: return serializeDefinitionStatement(s, storage.definition_statements.data[expression.index]);
         case PUT_ASSIGNMENT_STATEMENT: return serializePutAssignmentStatement(s, storage.put_assignment_statements.data[expression.index]);
         case PUT_EACH_ASSIGNMENT_STATEMENT: return serializePutEachAssignmentStatement(s, storage.put_each_assignment_statements.data[expression.index]);

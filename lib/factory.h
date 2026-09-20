@@ -29,7 +29,7 @@ struct Storage {
     DARRAY(DynamicExpression) dynamic_expressions;
     DARRAY(TypedExpression) typed_expressions;
     DARRAY(DictionaryExpression) dictionary_expressions;
-    DARRAY(DictionaryValue) dictionary_values;
+    DARRAY(DictionaryValue) dictionary_values_forever;
     DARRAY(ConditionalExpression) conditional_expressions;
     DARRAY(IsExpression) is_expressions;
     DARRAY(Alternative) alternatives;
@@ -67,7 +67,7 @@ struct Storage {
     DARRAY(size_t) slot_names;
     // The slot values of all dictionary_values.
     // Also used for function arguments.
-    DARRAY(Expression) slot_values;
+    DARRAY(Expression) slot_values_forever;
     DARRAY(String) strings;
     DARRAY(Row) rows;
     DARRAY(TableExpression) table_expressions;
@@ -101,7 +101,7 @@ Expression makeConditionalExpression(CodeRange code, ConditionalExpression expre
 Expression makeIsExpression(CodeRange code, IsExpression expression);
 Expression makeAlternative(CodeRange code, Alternative expression);
 Expression makeDictionaryExpression(CodeRange code, DictionaryExpression expression);
-Expression makeDictionaryValue(CodeRange code, DictionaryValue expression);
+Expression makeDictionaryValueForever(CodeRange code, DictionaryValue expression);
 Expression makeFunctionExpression(CodeRange code, FunctionExpression expression);
 Expression makeFunctionBuiltInValue(CodeRange code, FunctionBuiltInValue expression);
 Expression makeFunctionDictionaryExpression(CodeRange code, FunctionDictionaryExpression expression);

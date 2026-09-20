@@ -229,7 +229,7 @@ struct DictionaryExpression {
 
 struct DictionaryValue {
     Expression environment;
-    // The current values of the slots, as a range into storage.slot_values.
+    // The current values of the slots, as a range into storage.slot_values_forever.
     Indices slot_values;
     // The names of the slots, in slot order, as a range into
     // storage.slot_names. Shared with the expression this value was

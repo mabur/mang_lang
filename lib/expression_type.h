@@ -16,7 +16,7 @@ enum ExpressionType {
     // Values that are produced by evaluating an expression:
     STACK_VALUE,
     TUPLE_VALUE,
-    DICTIONARY_VALUE,
+    DICTIONARY_VALUE_FOREVER,
     TABLE_VALUE,
     TABLE_VIEW_VALUE,
     FUNCTION_VALUE,

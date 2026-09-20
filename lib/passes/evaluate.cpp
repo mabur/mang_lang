@@ -22,7 +22,7 @@ OptionalLookup optionalLookup(DictionaryValue dictionary, size_t name) {
     auto result = MAKE(OptionalLookup);
     FOR_EACH2(name_index, slot_index, dictionary.names, dictionary.slot_values) {
         if (storage.slot_names.data[name_index] == name) {
-            result.value = storage.slot_values.data[slot_index];
+            result.value = storage.slot_values_forever.data[slot_index];
             result.ok = true;
         }
     }
@@ -90,11 +90,11 @@ TypeCheck checkTypesTupleValue(Expression super, Expression sub, const char* des
 static
 TypeCheck checkTypesDictionaryValue(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
-    const auto dictionary_super = storage.dictionary_values.data[super.index];
-    const auto dictionary_sub = storage.dictionary_values.data[sub.index];
+    const auto dictionary_super = storage.dictionary_values_forever.data[super.index];
+    const auto dictionary_sub = storage.dictionary_values_forever.data[sub.index];
     FOR_EACH2(name_index, slot_index, dictionary_super.names, dictionary_super.slot_values) {
         const auto name_super = storage.slot_names.data[name_index];
-        const auto value_super = storage.slot_values.data[slot_index];
+        const auto value_super = storage.slot_values_forever.data[slot_index];
         const auto value_sub = optionalLookup(dictionary_sub, name_super);
         if (value_sub.ok) {
             result = checkTypes(value_super, value_sub.value, description);
@@ -161,7 +161,7 @@ TypeCheck checkTypes(Expression super, Expression sub, const char* description) 
     if (super.type == TUPLE_VALUE && sub.type == TUPLE_VALUE) {
         return checkTypesTupleValue(super, sub, description);
     }
-    if (super.type == DICTIONARY_VALUE && sub.type == DICTIONARY_VALUE) {
+    if (super.type == DICTIONARY_VALUE_FOREVER && sub.type == DICTIONARY_VALUE_FOREVER) {
         return checkTypesDictionaryValue(super, sub, description);
     }
     result.ok = false;
@@ -260,7 +260,7 @@ Expression evaluateLookupChild(
     if (child.type == ERROR_VALUE) {
         return child;
     }
-    if (child.type != DICTIONARY_VALUE) {
+    if (child.type != DICTIONARY_VALUE_FOREVER) {
         auto name = storage.names.data + lookup_child_struct.name;
         return makeErrorValue(lookup_child.range,
             "\n\nI have found an error.\n"
@@ -270,7 +270,7 @@ Expression evaluateLookupChild(
             getExpressionName(child.type)
         );
     }
-    const auto dictionary = storage.dictionary_values.data[child.index];
+    const auto dictionary = storage.dictionary_values_forever.data[child.index];
     return requiredLookup(dictionary, lookup_child_struct.name);
 }
 
@@ -308,9 +308,9 @@ Expression applyFunction(
         return argument_check;
     }
     // Allocation:
-    const auto slot_values = Indices{storage.slot_values.count, 1};
-    APPEND(storage.slot_values, input);
-    const auto middle = makeDictionaryValue(input.range,
+    const auto slot_values = Indices{storage.slot_values_forever.count, 1};
+    APPEND(storage.slot_values_forever, input);
+    const auto middle = makeDictionaryValueForever(input.range,
         DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
     );
     return evaluator(function_struct.body, middle);
@@ -323,7 +323,7 @@ Expression applyFunctionDictionary(
     FunctionValue function_value,
     Expression input
 ) {
-    if (input.type != DICTIONARY_VALUE) {
+    if (input.type != DICTIONARY_VALUE_FOREVER) {
         return makeErrorValue(function_value.function.range,
             "\n\nI have found a type error.\n"
             "It happens when calling a function that is expecting a dictionary as input.\n"
@@ -332,11 +332,11 @@ Expression applyFunctionDictionary(
         );
     }
     auto function_struct = storage.function_dictionary_expressions.data[function_value.function.index];
-    auto evaluated_dictionary = storage.dictionary_values.data[input.index];
+    auto evaluated_dictionary = storage.dictionary_values_forever.data[input.index];
     auto num_arguments = function_struct.argument_names.count;
 
     // Allocation:
-    const auto slot_values = Indices{storage.slot_values.count, num_arguments};
+    const auto slot_values = Indices{storage.slot_values_forever.count, num_arguments};
     for (size_t i = 0; i < num_arguments; ++i) {
         const auto name = storage.slot_names.data[function_struct.argument_names.data + i];
         auto expression = requiredLookup(evaluated_dictionary, name);
@@ -344,9 +344,9 @@ Expression applyFunctionDictionary(
         if (argument_check.type == ERROR_VALUE) {
             return argument_check;
         }
-        APPEND(storage.slot_values, expression);
+        APPEND(storage.slot_values_forever, expression);
     }
-    auto middle = makeDictionaryValue(input.range,
+    auto middle = makeDictionaryValueForever(input.range,
         DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
     );
     return evaluator(function_struct.body, middle);
@@ -380,16 +380,16 @@ Expression applyFunctionTuple(
     }
 
     // Allocation:
-    const auto slot_values = Indices{storage.slot_values.count, num_inputs};
+    const auto slot_values = Indices{storage.slot_values_forever.count, num_inputs};
     for (size_t i = 0; i < num_inputs; ++i) {
         const auto expression = storage.expressions.data[tuple.indices.data + i];
         const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, i, expression, function_value.environment);
         if (argument_check.type == ERROR_VALUE) {
             return argument_check;
         }
-        APPEND(storage.slot_values, expression);
+        APPEND(storage.slot_values_forever, expression);
     }
-    const auto middle = makeDictionaryValue(input.range,
+    const auto middle = makeDictionaryValueForever(input.range,
         DictionaryValue{function_value.environment, slot_values, function_struct.argument_names}
     );
     return evaluator(function_struct.body, middle);
@@ -422,15 +422,15 @@ Expression evaluateFunction(Expression function, Expression environment) {
 
 static
 Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression expression) {
-    if (expression.type != DICTIONARY_VALUE) {
+    if (expression.type != DICTIONARY_VALUE_FOREVER) {
         auto symbol = storage.names.data + name.global_index;
         auto expression_name = getExpressionName(expression.type);
         return makeErrorValue(range,
             "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range));
     }
-    const auto dictionary = storage.dictionary_values.data[expression.index];
+    const auto dictionary = storage.dictionary_values_forever.data[expression.index];
     if (name.parent_steps == 0) {
-        return storage.slot_values.data[dictionary.slot_values.data + name.dictionary_index];
+        return storage.slot_values_forever.data[dictionary.slot_values.data + name.dictionary_index];
     }
     if (name.parent_steps > 0) {
         return lookupDictionary(
@@ -767,21 +767,21 @@ Expression evaluateTypedExpression(Expression expression, Expression environment
 static
 Indices initializeDefinitions(const DictionaryExpression& dictionary) {
     // Allocation:
-    const auto first = storage.slot_values.count;
+    const auto first = storage.slot_values_forever.count;
     const auto slot_values = Indices{first, dictionary.slot_count};
     for (size_t i = 0; i < dictionary.slot_count; ++i) {
-        APPEND(storage.slot_values, Expression{});
+        APPEND(storage.slot_values_forever, Expression{});
     }
     FOR_EACH(i, dictionary.statements) {
         auto statement = storage.statements.data[i];
         auto type = statement.type;
         if (type == DEFINITION_STATEMENT) {
             auto dictionary_index = storage.definition_statements.data[statement.index].name.dictionary_index;
-            storage.slot_values.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
+            storage.slot_values_forever.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
         }
         else if (type == FOR_INIT_STATEMENT) {
             auto dictionary_index = storage.for_init_statements.data[statement.index].name.dictionary_index;
-            storage.slot_values.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
+            storage.slot_values_forever.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
         }
     }
     return slot_values;
@@ -790,25 +790,25 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
 static
 void setSlot(Expression evaluated_dictionary, size_t slot_index, Expression value) {
     CHECK_INTERNAL(
-        evaluated_dictionary.type == DICTIONARY_VALUE,
+        evaluated_dictionary.type == DICTIONARY_VALUE_FOREVER,
         "setSlot expected %s got %s",
-        getExpressionName(DICTIONARY_VALUE),
+        getExpressionName(DICTIONARY_VALUE_FOREVER),
         getExpressionName(evaluated_dictionary.type)
     );
-    auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
-    storage.slot_values.data[first + slot_index] = value;
+    auto first = storage.dictionary_values_forever.data[evaluated_dictionary.index].slot_values.data;
+    storage.slot_values_forever.data[first + slot_index] = value;
 }
 
 static
 Expression getSlot(Expression evaluated_dictionary, size_t slot_index) {
     CHECK_INTERNAL(
-        evaluated_dictionary.type == DICTIONARY_VALUE,
+        evaluated_dictionary.type == DICTIONARY_VALUE_FOREVER,
         "getSlot expected %s got %s",
-        getExpressionName(DICTIONARY_VALUE),
+        getExpressionName(DICTIONARY_VALUE_FOREVER),
         getExpressionName(evaluated_dictionary.type)
     );
-    auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
-    return storage.slot_values.data[first + slot_index];
+    auto first = storage.dictionary_values_forever.data[evaluated_dictionary.index].slot_values.data;
+    return storage.slot_values_forever.data[first + slot_index];
 }
 
 static
@@ -832,7 +832,7 @@ Expression evaluateDictionaryTypes(
     const auto initial_definitions = initializeDefinitions(
         storage.dictionary_expressions.data[dictionary.index]
     );
-    const auto result = makeDictionaryValue(
+    const auto result = makeDictionaryValueForever(
         dictionary.range, DictionaryValue{
             environment,
             initial_definitions,
@@ -913,7 +913,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
     const auto initial_definitions = initializeDefinitions(
         storage.dictionary_expressions.data[dictionary.index]
     );
-    const auto result = makeDictionaryValue(
+    const auto result = makeDictionaryValueForever(
         dictionary.range, DictionaryValue{
             environment,
             initial_definitions,
@@ -1259,7 +1259,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case STRING: return expression;
         case EMPTY_STACK: return expression;
         case STACK_VALUE: return expression;
-        case DICTIONARY_VALUE: return expression;
+        case DICTIONARY_VALUE_FOREVER: return expression;
         case TUPLE_VALUE: return expression;
         case TABLE_VALUE: return expression;
         case TABLE_VIEW_VALUE: return expression;
@@ -1307,7 +1307,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case STRING: return expression;
         case EMPTY_STACK: return expression;
         case STACK_VALUE: return expression;
-        case DICTIONARY_VALUE: return expression;
+        case DICTIONARY_VALUE_FOREVER: return expression;
         case TUPLE_VALUE: return expression;
         case TABLE_VALUE: return expression;
         case TABLE_VIEW_VALUE: return expression;

@@ -44,16 +44,16 @@ const BuiltInEntry* findBuiltIn(size_t name_index) {
 // entry, holding either the value function or the type function of each entry.
 static
 Expression makeBuiltInEnvironment(bool types) {
-    auto slot_values = Indices{storage.slot_values.count, BUILT_IN_ENTRIES_COUNT};
+    auto slot_values = Indices{storage.slot_values_forever.count, BUILT_IN_ENTRIES_COUNT};
     auto first = storage.slot_names.count;
     for (size_t i = 0; i < BUILT_IN_ENTRIES_COUNT; ++i) {
         auto entry = BUILT_IN_ENTRIES[i];
         auto function = types ? entry.function_types : entry.function;
-        APPEND(storage.slot_values, makeFunctionBuiltInValue(CodeRange{}, {function}));
+        APPEND(storage.slot_values_forever, makeFunctionBuiltInValue(CodeRange{}, {function}));
         APPEND(storage.slot_names, makeName(CodeRange{}, entry.name, strlen(entry.name)).index);
     }
     auto names = Indices{first, BUILT_IN_ENTRIES_COUNT};
-    return makeDictionaryValue(CodeRange{}, DictionaryValue{Expression{}, slot_values, names});
+    return makeDictionaryValueForever(CodeRange{}, DictionaryValue{Expression{}, slot_values, names});
 }
 
 Expression builtIns() {
