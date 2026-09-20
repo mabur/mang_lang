@@ -23,7 +23,6 @@ const char* getExpressionName(ExpressionType type) {
         case ERROR_VALUE: return "ERROR_VALUE";
 
         // Internal runtime state:
-        case FOR_ITERATOR: return "FOR_ITERATOR";
 
         // Expressions, constructors:
         case STACK_EXPRESSION: return "STACK_EXPRESSION";

@@ -430,9 +430,7 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
     }
     const auto dictionary = storage.dictionary_values.data[expression.index];
     if (name.parent_steps == 0) {
-        const auto value = storage.slot_values.data[dictionary.slot_values.data + name.dictionary_index];
-        return value.type != FOR_ITERATOR ? value :
-            builtInTake(storage.for_iterators.data[value.index].container);
+        return storage.slot_values.data[dictionary.slot_values.data + name.dictionary_index];
     }
     if (name.parent_steps > 0) {
         return lookupDictionary(
@@ -770,8 +768,8 @@ static
 Indices initializeDefinitions(const DictionaryExpression& dictionary) {
     // Allocation:
     const auto first = storage.slot_values.count;
-    const auto slot_values = Indices{first, dictionary.names.count};
-    for (size_t i = 0; i < dictionary.names.count; ++i) {
+    const auto slot_values = Indices{first, dictionary.slot_count};
+    for (size_t i = 0; i < dictionary.slot_count; ++i) {
         APPEND(storage.slot_values, Expression{});
     }
     FOR_EACH(i, dictionary.statements) {
@@ -790,31 +788,41 @@ Indices initializeDefinitions(const DictionaryExpression& dictionary) {
 }
 
 static
-void setDictionaryDefinition(
-    Expression evaluated_dictionary, BoundLocalName name, Expression value
-) {
+void setSlot(Expression evaluated_dictionary, size_t slot_index, Expression value) {
     CHECK_INTERNAL(
         evaluated_dictionary.type == DICTIONARY_VALUE,
-        "setDictionaryDefinition expected %s got %s",
+        "setSlot expected %s got %s",
         getExpressionName(DICTIONARY_VALUE),
         getExpressionName(evaluated_dictionary.type)
     );
     auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
-    storage.slot_values.data[first + name.dictionary_index] = value;
+    storage.slot_values.data[first + slot_index] = value;
+}
+
+static
+Expression getSlot(Expression evaluated_dictionary, size_t slot_index) {
+    CHECK_INTERNAL(
+        evaluated_dictionary.type == DICTIONARY_VALUE,
+        "getSlot expected %s got %s",
+        getExpressionName(DICTIONARY_VALUE),
+        getExpressionName(evaluated_dictionary.type)
+    );
+    auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
+    return storage.slot_values.data[first + slot_index];
+}
+
+static
+void setDictionaryDefinition(
+    Expression evaluated_dictionary, BoundLocalName name, Expression value
+) {
+    setSlot(evaluated_dictionary, name.dictionary_index, value);
 }
 
 static
 Expression getDictionaryDefinition(
     Expression evaluated_dictionary, BoundLocalName name
 ) {
-    CHECK_INTERNAL(
-        evaluated_dictionary.type == DICTIONARY_VALUE,
-        "getDictionaryDefinition expected %s got %s",
-        getExpressionName(DICTIONARY_VALUE),
-        getExpressionName(evaluated_dictionary.type)
-    );
-    auto first = storage.dictionary_values.data[evaluated_dictionary.index].slot_values.data;
-    return storage.slot_values.data[first + name.dictionary_index];
+    return getSlot(evaluated_dictionary, name.dictionary_index);
 }
 
 static
@@ -989,8 +997,8 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 return condition.error;
             }
             if (condition.value) {
-                auto iterator = makeForIterator(statement.range, ForIterator{container});
-                setDictionaryDefinition(result, for_init_statement.name, iterator);
+                setSlot(result, for_init_statement.container_index, container);
+                setDictionaryDefinition(result, for_init_statement.name, builtInTake(container));
                 i += 1;
             } else {
                 auto for_statement = storage.statements.data[base_index + i + 1];
@@ -1019,20 +1027,18 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
         else if (type == FOR_END_STATEMENT) {
             auto end_statement = storage.for_end_statements.data[statement.index];
             auto start_statement = storage.statements.data[base_index + end_statement.start_index];
-            auto name = storage.for_statements.data[start_statement.index].name;
-            auto iterator = storage.for_iterators.data[getDictionaryDefinition(result, name).index];
-            auto next_container = builtInDrop(iterator.container);
+            auto for_statement = storage.for_statements.data[start_statement.index];
+            auto next_container = builtInDrop(getSlot(result, for_statement.container_index));
             auto condition = boolean(next_container);
             if (condition.error.type == ERROR_VALUE) {
                 return condition.error;
             }
             if (condition.value) {
-                auto next_iterator = makeForIterator(statement.range, ForIterator{next_container});
-                setDictionaryDefinition(result, name, next_iterator);
+                setSlot(result, for_statement.container_index, next_container);
+                setDictionaryDefinition(result, for_statement.name, builtInTake(next_container));
                 i = end_statement.start_index;
             } else {
-                auto last_value = builtInTake(iterator.container);
-                setDictionaryDefinition(result, name, last_value);
+                // The named slot keeps the last item.
                 i += 1;
             }
         }

@@ -180,9 +180,13 @@ struct WhileStatement {
     size_t end_index;
 };
 
+// A for loop uses two slots of its dictionary: the named slot holds the
+// current item, and a hidden slot at container_index holds the rest of the
+// container. The hidden slot is assigned by the resolver, after all names.
 struct ForInitStatement {
     BoundLocalName name;
     Expression container_expression;
+    size_t container_index;
 };
 
 // The looping part of for:
@@ -190,6 +194,7 @@ struct ForStatement {
     BoundLocalName name;
     Expression container_expression;
     size_t end_index;
+    size_t container_index;
 };
 
 struct IfStatement {
@@ -207,16 +212,15 @@ struct ForEndStatement {
 
 // STATEMENTS END
 
-struct ForIterator {
-    Expression container;
-};
-
 struct DictionaryExpression {
     Indices statements;
     // The names defined by the statements, in slot order, as a range into
     // storage.slot_names. Shared by every value built from this
-    // expression. Filled in by the resolver. Its count is the slot count.
+    // expression. Filled in by the resolver.
     Indices names;
+    // The number of slots of a value built from this expression: the named
+    // slots first, then one hidden slot per for loop. Filled in by the resolver.
+    size_t slot_count;
 };
 
 struct DictionaryValue {

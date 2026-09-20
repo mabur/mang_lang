@@ -196,8 +196,24 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
         APPEND(storage.slot_names, dictionary_names_owner.data[i]);
     }
     dictionary_struct->names = Indices{names_first, dictionary_names_owner.count};
+    // Reserve one hidden slot per for loop, after the named slots, for the
+    // rest of the container being iterated.
+    auto slot_count = dictionary_names_owner.count;
+    FOR_EACH(i, dictionary_struct->statements) {
+        const auto statement = storage.statements.data[i];
+        if (statement.type == FOR_INIT_STATEMENT) {
+            const auto for_statement = storage.statements.data[i + 1];
+            CHECK_INTERNAL(for_statement.type == FOR_STATEMENT,
+                "Internal error in resolveDictionary. Expected a for statement after its init statement."
+            );
+            storage.for_init_statements.data[statement.index].container_index = slot_count;
+            storage.for_statements.data[for_statement.index].container_index = slot_count;
+            ++slot_count;
+        }
+    }
+    dictionary_struct->slot_count = slot_count;
     FREE_DARRAY(dictionary_names_owner);
-    
+
     resolveDictionaryLoops(*dictionary_struct);
     FOR_EACH(i, dictionary_struct->statements) {
         resolveStatement(storage.statements.data[i], ScopeChain{expression, &chain});

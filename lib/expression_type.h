@@ -24,11 +24,6 @@ enum ExpressionType {
     ANY_VALUE,
     ERROR_VALUE,
 
-    // INTERNAL RUNTIME STATE
-    // Stored in dictionary slots while a for loop runs. Never returned by
-    // evaluation, since lookups convert it with take.
-    FOR_ITERATOR,
-
     // EXPRESSIONS:
 
     // Constructors. Each has a value twin above:

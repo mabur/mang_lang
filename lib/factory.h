@@ -56,7 +56,6 @@ struct Storage {
     DARRAY(IfStatement) if_statements;
     DARRAY(WhileEndStatement) while_end_statements;
     DARRAY(ForEndStatement) for_end_statements;
-    DARRAY(ForIterator) for_iterators;
     DARRAY(DefinitionStatement) definition_statements;
     DARRAY(PutAssignmentStatement) put_assignment_statements;
     DARRAY(PutEachAssignmentStatement) put_each_assignment_statements;
@@ -127,7 +126,6 @@ Expression makeForStatement(CodeRange code, ForStatement expression);
 Expression makeIfStatement(CodeRange code, IfStatement expression);
 Expression makeWhileEndStatement(CodeRange code, WhileEndStatement expression);
 Expression makeForEndStatement(CodeRange code, ForEndStatement expression);
-Expression makeForIterator(CodeRange code, ForIterator expression);
 Expression makeString(CodeRange code, String expression);
 
 CodeRange makeCodeCharacters(const char* s);
