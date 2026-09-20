@@ -213,10 +213,9 @@ struct ForIterator {
 
 struct DictionaryExpression {
     Indices statements;
-    size_t definition_count;
     // The names defined by the statements, in slot order, as a range into
     // storage.slot_names. Shared by every value built from this
-    // expression. Filled in by the resolver. names.count == definition_count.
+    // expression. Filled in by the resolver. Its count is the slot count.
     Indices names;
 };
 

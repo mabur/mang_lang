@@ -189,7 +189,6 @@ void resolveDictionary(Expression expression, ScopeChain chain) {
     FOR_EACH(i, dictionary_struct->statements) {
         dictionary_names_owner = bindLocalNameStatement(dictionary_names_owner, storage.statements.data[i]);
     }
-    dictionary_struct->definition_count = dictionary_names_owner.count;
     // Persist the names in slot order, so that dictionary values built from
     // this expression can share them instead of storing a name per slot.
     const auto names_first = storage.slot_names.count;

@@ -399,7 +399,7 @@ Expression parseDictionary(CodeRange code) {
 
     FREE_DARRAY(statements);
 
-    auto dictionary = DictionaryExpression{Indices{statements_first, statements_last - statements_first}, 0};
+    auto dictionary = DictionaryExpression{Indices{statements_first, statements_last - statements_first}};
     return makeDictionaryExpression(firstPart(whole, code), dictionary);
 }
 

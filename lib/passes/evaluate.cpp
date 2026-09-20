@@ -770,8 +770,8 @@ static
 Indices initializeDefinitions(const DictionaryExpression& dictionary) {
     // Allocation:
     const auto first = storage.slot_values.count;
-    const auto slot_values = Indices{first, dictionary.definition_count};
-    for (size_t i = 0; i < dictionary.definition_count; ++i) {
+    const auto slot_values = Indices{first, dictionary.names.count};
+    for (size_t i = 0; i < dictionary.names.count; ++i) {
         APPEND(storage.slot_values, Expression{});
     }
     FOR_EACH(i, dictionary.statements) {
