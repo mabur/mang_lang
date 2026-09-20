@@ -34,3 +34,11 @@ BinaryTuple getBinaryTuple(Expression in, const char* function) {
     result.ok = true;
     return result;
 }
+
+Expression applyBinaryTuple(Expression in, const char* function, BinaryFunctionPointer function2) {
+    const auto tuple = getBinaryTuple(in, function);
+    if (!tuple.ok) {
+        return tuple.error;
+    }
+    return function2(tuple.left, tuple.right);
+}

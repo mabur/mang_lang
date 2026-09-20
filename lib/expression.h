@@ -85,6 +85,7 @@ struct FunctionExpression {
 };
 
 typedef Expression (*FunctionPointer)(Expression);
+typedef Expression (*BinaryFunctionPointer)(Expression, Expression);
 
 struct FunctionBuiltInValue {
     FunctionPointer function;
@@ -121,6 +122,9 @@ struct FunctionApplicationBuiltInExpression {
     size_t name;
     FunctionPointer function;
     FunctionPointer function_types;
+    // Special case to speed up built-ins that take a pair, like add!(a b)
+    BinaryFunctionPointer function2;
+    BinaryFunctionPointer function2_types;
     Expression child;
 };
 

@@ -859,8 +859,7 @@ Expression evaluateDictionaryTypes(
             const auto value = evaluate_types(right_expression, result);
             if (value.type == ERROR_VALUE) return value;
             const auto current = getDictionaryDefinition(result, put_assignment.name);
-            const auto tuple = makeTupleValue2(value, current);
-            const auto new_value = builtInPutTyped(tuple);
+            const auto new_value = builtInPutTyped2(value, current);
             setDictionaryDefinition(result, put_assignment.name, new_value);
         }
         else if (type == PUT_EACH_ASSIGNMENT_STATEMENT) {
@@ -874,8 +873,7 @@ Expression evaluateDictionaryTypes(
             {
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = builtInTakeTyped(container);
-                const auto tuple = makeTupleValue2(value, current);
-                const auto new_value = builtInPutTyped(tuple);
+                const auto new_value = builtInPutTyped2(value, current);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
             }
         }
@@ -944,8 +942,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             const auto right_expression = put_assignment.expression;
             const auto value = evaluate(right_expression, result);
             const auto current = getDictionaryDefinition(result, put_assignment.name);
-            const auto tuple = makeTupleValue2(value, current);
-            const auto new_value = builtInPut(tuple);
+            const auto new_value = builtInPut2(value, current);
             setDictionaryDefinition(result, put_assignment.name, new_value);
             i += 1;
         }
@@ -963,8 +960,7 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
                 }
                 const auto current = getDictionaryDefinition(result, put_each_assignment.name);
                 const auto value = builtInTake(container);
-                const auto tuple = makeTupleValue2(value, current);
-                const auto new_value = builtInPut(tuple);
+                const auto new_value = builtInPut2(value, current);
                 setDictionaryDefinition(result, put_each_assignment.name, new_value);
                 container = builtInDrop(container);
             }
@@ -1216,9 +1212,25 @@ Expression evaluateFunctionApplication(
     }
 }
 
+// Evaluates the two items of the literal tuple `child` and applies `function2`
+// to them directly, without building a tuple value.
+template<typename Evaluator>
+static
+Expression applyBinaryBuiltIn(
+    Evaluator evaluator, BinaryFunctionPointer function2, Expression child, Expression environment
+) {
+    const auto tuple = storage.tuple_expressions.data[child.index];
+    const auto left = evaluator(storage.expressions.data[tuple.indices.data + 0], environment);
+    const auto right = evaluator(storage.expressions.data[tuple.indices.data + 1], environment);
+    return function2(left, right);
+}
+
 static
 Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_application, Expression environment) {
     auto built_in = storage.function_application_built_in_expressions.data[built_in_application.index];
+    if (built_in.function2_types) {
+        return applyBinaryBuiltIn(evaluate_types, built_in.function2_types, built_in.child, environment);
+    }
     auto input = evaluate_types(built_in.child, environment);
     if (input.type == ERROR_VALUE) return input;
     return built_in.function_types(input);
@@ -1227,6 +1239,9 @@ Expression evaluateFunctionApplicationBuiltInTypes(Expression built_in_applicati
 static
 Expression evaluateFunctionApplicationBuiltIn(Expression built_in_application, Expression environment) {
     auto built_in = storage.function_application_built_in_expressions.data[built_in_application.index];
+    if (built_in.function2) {
+        return applyBinaryBuiltIn(evaluate, built_in.function2, built_in.child, environment);
+    }
     auto input = evaluate(built_in.child, environment);
     if (input.type == ERROR_VALUE) return input;
     return built_in.function(input);

@@ -10,6 +10,9 @@ struct BuiltInEntry {
     const char* name;
     FunctionPointer function;       // Used by evaluate().
     FunctionPointer function_types; // Used by evaluate_types().
+    // Special case for speed up for built-ins taking a pair, null for the others:
+    BinaryFunctionPointer function2;
+    BinaryFunctionPointer function2_types;
 };
 
 extern const BuiltInEntry BUILT_IN_ENTRIES[];

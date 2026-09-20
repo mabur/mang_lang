@@ -127,15 +127,9 @@ Expression putNumber(Expression collection, Expression item) {
     return makeNumber(CodeRange{}, getNumber(collection) + getNumber(item));
 }
 
-Expression builtInPut(Expression in) {
-    const auto tuple = getBinaryTuple(in, "put");
-    if (!tuple.ok) {
-        return tuple.error;
-    }
-    const auto item = tuple.left;
-    const auto collection = tuple.right;
+Expression builtInPut2(Expression item, Expression collection) {
     switch (collection.type) {
-        case ERROR_VALUE: return in;
+        case ERROR_VALUE: return collection;
         case STACK_VALUE: return builtInPutStackValue(collection, item);
         case EMPTY_STACK: return builtInPutStackValue(collection, item);
         case STRING: return builtInPutString(collection, item);
@@ -144,25 +138,19 @@ Expression builtInPut(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item;
         case NO: return item;
-        default: return makeErrorValue(in.range,
+        default: return makeErrorValue(collection.range,
             "I found an error during evaluation.\n"
-            "The put function received an %s, which it did not expect.", getExpressionName(in.type)
+            "The put function received an %s, which it did not expect.", getExpressionName(collection.type)
         );
     }
 }
 
-Expression builtInPutTyped(Expression in) {
-    const auto tuple = getBinaryTuple(in, "put");
-    if (!tuple.ok) {
-        return tuple.error;
-    }
-    const auto item = tuple.left;
-    const auto collection = tuple.right;
+Expression builtInPutTyped2(Expression item, Expression collection) {
     if (item.type == ANY_VALUE) {
         return collection;
     }
     switch (collection.type) {
-        case ERROR_VALUE: return in;
+        case ERROR_VALUE: return collection;
         case STACK_VALUE: return builtInPutStackValue(collection, item);
         case EMPTY_STACK: return builtInPutStackValue(collection, item);
         case STRING: return collection; // TODO: type check item
@@ -171,11 +159,19 @@ Expression builtInPutTyped(Expression in) {
         case NUMBER: return putNumber(collection, item);
         case YES: return item; // TODO: type check item
         case NO: return item;// TODO: type check item
-        default: return makeErrorValue(in.range,
+        default: return makeErrorValue(collection.range,
             "I found an error during type checking.\n"
-            "The put function received an %s, which it did not expect.", getExpressionName(in.type)
+            "The put function received an %s, which it did not expect.", getExpressionName(collection.type)
         );
     }
+}
+
+Expression builtInPut(Expression in) {
+    return applyBinaryTuple(in, "put", builtInPut2);
+}
+
+Expression builtInPutTyped(Expression in) {
+    return applyBinaryTuple(in, "put", builtInPutTyped2);
 }
 
 template<typename T>

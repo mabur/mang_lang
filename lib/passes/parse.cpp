@@ -677,9 +677,17 @@ Expression parseSubstitution(CodeRange code) {
         code = lastPart(code, child.range);
         const auto built_in = findBuiltIn(name.index);
         if (built_in) {
+            // A binary built-in applied to a literal tuple of two items, like
+            // add!(a b), can be called with the items directly:
+            auto is_binary_call = child.type == TUPLE_EXPRESSION
+                && storage.tuple_expressions.data[child.index].indices.count == 2;
+            auto function2 = is_binary_call ? built_in->function2 : nullptr;
+            auto function2_types = is_binary_call ? built_in->function2_types : nullptr;
             return makeFunctionApplicationBuiltInExpression(
                 firstPart(whole, code),
-                FunctionApplicationBuiltInExpression{name.index, built_in->function, built_in->function_types, child}
+                FunctionApplicationBuiltInExpression{
+                    name.index, built_in->function, built_in->function_types, function2, function2_types, child
+                }
             );
         }
         return makeFunctionApplicationExpression(
