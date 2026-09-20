@@ -52,9 +52,9 @@ int main(int argc,  char **argv) {
     }
     printf("Done.\n");
     
-    printf("Evaluating program ... ");
+    printf("Evaluating program ...\n");
     const clock_t start = clock();
-    const auto result = evaluate_all(code.data);
+    const auto result = evaluate_all_with_statistics(code.data);
     const double duration_total = (double)(clock() - start) / CLOCKS_PER_SEC;
     printf("Done in %.1f seconds.\n", duration_total);
     

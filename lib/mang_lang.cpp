@@ -40,7 +40,8 @@ StringBuilder evaluate_types(const char* code) {
     return buffer;
 }
 
-StringBuilder evaluate_all(const char* code) {
+static
+StringBuilder evaluateAll(const char* code, bool print_statistics) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
     
@@ -69,5 +70,16 @@ StringBuilder evaluate_all(const char* code) {
         return serializeAndClearMemory(std_evaluated);
     }
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
+    if (print_statistics) {
+        printStorageStatistics();
+    }
     return serializeAndClearMemory(code_evaluated);
+}
+
+StringBuilder evaluate_all(const char* code) {
+    return evaluateAll(code, false);
+}
+
+StringBuilder evaluate_all_with_statistics(const char* code) {
+    return evaluateAll(code, true);
 }

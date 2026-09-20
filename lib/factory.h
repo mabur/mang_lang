@@ -84,6 +84,10 @@ extern Storage storage;
 
 void clearMemory();
 
+// Prints the count and size of every non-empty storage array to stdout.
+// Useful to see what a program allocates.
+void printStorageStatistics();
+
 Character getCharacter(Expression expression);
 Number getNumber(Expression expression);
 ErrorValue getErrorValue(Expression expression);

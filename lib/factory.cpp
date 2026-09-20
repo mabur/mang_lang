@@ -1,6 +1,7 @@
 #include "factory.h"
 
 #include <cstring>
+#include <stdio.h>
 
 #include <carma/carma.h>
 
@@ -70,6 +71,67 @@ void clearMemory() {
     FREE_DARRAY(storage.name_index_table);
     
     storage.table_values.clear();
+}
+
+static
+void printStorageArray(const char* name, size_t count, size_t item_size) {
+    if (count == 0) {
+        return;
+    }
+    const auto megabytes = (double)(count * item_size) / (1024.0 * 1024.0);
+    printf("%-44s %12zu items %4zu bytes each %8.1f MB\n", name, count, item_size, megabytes);
+}
+
+#define PRINT_STORAGE_ARRAY(array) \
+    printStorageArray(#array, storage.array.count, sizeof(storage.array.data[0]))
+
+void printStorageStatistics() {
+    printf("Storage:\n");
+    PRINT_STORAGE_ARRAY(code_characters);
+    PRINT_STORAGE_ARRAY(code_rows);
+    PRINT_STORAGE_ARRAY(code_columns);
+    PRINT_STORAGE_ARRAY(dynamic_expressions);
+    PRINT_STORAGE_ARRAY(typed_expressions);
+    PRINT_STORAGE_ARRAY(dictionary_expressions);
+    PRINT_STORAGE_ARRAY(dictionary_values);
+    PRINT_STORAGE_ARRAY(conditional_expressions);
+    PRINT_STORAGE_ARRAY(is_expressions);
+    PRINT_STORAGE_ARRAY(alternatives);
+    PRINT_STORAGE_ARRAY(function_expressions);
+    PRINT_STORAGE_ARRAY(function_built_in_values);
+    PRINT_STORAGE_ARRAY(function_dictionary_expressions);
+    PRINT_STORAGE_ARRAY(function_tuple_expressions);
+    PRINT_STORAGE_ARRAY(function_values);
+    PRINT_STORAGE_ARRAY(tuple_expressions);
+    PRINT_STORAGE_ARRAY(tuple_values);
+    PRINT_STORAGE_ARRAY(stack_expressions);
+    PRINT_STORAGE_ARRAY(stack_values);
+    PRINT_STORAGE_ARRAY(table_view_values);
+    PRINT_STORAGE_ARRAY(lookup_child_expressions);
+    PRINT_STORAGE_ARRAY(function_application_expressions);
+    PRINT_STORAGE_ARRAY(function_application_built_in_expressions);
+    PRINT_STORAGE_ARRAY(lookup_symbol_expressions);
+    PRINT_STORAGE_ARRAY(argument_types);
+    PRINT_STORAGE_ARRAY(while_statements);
+    PRINT_STORAGE_ARRAY(for_init_statements);
+    PRINT_STORAGE_ARRAY(for_statements);
+    PRINT_STORAGE_ARRAY(if_statements);
+    PRINT_STORAGE_ARRAY(while_end_statements);
+    PRINT_STORAGE_ARRAY(for_end_statements);
+    PRINT_STORAGE_ARRAY(definition_statements);
+    PRINT_STORAGE_ARRAY(put_assignment_statements);
+    PRINT_STORAGE_ARRAY(put_each_assignment_statements);
+    PRINT_STORAGE_ARRAY(drop_assignment_statements);
+    PRINT_STORAGE_ARRAY(statements);
+    PRINT_STORAGE_ARRAY(expressions);
+    PRINT_STORAGE_ARRAY(slot_names);
+    PRINT_STORAGE_ARRAY(slot_values);
+    PRINT_STORAGE_ARRAY(strings);
+    PRINT_STORAGE_ARRAY(rows);
+    PRINT_STORAGE_ARRAY(table_expressions);
+    PRINT_STORAGE_ARRAY(names);
+    PRINT_STORAGE_ARRAY(name_index_table);
+    printStorageArray("table_values", storage.table_values.size(), sizeof(TableValue));
 }
 
 // MAKERS:
