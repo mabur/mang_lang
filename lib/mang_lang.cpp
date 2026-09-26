@@ -10,6 +10,9 @@
 
 #include <carma/carma.h>
 
+#include <stdio.h>
+#include <time.h>
+
 
 static
 StringBuilder serializeAndClearMemory(Expression expression) {
@@ -41,14 +44,20 @@ StringBuilder evaluate_types(const char* code) {
 }
 
 static
+double secondsSince(clock_t start) {
+    return (double)(clock() - start) / CLOCKS_PER_SEC;
+}
+
+static
 StringBuilder evaluateAll(const char* code, bool print_statistics) {
     const auto built_ins = builtIns();
     const auto built_ins_types = builtInsTypes();
-    
+
     auto code_character_standard_library = makeCodeCharacters(STANDARD_LIBRARY.c_str());
     auto code_characters_program = makeCodeCharacters(code);
     // N.B. Need to create all code characters before parsing for stable string interning.
-    
+
+    auto start = clock();
     const auto std_ast = resolve(parseExpression(code_character_standard_library), Expression{});
     if (std_ast.type == ERROR_VALUE) {
         return serializeAndClearMemory(std_ast);
@@ -57,6 +66,9 @@ StringBuilder evaluateAll(const char* code, bool print_statistics) {
     if (code_ast.type == ERROR_VALUE) {
         return serializeAndClearMemory(code_ast);
     }
+    const auto seconds_parsing = secondsSince(start);
+
+    start = clock();
     const auto std_checked = evaluate_types(std_ast, built_ins_types);
     if (std_checked.type == ERROR_VALUE) {
         return serializeAndClearMemory(std_checked);
@@ -65,12 +77,25 @@ StringBuilder evaluateAll(const char* code, bool print_statistics) {
     if (code_checked.type == ERROR_VALUE) {
         return serializeAndClearMemory(code_checked);
     }
+    const auto seconds_type_checking = secondsSince(start);
+
+    start = clock();
     const auto std_evaluated = evaluate(std_ast, built_ins);
     if (std_evaluated.type == ERROR_VALUE) {
         return serializeAndClearMemory(std_evaluated);
     }
+    const auto seconds_evaluating_standard_library = secondsSince(start);
+
+    start = clock();
     const auto code_evaluated = evaluate(code_ast, std_evaluated);
+    const auto seconds_evaluating_program = secondsSince(start);
+
     if (print_statistics) {
+        printf("Time:\n");
+        printf("parsing and resolving          %6.2f s\n", seconds_parsing);
+        printf("type checking                  %6.2f s\n", seconds_type_checking);
+        printf("evaluating standard library    %6.2f s\n", seconds_evaluating_standard_library);
+        printf("evaluating program             %6.2f s\n", seconds_evaluating_program);
         printStorageStatistics();
     }
     return serializeAndClearMemory(code_evaluated);
