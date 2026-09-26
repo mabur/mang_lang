@@ -261,7 +261,8 @@ LANGUAGE SYNTAX & SEMANTICS
     - xs = map!(0, points)
     - Remove need for get0, ...
     - Could support literal indexing for 0-9: 0!container, 9!container, to simplify parsing rules.
-  - Could also have index@container and x@y@image.
+      Or: 0@container, 9@container, maybe just for tuples.
+  - Could also have index@container and x@y@image and column@row@matrix
   - What about tables? When to return key-value-tuple and when to just return value?
     - get0,..., can already be used for tables. Mirror that behaviour.
     - table!index (make constant or logN?)
