@@ -451,6 +451,41 @@ Expression applyFunctionTuple(
     return result;
 }
 
+// Applies a function that takes a tuple to the literal tuple `child`, like
+// f!(a b), by evaluating its items straight into the frame, without building
+// a tuple value. Calls made while evaluating an item pop back to above the
+// items already pushed. Only in the value pass.
+static
+Expression applyFunctionTupleDirect(
+    FunctionValue function_value, Expression child, Expression environment
+) {
+    auto function_struct = storage.function_tuple_expressions.data[function_value.function.index];
+    auto tuple = storage.tuple_expressions.data[child.index];
+    auto mark = markStack();
+    FOR_EACH(i, tuple.indices) {
+        auto item = evaluate(storage.expressions.data[i], environment);
+        APPEND(storage.slot_values_stack, item);
+    }
+    auto frame = pushDictionaryValue(mark, child.range, function_value.environment, function_struct.argument_names);
+    auto result = evaluate(function_struct.body, frame);
+    popStack(mark);
+    return result;
+}
+
+static
+bool isDirectTupleCall(Expression function, Expression child) {
+    if (function.type != FUNCTION_VALUE || child.type != TUPLE_EXPRESSION) {
+        return false;
+    }
+    auto function_expression = storage.function_values.data[function.index].function;
+    if (function_expression.type != FUNCTION_TUPLE_EXPRESSION) {
+        return false;
+    }
+    auto argument_count = storage.function_tuple_expressions.data[function_expression.index].argument_names.count;
+    auto item_count = storage.tuple_expressions.data[child.index].indices.count;
+    return argument_count == item_count;
+}
+
 template<bool CheckTypes, typename Evaluator>
 static
 Expression applyFunctionValue(
@@ -1214,11 +1249,13 @@ Expression evaluateFunctionApplication(
     Expression function_application, Expression environment
 ) {
     auto name = storage.function_application_expressions.data[function_application.index].name;
+    const auto child = storage.function_application_expressions.data[function_application.index].child;
     const auto function = lookupDictionary(function_application.range, name, environment);
-    const auto input = evaluate(
-        storage.function_application_expressions.data[function_application.index].child,
-        environment
-    );
+    if (isDirectTupleCall(function, child)) {
+        auto function_value = storage.function_values.data[function.index];
+        return applyFunctionTupleDirect(function_value, child, environment);
+    }
+    const auto input = evaluate(child, environment);
     switch (function.type) {
         case ERROR_VALUE: return function;
 

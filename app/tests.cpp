@@ -686,6 +686,15 @@ int main() {
         {"map!(in row out map!(inc row) [[1 2] [3]])", "[[2 3] [4]]"},
         {"y@{f=in x out dynamic if x then add!(x f!dec!x) else 0 g=in x out f!x y=add!(g!2 f!g!1)}", "4"},
     ));
+    // The items of a literal tuple are evaluated straight into the frame of a
+    // function that takes a tuple. Calls made while evaluating an item must not
+    // disturb the items already evaluated.
+    testEvaluateAll("tuple arguments", TEST_CASES(
+        {"y@{f=in (a b) out sub!(a b) y=f!(5 2)}", "3"},
+        {"y@{f=in (a b) out sub!(a b) y=f!(f!(9 1) f!(5 2))}", "5"},
+        {"y@{f=in (a b c) out (c b a) y=f!(1 f!(2 3 4) 5)}", "(5 (4 3 2) 1)"},
+        {"y@{f=in (a b) out sub!(a b) t=(5 2) y=f!t}", "3"},
+    ));
     // A function value is used inside the call that created it, directly or
     // through values created there. Using it after that call has ended is
     // undefined behaviour, since the frame it captured is reclaimed then.
