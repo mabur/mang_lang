@@ -34,14 +34,14 @@ StringBuilder serializeArguments(StringBuilder s, Indices argument_names, Indice
 }
 
 static
-StringBuilder serializeDynamicExpression(StringBuilder s, const DynamicExpression& dynamic_expression) {
+StringBuilder serializeDynamicExpression(StringBuilder s, DynamicExpression dynamic_expression) {
     s = concatenate(s, "dynamic ");
     s = serialize(s, dynamic_expression.expression);
     return s;
 }
 
 static
-StringBuilder serializeTypedExpression(StringBuilder s, const TypedExpression& typed_expression) {
+StringBuilder serializeTypedExpression(StringBuilder s, TypedExpression typed_expression) {
     s = concatenate(s, "<");
     s = serialize(s, typed_expression.type);
     s = concatenate(s, ">");
@@ -50,7 +50,7 @@ StringBuilder serializeTypedExpression(StringBuilder s, const TypedExpression& t
 }
 
 static
-StringBuilder serializeConditionalExpression(StringBuilder s, const ConditionalExpression& conditional) {
+StringBuilder serializeConditionalExpression(StringBuilder s, ConditionalExpression conditional) {
     s = concatenate(s, "if ");
     FOR_EACH(a, conditional.alternatives) {
         const auto alternative = storage.alternatives.data[a];
@@ -65,7 +65,7 @@ StringBuilder serializeConditionalExpression(StringBuilder s, const ConditionalE
 }
 
 static
-StringBuilder serializeIsExpression(StringBuilder s, const IsExpression& is_expression) {
+StringBuilder serializeIsExpression(StringBuilder s, IsExpression is_expression) {
     s = concatenate(s, "is ");
     s = serialize(s, is_expression.input);
     s = concatenate(s, " ");
@@ -82,7 +82,7 @@ StringBuilder serializeIsExpression(StringBuilder s, const IsExpression& is_expr
 }
 
 static
-StringBuilder serializeDefinitionStatement(StringBuilder s, const DefinitionStatement& element) {
+StringBuilder serializeDefinitionStatement(StringBuilder s, DefinitionStatement element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "=");
     s = serialize(s, element.expression);
@@ -91,7 +91,7 @@ StringBuilder serializeDefinitionStatement(StringBuilder s, const DefinitionStat
 }
 
 static
-StringBuilder serializePutAssignmentStatement(StringBuilder s, const PutAssignmentStatement& element) {
+StringBuilder serializePutAssignmentStatement(StringBuilder s, PutAssignmentStatement element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "+=");
     s = serialize(s, element.expression);
@@ -100,7 +100,7 @@ StringBuilder serializePutAssignmentStatement(StringBuilder s, const PutAssignme
 }
 
 static
-StringBuilder serializePutEachAssignmentStatement(StringBuilder s, const PutEachAssignmentStatement& element) {
+StringBuilder serializePutEachAssignmentStatement(StringBuilder s, PutEachAssignmentStatement element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "++=");
     s = serialize(s, element.expression);
@@ -109,14 +109,14 @@ StringBuilder serializePutEachAssignmentStatement(StringBuilder s, const PutEach
 }
 
 static
-StringBuilder serializeDropAssignmentStatement(StringBuilder s, const DropAssignmentStatement& element) {
+StringBuilder serializeDropAssignmentStatement(StringBuilder s, DropAssignmentStatement element) {
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, "-- ");
     return s;
 }
 
 static
-StringBuilder serializeWhileStatement(StringBuilder s, const WhileStatement& element) {
+StringBuilder serializeWhileStatement(StringBuilder s, WhileStatement element) {
     s = concatenate(s, "while ");
     s = serialize(s, element.expression);
     s = concatenate(s, " ");
@@ -124,7 +124,7 @@ StringBuilder serializeWhileStatement(StringBuilder s, const WhileStatement& ele
 }
 
 static
-StringBuilder serializeForStatement(StringBuilder s, const ForStatement& element) {
+StringBuilder serializeForStatement(StringBuilder s, ForStatement element) {
     s = concatenate(s, "for ");
     s = serializeName(s, element.name.global_index);
     s = concatenate(s, " in ");
@@ -134,7 +134,7 @@ StringBuilder serializeForStatement(StringBuilder s, const ForStatement& element
 }
 
 static
-StringBuilder serializeIfStatement(StringBuilder s, const IfStatement& element) {
+StringBuilder serializeIfStatement(StringBuilder s, IfStatement element) {
     s = concatenate(s, "if ");
     s = serialize(s, element.expression);
     s = concatenate(s, " ");
@@ -143,7 +143,7 @@ StringBuilder serializeIfStatement(StringBuilder s, const IfStatement& element) 
 
 template<typename Serializer>
 static
-StringBuilder serializeDictionaryValue(StringBuilder s, Serializer serializer, const DictionaryValue& dictionary) {
+StringBuilder serializeDictionaryValue(StringBuilder s, Serializer serializer, DictionaryValue dictionary) {
     if (IS_EMPTY(dictionary.names)) {
         s = concatenate(s, "{}");
         return s;
@@ -180,7 +180,7 @@ StringBuilder serializeTupleValue(StringBuilder s, Serializer serializer, Expres
 }
 
 static
-StringBuilder serializeLookupChildExpression(StringBuilder s, const LookupChildExpression& lookup_child) {
+StringBuilder serializeLookupChildExpression(StringBuilder s, LookupChildExpression lookup_child) {
     s = serializeName(s, lookup_child.name);
     s = concatenate(s, "@");
     s = serialize(s, lookup_child.child);
@@ -188,7 +188,7 @@ StringBuilder serializeLookupChildExpression(StringBuilder s, const LookupChildE
 }
 
 static
-StringBuilder serializeTupleIndexExpression(StringBuilder s, const TupleIndexExpression& tuple_index) {
+StringBuilder serializeTupleIndexExpression(StringBuilder s, TupleIndexExpression tuple_index) {
     SERIALIZE_DOUBLE(s, (Number)tuple_index.item_index);
     s = concatenate(s, "@");
     s = serialize(s, tuple_index.child);
@@ -196,7 +196,7 @@ StringBuilder serializeTupleIndexExpression(StringBuilder s, const TupleIndexExp
 }
 
 static
-StringBuilder serializeFunctionApplicationExpression(StringBuilder s, const FunctionApplicationExpression& function_application) {
+StringBuilder serializeFunctionApplicationExpression(StringBuilder s, FunctionApplicationExpression function_application) {
     s = serializeName(s, function_application.name.global_index);
     s = concatenate(s, "!");
     s = serialize(s, function_application.child);
@@ -204,7 +204,7 @@ StringBuilder serializeFunctionApplicationExpression(StringBuilder s, const Func
 }
 
 static
-StringBuilder serializeFunctionApplicationBuiltInExpression(StringBuilder s, const FunctionApplicationBuiltInExpression& built_in_application) {
+StringBuilder serializeFunctionApplicationBuiltInExpression(StringBuilder s, FunctionApplicationBuiltInExpression built_in_application) {
     s = serializeName(s, built_in_application.name);
     s = concatenate(s, "!");
     s = serialize(s, built_in_application.child);
@@ -212,13 +212,13 @@ StringBuilder serializeFunctionApplicationBuiltInExpression(StringBuilder s, con
 }
 
 static
-StringBuilder serializeLookupSymbolExpression(StringBuilder s, const LookupSymbolExpression& lookup_symbol) {
+StringBuilder serializeLookupSymbolExpression(StringBuilder s, LookupSymbolExpression lookup_symbol) {
     s = serializeName(s, lookup_symbol.name.global_index);
     return s;
 }
     
 static
-StringBuilder serializeDictionaryExpression(StringBuilder s, const DictionaryExpression& dictionary) {
+StringBuilder serializeDictionaryExpression(StringBuilder s, DictionaryExpression dictionary) {
     s = concatenate(s, "{");
     FOR_EACH(i, dictionary.statements) {
         const auto statement = storage.statements.data[i];
@@ -281,7 +281,7 @@ StringBuilder serializeCharacter(StringBuilder s, Character character) {
 }
 
 static
-StringBuilder serializeFunctionExpression(StringBuilder s, const FunctionExpression& function) {
+StringBuilder serializeFunctionExpression(StringBuilder s, FunctionExpression function) {
     s = concatenate(s, "in ");
     s = serializeArguments(s, function.argument_names, function.argument_types);
     s = concatenate(s, "out ");
@@ -290,7 +290,7 @@ StringBuilder serializeFunctionExpression(StringBuilder s, const FunctionExpress
 }
 
 static
-StringBuilder serializeFunctionDictionaryExpression(StringBuilder s, const FunctionDictionaryExpression& function_dictionary) {
+StringBuilder serializeFunctionDictionaryExpression(StringBuilder s, FunctionDictionaryExpression function_dictionary) {
     s = concatenate(s, "in ");
     s = concatenate(s, "{");
     s = serializeArguments(s, function_dictionary.argument_names, function_dictionary.argument_types);
@@ -306,7 +306,7 @@ StringBuilder serializeFunctionDictionaryExpression(StringBuilder s, const Funct
 }
 
 static
-StringBuilder serializeFunctionTupleExpression(StringBuilder s, const FunctionTupleExpression& function_stack) {
+StringBuilder serializeFunctionTupleExpression(StringBuilder s, FunctionTupleExpression function_stack) {
     s = concatenate(s, "in ");
     s = concatenate(s, "(");
     s = serializeArguments(s, function_stack.argument_names, function_stack.argument_types);
