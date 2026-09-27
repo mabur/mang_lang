@@ -17,18 +17,6 @@ struct OptionalLookup {
     bool ok;
 };
     
-static
-OptionalLookup optionalLookup(DictionaryValue dictionary, size_t name) {
-    auto result = MAKE(OptionalLookup);
-    FOR_EACH2(name_index, slot_index, dictionary.names, dictionary.slot_values) {
-        if (storage.slot_names.data[name_index] == name) {
-            result.value = storage.slot_values_forever.data[slot_index];
-            result.ok = true;
-        }
-    }
-    return result;
-}
-
 // A dictionary value lives in one of two places, told apart by the tag of
 // the expression referring to it. These accessors hide which.
 static
@@ -62,7 +50,20 @@ void setSlot(Expression dictionary, size_t slot_index, Expression value) {
 }
 
 static
-Expression requiredLookup(DictionaryValue dictionary, size_t name) {
+OptionalLookup optionalLookup(Expression dictionary, size_t name) {
+    auto result = MAKE(OptionalLookup);
+    auto names = getDictionaryValue(dictionary).names;
+    for (size_t i = 0; i < names.count; ++i) {
+        if (storage.slot_names.data[names.data + i] == name) {
+            result.value = getSlot(dictionary, i);
+            result.ok = true;
+        }
+    }
+    return result;
+}
+
+static
+Expression requiredLookup(Expression dictionary, size_t name) {
     const auto result = optionalLookup(dictionary, name);
     if (result.ok) {
         return result.value;
@@ -123,11 +124,10 @@ static
 TypeCheck checkTypesDictionaryValue(Expression super, Expression sub, const char* description) {
     auto result = TypeCheck{.ok=true};
     const auto dictionary_super = storage.dictionary_values_forever.data[super.index];
-    const auto dictionary_sub = storage.dictionary_values_forever.data[sub.index];
     FOR_EACH2(name_index, slot_index, dictionary_super.names, dictionary_super.slot_values) {
         const auto name_super = storage.slot_names.data[name_index];
         const auto value_super = storage.slot_values_forever.data[slot_index];
-        const auto value_sub = optionalLookup(dictionary_sub, name_super);
+        const auto value_sub = optionalLookup(sub, name_super);
         if (value_sub.ok) {
             result = checkTypes(value_super, value_sub.value, description);
             if (!result.ok) return result;
@@ -302,8 +302,7 @@ Expression evaluateLookupChild(
             getExpressionName(child.type)
         );
     }
-    const auto dictionary = storage.dictionary_values_forever.data[child.index];
-    return requiredLookup(dictionary, lookup_child_struct.name);
+    return requiredLookup(child, lookup_child_struct.name);
 }
 
 template<typename Evaluator>
@@ -417,13 +416,12 @@ Expression applyFunctionDictionary(
         );
     }
     auto function_struct = storage.function_dictionary_expressions.data[function_value.function.index];
-    auto evaluated_dictionary = storage.dictionary_values_forever.data[input.index];
     auto num_arguments = function_struct.argument_names.count;
 
     const auto mark = markStack();
     for (size_t i = 0; i < num_arguments; ++i) {
         const auto name = storage.slot_names.data[function_struct.argument_names.data + i];
-        auto expression = requiredLookup(evaluated_dictionary, name);
+        auto expression = requiredLookup(input, name);
         const auto argument_check = checkArgument<CheckTypes>(evaluator, function_struct.argument_types, i, expression, function_value.environment);
         if (argument_check.type == ERROR_VALUE) {
             popStack(mark);
