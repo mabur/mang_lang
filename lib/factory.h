@@ -48,6 +48,7 @@ struct Storage {
     DARRAY(StackValue) stack_values;
     DARRAY(TableViewValue) table_view_values;
     DARRAY(LookupChildExpression) lookup_child_expressions;
+    DARRAY(TupleIndexExpression) tuple_index_expressions;
     DARRAY(FunctionApplicationExpression) function_application_expressions;
     DARRAY(FunctionApplicationBuiltInExpression) function_application_built_in_expressions;
     DARRAY(LookupSymbolExpression) lookup_symbol_expressions;
@@ -121,6 +122,7 @@ Expression makeTableExpression(CodeRange code, TableExpression expression);
 Expression makeTableValue(CodeRange code, TableValue expression);
 Expression makeTableViewValue(CodeRange code, TableViewValue expression);
 Expression makeLookupChildExpression(CodeRange code, LookupChildExpression expression);
+Expression makeTupleIndexExpression(CodeRange code, TupleIndexExpression expression);
 Expression makeFunctionApplicationExpression(CodeRange code, FunctionApplicationExpression expression);
 Expression makeFunctionApplicationBuiltInExpression(CodeRange code, FunctionApplicationBuiltInExpression expression);
 Expression makeLookupSymbolExpression(CodeRange code, LookupSymbolExpression expression);

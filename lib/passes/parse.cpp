@@ -762,6 +762,27 @@ Expression parseNumber(CodeRange code) {
 }
 
 static
+bool isTupleIndexing(CodeRange code) {
+    if (!startsWithDigit(code)) {
+        return false;
+    }
+    DROP_FRONT(code);
+    return startsWith(code, '@');
+}
+
+static
+Expression parseTupleIndex(CodeRange code) {
+    auto whole = code;
+    auto item_index = (size_t)(firstCharacter(code) - '0');
+    code = parseCharacter(code);
+    code = parseCharacter(code);
+    code = parseWhiteSpace(code);
+    auto child = parseExpression(code);
+    code = lastPart(code, child.range);
+    return makeTupleIndexExpression(firstPart(whole, code), {item_index, child});
+}
+
+static
 CodeRange parseKeyWordContent(CodeRange code, const char* keyword) {
     auto tail = parseKeyword(code, keyword);
     return firstPart(code, tail);
@@ -860,6 +881,7 @@ Expression parseExpression(CodeRange code) {
     if (isKeyword(code, "else")) return makeErrorValue(code, "Parse error. 'else' is a reserved keyword.");
     if (isKeyword(code, "while")) return makeErrorValue(code, "Parse error. 'while' is a reserved keyword.");
     if (isKeyword(code, "end")) return makeErrorValue(code, "Parse error. 'end' is a reserved keyword.");
+    if (isTupleIndexing(code)) return parseTupleIndex(code);
     if (isdigit(c) || c == '+' || c == '-') return parseNumber(code);
     if (isalpha(c) || c == '_') return parseSubstitution(code);
     return makeErrorValue(code, "I did not recognize the expression to parse %s");

@@ -188,6 +188,14 @@ StringBuilder serializeLookupChildExpression(StringBuilder s, const LookupChildE
 }
 
 static
+StringBuilder serializeTupleIndexExpression(StringBuilder s, const TupleIndexExpression& tuple_index) {
+    SERIALIZE_DOUBLE(s, (Number)tuple_index.item_index);
+    s = concatenate(s, "@");
+    s = serialize(s, tuple_index.child);
+    return s;
+}
+
+static
 StringBuilder serializeFunctionApplicationExpression(StringBuilder s, const FunctionApplicationExpression& function_application) {
     s = serializeName(s, function_application.name.global_index);
     s = concatenate(s, "!");
@@ -480,6 +488,7 @@ StringBuilder serialize(StringBuilder s, Expression expression) {
         case STACK_EXPRESSION: return serializeStackExpression(s, expression);
         case STACK_VALUE: return serializeStackValue(s, expression);
         case LOOKUP_CHILD_EXPRESSION: return serializeLookupChildExpression(s, storage.lookup_child_expressions.data[expression.index]);
+        case TUPLE_INDEX_EXPRESSION: return serializeTupleIndexExpression(s, storage.tuple_index_expressions.data[expression.index]);
         case FUNCTION_APPLICATION_EXPRESSION: return serializeFunctionApplicationExpression(s, storage.function_application_expressions.data[expression.index]);
         case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return serializeFunctionApplicationBuiltInExpression(s, storage.function_application_built_in_expressions.data[expression.index]);
         case LOOKUP_SYMBOL_EXPRESSION: return serializeLookupSymbolExpression(s, storage.lookup_symbol_expressions.data[expression.index]);

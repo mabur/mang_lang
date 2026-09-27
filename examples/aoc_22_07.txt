@@ -68,8 +68,8 @@ $ ls
     state = fold!(handle_command commands state)
 
     update_directory_sizes = in (path_and_size directory_sizes) out directory_sizes@{
-        path = path_and_size!0
-        size = path_and_size!1
+        path = 0@path_and_size
+        size = 1@path_and_size
         path = drop!path
         for item in path
             directory_size = get!(item directory_sizes 0)

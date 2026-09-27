@@ -115,6 +115,12 @@ struct LookupChildExpression {
     Expression child;
 };
 
+// Looks up the item at a literal position 0-9 of a tuple, like 0@vector.
+struct TupleIndexExpression {
+    size_t item_index;
+    Expression child;
+};
+
 struct FunctionApplicationExpression {
     BoundGlobalName name;
     Expression child;

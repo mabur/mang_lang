@@ -306,6 +306,35 @@ Expression evaluateLookupChild(
     return requiredLookup(dictionary, lookup_child_struct.name);
 }
 
+template<typename Evaluator>
+static
+Expression evaluateTupleIndex(
+    Evaluator evaluator, Expression tuple_index, Expression environment
+) {
+    auto tuple_index_struct = storage.tuple_index_expressions.data[tuple_index.index];
+    auto child = evaluator(tuple_index_struct.child, environment);
+    if (child.type == ERROR_VALUE) {
+        return child;
+    }
+    if (child.type != TUPLE_VALUE) {
+        return makeErrorValue(tuple_index.range,
+            "\n\nI have found an error.\n"
+            "It happens when trying to lookup item %zu in a tuple,\n"
+            "but instead of a tuple I got a %s.\n",
+            tuple_index_struct.item_index,
+            getExpressionName(child.type)
+        );
+    }
+    auto tuple = storage.tuple_values.data[child.index];
+    auto i = tuple_index_struct.item_index;
+    if (i >= tuple.indices.count) {
+        return makeErrorValue(tuple_index.range,
+            "Tuple of size %zu indexed with %zu", tuple.indices.count, i
+        );
+    }
+    return storage.expressions.data[tuple.indices.data + i];
+}
+
 // Checks `input` against the type ascription of argument `i` of a function,
 // given the function's argument_types range. Only in the type-checking pass.
 template<bool CheckTypes, typename Evaluator>
@@ -1346,6 +1375,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case TUPLE_EXPRESSION: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE_EXPRESSION: return evaluateTable(evaluate_types, serialize_types, expression, environment);
         case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate_types, expression, environment);
+        case TUPLE_INDEX_EXPRESSION: return evaluateTupleIndex(evaluate_types, expression, environment);
 
         // These are different for types and values:
         case TYPED_EXPRESSION: return evaluateTypedExpressionTypes(expression, environment);
@@ -1395,6 +1425,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case TUPLE_EXPRESSION: return evaluateTuple(evaluate, expression, environment);
         case TABLE_EXPRESSION: return evaluateTable(evaluate, serialize, expression, environment);
         case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate, expression, environment);
+        case TUPLE_INDEX_EXPRESSION: return evaluateTupleIndex(evaluate, expression, environment);
 
         // These are different for types and values:
         case TYPED_EXPRESSION: return evaluateTypedExpression(expression, environment);

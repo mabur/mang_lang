@@ -308,6 +308,11 @@ void resolveLookupChild(Expression expression, ScopeChain chain) {
 }
 
 static
+void resolveTupleIndex(Expression expression, ScopeChain chain) {
+    return resolveExpression(storage.tuple_index_expressions.data[expression.index].child, chain);
+}
+
+static
 void resolveFunctionApplication(Expression expression, ScopeChain chain) {
     auto function_application = &storage.function_application_expressions.data[expression.index];
     function_application->name = tryBindGlobalName(function_application->name, chain);
@@ -349,6 +354,7 @@ void resolveExpression(Expression expression, ScopeChain chain) {
         case STACK_EXPRESSION: return resolveStack(expression, chain);
         case TABLE_EXPRESSION: return resolveTable(expression, chain);
         case LOOKUP_CHILD_EXPRESSION: return resolveLookupChild(expression, chain);
+        case TUPLE_INDEX_EXPRESSION: return resolveTupleIndex(expression, chain);
         case FUNCTION_APPLICATION_EXPRESSION: return resolveFunctionApplication(expression, chain);
         case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return resolveBuiltInApplication(expression, chain);
         case TYPED_EXPRESSION: return resolveTypedExpression(expression, chain);

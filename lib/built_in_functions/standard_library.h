@@ -458,18 +458,18 @@ const std::string STANDARD_LIBRARY = R"(
     squared_norm = in <Numbers>a out <Number>dot!(a a)
     norm = in <Numbers>a out <Number>sqrt!squared_norm!a
 
-    add2 = in (<Vector2>a <Vector2>b) out <Vector2>(add!(a!0 b!0) add!(a!1 b!1))
-    sub2 = in (<Vector2>a <Vector2>b) out <Vector2>(sub!(a!0 b!0) sub!(a!1 b!1))
-    mul2 = in (<Vector2>a <Vector2>b) out <Vector2>(mul!(a!0 b!0) mul!(a!1 b!1))
-    div2 = in (<Vector2>a <Vector2>b) out <Vector2>(div!(a!0 b!0) div!(a!1 b!1))
+    add2 = in (<Vector2>a <Vector2>b) out <Vector2>(add!(0@a 0@b) add!(1@a 1@b))
+    sub2 = in (<Vector2>a <Vector2>b) out <Vector2>(sub!(0@a 0@b) sub!(1@a 1@b))
+    mul2 = in (<Vector2>a <Vector2>b) out <Vector2>(mul!(0@a 0@b) mul!(1@a 1@b))
+    div2 = in (<Vector2>a <Vector2>b) out <Vector2>(div!(0@a 0@b) div!(1@a 1@b))
     
-    add3 = in (<Vector3>a <Vector3>b) out <Vector3>(add!(a!0 b!0) add!(a!1 b!1) add!(a!2 b!2))
-    sub3 = in (<Vector3>a <Vector3>b) out <Vector3>(sub!(a!0 b!0) sub!(a!1 b!1) sub!(a!2 b!2))
-    mul3 = in (<Vector3>a <Vector3>b) out <Vector3>(mul!(a!0 b!0) mul!(a!1 b!1) mul!(a!2 b!2))
-    div3 = in (<Vector3>a <Vector3>b) out <Vector3>(div!(a!0 b!0) div!(a!1 b!1) div!(a!2 b!2))
+    add3 = in (<Vector3>a <Vector3>b) out <Vector3>(add!(0@a 0@b) add!(1@a 1@b) add!(2@a 2@b))
+    sub3 = in (<Vector3>a <Vector3>b) out <Vector3>(sub!(0@a 0@b) sub!(1@a 1@b) sub!(2@a 2@b))
+    mul3 = in (<Vector3>a <Vector3>b) out <Vector3>(mul!(0@a 0@b) mul!(1@a 1@b) mul!(2@a 2@b))
+    div3 = in (<Vector3>a <Vector3>b) out <Vector3>(div!(0@a 0@b) div!(1@a 1@b) div!(2@a 2@b))
 
-    dot2 = in (<Vector2>a <Vector2>b) out <Number>add!(mul!(a!0 b!0) mul!(a!1 b!1))
-    dot3 = in (<Vector3>a <Vector3>b) out <Number>add!(add!(mul!(a!0 b!0) mul!(a!1 b!1)) mul!(a!2 b!2))
+    dot2 = in (<Vector2>a <Vector2>b) out <Number>add!(mul!(0@a 0@b) mul!(1@a 1@b))
+    dot3 = in (<Vector3>a <Vector3>b) out <Number>add!(add!(mul!(0@a 0@b) mul!(1@a 1@b)) mul!(2@a 2@b))
     squared_norm2 = in <Vector2>a out <Number>dot2!(a a)
     squared_norm3 = in <Vector3>a out <Number>dot3!(a a)
     norm2 = in <Vector2>a out <Number>sqrt!squared_norm2!a

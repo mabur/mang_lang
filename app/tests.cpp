@@ -306,6 +306,27 @@ int main() {
         {"b@{a=(1) b=<a>(1)}", "(1)"},
         {"b@{a=(1 'a') b=<a>(1 'a')}", "(1 'a')"},
     ));
+    testReformat("tuple index", TEST_CASES(
+        {"0@(1 2)", "0@(1 2)"},
+        {"0@ (1 2)", "0@(1 2)"},
+        {"1@t", "1@t"},
+        {"0@1@t", "0@1@t"},
+    ));
+    testEvaluateTypes("tuple index", TEST_CASES(
+        {"0@(1 'a')", "NUMBER"},
+        {"1@(1 'a')", "CHARACTER"},
+        {"x@{t=(1 'a') x=1@t}", "CHARACTER"},
+    ));
+    testEvaluateAll("tuple index", TEST_CASES(
+        {"0@(1 2)", "1"},
+        {"1@(1 2)", "2"},
+        {"9@(0 1 2 3 4 5 6 7 8 9)", "9"},
+        {"0@1@((1 2) (3 4))", "3"},
+        {"x@{t=(1 2) x=1@t}", "2"},
+        {"x@{f=in t out 1@t x=f!(3 4)}", "4"},
+        {"x@{d={t=(5 6)} x=0@t@d}", "5"},
+        {"2@(1 2)", "Tuple of size 2 indexed with 2"},
+    ));
     testEvaluateAll("types", TEST_CASES(
         {"<Any>1", "1"},
         {"<Number>1", "1"},

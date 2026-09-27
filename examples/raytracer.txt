@@ -120,11 +120,11 @@ writePixel = in (<String>image <Number>x <Number>y <Number>width <Number>height 
     color = shade!(intersection world)
 
     image_out = image
-    image_out ++= serialize_natural_number!colorU8fromF64!color!0
+    image_out ++= serialize_natural_number!colorU8fromF64!0@color
     image_out ++= " "
-    image_out ++= serialize_natural_number!colorU8fromF64!color!1
+    image_out ++= serialize_natural_number!colorU8fromF64!1@color
     image_out ++= " "
-    image_out ++= serialize_natural_number!colorU8fromF64!color!2
+    image_out ++= serialize_natural_number!colorU8fromF64!2@color
     image_out ++= " "
 }
 

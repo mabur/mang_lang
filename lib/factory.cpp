@@ -46,6 +46,7 @@ void clearMemory() {
     FREE_DARRAY(storage.stack_values);
     FREE_DARRAY(storage.table_view_values);
     FREE_DARRAY(storage.lookup_child_expressions);
+    FREE_DARRAY(storage.tuple_index_expressions);
     FREE_DARRAY(storage.function_application_expressions);
     FREE_DARRAY(storage.function_application_built_in_expressions);
     FREE_DARRAY(storage.lookup_symbol_expressions);
@@ -111,6 +112,7 @@ void printStorageStatistics() {
     PRINT_STORAGE_ARRAY(stack_values);
     PRINT_STORAGE_ARRAY(table_view_values);
     PRINT_STORAGE_ARRAY(lookup_child_expressions);
+    PRINT_STORAGE_ARRAY(tuple_index_expressions);
     PRINT_STORAGE_ARRAY(function_application_expressions);
     PRINT_STORAGE_ARRAY(function_application_built_in_expressions);
     PRINT_STORAGE_ARRAY(lookup_symbol_expressions);
@@ -260,6 +262,10 @@ Expression makeTableViewValue(CodeRange code, TableViewValue expression) {
 
 Expression makeLookupChildExpression(CodeRange code, LookupChildExpression expression) {
     return makeExpression(code, expression, LOOKUP_CHILD_EXPRESSION, storage.lookup_child_expressions);
+}
+
+Expression makeTupleIndexExpression(CodeRange code, TupleIndexExpression expression) {
+    return makeExpression(code, expression, TUPLE_INDEX_EXPRESSION, storage.tuple_index_expressions);
 }
 
 Expression makeFunctionApplicationExpression(CodeRange code, FunctionApplicationExpression expression) {
