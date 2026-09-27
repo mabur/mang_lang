@@ -542,24 +542,24 @@ Expression evaluateFunction(Expression function, Expression environment) {
 
 static
 Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression expression) {
-    if (!isDictionaryValue(expression.type)) {
-        auto symbol = storage.names.data + name.global_index;
-        auto expression_name = getExpressionName(expression.type);
-        return makeErrorValue(range,
-            "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range));
+    auto parent_steps = name.parent_steps;
+    for (;;) {
+        if (!isDictionaryValue(expression.type)) {
+            auto symbol = storage.names.data + name.global_index;
+            auto expression_name = getExpressionName(expression.type);
+            return makeErrorValue(range,
+                "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range));
+        }
+        if (parent_steps == 0) {
+            return getSlot(expression, name.dictionary_index);
+        }
+        if (parent_steps < 0) {
+            auto symbol = storage.names.data + name.global_index;
+            return makeErrorValue(range, "Cannot find symbol %s.\n%s", symbol, describeLocation(range));
+        }
+        expression = getDictionaryValue(expression).environment;
+        --parent_steps;
     }
-    if (name.parent_steps == 0) {
-        return getSlot(expression, name.dictionary_index);
-    }
-    if (name.parent_steps > 0) {
-        return lookupDictionary(
-            range,
-            BoundGlobalName{name.global_index, name.parent_steps - 1, name.dictionary_index},
-            getDictionaryValue(expression).environment
-        );
-    }
-    auto symbol = storage.names.data + name.global_index;
-    return makeErrorValue(range, "Cannot find symbol %s.\n%s", symbol, describeLocation(range));
 }
 
 static
