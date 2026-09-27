@@ -351,7 +351,7 @@ Expression parseDictionary(CodeRange code) {
             return makeErrorValue(
                 code,
                 "I found an error while parsing a dictionary.\nIt ended too early.\n%s",
-                describeLocation(code)
+                describeLocation(code).data
             );
         }
         if (isKeyword(code, "while")) {

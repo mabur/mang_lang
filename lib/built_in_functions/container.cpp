@@ -100,7 +100,7 @@ Expression clearShared(Expression in, const char* error_message) {
             "%s\nThe clear function received an %s, which it did not expect.\n%s",
             error_message,
             getExpressionName(in.type),
-            describeLocation(in.range)
+            describeLocation(in.range).data
         );
     }
 }

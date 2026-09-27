@@ -548,14 +548,14 @@ Expression lookupDictionary(CodeRange range, BoundGlobalName name, Expression ex
             auto symbol = storage.names.data + name.global_index;
             auto expression_name = getExpressionName(expression.type);
             return makeErrorValue(range,
-                "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range));
+                "Cannot find symbol %s in environment of type %s.\n%s", symbol, expression_name, describeLocation(range).data);
         }
         if (parent_steps == 0) {
             return getSlot(expression, name.dictionary_index);
         }
         if (parent_steps < 0) {
             auto symbol = storage.names.data + name.global_index;
-            return makeErrorValue(range, "Cannot find symbol %s.\n%s", symbol, describeLocation(range));
+            return makeErrorValue(range, "Cannot find symbol %s.\n%s", symbol, describeLocation(range).data);
         }
         expression = getDictionaryValue(expression).environment;
         --parent_steps;
