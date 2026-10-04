@@ -284,29 +284,6 @@ Expression evaluateTable(
 
 template<typename Evaluator>
 static
-Expression evaluateLookupChild(
-    Evaluator evaluator, Expression lookup_child, Expression environment
-) {
-    const auto lookup_child_struct = storage.lookup_child_expressions.data[lookup_child.index];
-    const auto child = evaluator(lookup_child_struct.child, environment);
-    if (child.type == ERROR_VALUE) {
-        return child;
-    }
-    if (child.type != DICTIONARY_VALUE_FOREVER) {
-        auto name = storage.names.data + lookup_child_struct.name;
-        return makeErrorValue(lookup_child.range,
-            "\n\nI have found an error.\n"
-            "It happens when trying to lookup the child named \"%s\" in a dictionary,\n"
-            "but instead of a dictionary I got a %s.\n",
-            name,
-            getExpressionName(child.type)
-        );
-    }
-    return requiredLookup(child, lookup_child_struct.name);
-}
-
-template<typename Evaluator>
-static
 Expression evaluateTupleIndex(
     Evaluator evaluator, Expression tuple_index, Expression environment
 ) {
@@ -878,30 +855,33 @@ Expression evaluateTypedExpression(Expression expression, Expression environment
     return evaluate(storage.typed_expressions.data[expression.index].value, environment);
 }
 
-// Allocates the slots of a new dictionary value, all holding the any-value.
-// A slot defined by a statement gets the range of that statement, so that a
-// read before the definition can be reported at the definition.
 static
-Indices initializeDefinitions(const DictionaryExpression& dictionary) {
+Expression initializeDictionaryValue(Expression dictionary, Expression environment, ExpressionType lifetime) {
+    auto dictionary_struct = storage.dictionary_expressions.data[dictionary.index];
+    auto slot_count = dictionary_struct.slot_count;
+    auto result = Expression{};
     // Allocation:
-    const auto first = storage.slot_values_forever.count;
-    const auto slot_values = Indices{first, dictionary.slot_count};
-    for (size_t i = 0; i < dictionary.slot_count; ++i) {
-        APPEND(storage.slot_values_forever, Expression{});
-    }
-    FOR_EACH(i, dictionary.statements) {
-        auto statement = storage.statements.data[i];
-        auto type = statement.type;
-        if (type == DEFINITION_STATEMENT) {
-            auto dictionary_index = storage.definition_statements.data[statement.index].name.dictionary_index;
-            storage.slot_values_forever.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
+    if (lifetime == DICTIONARY_VALUE_STACK) {
+        auto slot_values = Indices{storage.slot_values_stack.count, slot_count};
+        for (size_t i = 0; i < slot_count; ++i) {
+            APPEND(storage.slot_values_stack, Expression{});
         }
-        else if (type == FOR_INIT_STATEMENT) {
-            auto dictionary_index = storage.for_init_statements.data[statement.index].name.dictionary_index;
-            storage.slot_values_forever.data[first + dictionary_index] = Expression{0, statement.range, ANY_VALUE};
+        result = makeDictionaryValueStack(
+            dictionary.range, DictionaryValue{environment, slot_values, dictionary_struct.names}
+        );
+    } else if (lifetime == DICTIONARY_VALUE_FOREVER) {
+        auto slot_values = Indices{storage.slot_values_forever.count, slot_count};
+        for (size_t i = 0; i < slot_count; ++i) {
+            APPEND(storage.slot_values_forever, Expression{});
         }
+        result = makeDictionaryValueForever(
+            dictionary.range, DictionaryValue{environment, slot_values, dictionary_struct.names}
+        );
     }
-    return slot_values;
+    else {
+        CARMA_ABORT_FAILURE("Unexpected lifetime for dictionary %s:", getExpressionName(lifetime));
+    }
+    return result;
 }
 
 static
@@ -920,18 +900,9 @@ Expression getDictionaryDefinition(
 
 static
 Expression evaluateDictionaryTypes(
-    Expression dictionary, Expression environment
+    Expression dictionary, Expression environment, ExpressionType lifetime
 ) {
-    const auto initial_definitions = initializeDefinitions(
-        storage.dictionary_expressions.data[dictionary.index]
-    );
-    const auto result = makeDictionaryValueForever(
-        dictionary.range, DictionaryValue{
-            environment,
-            initial_definitions,
-            storage.dictionary_expressions.data[dictionary.index].names
-        }
-    );
+    auto result = initializeDictionaryValue(dictionary, environment, lifetime);
     const auto dictionary_struct = storage.dictionary_expressions.data[dictionary.index];
     FOR_EACH(i, dictionary_struct.statements) {
         const auto statement = storage.statements.data[i];
@@ -1002,17 +973,8 @@ Expression evaluateDictionaryTypes(
 }
 
 static
-Expression evaluateDictionary(Expression dictionary, Expression environment) {
-    const auto initial_definitions = initializeDefinitions(
-        storage.dictionary_expressions.data[dictionary.index]
-    );
-    const auto result = makeDictionaryValueForever(
-        dictionary.range, DictionaryValue{
-            environment,
-            initial_definitions,
-            storage.dictionary_expressions.data[dictionary.index].names
-        }
-    );
+Expression evaluateDictionary(Expression dictionary, Expression environment, ExpressionType lifetime) {
+    auto result = initializeDictionaryValue(dictionary, environment, lifetime);
 
     const auto dict_statements = storage.dictionary_expressions.data[dictionary.index].statements;
     const auto base_index = dict_statements.data;
@@ -1138,6 +1100,41 @@ Expression evaluateDictionary(Expression dictionary, Expression environment) {
             break;
         }
     }
+    return result;
+}
+
+// Looks up a name in a dictionary, like name@dictionary.
+// A block, like name@{...}, is only built for this lookup,
+// so its dictionary value lives on the stack until the lookup is done.
+// Using a function value created in the block after that is undefined behaviour, like for a call.
+template<typename Evaluator, typename DictionaryEvaluator>
+static
+Expression evaluateLookupChild(
+    Evaluator evaluator,
+    DictionaryEvaluator dictionary_evaluator,
+    Expression lookup_child,
+    Expression environment
+) {
+    auto lookup_child_struct = storage.lookup_child_expressions.data[lookup_child.index];
+    auto mark = markStack();
+    auto child = lookup_child_struct.child.type == DICTIONARY_EXPRESSION
+        ? dictionary_evaluator(lookup_child_struct.child, environment, DICTIONARY_VALUE_STACK)
+        : evaluator(lookup_child_struct.child, environment);
+    auto result = child;
+    if (isDictionaryValue(child.type)) {
+        result = requiredLookup(child, lookup_child_struct.name);
+    }
+    else if (child.type != ERROR_VALUE) {
+        auto name = storage.names.data + lookup_child_struct.name;
+        result = makeErrorValue(lookup_child.range,
+            "\n\nI have found an error.\n"
+            "It happens when trying to lookup the child named \"%s\" in a dictionary,\n"
+            "but instead of a dictionary I got a %s.\n",
+            name,
+            getExpressionName(child.type)
+        );
+    }
+    popStack(mark);
     return result;
 }
 
@@ -1372,7 +1369,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case STACK_EXPRESSION: return evaluateStack(evaluate_types, expression, environment);
         case TUPLE_EXPRESSION: return evaluateTuple(evaluate_types, expression, environment);
         case TABLE_EXPRESSION: return evaluateTable(evaluate_types, serialize_types, expression, environment);
-        case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate_types, expression, environment);
+        case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate_types, evaluateDictionaryTypes, expression, environment);
         case TUPLE_INDEX_EXPRESSION: return evaluateTupleIndex(evaluate_types, expression, environment);
 
         // These are different for types and values:
@@ -1380,7 +1377,7 @@ Expression evaluate_types(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpressionTyped(expression);
         case CONDITIONAL_EXPRESSION: return evaluateConditionalTypes(expression, environment);
         case IS_EXPRESSION: return evaluateIsTypes(expression, environment);
-        case DICTIONARY_EXPRESSION: return evaluateDictionaryTypes(expression, environment);
+        case DICTIONARY_EXPRESSION: return evaluateDictionaryTypes(expression, environment, DICTIONARY_VALUE_FOREVER);
         case FUNCTION_APPLICATION_EXPRESSION: return evaluateFunctionApplicationTypes(expression, environment);
         case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return evaluateFunctionApplicationBuiltInTypes(expression, environment);
 
@@ -1422,7 +1419,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case STACK_EXPRESSION: return evaluateStack(evaluate, expression, environment);
         case TUPLE_EXPRESSION: return evaluateTuple(evaluate, expression, environment);
         case TABLE_EXPRESSION: return evaluateTable(evaluate, serialize, expression, environment);
-        case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate, expression, environment);
+        case LOOKUP_CHILD_EXPRESSION: return evaluateLookupChild(evaluate, evaluateDictionary, expression, environment);
         case TUPLE_INDEX_EXPRESSION: return evaluateTupleIndex(evaluate, expression, environment);
 
         // These are different for types and values:
@@ -1430,7 +1427,7 @@ Expression evaluate(Expression expression, Expression environment) {
         case DYNAMIC_EXPRESSION: return evaluateDynamicExpression(expression, environment);
         case CONDITIONAL_EXPRESSION: return evaluateConditional(expression, environment);
         case IS_EXPRESSION: return evaluateIs(expression, environment);
-        case DICTIONARY_EXPRESSION: return evaluateDictionary(expression, environment);
+        case DICTIONARY_EXPRESSION: return evaluateDictionary(expression, environment, DICTIONARY_VALUE_FOREVER);
         case FUNCTION_APPLICATION_EXPRESSION: return evaluateFunctionApplication(expression, environment);
         case FUNCTION_APPLICATION_BUILT_IN_EXPRESSION: return evaluateFunctionApplicationBuiltIn(expression, environment);
 

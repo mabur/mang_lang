@@ -731,6 +731,16 @@ int main() {
         {"{for i in [0 1] if i a=i end end}", "{i=1 a=1}"},
         {"{for i in [1 0] if i a=i end end}", "{i=0 a=1}"},
     ));
+    // A block, like name@{...}, lives on the stack until its name is looked
+    // up. Blocks and calls evaluated inside it must not disturb it.
+    testEvaluateAll("block on the stack", TEST_CASES(
+        {"y@{f=in x out inc!x y=f!1}", "2"},
+        {"a@{b=c@{c=d@{d=1}} a=add!(b 1)}", "2"},
+        {"x@{s=0 for i in [1 2 3] s=add!(s y@{y=mul!(i 2)}) end x=s}", "12"},
+        {"y@{f=in (a b) out c@{c=sub!(a b)} y=f!(f!(9 1) f!(5 2))}", "5"},
+        {"y@{f=in n out r@{r=dynamic if n then add!(n f!dec!n) else 0} y=f!4}", "10"},
+        {"z@y@{y={z=1}}", "1"},
+    ));
     testReformat("dynamic", TEST_CASES(
         {"dynamic 1", "dynamic 1"},
     ));
